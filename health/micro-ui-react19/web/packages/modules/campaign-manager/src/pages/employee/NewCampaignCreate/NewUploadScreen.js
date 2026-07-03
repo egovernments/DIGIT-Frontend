@@ -419,7 +419,7 @@ const NewUploadScreen = () => {
         actionClassName={"actionBarClass"}
         noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
-        label={config?.[0]?.form?.[0]?.last === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
+        label={config?.[0]?.form?.[0]?.last === true ? t(I18N_KEYS.COMMON.HCM_SUBMIT) : t(I18N_KEYS.COMMON.HCM_NEXT)}
         secondaryActionIcon={"ArrowBack"}
         primaryActionIconAsSuffix={true}
         primaryActionIcon={"ArrowDirection"}

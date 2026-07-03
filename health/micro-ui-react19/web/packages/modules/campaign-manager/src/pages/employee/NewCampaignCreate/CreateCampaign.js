@@ -521,17 +521,17 @@ const CreateCampaign = () => {
       const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
       const hierarchySelected = sessionHierarchy || formData?.SelectHierarchy?.hierarchy || params?.SelectHierarchy?.hierarchy;
       if (!hierarchySelected) {
-        setShowToast({ key: "error", label: t("HCM_SELECT_HIERARCHY_REQUIRED") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_SELECT_HIERARCHY_REQUIRED) });
         return;
       }
       const isBoundaryLoading = formData?.SelectHierarchy?.isBoundaryLoading ?? params?.SelectHierarchy?.isBoundaryLoading;
       if (isBoundaryLoading) {
-        setShowToast({ key: "info", label: t("HCM_BOUNDARY_DATA_LOADING") });
+        setShowToast({ key: "info", label: t(I18N_KEYS.PAGES.HCM_BOUNDARY_DATA_LOADING) });
         return;
       }
       const hasBoundaryData = formData?.SelectHierarchy?.hasBoundaryData ?? params?.SelectHierarchy?.hasBoundaryData;
       if (!hasBoundaryData) {
-        setShowToast({ key: "error", label: t("HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY) });
         return;
       }
       handleCampaignMutation(formData, hasDateChanged);
@@ -592,8 +592,8 @@ const CreateCampaign = () => {
           children={[
             <div>
               <CardText style={{ margin: 0 }}>
-                {t("ES_CAMPAIGN_DATE_CHANGE_DESCRIPTION") !== "ES_CAMPAIGN_DATE_CHANGE_DESCRIPTION"
-                  ? t("ES_CAMPAIGN_DATE_CHANGE_DESCRIPTION")
+                {t(I18N_KEYS.PAGES.ES_CAMPAIGN_DATE_CHANGE_DESCRIPTION) !== "ES_CAMPAIGN_DATE_CHANGE_DESCRIPTION"
+                  ? t(I18N_KEYS.PAGES.ES_CAMPAIGN_DATE_CHANGE_DESCRIPTION)
                   : "Updating the campaign dates will clear all existing delivery rules and cycle configurations. You will need to reconfigure them after the update."}
               </CardText>
             </div>,

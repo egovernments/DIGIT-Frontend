@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   Card,
@@ -273,7 +274,7 @@ const ReportsConfiguration = () => {
       if (reportsWithNoFrequency.length > 0) {
         setShowToast({
           key: "error",
-          label: t("HCM_REPORTS_SELECT_FREQUENCY_ERROR"),
+          label: t(I18N_KEYS.PAGES.HCM_REPORTS_SELECT_FREQUENCY_ERROR),
         });
         return;
       }
@@ -403,7 +404,7 @@ const ReportsConfiguration = () => {
         setIsSaving(false);
         setShowToast({
           key: "success",
-          label: t("HCM_REPORTS_CONFIG_NO_CHANGES"),
+          label: t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIG_NO_CHANGES),
         });
         setTimeout(() => {
           navigate(
@@ -423,7 +424,7 @@ const ReportsConfiguration = () => {
       if (failed === 0) {
         setShowToast({
           key: "success",
-          label: t("HCM_REPORTS_CONFIG_SAVED_SUCCESS"),
+          label: t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIG_SAVED_SUCCESS),
         });
         setTimeout(() => {
           navigate(
@@ -433,12 +434,12 @@ const ReportsConfiguration = () => {
       } else if (succeeded === 0) {
         setShowToast({
           key: "error",
-          label: `${t("HCM_REPORTS_CONFIG_SAVED_ERROR")} (${failed}/${total} ${t("HCM_FAILED")})`,
+          label: `${t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIG_SAVED_ERROR)} (${failed}/${total} ${t(I18N_KEYS.PAGES.HCM_FAILED)})`,
         });
       } else {
         setShowToast({
           key: "warning",
-          label: `${succeeded}/${total} ${t("HCM_REPORTS_CONFIG_PARTIAL_SUCCESS")} (${failed} ${t("HCM_FAILED")})`,
+          label: `${succeeded}/${total} ${t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIG_PARTIAL_SUCCESS)} (${failed} ${t(I18N_KEYS.PAGES.HCM_FAILED)})`,
         });
       }
     }
@@ -463,15 +464,15 @@ const ReportsConfiguration = () => {
       {currentStep === STEP_SELECTION && (
         <Card>
           <HeaderComponent className="reports-configuration__heading">
-            {t("HCM_REPORTS_SELECTION")}
+            {t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION)}
           </HeaderComponent>
           <p className="reports-configuration__description">
-            {t("HCM_REPORTS_SELECTION_DESC")}
+            {t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION_DESC)}
           </p>
 
           <div className="reports-configuration__count">
-            {t("HCM_REPORTS_AVAILABLE_REPORTS")} ({selectedCount}{" "}
-            {t("HCM_REPORT_SELECTED_LABEL")})
+            {t(I18N_KEYS.PAGES.HCM_REPORTS_AVAILABLE_REPORTS)} ({selectedCount}{" "}
+            {t(I18N_KEYS.PAGES.HCM_REPORT_SELECTED_LABEL)})
           </div>
 
           <div className="reports-configuration__grid">
@@ -494,7 +495,7 @@ const ReportsConfiguration = () => {
                 />
                 {!report.isApplicable && (
                   <span className="reports-configuration__not-applicable">
-                    {t("HCM_REPORT_NOT_APPLICABLE")}
+                    {t(I18N_KEYS.PAGES.HCM_REPORT_NOT_APPLICABLE)}
                   </span>
                 )}
               </div>
@@ -506,15 +507,15 @@ const ReportsConfiguration = () => {
       {currentStep === STEP_FREQUENCY && (
         <Card>
           <HeaderComponent className="reports-configuration__heading">
-            {t("HCM_REPORTS_CONFIGURE_FREQUENCY")}
+            {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY)}
           </HeaderComponent>
           <p className="reports-configuration__description">
-            {t("HCM_REPORTS_CONFIGURE_FREQUENCY_DESC")}
+            {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY_DESC)}
           </p>
 
           <div className="reports-configuration__count">
-            {t("HCM_REPORTS_CONFIGURE_FREQUENCY_COUNT")} ({selectedCount}{" "}
-            {t("HCM_REPORTS_SELECTED_SUFFIX")})
+            {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY_COUNT)} ({selectedCount}{" "}
+            {t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTED_SUFFIX)})
           </div>
 
           <Card
@@ -550,7 +551,7 @@ const ReportsConfiguration = () => {
                       <HeaderComponent className={`label`} styles={{width:"100%"}}>
                         <div className={`label-container`}>
                           <label className={`label-styles`}>
-                            {t("HCM_SELECT_FREQUENCIES")}
+                            {t(I18N_KEYS.PAGES.HCM_SELECT_FREQUENCIES)}
                             {frequencyOptions.length > 1 && (
                               <span style={{ color: "#B91900", marginLeft: "2px" }}>*</span>
                             )}
@@ -595,7 +596,7 @@ const ReportsConfiguration = () => {
                       <div className="reports-configuration__custom-dates">
                         <FieldV1
                           withoutLabel={false}
-                          label={t("HCM_CUSTOM_START_DATE")}
+                          label={t(I18N_KEYS.PAGES.HCM_CUSTOM_START_DATE)}
                           type="date"
                           value={frequencyConfig[report.code]?.customStartDate || null}
                           populators={{
@@ -607,7 +608,7 @@ const ReportsConfiguration = () => {
                         />
                         <FieldV1
                           withoutLabel={false}
-                          label={t("HCM_CUSTOM_END_DATE")}
+                          label={t(I18N_KEYS.PAGES.HCM_CUSTOM_END_DATE)}
                           type="date"
                           value={frequencyConfig[report.code]?.customEndDate || null}
                           populators={{
@@ -632,7 +633,7 @@ const ReportsConfiguration = () => {
         actionFields={[
           <Button
             key="back"
-            label={t("HCM_BACK")}
+            label={t(I18N_KEYS.COMMON.HCM_BACK)}
             onClick={handleBack}
             variation="secondary"
             icon="ArrowBack"
@@ -645,8 +646,8 @@ const ReportsConfiguration = () => {
             key="next"
             label={
               currentStep === STEP_FREQUENCY
-                ? t("HCM_SAVE_CONFIGURATION")
-                : t("HCM_NEXT")
+                ? t(I18N_KEYS.PAGES.HCM_SAVE_CONFIGURATION)
+                : t(I18N_KEYS.COMMON.HCM_NEXT)
             }
             onClick={handleNext}
             variation="primary"

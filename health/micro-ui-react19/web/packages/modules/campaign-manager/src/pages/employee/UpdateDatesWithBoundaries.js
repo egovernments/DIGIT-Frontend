@@ -220,8 +220,8 @@ function UpdateDatesWithBoundaries() {
         variant="default"
         style={{ marginBottom: "1.5rem", marginTop: "1.5rem", marginLeft: "0rem", maxWidth: "100%" }}
         additionalElements={[
-          <span style={{ color: "#505A5F" }}>{t(`UPDATE_DATE_CHANGE_INFO_TEXT1`)}</span>,
-          <span style={{ color: "#505A5F" }}>{t(`UPDATE_DATE_CHANGE_INFO_TEXT2`)}</span>,
+          <span style={{ color: "#505A5F" }}>{t(I18N_KEYS.PAGES.UPDATE_DATE_CHANGE_INFO_TEXT1)}</span>,
+          <span style={{ color: "#505A5F" }}>{t(I18N_KEYS.PAGES.UPDATE_DATE_CHANGE_INFO_TEXT2)}</span>,
         ]}
         label={"Info"}
         headerClassName={"headerClassName"}

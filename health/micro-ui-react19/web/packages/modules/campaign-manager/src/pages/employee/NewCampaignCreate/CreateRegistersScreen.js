@@ -1,5 +1,6 @@
 import { FormComposerV2, Loader, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createRegistersConfig } from "../../../configs/createRegistersConfig";
@@ -74,17 +75,17 @@ const CreateRegistersScreen = () => {
       formData?.uploadAttendanceRegister;
 
     if (!uploadedData?.uploadedFile?.length) {
-      return showErrorToast(t("PLEASE_UPLOAD_FILE"));
+      return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.PLEASE_UPLOAD_FILE));
     }
 
     if (uploadedData?.isError || uploadedData?.apiError) {
-      return showErrorToast(t("ENTER_VALID_FILE"));
+      return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.ENTER_VALID_FILE));
     }
 
     const filestoreId = uploadedData?.uploadedFile?.[0]?.filestoreId || uploadedData?.uploadedFile?.[0]?.fileStoreId;
 
     if (!filestoreId) {
-      return showErrorToast(t("PLEASE_UPLOAD_FILE"));
+      return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.PLEASE_UPLOAD_FILE));
     }
 
     const resourceDetails = {
@@ -110,8 +111,8 @@ const CreateRegistersScreen = () => {
             `/${window.contextPath}/employee/campaign/response?isSuccess=true`,
             {
               state: {
-                message: t("HCM_REGISTER_CREATION_SUCCESS"),
-                text: t("HCM_REGISTER_CREATION_SUCCESS_TEXT"),
+                message: t(I18N_KEYS.PAGES.HCM_REGISTER_CREATION_SUCCESS),
+                text: t(I18N_KEYS.PAGES.HCM_REGISTER_CREATION_SUCCESS_TEXT),
                 actionLabel: "HCM_BACK_TO_SETUP_ATTENDANCE",
                 actionLink: `/${window.contextPath}/employee/campaign/setup-attendance?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
               },
@@ -119,7 +120,7 @@ const CreateRegistersScreen = () => {
           );
         },
         onError: (error) => {
-          showErrorToast(error?.response?.data?.Errors?.[0]?.description || t("HCM_ERROR_IN_CAMPAIGN_CREATION"));
+          showErrorToast(error?.response?.data?.Errors?.[0]?.description || t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION));
           setLoader(false);
         },
       }
@@ -132,7 +133,7 @@ const CreateRegistersScreen = () => {
     );
   };
 
-  if (loader) return <Loader page={true} variant={"OverlayLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />;
+  if (loader) return <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />;
 
   const closeToast = () => setShowToast(null);
 
@@ -143,11 +144,11 @@ const CreateRegistersScreen = () => {
         onSubmit={onSubmit}
         defaultValues={params}
         showSecondaryLabel={true}
-        secondaryLabel={t("HCM_BACK")}
+        secondaryLabel={t(I18N_KEYS.COMMON.HCM_BACK)}
         actionClassName={"actionBarClass"}
         noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
-        label={t("HCM_SUBMIT")}
+        label={t(I18N_KEYS.COMMON.HCM_SUBMIT)}
         secondaryActionIcon={"ArrowBack"}
       />
       {showToast && (

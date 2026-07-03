@@ -2,6 +2,7 @@ import { Card, Stepper, TextBlock } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import UploadData from "./UploadData";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 import UploadDataMappingWrapper from "./UploadDataMappingWrapper";
 import NewUploadData from "./CreateCampaignComponents/NewUploadData";
 
@@ -52,7 +53,7 @@ function DataUploadWrapper({ formData, props, onSelect }) {
         {/* {!parentId && (
           <div className="card-container">
             <Card className="card-header-timeline">
-              <TextBlock subHeader={t("HCM_UPLOAD_DATA")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+              <TextBlock subHeader={t(I18N_KEYS.COMPONENTS.HCM_UPLOAD_DATA)} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
             <Card className="stepper-card">
               <Stepper customSteps={categories} currentStep={currentStep} onStepClick={() => {}} direction={"vertical"} />

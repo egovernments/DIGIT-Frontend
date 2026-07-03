@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import { Dropdown, TextInput, Toast, Button, CardText, LabelFieldPair, Loader } from "@egovernments/digit-ui-components";
 import { Link } from "react-router-dom";
 
@@ -159,13 +160,13 @@ const AddProducts = React.memo(({
           <div key={product.key} className="add-resource-container">
             <div className="header-container">
               <CardText>
-                {t("CAMPAIGN_RESOURCE")} {index + 1}
+                {t(I18N_KEYS.PAGES.CAMPAIGN_RESOURCE)} {index + 1}
               </CardText>
               {products.length > 1 && (
                 <Button
                   icon="Delete"
-                  label={t("DELETE")}
-                  title={t("DELETE")}
+                  label={t(I18N_KEYS.COMMON.DELETE)}
+                  title={t(I18N_KEYS.COMMON.DELETE)}
                   onClick={() => deleteProduct(product)}
                   variation="link"
                 />
@@ -174,7 +175,7 @@ const AddProducts = React.memo(({
             
             <div className="add-resource-label-field-container">
               <LabelFieldPair style={{ display: "grid" }}>
-                <label>{t("CAMPAIGN_ADD_PRODUCTS_LABEL")}</label>
+                <label>{t(I18N_KEYS.PAGES.CAMPAIGN_ADD_PRODUCTS_LABEL)}</label>
                 <Dropdown
                   t={t}
                   style={{ width: "100%", minWidth: "100%", marginBottom: 0 }}
@@ -196,7 +197,7 @@ const AddProducts = React.memo(({
                   flexDirection: "column", 
                   alignItems: "flex-start" 
                 }}>
-                  <label>{t("CAMPAIGN_COUNT_LABEL")}</label>
+                  <label>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_COUNT_LABEL)}</label>
                   <TextInput
                     type="numeric"
                     value={product?.quantity}
@@ -212,8 +213,8 @@ const AddProducts = React.memo(({
       {canAddMore && (
         <Button
           variation="secondary"
-          label={t("CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION")}
-          title={t("CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION")}
+          label={t(I18N_KEYS.PAGES.CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION)}
+          title={t(I18N_KEYS.PAGES.CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION)}
           className="add-rule-btn hover"
           icon="AddIcon"
           onClick={addProduct}
@@ -230,7 +231,7 @@ const AddProducts = React.memo(({
           marginBottom: "1rem"
         }}
       >
-        <p>{t("CAMPAIGN_NEW_PRODUCT_TEXT")}</p>
+        <p>{t(I18N_KEYS.PAGES.CAMPAIGN_NEW_PRODUCT_TEXT)}</p>
         <span className="link" onClick={updateSession}>
           <Link
             to={{
@@ -246,7 +247,7 @@ const AddProducts = React.memo(({
             }}
             id={"add-new-resource-popup"}
           >
-            {t("ES_CAMPAIGN_ADD_PRODUCT_LINK")}
+            {t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_ADD_PRODUCT_LINK)}
           </Link>
         </span>
       </div>

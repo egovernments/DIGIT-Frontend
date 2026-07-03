@@ -13,6 +13,7 @@ import {
   MultiSelectDropdown,
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 
@@ -996,10 +997,10 @@ const NewShipmentPopup = ({
       link.remove();
       URL.revokeObjectURL(url);
 
-      setShowToast({ key: "success", label: t("HCM_DOWNLOAD_STOCK_TEMPLATE") });
+      setShowToast({ key: "success", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DOWNLOAD_STOCK_TEMPLATE) });
     } catch (error) {
       console.error("Error downloading template:", error);
-      setShowToast({ key: "error", label: t("HCM_STOCK_VALIDATION_ERROR") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_VALIDATION_ERROR) });
     } finally {
       setIsDownloading(false);
     }
@@ -1055,7 +1056,7 @@ const NewShipmentPopup = ({
 
   const handleSubmit = useCallback(async () => {
     if (!uploadedFileData?.length) {
-      setShowToast({ key: "error", label: t("PLEASE_UPLOAD_FILE") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.CAMPAIGN_CREATE.PLEASE_UPLOAD_FILE) });
       return;
     }
     setIsSubmitting(true);
@@ -1063,7 +1064,7 @@ const NewShipmentPopup = ({
       const XLSX = (await import("xlsx")).default;
       const file = uploadedFileData[0]?.file;
       if (!file) {
-        setShowToast({ key: "error", label: t("PLEASE_UPLOAD_FILE") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.CAMPAIGN_CREATE.PLEASE_UPLOAD_FILE) });
         setIsSubmitting(false);
         return;
       }
@@ -1074,7 +1075,7 @@ const NewShipmentPopup = ({
       const allRows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
       if (!allRows || allRows.length < 3) {
-        setShowToast({ key: "error", label: t("HCM_EMPTY_SHEET") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_EMPTY_SHEET) });
         setIsSubmitting(false);
         return;
       }
@@ -1108,7 +1109,7 @@ const NewShipmentPopup = ({
       });
 
       if (!dataRows.length || !productColumns.length) {
-        setShowToast({ key: "error", label: t("HCM_EMPTY_SHEET") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_EMPTY_SHEET) });
         setIsSubmitting(false);
         return;
       }
@@ -1276,7 +1277,7 @@ const NewShipmentPopup = ({
       });
 
       if (!stockPayload.length) {
-        setShowToast({ key: "error", label: t("HCM_EMPTY_SHEET") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_EMPTY_SHEET) });
         setIsSubmitting(false);
         return;
       }
@@ -1325,7 +1326,7 @@ const NewShipmentPopup = ({
       <PopUp
         className={"boundaries-pop-module"}
         type={"default"}
-        heading={t("HCM_BULK_STOCK_UPLOAD_HEADING")}
+        heading={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BULK_STOCK_UPLOAD_HEADING)}
         children={[]}
         onOverlayClick={onClose}
         onClose={onClose}
@@ -1336,7 +1337,7 @@ const NewShipmentPopup = ({
                   type="button"
                   size="large"
                   variation="secondary"
-                  label={t("HCM_BACK")}
+                  label={t(I18N_KEYS.COMMON.HCM_BACK)}
                   onClick={() => setViewState("form")}
                 />,
               ]
@@ -1345,7 +1346,7 @@ const NewShipmentPopup = ({
                   type="button"
                   size="large"
                   variation="secondary"
-                  label={t("HCM_BACK")}
+                  label={t(I18N_KEYS.COMMON.HCM_BACK)}
                   onClick={onClose}
                 />,
                 <Button
@@ -1354,8 +1355,8 @@ const NewShipmentPopup = ({
                   variation="primary"
                   label={
                     isSubmitting
-                      ? t("HCM_STOCK_PROCESSING")
-                      : t("HCM_STOCK_SUBMIT")
+                      ? t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_PROCESSING)
+                      : t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_SUBMIT)
                   }
                   onClick={handleSubmit}
                   isDisabled={!uploadedFileData?.length || isSubmitting}
@@ -1381,23 +1382,23 @@ const NewShipmentPopup = ({
             <div style={{ padding: "2rem 1rem" }}>
               <Panels
                 type="error"
-                message={t("HCM_STOCK_VALIDATION_ERROR")}
-                info={t("PLEASE_CHECK_YOUR_FILE")}
+                message={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_VALIDATION_ERROR)}
+                info={t(I18N_KEYS.COMMODITY_MANAGEMENT.PLEASE_CHECK_YOUR_FILE)}
                 showAsSvg={false}
               />
             </div>
           ) : (
             <>
               <p style={{ marginBottom: "1.5rem", color: "#505A5F" }}>
-                {t("HCM_BULK_STOCK_UPLOAD_DESC")}
+                {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BULK_STOCK_UPLOAD_DESC)}
               </p>
 
               <Card type={"secondary"}>
                 <h2 style={{ fontSize: "1.2rem", fontWeight: "700" }}>
-                  {t("HCM_SELECT_FROM_FACILITY")}
+                  {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SELECT_FROM_FACILITY)}
                 </h2>
                 <p style={{ color: "#505A5F", marginBottom: "0rem" }}>
-                  {t("HCM_FROM_FACILITY_DESC")}
+                  {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_FROM_FACILITY_DESC)}
                 </p>
 
                 {fromVisibleLevels.length > 0 && (
@@ -1436,7 +1437,7 @@ const NewShipmentPopup = ({
                                 : undefined
                             }
                             select={(selected) => handleFromHierarchyChange(h.boundaryType, selected.code)}
-                            placeholder={t("ES_COMMON_SELECT")}
+                            placeholder={t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_COMMON_SELECT)}
                             style={{ width: "100%" }}
                             disable={isUserLevel}
                           />
@@ -1452,7 +1453,7 @@ const NewShipmentPopup = ({
                   <div style={{}}>
                     <input
                       type="text"
-                      placeholder={t("ES_COMMON_SEARCH")}
+                      placeholder={t(I18N_KEYS.PAGES.ES_COMMON_SEARCH)}
                       value={fromSearchQuery}
                       onChange={(e) => setFromSearchQuery(e.target.value)}
                       style={{
@@ -1501,18 +1502,18 @@ const NewShipmentPopup = ({
                           fontWeight: "600",
                         }}
                       >
-                        {t("HCM_SELECTED")}:{" "}
+                        {t(I18N_KEYS.COMPONENTS.HCM_SELECTED)}:{" "}
                         {fromFacility.name || fromFacility.id}
                       </p>
                     )}
                   </div>
                 ) : fromSelectedLevel >= 0 ? (
                   <p style={{ color: "#505A5F", marginBottom: "0rem" }}>
-                    {t("HCM_FACILITY_API_FAILED_DESC")}
+                    {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_FACILITY_API_FAILED_DESC)}
                   </p>
                 ) : (
                   <p style={{ color: "#505A5F", marginBottom: "0rem" }}>
-                    {t("HCM_SELECT_HIERARCHY_FIRST")}
+                    {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SELECT_HIERARCHY_FIRST)}
                   </p>
                 )}
 
@@ -1525,10 +1526,10 @@ const NewShipmentPopup = ({
                     }}
                   >
                     <h2 style={{ fontSize: "1.2rem", fontWeight: "700" }}>
-                      {t("HCM_SELECT_TO_FACILITIES")}
+                      {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SELECT_TO_FACILITIES)}
                     </h2>
                     <p style={{ color: "#505A5F", marginBottom: "0rem" }}>
-                      {t("HCM_TO_FACILITIES_DESC")}
+                      {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TO_FACILITIES_DESC)}
                     </p>
 
                     {toVisibleLevels.length > 0 && (
@@ -1598,7 +1599,7 @@ const NewShipmentPopup = ({
                       <div style={{ marginBottom: "1rem" }}>
                         <input
                           type="text"
-                          placeholder={t("ES_COMMON_SEARCH")}
+                          placeholder={t(I18N_KEYS.PAGES.ES_COMMON_SEARCH)}
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           style={{
@@ -1616,8 +1617,8 @@ const NewShipmentPopup = ({
                           onChange={toggleSelectAll}
                           label={`${
                             allVisibleSelected
-                              ? t("HCM_DESELECT_ALL")
-                              : t("HCM_SELECT_ALL")
+                              ? t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DESELECT_ALL)
+                              : t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SELECT_ALL)
                           } (${filteredFacilities.length})`}
                           style={{ marginBottom: "0.5rem" }}
                         />
@@ -1649,17 +1650,17 @@ const NewShipmentPopup = ({
                         </div>
                         {selectedFacilityIds.size > 0 && (
                           <p style={{ marginTop: "0.5rem", color: "#505A5F" }}>
-                            {selectedFacilityIds.size} {t("HCM_SELECTED")}
+                            {selectedFacilityIds.size} {t(I18N_KEYS.COMPONENTS.HCM_SELECTED)}
                           </p>
                         )}
                       </div>
                     ) : toSelectedLevel >= 0 ? (
                       <p style={{ color: "#505A5F", marginBottom: "1rem" }}>
-                        {t("HCM_FACILITY_API_FAILED_DESC")}
+                        {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_FACILITY_API_FAILED_DESC)}
                       </p>
                     ) : (
                       <p style={{ color: "#505A5F", marginBottom: "1rem" }}>
-                        {t("HCM_SELECT_HIERARCHY_FIRST")}
+                        {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SELECT_HIERARCHY_FIRST)}
                       </p>
                     )}
                   </div>
@@ -1668,8 +1669,8 @@ const NewShipmentPopup = ({
                 <Button
                   label={
                     isDownloading
-                      ? t("LOADING")
-                      : t("HCM_DOWNLOAD_STOCK_TEMPLATE")
+                      ? t(I18N_KEYS.CAMPAIGN_CREATE.LOADING)
+                      : t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DOWNLOAD_STOCK_TEMPLATE)
                   }
                   variation="secondary"
                   type="button"
@@ -1681,7 +1682,7 @@ const NewShipmentPopup = ({
 
               <Card type={"secondary"} style={{ marginTop: "1.5rem" }}>
                 <h2 style={{ fontSize: "1.2rem", fontWeight: "700" }}>
-                  {t("HCM_UPLOAD_STOCK_TEMPLATE")}
+                  {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_UPLOAD_STOCK_TEMPLATE)}
                 </h2>
                 <BulkUpload
                   onSubmit={handleFileUpload}

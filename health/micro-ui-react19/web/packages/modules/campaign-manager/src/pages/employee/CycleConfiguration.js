@@ -368,14 +368,14 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               <CardText style={{fontSize:"19px",color:"#505a5f"}}>{t(`CAMPAIGN_CYCLE_CONFIGURE_HEADING_${selectedProjectType.toUpperCase()}`)}</CardText>
               <LabelFieldPair>
                 <CardLabel className="cycleBold" style={{ fontWeight: "700",width:"40%" }}>
-                  {t(`CAMPAIGN_NO_OF_CYCLE`)}
+                  {t(I18N_KEYS.PAGES.CAMPAIGN_NO_OF_CYCLE)}
                   <span className="mandatory-span">*</span>
                 </CardLabel>
                 <TextInput type="numeric" value={cycleConfgureDate?.cycle} onChange={(d) => updateCycle(d)} disabled={cycleConfgureDate?.isDisable} />
               </LabelFieldPair>
               <LabelFieldPair>
                 <CardLabel className="cycleBold" style={{ fontWeight: "700" ,width:"40%"}}>
-                  {t(`CAMPAIGN_NO_OF_DELIVERY`)}
+                  {t(I18N_KEYS.PAGES.CAMPAIGN_NO_OF_DELIVERY)}
                   <span className="mandatory-span">*</span>
                 </CardLabel>
                 <TextInput
@@ -390,14 +390,14 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           <div style={{ marginBottom: "1.5rem" }}>
             <Card>
               <HeaderComponent className="cycle-configuration-heading">
-                {t(`CAMPAIGN_OBSERVATION_STRATEGY_HEADING`)}
+                {t(I18N_KEYS.PAGES.CAMPAIGN_OBSERVATION_STRATEGY_HEADING)}
               </HeaderComponent>
               <CardText style={{fontSize:"16px",color:"#505a5f", marginBottom: "1rem"}}>
-                {t(`CAMPAIGN_OBSERVATION_STRATEGY_DESCRIPTION`)}
+                {t(I18N_KEYS.PAGES.CAMPAIGN_OBSERVATION_STRATEGY_DESCRIPTION)}
               </CardText>
               <LabelFieldPair>
                 <CardLabel className="cycleBold" style={{ fontWeight: "700", width:"40%" }}>
-                  {t(`CAMPAIGN_OBSERVATION_STRATEGY`)}
+                  {t(I18N_KEYS.PAGES.CAMPAIGN_OBSERVATION_STRATEGY)}
                   <span className="mandatory-span">*</span>
                 </CardLabel>
                 <RadioButtons
@@ -420,12 +420,12 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           </div>
           <Card className="campaign-counter-container">
             <HeaderComponent className="cycle-configuration-heading" style={{ marginBottom: "1.5rem" }}>
-              {t(`CAMPAIGN_ADD_START_END_DATE_TEXT`)}
+              {t(I18N_KEYS.PAGES.CAMPAIGN_ADD_START_END_DATE_TEXT)}
             </HeaderComponent>
             {[...Array(cycleConfgureDate.cycle)].map((_, index) => (
               <LabelFieldPair key={index}>
                 <CardLabel style={{width:"40%"}}>
-                  {t(`CAMPAIGN_CYCLE`)} {index + 1}
+                  {t(I18N_KEYS.PAGES.CAMPAIGN_CYCLE)} {index + 1}
                   <span className="mandatory-span">*</span>
                 </CardLabel>
                 <div className="date-field-container">

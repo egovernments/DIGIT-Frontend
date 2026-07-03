@@ -2,6 +2,7 @@ import { Card, TextInput, Button, HeaderComponent, TooltipWrapper, SVG } from "@
 import React, { useRef, Fragment, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import html2canvas from "html2canvas";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 // React 19 removed ReactDOM.findDOMNode, so Digit.Download.Image/PDF break.
 // All helpers use chart.current (already a DOM element) directly via html2canvas.
@@ -181,35 +182,35 @@ const GenericChart = ({
   const menuItems = [
     {
       code: "image",
-      i18nKey: t("ES_COMMON_DOWNLOAD_IMAGE"),
+      i18nKey: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_COMMON_DOWNLOAD_IMAGE),
       icon: "FileDownload",
     },
     {
       code: "pdf",
-      i18nKey: t("ES_COMMON_DOWNLOAD_PDF"),
+      i18nKey: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_COMMON_DOWNLOAD_PDF),
       icon: "FileDownload",
     },
     {
       code: "sharePdf",
-      i18nKey: t("ES_DSS_SHARE_PDF"),
+      i18nKey: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_PDF),
       target: "mail",
       icon: "Email",
     },
     {
       code: "sharePdf",
-      i18nKey: t("ES_DSS_SHARE_PDF"),
+      i18nKey: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_PDF),
       target: "whatsapp",
       icon: "Whatsapp",
     },
     {
       code: "shareImage",
-      i18nKey: t("ES_DSS_SHARE_IMAGE"),
+      i18nKey: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_IMAGE),
       target: "mail",
       icon: "Email",
     },
     {
       code: "shareImage",
-      i18nKey: t("ES_DSS_SHARE_IMAGE"),
+      i18nKey: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_IMAGE),
       target: "whatsapp",
       icon: "Whatsapp",
     },
@@ -298,7 +299,7 @@ const GenericChart = ({
               {exportButton}
               {showSearch && (
                 <div className="digit-field">
-                  <TextInput className={"digit-generic-chart-search-field commodity-management"} placeholder={t("GENERIC_CHART_SEARCH")} onChange={onChange} type={"search"} />
+                  <TextInput className={"digit-generic-chart-search-field commodity-management"} placeholder={t(I18N_KEYS.COMMODITY_MANAGEMENT.GENERIC_CHART_SEARCH)} onChange={onChange} type={"search"} />
                 </div>
               )}
               {showDownload && <SVG.FileDownload onClick={handleExcelDownload} fill={"#505A5F"} />}

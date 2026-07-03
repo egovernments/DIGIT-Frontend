@@ -134,11 +134,11 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
         <div className="card-container2">
         <TagComponent campaignName={campaignName} />  
           <Card className="setup-campaign-card">
-            <HeaderComponent>{t(`HCM_CAMPAIGN_DATES_HEADER`)}</HeaderComponent>
-            <p className="dates-description">{t(`HCM_CAMPAIGN_DATES_DESCRIPTION`)}</p>
+            <HeaderComponent>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CAMPAIGN_DATES_HEADER)}</HeaderComponent>
+            <p className="dates-description">{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CAMPAIGN_DATES_DESCRIPTION)}</p>
             <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
               <div className="campaign-dates">
-                <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
+                <p>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CAMPAIGN_DATES)}</p>
                 <span className="mandatory-date">*</span>
               </div>
               <div className="date-field-container">

@@ -8,6 +8,7 @@ import UserDetails from "./UserDetails";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   const getFieldValue = (fieldKey) => {
@@ -264,29 +265,29 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   // Share options - DSS pattern
   const shareOptions = navigator.share
     ? [
-        { code: "ES_DSS_SHARE_PDF", label: t("ES_DSS_SHARE_PDF") },
-        { code: "ES_DSS_SHARE_IMAGE", label: t("ES_DSS_SHARE_IMAGE") },
+        { code: "ES_DSS_SHARE_PDF", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_PDF) },
+        { code: "ES_DSS_SHARE_IMAGE", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_IMAGE) },
       ]
     : [
         {
           icon: "EmailIcon",
           code: "ES_DSS_SHARE_PDF_EMAIL",
-          label: t("ES_DSS_SHARE_PDF"),
+          label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_PDF),
         },
         {
           icon: "WhatsappIcon",
           code: "ES_DSS_SHARE_PDF_WHATSAPP",
-          label: t("ES_DSS_SHARE_PDF"),
+          label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_PDF),
         },
         {
           icon: "EmailIcon",
           code: "ES_DSS_SHARE_IMAGE_EMAIL",
-          label: t("ES_DSS_SHARE_IMAGE"),
+          label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_IMAGE),
         },
         {
           icon: "WhatsappIcon",
           code: "ES_DSS_SHARE_IMAGE_WHATSAPP",
-          label: t("ES_DSS_SHARE_IMAGE"),
+          label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_IMAGE),
         },
       ];
 
@@ -295,24 +296,24 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     {
       icon: "ImageIcon",
       code: "ES_DSS_DOWNLOAD_IMAGE",
-      label: t("ES_DSS_DOWNLOAD_IMAGE"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_DOWNLOAD_IMAGE),
     },
     {
       icon: "PDFSvg",
       code: "ES_DSS_DOWNLOAD_PDF",
-      label: t("ES_DSS_DOWNLOAD_PDF"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_DOWNLOAD_PDF),
     },
     {
       icon: "FileDownload",
       code: "ES_DSS_DOWNLOAD_EXCEL",
-      label: t("ES_DSS_DOWNLOAD_EXCEL"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_DOWNLOAD_EXCEL),
     },
   ];
 
   // Handle share/download action selection - DSS pattern
   const onActionSelect = useCallback(
     (item) => {
-      const title = t("HCM_TRANSACTION_SUMMARY");
+      const title = t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRANSACTION_SUMMARY);
       switch (item?.code) {
         case "ES_DSS_DOWNLOAD_IMAGE":
           setTimeout(() => Digit.Download.Image(fullPageRef, title), 500);
@@ -370,15 +371,15 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   );
 
   const columns = [
-  { label: t("HCM_TRN"), key: "trn", grow: 1, minWidth: "120px", sortable: false },
-  { label: t("HCM_CREATION_DATE"), key: "creationDate", sortKey: "createdTime", sortType: "numeric", grow: 1.5, minWidth: "200px", sortable: true },
-  { label: t("HCM_SENT_FROM"), key: "sentFrom", grow: 1, minWidth: "160px", sortable: false },
-  { label: t("HCM_SENT_TO"), key: "sentTo", grow: 1, minWidth: "160px", sortable: false },
-  { label: t("HCM_CREATED_BY"), key: "createdBy", grow: 1, sortable: false },
-  { label: t("HCM_STATUS"), key: "status", grow: 0.8, minWidth: "120px", sortable: false },
-  { label: t("HCM_COMMODITY"), key: "commodity", grow: 0.8, sortable: false },
-  { label: t("HCM_QUANTITY"), key: "quantity", sortType: "numeric", grow: 0.6, minWidth: "100px", sortable: true },
-  { label: t("HCM_TRANSACTION_TYPE"), key: "transactionType", grow: 1, sortable: false },
+  { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRN), key: "trn", grow: 1, minWidth: "120px", sortable: false },
+  { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CREATION_DATE), key: "creationDate", sortKey: "createdTime", sortType: "numeric", grow: 1.5, minWidth: "200px", sortable: true },
+  { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SENT_FROM), key: "sentFrom", grow: 1, minWidth: "160px", sortable: false },
+  { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SENT_TO), key: "sentTo", grow: 1, minWidth: "160px", sortable: false },
+  { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CREATED_BY), key: "createdBy", grow: 1, sortable: false },
+  { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STATUS), key: "status", grow: 0.8, minWidth: "120px", sortable: false },
+  { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_COMMODITY), key: "commodity", grow: 0.8, sortable: false },
+  { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_QUANTITY), key: "quantity", sortType: "numeric", grow: 0.6, minWidth: "100px", sortable: true },
+  { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRANSACTION_TYPE), key: "transactionType", grow: 1, sortable: false },
 ];
 
   // Helper to map status to CSS class
@@ -504,11 +505,11 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       {/* Transaction List */}
       {/* <div className="cm-table-card">
         <div className="cm-table-header">
-          <h3 className="cm-table-title">{t("HCM_TRANSACTION_LIST")}</h3>
+          <h3 className="cm-table-title">{t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRANSACTION_LIST)}</h3>
           <input
             type="text"
             className="cm-search-input"
-            placeholder={t("ES_COMMON_SEARCH")}
+            placeholder={t(I18N_KEYS.PAGES.ES_COMMON_SEARCH)}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -532,7 +533,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
           <Button
             type="actionButton"
             variation="teritiary"
-            label={t("ES_DSS_SHARE")}
+            label={t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE)}
             options={shareOptions}
             optionsKey="label"
             showBottom={true}
@@ -547,7 +548,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
           <Button
             type="actionButton"
             variation="teritiary"
-            label={t("ES_DSS_DOWNLOAD")}
+            label={t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_DOWNLOAD)}
             options={downloadOptions}
             optionsKey="label"
             showBottom={true}
@@ -563,7 +564,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       </div> */}
 
       <GenericChart
-        header={t("HCM_TRANSACTION_LIST")}
+        header={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRANSACTION_LIST)}
         showSearch={true}
         className={"digit-stock-transactions-summary-tab"}
         subHeader={""}

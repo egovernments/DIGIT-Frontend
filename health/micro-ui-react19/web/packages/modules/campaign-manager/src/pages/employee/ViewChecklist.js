@@ -248,7 +248,7 @@ const ViewChecklist = () => {
         ))}
         {
           <div style={{ display: "flex",gap:"1.5rem" }}>
-            <div style={{ width: "20%", fontWeight: "500"}}>{t("CHECKLIST_HELP_TEXT")}</div>
+            <div style={{ width: "20%", fontWeight: "500"}}>{t(I18N_KEYS.PAGES.CHECKLIST_HELP_TEXT)}</div>
             <TextArea
               disabled={true}
               className="tetxinput-example"

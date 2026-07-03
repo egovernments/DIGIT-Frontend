@@ -286,7 +286,7 @@ const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
         }
         // Block campaign update if no boundary data exists for the selected hierarchy type
         if (hierarchyType && (!hierarchyData || hierarchyData.length === 0)) {
-          setShowToast({ key: "error", label: t("HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY") });
+          setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY) });
           setShouldUpdate(false);
           return;
         }
@@ -633,14 +633,14 @@ const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
           const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData);
           const missedType = recursiveParentFind(formData?.boundaryType?.selectedData);
           if (!validateBoundary) {
-            setShowToast({ key: "error", label: t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY") });
+            setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY) });
             return false;
           } else if (recursiveParentFind(formData?.boundaryType?.selectedData).length > 0) {
             setShowToast({
               key: "error",
-              label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(`${hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(
+              label: `${t(I18N_KEYS.PAGES.HCM_CAMPAIGN_FOR)} ${t(`${hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(
                 missedType?.[0]?.code
-              )} ${t(`HCM_CAMPAIGN_CHILD_NOT_PRESENT`)}`,
+              )} ${t(I18N_KEYS.PAGES.HCM_CAMPAIGN_CHILD_NOT_PRESENT)}`,
             });
             return false;
           }
@@ -1032,13 +1032,13 @@ const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
         onSubmit={onSubmit}
         isDisabled={isDataCreating}
         showSecondaryLabel={true}
-        secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t("HCM_BACK") : noAction === "false" ? null : t("HCM_BACK")}
+        secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t(I18N_KEYS.COMMON.HCM_BACK) : noAction === "false" ? null : t(I18N_KEYS.COMMON.HCM_BACK)}
         actionClassName={"actionBarClass setup-campaign-action-bar"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
         noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
-        label={filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_UPDATE") : t("HCM_NEXT")}
+        label={filteredConfig?.[0]?.form?.[0]?.isLast === true ? t(I18N_KEYS.PAGES.HCM_UPDATE) : t(I18N_KEYS.COMMON.HCM_NEXT)}
         secondaryActionIcon={<SVG.ArrowBack />}
         primaryActionIconAsSuffix={true}
         primaryActionIcon={"ArrowForward"}

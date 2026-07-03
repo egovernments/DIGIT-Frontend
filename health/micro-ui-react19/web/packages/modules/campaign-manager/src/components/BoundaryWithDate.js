@@ -82,7 +82,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
       </div>
       <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start", gap: "1rem" }}>
         <div className="campaign-dates">
-          <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
+          <p>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CAMPAIGN_DATES)}</p>
           <span className="mandatory-date">*</span>
         </div>
         <div className="date-field-container">

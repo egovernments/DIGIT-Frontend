@@ -261,7 +261,7 @@ const SetupCampaign = ({ hierarchyType: hierarchyTypeProp, hierarchyData: hierar
         }
         // Block campaign create/update if no boundary data exists for the selected hierarchy type
         if (hierarchyType && (!hierarchyData || hierarchyData.length === 0)) {
-          setShowToast({ key: "error", label: t("HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY") });
+          setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY) });
           setShouldUpdate(false);
           return;
         }
@@ -1175,7 +1175,7 @@ const SetupCampaign = ({ hierarchyType: hierarchyTypeProp, hierarchyData: hierar
         isDisabled={isDataCreating}
         onSubmit={onSubmit}
         showSecondaryLabel={currentKey > 1 ? true : false}
-        secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t("HCM_BACK") : noAction === "false" ? null : t("HCM_BACK")}
+        secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t(I18N_KEYS.COMMON.HCM_BACK) : noAction === "false" ? null : t(I18N_KEYS.COMMON.HCM_BACK)}
         actionClassName={"actionBarClass setup-campaign-action-bar"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"

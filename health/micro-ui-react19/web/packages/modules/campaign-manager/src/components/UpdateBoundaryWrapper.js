@@ -288,8 +288,8 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
     <>
       <Card>
         <TagComponent campaignName={campaignName} />
-        <HeaderComponent className={"update-boundary-header"}>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
-        <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
+        <HeaderComponent className={"update-boundary-header"}>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_SELECT_BOUNDARY)}</HeaderComponent>
+        <p className="description-type">{t(I18N_KEYS.COMPONENTS.CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION)}</p>
         {hierarchyData && (
           <Wrapper
             hierarchyType={hierarchyType}

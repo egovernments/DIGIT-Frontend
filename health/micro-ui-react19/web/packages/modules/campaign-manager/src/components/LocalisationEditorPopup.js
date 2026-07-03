@@ -2,6 +2,7 @@ import React, { useState, useEffect, forwardRef, useImperativeHandle } from "rea
 import { TextInput, Tab, Loader } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const LocalisationEditorPopup = forwardRef(({ locales, languages, currentLocale, localisationData, module = "hcm-checklist", tenantId }, ref) => {
   const { t } = useTranslation();
@@ -95,7 +96,7 @@ const LocalisationEditorPopup = forwardRef(({ locales, languages, currentLocale,
               [row.code]: { ...prev[row.code], [activeLocale]: e.target.value },
             }))
           }
-          placeholder={t("ENTER_TRANSLATION")}
+          placeholder={t(I18N_KEYS.COMPONENTS.ENTER_TRANSLATION)}
         >
         </TextInput>
       ),

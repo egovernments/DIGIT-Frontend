@@ -9,6 +9,7 @@ import GenericChart from "./GenericChart";
 import CommodityShipmentPopup from "./CommodityShipmentPopup";
 import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const toCamelCase = (str) =>
   str.split(" ")
@@ -296,7 +297,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       // Determine type: if sender/receiver is not in facility API response, it's a staff member
       let rowType;
       if (!facilityNameMap[senderId] && !facilityNameMap[receiverId]) {
-        rowType = t("HCM_STAFF");
+        rowType = t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STAFF);
       } else if (stock.senderType === "WAREHOUSE" || stock.receiverType === "WAREHOUSE") {
         rowType = "Warehouse";
       } else {
@@ -436,7 +437,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         rows.push({
           facilityId,
           facilityName: resolveName(facilityId),
-          facilityType: facilityUsageMap[facilityId] || (!facilityNameMap[facilityId] ? t("HCM_STAFF") : "—"),
+          facilityType: facilityUsageMap[facilityId] || (!facilityNameMap[facilityId] ? t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STAFF) : "—"),
           boundary: getBoundaryDisplay(facilityId),
           boundaryHierarchy: getBoundaryHierarchyDisplay(facilityId),
           productVariantId: pvId,
@@ -510,56 +511,56 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
 
   const columns = [
     {
-      label: t("HCM_FROM_FACILITY"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_FROM_FACILITY),
       key: "warehouseName",
       grow: 1.5,
       minWidth: "180px",
       sortable: true,
     },
     {
-      label: t("HCM_TO_FACILITY"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TO_FACILITY),
       key: "toFacility",
       grow: 1.2,
       minWidth: "160px",
       sortable: true,
     },
     {
-      label: t("HCM_TYPE"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TYPE),
       key: "type",
       grow: 0.6,
       minWidth: "100px",
       sortable: true,
     },
     {
-      label: t("HCM_BOUNDARY"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BOUNDARY),
       key: "boundary",
       grow: 1.2,
       minWidth: "160px",
       sortable: true,
     },
     {
-      label: t("HCM_COMMODITY"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_COMMODITY),
       key: "commodity",
       grow: 0.6,
       minWidth: "100px",
       sortable: true,
     },
     {
-      label: t("HCM_QUANTITY"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_QUANTITY),
       key: "quantity",
       grow: 0.6,
       minWidth: "100px",
       sortable: true,
     },
     {
-      label: t("HCM_STATUS"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STATUS),
       key: "displayStatus",
       grow: 0.8,
       minWidth: "120px",
       sortable: true,
     },
     ...(!isCompleted ? [{
-      label: t("HCM_ACTION"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_ACTION),
       key: "action",
       grow: 1.5,
       minWidth: "240px",
@@ -574,17 +575,17 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   }, [facilityStockSummaryRows, summarySearchQuery]);
 
   const summaryColumns = [
-    { label: t("HCM_CHILD_FACILITY"),      key: "facilityName",      grow: 1.5, minWidth: "180px", sortable: true },
-    { label: t("HCM_TYPE"),                key: "facilityType",      grow: 0.8, minWidth: "120px", sortable: true },
-    { label: t("HCM_BOUNDARY"),            key: "boundary",          grow: 1.2, minWidth: "160px", sortable: true },
-    { label: t("HCM_BOUNDARY_HIERARCHY"),  key: "boundaryHierarchy", grow: 2.5, minWidth: "280px", sortable: false },
-    { label: t("HCM_COMMODITY"),           key: "commodity",         grow: 0.8, minWidth: "120px", sortable: true },
-    { label: t("HCM_TOTAL_RECEIVED"), key: "totalReceived", grow: 0.7, minWidth: "110px", sortable: true },
-    { label: t("HCM_TOTAL_ACCEPTED"), key: "totalAccepted", grow: 0.7, minWidth: "110px", sortable: true },
-    { label: t("HCM_TOTAL_ISSUED"),   key: "totalIssued",   grow: 0.7, minWidth: "110px", sortable: true },
-    { label: t("HCM_TOTAL_REJECTED"), key: "totalRejected", grow: 0.7, minWidth: "110px", sortable: true },
-    { label: t("HCM_TOTAL_RETURNED"), key: "totalReturned", grow: 0.7, minWidth: "110px", sortable: true },
-    { label: t("HCM_BALANCE"),        key: "balance",       grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CHILD_FACILITY),      key: "facilityName",      grow: 1.5, minWidth: "180px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TYPE),                key: "facilityType",      grow: 0.8, minWidth: "120px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BOUNDARY),            key: "boundary",          grow: 1.2, minWidth: "160px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BOUNDARY_HIERARCHY),  key: "boundaryHierarchy", grow: 2.5, minWidth: "280px", sortable: false },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_COMMODITY),           key: "commodity",         grow: 0.8, minWidth: "120px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_RECEIVED), key: "totalReceived", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_ACCEPTED), key: "totalAccepted", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_ISSUED),   key: "totalIssued",   grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_REJECTED), key: "totalRejected", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_RETURNED), key: "totalReturned", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BALANCE),        key: "balance",       grow: 0.7, minWidth: "110px", sortable: true },
   ];
 
   const summaryCellRenderer = {
@@ -635,7 +636,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
 
   // Transaction List export — called by onActionSelect (ES_DSS_DOWNLOAD_EXCEL) and the inline button
   const handleExcelDownload = useCallback(() => {
-    const label = t("HCM_TRANSACTION_LIST");
+    const label = t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRANSACTION_LIST);
     exportTableToXlsx(
       filteredData,
       columns.filter((col) => col.key !== "action"),
@@ -646,36 +647,36 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
 
   // Stock Summary List export
   const handleSummaryExport = useCallback(() => {
-    const label = t("HCM_STOCK_SUMMARY_LIST");
+    const label = t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_SUMMARY_LIST);
     exportTableToXlsx(summaryFilteredData, summaryColumns, label, label);
   }, [summaryFilteredData, summaryColumns, exportTableToXlsx, t]);
 
   // Share options - DSS pattern
   const shareOptions = navigator.share
     ? [
-      { code: "ES_DSS_SHARE_PDF", label: t("ES_DSS_SHARE_PDF") },
-      { code: "ES_DSS_SHARE_IMAGE", label: t("ES_DSS_SHARE_IMAGE") },
+      { code: "ES_DSS_SHARE_PDF", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_PDF) },
+      { code: "ES_DSS_SHARE_IMAGE", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_IMAGE) },
     ]
     : [
       {
         icon: "EmailIcon",
         code: "ES_DSS_SHARE_PDF_EMAIL",
-        label: t("ES_DSS_SHARE_PDF"),
+        label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_PDF),
       },
       {
         icon: "WhatsappIcon",
         code: "ES_DSS_SHARE_PDF_WHATSAPP",
-        label: t("ES_DSS_SHARE_PDF"),
+        label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_PDF),
       },
       {
         icon: "EmailIcon",
         code: "ES_DSS_SHARE_IMAGE_EMAIL",
-        label: t("ES_DSS_SHARE_IMAGE"),
+        label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_IMAGE),
       },
       {
         icon: "WhatsappIcon",
         code: "ES_DSS_SHARE_IMAGE_WHATSAPP",
-        label: t("ES_DSS_SHARE_IMAGE"),
+        label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_IMAGE),
       },
     ];
 
@@ -684,24 +685,24 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     {
       icon: "ImageIcon",
       code: "ES_DSS_DOWNLOAD_IMAGE",
-      label: t("ES_DSS_DOWNLOAD_IMAGE"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_DOWNLOAD_IMAGE),
     },
     {
       icon: "PDFSvg",
       code: "ES_DSS_DOWNLOAD_PDF",
-      label: t("ES_DSS_DOWNLOAD_PDF"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_DOWNLOAD_PDF),
     },
     {
       icon: "FileDownload",
       code: "ES_DSS_DOWNLOAD_EXCEL",
-      label: t("ES_DSS_DOWNLOAD_EXCEL"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_DOWNLOAD_EXCEL),
     },
   ];
 
   // Handle share/download action selection - DSS pattern
   const onActionSelect = useCallback(
     (item) => {
-      const title = t("HCM_STOCK_SUMMARY");
+      const title = t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_SUMMARY);
       switch (item?.code) {
         case "ES_DSS_DOWNLOAD_IMAGE":
           setTimeout(() => Digit.Download.Image(fullPageRef, title), 500);
@@ -796,9 +797,9 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         onClick={() =>
           setShipmentFacility({ id: row.facilityId, name: row.warehouseName, productVariantId: row.productVariantId })
         }
-        title={t("HCM_SHIP_COMMODITY")}
+        title={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SHIP_COMMODITY)}
         icon={"Add"}
-        label={t("HCM_SHIP_COMMODITY")}
+        label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SHIP_COMMODITY)}
         variation={"secondary"}
       />
     ),
@@ -849,11 +850,11 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
 
       {/* <div className="cm-table-card">
         <div className="cm-table-header">
-          <div className="cm-table-title">{t("HCM_TRANSACTION_LIST")}</div>
+          <div className="cm-table-title">{t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRANSACTION_LIST)}</div>
           <input
             type="text"
             className="cm-search-input"
-            placeholder={t("ES_COMMON_SEARCH")}
+            placeholder={t(I18N_KEYS.PAGES.ES_COMMON_SEARCH)}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -877,7 +878,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           <Button
             type="actionButton"
             variation="teritiary"
-            label={t("ES_DSS_SHARE")}
+            label={t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE)}
             options={shareOptions}
             optionsKey="label"
             showBottom={true}
@@ -892,7 +893,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           <Button
             type="actionButton"
             variation="teritiary"
-            label={t("ES_DSS_DOWNLOAD")}
+            label={t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_DOWNLOAD)}
             options={downloadOptions}
             optionsKey="label"
             showBottom={true}
@@ -907,19 +908,19 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         </div>
       </div> */}
 
-      <div className="digit-dss-switch-tabs" style={{ marginBottom: "8px" }}>
+      <div className="digit-dss-switch-tabs" style={{ marginBottom: "8px",width:"100%" }}>
         <div className="digit-dss-switch-tab-wrapper">
           <div
             className={activeSubTab === "transactions" ? "digit-dss-switch-tab-selected" : "digit-dss-switch-tab-unselected"}
             onClick={() => setActiveSubTab("transactions")}
           >
-            {t("HCM_TRANSACTION_LIST")}
+            {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRANSACTION_LIST)}
           </div>
           <div
             className={activeSubTab === "stockSummary" ? "digit-dss-switch-tab-selected" : "digit-dss-switch-tab-unselected"}
             onClick={() => setActiveSubTab("stockSummary")}
           >
-            {t("HCM_STOCK_SUMMARY_LIST")}
+            {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_SUMMARY_LIST)}
           </div>
         </div>
       </div>
@@ -935,7 +936,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
             <Button
               type="button"
               variation="secondary"
-              label={t("HCM_EXPORT_XLSX")}
+              label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_EXPORT_XLSX)}
               icon="FileDownload"
               onClick={handleExcelDownload}
               size="medium"
@@ -971,7 +972,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
             <Button
               type="button"
               variation="secondary"
-              label={t("HCM_EXPORT_XLSX")}
+              label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_EXPORT_XLSX)}
               icon="FileDownload"
               onClick={handleSummaryExport}
               size="medium"
@@ -1010,7 +1011,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           onClose={() => setShipmentFacility(null)}
           onSuccess={() => {
             setShipmentFacility(null);
-            setShowToast({ key: "success", label: t("HCM_SHIPMENT_CREATED_SUCCESS") });
+            setShowToast({ key: "success", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SHIPMENT_CREATED_SUCCESS) });
             if (refetchStockData) {
               setTimeout(() => refetchStockData(), 2000);
             }

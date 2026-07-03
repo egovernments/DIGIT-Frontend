@@ -161,7 +161,7 @@ const CloneCampaignWrapper = (props) => {
           <div className="container">
             <div className="card-container2">
               <div>
-                {/* <HeaderComponent className={"popUp-header"}>{t("HCM_CAMPAIGN_NAME_HEADER")}</HeaderComponent> */}
+                {/* <HeaderComponent className={"popUp-header"}>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_NAME_HEADER)}</HeaderComponent> */}
                 <p className="name-description">{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_NAME_DESCRIPTION)}</p>
                 <div
                   className="clone-campaign-fields-wrapper"

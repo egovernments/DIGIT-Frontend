@@ -1800,9 +1800,9 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
     <Fragment>
       {/* Moved to SidePanelApp header for sticky behavior */}
       {/* <div className="app-config-drawer-subheader">
-        <div className={"app-config-drawer-subheader-text"}>{t("APPCONFIG_PROPERTIES")}</div>
+        <div className={"app-config-drawer-subheader-text"}>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_PROPERTIES)}</div>
         <span className="icon-wrapper new">
-          <ConsoleTooltip className="app-config-tooltip new" toolTipContent={t("TIP_APPCONFIG_PROPERTIES")} />
+          <ConsoleTooltip className="app-config-tooltip new" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_PROPERTIES)} />
         </span>
       </div>
       <Divider /> */}

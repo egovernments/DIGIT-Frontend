@@ -6,6 +6,7 @@ import { AlertCard, PopUp, Toast, Button, Card, HeaderComponent, Loader } from "
 import { downloadExcelWithCustomName } from "../../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../TagComponent";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
  * for different types of data in a web application.
@@ -650,7 +651,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //   // const expectedHeaders = XLSX.utils.sheet_to_json(sheet, {
   //   //   header: 1,
   //   // })[0];
-  //   const excludedSheetNames = [t("HCM_README_SHEETNAME"), t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")];
+  //   const excludedSheetNames = [t("HCM_README_SHEETNAME"), t(I18N_KEYS.COMPONENTS.HCM_ADMIN_CONSOLE_BOUNDARY_DATA)];
   //   let nextSheetName = null;
   //   let expectedHeaders = [];
 
@@ -685,7 +686,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //   for (let i = 0; i < workbook.SheetNames.length; i++) {
   //     const sheetName = workbook?.SheetNames[i];
 
-  //     if (sheetName === t("HCM_README_SHEETNAME") || sheetName === t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
+  //     if (sheetName === t("HCM_README_SHEETNAME") || sheetName === t(I18N_KEYS.COMPONENTS.HCM_ADMIN_CONSOLE_BOUNDARY_DATA)) {
   //       continue;
   //     }
 
@@ -716,7 +717,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //   for (let i = 0; i < workbook.SheetNames.length; i++) {
   //     const sheetName = workbook?.SheetNames[i];
 
-  //     if (sheetName === t("HCM_README_SHEETNAME") || sheetName === t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
+  //     if (sheetName === t("HCM_README_SHEETNAME") || sheetName === t(I18N_KEYS.COMPONENTS.HCM_ADMIN_CONSOLE_BOUNDARY_DATA)) {
   //       continue;
   //     }
 
@@ -790,9 +791,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   // };
 
   const sheetTypeMap = {
-    facility: t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES"),
-    boundary: t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA"),
-    user: t("HCM_ADMIN_CONSOLE_USER_LIST"),
+    facility: t(I18N_KEYS.COMPONENTS.HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES),
+    boundary: t(I18N_KEYS.COMPONENTS.HCM_ADMIN_CONSOLE_BOUNDARY_DATA),
+    user: t(I18N_KEYS.COMPONENTS.HCM_ADMIN_CONSOLE_USER_LIST),
   };
 
   // const validateExcel = (selectedFile) => {
@@ -849,7 +850,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   //         jsonData = jsonData.filter((element) => element);
   //         if (type === "boundary") {
-  //           if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
+  //           if (workbook?.SheetNames.filter(sheetName => sheetName !== t(I18N_KEYS.COMPONENTS.HCM_ADMIN_CONSOLE_BOUNDARY_DATA)).length == 0) {
   //             const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
   //             setErrorsType((prevErrors) => ({
   //               ...prevErrors,
@@ -860,7 +861,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //           }
   //         } else
   //         if (type === "facility") {
-  //           if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")).length == 0) {
+  //           if (workbook?.SheetNames.filter((sheetName) => sheetName == t(I18N_KEYS.COMPONENTS.HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES)).length == 0) {
   //             const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
   //             setErrorsType((prevErrors) => ({
   //               ...prevErrors,
@@ -886,7 +887,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //             // }
   //           }
   //         } else if (type === "userWithBoundary") {
-  //           if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_USER_LIST")).length == 0) {
+  //           if (workbook?.SheetNames.filter((sheetName) => sheetName == t(I18N_KEYS.COMPONENTS.HCM_ADMIN_CONSOLE_USER_LIST)).length == 0) {
   //             const errorMessage = t("HCM_INVALID_USER_SHEET");
   //             setErrorsType((prevErrors) => ({
   //               ...prevErrors,
@@ -948,7 +949,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   const onBulkUploadSubmit = async (file) => {
     if (file.length > 1) {
-      setShowToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_ERROR_MORE_THAN_ONE_FILE) });
       return;
     }
     try {
@@ -958,14 +959,14 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, file, tenantId);
       if (!fileStoreIds || fileStoreIds.length === 0) {
         setUploadLoader(false);
-        setShowToast({ key: "error", label: t("HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED") });
-        throw new Error(t("HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED"));
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED) });
+        throw new Error(t(I18N_KEYS.COMPONENTS.HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED));
       }
       const filesArray = [fileStoreIds?.[0]?.fileStoreId];
       const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
       if (!fileUrl || fileUrl.length === 0) {
         setUploadLoader(false);
-        throw new Error(t("HCM_CONSOLE_ERROR_FILE_FETCH_FAILED"));
+        throw new Error(t(I18N_KEYS.COMPONENTS.HCM_CONSOLE_ERROR_FILE_FETCH_FAILED));
       }
       const fileData = fileUrl
         .map((i) => {
@@ -988,7 +989,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       setErrorsType(0);
       // const validate = await validateExcel(file[0]);
     } catch (error) {
-      setShowUploadToast({ key: "error", label: t("HCM_ERROR_FILE_UPLOAD") });
+      setShowUploadToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_ERROR_FILE_UPLOAD) });
     } finally {
       setUploadLoader(false);
     }
@@ -1027,7 +1028,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       if (!generatedResource?.fileStoreId && !generatedResource?.fileStoreid) {
         setShowToast({
           key: "info",
-          label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME"),
+          label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME),
         });
         return;
       }
@@ -1041,7 +1042,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         customName: customFileName,
       });
     } catch (error) {
-      setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.ERROR_WHILE_DOWNLOADING) });
     }
   };
 
@@ -1133,7 +1134,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             const isValidFile = !hasSheetErrors && !isExcelIngestionInvalid;
 
             if (isValidFile) {
-              setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
+              setShowToast({ key: "success", label: t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_COMPLETED) });
               if (temp?.id) {
                 setResourceId(temp?.id);
               }
@@ -1149,7 +1150,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               // Handle both casing: processedFilestoreId (old) and processedFileStoreId (unified-console API)
               const processedFileStore = temp?.processedFilestoreId || temp?.processedFileStoreId;
               if (!processedFileStore) {
-                setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED") });
+                setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED) });
                 // setIsValidation(true);
                 return;
               } else {
@@ -1171,18 +1172,18 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   .map(({ id, ...rest }) => rest);
                 // onFileDelete(uploadedFile);
                 setUploadedFile(fileData);
-                setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN") });
+                setShowToast({ key: "warning", label: t(I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN) });
                 setIsError(true);
               }
             }
           } else {
             setLoader(false);
             setIsValidation(false);
-            // setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+            // setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED), transitionTime: 5000000 });
             // Handle both casing: processedFilestoreId (old) and processedFileStoreId (unified-console API)
             const processedFileStore = temp?.processedFilestoreId || temp?.processedFileStoreId;
             if (!processedFileStore) {
-              setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+              setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED), transitionTime: 5000000 });
               return;
             } else {
               setIsError(true);
@@ -1203,7 +1204,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 .map(({ id, ...rest }) => rest);
               // onFileDelete(uploadedFile);
               setUploadedFile(fileData);
-              setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN"), transitionTime: 5000000 });
+              setShowToast({ key: "warning", label: t(I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN), transitionTime: 5000000 });
               setIsError(true);
             }
           }
@@ -1257,31 +1258,31 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         const generatedResource = response?.GenerationDetails?.[0];
         if (!generatedResource) {
           setDownloadError(true);
-          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
           return;
         }
 
         if (generatedResource?.status === "failed") {
           setDownloadError(true);
-          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.ERROR_WHILE_DOWNLOADING) });
           return;
         }
 
         if (generatedResource?.status === "inprogress") {
           setDownloadError(true);
-          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
           return;
         }
 
         const fileStoreId = generatedResource?.fileStoreid || generatedResource?.fileStoreId;
         if (!fileStoreId) {
           setDownloadError(true);
-          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
           return;
         }
         // Download the file directly using fileStoreId
         setDownloadError(false);
-        const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_Unified_Template` : `${campaignName}_Unified_Template`;
+        const customFileName = parentId ? `${campaignName}_${t(I18N_KEYS.COMPONENTS.HCM_FILLED)}_Unified_Template` : `${campaignName}_Unified_Template`;
         downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName });
         setDownloadedTemplates((prev) => ({
           ...prev,
@@ -1292,10 +1293,10 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         const errorCode = error?.response?.data?.Errors?.[0]?.code;
         if (errorCode === "NativeIoException") {
           setDownloadError(true);
-          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
         } else {
           setDownloadError(true);
-          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.ERROR_WHILE_DOWNLOADING) });
         }
       }
       return;
@@ -1369,12 +1370,12 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         const fileStoreId = resource?.fileStoreid || resource?.fileStoreId;
         if (!fileStoreId) {
           setDownloadError(true);
-          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
           return;
         }
         setDownloadError(false);
         const templateLabel = type === "attendanceRegisterAttendee" ? "Attendee_Template" : "Attendance_Register_Template";
-        const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_${templateLabel}` : `${campaignName}_${templateLabel}`;
+        const customFileName = parentId ? `${campaignName}_${t(I18N_KEYS.COMPONENTS.HCM_FILLED)}_${templateLabel}` : `${campaignName}_${templateLabel}`;
         downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName });
         setDownloadedTemplates((prev) => ({
           ...prev,
@@ -1422,10 +1423,10 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         // If failed or timeout after generate, stop
         if (resource?.status === "failed") {
           setDownloadError(true);
-          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.ERROR_WHILE_DOWNLOADING) });
         } else {
           setDownloadError(true);
-          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
         }
       } catch (error) {
         setLoader(false);
@@ -1433,10 +1434,10 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         const errorCode = error?.response?.data?.Errors?.[0]?.code;
         if (errorCode === "NativeIoException") {
           setDownloadError(true);
-          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
         } else {
           setDownloadError(true);
-          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.ERROR_WHILE_DOWNLOADING) });
         }
       }
       return;
@@ -1458,17 +1459,17 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         onSuccess: async (result) => {
           if (result?.GeneratedResource?.[0]?.status === "failed") {
             setDownloadError(true);
-            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+            setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.ERROR_WHILE_DOWNLOADING) });
             return;
           }
           if (result?.GeneratedResource?.[0]?.status === "inprogress") {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
             return;
           }
           if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
             return;
           }
           const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
@@ -1487,7 +1488,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setDownloadError(false);
             if (fileData?.[0]?.id) {
               const customFileName = parentId
-                ? `${campaignName}_${t("HCM_FILLED")}_${fileData[0].filename}`
+                ? `${campaignName}_${t(I18N_KEYS.COMPONENTS.HCM_FILLED)}_${fileData[0].filename}`
                 : `${campaignName}_${fileData[0].filename}`;
               downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: customFileName });
               setDownloadedTemplates((prev) => ({
@@ -1497,17 +1498,17 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             }
           } else {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
+            setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT) });
           }
         },
         onError: (error, result) => {
           const errorCode = error?.response?.data?.Errors?.[0]?.code;
           if (errorCode == "NativeIoException") {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
           } else {
             setDownloadError(true);
-            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+            setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.ERROR_WHILE_DOWNLOADING) });
           }
         },
       }
@@ -1520,7 +1521,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     try {
       downloadExcelWithCustomName({ fileStoreId: processedFileStoreId, customName: `${campaignName}_${suffix}` });
     } catch (error) {
-      setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.ERROR_WHILE_DOWNLOADING) });
     }
   };
   const downloadCurrentAttendeesFile = () => downloadCurrentFile("Current_Attendees");
@@ -1557,16 +1558,16 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const getDownloadLabel = () => {
     if (parentId) {
       if (type === "boundary") {
-        return t("WBH_DOWNLOAD_CURRENT_TARGET");
+        return t(I18N_KEYS.COMPONENTS.WBH_DOWNLOAD_CURRENT_TARGET);
       } else if (type === "facility") {
-        return t("WBH_DOWNLOAD_CURRENT_FACILITY");
+        return t(I18N_KEYS.COMPONENTS.WBH_DOWNLOAD_CURRENT_FACILITY);
       } else if (type === "unified-console") {
-        return t("WBH_DOWNLOAD_CURRENT_UNIFIED_DATA");
+        return t(I18N_KEYS.COMPONENTS.WBH_DOWNLOAD_CURRENT_UNIFIED_DATA);
       } else {
-        return t("WBH_DOWNLOAD_CURRENT_USER");
+        return t(I18N_KEYS.COMPONENTS.WBH_DOWNLOAD_CURRENT_USER);
       }
     } else {
-      return t("WBH_DOWNLOAD_TEMPLATE");
+      return t(I18N_KEYS.COMPONENTS.WBH_DOWNLOAD_TEMPLATE);
     }
   };
 
@@ -1574,7 +1575,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     <>
       <div className="container-full" style={{ width: "100%" }}>
         {loader && <Loader page={true} variant={"OverlayLoader"} loaderText={t(loaderText)} />}
-        {uploadLoader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_UPLOADING_FILE")} />}
+        {uploadLoader && <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMPONENTS.CAMPAIGN_UPLOADING_FILE)} />}
         <div className={parentId ? "card-container2" : "card-container1"}>
           <Card>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -1582,8 +1583,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
              <div style={{ display: "flex", gap: "0.75rem" }}>
                 {type === "attendanceRegisterAttendee" && props?.props?.resourceDetails?.[0]?.processedFileStoreId && (
                   <Button
-                    label={t("HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE")}
-                    title={t("HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE")}
+                    label={t(I18N_KEYS.COMPONENTS.HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE)}
+                    title={t(I18N_KEYS.COMPONENTS.HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE)}
                     variation="secondary"
                     icon={"FileDownload"}
                     type="button"
@@ -1592,8 +1593,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 )}
                 {type === "attendanceRegister" && props?.props?.resourceDetails?.[0]?.processedFileStoreId && (
                   <Button
-                    label={t("HCM_DOWNLOAD_CURRENT_REGISTER_FILE")}
-                    title={t("HCM_DOWNLOAD_CURRENT_REGISTER_FILE")}
+                    label={t(I18N_KEYS.COMPONENTS.HCM_DOWNLOAD_CURRENT_REGISTER_FILE)}
+                    title={t(I18N_KEYS.COMPONENTS.HCM_DOWNLOAD_CURRENT_REGISTER_FILE)}
                     variation="secondary"
                     icon={"FileDownload"}
                     type="button"
@@ -1615,27 +1616,27 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             <div className="campaign-bulk-upload">
               <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
                 {type === "boundary"
-                  ? t("WBH_UPLOAD_TARGET")
+                  ? t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_TARGET)
                   : type === "facility"
-                  ? t("WBH_UPLOAD_FACILITY")
+                  ? t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_FACILITY)
                   : type === "unified-console"
-                  ? t("WBH_UPLOAD_UNIFIED_DATA")
+                  ? t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_UNIFIED_DATA)
                   : type === "attendanceRegister"
-                  ? t("WBH_UPLOAD_ATTENDANCE_REGISTER")
-                  : t("WBH_UPLOAD_USER")}
+                  ? t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_ATTENDANCE_REGISTER)
+                  : t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_USER)}
               </HeaderComponent>
             </div>
             {uploadedFile.length === 0 && (
               <div className="info-text">
                 {type === "boundary"
-                  ? t("HCM_BOUNDARY_MESSAGE")
+                  ? t(I18N_KEYS.COMPONENTS.HCM_BOUNDARY_MESSAGE)
                   : type === "facility"
-                  ? t("HCM_FACILITY_MESSAGE")
+                  ? t(I18N_KEYS.COMPONENTS.HCM_FACILITY_MESSAGE)
                   : type === "unified-console"
-                  ? t("HCM_UNIFIED_DATA_MESSAGE")
+                  ? t(I18N_KEYS.COMPONENTS.HCM_UNIFIED_DATA_MESSAGE)
                   : type === "attendanceRegister"
-                  ? t("HCM_ATTENDANCE_REGISTER_MESSAGE")
-                  : t("HCM_USER_MESSAGE")}
+                  ? t(I18N_KEYS.COMPONENTS.HCM_ATTENDANCE_REGISTER_MESSAGE)
+                  : t(I18N_KEYS.COMPONENTS.HCM_USER_MESSAGE)}
               </div>
             )}
             <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
@@ -1646,7 +1647,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 }}
                 variant="error"
                 style={{ marginLeft: "0rem", maxWidth: "100%" }}
-                label={t("HCM_ERROR")}
+                label={t(I18N_KEYS.COMPONENTS.HCM_ERROR)}
                 additionalElements={[
                   <React.Fragment key={type}>
                     {errorsType[type] && (
@@ -1695,26 +1696,26 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             footerclassName={"popUpFooter"}
             heading={
               type === "boundary"
-                ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
+                ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER)
                 : type === "facility"
-                ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
+                ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER)
                 : type === "unified-console"
-                ? t("ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_HEADER")
+                ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_HEADER)
                 : type === "attendanceRegister"
-                ? t("ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_HEADER")
-                : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
+                ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_HEADER)
+                : t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER)
             }
             children={[
               <div>
                 {type === "boundary"
-                  ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
+                  ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT)
                   : type === "facility"
-                  ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
+                  ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT)
                   : type === "unified-console"
-                  ? t("ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT")
+                  ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT)
                   : type === "attendanceRegister"
-                  ? t("ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_TEXT")
-                  : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT")}
+                  ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_TEXT)
+                  : t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT)}
               </div>,
             ]}
             onOverlayClick={() => {
@@ -1725,8 +1726,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 type={"button"}
                 size={"large"}
                 variation={"secondary"}
-                label={t("HCM_CAMPAIGN_UPLOAD_CANCEL")}
-                title={t("HCM_CAMPAIGN_UPLOAD_CANCEL")}
+                label={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_UPLOAD_CANCEL)}
+                title={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_UPLOAD_CANCEL)}
                 onClick={() => {
                   setShowPopUp(false);
                 }}
@@ -1737,7 +1738,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 variation={"primary"}
                 icon={"FileDownload"}
                 label={getDownloadLabel()}
-                title={getDownloadLabel() || t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
+                title={getDownloadLabel() || t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_DOWNLOAD_TEMPLATE)}
                 onClick={() => {
                   downloadTemplate(), setShowPopUp(false);
                 }}

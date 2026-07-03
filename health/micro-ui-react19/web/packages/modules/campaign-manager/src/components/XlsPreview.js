@@ -3,6 +3,7 @@ import React from "react";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { Button, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 import { PRIMARY_COLOR } from "../utils";
 
 const DocViewerWithRenderers = (props) => <DocViewer {...props} pluginRenderers={DocViewerRenderers} />;
@@ -33,16 +34,16 @@ function XlsPreview({ file, ...props }) {
     <PopUp className="campaign-data-preview" style={{ flexDirection: "column" }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginLeft: "2.5rem", marginRight: "2.5rem", marginTop: "2.5rem" }}>
         <Button
-          label={t("BACK")}
-          title={t("BACK")}
+          label={t(I18N_KEYS.COMMON.BACK)}
+          title={t(I18N_KEYS.COMMON.BACK)}
           onClick={() => props?.onBack()}
           variation="secondary"
           icon="ArrowBack"
           className={"back-button-xlsxpreview"}
         />
         <Button
-          label={t("WBH_DOWNLOAD")}
-          title={t("WBH_DOWNLOAD")}
+          label={t(I18N_KEYS.COMPONENTS.WBH_DOWNLOAD)}
+          title={t(I18N_KEYS.COMPONENTS.WBH_DOWNLOAD)}
           onClick={() => props?.onDownload()}
           variation="primary"
           isSuffix

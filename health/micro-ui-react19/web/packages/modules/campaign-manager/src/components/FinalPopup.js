@@ -1,6 +1,7 @@
 import React from "react";
 import { PopUp, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const FinalPopup = ({ showFinalPopUp, setShowFinalPopup, onConfirmClick})=> {
     const { t } = useTranslation();
@@ -10,7 +11,7 @@ const FinalPopup = ({ showFinalPopUp, setShowFinalPopup, onConfirmClick})=> {
                 className={"custom-popup"}
                 type={"alert"}
                 alertMessage={t("YOU_WON'T_BE_ABLE_TO_UNDO_THIS_STEP_OF_CREATING_HIERARCHY")}
-                alertHeading={t("CREATE_BOUNDARY_HIERARCHY")}
+                alertHeading={t(I18N_KEYS.COMPONENTS.CREATE_BOUNDARY_HIERARCHY)}
                 children={[
                 ]}
                 onClose={()=>{
@@ -28,8 +29,8 @@ const FinalPopup = ({ showFinalPopUp, setShowFinalPopup, onConfirmClick})=> {
                         type={"button"}
                         size={"large"}
                         variation={"secondary"}
-                        label={t("CANCEL")}
-                        title={t("CANCEL")}
+                        label={t(I18N_KEYS.COMMON.CANCEL)}
+                        title={t(I18N_KEYS.COMMON.CANCEL)}
                         onClick={() => {
                             setShowFinalPopup(false);
                         }}
@@ -38,8 +39,8 @@ const FinalPopup = ({ showFinalPopUp, setShowFinalPopup, onConfirmClick})=> {
                         type={"button"}
                         size={"large"}
                         variation={"primary"}
-                        label={t("CREATE")}
-                        title={t("CREATE")}
+                        label={t(I18N_KEYS.COMPONENTS.CREATE)}
+                        title={t(I18N_KEYS.COMPONENTS.CREATE)}
                         onClick={() => {
                             onConfirmClick();
                             setShowFinalPopup(false);

@@ -11,3 +11,11 @@
         border:none !important;
     }
 }
+
+.map-users-heading{
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
+    flex-direction: column;
+}

@@ -1,14 +1,15 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { FieldV1, Card, LabelFieldPair, RadioButtons } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const CycleSelection = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const [selectedOption, setSelectedOption] = useState(formData?.CycleSelection);
 
   const options = [
-    { code: "HCM_SINGLE_ROUND", name: t("HCM_SINGLE_ROUND") },
-    { code: "HCM_MULTI_ROUND", name: t("HCM_MULTI_ROUND") },
+    { code: "HCM_SINGLE_ROUND", name: t(I18N_KEYS.COMMON.HCM_SINGLE_ROUND) },
+    { code: "HCM_MULTI_ROUND", name: t(I18N_KEYS.COMPONENTS.HCM_MULTI_ROUND) },
   ];
 
 useEffect(()=>{

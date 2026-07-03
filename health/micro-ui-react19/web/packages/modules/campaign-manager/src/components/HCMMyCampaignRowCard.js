@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 import { Tag, Button, Card, SummaryCardFieldPair, Divider, PopUp, CardText, Chip } from "@egovernments/digit-ui-components";
 import { calculateDurationInDays } from "../utils/calculateDurationInDays";
 import { downloadExcelWithCustomName } from "../utils";
@@ -326,7 +327,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
           <div className="digit-results-card-tags">
             {/* {showCancelCampaign ? (
               <div className="digit-tag-container" onClick={handleCancelClick} style={{ margin: "0rem" }}>
-                <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} hideClose={false} />
+                <Chip text={`${t(I18N_KEYS.COMPONENTS.CANCEL_CAMPAIGN)}`} hideClose={false} />
               </div>
             ) : null} */}
             {tagElements &&
@@ -350,25 +351,25 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={t("START_DATE")}
+              label={t(I18N_KEYS.COMPONENTS.START_DATE)}
               value={convertEpochToNewDateFormat(rowData?.startDate) || "NA"}
             />
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={t("END_DATE")}
+              label={t(I18N_KEYS.COMPONENTS.END_DATE)}
               value={convertEpochToNewDateFormat(rowData?.endDate) || "NA"}
             />
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("DURATION")} value={duration} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t(I18N_KEYS.COMPONENTS.DURATION)} value={duration} />
           </div>
           <Divider />
           <div className="right-column">
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("NO_OF_CYCLES")} value={noOfCycles} />
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("RESOURCES")} value={resources} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t(I18N_KEYS.COMPONENTS.NO_OF_CYCLES)} value={noOfCycles} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t(I18N_KEYS.COMPONENTS.RESOURCES)} value={resources} />
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={t("STATUS")}
+              label={t(I18N_KEYS.COMPONENTS.STATUS)}
               type="custom"
               // value={t(rowData?.status) || "NA"}
               value={{}}
@@ -376,19 +377,19 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
                 if (rowData?.status === "created") {
                   return (
                     <div className="digit-viewcard-value">
-                      <Tag label={t("CAMPAIGN_CREATED")} type="success" stroke={false} />
+                      <Tag label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_CREATED)} type="success" stroke={false} />
                     </div>
                   );
                 } else if (rowData?.status === "creating") {
                   return (
                     <div className="digit-viewcard-value">
-                      <Tag label={t("CAMPAIGN_CREATION_INPROGRESS")} type="warning" showIcon={false} stroke={false} />
+                      <Tag label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_CREATION_INPROGRESS)} type="warning" showIcon={false} stroke={false} />
                     </div>
                   );
                 } else if (rowData?.status === "failed") {
                   return (
                     <div className="digit-viewcard-value">
-                      <Tag label={t("CAMPAIGN_CREATION_FAILED")} type="error" showIcon={false} stroke={false} />
+                      <Tag label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_CREATION_FAILED)} type="error" showIcon={false} stroke={false} />
                     </div>
                   );
                 } else {
@@ -410,23 +411,23 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
             <Button
               key={"DuplicateCampaign"}
               icon={"TabInactive"}
-              label={t("DUPLICATE_CAMPAIGN")}
+              label={t(I18N_KEYS.COMPONENTS.DUPLICATE_CAMPAIGN)}
               onClick={() => setCloneCampaign(true)}
               variation={"teritiary"}
               size={"medium"}
               id={`my-campaigns-row-card-clone-campaign-button-${rowData?.id}`}
-              title={t("DUPLICATE_CAMPAIGN")}
+              title={t(I18N_KEYS.COMPONENTS.DUPLICATE_CAMPAIGN)}
             />
           )}
           {showCancelCampaign && (
             <Button
               key={"DeleteCampaign"}
               icon={"Delete"}
-              label={t("CANCEL_CAMPAIGN")}
+              label={t(I18N_KEYS.COMPONENTS.CANCEL_CAMPAIGN)}
               onClick={() => setShowDeleteConfirmPopUp(true)}
               variation={"teritiary"}
               size={"medium"}
-              title={t("CANCEL_CAMPAIGN")}
+              title={t(I18N_KEYS.COMPONENTS.CANCEL_CAMPAIGN)}
             />
           )}
           {cloneCampaign && (
@@ -487,7 +488,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       {showErrorPopUp && (
         <PopUp
           type={"default"}
-          heading={t("ES_CAMPAIGN_FAILED_ERROR")}
+          heading={t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_FAILED_ERROR)}
           children={[
             <div>
               <CardText style={{ margin: 0 }}>{t(rowData?.additionalDetails?.error)}</CardText>
@@ -505,10 +506,10 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       {showRetryPopUp && (
         <PopUp
           type={"default"}
-          heading={t("ES_CAMPAIGN_RETRY")}
+          heading={t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_RETRY)}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t("RETRY_IN_PROGRESS")}</CardText>
+              <CardText style={{ margin: 0 }}>{t(I18N_KEYS.COMPONENTS.RETRY_IN_PROGRESS)}</CardText>
             </div>,
           ]}
           onOverlayClick={() => {
@@ -523,10 +524,10 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       {showCreatingPopUp && (
         <PopUp
           type={"default"}
-          heading={t("ES_CAMPAIGN_CREATING")}
+          heading={t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_CREATING)}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t("HCM_CAMPAIGN_CREATION_PROGRESS")}</CardText>
+              <CardText style={{ margin: 0 }}>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_CREATION_PROGRESS)}</CardText>
             </div>,
           ]}
           onOverlayClick={() => {
@@ -542,21 +543,21 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       {showDeleteConfirmPopUp && (
         <PopUp
           type={"alert"}
-          alertHeading={t("HCM_DELETE_CAMPAIGN_CONFIRM_HEADER")}
+          alertHeading={t(I18N_KEYS.COMPONENTS.HCM_DELETE_CAMPAIGN_CONFIRM_HEADER)}
           alertMessage={t("HCM_DELETE_CAMPAIGN_CONFIRM_MESSAGE", { campaignName: rowData?.campaignName, campaignNumber: rowData?.campaignNumber })}
           onOverlayClick={() => setShowDeleteConfirmPopUp(false)}
           onClose={() => setShowDeleteConfirmPopUp(false)}
           footerChildren={[
             <Button
               key="cancel"
-              label={t("HCM_CANCEL")}
+              label={t(I18N_KEYS.COMPONENTS.HCM_CANCEL)}
               variation="secondary"
               onClick={() => setShowDeleteConfirmPopUp(false)}
               size="medium"
             />,
             <Button
               key="confirm"
-              label={t("HCM_CONFIRM_DELETE")}
+              label={t(I18N_KEYS.COMPONENTS.HCM_CONFIRM_DELETE)}
               variation="primary"
               onClick={() => {
                 setShowDeleteConfirmPopUp(false);
