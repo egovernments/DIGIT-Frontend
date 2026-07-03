@@ -1531,9 +1531,22 @@
   &__files-list {
     display: flex;
     flex-direction: column;
+    gap: 1rem;
 
     .digit-report-detail__file-card {
       border-bottom: none;
+      border: 0.063rem solid #D6D5D4;
+      background-color: #FFFFFF;
+      box-shadow: none;
+      padding: 1rem 1.5rem;
+
+      .digit-report-detail__file-date {
+        font-family: Roboto;
+        font-weight: 700;
+        font-style: Bold;
+        font-size: 1rem;
+        color: #363636;
+      }
 
       &:last-child {
         border-bottom: 0.063rem solid var(--digitv2-lightTheme-divider);
@@ -1552,9 +1565,11 @@
   &__popup {
     border-radius: 12px !important;
     max-width: 48% !important;
+
     .digit-popup-heading {
       color: #0b4b66;
     }
+
     .digit-popup-children-wrap {
       overflow: visible !important;
     }
@@ -1606,7 +1621,31 @@
 }
 
 .digit-report-details-accordion {
-  border-radius: 0.75rem;
+  border-radius: 0.75rem;    
+  background-color: var(--digitv2-lightTheme-paper-secondary);
+  border: 0.063em solid var(--digitv2-lightTheme-generic-divider);
+
+  .digit-accordion-header-title {
+    color: #0b4b66;
+    font-family: var(--digitv2-fontFamily-sans);
+    font-style: var(--digitv2-fontStyle-normal);
+    font-weight: var(--digitv2-fontWeight-bold);
+    font-size: 1rem;
+  }
+
+  .digit-accordion-titile-dashboard-wrap{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: flex-start;
+
+    .digit-tag-wrapper{
+      background-color:#DEEFFF;
+      border: 0.5px solid #0B4B66;
+      border-radius: 12px;
+      height: 1.5rem;
+    }
+  }
 }
 
 .digit-report-detail {
@@ -1696,7 +1735,7 @@
   .digit-popup-overlay {
     .digit-popup-wrapper {
       &.digit-report-detail__popup {
-        max-width: 48%;
+        max-width: 35% !important;
       }
     }
   }

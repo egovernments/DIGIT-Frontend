@@ -43,16 +43,17 @@ const downloadFileFromStore = ({ fileStoreId, customName }) => {
     });
 };
 
+const toOrdinalDate = (date) => {
+  const d = date.getUTCDate();
+  const suffix = d % 10 === 1 && d !== 11 ? "st" : d % 10 === 2 && d !== 12 ? "nd" : d % 10 === 3 && d !== 13 ? "rd" : "th";
+  return `${d}${suffix} ${date.toLocaleDateString("en-US", { month: "long", timeZone: "UTC" })} ${date.getUTCFullYear()}`;
+};
+
 const formatCreatedTime = (createdtime) => {
   if (!createdtime) return "";
   const date = new Date(createdtime);
   if (isNaN(date.getTime())) return createdtime;
-  return date.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  return toOrdinalDate(date);
 };
 
 const formatDateForPayload = (dateStr) => {
@@ -81,7 +82,7 @@ const FrequencyContent = ({ reports, t, reportType }) => {
               <div className="digit-report-detail__file-date">{report.dateLabel}</div>
             </div>
             <div className="digit-report-detail__file-actions">
-              <Button label={t("HCM_DOWNLOAD")} onClick={() => handleDownload(report)} variation="link" icon="FileDownload" size="medium" />
+              <Button label={t("HCM_DOWNLOAD_REPORT")} onClick={() => handleDownload(report)} variation="link" icon="FileDownload" size="medium" />
             </div>
           </div>
         </Card>
@@ -105,6 +106,21 @@ const ReportDetailPage = () => {
   const [customEndDate, setCustomEndDate] = useState("");
   const [isTriggering, setIsTriggering] = useState(false);
   const [showToast, setShowToast] = useState(null);
+
+  const campaignSelected = Digit.SessionStorage.get("campaignSelected");
+  const epochToDateStr = (epoch) => {
+    if (!epoch) return "";
+    const d = new Date(epoch);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  };
+  const campaignMinDate = epochToDateStr(campaignSelected?.startDate);
+  const campaignMaxDate = epochToDateStr(campaignSelected?.endDate);
+
+  const handleClosePopup = () => {
+    setShowCustomPopup(false);
+    setCustomStartDate("");
+    setCustomEndDate("");
+  };
 
   const handleTriggerCustomReport = async () => {
     if (!customStartDate || !customEndDate) {
@@ -196,7 +212,7 @@ const ReportDetailPage = () => {
             const isoStr = trimmed.replace(" ", "T").replace(/([+-])(\d{2})(\d{2})$/, "$1$2:$3");
             const d = new Date(isoStr);
             if (isNaN(d.getTime())) return trimmed;
-            return d.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+            return toOrdinalDate(d);
           };
           dateLabel = `${formatRangeDate(parts[0])} — ${formatRangeDate(parts[1])}`;
         }
@@ -230,7 +246,9 @@ const ReportDetailPage = () => {
               <HeaderComponent className="digit-report-detail__header-with-tag-header">{t(reportLabel)}</HeaderComponent>
               <Tag label={t("HCM_CONTAINS_PII")} showIcon={true} type="error" stroke={true} />
             </div>
-            <p className="digit-report-detail__subtitle">{t("HCM_REPORTS_GENERATED_BY_FREQUENCY")}</p>
+            {/* <p className="digit-report-detail__subtitle">
+              {t("HCM_REPORTS_GENERATED_BY_FREQUENCY")}
+            </p> */}
           </div>
           <div className="digit-report-detail__custom-btn">
             <Button
@@ -238,20 +256,38 @@ const ReportDetailPage = () => {
               onClick={() => setShowCustomPopup(true)}
               variation="secondary"
               icon="CalendarMonth"
+              icon="DownloadIcon"
               size="medium"
             />
           </div>
         </div>
 
         {totalReports === 0 ? (
-          <NoResultsFound text={t("HCM_NO_REPORTS_GENERATED")} />
+          <div
+            className="digit-no-data-found"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <SVG.NoResultsFoundIcon height={280} width={220} />
+            <span style={{marginTop:"0.5rem"}}>
+              {t("HCM_NO_REPORTS_GENERATED")}
+            </span>
+          </div>
         ) : (
           <AccordionList allowMultipleOpen={true}>
             {Object.entries(reportsByFrequency).map(([frequency, reports]) => (
               <Accordion
                 key={frequency}
-                title={`${t(`HCM_REPORT_FREQUENCY_${frequency}`)} : ${reports.length} ${t("HCM_REPORTS_COUNT")}`}
-                icon="Calender"
+                title={
+                <div className="digit-accordion-titile-dashboard-wrap">
+                  <div className="digit-accordion-titile-dashboard">{t(`HCM_REPORT_FREQUENCY_${frequency}`)}</div>
+                  <Tag label={`${reports.length} ${t("HCM_REPORTS_COUNT")}`} stroke={true} type={"monochrome"}/>
+                </div>
+                }
                 isOpenInitially={false}
                 hideCardBorder={false}
                 hideCardBg={true}
@@ -267,13 +303,13 @@ const ReportDetailPage = () => {
 
       {showCustomPopup && (
         <PopUp
-          onClose={() => setShowCustomPopup(false)}
-          onOverlayClick={() => setShowCustomPopup(false)}
+          onClose={handleClosePopup}
+          onOverlayClick={handleClosePopup}
           heading={t("HCM_DOWNLOAD_CUSTOM_RANGE_POPUP")}
           description={t("HCM_DOWNLOAD_CUSTOM_RANGE_DESC")}
           className={"digit-report-detail__popup"}
           footerChildren={[
-            <Button key="cancel" label={t("HCM_CANCEL")} onClick={() => setShowCustomPopup(false)} variation="secondary" />,
+            <Button key="cancel" label={t("HCM_CANCEL")} onClick={handleClosePopup} variation="secondary" />,
             <Button
               key="trigger"
               label={t("HCM_GENERATE_REPORT")}
@@ -290,8 +326,11 @@ const ReportDetailPage = () => {
               withoutLabel={true}
               type="date"
               value={customStartDate}
-              populators={{ newDateFormat: true, customClass: "custom-date-range" }}
-              onChange={(d) => setCustomStartDate(d)}
+              populators={{ newDateFormat: true, min: campaignMinDate, max: campaignMaxDate, customClass: "custom-date-range" }}
+              onChange={(d) => {
+                setCustomStartDate(d);
+                if (customEndDate && d > customEndDate) setCustomEndDate("");
+              }}
             />
           </div>
           <div className="digit-report-detail__custom-popup-field">
@@ -300,7 +339,7 @@ const ReportDetailPage = () => {
               withoutLabel={true}
               type="date"
               value={customEndDate}
-              populators={{ newDateFormat: true, min: customStartDate, customClass: "custom-date-range" }}
+              populators={{ newDateFormat: true, min: customStartDate || campaignMinDate, max: campaignMaxDate, customClass: "custom-date-range" }}
               onChange={(d) => setCustomEndDate(d)}
             />
           </div>

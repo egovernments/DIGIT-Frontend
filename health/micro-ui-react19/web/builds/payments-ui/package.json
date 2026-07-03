@@ -45,7 +45,7 @@
     "@egovernments/digit-ui-module-core": "2.0.0-dev-23",
     "@egovernments/digit-ui-react-components": "2.0.0-dev-16",
     "@egovernments/digit-ui-svg-components": "2.0.0-dev-05",
-    "@egovernments/digit-ui-components": "2.0.0-dev-53",
+    "@egovernments/digit-ui-components": "2.0.0-dev-54",
     "@egovernments/digit-ui-module-health-pgr": "0.0.2",
     "@egovernments/digit-ui-module-health-hrms": "1.0.0",
     "@egovernments/digit-ui-module-health-payments": "1.0.0",

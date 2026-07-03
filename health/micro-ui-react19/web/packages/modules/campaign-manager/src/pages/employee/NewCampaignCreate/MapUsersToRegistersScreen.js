@@ -414,7 +414,7 @@ const MapUsersToRegistersScreen = () => {
             gap: "1.5rem",
             alignItems: "flex-end",
             flexWrap: "wrap",
-            marginTop:"1rem"
+            // marginTop:"1rem"
           }}
         >
           <div
