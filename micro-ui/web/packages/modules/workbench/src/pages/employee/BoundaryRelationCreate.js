@@ -107,7 +107,16 @@ const BoundaryRelationCreate = () => {
         BoundaryHierarchy: {
           tenantId: tenantId,
           hierarchyType: hierarchyType,
-          boundaryHierarchy: [...defData, ...newBoundaryData],
+          boundaryHierarchy: [
+              ...defData,
+              ...newBoundaryData.map((item) => ({
+                ...item,
+                boundaryType: trimming(item.boundaryType).toUpperCase(),
+                parentBoundaryType: item.parentBoundaryType
+                  ? trimming(item.parentBoundaryType).toUpperCase()
+                  : null,
+              })),
+            ],
         },
       },
     });
@@ -461,7 +470,6 @@ const BoundaryRelationCreate = () => {
     setNewBoundaryData((prevItems) => {
       // Loop through the array starting from the second element
       return prevItems.map((item, idx) => {
-        item.boundaryType = trimming(item.boundaryType).toUpperCase();
         if (idx === 0) {
           if (newHierarchy) item.parentBoundaryType = null;
           else {

@@ -47,7 +47,6 @@ const CustomSelectWidget = (props) => {
   const { schemaCode = `${moduleName}.${masterName}`, tenantId, fieldPath } = schema;
   const [showTooltipFlag, setShowTooltipFlag] = useState(false);
 
-  const [mainData, setMainData] = useState([]);
   /*
   logic added to fetch data of schemas in each component itself
   */
@@ -56,31 +55,28 @@ const CustomSelectWidget = (props) => {
     params: {},
     body: {
       MdmsCriteria: {
-        tenantId: tenantId,
+        tenantId: tenantId || Digit.ULBService.getCurrentTenantId(),
         schemaCode: schemaCode,
         limit: 1000,
-        offset: 0
+        offset: 0,
       },
     },
     config: {
       enabled: schemaCode && schemaCode?.length > 0,
-      select: (data) => {
-        const respData = data?.mdms?.map((e) => ({ label: e?.uniqueIdentifier, value: e?.uniqueIdentifier }));
+      select: (rawData) => {
+        const respData = rawData?.mdms?.map((e) => ({ label: e?.uniqueIdentifier, value: e?.uniqueIdentifier }));
         const finalJSONPath = `registry.rootSchema.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
         if (_.has(props, finalJSONPath)) {
-          _.set(
-            props,
-            finalJSONPath,
-            respData?.map((e) => e.value)
-          );
+          _.set(props, finalJSONPath, respData?.map((e) => e.value));
         }
-        setMainData(data?.mdms);
-        return respData;
+        return { display: respData, raw: rawData?.mdms };
       },
     },
     changeQueryName: `data-${schemaCode}`,
   };
-  const { isLoading, data } = Digit.Hooks.useCustomAPIHook(reqCriteriaForData);
+  const { isLoading, data: queryResult } = Digit.Hooks.useCustomAPIHook(reqCriteriaForData);
+  const data = queryResult?.display;
+  const mainData = queryResult?.raw || [];
   const optionsList = data || options?.enumOptions || options || [];
   const optionsLimit = 10;
   const formattedOptions = React.useMemo(
