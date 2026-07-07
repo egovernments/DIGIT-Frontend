@@ -414,7 +414,9 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       select: (data) => {
         const hierarchyType = paramsData?.hierarchy?.hierarchyType || Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")?.name;
         const schemas = data?.["HCM-ADMIN-CONSOLE"]?.HierarchySchema || [];
-        return schemas.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
+        // Only use lowestHierarchy from a matching "console" type entry for the selected hierarchy
+        const consoleSchema = schemas.find((item) => item.type === "console" && item.hierarchy === hierarchyType);
+        return consoleSchema?.lowestHierarchy;
       },
     },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
