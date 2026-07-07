@@ -22,16 +22,6 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
   );
-  // Load boundary localizations (boundary-${hierarchyType}) here where the hierarchy type is known
-  const stateCode = Digit.ULBService.getStateId();
-  const language = Digit.StoreData.getCurrentLanguage();
-  const boundaryHierarchyType = props?.props?.hierarchyType || Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")?.name;
-  Digit.Services.useStore({
-    stateCode,
-    moduleCode: boundaryHierarchyType ? [`boundary-${boundaryHierarchyType}`] : [],
-    language,
-    modulePrefix: "hcm",
-  });
   const [selectedData, setSelectedData] = useState(
     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []
   );
@@ -40,6 +30,15 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   );
   const campaignName = searchParams.get("campaignName");
   const [hierarchyType, SetHierarchyType] = useState(props?.props?.hierarchyType);
+  // Load boundary localizations using the hierarchyType state (updated from campaign API when available)
+  const stateCode = Digit.ULBService.getStateId();
+  const language = Digit.StoreData.getCurrentLanguage();
+  Digit.Services.useStore({
+    stateCode,
+    moduleCode: hierarchyType ? [`boundary-${hierarchyType}`] : [],
+    language,
+    modulePrefix: "hcm",
+  });
   const [showPopUp, setShowPopUp] = useState(false);
   const [restrictSelection, setRestrictSelection] = useState(null);
   const [isUnifiedCampaign, setIsUnifiedCampaign] = useState(
