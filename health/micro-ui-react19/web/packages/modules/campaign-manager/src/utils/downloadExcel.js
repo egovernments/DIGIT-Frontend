@@ -32,6 +32,7 @@ export const downloadExcelWithCustomName = ({ fileStoreId = null, customName = n
           "auth-token": Digit.UserService.getUser()?.["access_token"],
         },
         params: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
           fileStoreId: fileStoreId,
         },
       })

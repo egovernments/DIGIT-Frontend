@@ -12,6 +12,7 @@ export const jsonReader = async ({ fileStoreId = null }) => {
           "auth-token": Digit.UserService.getUser()?.["access_token"],
         },
         params: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
           fileStoreId: fileStoreId,
         },
       });
