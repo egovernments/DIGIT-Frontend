@@ -22,6 +22,16 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
   );
+  // Load boundary localizations (boundary-${hierarchyType}) here where the hierarchy type is known
+  const stateCode = Digit.ULBService.getStateId();
+  const language = Digit.StoreData.getCurrentLanguage();
+  const boundaryHierarchyType = props?.props?.hierarchyType || Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")?.name;
+  Digit.Services.useStore({
+    stateCode,
+    moduleCode: boundaryHierarchyType ? [`boundary-${boundaryHierarchyType}`] : [],
+    language,
+    modulePrefix: "hcm",
+  });
   const [selectedData, setSelectedData] = useState(
     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []
   );
@@ -54,10 +64,12 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteriaHierarchy);
 
   const lowestHierarchy = useMemo(() => {
-    // Try MDMS first
-    const fromMdms = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
-    if (fromMdms) return fromMdms;
-    // Fallback: derive from boundary hierarchy definition (leaf = type not used as any other's parent)
+    // Only use lowestHierarchy from MDMS if a matching "console" type entry exists for the selected hierarchy
+    const consoleSchema = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find(
+      (item) => item.type === "console" && item.hierarchy === hierarchyType
+    );
+    if (consoleSchema?.lowestHierarchy) return consoleSchema.lowestHierarchy;
+    // No matching "console" type entry — show all levels (use the natural leaf from boundary hierarchy definition)
     const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
     if (!boundaryHierarchy.length) return undefined;
     const typesUsedAsParent = new Set(boundaryHierarchy.map((b) => b.parentBoundaryType).filter(Boolean));

@@ -42,12 +42,21 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.mailConfig` }
   );
+  // Load boundary localizations (boundary-${hierarchyType}) here where the hierarchy type is known
+  const stateCode = Digit.ULBService.getStateId();
+  const language = Digit.StoreData.getCurrentLanguage();
+  Digit.Services.useStore({
+    stateCode,
+    moduleCode: hierarchyType ? [`boundary-${hierarchyType}`] : [],
+    language,
+    modulePrefix: "hcm",
+  });
   const lowestHierarchy = useMemo(() => {
-    // Try MDMS first
+    // Only use lowestHierarchy from MDMS if a matching "console" type entry exists for the selected hierarchy
     const schemas = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema || [];
-    const fromMdms = schemas.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
-    if (fromMdms) return fromMdms;
-    // Fallback: derive from boundary hierarchy definition (leaf = type not used as any other's parent)
+    const consoleSchema = schemas.find((item) => item.type === "console" && item.hierarchy === hierarchyType);
+    if (consoleSchema?.lowestHierarchy) return consoleSchema.lowestHierarchy;
+    // No matching "console" type entry — show all levels (use the natural leaf from boundary hierarchy definition)
     const boundaryHierarchy = props?.props?.dataParams?.hierarchy?.boundaryHierarchy || [];
     if (!boundaryHierarchy.length) return undefined;
     const typesUsedAsParent = new Set(boundaryHierarchy.map((b) => b.parentBoundaryType).filter(Boolean));

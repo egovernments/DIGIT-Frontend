@@ -29,7 +29,6 @@ export const useResourceData = async (data, hierarchyType, type, tenantId, id , 
           "auth-token": Digit.UserService.getUser()?.["access_token"],
         },
         params: {
-          tenantId: Digit.ULBService.getCurrentTenantId(),
           fileStoreId: data?.[0]?.filestoreId,
         },
       })

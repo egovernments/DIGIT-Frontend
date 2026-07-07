@@ -215,7 +215,6 @@ const fetchExcelData = async ({ tenantId, fileStoreId, currentCategories, sheetN
         "auth-token": Digit.UserService.getUser()?.["access_token"],
       },
       params: {
-        tenantId: Digit.ULBService.getCurrentTenantId(),
         fileStoreId: fileStoreId,
       },
     });
