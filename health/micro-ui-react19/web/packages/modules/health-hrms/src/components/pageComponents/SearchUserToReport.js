@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import AttendanceService from "../../services/hrms/SearchUser";
 import SelectableList from "./SelectableList";
 import ReportingUserSearchTable from "./ReportingUserSearchTable";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 
 
@@ -56,7 +57,7 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
 
             if (locallity === null) {
                 setShowToast(
-                    { key: "error", label: t(`HCM_AM_LOCALITY_NOT_SELECTED`), transitionTime: 3000 }
+                    { key: "error", label: t(I18N_KEYS.SEARCH_USER_TO_REPORT.HCM_AM_LOCALITY_NOT_SELECTED), transitionTime: 3000 }
                 );
                 setLoading(false);
                 return;
@@ -112,7 +113,7 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
         <PopUp
             style={{ width: "800px", minHeight: "430px" }}
             onClose={onClose}
-            heading={t("HCM_AM_SEARCH_USER")}
+            heading={t(I18N_KEYS.SEARCH_USER_TO_REPORT.HCM_AM_SEARCH_USER)}
             onOverlayClick={onClose}
             children={[
                 (
@@ -124,7 +125,7 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
 
                         <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
                             <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                                <TextInput type="search" name="title" placeholder={t("HCM_AM_VIEW_REGISTER_PLACE_HOLDER")} value={searchQuery} onChange={(e) => {
+                                <TextInput type="search" name="title" placeholder={t(I18N_KEYS.COMMON.HCM_AM_VIEW_REGISTER_PLACE_HOLDER)} value={searchQuery} onChange={(e) => {
                                     setSearchQuery(e.target.value)
                                     // live check
                                     if (e.target.value.length < 3) {
@@ -152,7 +153,7 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
                                     type={"button"}
                                     size={"large"}
                                     variation={"primary"}
-                                    label={t("CS_INBOX_SEARCH")}
+                                    label={t(I18N_KEYS.SEARCH_USER_TO_REPORT.CS_INBOX_SEARCH)}
                                     onClick={(e) => {
                                         e.preventDefault();
                                         setApiCall(true);
@@ -181,7 +182,7 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
 
                         {!loading && searchQuery != "" && searchedIndividual.length === 0 && apiCall ==true   && (
                             <div>
-                                <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
+                                <NoResultsFound text={t(I18N_KEYS.SEARCH_USER_TO_REPORT.HCM_AM_NO_DATA_FOUND)} />
                             </div>
                         )
                         }
@@ -213,7 +214,7 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
                     type={"button"}
                     size={"large"}
                     variation={"primary"}
-                    label={t("HCM_AM_ASSIGN_BT")}
+                    label={t(I18N_KEYS.SEARCH_USER_TO_REPORT.HCM_AM_ASSIGN_BT)}
                     onClick={handleEnrollAttendee}
                 />,
             ]}

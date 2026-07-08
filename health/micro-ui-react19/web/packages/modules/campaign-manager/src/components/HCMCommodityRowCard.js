@@ -39,7 +39,7 @@ const HCMCommodityRowCard = ({ key, rowData, tabData }) => {
   const navigate = useNavigate();
 
   const durationDays = calculateDurationInDays(rowData?.startDate, rowData?.endDate);
-  const duration = durationDays !== "NA" ? `${durationDays} ${t("Days")}` : "NA";
+  const duration = durationDays !== "NA" ? `${durationDays} ${t(I18N_KEYS.COMPONENTS.Days)}` : "NA";
   const tagElements = getTagElements(rowData);
   const currentTab = tabData?.find((i) => i?.active === true)?.label;
   const isCompleted = currentTab === "CAMPAIGN_COMPLETED";

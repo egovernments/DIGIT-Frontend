@@ -10,6 +10,7 @@ import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
 import AlertPopUp from "../alertPopUp";
 import InboxSearchLinkHeader from "../InboxSearchLinkHeader";
 import { renderProjectPeriod } from "../../utils/time_conversion";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /**
  * @returns {React.ReactElement} BillInboxComponent
@@ -107,7 +108,7 @@ const BillInboxComponent = () => {
         setTotalCount(0);
         setTableData([]);
         setShowGenerateBillAction(false);
-        setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED"), transitionTime: 3000 });
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED), transitionTime: 3000 });
       },
       changeQueryName: "inbox",
     },
@@ -322,7 +323,7 @@ const BillInboxComponent = () => {
           onSuccess: (data) => {
             setBillGenerationStatus(data?.statusCode);
             if (data?.statusCode === "SUCCESSFUL") {
-              setShowToast({ key: "success", label: t("HCM_AM_BILL_GENERATED_SUCCESSFULLY"), transitionTime: 3000 });
+              setShowToast({ key: "success", label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BILL_GENERATED_SUCCESSFULLY), transitionTime: 3000 });
               refetchBill();
             } else {
               setInfoDescription(`HCM_AM_${data?.statusCode}_INFO_MESSAGE`);
@@ -335,7 +336,7 @@ const BillInboxComponent = () => {
         }
       );
     } catch (error) {
-      setShowToast({ key: "error", label: t(`HCM_AM_BILL_GENERATE_ERROR`), transitionTime: 3000 });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BILL_GENERATE_ERROR), transitionTime: 3000 });
     }
   };
 
@@ -398,7 +399,7 @@ const BillInboxComponent = () => {
                 }}
                 variant="default"
                 style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "124px" }}
-                label={t(`HCM_AM_INFO`)}
+                label={t(I18N_KEYS.PAGES_BILLS.HCM_AM_INFO)}
                 text={t(infoDescription)}
               />
             </div>
@@ -411,7 +412,7 @@ const BillInboxComponent = () => {
                   <div style={{ fontSize: "14px" }}>{renderProjectPeriod(t, selectedProject, selectedPeriod)?.[1] || ""}</div>
                 </div>
                 <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name || "")}</div>
-                <SearchResultsPlaceholder placeholderText={t("HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT")} />
+                <SearchResultsPlaceholder placeholderText={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT)} />
               </Card>
             )}
             {tableData && (
@@ -433,11 +434,11 @@ const BillInboxComponent = () => {
                       configNavItems={[
                         {
                           code: "APPROVED",
-                          name: `${`${t(`HCM_AM_APPROVED_REGISTER`)} (${approvalCount})`}`,
+                          name: `${`${t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_APPROVED_REGISTER)} (${approvalCount})`}`,
                         },
                         {
                           code: "PENDING",
-                          name: `${`${t(`HCM_AM_PENDING_REGISTER`)} (${pendingApprovalCount})`}`,
+                          name: `${`${t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_PENDING_REGISTER)} (${pendingApprovalCount})`}`,
                         },
                       ]}
                       navStyles={{}}
@@ -489,10 +490,10 @@ const BillInboxComponent = () => {
           onClose={() => {
             setOpenAlertPopUp(false);
           }}
-          alertHeading={t(`HCM_AM_BILL_GENERATION_ALERT_HEADING`)}
-          alertMessage={t(`HCM_AM_BILL_GENERATION_ALERT_DESCRIPTION`)}
-          submitLabel={t(`HCM_AM_GENERATE_BILL`)}
-          cancelLabel={t(`HCM_AM_CANCEL`)}
+          alertHeading={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BILL_GENERATION_ALERT_HEADING)}
+          alertMessage={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BILL_GENERATION_ALERT_DESCRIPTION)}
+          submitLabel={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_GENERATE_BILL)}
+          cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
           onPrimaryAction={() => {
             setOpenAlertPopUp(false);
             triggerGenerateBill();
@@ -506,7 +507,7 @@ const BillInboxComponent = () => {
           actionFields={[
             <Button
               icon="CheckCircle"
-              label={t(`HCM_AM_GENERATE_BILL_LABEL`)}
+              label={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_GENERATE_BILL_LABEL)}
               onClick={() => {
                 setOpenAlertPopUp(true);
               }}

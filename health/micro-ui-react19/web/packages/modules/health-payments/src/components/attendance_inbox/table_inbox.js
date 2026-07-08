@@ -9,6 +9,7 @@ import { defaultPaginationValues } from "../../utils/constants";
 import { getCustomPaginationOptions } from "../../utils";
 import CommentPopUp from "../commentPopUp";
 import { renderProjectPeriod } from "../../utils/time_conversion";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const PENDING_TAB = { code: "PENDING", name: "HCM_AM_PENDING_FOR_APPROVAL" };
 const APPROVED_TAB = { code: "APPROVED", name: "HCM_AM_APPROVED" };
@@ -79,7 +80,7 @@ const CustomInboxTable = ({
 
   const columns = [
     {
-      name: <div className="custom-inbox-table-row">{t("HCM_AM_ATTENDANCE_ID")}</div>,
+      name: <div className="custom-inbox-table-row">{t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_ID)}</div>,
       selector: (row) => (
         <span className="link">
           <Button
@@ -129,25 +130,25 @@ const CustomInboxTable = ({
     {
       name: (
         <div className="custom-inbox-table-row">
-          {activeLink?.code === "PENDING" ? t("HCM_AM_ATTENDANCE_MARKED_BY") : t("HCM_AM_ATTENDANCE_APPROVED_BY")}
+          {activeLink?.code === "PENDING" ? t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_MARKED_BY) : t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_APPROVED_BY)}
         </div>
       ),
       selector: (row) => (
-        <div className="ellipsis-cell" title={activeLink?.code === "PENDING" ? row?.markby : row?.approvedBy || t("NA")}>
-          {activeLink?.code === "PENDING" ? row?.markby : row?.approvedBy || t("NA")}
+        <div className="ellipsis-cell" title={activeLink?.code === "PENDING" ? row?.markby : row?.approvedBy || t(I18N_KEYS.COMMON.NA)}>
+          {activeLink?.code === "PENDING" ? row?.markby : row?.approvedBy || t(I18N_KEYS.COMMON.NA)}
         </div>
       ),
     },
     {
-      name: <div className="custom-inbox-table-row">{t("HCM_AM_ATTENDANCE_BOUNDARY")}</div>,
+      name: <div className="custom-inbox-table-row">{t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_BOUNDARY)}</div>,
       selector: (row) => (
-        <div className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
-          {t(row.boundary) || t("NA")}
+        <div className="ellipsis-cell" title={t(row?.boundary) || t(I18N_KEYS.COMMON.NA)}>
+          {t(row.boundary) || t(I18N_KEYS.COMMON.NA)}
         </div>
       ),
     },
     {
-      name: <div className="custom-inbox-table-row">{t("HCM_AM_ATTENDANCE_ATTENDEES")}</div>,
+      name: <div className="custom-inbox-table-row">{t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_ATTENDEES)}</div>,
       selector: (row) => (
         <div className="ellipsis-cell" title={t(row?.status || "0")}>
           {t(row?.status || "0")}
@@ -159,10 +160,10 @@ const CustomInboxTable = ({
 
   if (activeLink?.code === "APPROVED") {
     columns.push({
-      name: t("HCM_AM_COMMENT_LOGS"),
+      name: t(I18N_KEYS.COMMON.HCM_AM_COMMENT_LOGS),
       selector: (row) => (
         <Button
-          label={t("HCM_AM_VIEW_COMMENT_LOGS")}
+          label={t(I18N_KEYS.COMMON.HCM_AM_VIEW_COMMENT_LOGS)}
           onClick={() => {
             triggerMusterRollSearch(row?.registerId);
           }}
@@ -227,7 +228,7 @@ const CustomInboxTable = ({
         <div>{t(`ATTENDANCE_${Digit.SessionStorage.get("selectedProject")?.address?.boundaryType}`)}</div>
 
         {!tableData ? (
-          <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
+          <NoResultsFound text={t(I18N_KEYS.COMMON.HCM_AM_NO_DATA_FOUND)} />
         ) : (
           <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
             {/* Fixed Tab Section */}
@@ -249,11 +250,11 @@ const CustomInboxTable = ({
                 configNavItems={[
                   {
                     code: "PENDING",
-                    name: `${t(`HCM_AM_PENDING_FOR_APPROVAL`)} (${statusCount?.PENDINGFORAPPROVAL})`,
+                    name: `${t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_PENDING_FOR_APPROVAL)} (${statusCount?.PENDINGFORAPPROVAL})`,
                   },
                   {
                     code: "APPROVED",
-                    name: `${t(`HCM_AM_APPROVED`)} (${statusCount?.APPROVED})`,
+                    name: `${t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_APPROVED)} (${statusCount?.APPROVED})`,
                   },
                 ]}
                 onTabClick={(e) => {
@@ -286,7 +287,7 @@ const CustomInboxTable = ({
                   <Loader />
                 </div>
               ) : tableData && tableData.length === 0 ? (
-                <NoResultsFound style={{ height: "40vh" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
+                <NoResultsFound style={{ height: "40vh" }} text={t(I18N_KEYS.COMMON.HCM_AM_NO_DATA_FOUND)} />
               ) : (
                 <DataTable
                   columns={columns}
@@ -316,7 +317,7 @@ const CustomInboxTable = ({
       </Card>
 
       {commentLogs && (
-        <CommentPopUp onClose={onCommentLogClose} businessId={data?.musterRollNumber} heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`} />
+        <CommentPopUp onClose={onCommentLogClose} businessId={data?.musterRollNumber} heading={`${t(I18N_KEYS.COMMON.HCM_AM_STATUS_LOG_FOR_LABEL)}`} />
       )}
       {showToast && (
         <Toast

@@ -14,6 +14,7 @@ import { Loader, Chip, Button } from "@egovernments/digit-ui-components";
 import { HeaderComponent } from "@egovernments/digit-ui-components";
 import { getDuration } from "../../utils/getDuration";
 import { PDFDownload, ImageDownload, SharePDF, ShareImage } from "../../utils/PDFDownload";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const nationalScreenURLs = {
   overview: { key: "national-overview", stateKey: "overview", label: "NURT_OVERVIEW", active: true, nActive: true },
@@ -413,32 +414,32 @@ const L2Main = ({}) => {
     ? [
         {
           code: "ES_DSS_SHARE_PDF",
-          label: t("ES_DSS_SHARE_PDF"),
+          label: t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_SHARE_PDF),
         },
         {
           code: "ES_DSS_SHARE_IMAGE",
-          label: t("ES_DSS_SHARE_IMAGE"),
+          label: t(I18N_KEYS.COMMON.ES_DSS_SHARE_IMAGE),
         },
       ]
     : [
         {
           icon: "EmailIcon",
           code: "ES_DSS_SHARE_PDF_EMAIL",
-          label: t("ES_DSS_SHARE_PDF"),
+          label: t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_SHARE_PDF),
         },
         {
           icon: "WhatsappIcon",
           code: "ES_DSS_SHARE_PDF_WHATSAPP",
-          label: t("ES_DSS_SHARE_PDF"),
+          label: t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_SHARE_PDF),
         },
         {
           icon: "EmailIcon",
-          label: t("ES_DSS_SHARE_IMAGE"),
+          label: t(I18N_KEYS.COMMON.ES_DSS_SHARE_IMAGE),
           code: "ES_DSS_SHARE_IMAGE_EMAIL",
         },
         {
           icon: "WhatsappIcon",
-          label: t("ES_DSS_SHARE_IMAGE"),
+          label: t(I18N_KEYS.COMMON.ES_DSS_SHARE_IMAGE),
           code: "ES_DSS_SHARE_IMAGE_WHATSAPP",
         },
       ];
@@ -447,11 +448,11 @@ const L2Main = ({}) => {
     {
       icon: "ImageIcon",
       code: "ES_DSS_DOWNLOAD_IMAGE",
-      label: t("ES_DSS_DOWNLOAD_IMAGE"),
+      label: t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_DOWNLOAD_IMAGE),
     },
     {
       icon: "PDFSvg",
-      label: t("ES_DSS_DOWNLOAD_PDF"),
+      label: t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_DOWNLOAD_PDF),
       code: "ES_DSS_DOWNLOAD_PDF",
     },
   ];
@@ -520,7 +521,7 @@ const L2Main = ({}) => {
               <Button
                 type="actionButton"
                 variation="teritiary"
-                label={t(`ES_DSS_SHARE`)}
+                label={t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_SHARE)}
                 options={shareOptions}
                 optionsKey="label"
                 showBottom={true}
@@ -537,7 +538,7 @@ const L2Main = ({}) => {
                 className={"digit-dss-options-header-option-button"}
                 variation="teritiary"
                 wrapperClassName={"digit-dss-options-header-options-button-wrapper"}
-                label={t(`ES_DSS_DOWNLOAD`)}
+                label={t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_DOWNLOAD)}
                 options={downloadOptions}
                 optionsKey="label"
                 size={"medium"}
@@ -584,28 +585,28 @@ const L2Main = ({}) => {
               filters.filters.tenantId
                 .slice(0, 5)
                 .map((filter, id) => (
-                  <Chip key={id} text={`${t(`DSS_HEADER_ULB`)}: ${t(filter)}`} onClick={(e, id) => removeULB(id)} hideClose={false} />
+                  <Chip key={id} text={`${t(I18N_KEYS.DASHBOARD_PAGES.DSS_HEADER_ULB)}: ${t(filter)}`} onClick={(e, id) => removeULB(id)} hideClose={false} />
                 ))}
             {filters?.filters?.tenantId?.length > 6 && (
               <>
                 {showFilters &&
                   filters.filters.tenantId.map((filter, id) => (
-                    <Chip key={id} text={`${t(`DSS_HEADER_ULB`)}: ${t(filter)}`} onClick={(e, id) => removeULB(id)} hideClose={false} />
+                    <Chip key={id} text={`${t(I18N_KEYS.DASHBOARD_PAGES.DSS_HEADER_ULB)}: ${t(filter)}`} onClick={(e, id) => removeULB(id)} hideClose={false} />
                   ))}
                 {!showFilters && (
                   <p className="clearText cursorPointer" onClick={() => setShowFilters(true)}>
-                    {t(`DSS_FILTER_SHOWALL`)}
+                    {t(I18N_KEYS.DASHBOARD_PAGES.DSS_FILTER_SHOWALL)}
                   </p>
                 )}
                 {showFilters && (
                   <p className="clearText cursorPointer" onClick={() => setShowFilters(false)}>
-                    {t(`DSS_FILTER_SHOWLESS`)}
+                    {t(I18N_KEYS.DASHBOARD_PAGES.DSS_FILTER_SHOWLESS)}
                   </p>
                 )}
               </>
             )}
             <p className="clearText cursorPointer" onClick={handleClear}>
-              {t(`DSS_FILTER_CLEAR`)}
+              {t(I18N_KEYS.DASHBOARD_PAGES.DSS_FILTER_CLEAR)}
             </p>
           </div>
         )}
@@ -618,7 +619,7 @@ const L2Main = ({}) => {
                 .map((filter, id) => (
                   <Chip
                     key={id}
-                    text={`${t(`DSS_HEADER_STATE`)}: ${t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(filter)}`)}`}
+                    text={`${t(I18N_KEYS.DASHBOARD_PAGES.DSS_HEADER_STATE)}: ${t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(filter)}`)}`}
                     onClick={(e, id) => removeST(id)}
                     hideClose={false}
                   />
@@ -629,25 +630,25 @@ const L2Main = ({}) => {
                   filters.filters.state.map((filter, id) => (
                     <Chip
                       key={id}
-                      text={`${t(`DSS_HEADER_STATE`)}: ${t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(filter)}`)}`}
+                      text={`${t(I18N_KEYS.DASHBOARD_PAGES.DSS_HEADER_STATE)}: ${t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(filter)}`)}`}
                       onClick={(e, id) => removeST(id)}
                       hideClose={false}
                     />
                   ))}
                 {!showFilters && (
                   <p className="clearText cursorPointer" onClick={() => setShowFilters(true)}>
-                    {t(`DSS_FILTER_SHOWALL`)}
+                    {t(I18N_KEYS.DASHBOARD_PAGES.DSS_FILTER_SHOWALL)}
                   </p>
                 )}
                 {showFilters && (
                   <p className="clearText cursorPointer" onClick={() => setShowFilters(false)}>
-                    {t(`DSS_FILTER_SHOWLESS`)}
+                    {t(I18N_KEYS.DASHBOARD_PAGES.DSS_FILTER_SHOWLESS)}
                   </p>
                 )}
               </>
             )}
             <p className="clearText cursorPointer" onClick={clearAllSt}>
-              {t(`DSS_FILTER_CLEAR_ST`)}
+              {t(I18N_KEYS.DASHBOARD_PAGES.DSS_FILTER_CLEAR_ST)}
             </p>
           </div>
         )}
@@ -660,7 +661,7 @@ const L2Main = ({}) => {
                 .map((filter, id) => (
                   <Chip
                     key={id}
-                    text={`${t(`DSS_HEADER_ULB`)}: ${t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(filter)}`)}`}
+                    text={`${t(I18N_KEYS.DASHBOARD_PAGES.DSS_HEADER_ULB)}: ${t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(filter)}`)}`}
                     onClick={(e, id) => removeTenant(id)}
                     hideClose={false}
                   />
@@ -671,25 +672,25 @@ const L2Main = ({}) => {
                   filters.filters.ulb.map((filter, id) => (
                     <Chip
                       key={id}
-                      text={`${t(`DSS_HEADER_ULB`)}: ${t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(filter)}`)}`}
+                      text={`${t(I18N_KEYS.DASHBOARD_PAGES.DSS_HEADER_ULB)}: ${t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(filter)}`)}`}
                       onClick={(e, id) => removeTenant(id)}
                       hideClose={false}
                     />
                   ))}
                 {!showFilters && (
                   <p className="clearText cursorPointer" onClick={() => setShowFilters(true)}>
-                    {t(`DSS_FILTER_SHOWALL`)}
+                    {t(I18N_KEYS.DASHBOARD_PAGES.DSS_FILTER_SHOWALL)}
                   </p>
                 )}
                 {showFilters && (
                   <p className="clearText cursorPointer" onClick={() => setShowFilters(false)}>
-                    {t(`DSS_FILTER_SHOWLESS`)}
+                    {t(I18N_KEYS.DASHBOARD_PAGES.DSS_FILTER_SHOWLESS)}
                   </p>
                 )}
               </>
             )}
             <p className="clearText cursorPointer" onClick={clearAllTn}>
-              {t(`DSS_FILTER_CLEAR_TN`)}
+              {t(I18N_KEYS.DASHBOARD_PAGES.DSS_FILTER_CLEAR_TN)}
             </p>
           </div>
         )}
@@ -698,13 +699,13 @@ const L2Main = ({}) => {
             {!showFilters && filters?.moduleLevel && (
               <Chip
                 key={filters?.moduleLevel}
-                text={`${t(`DSS_HEADER_SERVICE`)}: ${t(filters?.moduleLevel)}`}
+                text={`${t(I18N_KEYS.DASHBOARD_PAGES.DSS_HEADER_SERVICE)}: ${t(filters?.moduleLevel)}`}
                 onClick={() => removeService()}
                 hideClose={false}
               />
             )}
             <p className="clearText cursorPointer" onClick={clearAllServices}>
-              {t(`DSS_FILTER_CLEAR`)}
+              {t(I18N_KEYS.DASHBOARD_PAGES.DSS_FILTER_CLEAR)}
             </p>
           </div>
         )}
@@ -717,7 +718,7 @@ const L2Main = ({}) => {
             <div className="divToBeHidden">
               <MultiLink
                 className="multilink-block-wrapper"
-                label={t(`ES_DSS_SHARE`)}
+                label={t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_SHARE)}
                 icon={<ShareIcon className="mrsm" />}
                 showOptions={(e) => setShowShareOptions(e)}
                 onHeadClick={(e) => {
@@ -729,7 +730,7 @@ const L2Main = ({}) => {
             </div>
             <div onClick={handlePrint} className="divToBeHidden">
               <DownloadIcon />
-              {t(`ES_DSS_DOWNLOAD`)}
+              {t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_DOWNLOAD)}
             </div>
           </div>
         ) : null}

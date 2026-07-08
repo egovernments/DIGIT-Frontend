@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Routes, Route, useLocation } from "react-router-dom";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const EmployeeApp = () => {
   const { t } = useTranslation();
@@ -19,33 +20,33 @@ const EmployeeApp = () => {
       <BreadCrumbs
         crumbs={[
           {
-            content: t("HR_COMMON_BUTTON_HOME"),
+            content: t(I18N_KEYS.PAGES_INDEX.HR_COMMON_BUTTON_HOME),
             internalLink: `/${window?.contextPath}/employee`,
             show: true,
           },
           {
-            content: t("CS_COMMON_INBOX"),
+            content: t(I18N_KEYS.PAGES_INDEX.CS_COMMON_INBOX),
             internalLink: `/${window?.contextPath}/employee/hrms/inbox`,
             show:
               Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "INBOX" || location.pathname.includes("details") || location.pathname.includes("update") || location.pathname.includes("edit"),
           },
           {
-            content: t("details"),
+            content: t(I18N_KEYS.PAGES_INDEX.DETAILS),
             internalLink: `/${window?.contextPath}/employee/hrms/details`,
             show: location.pathname.includes("details"),
           },
           {
-            content: t("HR_COMMON_CREATE_EMPLOYEE_HEADER"),
+            content: t(I18N_KEYS.COMMON.HR_COMMON_CREATE_EMPLOYEE_HEADER),
             internalLink: `/${window?.contextPath}/employee/hrms/create`,
             show: location.pathname.includes("create"),
           },
           {
-            content: t("HR_COMMON_EDIT_EMPLOYEE_HEADER"),
+            content: t(I18N_KEYS.COMMON.HR_COMMON_EDIT_EMPLOYEE_HEADER),
             internalLink: `/${window?.contextPath}/employee/hrms/edit`,
             show: location.pathname.includes("edit"),
           },
           {
-            content: t("HR_CAMPAIGN_ASSIGNMENT"),
+            content: t(I18N_KEYS.PAGES_INDEX.HR_CAMPAIGN_ASSIGNMENT),
             internalLink: `/${window?.contextPath}/employee/hrms/assign-campaign`,
             show: location.pathname.includes("assign-campaign"),
           },

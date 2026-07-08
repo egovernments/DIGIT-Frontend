@@ -10,6 +10,7 @@ import {
   Toast,
   Footer
 } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 const HierarchySelection = ({ onHierarchyChosen }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
@@ -71,7 +72,7 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
     if (!selectedHierarchy) {
       setToast({
         show: true,
-        label: t("HIERARCHY_FIELD_MANDATORY"),
+        label: t(I18N_KEYS.PAGES_HIERARCHY_SELECTION.HIERARCHY_FIELD_MANDATORY),
         type: "error",
       });
       return;
@@ -85,7 +86,7 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
     ) {
       setToast({
         show: true,
-        label: t("NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY"),
+        label: t(I18N_KEYS.PAGES_HIERARCHY_SELECTION.NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY),
         type: "error",
       });
       return;
@@ -109,7 +110,7 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
     ) {
       setToast({
         show: true,
-        label: t("NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY"),
+        label: t(I18N_KEYS.PAGES_HIERARCHY_SELECTION.NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY),
         type: "error",
       });
     }
@@ -126,17 +127,17 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
         <HeaderComponent
           styles={{ margin: "0px", fontSize: "2rem", color: "#0b4b66" }}
         >
-          {t(`HCM_HIERARCHY_TYPE_HEADER`)}
+          {t(I18N_KEYS.PAGES_HIERARCHY_SELECTION.HCM_HIERARCHY_TYPE_HEADER)}
         </HeaderComponent>
         <p className="description-type">
-          {t(`HCM_HIERARCHY_TYPE_DESCRIPTION`)}
+          {t(I18N_KEYS.PAGES_HIERARCHY_SELECTION.HCM_HIERARCHY_TYPE_DESCRIPTION)}
         </p>
         <LabelFieldPair>
           <div
             className=""
             style={{ justifyContent: "center", marginTop: "6px" }}
           >
-            <span>{t("HCM_HIERARCHY_TYPE")}</span>
+            <span>{t(I18N_KEYS.PAGES_HIERARCHY_SELECTION.HCM_HIERARCHY_TYPE)}</span>
             <span className="mandatory-span">*</span>
           </div>
           <Dropdown
@@ -155,8 +156,8 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
           <Button
             style={{minWidth: "10rem" }}
             variation="primary"
-            label={t("NEXT")}
-            title={t("NEXT")}
+            label={t(I18N_KEYS.PAGES_HIERARCHY_SELECTION.NEXT)}
+            title={t(I18N_KEYS.PAGES_HIERARCHY_SELECTION.NEXT)}
             onClick={onNextClick}
             icon={"ArrowForward"}
             isSuffix

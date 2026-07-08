@@ -2,6 +2,7 @@ import React, { useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card, HeaderComponent, SVG, Loader, Button } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const ReportsListPage = () => {
   const { t } = useTranslation();
@@ -70,8 +71,8 @@ const ReportsListPage = () => {
 
   return (
     <Card className="digit-reports-list__cards_main">
-      <HeaderComponent className="digit-reports-list__heading">{t("HCM_REPORTS")}</HeaderComponent>
-      <p className="digit-reports-list__description">{t("HCM_REPORTS_SELECT_TYPE_DESC")}</p>
+      <HeaderComponent className="digit-reports-list__heading">{t(I18N_KEYS.PAGES.HCM_REPORTS)}</HeaderComponent>
+      <p className="digit-reports-list__description">{t(I18N_KEYS.PAGES.HCM_REPORTS_SELECT_TYPE_DESC)}</p>
 
       <div className="digit-reports-list__cards">
         {reportTypes.map((report) => (
@@ -84,7 +85,7 @@ const ReportsListPage = () => {
                 <div className="digit-reports-list__row-title">{t(report.label)}</div>
                 <div className="digit-reports-list__row-desc">{t(report.description)}</div>
               </div>
-              <Button label={t("HCM_VIEW_REPORTS")} variation="secondary" size="medium" />
+              <Button label={t(I18N_KEYS.PAGES.HCM_VIEW_REPORTS)} variation="secondary" size="medium" />
             </div>
           </Card>
         ))}

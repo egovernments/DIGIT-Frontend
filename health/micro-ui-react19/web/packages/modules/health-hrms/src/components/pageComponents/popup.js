@@ -6,6 +6,7 @@ import {
   TextArea,
   Toast,
 } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /**
  * Component to show a pop-up to allow the user to close or confirm the edit user.
@@ -33,8 +34,8 @@ const ActionPopUp = ({ onClose, onSubmit, headingMsg }) => {
             size="large"
             style={{ minWidth: "270px" }}
             variation="secondary"
-            label={t(`CORE_COMMON_CLOSE`)}
-            title={t(`CORE_COMMON_CLOSE`)}
+            label={t(I18N_KEYS.COMMON.CORE_COMMON_CLOSE)}
+            title={t(I18N_KEYS.COMMON.CORE_COMMON_CLOSE)}
             onClick={onClose}
           />,
           <Button
@@ -44,14 +45,14 @@ const ActionPopUp = ({ onClose, onSubmit, headingMsg }) => {
             size="large"
             variation="primary"
             style={{ minWidth: "270px" }}
-            label={t(`HR_COMMON_BUTTON_SUBMIT`)}
-            title={t(`HR_COMMON_BUTTON_SUBMIT`)}
+            label={t(I18N_KEYS.COMMON.HR_COMMON_BUTTON_SUBMIT)}
+            title={t(I18N_KEYS.COMMON.HR_COMMON_BUTTON_SUBMIT)}
             onClick={onSubmit}
           />,
         ]}
       >
         <div key="comment-section">
-          <div className="comment-label">{t(`HR_READY_TO_SUBMIT_TEXT`)}</div>
+          <div className="comment-label">{t(I18N_KEYS.COMMON.HR_READY_TO_SUBMIT_TEXT)}</div>
         </div>
       </PopUp>
     </>

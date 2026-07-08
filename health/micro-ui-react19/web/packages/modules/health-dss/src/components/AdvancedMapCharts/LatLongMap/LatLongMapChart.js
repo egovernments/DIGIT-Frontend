@@ -9,6 +9,7 @@ import FilterContext from "../../FilterContext";
 import { getTitleHeading } from "../../../utils/locale";
 import { getQueryParam } from "../../../utils/getQueryParam";
 import { isLevelOneBoundary } from "../../../utils/isLevelOneBoundary";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const { t } = useTranslation();
@@ -218,7 +219,7 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
       <React.Fragment>
         {drillDownStack?.length > 1 && (
           <div className="digit-tag-container">
-            <div className="digit-tag-filter-text">{t("DSS_FILTERS_APPLIED")}: </div>
+            <div className="digit-tag-filter-text">{t(I18N_KEYS.COMMON.DSS_FILTERS_APPLIED)}: </div>
             {drillDownStack.map((filter, id) =>
               id > 0 ? (
                 <Chip

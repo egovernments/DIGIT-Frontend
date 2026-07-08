@@ -2,6 +2,7 @@ import { Dropdown, SVG, TextBlock } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ScreenTypeEnum } from "../utils/constants";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * BoundaryComponent allows users to select boundaries based on the hierarchy.
@@ -245,7 +246,7 @@ const AttendeeBoundaryComponent = ({ t, config, onSelect, formData }) => {
                         style={{
                             paddingLeft: "0px"
                         }}
-                    >{t("HCM_AM_FILTER")}</span>
+                    >{t(I18N_KEYS.COMMON.HCM_AM_FILTER)}</span>
 
                     <span
                         onClick={() => {

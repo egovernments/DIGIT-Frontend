@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const FilterByCycleDropdown = ({ handleItemClick }) => {
   const { t } = useTranslation();
@@ -10,7 +11,7 @@ const FilterByCycleDropdown = ({ handleItemClick }) => {
   const dropdownItems =
   projectData?.project?.additionalDetails?.projectType?.cycles?.map((item) => ({
       code: String(item.id).padStart(2, "0"),
-      name: `${t("CYCLE")} ${String(item.id).padStart(2, "0")}`,
+      name: `${t(I18N_KEYS.FILTERS.CYCLE)} ${String(item.id).padStart(2, "0")}`,
       id: item.id,
     })) || [];
 
@@ -18,7 +19,7 @@ const FilterByCycleDropdown = ({ handleItemClick }) => {
     <Button
       ref={actionRef}
       type="actionButton"
-      label={t("FILTER_BY_CYCLE")}
+      label={t(I18N_KEYS.FILTERS.FILTER_BY_CYCLE)}
       size="medium"
       variation="secondary"
       icon="FilterAlt"

@@ -7,6 +7,7 @@ import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues } from "../utils/constants";
 import SendForApprovalPopUp from "./SendForApprovalPopUp"; 
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 /**
  * Column builder registry.
  * Each key maps to a function: (t, navigate, props, setShowToast) => react-data-table column definition.
@@ -62,18 +63,18 @@ const ManageBillsTable = ({ ...props }) => {
     
         return {
             billId: {
-                name: colHeader(t("HCM_AM_BILL_ID")),
+                name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_BILL_ID)),
                 selector: (row) => (
                     <div
                         className="ellipsis-cell"
                         style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign: "start", lineHeight: "1.4", color: "#C84C0E", cursor: "pointer", textDecoration: "underline" }}
-                        title={row?.billNumber || t("NA")}
+                        title={row?.billNumber || t(I18N_KEYS.COMMON.NA)}
                         onClick={(ev) => {
                             ev.stopPropagation();
                             navigateToBillDetails(row);
                         }}
                     >
-                        {row?.billNumber || t("NA")}
+                        {row?.billNumber || t(I18N_KEYS.COMMON.NA)}
                     </div>
                 ),
                 grow: 1,
@@ -81,10 +82,10 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             source: {
-                name: colHeader(t("HCM_AM_SOURCE")),
+                name: colHeader(t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_SOURCE)),
                 selector: () => (
-                    <div className="ellipsis-cell" title={t("HCM_AM_ATTENDANCE")} style={{ paddingRight: "1rem" }}>
-                        {t("HCM_AM_ATTENDANCE")}
+                    <div className="ellipsis-cell" title={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_ATTENDANCE)} style={{ paddingRight: "1rem" }}>
+                        {t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_ATTENDANCE)}
                     </div>
                 ),
                 grow: 1,
@@ -92,7 +93,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             registers: {
-                name: colHeader(t("HCM_AM_NO_OF_REGISTERS"), "right"),
+                name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_NO_OF_REGISTERS), "right"),
                 selector: (row) => (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                         {row?.additionalDetails?.noOfRegisters || "0"}
@@ -105,7 +106,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             payees: {
-                name: colHeader(t("HCM_AM_NUMBER_OF_PAYEES"), "right"),
+                name: colHeader(t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_NUMBER_OF_PAYEES), "right"),
                 selector: (row) => (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                         {row?.billDetails?.length || "0"}
@@ -118,7 +119,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             totalAmount: {
-                name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`),
+                name: colHeader(`${t(I18N_KEYS.COMMON.HCM_AM_TOTAL_AMOUNT)}${currencySuffix}`),
                 selector: (row) => {
                     const total = row?.totalAmount || 0;
                     return (
@@ -134,7 +135,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             download: {
-                name: colHeader(t("HCM_AM_DOWNLOAD_BILL")),
+                name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_DOWNLOAD_BILL)),
                 selector: (row, index) => {
                     const reportDetails = row?.additionalDetails?.reportDetails;
                     const billId = row?.billNumber;
@@ -146,27 +147,27 @@ const ManageBillsTable = ({ ...props }) => {
                             size="medium"
                             icon="FileDownload"
                             isSuffix
-                            label={t("HCM_AM_DOWNLOAD_BILLS")}
-                            title={t("HCM_AM_DOWNLOAD_BILLS")}
+                            label={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_DOWNLOAD_BILLS)}
+                            title={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_DOWNLOAD_BILLS)}
                             showBottom={!isLastRow}
                             onOptionSelect={(value) => {
                                 if (value.code === "HCM_AM_PDF") {
                                     if (reportDetails?.pdfReportId) {
                                         downloadFileWithName({ fileStoreId: reportDetails.pdfReportId, customName: `${billId}`, type: "pdf" });
                                     } else {
-                                        setShowToast({ key: "error", label: t("HCM_AM_PDF_GENERATION_FAILED"), transitionTime: 3000 });
+                                        setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_PDF_GENERATION_FAILED), transitionTime: 3000 });
                                     }
                                 } else if (value.code === "HCM_AM_EXCEL") {
                                     if (reportDetails?.excelReportId) {
                                         downloadFileWithName({ fileStoreId: reportDetails.excelReportId, customName: `${billId}`, type: "excel" });
                                     } else {
-                                        setShowToast({ key: "error", label: t("HCM_AM_EXCEL_GENERATION_FAILED"), transitionTime: 3000 });
+                                        setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_EXCEL_GENERATION_FAILED), transitionTime: 3000 });
                                     }
                                 }
                             }}
                             options={[
-                                { code: "HCM_AM_EXCEL", name: t("HCM_AM_EXCEL") },
-                                { code: "HCM_AM_PDF", name: t("HCM_AM_PDF") },
+                                { code: "HCM_AM_EXCEL", name: t(I18N_KEYS.COMMON.HCM_AM_EXCEL) },
+                                { code: "HCM_AM_PDF", name: t(I18N_KEYS.COMMON.HCM_AM_PDF) },
                             ]}
                             optionsKey="name"
                             style={{ minWidth: "10rem" }}
@@ -174,10 +175,10 @@ const ManageBillsTable = ({ ...props }) => {
                             variation="secondary"
                         />
                     ) : (
-                        <div title={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}>
+                        <div title={reportDetails?.status === "FAILED" ? t(I18N_KEYS.COMMON.HCM_AM_FAILED_REPORT_GENERATION) : t(I18N_KEYS.COMMON.HCM_AM_PROGRESS_REPORT_GENERATION)}>
                             <Tag
                                 {...(reportDetails?.status !== "FAILED" && { icon: "Info" })}
-                                label={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
+                                label={reportDetails?.status === "FAILED" ? t(I18N_KEYS.COMMON.HCM_AM_FAILED_REPORT_GENERATION) : t(I18N_KEYS.COMMON.HCM_AM_PROGRESS_REPORT_GENERATION)}
                                 showIcon={true}
                                 {...(reportDetails?.status === "FAILED" && { type: "error" })}
                                 style={{ whiteSpace: "normal", wordBreak: "break-word", height: "auto", minHeight: "unset" }}
@@ -191,13 +192,13 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             sendForApproval: {
-                name: t("HCM_AM_SEND_FOR_APPROVAL"),
+                name: t(I18N_KEYS.COMMON.HCM_AM_SEND_FOR_APPROVAL),
                 selector: (row) => (
                     <Button
                         variation="secondary"
                         size="medium"
-                        label={t("HCM_AM_SEND_FOR_APPROVAL")}
-                        title={t("HCM_AM_SEND_FOR_APPROVAL")}
+                        label={t(I18N_KEYS.COMMON.HCM_AM_SEND_FOR_APPROVAL)}
+                        title={t(I18N_KEYS.COMMON.HCM_AM_SEND_FOR_APPROVAL)}
                         style={{ minWidth: "12.5rem", maxWidth: "none" }}
                         onClick={() => {
                             setSelectedBill(row); // Set the selected bill details
@@ -218,7 +219,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             downloadAdvisory: {
-                name: colHeader(t("HCM_AM_DOWNLOAD_ADVISORY")),
+                name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_DOWNLOAD_ADVISORY)),
                 selector: (row, index) => {
                     const advisoryReport = row?.advisoryReport;
                     const billId = row?.billNumber;
@@ -230,8 +231,8 @@ const ManageBillsTable = ({ ...props }) => {
                             size="medium"
                             icon="FileDownload"
                             isSuffix
-                            label={t("HCM_AM_DOWNLOAD_ADVISORY")}
-                            title={t("HCM_AM_DOWNLOAD_ADVISORY")}
+                            label={t(I18N_KEYS.COMMON.HCM_AM_DOWNLOAD_ADVISORY)}
+                            title={t(I18N_KEYS.COMMON.HCM_AM_DOWNLOAD_ADVISORY)}
                             onClick={() => {
                                 downloadFileWithName({ fileStoreId: advisoryReport.fileStoreId, customName: `Payment_Advisory_${billId}`, type: "excel" });
                             }}
@@ -240,10 +241,10 @@ const ManageBillsTable = ({ ...props }) => {
                             type="button"
                         />
                     ) : (
-                        <div title={advisoryReport?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}>
+                        <div title={advisoryReport?.status === "FAILED" ? t(I18N_KEYS.COMMON.HCM_AM_FAILED_REPORT_GENERATION) : t(I18N_KEYS.COMMON.HCM_AM_PROGRESS_REPORT_GENERATION)}>
                             <Tag
                                 {...(advisoryReport?.status !== "FAILED" && { icon: "Info" })}
-                                label={advisoryReport?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
+                                label={advisoryReport?.status === "FAILED" ? t(I18N_KEYS.COMMON.HCM_AM_FAILED_REPORT_GENERATION) : t(I18N_KEYS.COMMON.HCM_AM_PROGRESS_REPORT_GENERATION)}
                                 showIcon={true}
                                 {...(advisoryReport?.status === "FAILED" && { type: "error" })}
                                 style={{ whiteSpace: "normal", wordBreak: "break-word", height: "auto", minHeight: "unset" }}
@@ -258,7 +259,7 @@ const ManageBillsTable = ({ ...props }) => {
     
             // ── Status count columns (verification) ──────────────────────────
             pending: {
-                name: colHeader(t("HCM_AM_PENDING"), "right"),
+                name: colHeader(t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_PENDING), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "PENDING_VERIFICATION")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
@@ -270,7 +271,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             verificationFailed: {
-                name: colHeader(t("HCM_AM_VERIFICATION_FAILED"), "right"),
+                name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_VERIFICATION_FAILED), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "VERIFICATION_FAILED")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
@@ -282,7 +283,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             verified: {
-                name: colHeader(t("HCM_AM_VERIFIED"), "right"),
+                name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_VERIFIED), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => ["VERIFIED", "PAYMENT_FAILED"].includes(d?.status))?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>{count}</div>;
@@ -294,7 +295,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             failures: {
-                name: colHeader(t("HCM_AM_NUMBER_OF_FAILURES"), "right"),
+                name: colHeader(t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_NUMBER_OF_FAILURES), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "VERIFICATION_FAILED")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
@@ -306,12 +307,12 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             editBill: {
-                name: t("HCM_AM_EDIT_BILL"),
+                name: t(I18N_KEYS.COMMON.HCM_AM_EDIT_BILL),
                 selector: (row) => (
                     <Button
                         variation="secondary"
                         size="medium"
-                        label={t("HCM_AM_EDIT_BILL")}
+                        label={t(I18N_KEYS.COMMON.HCM_AM_EDIT_BILL)}
                         onClick={() => {
                             navigate(`/${window.contextPath}/employee/payments/view-bill-payment-details/${role}`, {
                                 state: {
@@ -328,10 +329,10 @@ const ManageBillsTable = ({ ...props }) => {
     
             // ── Payment approver columns ──────────────────────────────────────
             billDate: {
-                name: colHeader(t("HCM_AM_BILL_DATE")),
+                name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_BILL_DATE)),
                 selector: (row) => (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                        {row?.billDate ? formatTimestampToDate(row.billDate) : t("NA")}
+                        {row?.billDate ? formatTimestampToDate(row.billDate) : t(I18N_KEYS.COMMON.NA)}
                     </div>
                 ),
                 grow: 1,
@@ -339,7 +340,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             amountPaid: {
-                name: colHeader(t("HCM_AM_AMOUNT_PAID"), "right"),
+                name: colHeader(t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_AMOUNT_PAID), "right"),
                 selector: (row) => {
                     const paid = row?.billDetails?.filter((d) => d?.status === "PAID")?.reduce((sum, d) => sum + (d?.totalAmount || 0), 0) || 0;
                     return (
@@ -355,7 +356,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             pendingPayment: {
-                name: colHeader(t("HCM_AM_PENDING"), "right"),
+                name: colHeader(t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_PENDING), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => !["PAID", "PAYMENT_FAILED"].includes(d?.status))?.length || 0;
                     return <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>{count}</div>;
@@ -367,7 +368,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             failedPayment: {
-                name: colHeader(t("HCM_AM_FAILED"), "right"),
+                name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_FAILED), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "PAYMENT_FAILED")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
@@ -379,7 +380,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             paidCount: {
-                name: colHeader(t("HCM_AM_PAID"), "right"),
+                name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_PAID), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "PAID")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>{count}</div>;
@@ -486,7 +487,7 @@ const ManageBillsTable = ({ ...props }) => {
                     setShowApprovalPopup(false);
                     setShowToast({
                       key: "success",
-                      label: t("HCM_AM_SEND_FOR_APPROVAL_SUCCESS"),
+                      label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_SEND_FOR_APPROVAL_SUCCESS),
                       transitionTime: 3000,
                     });
                     props?.onRefetchBills?.();
@@ -497,7 +498,7 @@ const ManageBillsTable = ({ ...props }) => {
           
                     setShowToast({
                       key: "error",
-                      label: t("HCM_AM_SOMETHING_WENT_WRONG"),
+                      label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
                       transitionTime: 3000,
                     });
                   },

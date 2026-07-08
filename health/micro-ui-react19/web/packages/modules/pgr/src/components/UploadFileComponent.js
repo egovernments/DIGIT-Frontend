@@ -3,6 +3,7 @@ import { FileUpload } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { downloadFileWithCustomName } from "../utils/downloadFileWithCustomName";
 import { Button } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const UploadedFileComponent = ({ config, onSelect }) => {
   const { t } = useTranslation();
@@ -39,12 +40,12 @@ const UploadedFileComponent = ({ config, onSelect }) => {
       if (file) {
         const validTypes = ["application/pdf", "image/jpeg", "image/jpg"];
         if (!validTypes.includes(file.type)) {
-          setError(t("CS_INVALID_FILE_TYPE"));
+          setError(t(I18N_KEYS.COMPONENTS.CS_INVALID_FILE_TYPE));
           return;
         }
 
         if (file.size >= maxFileSize) {
-          setError(`${t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED")} (${t("MAX_FILE_SIZE")}: ${maxFileSizeMB} MB)`);
+          setError(`${t(I18N_KEYS.COMPONENTS.CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED)} (${t(I18N_KEYS.COMPONENTS.MAX_FILE_SIZE)}: ${maxFileSizeMB} MB)`);
         } else {
           try {
             const response = await Digit.UploadServices.Filestorage("property-upload", file, tenantId);
@@ -61,13 +62,13 @@ const UploadedFileComponent = ({ config, onSelect }) => {
                 onSelect(config.key, { ...uploaded, auditDetails });
               }
             } else {
-              setError(t("CS_FILE_UPLOAD_ERROR"));
+              setError(t(I18N_KEYS.COMPONENTS.CS_FILE_UPLOAD_ERROR));
             }
           } catch (err) {
             if (err.message && err.message.includes("corrupt")) {
-              setError(t("CS_FILE_CORRUPTED_ERROR"));
+              setError(t(I18N_KEYS.COMPONENTS.CS_FILE_CORRUPTED_ERROR));
             } else {
-              setError(t("CS_FILE_UPLOAD_ERROR"));
+              setError(t(I18N_KEYS.COMPONENTS.CS_FILE_UPLOAD_ERROR));
             }
           }
         }
@@ -100,7 +101,7 @@ const UploadedFileComponent = ({ config, onSelect }) => {
       }
     } catch (err) {
       console.error("Download error:", err);
-      setError(t("CS_FILE_DOWNLOAD_ERROR"));
+      setError(t(I18N_KEYS.COMPONENTS.CS_FILE_DOWNLOAD_ERROR));
     }
   }
 
@@ -121,11 +122,11 @@ const UploadedFileComponent = ({ config, onSelect }) => {
       />
       {uploadedFile && (
         <Button
-          label={t("WBH_DOWNLOAD")}
+          label={t(I18N_KEYS.COMPONENTS.WBH_DOWNLOAD)}
           variation="secondary"
           type="button"
           size={"medium"}
-          icon={t("DownloadIcon")}
+          icon={"DownloadIcon"}
           onClick={downloadFile}
         />
       )}

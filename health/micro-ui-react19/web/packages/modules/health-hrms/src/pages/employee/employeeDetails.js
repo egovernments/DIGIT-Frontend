@@ -7,17 +7,18 @@ import { searchStaff } from "../../services/service";
 import { HeaderComponent, Button, Card, Footer, ActionBar, SummaryCard, Tag, NoResultsFound,Loader } from "@egovernments/digit-ui-components";
 import DeactivatePopUp from "../../components/pageComponents/DeactivatePopUp";
 import { ReposeScreenType } from "../../constants/enums";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const EmployeeDetailScreen = () => {
   const [openActivate, setOpenActivate] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const { t } = useTranslation();
   const activeworkflowActions = [
-    { code: "EDIT_CAMPAIGN_ASSIGNMENT", name: t("HR_COMMON_EDIT_CAMPAIGNS_HEADER") },
-    { code: "DEACTIVATE_EMPLOYEE_HEAD", name: t("HR_DEACTIVATE_EMPLOYEE_HEAD") },
-    { code: "COMMON_EDIT_EMPLOYEE_HEADER", name: t("HR_COMMON_EDIT_EMPLOYEE_HEADER") },
+    { code: "EDIT_CAMPAIGN_ASSIGNMENT", name: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_COMMON_EDIT_CAMPAIGNS_HEADER) },
+    { code: "DEACTIVATE_EMPLOYEE_HEAD", name: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_DEACTIVATE_EMPLOYEE_HEAD) },
+    { code: "COMMON_EDIT_EMPLOYEE_HEADER", name: t(I18N_KEYS.COMMON.HR_COMMON_EDIT_EMPLOYEE_HEADER) },
   ];
-  const deactiveworkflowActions = [{ code: "ACTIVATE_EMPLOYEE_HEAD", name: t("HR_ACTIVATE_EMPLOYEE_HEAD") }];
+  const deactiveworkflowActions = [{ code: "ACTIVATE_EMPLOYEE_HEAD", name: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_ACTIVATE_EMPLOYEE_HEAD) }];
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
 
@@ -125,11 +126,11 @@ const EmployeeDetailScreen = () => {
               state: {
                 isCampaign: ReposeScreenType.EDIT_USER,
                 state: "success",
-                info: t("HR_EMPLOYEE_ID_LABEL"),
+                info: t(I18N_KEYS.COMMON.HR_EMPLOYEE_ID_LABEL),
                 fileName: res?.Employees?.[0],
                 description: null,
-                message: t(`EMPLOYEE_RESPONSE_DEACTIVATION_ACTION`),
-                back: t(`CORE_COMMON_GO_TO_HOME`),
+                message: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.EMPLOYEE_RESPONSE_DEACTIVATION_ACTION),
+                back: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.CORE_COMMON_GO_TO_HOME),
                 backlink: `/${window.contextPath}/employee`,
               },
             });
@@ -140,11 +141,11 @@ const EmployeeDetailScreen = () => {
               state: {
                 isCampaign: ReposeScreenType.EDIT_USER_ERROR,
                 state: "error",
-                info: t("HR_EMPLOYEE_ID_LABEL"),
+                info: t(I18N_KEYS.COMMON.HR_EMPLOYEE_ID_LABEL),
                 fileName: error?.Employees?.[0],
                 description: null,
-                message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION_ERROR`),
-                back: t(`CORE_COMMON_GO_TO_HOME`),
+                message: t(I18N_KEYS.COMMON.EMPLOYEE_RESPONSE_UPDATE_ACTION_ERROR),
+                back: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.CORE_COMMON_GO_TO_HOME),
                 backlink: `/${window.contextPath}/employee`,
               },
             });
@@ -175,11 +176,11 @@ const EmployeeDetailScreen = () => {
               state: {
                 isCampaign: ReposeScreenType.EDIT_USER,
                 state: "success",
-                info: t("HR_EMPLOYEE_ID_LABEL"),
+                info: t(I18N_KEYS.COMMON.HR_EMPLOYEE_ID_LABEL),
                 fileName: res?.Employees?.[0],
                 description: null,
-                message: t(`HR_RACTIVATE_SUCCESS_MESSAGE`),
-                back: t(`CORE_COMMON_GO_TO_HOME`),
+                message: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_RACTIVATE_SUCCESS_MESSAGE),
+                back: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.CORE_COMMON_GO_TO_HOME),
                 backlink: `/${window.contextPath}/employee`,
               },
             });
@@ -190,11 +191,11 @@ const EmployeeDetailScreen = () => {
               state: {
                 isCampaign: ReposeScreenType.EDIT_USER_ERROR,
                 state: "error",
-                info: t("HR_EMPLOYEE_ID_LABEL"),
+                info: t(I18N_KEYS.COMMON.HR_EMPLOYEE_ID_LABEL),
                 fileName: error?.Employees?.[0],
                 description: null,
-                message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION_ERROR`),
-                back: t(`CORE_COMMON_GO_TO_HOME`),
+                message: t(I18N_KEYS.COMMON.EMPLOYEE_RESPONSE_UPDATE_ACTION_ERROR),
+                back: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.CORE_COMMON_GO_TO_HOME),
                 backlink: `/${window.contextPath}/employee`,
               },
             });
@@ -232,7 +233,7 @@ const EmployeeDetailScreen = () => {
       >
         {
           <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
-            {t("HR_NEW_EMPLOYEE_FORM_HEADER")}
+            {t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_NEW_EMPLOYEE_FORM_HEADER)}
           </HeaderComponent>
         }
       </div>
@@ -249,23 +250,23 @@ const EmployeeDetailScreen = () => {
                 fieldPairs: [
                   {
                     inline: true,
-                    label: t("HR_EMP_STATUS_LABEL"),
+                    label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_EMP_STATUS_LABEL),
                     type: "text",
-                    value: data?.Employees ? (data?.Employees[0].isActive ? t("ACTIVE") : t("INACTIVE")) : t("INACTIVE"),
+                    value: data?.Employees ? (data?.Employees[0].isActive ? t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.ACTIVE) : t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.INACTIVE)) : t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.INACTIVE),
                   },
                   {
                     inline: true,
-                    label: t("HR_USERNAME_LABEL"),
+                    label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_USERNAME_LABEL),
                     type: "text",
-                    value: data?.Employees ? data?.Employees[0].code : t(`CORE_COMMON_NA`),
+                    value: data?.Employees ? data?.Employees[0].code : t(I18N_KEYS.COMMON.CORE_COMMON_NA),
                   },
                   {
                     inline: true,
-                    label: t("HR_PASSWORD_LABEL"),
+                    label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_PASSWORD_LABEL),
                     value: "******",
                   },
                 ],
-                header: t("HR_LOGIN_FORM_HEADER"),
+                header: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_LOGIN_FORM_HEADER),
                 subHeader: "",
               },
               // Personal Details
@@ -274,36 +275,36 @@ const EmployeeDetailScreen = () => {
                 fieldPairs: [
                   {
                     inline: true,
-                    label: t("HR_NAME_LABEL"),
+                    label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_NAME_LABEL),
                     type: "text",
-                    value: data?.Employees ? data?.Employees[0]?.user?.name : t(`CORE_COMMON_NA`),
+                    value: data?.Employees ? data?.Employees[0]?.user?.name : t(I18N_KEYS.COMMON.CORE_COMMON_NA),
                   },
                   {
                     inline: true,
-                    label: t("HR_MOB_NO_LABEL"),
+                    label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_MOB_NO_LABEL),
                     type: "text",
 
-                    value: data?.Employees ? data?.Employees[0]?.user?.mobileNumber : t(`CORE_COMMON_NA`),
+                    value: data?.Employees ? data?.Employees[0]?.user?.mobileNumber : t(I18N_KEYS.COMMON.CORE_COMMON_NA),
                   },
                   {
                     inline: true,
-                    label: t("HR_GENDER_LABEL"),
-                    value: data?.Employees ? data?.Employees[0]?.user?.gender : t(`CORE_COMMON_NA`),
+                    label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_GENDER_LABEL),
+                    value: data?.Employees ? data?.Employees[0]?.user?.gender : t(I18N_KEYS.COMMON.CORE_COMMON_NA),
                   },
                   {
                     inline: true,
-                    label: t("HR_EMAIL_LABEL"),
+                    label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_EMAIL_LABEL),
                     type: "text",
-                    value: data?.Employees ? data?.Employees[0]?.user?.emailId : t(`CORE_COMMON_NA`),
+                    value: data?.Employees ? data?.Employees[0]?.user?.emailId : t(I18N_KEYS.COMMON.CORE_COMMON_NA),
                   },
                   {
                     inline: true,
-                    label: t("HR_CORRESPONDENCE_ADDRESS_LABEL"),
+                    label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_CORRESPONDENCE_ADDRESS_LABEL),
                     type: "text",
-                    value: data?.Employees ? data?.Employees[0]?.user?.correspondenceAddress : t(`CORE_COMMON_NA`),
+                    value: data?.Employees ? data?.Employees[0]?.user?.correspondenceAddress : t(I18N_KEYS.COMMON.CORE_COMMON_NA),
                   },
                 ],
-                header: t("HR_PERSONAL_DETAILS_FORM_HEADER"),
+                header: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_PERSONAL_DETAILS_FORM_HEADER),
                 subHeader: "",
               },
 
@@ -314,20 +315,20 @@ const EmployeeDetailScreen = () => {
                 fieldPairs: [
                   {
                     inline: true,
-                    label: t("HR_EMPLOYMENT_TYPE_LABEL"),
+                    label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_EMPLOYMENT_TYPE_LABEL),
                     type: "text",
                     //value: data?.Employees?.[0]?.assignments?.length > 0 ? data.Employees[0].assignments[0].department : "NA",
-                    value: data?.Employees ? data?.Employees[0]?.employeeType : t(`CORE_COMMON_NA`),
+                    value: data?.Employees ? data?.Employees[0]?.employeeType : t(I18N_KEYS.COMMON.CORE_COMMON_NA),
                   },
                   // {
                   //   inline: true,
-                  //   label: t("EMPLOYEE_RESPONSE_CREATE_LABEL"),
+                  //   label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.EMPLOYEE_RESPONSE_CREATE_LABEL),
                   //   type: "text",
                   //   value: "USR-003682",
                   // },
                   {
                     inline: true,
-                    label: t("HR_COMMON_TABLE_COL_DEPT"),
+                    label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_COMMON_TABLE_COL_DEPT),
                     type: "text",
                     value:
                       data?.Employees?.[0]?.assignments?.length > 0
@@ -336,12 +337,12 @@ const EmployeeDetailScreen = () => {
                   },
                   {
                     inline: true,
-                    label: t("HR_APPOINTMENT_DATE_LABEL"),
+                    label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_APPOINTMENT_DATE_LABEL),
                     type: "text",
-                    value: data?.Employees?.[0]?.dateOfAppointment ? convertEpochToDate(data.Employees[0].dateOfAppointment) : t(`CORE_COMMON_NA`),
+                    value: data?.Employees?.[0]?.dateOfAppointment ? convertEpochToDate(data.Employees[0].dateOfAppointment) : t(I18N_KEYS.COMMON.CORE_COMMON_NA),
                   },
                 ],
-                header: t("HR_PROFESSIONAL_DETAILS_FORM_HEADER"),
+                header: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_PROFESSIONAL_DETAILS_FORM_HEADER),
                 subHeader: "",
               },
 
@@ -366,24 +367,24 @@ const EmployeeDetailScreen = () => {
                                     fieldPairs: [
                                       {
                                         inline: true,
-                                        label: t("HR_HIERARCHY_LABEL"),
+                                        label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_HIERARCHY_LABEL),
                                         type: "text",
-                                        value: element?.hierarchy || t(`CORE_COMMON_NA`),
+                                        value: element?.hierarchy || t(I18N_KEYS.COMMON.CORE_COMMON_NA),
                                       },
                                       {
                                         inline: true,
-                                        label: t("HR_BOUNDARY_TYPE_LABEL"),
+                                        label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_BOUNDARY_TYPE_LABEL),
                                         type: "text",
-                                        value: element?.boundaryType || t(`CORE_COMMON_NA`),
+                                        value: element?.boundaryType || t(I18N_KEYS.COMMON.CORE_COMMON_NA),
                                       },
                                       {
                                         inline: true,
-                                        label: t("HR_BOUNDARY_LABEL"),
-                                        value: element?.boundary || t(`CORE_COMMON_NA`),
+                                        label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_BOUNDARY_LABEL),
+                                        value: element?.boundary || t(I18N_KEYS.COMMON.CORE_COMMON_NA),
                                       },
                                       {
                                         inline: true,
-                                        label: t("HR_ROLE_LABEL"),
+                                        label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_ROLE_LABEL),
                                         value: data?.Employees?.[0]?.user?.roles
                                           ?.filter((ele) => ele.tenantId == element?.tenantId)
                                           ?.map((ele) => t(`ACCESSCONTROL_ROLES_ROLES_` + ele?.code))
@@ -391,7 +392,7 @@ const EmployeeDetailScreen = () => {
                                       },
                                     ],
                                     header: "",
-                                    subHeader: `${t("HR_JURISDICTION")} ${index + 1}`,
+                                    subHeader: `${t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_JURISDICTION)} ${index + 1}`,
                                   };
                                 })
                               : []
@@ -401,7 +402,7 @@ const EmployeeDetailScreen = () => {
                     },
                   },
                 ],
-                header: t("HR_JURISDICTION_DETAILS_HEADER"),
+                header: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_JURISDICTION_DETAILS_HEADER),
                 subHeader: "",
               },
 
@@ -425,24 +426,24 @@ const EmployeeDetailScreen = () => {
                                     fieldPairs: [
                                       {
                                         inline: true,
-                                        label: t("HR_CAMPAIGN_LABEL"),
+                                        label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_CAMPAIGN_LABEL),
                                         type: "text",
-                                        value: element?.name || t(`CORE_COMMON_NA`),
+                                        value: element?.name || t(I18N_KEYS.COMMON.CORE_COMMON_NA),
                                       },
                                       {
                                         inline: true,
-                                        label: t("HR_ASMT_FROM_DATE_LABEL"),
+                                        label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_ASMT_FROM_DATE_LABEL),
                                         type: "text",
-                                        value: element?.startDate ? convertEpochToDate(element?.startDate) : t(`CORE_COMMON_NA`),
+                                        value: element?.startDate ? convertEpochToDate(element?.startDate) : t(I18N_KEYS.COMMON.CORE_COMMON_NA),
                                       },
                                       {
                                         inline: true,
-                                        label: t("HR_ASMT_TO_DATE_LABEL"),
-                                        value: element?.endDate ? convertEpochToDate(element?.endDate) : t(`CORE_COMMON_NA`),
+                                        label: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_ASMT_TO_DATE_LABEL),
+                                        value: element?.endDate ? convertEpochToDate(element?.endDate) : t(I18N_KEYS.COMMON.CORE_COMMON_NA),
                                       },
                                     ],
                                     header: "",
-                                    subHeader: `${t("HR_ASSIGNMENT")} ${index + 1}`,
+                                    subHeader: `${t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_ASSIGNMENT)} ${index + 1}`,
                                   };
                                 })
                               : []
@@ -454,7 +455,7 @@ const EmployeeDetailScreen = () => {
                     },
                   },
                 ],
-                header: t("HR_ASSIGN_DET_HEADER"),
+                header: t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_ASSIGN_DET_HEADER),
                 subHeader: "",
               },
 
@@ -474,7 +475,7 @@ const EmployeeDetailScreen = () => {
             <Button
               // className="custom-class"
               variation="primary"
-              label={t("HR_COMMON_TAKE_ACTION")}
+              label={t(I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_COMMON_TAKE_ACTION)}
               menuStyles={{
                   bottom: "40px",
                   maxWidth: "fit-content",
@@ -527,8 +528,8 @@ const EmployeeDetailScreen = () => {
 
       {openModal && (
         <DeactivatePopUp
-          bussnessBtnLabel="HR_DEACTIVATE_EMPLOYEE_BUTTON_TEXT"
-          label="HR_COMMON_DEACTIVATED_EMPLOYEE_HEADER"
+          bussnessBtnLabel={I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_DEACTIVATE_EMPLOYEE_BUTTON_TEXT}
+          label={I18N_KEYS.COMMON.HR_COMMON_DEACTIVATED_EMPLOYEE_HEADER}
           onClose={() => {
             setOpenModal(false);
           }}
@@ -541,8 +542,8 @@ const EmployeeDetailScreen = () => {
 
       {openActivate && (
         <DeactivatePopUp
-          bussnessBtnLabel="HR_ACTIVATE_EMPLOYEE_HEAD"
-          label="HR_ACTIVATE_EMPLOYEE_HEAD"
+          bussnessBtnLabel={I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_ACTIVATE_EMPLOYEE_HEAD}
+          label={I18N_KEYS.PAGES_EMPLOYEE_DETAILS.HR_ACTIVATE_EMPLOYEE_HEAD}
           onClose={() => {
             setOpenActivate(false);
           }}

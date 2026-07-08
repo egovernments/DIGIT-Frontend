@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState, Fragment } from "react";
 import { useLocation } from "react-router-dom";
 import { Loader } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const ViewDashboard = ({ stateCode }) => {
   const { t } = useTranslation();
@@ -15,7 +16,7 @@ const ViewDashboard = ({ stateCode }) => {
   const campaignNumber = project?.referenceID;
   const [redirected, setRedirected] = useState(false);
   const queryStrings = Digit.Hooks.useQueryParams();
-  const [loaderText, setLoaderText] = useState(t("LOADING"));
+  const [loaderText, setLoaderText] = useState(t(I18N_KEYS.PAGES.LOADING));
 
   // campaign search call
   const { isLoading: campaignSearchLoading, data: campaignData, error: campaignError, refetch: refetch } = Digit.Hooks.DSS.useSearchCampaign({
@@ -169,11 +170,11 @@ const ViewDashboard = ({ stateCode }) => {
 
   // Dynamic loader text based on current API
   useEffect(() => {
-    if (campaignSearchLoading) setLoaderText(t("FETCHING_CAMPAIGN_DETAILS"));
-    else if (hierarchyLoading) setLoaderText(t("FETCHING_HIERARCHY"));
-    else if (isMDMSLoading) setLoaderText(t("LOADING_DASHBOARD_CONFIGURATION"));
-    else if (isDashboardLoading) setLoaderText(t("LOADING_DASHBOARD"));
-    else if (boundaryDataLoading) setLoaderText(t("FETCHING_BOUNDARIES"));
+    if (campaignSearchLoading) setLoaderText(t(I18N_KEYS.PAGES.FETCHING_CAMPAIGN_DETAILS));
+    else if (hierarchyLoading) setLoaderText(t(I18N_KEYS.PAGES.FETCHING_HIERARCHY));
+    else if (isMDMSLoading) setLoaderText(t(I18N_KEYS.PAGES.LOADING_DASHBOARD_CONFIGURATION));
+    else if (isDashboardLoading) setLoaderText(t(I18N_KEYS.PAGES.LOADING_DASHBOARD));
+    else if (boundaryDataLoading) setLoaderText(t(I18N_KEYS.PAGES.FETCHING_BOUNDARIES));
   }, [campaignSearchLoading, hierarchyLoading, isMDMSLoading, isDashboardLoading, boundaryDataLoading, t]);
 
   
@@ -214,7 +215,7 @@ const ViewDashboard = ({ stateCode }) => {
 
   // Always show loader until redirect
   if (!redirected) {
-    return <Loader variant={"PageLoader"} className={"digit-center-loader"} loaderText={loaderText || t("LOADING")} />;
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} loaderText={loaderText || t(I18N_KEYS.PAGES.LOADING)} />;
   }
   return null;
 };

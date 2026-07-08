@@ -8,6 +8,7 @@ import { defaultPaginationValues } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 import SendForEditPopUp from "../components/sendForEditPopUp";
 import AlertPopUp from "../components/alertPopUp";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * @function VerifyAndGeneratePaymentsTable
@@ -80,7 +81,7 @@ const VerifyAndGeneratePaymentsTable = ({
             onError: (error) => {
                     setShowToast({
                         key: "error",
-                        label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_BILL_DETAILS_SENT_FOR_EDIT_ERROR"),//TODO UPDATE TOAST MSG
+                        label: error?.response?.data?.Errors?.[0]?.message || t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BILL_DETAILS_SENT_FOR_EDIT_ERROR),//TODO UPDATE TOAST MSG
                         transitionTime: 2000,
                     });
                 },
@@ -89,7 +90,7 @@ const VerifyAndGeneratePaymentsTable = ({
         }catch (error) {
             setShowToast({
                 key: "error",
-                label: t("HCM_AM_BILL_DETAILS_SENT_FOR_EDIT_ERROR"), //TODO UPDATE TOAST MSG
+                label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BILL_DETAILS_SENT_FOR_EDIT_ERROR), //TODO UPDATE TOAST MSG
                 transitionTime: 3000,
             }); 
         }
@@ -102,7 +103,7 @@ const VerifyAndGeneratePaymentsTable = ({
             if (!detailsToEdit || detailsToEdit.length === 0){
                 setShowToast({
                     key: "info",
-                    label: t("HCM_AM_NO_BILL_DETAILS_TO_EDIT"), //TODO UPDATE TOAST MSG
+                    label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_NO_BILL_DETAILS_TO_EDIT), //TODO UPDATE TOAST MSG
                     transitionTime: 2000,
                 });
                 return;
@@ -114,7 +115,7 @@ const VerifyAndGeneratePaymentsTable = ({
 
             setShowToast({
                 key: "success",
-                label: t("HCM_AM_BILL_DETAILS_SENT_FOR_EDIT_SUCCESS"), //TODO UPDATE TOAST MSG
+                label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BILL_DETAILS_SENT_FOR_EDIT_SUCCESS), //TODO UPDATE TOAST MSG
                 transitionTime: 2000,
             });
             onTaskDone?.(); //  trigger bill search in parent
@@ -140,7 +141,7 @@ const VerifyAndGeneratePaymentsTable = ({
                     const taskId = verifyResponse?.taskId;
                     if (!taskId) {
                          setIsLoading(false);
-                        setShowToast({ key: "error", label: t("HCM_AM_TASK_ID_NOT_FOUND"), transitionTime: 2000 }); //TODO UPDATE TOAST MSG 
+                        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_TASK_ID_NOT_FOUND), transitionTime: 2000 }); //TODO UPDATE TOAST MSG 
                         return;
                     }
 
@@ -164,14 +165,14 @@ const VerifyAndGeneratePaymentsTable = ({
                                 setIsLoading(false);
                 setShowToast({
                   key: "info",
-                  label: t("HCM_AM_BILL_VERIFICATION_COMPLETED"),
+                  label: t(I18N_KEYS.COMMON.HCM_AM_BILL_VERIFICATION_COMPLETED),
                   transitionTime: 5000,
                 });
                 setInProgressBillsVerify(prev => ({ ...prev, [bill?.id]: false }));
                 onTaskDone?.(); //  trigger bill search in parent
               }  else if (status === "IN_PROGRESS") {
                         setIsLoading(true); // start loader                        
-                        setShowToast({ key: "info", label: t("HCM_AM_BILL_VERIFICATION_IN_PROGRESS"), transitionTime: 2000 });
+                        setShowToast({ key: "info", label: t(I18N_KEYS.COMMON.HCM_AM_BILL_VERIFICATION_IN_PROGRESS), transitionTime: 2000 });
 
                                 if (attempts < MAX_ATTEMPTS) {
                                     attempts++;
@@ -179,7 +180,7 @@ const VerifyAndGeneratePaymentsTable = ({
                                 } else {
                                     setIsLoading(false);
                                     setInProgressBillsVerify(prev => ({ ...prev, [bill?.id]: true }));                                     
-                                    setShowToast({ key: "info", label: t("HCM_AM_TASK_POLL_TIMEOUT"), transitionTime: 3000 });
+                                    setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_TASK_POLL_TIMEOUT), transitionTime: 3000 });
                                 }
                             } else {
                                  setIsLoading(false);
@@ -187,7 +188,7 @@ const VerifyAndGeneratePaymentsTable = ({
                             }
                         } catch (err) {
                              setIsLoading(false);
-                            setShowToast({ key: "error", label: t("HCM_AM_TASK_STATUS_ERROR"), transitionTime: 3000 });//TODO UPDATE TOAST MSG
+                            setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_TASK_STATUS_ERROR), transitionTime: 3000 });//TODO UPDATE TOAST MSG
                         }
                     };
 
@@ -207,7 +208,7 @@ const VerifyAndGeneratePaymentsTable = ({
          setIsLoading(false);
         setShowToast({
             key: "error",
-            label: t("HCM_AM_BILL_VERIFY_EXCEPTION"),//TODO UPDATE TOAST MSG
+            label: t(I18N_KEYS.COMMON.HCM_AM_BILL_VERIFY_EXCEPTION),//TODO UPDATE TOAST MSG
             transitionTime: 3000,
         });
     }
@@ -228,7 +229,7 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
                     const taskId = paymentResponse?.taskId;
                     if (!taskId) {
                          setIsLoading(false);
-                        setShowToast({ key: "error", label: t("HCM_AM_TASK_ID_NOT_FOUND"), transitionTime: 2000 });//TODO UPDATE TOAST MSG
+                        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_TASK_ID_NOT_FOUND), transitionTime: 2000 });//TODO UPDATE TOAST MSG
                         return;
                     }
 
@@ -252,7 +253,7 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
                                 setIsLoading(false);
                 setShowToast({
                   key: "info",
-                  label: t("HCM_AM_PAYMENT_GENERATION_COMPLETED"),
+                  label: t(I18N_KEYS.COMMON.HCM_AM_PAYMENT_GENERATION_COMPLETED),
                   transitionTime: 5000,
                 });
                 setInProgressBillsTransfer(prev => ({ ...prev, [bill?.id]: false }));
@@ -261,14 +262,14 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
                 setInProgressBillsTransfer(prev => ({ ...prev, [bill?.id]: true }));
                         //  setIsLoading(true); // start loader
                         //TODO UPDATE TOAST MSG
-                        setShowToast({ key: "info", label: t("HCM_AM_PAYMENT_GENERATION_IN_PROGRESS"), transitionTime: 3000 });//TODO UPDATE TOAST MSG
+                        setShowToast({ key: "info", label: t(I18N_KEYS.COMMON.HCM_AM_PAYMENT_GENERATION_IN_PROGRESS), transitionTime: 3000 });//TODO UPDATE TOAST MSG
 
                                 if (attempts < MAX_ATTEMPTS) {
                                     attempts++;
                                     setTimeout(pollStatus, POLLING_INTERVAL);
                                 } else {
                                      setIsLoading(false);
-                                    setShowToast({ key: "info", label: t("HCM_AM_TASK_POLL_TIMEOUT"), transitionTime: 3000 });
+                                    setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_TASK_POLL_TIMEOUT), transitionTime: 3000 });
                                 }
                             } else {
                                  setIsLoading(false);
@@ -276,7 +277,7 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
                             }
                         } catch (err) {
                              setIsLoading(false);
-                            setShowToast({ key: "error", label: t("HCM_AM_TASK_STATUS_ERROR"), transitionTime: 3000 });
+                            setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_TASK_STATUS_ERROR), transitionTime: 3000 });
                         }
                     };
 
@@ -296,7 +297,7 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
          setIsLoading(false);
         setShowToast({
             key: "error",
-            label: t("HCM_AM_PAYMENT_GENERATION_EXCEPTION"),//TODO UPDATE TOAST MSG
+            label: t(I18N_KEYS.COMMON.HCM_AM_PAYMENT_GENERATION_EXCEPTION),//TODO UPDATE TOAST MSG
             transitionTime: 3000,
         });
     }
@@ -325,7 +326,7 @@ const getAvailableActions = (status) => {
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {t("HCM_AM_BILL_ID")}
+                        {t(I18N_KEYS.COMMON.HCM_AM_BILL_ID)}
                     </div>
                 ),
                 selector: (row) => (
@@ -354,7 +355,7 @@ const getAvailableActions = (status) => {
                             }
                         }}
                     >
-                        {row?.billNumber || t("NA")}
+                        {row?.billNumber || t(I18N_KEYS.COMMON.NA)}
                     </div>
                 ),
                 width: "240px",
@@ -362,12 +363,12 @@ const getAvailableActions = (status) => {
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {t("HCM_AM_NUMBER_OF_WORKERS")}
+                        {t(I18N_KEYS.COMMON.HCM_AM_NUMBER_OF_WORKERS)}
                     </div>
                 ),
                 selector: (row) => (
                     <div className="ellipsis-cell" style={{ textAlign: "center", width: "100%" }}>
-                        {t(row?.billDetails?.length) || t("NA")}
+                        {t(row?.billDetails?.length) || t(I18N_KEYS.COMMON.NA)}
                     </div>
                 ),
                 width: "140px",
@@ -375,7 +376,7 @@ const getAvailableActions = (status) => {
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {props?.editBill ? t("HCM_AM_PENDING_FOR_EDIT") : t("HCM_AM_PENDING_VERIFICATION")}
+                        {props?.editBill ? t(I18N_KEYS.COMMON.HCM_AM_PENDING_FOR_EDIT) : t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_PENDING_VERIFICATION)}
                     </div>
                 ),
                 selector: (row) => {
@@ -403,7 +404,7 @@ const getAvailableActions = (status) => {
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {t("HCM_AM_VERIFIED")}
+                        {t(I18N_KEYS.COMMON.HCM_AM_VERIFIED)}
                     </div>
                 ),
                 selector: (row) => {
@@ -423,7 +424,7 @@ const getAvailableActions = (status) => {
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {t("HCM_AM_PAID")}
+                        {t(I18N_KEYS.COMMON.HCM_AM_PAID)}
                     </div>
                 ),
                 selector: (row) => {
@@ -443,7 +444,7 @@ const getAvailableActions = (status) => {
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {t("HCM_AM_EDITED")}
+                        {t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_EDITED)}
                     </div>
                 ),
                 selector: (row) => {
@@ -461,7 +462,7 @@ const getAvailableActions = (status) => {
         const statusColumn = {
             name: (
                 <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                    {t("HCM_AM_STATUS")}
+                    {t(I18N_KEYS.COMMON.HCM_AM_STATUS)}
                 </div>
             ),
             selector: (row) => {
@@ -498,7 +499,7 @@ const getAvailableActions = (status) => {
         const actionsColumn = {
             name: (
                 <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                    {t("HCM_AM_BILL_ACTIONS")}
+                    {t(I18N_KEYS.COMMON.HCM_AM_BILL_ACTIONS)}
                 </div>
             ),
             selector: (row, index) => {
@@ -524,8 +525,8 @@ const getAvailableActions = (status) => {
                                     icon="ArrowDropDown"
                                     size="medium"
                                     isSuffix
-                                    label={t(`HCM_AM_BILL_ACTIONS`)}
-                                    title={t(`HCM_AM_BILL_ACTIONS`)}
+                                    label={t(I18N_KEYS.COMMON.HCM_AM_BILL_ACTIONS)}
+                                    title={t(I18N_KEYS.COMMON.HCM_AM_BILL_ACTIONS)}
                                     showBottom={isLastRow ? false : true}
                                     onOptionSelect={(value) => {
                                         if (value.code === "HCM_AM_VERIFY") {
@@ -545,14 +546,14 @@ const getAvailableActions = (status) => {
                                                 } catch {
                                                     setShowToast({
                                                         key: "error",
-                                                        label: t(`HCM_AM_EXCEL_GENERATION_FAILED`),
+                                                        label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_EXCEL_GENERATION_FAILED),
                                                         transitionTime: 3000,
                                                     });
                                                 }
                                             } else {
                                                 setShowToast({
                                                     key: "error",
-                                                    label: t(`HCM_AM_EXCEL_GENERATION_FAILED`),
+                                                    label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_EXCEL_GENERATION_FAILED),
                                                     transitionTime: 3000,
                                                 });
                                             }
@@ -569,8 +570,8 @@ const getAvailableActions = (status) => {
                                     icon="Info"
                                     label={
                                         inProgressBillsTransfer?.[id]
-                                            ? t("HCM_AM_PAYMENT_IN_PROGRESS")
-                                            : t("HCM_AM_VERIFICATION_IN_PROGRESS")
+                                            ? t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_PAYMENT_IN_PROGRESS)
+                                            : t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_VERIFICATION_IN_PROGRESS)
                                     }
                                     showIcon={true}
                                 />
@@ -588,8 +589,8 @@ const getAvailableActions = (status) => {
                                         state: { billID: row.billNumber },
                                     });
                                 }}
-                                label={t(`HCM_AM_EDIT_BILL`)}
-                                title={t(`HCM_AM_EDIT_BILL`)}
+                                label={t(I18N_KEYS.COMMON.HCM_AM_EDIT_BILL)}
+                                title={t(I18N_KEYS.COMMON.HCM_AM_EDIT_BILL)}
                             />
                         )}
                     </div>
@@ -639,10 +640,10 @@ const getAvailableActions = (status) => {
         onClose={() => {
           setVerifyPopupState({ open: false, row: null });
         }}
-        alertHeading={t(`HCM_AM_ALERT_VERIFY_HEADING`)}
-        alertMessage={t(`HCM_AM_ALERT_VERIFY_DESCRIPTION`)}
-        submitLabel={t(`HCM_AM_APPROVE`)}
-        cancelLabel={t(`HCM_AM_CANCEL`)}
+        alertHeading={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_ALERT_VERIFY_HEADING)}
+        alertMessage={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_ALERT_VERIFY_DESCRIPTION)}
+        submitLabel={t(I18N_KEYS.COMMON.HCM_AM_APPROVE)}
+        cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
         onPrimaryAction={() => {
           triggerVerifyBill(verifyPopupState.row);
           setVerifyPopupState({ open: false, row: null });
@@ -652,10 +653,10 @@ const getAvailableActions = (status) => {
         onClose={() => {
           setPaymentPopupState({ open: false, row: null });
         }}
-        alertHeading={t(`HCM_AM_ALERT_PAYMENT_HEADING`)}
-        alertMessage={t(`HCM_AM_ALERT_PAYMENT_DESCRIPTION`)}
-        submitLabel={t(`HCM_AM_APPROVE`)}
-        cancelLabel={t(`HCM_AM_CANCEL`)}
+        alertHeading={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_ALERT_PAYMENT_HEADING)}
+        alertMessage={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_ALERT_PAYMENT_DESCRIPTION)}
+        submitLabel={t(I18N_KEYS.COMMON.HCM_AM_APPROVE)}
+        cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
         onPrimaryAction={() => {
           triggerGeneratePayment(paymentPopupState.row);
           setPaymentPopupState({ open: false, row: null });
@@ -665,10 +666,10 @@ const getAvailableActions = (status) => {
         onClose={() => {
           setEditPopupState({ open: false, row: null });
         }}
-        alertHeading={t(`HCM_AM_SEND_FOR_EDIT`)}
-        alertMessage={t(`HCM_AM_ALERT_SEND_FOR_EDIT_DESCRIPTION`)}
-        submitLabel={t(`HCM_AM_APPROVE`)}
-        cancelLabel={t(`HCM_AM_CANCEL`)}
+        alertHeading={t(I18N_KEYS.COMMON.HCM_AM_SEND_FOR_EDIT)}
+        alertMessage={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_ALERT_SEND_FOR_EDIT_DESCRIPTION)}
+        submitLabel={t(I18N_KEYS.COMMON.HCM_AM_APPROVE)}
+        cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
         onPrimaryAction={() => {
           sendBillDetailsForEdit(editPopupState.row);
           setEditPopupState({ open: false, row: null });

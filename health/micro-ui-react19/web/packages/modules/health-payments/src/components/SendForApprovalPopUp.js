@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-components";
 import BulkUpload from "./BulkUpload";
 import { downloadFileWithName } from "../utils";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const sanitizeComment = (value) =>
   value
@@ -28,11 +29,11 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
         if (fileStoreId) {
           setUploadedFile([{ filestoreId: fileStoreId, filename: file.name }]);
         } else {
-          setShowToast({ key: "error", label: t("HCM_AM_FILE_UPLOAD_FAILED") });
+          setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_FILE_UPLOAD_FAILED) });
         }
       } catch (err) {
         console.error("Upload Error:", err);
-        setShowToast({ key: "error", label: t("HCM_AM_FILE_UPLOAD_FAILED") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_FILE_UPLOAD_FAILED) });
       }
     },
     [tenantId, t]
@@ -59,7 +60,7 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
     setShowToast(null);
     const trimmedComment = comment.trim();
     if (!uploadedFile?.length || !trimmedComment) {
-      setShowToast({ key: "error", label: t("HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS) });
       return;
     }
     onSubmit({
@@ -73,16 +74,16 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
       <PopUp
         style={{ width: "700px" }}
         onClose={handleCancel}
-        heading={t("HCM_AM_ADD_JUSTIFICATION_AND_COMMENTS")}
+        heading={t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_ADD_JUSTIFICATION_AND_COMMENTS)}
         onOverlayClick={handleCancel}
         equalWidthButtons={true}
         children={[
           <div key="upload-section">
             {/* <div className="comment-label">
-              {t("HCM_AM_UPLOAD_JUSTIFICATION")}
+              {t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_UPLOAD_JUSTIFICATION)}
             </div> */}
             <div className="comment-label">
-              {t("HCM_AM_UPLOAD_BILL_OR_DOC")}
+              {t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_UPLOAD_BILL_OR_DOC)}
               <span style={{ color: "red", marginLeft: "4px" }}>*</span>
             </div>
             <BulkUpload
@@ -94,7 +95,7 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
           </div>,
           <div key="comment-section" style={{ marginTop: "1rem" }}>
             <div className="comment-label">
-              {t("HCM_AM_COMMENTS")}
+              {t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_COMMENTS)}
               <span style={{ color: "red", marginLeft: "4px" }}>*</span>
             </div>
             <TextArea
@@ -112,8 +113,8 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
             size="large"
             style={{ minWidth: "270px" }}
             variation="secondary"
-            label={t("HCM_AM_CANCEL")}
-            title={t("HCM_AM_CANCEL")}
+            label={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
+            title={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
             onClick={handleCancel}
           />,
           <Button
@@ -123,8 +124,8 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
             size="large"
             variation="primary"
             style={{ minWidth: "270px" }}
-            label={t("HCM_AM_SEND_FOR_APPROVAL")}
-            title={t("HCM_AM_SEND_FOR_APPROVAL")}
+            label={t(I18N_KEYS.COMMON.HCM_AM_SEND_FOR_APPROVAL)}
+            title={t(I18N_KEYS.COMMON.HCM_AM_SEND_FOR_APPROVAL)}
             onClick={handleSave}
             //isDisabled={!uploadedFile?.length || !comment.trim()}
           />,

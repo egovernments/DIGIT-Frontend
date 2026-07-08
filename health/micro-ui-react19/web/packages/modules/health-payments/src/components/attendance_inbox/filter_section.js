@@ -5,6 +5,7 @@ import { Card, SVG, SubmitBar, Dropdown, Loader, Toast } from "@egovernments/dig
 import { lowerBoundaryDefaultSet } from "../../utils/constants";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { getValidPeriods } from "../../utils/time_conversion";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
   const { t } = useTranslation();
@@ -134,7 +135,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
     if (periods.length > 0) {
       onFilterChange(boundary, isDistrictSelected, selectedPeriod);
     } else {
-      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PAYMENT_PERIOD_FAILED"), transitionTime: 3000 });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_PAYMENT_PERIOD_FAILED), transitionTime: 3000 });
       return;
     }
   };
@@ -207,7 +208,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
         >
           <div style={{ display: "flex", alignItems: "center" }}>
             <SVG.FilterAlt width={"32px"} height={"32px"} fill={"#c84c0e"} />
-            <span className="custom-inbox-filter-heading">{t("HCM_AM_FILTER")}</span>
+            <span className="custom-inbox-filter-heading">{t(I18N_KEYS.COMMON.HCM_AM_FILTER)}</span>
           </div>
 
           <span onClick={() => setReset(true)} style={{ border: "1px solid #e0e0e0", padding: "6px", marginBottom: "10px", cursor: "pointer" }}>
@@ -216,7 +217,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
         </div>
 
         {/* Boundary Component */}
-        <div className="label-pair">{t(`HCM_AM_CHOOSE_BOUNDARY_DESCRIPTION`)}</div>
+        <div className="label-pair">{t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_CHOOSE_BOUNDARY_DESCRIPTION)}</div>
 
         {projectSelected?.address?.boundary && (
           <BoundaryComponent
@@ -237,7 +238,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
         {projectSelected && (
           <div style={{ width: "100%", marginTop: "1.5rem" }}>
             <div className="comment-label">
-              {t("HCM_AM_BILL_PERIOD_DATE")}
+              {t(I18N_KEYS.COMMON.HCM_AM_BILL_PERIOD_DATE)}
               <span className="required comment-label"> *</span>
             </div>
 
@@ -269,7 +270,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
 
       {/* Submit Button */}
       <div style={{ justifyContent: "center", marginTop: "auto", paddingTop: "16px" ,width:"100%"}}>
-        <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("HCM_AM_COMMON_APPLY")} disabled={!boundary} style={{width:"100%"}} />
+        <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t(I18N_KEYS.COMMON.HCM_AM_COMMON_APPLY)} disabled={!boundary} style={{width:"100%"}} />
       </div>
       {showToast && (
         <Toast

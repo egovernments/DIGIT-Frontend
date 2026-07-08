@@ -2,6 +2,7 @@ import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-components";
 import SupportingDocumentUpload from "./attendance_file_upload/SupportingDocumentUpload";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * Component to show a pop-up to allow the user to enter a comment before approving an attendance register.
@@ -32,7 +33,7 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
             // Show toast if comment is empty
             setShowToast({
                 key: "error",
-                label: t("HCM_AM_COMMENT_REQUIRED_ERROR_TOAST_MESSAGE"),
+                label: t(I18N_KEYS.COMMON.HCM_AM_COMMENT_REQUIRED_ERROR_TOAST_MESSAGE),
                 transitionTime: 3000
             });
             return;
@@ -58,11 +59,11 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
             <PopUp
                 style={{ width: "700px" }}
                 onClose={onClose}
-                heading={t(`HCM_AM_APPROVE_LABEL`)}
+                heading={t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_APPROVE_LABEL)}
                 children={[
                     <div key="comment-section">
                         <div className="comment-label">
-                            {t(`HCM_AM_APPROVE_COMMENT_LABEL`)}<span className="required"> *</span>
+                            {t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_APPROVE_COMMENT_LABEL)}<span className="required"> *</span>
                         </div>
                         <TextArea
                             style={{ maxWidth: "100%" }}
@@ -73,7 +74,7 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
                     </div>,
                     <div key="supporting-doc" style={{ marginTop: "1rem" }}>
                     <div className="comment-label">
-                      {t("HCM_AM_SUPPORTING_DOCUMENT_LABEL")}
+                      {t(I18N_KEYS.COMMON.HCM_AM_SUPPORTING_DOCUMENT_LABEL)}
                     </div>
                 
                     <SupportingDocumentUpload
@@ -92,8 +93,8 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
                         size="large"
                         style={{ minWidth: "270px" }}
                         variation="secondary"
-                        label={t(`HCM_AM_CLOSE`)}
-                        title={t(`HCM_AM_CLOSE`)}
+                        label={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_CLOSE)}
+                        title={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_CLOSE)}
                         onClick={onClose}
                     />,
                     <Button
@@ -103,8 +104,8 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
                         size="large"
                         variation="primary"
                         style={{ minWidth: "270px" }}
-                        label={t(`HCM_AM_APPROVE`)}
-                        title={t(`HCM_AM_APPROVE`)}
+                        label={t(I18N_KEYS.COMMON.HCM_AM_APPROVE)}
+                        title={t(I18N_KEYS.COMMON.HCM_AM_APPROVE)}
                         onClick={() => handleSave()}
                     />,
                 ]}

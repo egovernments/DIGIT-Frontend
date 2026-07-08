@@ -3,6 +3,7 @@ import React, { Fragment, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import FilterContext from "./FilterContext";
 import Icon from "./Icon";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const MetricData = ({ t, data, code }) => {
   const { value } = useContext(FilterContext);
@@ -14,7 +15,7 @@ const MetricData = ({ t, data, code }) => {
           <Rating currentRating={Math.round(data?.headerValue * 10) / 10} styles={{ width: "unset" }} starStyles={{ width: "25px" }} />
         ) : (
           `${Digit.Utils.dss.formatter(data?.headerValue, data?.headerSymbol, value?.denomination, true, t)} ${
-            code === "totalSludgeTreated" ? t(`DSS_KL`) : ""
+            code === "totalSludgeTreated" ? t(I18N_KEYS.CHARTS.DSS_KL) : ""
           }`
         )}
       </p>
@@ -94,7 +95,7 @@ const MetricChartRow = ({ data, setChartDenomination, index }) => {
             <span style={{ fontWeight: "500", color: "white" }}>{t(`TIP_${data.name}`)}</span>
           </span>
         </div>
-        <span style={{ whiteSpace: "pre" }}>{t("DSS_NO_DATA")}</span>
+        <span style={{ whiteSpace: "pre" }}>{t(I18N_KEYS.COMMON.DSS_NO_DATA)}</span>
       </div>
     );
   }

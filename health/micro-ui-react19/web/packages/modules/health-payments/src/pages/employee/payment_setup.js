@@ -17,6 +17,7 @@ import RoleWageTable from "../../components/payment_setup/wageTable";
 import ProjectService from "../../services/project/ProjectService";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import ActionPopUp from "../../components/payment_setup/AlertStatus";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 export const HCM_BILLING_CONFIG_PAYMENT_SETUP = "HCM-BILLING-CONFIG-PAYMENT-SETUP";
 
@@ -439,8 +440,8 @@ const PaymentSetUpPage = () => {
                 info: "",
                 fileName: "",
                 description: "",
-                message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-                back: t("GO_BACK_TO_HOME"),
+                message: t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_HEADER_ERROR),
+                back: t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME),
                 backlink: `/${window.contextPath}/employee`,
                 showFooter: false,
               },
@@ -454,9 +455,9 @@ const PaymentSetUpPage = () => {
                 state: "success",
                 info: "",
                 fileName: "",
-                description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2")}`,
-                message: t("HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS"),
-                back: t("GO_BACK_TO_HOME"),
+                description: `${t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1)} ${camData}. ${t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2)}`,
+                message: t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS),
+                back: t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME),
                 backlink: `/${window.contextPath}/employee`,
                 showFooter: false,
               },
@@ -472,8 +473,8 @@ const PaymentSetUpPage = () => {
           info: "",
           fileName: "",
           description: "",
-          message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-          back: t("GO_BACK_TO_HOME"),
+          message: t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_HEADER_ERROR),
+          back: t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME),
           backlink: `/${window.contextPath}/employee`,
           showFooter: false,
         },
@@ -495,8 +496,8 @@ const PaymentSetUpPage = () => {
                 info: "",
                 fileName: "",
                 description: "",
-                message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-                back: t("GO_BACK_TO_HOME"),
+                message: t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_HEADER_ERROR),
+                back: t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME),
                 backlink: `/${window.contextPath}/employee`,
                 showFooter: false,
               },
@@ -510,9 +511,9 @@ const PaymentSetUpPage = () => {
                 state: "success",
                 info: "",
                 fileName: "",
-                description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2")}`,
-                message: t("HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS"),
-                back: t("GO_BACK_TO_HOME"),
+                description: `${t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1)} ${camData}. ${t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2)}`,
+                message: t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS),
+                back: t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME),
                 backlink: `/${window.contextPath}/employee`,
                 showFooter: false,
               },
@@ -528,8 +529,8 @@ const PaymentSetUpPage = () => {
           info: "",
           fileName: "",
           description: "",
-          message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-          back: t("GO_BACK_TO_HOME"),
+          message: t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_HEADER_ERROR),
+          back: t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME),
           backlink: `/${window.contextPath}/employee`,
           showFooter: false,
         },
@@ -574,8 +575,8 @@ const PaymentSetUpPage = () => {
                   info: "",
                   fileName: "",
                   description: "",
-                  message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-                  back: t("GO_BACK_TO_HOME"),
+                  message: t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_HEADER_ERROR),
+                  back: t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME),
                   backlink: `/${window.contextPath}/employee`,
                   showFooter: false,
                 },
@@ -613,8 +614,8 @@ const PaymentSetUpPage = () => {
                   info: "",
                   fileName: "",
                   description: "",
-                  message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-                  back: t("GO_BACK_TO_HOME"),
+                  message: t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_HEADER_ERROR),
+                  back: t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME),
                   backlink: `/${window.contextPath}/employee`,
                   showFooter: false,
                 },
@@ -637,8 +638,8 @@ const PaymentSetUpPage = () => {
           info: "",
           fileName: "",
           description: "",
-          message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-          back: t("GO_BACK_TO_HOME"),
+          message: t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_HEADER_ERROR),
+          back: t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME),
           backlink: `/${window.contextPath}/employee`,
           showFooter: false,
         },
@@ -722,7 +723,7 @@ const PaymentSetUpPage = () => {
     return (
       <div>
         <Card type="primary" className="bottom-gap-card-payment">
-          <NoResultsFound style={{ height: "35rem" }} text={t(`HCM_AM_NO_UPCOMING_CAMPAIGN_FOUND`)} />
+          <NoResultsFound style={{ height: "35rem" }} text={t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_NO_UPCOMING_CAMPAIGN_FOUND)} />
         </Card>
 
         {/* Action Bar */}
@@ -731,8 +732,8 @@ const PaymentSetUpPage = () => {
             <Button
               style={{ margin: "0.5rem", marginLeft: "4rem", minWidth: "14rem" }}
               variation="primary"
-              label={t("GO_BACK_TO_HOME")}
-              title={t("GO_BACK_TO_HOME")}
+              label={t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME)}
+              title={t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME)}
               onClick={() => {
                 navigate(`/${window.contextPath}/employee`);
                 return;
@@ -752,10 +753,10 @@ const PaymentSetUpPage = () => {
       {/* Payment Setup Card */}
       <Card type="primary" className="bottom-gap-card-payment">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <HeaderComponent className="payment-screen-headers">{t("HCM_AM_PAYEMENT_SETUP_HEAD")}</HeaderComponent>
+          <HeaderComponent className="payment-screen-headers">{t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYEMENT_SETUP_HEAD)}</HeaderComponent>
         </div>
 
-        <CardText>{t("HCM_AM_PAYEMENT_SETUP_SUB_HEAD")}</CardText>
+        <CardText>{t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYEMENT_SETUP_SUB_HEAD)}</CardText>
 
         {/* Campaign Dropdown */}
         {renderLabelPair(
@@ -793,7 +794,7 @@ const PaymentSetUpPage = () => {
                 name="customDays"
                 value={customDays}
                 onChange={handleCustomDaysChange}
-                placeholder={t("HCM_AM_PAYEMENT_SELECT_BILLING_CYCLE_CUSTOM_NO_DAYS")}
+                placeholder={t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYEMENT_SELECT_BILLING_CYCLE_CUSTOM_NO_DAYS)}
                 type="text"
                 inputMode="numeric"
                 disabled={edit ? true : false}
@@ -813,11 +814,11 @@ const PaymentSetUpPage = () => {
                       })
                     )) && (
                   <span style={{ color: "red", fontSize: "0.8rem" }}>
-                    {`${t("HCM_AM_BILLING_CYCLE_DURATION_BETWEEN")} 
+                    {`${t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_BILLING_CYCLE_DURATION_BETWEEN)} 
         ${billingCycle.minDuration} 
-        ${t("HCM_AM_TO")} 
+        ${t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_TO)} 
         ${billingCycle.maxDuration} 
-        ${t("HCM_AM_DAYS")}`}
+        ${t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_DAYS)}`}
                   </span>
                 )}
             </div>
@@ -827,8 +828,8 @@ const PaymentSetUpPage = () => {
       {/* Role Wages Setup Card */}
       {selectedCampaign ? (
         <Card>
-          <HeaderComponent className="payment-screen-headers">{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_HEAD")}</HeaderComponent>
-          <CardText>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_SUB_HEAD")}</CardText>
+          <HeaderComponent className="payment-screen-headers">{t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_HEAD)}</HeaderComponent>
+          <CardText>{t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_SUB_HEAD)}</CardText>
 
           {/* Conditional Rendering */}
           {loadingSkills ? (
@@ -849,9 +850,9 @@ const PaymentSetUpPage = () => {
               styles={{marginTop:"0rem"}}
             />
           ) : selectedCampaign ? (
-            <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_ERR_NO_SKILL")}</div>
+            <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_ERR_NO_SKILL)}</div>
           ) : (
-            <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_INFO_SELECT_CAMPAIGN")}</div>
+            <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_INFO_SELECT_CAMPAIGN)}</div>
           )}
         </Card>
       ) : (
@@ -866,19 +867,19 @@ const PaymentSetUpPage = () => {
             variation="primary"
             label={
               isCampaignStarted
-                ? t("GO_BACK_TO_HOME")
-                : // edit ? t("HCM_AM_BTN_EDIT") :
+                ? t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME)
+                : // edit ? t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_BTN_EDIT) :
                 update
-                ? t("HCM_AM_BTN_UPDATE")
-                : t("HCM_AM_BTN_SUBMIT")
+                ? t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_BTN_UPDATE)
+                : t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_BTN_SUBMIT)
             }
             title={
               isCampaignStarted
-                ? t("GO_BACK_TO_HOME")
-                : //  edit ? t("HCM_AM_BTN_EDIT") :
+                ? t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME)
+                : //  edit ? t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_BTN_EDIT) :
                 update
-                ? t("HCM_AM_BTN_UPDATE")
-                : t("HCM_AM_BTN_SUBMIT")
+                ? t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_BTN_UPDATE)
+                : t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_BTN_SUBMIT)
             }
             onClick={handlePrimaryButtonClick}
             icon={edit ? "" : "ArrowForward"}
@@ -909,8 +910,8 @@ const PaymentSetUpPage = () => {
 
       {popup && (
         <ActionPopUp
-          headingMsg={t("HCM_AM_PAYMENT_SETUP_CONFIRM_ALERT_HEADER")}
-          description={t("HCM_AM_PAYMENT_SETUP_CONFIRM_ALERT_CREATE_DES")}
+          headingMsg={t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_CONFIRM_ALERT_HEADER)}
+          description={t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_PAYMENT_SETUP_CONFIRM_ALERT_CREATE_DES)}
           onSubmit={handleSubmit}
           onClose={() => {
             setPopUp(false);

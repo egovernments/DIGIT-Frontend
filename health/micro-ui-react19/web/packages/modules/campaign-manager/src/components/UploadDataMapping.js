@@ -913,8 +913,8 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "User Usage")?.name)] === "Inactive" ? true : false}
                     variation="link"
-                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t("ADD _BOUNDARY")}
-                    title={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t("ADD _BOUNDARY")}
+                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t(I18N_KEYS.COMPONENTS["ADD _BOUNDARY"])}
+                    title={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t(I18N_KEYS.COMPONENTS["ADD _BOUNDARY"])}
                     onClick={() => {
                       setShowPopUp(row);
                     }}
@@ -933,7 +933,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   isDisabled={row?.editable ? false : true}
                   variation={"primary"}
                   icon={"Edit"}
-                  // label={listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t("ADD _BOUNDARY")}
+                  // label={listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t(I18N_KEYS.COMPONENTS["ADD _BOUNDARY"])}
                   label={t(I18N_KEYS.COMPONENTS.MAPPING_EDIT)}
                   title={t(I18N_KEYS.COMPONENTS.MAPPING_EDIT)}
                   onClick={() => {
@@ -1062,8 +1062,8 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)] === "Inactive" ? true : false}
                     variation={"link"}
-                    title={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t("ADD _BOUNDARY")}
-                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t("ADD _BOUNDARY")}
+                    title={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t(I18N_KEYS.COMPONENTS["ADD _BOUNDARY"])}
+                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t(I18N_KEYS.COMPONENTS["ADD _BOUNDARY"])}
                     onClick={() => {
                       setShowPopUp(row);
                     }}

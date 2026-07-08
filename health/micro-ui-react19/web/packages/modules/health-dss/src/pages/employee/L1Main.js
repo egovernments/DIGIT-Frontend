@@ -21,6 +21,7 @@ import CustomHorizontalBarChart from "../../components/CustomHorizontalBarChart"
 import VennDiagramChart from "../../components/VennDiagramChart";
 import { getDuration } from "../../utils/getDuration";
 import { PDFDownload, ImageDownload, SharePDF, ShareImage } from "../../utils/PDFDownload";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const key = "DSS_FILTERS";
 const getInitialRange = () => {
@@ -334,32 +335,32 @@ const L1Main = () => {
     ? [
         {
           code: "ES_DSS_SHARE_PDF",
-          label: t("ES_DSS_SHARE_PDF"),
+          label: t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_SHARE_PDF),
         },
         {
           code: "ES_DSS_SHARE_IMAGE",
-          label: t("ES_DSS_SHARE_IMAGE"),
+          label: t(I18N_KEYS.COMMON.ES_DSS_SHARE_IMAGE),
         },
       ]
     : [
         {
           icon: "EmailIcon",
           code: "ES_DSS_SHARE_PDF_EMAIL",
-          label: t("ES_DSS_SHARE_PDF"),
+          label: t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_SHARE_PDF),
         },
         {
           icon: "WhatsappIcon",
           code: "ES_DSS_SHARE_PDF_WHATSAPP",
-          label: t("ES_DSS_SHARE_PDF"),
+          label: t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_SHARE_PDF),
         },
         {
           icon: "EmailIcon",
-          label: t("ES_DSS_SHARE_IMAGE"),
+          label: t(I18N_KEYS.COMMON.ES_DSS_SHARE_IMAGE),
           code: "ES_DSS_SHARE_IMAGE_EMAIL",
         },
         {
           icon: "WhatsappIcon",
-          label: t("ES_DSS_SHARE_IMAGE"),
+          label: t(I18N_KEYS.COMMON.ES_DSS_SHARE_IMAGE),
           code: "ES_DSS_SHARE_IMAGE_WHATSAPP",
         },
       ];
@@ -368,11 +369,11 @@ const L1Main = () => {
     {
       icon: "ImageIcon",
       code: "ES_DSS_DOWNLOAD_IMAGE",
-      label: t("ES_DSS_DOWNLOAD_IMAGE"),
+      label: t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_DOWNLOAD_IMAGE),
     },
     {
       icon: "PDFSvg",
-      label: t("ES_DSS_DOWNLOAD_PDF"),
+      label: t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_DOWNLOAD_PDF),
       code: "ES_DSS_DOWNLOAD_PDF",
     },
   ];
@@ -436,7 +437,7 @@ const L1Main = () => {
               <Button
                 type="actionButton"
                 variation="teritiary"
-                label={t(`ES_DSS_SHARE`)}
+                label={t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_SHARE)}
                 options={shareOptions}
                 optionsKey="label"
                 showBottom={true}
@@ -453,7 +454,7 @@ const L1Main = () => {
                 className={"digit-dss-options-header-option-button"}
                 variation="teritiary"
                 wrapperClassName={"digit-dss-options-header-options-button-wrapper"}
-                label={t(`ES_DSS_DOWNLOAD`)}
+                label={t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_DOWNLOAD)}
                 options={downloadOptions}
                 optionsKey="label"
                 size={"medium"}
@@ -472,7 +473,7 @@ const L1Main = () => {
             <div>
               <MultiLink
                 className="multilink-block-wrapper"
-                label={t(`ES_DSS_SHARE`)}
+                label={t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_SHARE)}
                 icon={<ShareIcon className="mrsm" />}
                 showOptions={(e) => setShowShareOptions(e)}
                 onHeadClick={(e) => setShowShareOptions(e !== undefined ? e : !showShareOptions)}
@@ -482,7 +483,7 @@ const L1Main = () => {
             </div>
             <div onClick={handlePrint}>
               <DownloadIcon />
-              {t(`ES_DSS_DOWNLOAD`)}
+              {t(I18N_KEYS.DASHBOARD_PAGES.ES_DSS_DOWNLOAD)}
             </div>
           </div>
         ) : null}
@@ -541,7 +542,7 @@ const L1Main = () => {
                           </p>
                           {selectedState != "" && item.name.includes("PROJECT_STAUS") && (
                             <span style={{ fontSize: "16px", display: "block" }}>
-                              {t(`DSS_TOTAL_ULBS`)} {Number(totalCount).toFixed()} | {t(`DSS_LIVE_ULBS`)} {Number(liveCount).toFixed()}
+                              {t(I18N_KEYS.DASHBOARD_PAGES.DSS_TOTAL_ULBS)} {Number(totalCount).toFixed()} | {t(I18N_KEYS.DASHBOARD_PAGES.DSS_LIVE_ULBS)} {Number(liveCount).toFixed()}
                             </span>
                           )}
                         </div>
@@ -669,7 +670,7 @@ const L1Main = () => {
                               flexDirection: "row",
                             }}
                           >
-                            <span style={{ paddingRight: 10 }}>{t("DSS_OVERVIEW")}</span>
+                            <span style={{ paddingRight: 10 }}>{t(I18N_KEYS.DASHBOARD_PAGES.DSS_OVERVIEW)}</span>
                             <span>
                               {" "}
                               <Arrow_Right />

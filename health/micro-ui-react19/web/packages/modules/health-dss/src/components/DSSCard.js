@@ -1,6 +1,7 @@
 import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const DSSCard = () => {
   const { t } = useTranslation();
@@ -19,7 +20,7 @@ const DSSCard = () => {
   };
   
   let links = [
-    generateLink("ACTION_TEST_MY_CAMPAIGNS","my-campaigns"),
+    generateLink(I18N_KEYS.COMPONENTS.ACTION_TEST_MY_CAMPAIGNS,"my-campaigns"),
   ];
  
   if (!userRoles?.some((role) => ROLES.HEALTH_DSS.includes(role))) {
@@ -28,7 +29,7 @@ const DSSCard = () => {
 
   const propsForModuleCard = {
     Icon: "Dashboard",
-    moduleName: t("Dashboard"),
+    moduleName: t(I18N_KEYS.COMPONENTS.DASHBOARD),
     kpis: [],
     links: links,
     className: "microplan-employee-module-card",

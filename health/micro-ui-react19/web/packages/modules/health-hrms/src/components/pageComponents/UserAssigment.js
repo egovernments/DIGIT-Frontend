@@ -12,6 +12,7 @@ import {
 } from "@egovernments/digit-ui-components";
 
 import SearchUserToReport from "./SearchUserToReport";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const UserAssignment = ({ t, config, onSelect, formData, }) => {
 
@@ -37,7 +38,7 @@ const UserAssignment = ({ t, config, onSelect, formData, }) => {
     return (<div>
         <LabelFieldPair>
             <CardLabel style={{ width: "50.1%" }} className="digit-card-label-smaller">
-                {t("HCM_AM_REPORTING_TO")}<span style={{ color: "#B91900" }}> *</span>
+                {t(I18N_KEYS.USER_ASSIGNMENT.HCM_AM_REPORTING_TO)}<span style={{ color: "#B91900" }}> *</span>
             </CardLabel>
             <div style={{ width: "100%" }}
                 onClick={() => {
@@ -45,7 +46,7 @@ const UserAssignment = ({ t, config, onSelect, formData, }) => {
                 }}
             >
 
-                <TextInput type="search" name="title" placeholder={t("HCM_AM_VIEW_REGISTER_PLACE_HOLDER")} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                <TextInput type="search" name="title" placeholder={t(I18N_KEYS.COMMON.HCM_AM_VIEW_REGISTER_PLACE_HOLDER)} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
             </div>
         </LabelFieldPair>
 
@@ -54,7 +55,7 @@ const UserAssignment = ({ t, config, onSelect, formData, }) => {
 
                 boundaryCode={boundaryCode}
                 onClose={() => { setOpen(false) }}
-                heading={`${t("HCM_AM_ATTENDANCE_ASSIGN_USER")}`}
+                heading={`${t(I18N_KEYS.USER_ASSIGNMENT.HCM_AM_ATTENDANCE_ASSIGN_USER)}`}
                 onSubmit={seletctedValue}
             />
         }

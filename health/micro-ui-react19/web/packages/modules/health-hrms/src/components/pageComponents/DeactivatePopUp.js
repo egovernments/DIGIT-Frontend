@@ -9,6 +9,7 @@ import {
   FieldV1,
 } from "@egovernments/digit-ui-components";
 import { convertEpochToDate } from "../../utils/utlis";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const DeactivatePopUp = ({
   bussnessBtnLabel,
@@ -39,7 +40,7 @@ const DeactivatePopUp = ({
       // Show toast if comment is empty
       setShowToast({
         key: "error",
-        label: t("HCM_AM_COMMENT_REQUIRED_ERROR_TOAST_MESSAGE"),
+        label: t(I18N_KEYS.DEACTIVATE_POPUP.HCM_AM_COMMENT_REQUIRED_ERROR_TOAST_MESSAGE),
         transitionTime: 3000,
       });
       return;
@@ -57,7 +58,7 @@ const DeactivatePopUp = ({
         onClose={() => {
           onClose();
         }}
-        heading={t(label ? label : `HR_COMMON_DEACTIVATED_EMPLOYEE_HEADER`)}
+        heading={t(label ? label : I18N_KEYS.COMMON.HR_COMMON_DEACTIVATED_EMPLOYEE_HEADER)}
         onOverlayClick={onClose}
         equalWidthButtons={true}
         footerChildren={[
@@ -68,8 +69,8 @@ const DeactivatePopUp = ({
             size="large"
             style={{ minWidth: "270px" }}
             variation="secondary"
-            label={t(`CORE_COMMON_CLOSE`)}
-            title={t(`CORE_COMMON_CLOSE`)}
+            label={t(I18N_KEYS.COMMON.CORE_COMMON_CLOSE)}
+            title={t(I18N_KEYS.COMMON.CORE_COMMON_CLOSE)}
             onClick={onClose}
           />,
           <Button
@@ -90,7 +91,7 @@ const DeactivatePopUp = ({
       >
         <div className="comment-section">
           <div className="comment-label">
-            {t(reasonMsg ? `HR_ACTIVATION_REASON` : `HR_DEACTIVATION_REASON`)}
+            {t(reasonMsg ? I18N_KEYS.DEACTIVATE_POPUP.HR_ACTIVATION_REASON : I18N_KEYS.DEACTIVATE_POPUP.HR_DEACTIVATION_REASON)}
             <span className="required"> *</span>
           </div>
           <Dropdown
@@ -100,7 +101,7 @@ const DeactivatePopUp = ({
             error=""
             errorStyle={null}
             inputRef={null}
-            label={t(`HRMS_SELECT_OPTION`)}
+            label={t(I18N_KEYS.DEACTIVATE_POPUP.HRMS_SELECT_OPTION)}
             name="genders"
             onChange={(e) => {}}
             option={data?.["egov-hrms"]?.DeactivationReason.map((ele) => {
@@ -117,7 +118,7 @@ const DeactivatePopUp = ({
           />
         </div>
         <FieldV1
-          label={t("HR_ENTER_ORDER_NO")}
+          label={t(I18N_KEYS.DEACTIVATE_POPUP.HR_ENTER_ORDER_NO)}
           onChange={(e) => {
             setComment(e.target.value);
           }}
@@ -126,7 +127,7 @@ const DeactivatePopUp = ({
           populators={{ alignFieldPairVerically: true }}
         />
         <FieldV1
-          label={t("HR_EFFECTIVE_DATE")}
+          label={t(I18N_KEYS.DEACTIVATE_POPUP.HR_EFFECTIVE_DATE)}
           type="date"
           populators={{
             name: "date",
@@ -141,14 +142,14 @@ const DeactivatePopUp = ({
           value={date}
         />
         <FileUpload
-          label={t("TL_APPROVAL_UPLOAD_SUBHEAD")}
+          label={t(I18N_KEYS.DEACTIVATE_POPUP.TL_APPROVAL_UPLOAD_SUBHEAD)}
           showLabel
           uploadedFiles={[]}
           variant="uploadField"
           populators={{ alignFieldPairVerically: true }}
         />
         <FieldV1
-          label={t("HR_ENTER_REMARKS")}
+          label={t(I18N_KEYS.DEACTIVATE_POPUP.HR_ENTER_REMARKS)}
           onChange={(e) => {
             setOrder(e.target.value);
           }}

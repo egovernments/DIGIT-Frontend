@@ -77,7 +77,7 @@ const CycleDetaisPreview = ({ data, items, index }) => {
           {item?.startDate && (
             <Row
               key={t(item?.startDate)}
-              label={`${t("Start Date")}`}
+              label={`${t(I18N_KEYS.COMPONENTS["Start Date"])}`}
               text={Digit.Utils.date.convertEpochToDate(item?.startDate)}
               className="border-none"
               rowContainerStyle={{ display: "flex" }}
@@ -87,7 +87,7 @@ const CycleDetaisPreview = ({ data, items, index }) => {
           {item?.endDate && (
             <Row
               key={t(item?.endDate)}
-              label={`${t("End Date")}`}
+              label={`${t(I18N_KEYS.COMPONENTS["End Date"])}`}
               text={Digit.Utils.date.convertEpochToDate(item?.endDate)}
               className="border-none"
               rowContainerStyle={{ display: "flex" }}
@@ -104,15 +104,15 @@ const CycleDetaisPreview = ({ data, items, index }) => {
             cardHeader={{ value: "Condition" }}
             columnsData={[
               {
-                Header: t("Attribute"),
+                Header: t(I18N_KEYS.COMPONENTS.Attribute),
                 accessor: "attribute",
               },
               {
-                Header: t("Operator"),
+                Header: t(I18N_KEYS.COMPONENTS.Operator),
                 accessor: "operator",
               },
               {
-                Header: t("Value"),
+                Header: t(I18N_KEYS.COMPONENTS.Value),
                 accessor: "value",
               },
             ]}
@@ -125,11 +125,11 @@ const CycleDetaisPreview = ({ data, items, index }) => {
             // cardHeader={{ value: "Product Details" }}
             columnsData={[
               {
-                Header: t("Product"),
+                Header: t(I18N_KEYS.COMPONENTS.Product),
                 accessor: "name",
               },
               {
-                Header: t("Count"),
+                Header: t(I18N_KEYS.COMPONENTS.Count),
                 accessor: "quantity",
               },
             ]}

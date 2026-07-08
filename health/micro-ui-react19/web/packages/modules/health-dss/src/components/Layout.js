@@ -17,13 +17,14 @@ import KibanaCard from "./KibanaCard";
 import VennDiagram from "./VennDiagramChart";
 import UserActivityMetrics from "./UserActivityTracking/UserActivityMetrics";
 import UserActivitySummaryTable from "./UserActivityTracking/UserActivitySummaryTable";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 let index = 1;
 
 const showCustomLabel = (title, t) => {
   switch (title) {
     case "DSS_FSM_MONTHLY_WASTE_CAL":
-      return `${t("DSS_WASTE_RECIEVED")} ${t(`DSS_WASTE_UNIT`)}`;
+      return `${t(I18N_KEYS.CHARTS.DSS_WASTE_RECIEVED)} ${t(I18N_KEYS.CHARTS.DSS_WASTE_UNIT)}`;
     default:
       return "";
   }

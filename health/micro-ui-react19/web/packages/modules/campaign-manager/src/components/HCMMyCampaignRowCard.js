@@ -267,7 +267,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
     );
   };
   const durationDays = calculateDurationInDays(rowData?.startDate, rowData?.endDate);
-  const duration = durationDays !== "NA" ? `${durationDays} ${t("Days")}` : "NA";
+  const duration = durationDays !== "NA" ? `${durationDays} ${t(I18N_KEYS.COMPONENTS.Days)}` : "NA";
   const rawCycleCount = rowData?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle;
   const noOfCycles =
     rawCycleCount > 0 ? rawCycleCount : rowData?.deliveryRules?.[0]?.cycles?.length > 0 ? rowData.deliveryRules[0].cycles.length : "NA";

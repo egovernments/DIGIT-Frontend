@@ -3,6 +3,7 @@ import { InboxSearchComposer, HeaderComponent, Toast, Loader } from "@egovernmen
 import { useTranslation } from "react-i18next";
 import PGRSearchInboxConfig from "../../configs/PGRSearchInboxConfig";
 import { useLocation } from "react-router-dom";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /**
  * PGRSearchInbox - Complaint Search Inbox Screen
@@ -155,7 +156,7 @@ const PGRSearchInbox = () => {
       >
         {
           <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem", position: "relative", right: "0.5rem" }}>
-            {t("PGR_SEARCH_RESULTS_HEADING")}
+            {t(I18N_KEYS.PAGES_INBOX.PGR_SEARCH_RESULTS_HEADING)}
           </HeaderComponent>
         }
       </div>

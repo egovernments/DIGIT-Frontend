@@ -3,6 +3,7 @@ import React, { useEffect, Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DateRangePicker from "./DateRangePicker";
 import { billTypeOptions } from "../utils/constants";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * MyBillsSearch component allows users to search for bills based on bill ID and date range.
@@ -64,7 +65,7 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { }, headerConten
       )}
       <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-end", gap: "1rem" }}>
         <div style={{ flex: 1 }}>
-          <TextBlock body={`${t("HCM_AM_BILL_ID")}`}></TextBlock>
+          <TextBlock body={`${t(I18N_KEYS.COMMON.HCM_AM_BILL_ID)}`}></TextBlock>
           <TextInput
             value={billID}
             onChange={(e) => {
@@ -79,14 +80,14 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { }, headerConten
             onFilterChange={handleFilterChange}
             t={(key) => key}
             labelClass="custom-label"
-            title={t("HCM_AM_SELECTE_DATA_RANGE")}
+            title={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_SELECTE_DATA_RANGE)}
             epochStartDate={new Date().getTime()}
             epochEndDate={new Date().getTime()}
             disabled={false}
           />
         </div>
         <div style={{ flex: 1 }}>
-          <TextBlock body={`${t("HCM_AM_BILL_TYPE")}`}></TextBlock>
+          <TextBlock body={`${t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BILL_TYPE)}`}></TextBlock>
           <Dropdown
             style={{ width: "100%" }}
             t={t}
@@ -107,8 +108,8 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { }, headerConten
           />
         </div>
         <div style={{ display: "flex", alignItems: "flex-end", flexShrink: 0 }}>
-          <Button variation="teritiary" label={t(`HCM_AM_CLEAR`)} type="button" onClick={handleClear} size="medium" />
-          <Button variation="primary" label={t(`HCM_AM_SEARCH`)} type="button" onClick={handleSearch} size="medium" />
+          <Button variation="teritiary" label={t(I18N_KEYS.COMMON.HCM_AM_CLEAR)} type="button" onClick={handleClear} size="medium" />
+          <Button variation="primary" label={t(I18N_KEYS.COMMON.HCM_AM_SEARCH)} type="button" onClick={handleSearch} size="medium" />
         </div>
       </div>
     </Card>

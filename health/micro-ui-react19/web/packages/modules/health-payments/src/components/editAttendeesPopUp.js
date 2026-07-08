@@ -11,6 +11,7 @@ import {
 import EditAttendanceManagementTable from "./EditAttendanceManagementTable";
 import BulkUpload from "./BulkUpload";
 import { useNavigate } from "react-router-dom";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * Component: EditAttendeePopUp
@@ -182,10 +183,10 @@ const EditAttendeePopUp = ({
 
                 // Merge details if found
                 if (matchingIndividual) {
-                    const userName = matchingIndividual.name?.givenName || t("NA");
-                    const userId = matchingIndividual?.userDetails?.username || t("NA");
+                    const userName = matchingIndividual.name?.givenName || t(I18N_KEYS.COMMON.NA);
+                    const userId = matchingIndividual?.userDetails?.username || t(I18N_KEYS.COMMON.NA);
                     const userRole =
-                        t(matchingIndividual.skills?.[0]?.type) || t("NA");
+                        t(matchingIndividual.skills?.[0]?.type) || t(I18N_KEYS.COMMON.NA);
                     const noOfDaysWorked =
                         individualEntry?.denrollmentDate == null ? true : false;
                     const id = individualEntry.individualId || 0;
@@ -273,7 +274,7 @@ const EditAttendeePopUp = ({
     const handleBulkEditFileUpload = async (files) => {
         if (!files || files.length === 0) return;
         if (files.length > 1) {
-            setBulkEditToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
+            setBulkEditToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_ERROR_MORE_THAN_ONE_FILE) });
             return;
         }
         const file = files[0];
@@ -293,10 +294,10 @@ const EditAttendeePopUp = ({
                 }]);
                 setBulkEditFile(file);
             } else {
-                setBulkEditToast({ key: "error", label: t("HCM_FILE_UPLOAD_FAILED") });
+                setBulkEditToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_FILE_UPLOAD_FAILED) });
             }
         } catch (err) {
-            setBulkEditToast({ key: "error", label: t("HCM_FILE_UPLOAD_FAILED") });
+            setBulkEditToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_FILE_UPLOAD_FAILED) });
         } finally {
             setBulkEditLoader(false);
         }
@@ -350,7 +351,7 @@ const EditAttendeePopUp = ({
                             <TextInput
                                 type="search"
                                 name="title"
-                                placeholder={t("HCM_AM_VIEW_REGISTER_PLACE_HOLDER")}
+                                placeholder={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_VIEW_REGISTER_PLACE_HOLDER)}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
@@ -379,7 +380,7 @@ const EditAttendeePopUp = ({
                             >
                                 <div>{t(labels[1])}</div>
                                 <Button
-                                    label={t("HCM_AM_SEARCH_USER")}
+                                    label={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_SEARCH_USER)}
                                     variation="link"
                                     onClick={() => {
                                         // Navigate to attendee inbox page
@@ -390,7 +391,7 @@ const EditAttendeePopUp = ({
                                 />
                                 {/* <div>{t(labels[2])}</div>
                                 <Button
-                                    label={t("HCM_AM_BULK_EDIT")}
+                                    label={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_BULK_EDIT)}
                                     variation="link"
                                     onClick={() => setShowBulkEditPopUp(true)}
                                 /> */}
@@ -404,7 +405,7 @@ const EditAttendeePopUp = ({
                         type={"button"}
                         size={"large"}
                         variation={"primary"}
-                        label={t("HCM_AM_SAVE_AND_CLOSE")}
+                        label={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_SAVE_AND_CLOSE)}
                         onClick={onClose}
                     />,
                 ]}
@@ -414,7 +415,7 @@ const EditAttendeePopUp = ({
             {/* Bulk Edit PopUp */}
             {showBulkEditPopUp && (
                 <PopUp
-                    heading={t("HCM_AM_BULK_EDIT_ATTENDEES")}
+                    heading={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_BULK_EDIT_ATTENDEES)}
                     onClose={closeBulkEditPopUp}
                     onOverlayClick={closeBulkEditPopUp}
                     children={[
@@ -425,8 +426,8 @@ const EditAttendeePopUp = ({
                             {/* Download template button aligned to the right */}
                             <div style={{ display: "flex", justifyContent: "flex-end" }}>
                                 <Button
-                                    label={t("WBH_DOWNLOAD_TEMPLATE")}
-                                    title={t("WBH_DOWNLOAD_TEMPLATE")}
+                                    label={t(I18N_KEYS.COMPONENTS_ATTENDANCE.WBH_DOWNLOAD_TEMPLATE)}
+                                    title={t(I18N_KEYS.COMPONENTS_ATTENDANCE.WBH_DOWNLOAD_TEMPLATE)}
                                     variation="secondary"
                                     icon={"FileDownload"}
                                     type="button"
@@ -437,7 +438,7 @@ const EditAttendeePopUp = ({
 
                             {/* Info text shown only when no file is uploaded */}
                             {!bulkEditFile && (
-                                <div className="info-text">{t("HCM_AM_BULK_EDIT_UPLOAD_MESSAGE")}</div>
+                                <div className="info-text">{t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_BULK_EDIT_UPLOAD_MESSAGE)}</div>
                             )}
 
                             {/* File upload area */}
@@ -455,14 +456,14 @@ const EditAttendeePopUp = ({
                             type="button"
                             size="large"
                             variation="secondary"
-                            label={t("HCM_AM_CANCEL")}
+                            label={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
                             onClick={closeBulkEditPopUp}
                         />,
                         <Button
                             type="button"
                             size="large"
                             variation="primary"
-                            label={t("HCM_AM_SUBMIT")}
+                            label={t(I18N_KEYS.COMMON.HCM_AM_SUBMIT)}
                             isDisabled={!bulkEditUploadedData?.length}
                             onClick={handleBulkEditSubmit}
                         />,

@@ -3,6 +3,7 @@ import { InboxSearchComposer, HeaderComponent, Loader } from "@egovernments/digi
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { AssignCampaignInboxConfig } from "../../components/config/assignCampaignConfig";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const AssignCampaignInbox = () => {
   const { t } = useTranslation();
@@ -71,7 +72,7 @@ const AssignCampaignInbox = () => {
       >
         {
           <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
-            {t("HR_HOME_SEARCH_CAMPAIGNS_HEADING")}
+            {t(I18N_KEYS.PAGES_CAMPAIGN_ASSIGNMENT_INBOX.HR_HOME_SEARCH_CAMPAIGNS_HEADING)}
           </HeaderComponent>
         }
       </div>

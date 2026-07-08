@@ -3,6 +3,7 @@ import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { TextInput } from "@egovernments/digit-ui-components";
 import { tableCustomStyle } from "../table_inbox_custom_style";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const RoleWageTable = ({
   skills = [],
@@ -155,7 +156,7 @@ const RoleWageTable = ({
 
         if (maxLimit !== undefined && numericValue > maxLimit) {
           if (!updated[id]) updated[id] = {};
-          updated[id][field] = `${t(`${"HCM_AM"}_${field}`)} ${t("HCM_AM_CAN_NOT_EXCEED")} ${maxLimit}`;
+          updated[id][field] = `${t(`${"HCM_AM"}_${field}`)} ${t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_CAN_NOT_EXCEED)} ${maxLimit}`;
         } else {
           if (updated[id]) {
             delete updated[id][field];
@@ -211,7 +212,7 @@ const RoleWageTable = ({
   const columns = useMemo(() => {
     const cols = [
       {
-        name: <div style={{ textAlign: "start" }}>{t("HCM_AM_ROLE_LABEL")}</div>,
+        name: <div style={{ textAlign: "start" }}>{t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_ROLE_LABEL)}</div>,
         selector: (row) => row.role,
         width: "200px",
       },
@@ -226,7 +227,7 @@ const RoleWageTable = ({
     });
 
     cols.push({
-      name: <div style={{ textAlign: "start" }}>{t("HCM_AM_TOTAL_WAGE")}</div>,
+      name: <div style={{ textAlign: "start" }}>{t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_TOTAL_WAGE)}</div>,
       cell: (row) => (
         <div
           style={{
@@ -247,11 +248,11 @@ const RoleWageTable = ({
   }, [t, rateColumns, renderNumericInput]);
 
   if (!skills || skills.length === 0) {
-    return <div style={{ padding: "1rem", textAlign: "center" }}>{t("HCM_AM_NO_ROLES_FOUND")}</div>;
+    return <div style={{ padding: "1rem", textAlign: "center" }}>{t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_NO_ROLES_FOUND)}</div>;
   }
 
   if (!rateBreakupSchema || Object.keys(rateBreakupSchema).length === 0) {
-    return <div style={{ padding: "1rem", textAlign: "center" }}>{t("HCM_AM_NO_SCHEMA_RATE_FOUND")}</div>;
+    return <div style={{ padding: "1rem", textAlign: "center" }}>{t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_NO_SCHEMA_RATE_FOUND)}</div>;
   }
 
   return (

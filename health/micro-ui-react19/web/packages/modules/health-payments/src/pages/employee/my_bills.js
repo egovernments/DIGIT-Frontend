@@ -12,6 +12,7 @@ import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 
 
 import _ from "lodash";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const MyBills = (props) => {
 
@@ -231,7 +232,7 @@ const MyBills = (props) => {
         // setShowToast(null);
         setTableData([]);
         setTotalCount(0);
-        //setShowToast({ key: "error", label: t("HCM_AM_SELECT_PERIODS_EMPTY"), transitionTime: 3000 });
+        //setShowToast({ key: "error", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_SELECT_PERIODS_EMPTY), transitionTime: 3000 });
 
         return;
       }
@@ -257,17 +258,17 @@ const MyBills = (props) => {
     const totalAmount = getTotalAmount(props?.selectedBills);
     return (
         <React.Fragment>
-            <HeaderComponent className="payment-screen-headers">{t("HCM_AM_MY_BILLS")}</HeaderComponent>
+            <HeaderComponent className="payment-screen-headers">{t(I18N_KEYS.PAGES_BILLS.HCM_AM_MY_BILLS)}</HeaderComponent>
             <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
             <Card>
                 {isFetching ? ( <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
-) : tableData.length === 0 ? (<NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />)
+) : tableData.length === 0 ? (<NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_DATA_FOUND_FOR_BILLS)} />)
                     :
                     (
                         <React.Fragment>
                             {selectedCount > 0 && (
                                 <div style={{ margin: '1rem 0', fontWeight: 'bold', color: '#0B4B66' }}>
-                                    {selectedCount} {t("HCM_AM_BILLS_SELECTED")} | {t("PDF_STATIC_LABEL_BILL_TOTAL_AMOUNT_TO_PROCESS")} {totalAmount} {workerRatesData?.currency}
+                                    {selectedCount} {t(I18N_KEYS.PAGES_BILLS.HCM_AM_BILLS_SELECTED)} | {t(I18N_KEYS.PAGES_BILLS.PDF_STATIC_LABEL_BILL_TOTAL_AMOUNT_TO_PROCESS)} {totalAmount} {workerRatesData?.currency}
                                 </div>
                             )}
                             <MyBillsTable

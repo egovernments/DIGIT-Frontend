@@ -10,6 +10,7 @@ import { defaultPaginationValues } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 import WorkerDetailsPopUp from "./WorkerDetailsPopUp";
 import { isBank } from "../utils/roleUtils";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 
 const BillDetailsTable = ({ ...props }) => {
@@ -236,7 +237,7 @@ const BillDetailsTable = ({ ...props }) => {
         // --- Reusable column definitions ---
 
         const userIdCol = {
-            name: colHeader(t("HCM_AM_WORKER_ID")),
+            name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_WORKER_ID)),
             selector: (row) => {
                 // const showErrorPayments = row?.status === "PAYMENT_FAILED";
                 // const showErrorNotProcessed =
@@ -253,10 +254,10 @@ const BillDetailsTable = ({ ...props }) => {
                                 maxWidth: "160px", display: "inline-block", marginRight: "4px",
                                 color: "#C84C0E", cursor: "pointer", textDecoration: "underline",
                             }}
-                            title={t(row?.userId) || t("NA")}
+                            title={t(row?.userId) || t(I18N_KEYS.COMMON.NA)}
                             onClick={() => setSelectedRow(row)}
                         >
-                            {t(row?.userId) || t("NA")}
+                            {t(row?.userId) || t(I18N_KEYS.COMMON.NA)}
                         </span>
                         {/* {(showErrorPayments || showErrorNotProcessed) && (
                             <TooltipWrapper
@@ -268,13 +269,13 @@ const BillDetailsTable = ({ ...props }) => {
                                                 ? t(row.additionalDetails.responseMessage)
                                                 : row?.additionalDetails?.errorDetails?.reasonForFailure
                                                     ? t(row.additionalDetails.errorDetails.reasonForFailure)
-                                                    : `${t("HCM_AM_REQUEST_NOT_PROCESSED")} ${t("HCM_AM_PLEASE_TRY_AGAIN")}`)
-                                            : `${t("HCM_AM_REQUEST_NOT_PROCESSED")} ${t("HCM_AM_PLEASE_TRY_AGAIN")}`
+                                                    : `${t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_REQUEST_NOT_PROCESSED)} ${t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_PLEASE_TRY_AGAIN)}`)
+                                            : `${t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_REQUEST_NOT_PROCESSED)} ${t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_PLEASE_TRY_AGAIN)}`
                                         }
                                     </div>
                                 }
                                 enterDelay={100}
-                                header={t("HCM_AM_DATA_ERROR")}
+                                header={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_DATA_ERROR)}
                                 leaveDelay={0}
                                 placement="right"
                             >
@@ -296,11 +297,11 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const workerNameCol = {
-            name: colHeader(t("HCM_AM_WORKER_NAME")),
+            name: colHeader(t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_WORKER_NAME)),
             selector: (row) => (
                 <span className="ellipsis-cell" style={{ fontSize: "14px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px", display: "inline-block" }}
-                    title={row?.givenName || t("NA")}>
-                    {row?.givenName || t("NA")}
+                    title={row?.givenName || t(I18N_KEYS.COMMON.NA)}>
+                    {row?.givenName || t(I18N_KEYS.COMMON.NA)}
                 </span>
             ),
             minWidth: "150px",
@@ -309,7 +310,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const payeeNameCol = {
-            name: colHeader(t("HCM_AM_PAYEE_NAME")),
+            name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_PAYEE_NAME)),
             selector: (row) => (
                 <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
                     {row?.payeeName || "\u2014"}
@@ -322,10 +323,10 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const phoneCol = {
-            name: colHeader(t("HCM_AM_MOBILE_NUMBER")),
+            name: colHeader(t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_MOBILE_NUMBER)),
             selector: (row) => (
                 <span className="ellipsis-cell" style={{ fontSize: "14px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px", display: "inline-block" }}>
-                    {row?.mobileNumber || t("NA")}
+                    {row?.mobileNumber || t(I18N_KEYS.COMMON.NA)}
                 </span>
             ),
             minWidth: "140px",
@@ -334,10 +335,10 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const payeePhoneCol = {
-            name: colHeader(t("HCM_AM_PAYEE_PHONE_NUMBER")),
+            name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_PAYEE_PHONE_NUMBER)),
             selector: (row) => (
                 <span className="ellipsis-cell" style={{fontSize: "14px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px", display: "inline-block" }}>
-                    {row?.payeePhoneNumber || t("NA")}
+                    {row?.payeePhoneNumber || t(I18N_KEYS.COMMON.NA)}
                 </span>
             ),
             minWidth: "160px",
@@ -346,11 +347,11 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const roleCol = {
-            name: colHeader(t("HCM_AM_ROLE")),
+            name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_ROLE)),
             selector: (row) => (
                 <span
                     className="ellipsis-cell"
-                    title={t(row?.role) || t("NA")}
+                    title={t(row?.role) || t(I18N_KEYS.COMMON.NA)}
                     style={{
                         fontSize: "14px",
                         whiteSpace: "normal",
@@ -361,7 +362,7 @@ const BillDetailsTable = ({ ...props }) => {
                         wordBreak: "break-word",
                     }}
                 >
-                    {t(row?.role) || t("NA")}
+                    {t(row?.role) || t(I18N_KEYS.COMMON.NA)}
                 </span>
             ),
             style: { justifyContent: "start" },
@@ -371,7 +372,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const operatorCol = {
-            name: colHeader(t("HCM_AM_PAYMENT_PROVIDER")),
+            name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_PAYMENT_PROVIDER)),
             selector: (row) => (
                 <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
                     {row?.payee?.paymentProvider || "\u2014"}
@@ -384,7 +385,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const bankAccountCol = {
-            name: colHeader(t("HCM_AM_BANK_ACCOUNT")),
+            name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_BANK_ACCOUNT)),
             selector: (row) => (
                 <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
                     {row?.payee?.bankAccount || "\u2014"}
@@ -397,7 +398,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const bankCodeCol = {
-            name: colHeader(t("HCM_AM_BANK_CODE")),
+            name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_BANK_CODE)),
             selector: (row) => (
                 <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
                     {row?.payee?.bankCode || "\u2014"}
@@ -410,7 +411,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const beneficiaryCodeCol = {
-            name: colHeader(t("HCM_AM_BENEFICIARY_CODE")),
+            name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_BENEFICIARY_CODE)),
             selector: (row) => (
                 <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
                     {row?.payee?.beneficiaryCode || "\u2014"}
@@ -423,10 +424,10 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const daysCol = {
-            name: colHeader(t("HCM_AM_NUMBER_OF_DAYS"), "right"),
+            name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_NUMBER_OF_DAYS), "right"),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem", fontSize: "14px" }}>
-                    {row?.totalAttendance != null ? row.totalAttendance : t("NA")}
+                    {row?.totalAttendance != null ? row.totalAttendance : t(I18N_KEYS.COMMON.NA)}
                 </div>
             ),
             style: { justifyContent: "flex-end" },
@@ -436,7 +437,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const wageCol = {
-            name: colHeader(`${t("HCM_AM_WAGE")}${currencySuffix}`, "right"),
+            name: colHeader(`${t(I18N_KEYS.COMMON.HCM_AM_WAGE)}${currencySuffix}`, "right"),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem", fontSize: "14px" }}>
                     {`${row.wage}`}
@@ -449,7 +450,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const totalAmountCol = {
-            name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`, "right"),
+            name: colHeader(`${t(I18N_KEYS.COMMON.HCM_AM_TOTAL_AMOUNT)}${currencySuffix}`, "right"),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem", fontSize: "14px" }}>
                     {displayAmountMax2(row?.totalAmount)}
@@ -483,7 +484,7 @@ const BillDetailsTable = ({ ...props }) => {
         }));
 
         const feesCol = {
-            name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")} %`, "right"),
+            name: colHeader(`${t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_FEES_AND_CHARGES)} %`, "right"),
             selector: (row) => {
                 const percent = getFeePercent(row);
                 const displayPercent = displayFeePercentOneDecimal(percent);
@@ -500,7 +501,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const totalCol = {
-            name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`, "right"),
+            name: colHeader(`${t(I18N_KEYS.COMMON.HCM_AM_TOTAL_AMOUNT)}${currencySuffix}`, "right"),
             selector: (row) => {
                 const total = displayAmountMax2(row?.totalAmount);
                 // const percent = getFeePercent(row);
@@ -521,11 +522,11 @@ const BillDetailsTable = ({ ...props }) => {
         // --- Columns for Partially Verified > Verification Failed ---
 
         const reasonCol = {
-            name: colHeader(t("HCM_AM_REASON_FOR_FAILURE")),
+            name: colHeader(t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_REASON_FOR_FAILURE)),
             selector: (row) => (
                 <span
                     className="ellipsis-cell"
-                    title={t(row?.additionalDetails?.errorDetails?.reasonForFailure) || t("NA")}
+                    title={t(row?.additionalDetails?.errorDetails?.reasonForFailure) || t(I18N_KEYS.COMMON.NA)}
                     style={{
                         fontSize: "14px",
                         color: "#B91900",
@@ -537,7 +538,7 @@ const BillDetailsTable = ({ ...props }) => {
                         wordBreak: "break-word",
                     }}
                 >
-                    {t(row?.additionalDetails?.errorDetails?.reasonForFailure) || t("NA")}
+                    {t(row?.additionalDetails?.errorDetails?.reasonForFailure) || t(I18N_KEYS.COMMON.NA)}
                 </span>
             ),
             grow: 1,
@@ -547,12 +548,12 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const actionCol = {
-            name: colHeader(t("HCM_AM_ACTION")),
+            name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_ACTION)),
             selector: () => (
                 <Button
                     variation="secondary"
                     size="small"
-                    label={t("HCM_AM_IGNORE_ERROR")}
+                    label={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_IGNORE_ERROR)}
                     onClick={() => { /* placeholder */ }}
                 />
             ),
@@ -562,11 +563,11 @@ const BillDetailsTable = ({ ...props }) => {
         // --- Additional columns for approver views ---
 
         const errorMessageCol = {
-            name: colHeader(t("HCM_AM_ERROR_MESSAGE")),
+            name: colHeader(t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_ERROR_MESSAGE)),
             selector: (row) => (
-                <span className="ellipsis-cell" title={t(row?.additionalDetails?.responseMessage || row?.additionalDetails?.errorDetails?.reasonForFailure) || t("NA")}
+                <span className="ellipsis-cell" title={t(row?.additionalDetails?.responseMessage || row?.additionalDetails?.errorDetails?.reasonForFailure) || t(I18N_KEYS.COMMON.NA)}
                     style={{ fontSize: "14px", color: "#B91900" }}>
-                    {t(row?.additionalDetails?.responseMessage || row?.additionalDetails?.errorDetails?.reasonForFailure) || t("NA")}
+                    {t(row?.additionalDetails?.responseMessage || row?.additionalDetails?.errorDetails?.reasonForFailure) || t(I18N_KEYS.COMMON.NA)}
                 </span>
             ),
             grow: 1,
@@ -617,12 +618,12 @@ const BillDetailsTable = ({ ...props }) => {
         }));
 
         const reviewerDaysCol = {
-            name: colHeader(t("HCM_AM_NUMBER_OF_DAYS"), "right"),
+            name: colHeader(t(I18N_KEYS.COMMON.HCM_AM_NUMBER_OF_DAYS), "right"),
             selector: (row) => {
                 if (!isReviewerEdit) {
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                            {row?.totalAttendance != null ? row.totalAttendance : t("NA")}
+                            {row?.totalAttendance != null ? row.totalAttendance : t(I18N_KEYS.COMMON.NA)}
                         </div>
                     );
                 }
@@ -649,7 +650,7 @@ const BillDetailsTable = ({ ...props }) => {
                                 setShowToast({
                                     key: "error",
                                     label:
-                                        t("HCM_AM_ATTENDANCE_EXCEEDS_BILLING_PERIOD") ||
+                                        t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_EXCEEDS_BILLING_PERIOD) ||
                                         `Attendance cannot exceed ${maxAttendanceDays} day(s) for this billing period`,
                                     transitionTime: 3000,
                                 });
@@ -686,7 +687,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const reviewerFeesCol = {
-            name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")} %`, "right"),
+            name: colHeader(`${t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_FEES_AND_CHARGES)} %`, "right"),
             selector: (row) => {
                 const percent = getFeePercent(row);
                 // FEES is editable only when (a) reviewer is in edit mode AND
@@ -728,7 +729,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const reviewerTotalCol = {
-            name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`, "right"),
+            name: colHeader(`${t(I18N_KEYS.COMMON.HCM_AM_TOTAL_AMOUNT)}${currencySuffix}`, "right"),
             selector: (row) => {
                 const subtotal = reviewerLineSubtotal(row);
                 const baseSubtotal =
@@ -826,20 +827,20 @@ const BillDetailsTable = ({ ...props }) => {
     const handleMultiFieldUpdate = async (updatedFields) => {
         if (billDetailUpdateMutation?.isLoading) return;
         if (!billId) {
-            setShowToast({ key: "error", label: t("HCM_AM_BILL_NOT_FOUND"), transitionTime: 3000 });
+            setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_BILL_NOT_FOUND), transitionTime: 3000 });
             return;
         }
         if (!tenantId) {
-            setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 3000 });
+            setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG), transitionTime: 3000 });
             return;
         }
         if (!selectedRow?.id) {
-            setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 3000 });
+            setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG), transitionTime: 3000 });
             return;
         }
         const isEditable = ["PENDING_VERIFICATION", "VERIFICATION_FAILED"].includes(selectedRow?.status);
         if (!isEditable) {
-            setShowToast({ key: "error", label: t("HCM_AM_EDIT_NOT_ALLOWED_FOR_STATUS") || t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 3000 });
+            setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_EDIT_NOT_ALLOWED_FOR_STATUS) || t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG), transitionTime: 3000 });
             return;
         }
 
@@ -897,7 +898,7 @@ const BillDetailsTable = ({ ...props }) => {
                         );
                         setTableData(updatedData);
                         setSelectedRow(null);
-                        setShowToast({ key: "success", label: t("HCM_AM_SAVE_CHANGES_SUCCESS"), transitionTime: 3000 });
+                        setShowToast({ key: "success", label: t(I18N_KEYS.COMMON.HCM_AM_SAVE_CHANGES_SUCCESS), transitionTime: 3000 });
                         setTimeout(() => {
                             props?.onRefetchBill?.();
                         }, 2000);
@@ -905,7 +906,7 @@ const BillDetailsTable = ({ ...props }) => {
                     onError: (error) => {
                         setShowToast({
                             key: "error",
-                            label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
+                            label: error?.response?.data?.Errors?.[0]?.message || t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
                             transitionTime: 3000,
                         });
                     },
@@ -914,7 +915,7 @@ const BillDetailsTable = ({ ...props }) => {
         } catch (e) {
             setShowToast({
                 key: "error",
-                label: e?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
+                label: e?.response?.data?.Errors?.[0]?.message || t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
                 transitionTime: 3000,
             });
         }

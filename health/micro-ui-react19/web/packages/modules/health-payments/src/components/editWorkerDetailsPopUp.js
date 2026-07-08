@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * Component to show a pop-up to allow the user to enter a comment before approving an attendance register.
@@ -31,7 +32,7 @@ const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, in
             if (!trimmedInput) {
                 setShowToast({
                     key: "error",
-                    label: t("HCM_AM_INVALID_MOBILE_NUMBER_ERROR_TOAST_MESSAGE") || "Please enter a valid 8-digit mobile number.",
+                    label: t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_INVALID_MOBILE_NUMBER_ERROR_TOAST_MESSAGE) || "Please enter a valid 8-digit mobile number.",
                     transitionTime: 3000
                 });
                 return;
@@ -39,7 +40,7 @@ const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, in
             else if (!mobileRegex.test(trimmedInput)) {
                 setShowToast({
                     key: "error",
-                    label: t("HCM_AM_INVALID_MOBILE_NUMBER_ERROR_TOAST_MESSAGE") || "Please enter a valid 8-digit mobile number.",
+                    label: t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_INVALID_MOBILE_NUMBER_ERROR_TOAST_MESSAGE) || "Please enter a valid 8-digit mobile number.",
                     transitionTime: 3000
                 });
                 return;
@@ -49,7 +50,7 @@ const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, in
             if (!trimmedInput) {
                 setShowToast({
                     key: "error",
-                    label: t("HCM_AM_INVALID_NAME_ERROR_TOAST_MESSAGE") || "Please enter a valid name.",
+                    label: t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_INVALID_NAME_ERROR_TOAST_MESSAGE) || "Please enter a valid name.",
                     transitionTime: 3000
                 });
                 return;
@@ -71,7 +72,7 @@ const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, in
             <PopUp
                 style={{ width: "700px" }}
                 onClose={onClose}
-                heading={t(`HCM_AM_EDIT_WORKER_DETAILS_LABEL`)}
+                heading={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_EDIT_WORKER_DETAILS_LABEL)}
                 children={[
                     <div key="comment-section">
                         <div className="comment-label">
@@ -95,8 +96,8 @@ const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, in
                         size="large"
                         style={{ minWidth: "270px" }}
                         variation="secondary"
-                        label={t(`HCM_AM_CLOSE`)}
-                        title={t(`HCM_AM_CLOSE`)}
+                        label={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_CLOSE)}
+                        title={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_CLOSE)}
                         onClick={onClose}
                     />,
                     <Button
@@ -106,8 +107,8 @@ const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, in
                         size="large"
                         variation="primary"
                         style={{ minWidth: "270px" }}
-                        label={t(`HCM_AM_APPROVE`)}
-                        title={t(`HCM_AM_APPROVE`)}
+                        label={t(I18N_KEYS.COMMON.HCM_AM_APPROVE)}
+                        title={t(I18N_KEYS.COMMON.HCM_AM_APPROVE)}
                         onClick={() => handleSave()}
                     />,
                 ]}

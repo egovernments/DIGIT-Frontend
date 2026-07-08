@@ -6,6 +6,7 @@ import NoData from "./NoData";
 import { getTitleHeading } from "../utils/locale";
 import { Loader, Chip } from "@egovernments/digit-ui-components";
 import { getDuration } from "../utils/getDuration";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 const COLORS = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE", "#6E8459", "#D4351C", "#0CF7E4", "#F80BF4", "#22F80B"];
 const mobileView = innerWidth <= 640;
 
@@ -222,12 +223,12 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
     <Fragment>
       {id === "deathByCategory" && ( //|| id === "nssNumberOfDeathsByCategory") && (
         <span className={"dss-pie-subheader"} style={{ position: "sticky", left: 0 }}>
-          {t("DSS_CMN_PIE_INFO")}
+          {t(I18N_KEYS.CHARTS.DSS_CMN_PIE_INFO)}
         </span>
       )}
       {isPieClicked && (
         <div className="digit-tag-container digit-pie-chart-tags">
-          <div className="digit-tag-filter-text">{t("DSS_FILTERS_APPLIED")}: </div>
+          <div className="digit-tag-filter-text">{t(I18N_KEYS.COMMON.DSS_FILTERS_APPLIED)}: </div>
           <Chip key={id} text={`${t(pieSelected)}`} onClick={(e) => removeFilter(e)} hideClose={false} />
         </div>
       )}
@@ -264,7 +265,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
                     <Label
                       position="centerBottom"
                       className="digit-pie-chart-inner-label-text"
-                      value={t("DSS_TOTAL")}
+                      value={t(I18N_KEYS.CHARTS.DSS_TOTAL)}
                       style={{ transform: "translateY(-10px)" }}
                     />
                     <Label position="centerTop" value={totalValue()} className="digit-pie-chart-inner-label-value" />

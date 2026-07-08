@@ -6,6 +6,7 @@ import MyBills from "./my_bills";
 import FetchBills from "./fetch_bills";
 import { CloudDownload } from "./svg_components/CloudDownload";
 import { FileUpload } from "./svg_components/FileUpload";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const ROLES = {
   ATTENDANCE: ["PROXIMITY_SUPERVISOR"],
@@ -53,8 +54,8 @@ const UploadAndFetchBillsCard = () => {
           }}
         >
 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "0.5rem", marginTop: "1rem", width: "100%" }}>
-<HeaderComponent className="pop-inbox-header payment-screen-headers">{t("HCM_AM_UPLOAD_OR_FETCH_BILLS")}</HeaderComponent>
-          <div className="label-pair">{t("HCM_AM_PLEASE_SELECT_ONE_VERIFY")}</div>
+<HeaderComponent className="pop-inbox-header payment-screen-headers">{t(I18N_KEYS.PAGES_BILLS.HCM_AM_UPLOAD_OR_FETCH_BILLS)}</HeaderComponent>
+          <div className="label-pair">{t(I18N_KEYS.PAGES_BILLS.HCM_AM_PLEASE_SELECT_ONE_VERIFY)}</div>
           </div>
           <div style={{ display: "flex", justifyContent: "center", gap: "2rem", marginTop: "1rem" }}>
             <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
@@ -76,7 +77,7 @@ const UploadAndFetchBillsCard = () => {
   <div style={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
     <FileUpload style={{ width: "80%", height: "80%" }} />
   </div>
-  <div className="label-pair" style={{ marginTop: "0.5rem" }}>{t("HCM_AM_UPLOAD_BILLS")}</div>
+  <div className="label-pair" style={{ marginTop: "0.5rem" }}>{t(I18N_KEYS.PAGES_BILLS.HCM_AM_UPLOAD_BILLS)}</div>
 </Card>
 
 <Card
@@ -99,7 +100,7 @@ const UploadAndFetchBillsCard = () => {
   <div style={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
     <CloudDownload style={{ width: "80%", height: "80%" }} />
   </div>
-  <div className="label-pair" style={{ marginTop: "0.5rem" }}>{t("HCM_AM_FETCH_BILLS")}</div>
+  <div className="label-pair" style={{ marginTop: "0.5rem" }}>{t(I18N_KEYS.COMMON.HCM_AM_FETCH_BILLS)}</div>
 </Card>
             </div>
           </div>
@@ -121,7 +122,7 @@ const UploadAndFetchBillsCard = () => {
         type={"button"}
         size={"large"}
         variation={"secondary"}
-        label={t("HCM_AM_CANCEL")}
+        label={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
         onClick={() => 
           closePopUp()  
         }
@@ -131,7 +132,7 @@ const UploadAndFetchBillsCard = () => {
         type={"button"}
         size={"large"}
         variation={"primary"}
-        label={t("HCM_AM_NEXT_LABEL")}
+        label={t(I18N_KEYS.COMMON.HCM_AM_NEXT_LABEL)}
         onClick={() => 
           handleConfirm()
           // closePopUp()
@@ -156,7 +157,7 @@ const UploadAndFetchBillsCard = () => {
         actionFields={[
           <Button
             icon="ArrowBack"
-            label={t("HCM_AM_BACK_LABEL")}
+            label={t(I18N_KEYS.COMMON.HCM_AM_BACK_LABEL)}
             onClick={() => navigate(`/${window.contextPath}/employee`)}
             style={{ marginLeft: "2.5rem", minWidth: "14rem" }}
             type="button"
@@ -166,7 +167,7 @@ const UploadAndFetchBillsCard = () => {
             onClick={openPopUp}
             icon="ArrowForward"
             isSuffix
-            label={t("HCM_AM_NEXT_LABEL")}
+            label={t(I18N_KEYS.COMMON.HCM_AM_NEXT_LABEL)}
             style={{ marginRight: "2.5rem", minWidth: "14rem" }}
             type="button"
             variation="primary"
