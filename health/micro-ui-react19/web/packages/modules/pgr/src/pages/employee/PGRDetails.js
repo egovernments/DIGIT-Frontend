@@ -18,6 +18,7 @@ import { convertEpochFormateToDate } from "../../utils";
 import TimelineWrapper from "../../components/TimeLineWrapper";
 import PGRWorkflowModal from "../../components/PGRWorkflowModal";
 import Urls from "../../utils/urls";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 // Action configurations used for handling different workflow actions like ASSIGN, REJECT, RESOLVE
 // TO DO: Move this to MDMS for handling Action Modal properties
@@ -293,7 +294,7 @@ const PGRDetails = () => {
     if (missingFields.length > 0) {
       setToast({
         show: true,
-        label: t("CS_COMMON_REQUIRED_FIELDS_MISSING") + ": " + missingFields.join(", "),
+        label: t(I18N_KEYS.PAGES_DETAILS.CS_COMMON_REQUIRED_FIELDS_MISSING) + ": " + missingFields.join(", "),
         type: "error",
       });
       return;
@@ -322,11 +323,11 @@ const PGRDetails = () => {
   const handleResponseForUpdateComplaint = async (payload) => {
     setOpenModal(false);
     await UpdateComplaintMutation(payload, {
-      onError: () => setToast({ show: true, label: t("FAILED_TO_UPDATE_COMPLAINT"), type: "error" }),
+      onError: () => setToast({ show: true, label: t(I18N_KEYS.PAGES_DETAILS.FAILED_TO_UPDATE_COMPLAINT), type: "error" }),
       onSuccess: async (responseData) => {
         const msg = payload.workflow.action || "RESOLVE";
         if (responseData?.ResponseInfo?.Errors) {
-          setToast({ show: true, label: t("FAILED_TO_UPDATE_COMPLAINT"), type: "error" });
+          setToast({ show: true, label: t(I18N_KEYS.PAGES_DETAILS.FAILED_TO_UPDATE_COMPLAINT), type: "error" });
         } else {
           setToast({ show: true, label: t(`${msg}_SUCCESSFULLY`), type: "success" });
           await refreshData();
@@ -415,7 +416,7 @@ const PGRDetails = () => {
     <React.Fragment>
       {/* Header */}
       <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
-        {t("CS_COMPLAINT_DETAILS_COMPLAINT_DETAILS")}
+        {t(I18N_KEYS.PAGES_INBOX.CS_COMPLAINT_DETAILS_COMPLAINT_DETAILS)}
       </HeaderComponent>
 
       {/* Complaint Summary Card */}
@@ -431,59 +432,59 @@ const PGRDetails = () => {
                 fieldPairs: [
                   {
                     inline: true,
-                    label: t("CS_COMPLAINT_DETAILS_COMPLAINT_NO"),
+                    label: t(I18N_KEYS.PAGES_DETAILS.CS_COMPLAINT_DETAILS_COMPLAINT_NO),
                     type: "text",
                     value: pgrData?.ServiceWrappers[0].service?.serviceRequestId || "NA",
                     className:"summary-card-complaint-details"
                   },
                   {
                     inline: true,
-                    label: t("CS_COMPLAINT_DETAILS_COMPLAINT_TYPE"),
+                    label: t(I18N_KEYS.PAGES_DETAILS.CS_COMPLAINT_DETAILS_COMPLAINT_TYPE),
                     type: "text",
                     className:"summary-card-complaint-details",
                     value: t(pgrData?.ServiceWrappers[0].service?.serviceCode || "NA"),
                   },
                   {
                     inline: true,
-                    label: t("CS_COMPLAINT_FILED_DATE"),
+                    label: t(I18N_KEYS.PAGES_DETAILS.CS_COMPLAINT_FILED_DATE),
                     className:"summary-card-complaint-details",
-                    value: convertEpochFormateToDate(pgrData?.ServiceWrappers[0].service?.auditDetails?.createdTime) || t("NA"),
+                    value: convertEpochFormateToDate(pgrData?.ServiceWrappers[0].service?.auditDetails?.createdTime) || t(I18N_KEYS.COMMON.NA),
                   },
                   {
                     inline: true,
-                    label: t("CS_COMPLAINT_DETAILS_AREA"),
+                    label: t(I18N_KEYS.PAGES_DETAILS.CS_COMPLAINT_DETAILS_AREA),
                     className:"summary-card-complaint-details",
                     value: t(pgrData?.ServiceWrappers[0].service?.address?.locality?.code?.split(".")?.pop() || "NA"),
                   },
                   {
                     inline: true,
-                    label: t("CS_COMPLAINT_DETAILS_CURRENT_STATUS"),
+                    label: t(I18N_KEYS.PAGES_DETAILS.CS_COMPLAINT_DETAILS_CURRENT_STATUS),
                     className:"summary-card-complaint-details",
                     value: pgrData?.ServiceWrappers?.[0]?.service?.applicationStatus
                       ? t(`WF_INBOX_${pgrData?.ServiceWrappers?.[0]?.service?.applicationStatus}`)
-                      : t("WF_INBOX_PENDING_ASSIGNMENT"),
+                      : t(I18N_KEYS.PAGES_DETAILS.WF_INBOX_PENDING_ASSIGNMENT),
                   },
                   {
                     inline: true,
-                    label: t("CS_COMPLAINT_LANDMARK__DETAILS"),
+                    label: t(I18N_KEYS.PAGES_DETAILS.CS_COMPLAINT_LANDMARK__DETAILS),
                     className:"summary-card-complaint-details",
                     value: pgrData?.ServiceWrappers[0].service?.address?.landmark || "NA",
                   },
                   {
                     inline: true,
                     className:"summary-card-complaint-details",
-                    label: t("CS_COMPLAINT_DETAILS_ADDITIONAL_DETAILS_DESCRIPTION"),
+                    label: t(I18N_KEYS.PAGES_DETAILS.CS_COMPLAINT_DETAILS_ADDITIONAL_DETAILS_DESCRIPTION),
                     value: pgrData?.ServiceWrappers[0].service?.description || "NA",
                   },
                   {
                     inline: true,
-                    label: t("COMPLAINTS_COMPLAINANT_NAME"),
+                    label: t(I18N_KEYS.PAGES_DETAILS.COMPLAINTS_COMPLAINANT_NAME),
                     className:"summary-card-complaint-details",
                     value: pgrData?.ServiceWrappers[0].service?.user?.name || "NA",
                   },
                   {
                     inline: true,
-                    label: t("COMPLAINTS_COMPLAINANT_CONTACT_NUMBER"),
+                    label: t(I18N_KEYS.PAGES_DETAILS.COMPLAINTS_COMPLAINANT_CONTACT_NUMBER),
                     className:"summary-card-complaint-details",
                     value: pgrData?.ServiceWrappers[0].service?.user?.mobileNumber || "NA",
                   },
@@ -494,7 +495,7 @@ const PGRDetails = () => {
                           type: "custom",
                           renderCustomContent: () => (
                             <div className="boundary-hierarchy-container" style={{ marginBottom: "0rem", marginTop: "0rem", paddingTop: "0rem",paddingBottom:"0rem" }}>
-                              <div style={{ fontWeight: "bold", fontSize:"20px", marginBottom: "0.5rem" ,color:"#0B4B66"}}>{t("CS_COMPLAINT_BOUNDARY_HIERARCHY")}</div>
+                              <div style={{ fontWeight: "bold", fontSize:"20px", marginBottom: "0.5rem" ,color:"#0B4B66"}}>{t(I18N_KEYS.PAGES_DETAILS.CS_COMPLAINT_BOUNDARY_HIERARCHY)}</div>
                               {isHierarchyLoading ? (
                                 <Loader />
                               ) : boundaryHierarchyPath.length > 0 ? (
@@ -507,7 +508,7 @@ const PGRDetails = () => {
                                   ))}
                                 </div>
                               ) : (
-                                <div>{t("CS_COMPLAINT_NO_BOUNDARY_DATA")}</div>
+                                <div>{t(I18N_KEYS.PAGES_DETAILS.CS_COMPLAINT_NO_BOUNDARY_DATA)}</div>
                               )}
                             </div>
                           ),
@@ -520,7 +521,7 @@ const PGRDetails = () => {
                     renderCustomContent: () => (
                       <div style={{ marginTop: "0rem" }}>
                         <Button
-                          label={showMore ? t("HCM_AM_VIEW_LESS") : t("HCM_AM_VIEW_MORE")}
+                          label={showMore ? t(I18N_KEYS.COMMON.HCM_AM_VIEW_LESS) : t(I18N_KEYS.COMMON.HCM_AM_VIEW_MORE)}
                           onClick={() => setShowMore((prev) => !prev)}
                           variation="link"
                           style={{ whiteSpace: "nowrap", width: "auto", padding: 0 }}
@@ -541,7 +542,7 @@ const PGRDetails = () => {
                     ),
                   },
                 ],
-                header: t("CS_COMPLAINT_DETAILS_COMPLAINT_TIMELINE"),
+                header: t(I18N_KEYS.PAGES_DETAILS.CS_COMPLAINT_DETAILS_COMPLAINT_TIMELINE),
               },
             ]}
             type="primary"
@@ -566,7 +567,7 @@ const PGRDetails = () => {
             }}
             isDisabled={getNextActionOptions(workflowData, businessServiceData?.BusinessServices?.[0]).length === 0}
             key="action-button"
-            label={t("ES_COMMON_TAKE_ACTION")}
+            label={t(I18N_KEYS.PAGES_DETAILS.ES_COMMON_TAKE_ACTION)}
             onOptionSelect={(selected) => {
               setSelectedAction(selected);
               setOpenModal(true);

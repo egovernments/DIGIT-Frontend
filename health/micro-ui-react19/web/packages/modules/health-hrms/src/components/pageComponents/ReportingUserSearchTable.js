@@ -4,6 +4,7 @@ import { Loader, CustomSVG } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
 import { editAttendeetableCustomStyle } from "../../utils/utlis";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const ReportingUserSearchTable = ({
   data = [],
@@ -39,7 +40,7 @@ const ReportingUserSearchTable = ({
   const columns = useMemo(
     () => [
       {
-        name: t("CORE_COMMON_NAME"),
+        name: t(I18N_KEYS.REPORTING_USER_SEARCH_TABLE.CORE_COMMON_NAME),
         selector: (row) => row?.name?.givenName || "-",
         sortable: true,
         cell: (row) => (
@@ -49,7 +50,7 @@ const ReportingUserSearchTable = ({
         ),
       },
       {
-        name: t("CORE_COMMON_PROFILE_MOBILE_NUMBER"),
+        name: t(I18N_KEYS.REPORTING_USER_SEARCH_TABLE.CORE_COMMON_PROFILE_MOBILE_NUMBER),
         selector: (row) => row?.mobileNumber || "-",
         sortable: true,
         cell: (row) => (
@@ -103,7 +104,7 @@ const ReportingUserSearchTable = ({
           conditionalRowStyles={conditionalRowStyles}
           noDataComponent={
             <div style={{ textAlign: "center", padding: "10px" }}>
-              {t("COMMON_NO_DATA")}
+              {t(I18N_KEYS.REPORTING_USER_SEARCH_TABLE.COMMON_NO_DATA)}
             </div>
           }
         />

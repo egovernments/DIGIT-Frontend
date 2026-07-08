@@ -5,6 +5,7 @@ import { downloadFileWithName, formatTimestampToDate, getCustomPaginationOptions
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues } from "../utils/constants";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * @function MyBillsTable
@@ -27,7 +28,7 @@ const MyBillsTable = ({ ...props }) => {
   const columns = useMemo(() => {
     const baseColumns = [
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_BILL_ID")}</div>,
+        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMMON.HCM_AM_BILL_ID)}</div>,
         selector: (row) => {
           return (
             <div
@@ -38,9 +39,9 @@ const MyBillsTable = ({ ...props }) => {
                 textAlign: "start",
                 lineHeight: "1.4",
               }}
-              title={t(row?.billNumber) || t("NA")}
+              title={t(row?.billNumber) || t(I18N_KEYS.COMMON.NA)}
             >
-              {t(row?.billNumber) || t("NA")}
+              {t(row?.billNumber) || t(I18N_KEYS.COMMON.NA)}
             </div>
           );
         },
@@ -52,11 +53,11 @@ const MyBillsTable = ({ ...props }) => {
       },
 
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_BILL_TYPE_COLOUMN")}</div>,
+        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BILL_TYPE_COLOUMN)}</div>,
         selector: (row) => {
           return (
             <div className="ellipsis-cell" style={{ alignItems: "flex-start" }}>
-              {t(`HCM_AM_${row?.additionalDetails?.billingType}` || "NA") || t("NA")}
+              {t(`HCM_AM_${row?.additionalDetails?.billingType}` || "NA") || t(I18N_KEYS.COMMON.NA)}
             </div>
           );
         },
@@ -68,9 +69,9 @@ const MyBillsTable = ({ ...props }) => {
       },
 
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_BILL_DATE")}</div>,
+        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMMON.HCM_AM_BILL_DATE)}</div>,
         selector: (row) => {
-          return <div className="ellipsis-cell">{formatTimestampToDate(row.billDate) || t("NA")}</div>;
+          return <div className="ellipsis-cell">{formatTimestampToDate(row.billDate) || t(I18N_KEYS.COMMON.NA)}</div>;
         },
         style: {
           display: "flex",
@@ -80,7 +81,7 @@ const MyBillsTable = ({ ...props }) => {
       },
 
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_BILL_PERIOD_DATE")}</div>,
+        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMMON.HCM_AM_BILL_PERIOD_DATE)}</div>,
         selector: (row) => {
           return (
             <div
@@ -91,7 +92,7 @@ const MyBillsTable = ({ ...props }) => {
                 textAlign: "start",
               }}
             >
-              {`${formatTimestampToDate(row.fromPeriod)} - ${formatTimestampToDate(row.toPeriod)}` || t("NA")}
+              {`${formatTimestampToDate(row.fromPeriod)} - ${formatTimestampToDate(row.toPeriod)}` || t(I18N_KEYS.COMMON.NA)}
             </div>
           );
         },
@@ -103,7 +104,7 @@ const MyBillsTable = ({ ...props }) => {
       },
       // INFO:: no of registers commented
        {
-         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "right", paddingRight: "1rem" }}>{t("HCM_AM_NO_OF_REGISTERS")}</div>,
+         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "right", paddingRight: "1rem" }}>{t(I18N_KEYS.COMMON.HCM_AM_NO_OF_REGISTERS)}</div>,
          selector: (row) => {
            return (
              <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
@@ -118,11 +119,11 @@ const MyBillsTable = ({ ...props }) => {
         },
        },
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "right", paddingRight: "1rem" }}>{t("HCM_AM_NUMBER_OF_WORKERS")}</div>,
+        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "right", paddingRight: "1rem" }}>{t(I18N_KEYS.COMMON.HCM_AM_NUMBER_OF_WORKERS)}</div>,
         selector: (row) => {
           return (
             <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-              {t(row?.billDetails?.length) || t("0")}
+              {t(row?.billDetails?.length) || t(I18N_KEYS.COMPONENTS_BILLS["0"])}
             </div>
           );
         },
@@ -134,9 +135,9 @@ const MyBillsTable = ({ ...props }) => {
         },
       },
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_BOUNDARY_NAME")}</div>,
+        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BOUNDARY_NAME)}</div>,
         selector: (row) => {
-          return <div className="ellipsis-cell">{t(row.localityCode) || t("NA")}</div>;
+          return <div className="ellipsis-cell">{t(row.localityCode) || t(I18N_KEYS.COMMON.NA)}</div>;
         },
         style: {
           display: "flex",
@@ -146,7 +147,7 @@ const MyBillsTable = ({ ...props }) => {
       },
 
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_PROJECT_NAME")}</div>,
+        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_PROJECT_NAME)}</div>,
         selector: (row) => {
           return (
             <div
@@ -169,7 +170,7 @@ const MyBillsTable = ({ ...props }) => {
         },
       },
       {
-        name: t("HCM_AM_BILL_ACTIONS"),
+        name: t(I18N_KEYS.COMMON.HCM_AM_BILL_ACTIONS),
         selector: (row, index) => {
           const reportDetails = row?.additionalDetails?.reportDetails;
           const billId = row?.billNumber;
@@ -181,32 +182,32 @@ const MyBillsTable = ({ ...props }) => {
               size="medium"
               icon="FileDownload"
               isSuffix
-              label={t(`HCM_AM_DOWNLOAD_BILLS`)}
-              title={t(`HCM_AM_DOWNLOAD_BILLS`)}
+              label={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_DOWNLOAD_BILLS)}
+              title={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_DOWNLOAD_BILLS)}
               showBottom={isLastRow && props.data.length !== 1 ? false : true}
               onOptionSelect={(value) => {
                 if (value.code === "HCM_AM_PDF") {
                   if (reportDetails?.pdfReportId) {
                     downloadFileWithName({ fileStoreId: reportDetails?.pdfReportId, customName: `${billId}`, type: "pdf" });
                   } else {
-                    setShowToast({ key: "error", label: t(`HCM_AM_PDF_GENERATION_FAILED`), transitionTime: 3000 });
+                    setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_PDF_GENERATION_FAILED), transitionTime: 3000 });
                   }
                 } else if (value.code === "HCM_AM_EXCEL") {
                   if (reportDetails?.excelReportId) {
                     downloadFileWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}`, type: "excel" });
                   } else {
-                    setShowToast({ key: "error", label: t(`HCM_AM_EXCEL_GENERATION_FAILED`), transitionTime: 3000 });
+                    setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_EXCEL_GENERATION_FAILED), transitionTime: 3000 });
                   }
                 }
               }}
               options={[
                 {
                   code: "HCM_AM_EXCEL",
-                  name: t(`HCM_AM_EXCEL`),
+                  name: t(I18N_KEYS.COMMON.HCM_AM_EXCEL),
                 },
                 {
                   code: "HCM_AM_PDF",
-                  name: t(`HCM_AM_PDF`),
+                  name: t(I18N_KEYS.COMMON.HCM_AM_PDF),
                 },
               ]}
               optionsKey="name"
@@ -218,7 +219,7 @@ const MyBillsTable = ({ ...props }) => {
             <div>
               <Tag
                 {...(reportDetails?.status !== "FAILED" && { icon: "Info" })}
-                label={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
+                label={reportDetails?.status === "FAILED" ? t(I18N_KEYS.COMMON.HCM_AM_FAILED_REPORT_GENERATION) : t(I18N_KEYS.COMMON.HCM_AM_PROGRESS_REPORT_GENERATION)}
                 labelStyle={{}}
                 showIcon={true}
                 style={{}}

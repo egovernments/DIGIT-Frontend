@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /**
  * Component to show a pop-up to allow the user to close or confirm the edit user.
@@ -33,8 +34,8 @@ const ActionPopUp = ({ onClose, onSubmit, headingMsg, description }) => {
             size="large"
             style={{ minWidth: "270px" }}
             variation="secondary"
-            label={t(`CORE_COMMON_CLOSE`)}
-            title={t(`CORE_COMMON_CLOSE`)}
+            label={t(I18N_KEYS.COMMON.CORE_COMMON_CLOSE)}
+            title={t(I18N_KEYS.COMMON.CORE_COMMON_CLOSE)}
             onClick={onClose}
           />,
           <Button
@@ -44,8 +45,8 @@ const ActionPopUp = ({ onClose, onSubmit, headingMsg, description }) => {
             size="large"
             variation="primary"
             style={{ minWidth: "270px" }}
-            label={t(`HCM_AM_BUTTON_CONFIRM`)}
-            title={t(`HCM_AM_BUTTON_CONFIRM`)}
+            label={t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_BUTTON_CONFIRM)}
+            title={t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_BUTTON_CONFIRM)}
             onClick={onSubmit}
           />,
         ]}

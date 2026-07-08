@@ -24,6 +24,7 @@ import {
   endOfQuarter,
 } from "date-fns";
 import { TextInput } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 function isEndDateFocused(focusNumber) {
   return focusNumber === 1;
@@ -72,49 +73,49 @@ const DateRangePicker = ({ values, onFilterChange, t, labelClass, title, epochSt
   const staticRanges = useMemo(() => {
     return createStaticRanges([
       {
-        label: t("DSS_TODAY"),
+        label: t(I18N_KEYS.COMPONENTS_MISC.DSS_TODAY),
         range: () => ({
           startDate: startOfToday(new Date()),
           endDate: endOfToday(new Date()),
         }),
       },
       {
-        label: t("DSS_YESTERDAY"),
+        label: t(I18N_KEYS.COMPONENTS_MISC.DSS_YESTERDAY),
         range: () => ({
           startDate: startOfYesterday(new Date()),
           endDate: endOfYesterday(new Date()),
         }),
       },
       {
-        label: t("DSS_THIS_WEEK"),
+        label: t(I18N_KEYS.COMPONENTS_MISC.DSS_THIS_WEEK),
         range: () => ({
           startDate: startOfWeek(new Date()),
           endDate: endOfWeek(new Date()),
         }),
       },
       {
-        label: t("DSS_THIS_MONTH"),
+        label: t(I18N_KEYS.COMPONENTS_MISC.DSS_THIS_MONTH),
         range: () => ({
           startDate: startOfMonth(new Date()),
           endDate: endOfMonth(new Date()),
         }),
       },
       {
-        label: t("DSS_THIS_QUARTER"),
+        label: t(I18N_KEYS.COMPONENTS_MISC.DSS_THIS_QUARTER),
         range: () => ({
           startDate: startOfQuarter(new Date()),
           endDate: endOfQuarter(new Date()),
         }),
       },
       {
-        label: t("DSS_PREVIOUS_YEAR"),
+        label: t(I18N_KEYS.COMPONENTS_MISC.DSS_PREVIOUS_YEAR),
         range: () => ({
           startDate: subYears(addMonths(startOfYear(new Date()), 3), 1),
           endDate: subYears(addMonths(endOfYear(new Date()), 3), 1),
         }),
       },
       {
-        label: t("DSS_THIS_YEAR"),
+        label: t(I18N_KEYS.COMPONENTS_MISC.DSS_THIS_YEAR),
         range: () => ({
           startDate: addMonths(startOfYear(new Date()), 3),
           endDate: addMonths(endOfYear(new Date()), 3),

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Tag, Button, Card, SummaryCardFieldPair, Divider } from "@egovernments/digit-ui-components";
 import { useNavigate } from "react-router-dom";
 import { convertEpochToNewDateFormat } from "../utils/convertEpochToNewDateFormat";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 // function to generate tags
 const getTagElements = (rowData) => {
@@ -161,17 +162,17 @@ const DSSCampaignRowCard = ({ key, rowData, tabData }) => {
         {/* Center Content (children) */}
         <div className="digit-results-card-content ">
           <div className="left-column">
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("CAMPAIGN_NAME")} value={rowData?.name} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_NAME)} value={rowData?.name} />
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={t("START_DATE")}
+              label={t(I18N_KEYS.COMPONENTS.START_DATE)}
               value={convertEpochToNewDateFormat(rowData?.startDate) || "NA"}
             />
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={t("END_DATE")}
+              label={t(I18N_KEYS.COMPONENTS.END_DATE)}
               value={convertEpochToNewDateFormat(rowData?.endDate) || "NA"}
             />
           </div>
@@ -180,14 +181,14 @@ const DSSCampaignRowCard = ({ key, rowData, tabData }) => {
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={t("BOUNDARY_NAME")}
+              label={t(I18N_KEYS.COMPONENTS.BOUNDARY_NAME)}
               value={boundaryCodeResponse?.message || t(rowData?.address?.boundary)}
             />
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("PROJECT_TYPE")} value={t(rowData?.projectType)} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t(I18N_KEYS.COMPONENTS.PROJECT_TYPE)} value={t(rowData?.projectType)} />
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={t("CAMPAIGN_NUMBER")}
+              label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_NUMBER)}
               value={t(rowData?.referenceID) || "NA"}
             />
           </div>

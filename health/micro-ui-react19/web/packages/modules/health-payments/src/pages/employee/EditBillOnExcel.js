@@ -5,6 +5,7 @@ import { Loader } from "@egovernments/digit-ui-react-components";
 import { Card, Button, Toast, HeaderComponent, Footer } from "@egovernments/digit-ui-components";
 import BulkUpload from "../../components/BulkUpload";
 import { downloadFileWithName } from "../../utils";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const EditBillOnExcel = () => {
   const { t } = useTranslation();
@@ -77,12 +78,12 @@ const EditBillOnExcel = () => {
           // setTimeout(() => {
           //   setIsValidating(false);
           //   setIsValidated(true);
-          //   setShowToast({ key: "success", label: t("HCM_AM_FILE_VALIDATED_SUCCESSFULLY"), transitionTime: 3000 });
+          //   setShowToast({ key: "success", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_FILE_VALIDATED_SUCCESSFULLY), transitionTime: 3000 });
           // }, 2000);
         }
       } catch (error) {
         console.error("File upload failed:", error);
-        setShowToast({ key: "error", label: t("HCM_AM_FILE_UPLOAD_FAILED"), transitionTime: 3000 });
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_FILE_UPLOAD_FAILED), transitionTime: 3000 });
       }
     },
     [tenantId, t]
@@ -110,7 +111,7 @@ const EditBillOnExcel = () => {
       if (!filestoreId) {
         setShowToast({
           key: "error",
-          label: t("HCM_AM_FILE_UPLOAD_REQUIRED"),
+          label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_FILE_UPLOAD_REQUIRED),
           transitionTime: 3000,
         });
         return;
@@ -128,7 +129,7 @@ const EditBillOnExcel = () => {
           onSuccess: () => {
             setShowToast({
               key: "success",
-              label: t("HCM_AM_BILL_UPDATED_SUCCESSFULLY"),
+              label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_BILL_UPDATED_SUCCESSFULLY),
               transitionTime: 3000,
             });
   
@@ -141,7 +142,7 @@ const EditBillOnExcel = () => {
               key: "error",
               label:
                 error?.response?.data?.Errors?.[0]?.message ||
-                t("HCM_AM_SOMETHING_WENT_WRONG"),
+                t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
               transitionTime: 3000,
             });
           },
@@ -154,7 +155,7 @@ const EditBillOnExcel = () => {
         key: "error",
         label:
           err?.response?.data?.Errors?.[0]?.message ||
-          t("HCM_AM_SOMETHING_WENT_WRONG"),
+          t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
         transitionTime: 3000,
       });
     }
@@ -164,10 +165,10 @@ const EditBillOnExcel = () => {
     return (
       <React.Fragment>
         <HeaderComponent className="payment-screen-headers">
-          {t("HCM_AM_EDIT_ON_EXCEL")}
+          {t(I18N_KEYS.COMMON.HCM_AM_EDIT_ON_EXCEL)}
         </HeaderComponent>
         <Card>
-          <p>{t("HCM_AM_NO_BILL_SELECTED")}</p>
+          <p>{t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_BILL_SELECTED)}</p>
         </Card>
       </React.Fragment>
     );
@@ -178,28 +179,28 @@ const EditBillOnExcel = () => {
       {isValidating && <Loader variant="OverlayLoader" className="digit-center-loader" />}
 
       <HeaderComponent className="payment-screen-headers">
-        {t("HCM_AM_EDIT_ON_EXCEL")}
+        {t(I18N_KEYS.COMMON.HCM_AM_EDIT_ON_EXCEL)}
       </HeaderComponent>
 
       <Card>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
           <span style={{ fontWeight: 700, fontSize: "16px" }}>
-            {t("HCM_AM_BILL_NUMBER")}: {billData?.billNumber || billID}
+            {t(I18N_KEYS.COMMON.HCM_AM_BILL_NUMBER)}: {billData?.billNumber || billID}
           </span>
           <Button
             variation="secondary"
-            label={t("HCM_AM_DOWNLOAD_EXCEL_TO_EDIT")}
+            label={t(I18N_KEYS.PAGES_BILLS.HCM_AM_DOWNLOAD_EXCEL_TO_EDIT)}
             icon="FileDownload"
             onClick={handleDownload}
           />
         </div>
 
         {/* <p style={{ fontWeight: 700, fontSize: "16px", marginBottom: "0.5rem" }}>
-          {t("HCM_AM_UPLOAD_MODIFIED_BILL")}
+          {t(I18N_KEYS.PAGES_BILLS.HCM_AM_UPLOAD_MODIFIED_BILL)}
         </p>
         {uploadedFile.length === 0 && (
           <p style={{ color: "#505A5F", marginBottom: "1rem" }}>
-            {t("HCM_AM_UPLOAD_MODIFIED_BILL_INFO")}
+            {t(I18N_KEYS.PAGES_BILLS.HCM_AM_UPLOAD_MODIFIED_BILL_INFO)}
           </p>
         )} */}
 
@@ -212,7 +213,7 @@ const EditBillOnExcel = () => {
 
         {isValidated && (
           <div style={{ marginTop: "1rem", color: "#00703C", fontWeight: 600 }}>
-            {t("HCM_AM_FILE_VALIDATED_SUCCESSFULLY")}
+            {t(I18N_KEYS.PAGES_BILLS.HCM_AM_FILE_VALIDATED_SUCCESSFULLY)}
           </div>
         )}
       </Card>
@@ -231,14 +232,14 @@ const EditBillOnExcel = () => {
         actionFields={[
           <Button
             variation="secondary"
-            label={t("HCM_AM_BACK")}
+            label={t(I18N_KEYS.COMMON.HCM_AM_BACK)}
             icon="ArrowBack"
             style={{ minWidth: "10rem", whiteSpace: "normal", marginLeft: "2rem" }}
             onClick={() => navigate(-1)}
           />,
           <Button
             variation="primary"
-            label={t("HCM_AM_SUBMIT")}
+            label={t(I18N_KEYS.COMMON.HCM_AM_SUBMIT)}
             style={{ minWidth: "14rem", whiteSpace: "normal", marginRight: "1rem" }}
             isDisabled={uploadedFile.length === 0}
             onClick={handleSubmit}

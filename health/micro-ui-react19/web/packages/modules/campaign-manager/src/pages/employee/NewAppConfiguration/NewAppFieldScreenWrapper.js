@@ -73,10 +73,10 @@ const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale,
   }, [footerButtonConfig?.label, currentLocale, localValue, dispatch]);
 
   const labelMap = {
-    primary: t("Primary"),
-    secondary: t("Secondary"),
-    teritiary: t("Teritiary"),
-    link: t("Link"),
+    primary: t(I18N_KEYS.APP_CONFIGURATION.Primary),
+    secondary: t(I18N_KEYS.APP_CONFIGURATION.Secondary),
+    teritiary: t(I18N_KEYS.APP_CONFIGURATION.Teritiary),
+    link: t(I18N_KEYS.APP_CONFIGURATION.Link),
   }
 
   return (

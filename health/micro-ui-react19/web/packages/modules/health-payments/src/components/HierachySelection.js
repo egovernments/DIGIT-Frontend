@@ -10,6 +10,7 @@ import {
   Toast,
 } from "@egovernments/digit-ui-components";
 import { ActionBar } from "@egovernments/digit-ui-react-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const HierarchySelection = ({onHierarchyChosen  }) => {
   const { t } = useTranslation();
@@ -72,7 +73,7 @@ const HierarchySelection = ({onHierarchyChosen  }) => {
     if (!selectedHierarchy) {
       setToast({
         show: true,
-        label: t("HIERARCHY_FIELD_MANDATORY"),
+        label: t(I18N_KEYS.COMPONENTS_MISC.HIERARCHY_FIELD_MANDATORY),
         type: "error",
       });
       return;
@@ -86,7 +87,7 @@ const HierarchySelection = ({onHierarchyChosen  }) => {
     ) {
       setToast({
         show: true,
-        label: t("NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY"),
+        label: t(I18N_KEYS.COMPONENTS_MISC.NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY),
         type: "error",
       });
       return;
@@ -110,7 +111,7 @@ const HierarchySelection = ({onHierarchyChosen  }) => {
     ) {
       setToast({
         show: true,
-        label: t("NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY"),
+        label: t(I18N_KEYS.COMPONENTS_MISC.NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY),
         type: "error",
       });
     }
@@ -122,12 +123,12 @@ const HierarchySelection = ({onHierarchyChosen  }) => {
     <div className="container">
       <Card className="setup-campaign-card">
         <HeaderComponent styles={{ margin: "0px" }}>
-          {t(`HCM_HIERARCHY_TYPE_HEADER`)}
+          {t(I18N_KEYS.COMPONENTS_MISC.HCM_HIERARCHY_TYPE_HEADER)}
         </HeaderComponent>
-        <p className="description-type">{t(`HCM_HIERARCHY_TYPE_DESCRIPTION`)}</p>
+        <p className="description-type">{t(I18N_KEYS.COMPONENTS_MISC.HCM_HIERARCHY_TYPE_DESCRIPTION)}</p>
         <LabelFieldPair>
           <div className="campaign-type">
-            <span>{t("HCM_HIERARCHY_TYPE")}</span>
+            <span>{t(I18N_KEYS.COMPONENTS_MISC.HCM_HIERARCHY_TYPE)}</span>
             <span className="mandatory-span">*</span>
           </div>
           <Dropdown
@@ -144,8 +145,8 @@ const HierarchySelection = ({onHierarchyChosen  }) => {
         <Button
           style={{ margin: "0.5rem", marginLeft: "6rem", minWidth: "16rem" }}
           variation="primary"
-          label={t("NEXT")}
-          title={t("NEXT")}
+          label={t(I18N_KEYS.COMPONENTS_MISC.NEXT)}
+          title={t(I18N_KEYS.COMPONENTS_MISC.NEXT)}
           onClick={onNextClick}
           icon={"ArrowForward"}
           isSuffix

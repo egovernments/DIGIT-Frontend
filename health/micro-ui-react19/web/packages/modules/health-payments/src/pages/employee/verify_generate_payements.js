@@ -7,6 +7,7 @@ import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
 import VerifyBillsSearch from "../../components/VerifyBillsSearch";
 import VerifyAndGeneratePaymentsTable from "../../components/VerifyAndGeneratePaymentsTable";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 // import { useSelector } from "react-redux";
 const VerifyAndGeneratePayments = ({editBills = false}) => {
 
@@ -106,7 +107,7 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
             });
         } catch (err) {
             console.error("Polling failed for", billId, err);
-            setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
+            setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG), transitionTime: 2000 });
             return;
         }
     }
@@ -194,7 +195,7 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
                 }
             } catch (e) {
                 console.warn("Task status check failed for", billId, e);
-                setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
+                setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG), transitionTime: 2000 });
             }
 
             //Verify poilling
@@ -220,7 +221,7 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
                 }
             } catch (e) {
                 console.warn("Task status check failed for", billId, e);
-                setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
+                setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG), transitionTime: 2000 });
             }
 
          
@@ -257,7 +258,7 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
     return (
         <React.Fragment>
             <HeaderComponent className="payment-screen-headers">
-                {!editBills ? t("HCM_AM_VERIFY_AND_GENERATE_PAYMENTS") : t("HCM_AM_EDIT_BILL")}
+                {!editBills ? t(I18N_KEYS.PAGES_BILLS.HCM_AM_VERIFY_AND_GENERATE_PAYMENTS) : t(I18N_KEYS.COMMON.HCM_AM_EDIT_BILL)}
             </HeaderComponent>
 
 
@@ -267,7 +268,7 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
                 {isFetching ? (
                     <Loader />
                 ) : tableData.length === 0 ? (
-                    <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
+                    <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_DATA_FOUND_FOR_BILLS)} />
                 ) : (
                     <VerifyAndGeneratePaymentsTable
                     editBill={editBills}

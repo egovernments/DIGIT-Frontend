@@ -6,6 +6,7 @@ import FilterContext from "./FilterContext";
 import { Button } from "@egovernments/digit-ui-components";
 import { useNavigate } from "react-router-dom";
 import { getDuration } from "../utils/getDuration";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 import { useLocation } from "react-router-dom";
 
 export default function StackedTable({ chartId, visualizer, initialRange, isNational, routeTo, redirectUrl }) {
@@ -99,9 +100,9 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
         })}
         <Button
           type={"button"}
-          label={t("DSS_VIEW_DASHBOARD")}
+          label={t(I18N_KEYS.CHARTS.DSS_VIEW_DASHBOARD)}
           variation={"secondary"}
-          title={t("DSS_VIEW_DASHBOARD")}
+          title={t(I18N_KEYS.CHARTS.DSS_VIEW_DASHBOARD)}
           t={t}
           onClick={() => {
             navigate(
@@ -215,14 +216,14 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
     if (filteredData?.length) {
       return filteredData?.map((item) => StackedRowV2(item));
     } else {
-      return <div className="digit-stacked-row">{t("DSS_NO_RESULTS")}</div>;
+      return <div className="digit-stacked-row">{t(I18N_KEYS.CHARTS.DSS_NO_RESULTS)}</div>;
     }
   };
   const subHead = "SUB_" + visualizer?.name;
   return (
     <GenericChart header={visualizer?.name} showSearch={true} className={"digit-stacked-table"} subHeader={t(subHead)} onChange={handleSearch}>
       <div className="digit-stacked-table-container">
-        {chartData?.length ? filteredRows() : <div className="digit-stacked-row">{t("DSS_NO_DATA")}</div>}
+        {chartData?.length ? filteredRows() : <div className="digit-stacked-row">{t(I18N_KEYS.COMMON.DSS_NO_DATA)}</div>}
       </div>
     </GenericChart>
   );

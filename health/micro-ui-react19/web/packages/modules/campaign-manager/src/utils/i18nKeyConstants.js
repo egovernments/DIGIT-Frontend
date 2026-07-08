@@ -182,6 +182,10 @@ export const I18N_KEYS = {
     VALUE: "VALUE",
     CS_COMMON_ROWS_PER_PAGE: "CS_COMMON_ROWS_PER_PAGE",
     TIP_APPCONFIG_PREVENT_SCREEN_CAPTURE: "TIP_APPCONFIG_PREVENT_SCREEN_CAPTURE",
+    Primary: "Primary",
+    Secondary: "Secondary",
+    Teritiary: "Teritiary",
+    Link: "Link",
   },
 
   // ─── CAMPAIGN_CREATE (unique to NewCampaignCreate/) ────────────────────────
@@ -341,6 +345,7 @@ export const I18N_KEYS = {
     HCM_CAMPAIGN_DATES_DESC: "HCM_CAMPAIGN_DATES_DESC",
     HCM_CAMPAIGN_DATES: "HCM_CAMPAIGN_DATES",
     HCM_CAMPAIGN_DATES_DESCRIPTION: "HCM_CAMPAIGN_DATES_DESCRIPTION",
+    CREATE_NEW_HIERARCHY: "CREATE_NEW_HIERARCHY",
   },
 
   // ─── COMPONENTS (unique to components/) ────────────────────────────────────
@@ -635,6 +640,16 @@ export const I18N_KEYS = {
     HCM_ATTENDANCE_REGISTER_MESSAGE: "HCM_ATTENDANCE_REGISTER_MESSAGE",
     HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE: "HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE",
     HCM_DOWNLOAD_CURRENT_REGISTER_FILE: "HCM_DOWNLOAD_CURRENT_REGISTER_FILE",
+    "MR-DN": "MR-DN",
+    "Start Date": "Start Date",
+    "End Date": "End Date",
+    Attribute: "Attribute",
+    Operator: "Operator",
+    Value: "Value",
+    Product: "Product",
+    Count: "Count",
+    Days: "Days",
+    "ADD _BOUNDARY": "ADD _BOUNDARY",
   },
 
   // ─── UTILS (unique to utils/) ──────────────────────────────────────────────

@@ -7,6 +7,7 @@ import { Toast, Card } from "@egovernments/digit-ui-components";
 import { defaultRowsPerPage, ScreenTypeEnum, StatusEnum } from "../../utils/constants";
 import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
 import { renderProjectPeriod } from "../../utils/time_conversion";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /**
  * AttendanceInboxComponent: Displays a filterable and paginated inbox for attendance records.
@@ -122,12 +123,12 @@ const AttendanceInboxComponent = ({ fromBill = false }) => {
           onError: (error) => {
             setCard(true);
             setChildrenDataLoading(false);
-            setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED"), transitionTime: 3000 });
+            setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED), transitionTime: 3000 });
           },
         }
       );
     } catch (error) {
-      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED"), transitionTime: 3000 });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED), transitionTime: 3000 });
     }
   };
 
@@ -194,7 +195,7 @@ const AttendanceInboxComponent = ({ fromBill = false }) => {
       setMarkPeriod(null);
       Digit.SessionStorage.del("selectedPeriod");
 
-      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PERIOD_SELECT"), transitionTime: 3000 });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_ATTENDANCE_PERIOD_SELECT), transitionTime: 3000 });
       return;
     }
 
@@ -204,13 +205,13 @@ const AttendanceInboxComponent = ({ fromBill = false }) => {
 
     // Validation 1: Check if both `selectedProject` and `existingPaymentInbox.selectedProject` are empty
     if (isEmptyObject(selectedProject) && isEmptyObject(existingPaymentInbox?.selectedProject)) {
-      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PROJECT_SELECT"), transitionTime: 3000 });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_ATTENDANCE_PROJECT_SELECT), transitionTime: 3000 });
       return;
     }
 
     // Validation 2: Check if `newFilter` is null or undefined
     if ((!newFilter || isEmptyObject(newFilter)) && !existingPaymentInbox?.boundaryType) {
-      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_BOUNDARY_SELECT"), transitionTime: 3000 });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_ATTENDANCE_BOUNDARY_SELECT), transitionTime: 3000 });
       return;
     }
 

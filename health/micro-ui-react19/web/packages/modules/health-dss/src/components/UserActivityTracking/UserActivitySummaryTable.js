@@ -5,6 +5,7 @@ import DataTable from "react-data-table-component";
 import XLSX from "xlsx";
 import FilterContext from "../FilterContext";
 import UserProfilePopup from "./UserProfilePopup";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const roleTagType = {
   CDD: "monochrome",
@@ -167,14 +168,14 @@ const UserActivitySummaryTable = ({ data }) => {
 
   // Filter options derived from response data
   const statusOptions = [
-    { name: t("HCM_ALL_STATUS"), code: "ALL" },
-    { name: t("HCM_ONLINE"), code: "ONLINE" },
-    { name: t("HCM_OFFLINE"), code: "OFFLINE" },
+    { name: t(I18N_KEYS.USER_ACTIVITY.HCM_ALL_STATUS), code: "ALL" },
+    { name: t(I18N_KEYS.USER_ACTIVITY.HCM_ONLINE), code: "ONLINE" },
+    { name: t(I18N_KEYS.USER_ACTIVITY.HCM_OFFLINE), code: "OFFLINE" },
   ];
 
   const roleOptions = useMemo(() => {
     const unique = [...new Set(usersSummary.map((r) => r.role).filter(Boolean))];
-    return [{ name: t("HCM_ALL_ROLES"), code: "ALL" }, ...unique.map((r) => ({ name: t("HCM_ROLE_" + r.toUpperCase()), code: r }))];
+    return [{ name: t(I18N_KEYS.USER_ACTIVITY.HCM_ALL_ROLES), code: "ALL" }, ...unique.map((r) => ({ name: t("HCM_ROLE_" + r.toUpperCase()), code: r }))];
   }, [usersSummary, t]);
 
   // Client-side filtering
@@ -215,7 +216,7 @@ const UserActivitySummaryTable = ({ data }) => {
   // Table columns
   const columns = [
     {
-      name: t("USER_ACTIVITY_USER"),
+      name: t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_USER),
       cell: (row) => (
         <div style={{display:"flex",flexDirection:"column",gap:'4px'}}>
           <span title={row.userName} style={{ ...ellipsisStyle, fontWeight: 600, color: "#0B4B66" }}>{row.userName}</span>
@@ -228,14 +229,14 @@ const UserActivitySummaryTable = ({ data }) => {
       minWidth: "150px",
     },
     {
-      name: t("USER_ACTIVITY_ROLE"),
+      name: t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_ROLE),
       cell: (row) => <Tag label={t(row.role)} type={roleTagType[row.role] || "monochrome"} showIcon={false} stroke={true} />,
       sortable: true,
       grow: 1,
       minWidth: "120px",
     },
     {
-      name: t("USER_ACTIVITY_GEO_BOUNDARY"),
+      name: t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_GEO_BOUNDARY),
       cell: (row) => (
         <span title={row.geoBoundary} style={ellipsisStyle}>{row.geoBoundary}</span>
       ),
@@ -244,7 +245,7 @@ const UserActivitySummaryTable = ({ data }) => {
       minWidth: "160px",
     },
     {
-      name: t("USER_ACTIVITY_LAST_SYNC"),
+      name: t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_LAST_SYNC),
       cell: (row) => {
         const isWarning = row.status === "OFFLINE";
         return (
@@ -254,10 +255,10 @@ const UserActivitySummaryTable = ({ data }) => {
               {row.lastSync ? (
                 <span title={row.lastSync} style={ellipsisStyle}>{row.lastSync}</span>
               ) : (
-                t("NA")
+                t(I18N_KEYS.COMMON.NA)
               )}
             </div>
-            {isWarning && <div style={{ fontSize: "11px", color: "#D4351C" }}>{t("SYNC_GAP")}</div>}
+            {isWarning && <div style={{ fontSize: "11px", color: "#D4351C" }}>{t(I18N_KEYS.USER_ACTIVITY.SYNC_GAP)}</div>}
           </div>
         );
       },
@@ -266,7 +267,7 @@ const UserActivitySummaryTable = ({ data }) => {
       minWidth: "120px",
     },
     {
-      name: t("USER_ACTIVITY_RECORDS_TODAY"),
+      name: t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_RECORDS_TODAY),
       cell: (row) => (
         <span style={{ fontWeight: 600, color: row.recordsToday === 0 ? "#D4351C" : "#363636" }}>{row.recordsToday}</span>
       ),
@@ -276,17 +277,17 @@ const UserActivitySummaryTable = ({ data }) => {
       minWidth: "120px",
     },
     {
-      name: t("USER_ACTIVITY_STATUS"),
+      name: t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_STATUS),
       cell: (row) => <Tag label={t(row.status)} type={row.status === "ONLINE" ? "success" : "error"} showIcon={true} />,
       sortable: true,
       grow: 0.8,
       minWidth: "120px",
     },
     {
-      name: t("USER_ACTIVITY_ACTION"),
+      name: t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_ACTION),
       cell: (row) => (
         <Button
-          label={t("VIEW_PROFILE")}
+          label={t(I18N_KEYS.USER_ACTIVITY.VIEW_PROFILE)}
           variation="teritiary"
           onClick={() => setSelectedUser(row)}
           icon="ArrowForward"
@@ -311,21 +312,21 @@ const UserActivitySummaryTable = ({ data }) => {
           <div>
             <HeaderComponent>
               <span className="digit-generic-chart-header" style={{ color: "#0B4B66" }}>
-                {t("DEVICE_MANAGEMENT")}
+                {t(I18N_KEYS.USER_ACTIVITY.DEVICE_MANAGEMENT)}
               </span>
             </HeaderComponent>
             <div style={{ fontSize: "14px", color: "#787878", marginTop: "8px" }}>
-              {t("DEVICE_MANAGEMENT_DESC")}
+              {t(I18N_KEYS.USER_ACTIVITY.DEVICE_MANAGEMENT_DESC)}
             </div>
           </div>
-          <Button label={t("EXPORT_XLSX")} variation="secondary" icon="FileDownload" onClick={handleExportCSV} size="medium" />
+          <Button label={t(I18N_KEYS.USER_ACTIVITY.EXPORT_XLSX)} variation="secondary" icon="FileDownload" onClick={handleExportCSV} size="medium" />
         </div>
         {/* Filters Row */}
         <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "flex-start" }}>
           <div style={{ minWidth: "250px" }}>
             <TextInput
               type="text"
-              placeholder={t("SEARCH_PLACEHOLDER")}
+              placeholder={t(I18N_KEYS.USER_ACTIVITY.SEARCH_PLACEHOLDER)}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -375,8 +376,8 @@ const UserActivitySummaryTable = ({ data }) => {
                     .map((item) => item[1]);
                   setSelectedBoundaries(selectedItems);
                 }}
-                defaultLabel={t("HCM_SELECT_BOUNDARIES")}
-                defaultUnit={t("HCM_BOUNDARIES")}
+                defaultLabel={t(I18N_KEYS.USER_ACTIVITY.HCM_SELECT_BOUNDARIES)}
+                defaultUnit={t(I18N_KEYS.USER_ACTIVITY.HCM_BOUNDARIES)}
                 variant="nestedmultiselect"
                 addCategorySelectAllCheck={true}
                 config={{ isDropdownWithChip: selectedBoundaries.length > 0 ? true : false, numberOfChips: 3 }}
@@ -388,7 +389,7 @@ const UserActivitySummaryTable = ({ data }) => {
         {
           /* SHOWING ROWS DETAILS */ 
           <div style={{ marginLeft: "auto", fontSize: "12px", color: "#787878" }}>
-            {t("SHOWING")} {filteredData.length} {t("OF")} {usersSummary.length} {t("USERS")}
+            {t(I18N_KEYS.USER_ACTIVITY.SHOWING)} {filteredData.length} {t(I18N_KEYS.USER_ACTIVITY.OF)} {usersSummary.length} {t(I18N_KEYS.USER_ACTIVITY.USERS)}
           </div>
         }
 
@@ -402,12 +403,12 @@ const UserActivitySummaryTable = ({ data }) => {
             pagination
             paginationPerPage={10}
             progressComponent={<Loader />}
-            noDataComponent={<div style={{ padding: "24px", color: "#787878" }}>{t("NO_DATA")}</div>}
+            noDataComponent={<div style={{ padding: "24px", color: "#787878" }}>{t(I18N_KEYS.USER_ACTIVITY.NO_DATA)}</div>}
             className="data-table user-tracking-inbox-table"
             sortIcon={<SVG.ArrowUpward width="16px" height="16px" fill="#0b4b66" />}
             persistTableHead
             fixedHeader={true}
-            paginationComponentOptions={{ rowsPerPageText: t("CS_COMMON_ROWS_PER_PAGE") }}
+            paginationComponentOptions={{ rowsPerPageText: t(I18N_KEYS.COMMON.CS_COMMON_ROWS_PER_PAGE) }}
             onRowClicked={(row) => setSelectedUser(row)}
             pointerOnHover
           />
@@ -425,11 +426,11 @@ const UserActivitySummaryTable = ({ data }) => {
         <PopUp
           onClose={() => setViewMoreBoundaries(null)}
           onOverlayClick={() => setViewMoreBoundaries(null)}
-          heading={t("HCM_SELECTED_BOUNDARIES")}
+          heading={t(I18N_KEYS.USER_ACTIVITY.HCM_SELECTED_BOUNDARIES)}
           footerChildren={[
             <Button
               key="close"
-              label={t("HCM_CLOSE")}
+              label={t(I18N_KEYS.USER_ACTIVITY.HCM_CLOSE)}
               onClick={() => setViewMoreBoundaries(null)}
               variation="primary"
             />

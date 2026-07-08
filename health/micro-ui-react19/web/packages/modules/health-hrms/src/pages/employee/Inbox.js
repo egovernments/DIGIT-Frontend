@@ -3,6 +3,7 @@ import { InboxSearchComposer, HeaderComponent, Loader } from "@egovernments/digi
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import inboxSearchConfig from "../../components/config/inboxSearchConfig";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const InboxSearch = () => {
   const { t } = useTranslation();
@@ -31,7 +32,7 @@ const InboxSearch = () => {
         }
       >
         <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
-          {t("HR_HOME_SEARCH_RESULTS_HEADING")}
+          {t(I18N_KEYS.PAGES_INBOX.HR_HOME_SEARCH_RESULTS_HEADING)}
         </HeaderComponent>
       </div>
       <div className="digit-inbox-search-wrapper">

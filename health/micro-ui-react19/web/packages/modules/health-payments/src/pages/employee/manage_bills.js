@@ -12,6 +12,7 @@ import _ from "lodash";
 import { getManageBillsRole, getManageBillsConfig, MANAGE_BILLS_ROLE_STORAGE_KEY, normalizeManageBillsRoleParam } from "../../utils/roleUtils";
 import { MANAGE_BILLS_ROLES } from "../../config/manageBillsRoleConfig";
 import AlertPopUp from "../../components/alertPopUp";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const ManageBills = () => {
   const { t } = useTranslation();
@@ -74,7 +75,7 @@ const ManageBills = () => {
 
   useEffect(() => {
     if (selectedProject?.id) return;
-    setShowToast((prev) => prev || { key: "error", label: t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY"), transitionTime: 3000 });
+    setShowToast((prev) => prev || { key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_PROJECT_SELECTION_IS_MANDATORY), transitionTime: 3000 });
   }, [selectedProject?.id, t]);
 
   const baseBillCriteria = {
@@ -279,7 +280,7 @@ const ManageBills = () => {
             console.error("Bulk update failed:", error);
             setShowToast({
               key: "error",
-              label: t("HCM_AM_SOMETHING_WENT_WRONG"),
+              label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
               transitionTime: 3000,
             });
           },
@@ -422,7 +423,7 @@ const ManageBills = () => {
         setTotalCount(0);
         setShowToast({
           key: "error",
-          label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
+          label: error?.response?.data?.Errors?.[0]?.message || t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
           transitionTime: 5000,
         });
       } finally {
@@ -482,12 +483,12 @@ const ManageBills = () => {
         break;
       case "DOWNLOAD_TXN_HISTORY":
         // Mock — placeholder for future implementation
-        setShowToast({ key: "info", label: t("HCM_AM_DOWNLOAD_TXN_HISTORY_PLACEHOLDER"), transitionTime: 3000 });
+        setShowToast({ key: "info", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_DOWNLOAD_TXN_HISTORY_PLACEHOLDER), transitionTime: 3000 });
         break;
       case "GENERATE_ADVISORY":
         try {
           await triggerGenerateAdvisory(selectedBills);
-          setShowToast({ key: "info", label: t("HCM_AM_REPORT_GENERATION_IN_PROGRESS"), transitionTime: 5000 });
+          setShowToast({ key: "info", label: t(I18N_KEYS.COMMON.HCM_AM_REPORT_GENERATION_IN_PROGRESS), transitionTime: 5000 });
           refetchBill();
           refetchBillCount();
           setSelectedBills([]);
@@ -495,14 +496,14 @@ const ManageBills = () => {
         } catch (error) {
           setShowToast({
             key: "error",
-            label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
+            label: error?.response?.data?.Errors?.[0]?.message || t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
             transitionTime: 5000,
           });
         }
         break;
       case "DOWNLOAD_ADVISORY":
         // Mock — placeholder for future implementation
-        setShowToast({ key: "info", label: t("HCM_AM_DOWNLOAD_ADVISORY_PLACEHOLDER"), transitionTime: 3000 });
+        setShowToast({ key: "info", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_DOWNLOAD_ADVISORY_PLACEHOLDER), transitionTime: 3000 });
         break;
       default:
         break;
@@ -512,9 +513,9 @@ const ManageBills = () => {
   if (!roleConfig) {
     return (
       <React.Fragment>
-        <HeaderComponent className="payment-screen-headers">{t("HCM_AM_MANAGE_BILLS")}</HeaderComponent>
+        <HeaderComponent className="payment-screen-headers">{t(I18N_KEYS.PAGES_BILLS.HCM_AM_MANAGE_BILLS)}</HeaderComponent>
         <Card>
-          <NoResultsFound text={t("HCM_AM_NO_ACCESS")} />
+          <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_ACCESS)} />
         </Card>
       </React.Fragment>
     );
@@ -527,9 +528,9 @@ const ManageBills = () => {
   if (!selectedProject?.id) {
     return (
       <React.Fragment>
-        <HeaderComponent className="payment-screen-headers">{t("HCM_AM_MANAGE_BILLS")}</HeaderComponent>
+        <HeaderComponent className="payment-screen-headers">{t(I18N_KEYS.PAGES_BILLS.HCM_AM_MANAGE_BILLS)}</HeaderComponent>
         <Card>
-          <NoResultsFound text={t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY")} />
+          <NoResultsFound text={t(I18N_KEYS.COMMON.HCM_AM_PROJECT_SELECTION_IS_MANDATORY)} />
         </Card>
         {showToast && (
           <Toast
@@ -559,10 +560,10 @@ const ManageBills = () => {
               <Tag label={t(projectName)} type="monochrome" showIcon={false} className="campaign-tag" style={{ marginBottom: "0.5rem" }} />
             )}
             <HeaderComponent styles={{ marginBottom: "0.5rem" }} className="payment-screen-headers">
-              {t("HCM_AM_MANAGE_BILLS")}
+              {t(I18N_KEYS.PAGES_BILLS.HCM_AM_MANAGE_BILLS)}
             </HeaderComponent>
             <p style={{ color: "#505A5F", fontSize: "16px", lineHeight: "1.5", marginBottom: "0.5rem" }}>
-              {t("HCM_AM_MANAGE_BILLS_DESCRIPTION")}
+              {t(I18N_KEYS.PAGES_BILLS.HCM_AM_MANAGE_BILLS_DESCRIPTION)}
             </p>
           </>
         }
@@ -606,7 +607,7 @@ const ManageBills = () => {
         {isFetching || isBillReportLoading || isBillCountFetching ? (
           <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
         ) : tableData.length === 0 ? (
-          <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
+          <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_DATA_FOUND_FOR_BILLS)} />
         ) : (
           <ManageBillsTable
             data={tableData.sort((a, b) => (a?.auditDetails?.createdTime || 0) - (b?.auditDetails?.createdTime || 0))}
@@ -640,8 +641,8 @@ const ManageBills = () => {
             populators={{ name: "infocard" }}
             variant="default"
             style={{ margin: "0.75rem 0 0", width: "100%", maxWidth: "unset" }}
-            label={t("HCM_AM_INFO")}
-            text={t("HCM_AM_BILLS_PROCESSING_INFO")}
+            label={t(I18N_KEYS.PAGES_BILLS.HCM_AM_INFO)}
+            text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_BILLS_PROCESSING_INFO)}
           />
         ) : null;
       })()}
@@ -660,7 +661,7 @@ const ManageBills = () => {
         actionFields={[
           <Button
             variation="secondary"
-            label={t("HCM_AM_BACK")}
+            label={t(I18N_KEYS.COMMON.HCM_AM_BACK)}
             icon="ArrowBack"
             onClick={() => navigate(`/${window.contextPath}/employee/payments/manage-bills-project-selection/${resolvedRole}`)}
             style={{ flexShrink: 0, minWidth: "10rem", whiteSpace: "normal", marginLeft: "2rem" }}
@@ -704,8 +705,8 @@ const ManageBills = () => {
             onClose={() => setActivePopUpAction(null)}
             alertHeading={t(config.heading)}
             alertMessage={t(config.message, { count: selectedBills.length })}
-            submitLabel={t("HCM_AM_CONFIRM")}
-            cancelLabel={t("HCM_AM_CANCEL")}
+            submitLabel={t(I18N_KEYS.COMMON.HCM_AM_CONFIRM)}
+            cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
             onPrimaryAction={async () => {
               if (!selectedBills?.length) return;
               const action = activePopUpAction;

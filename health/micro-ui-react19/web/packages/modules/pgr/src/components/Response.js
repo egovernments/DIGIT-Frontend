@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PanelCard, Footer, Button } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const Response = () => {
   const { t } = useTranslation();
@@ -36,7 +37,7 @@ const Response = () => {
           <Button
             key="create-another"
             variation="secondary"
-            label={t("PGR_CREATE_ANOTHER_COMPLAIN")}
+            label={t(I18N_KEYS.COMPONENTS.PGR_CREATE_ANOTHER_COMPLAIN)}
             icon={"Add"}
             onClick={() => navigate(`/${window.contextPath}/employee/pgr/create-complaint`)}
             type="button"
@@ -44,7 +45,7 @@ const Response = () => {
           <Button
             key="go-to-inbox"
             variation="primary"
-            label={t("PGR_SEARCH_COMPLAINT")}
+            label={t(I18N_KEYS.COMPONENTS.PGR_SEARCH_COMPLAINT)}
             icon={"ExitToApp"}
             isSuffix={true}
             onClick={() => navigate(state?.backlink || `/${window.contextPath}/employee/`)}

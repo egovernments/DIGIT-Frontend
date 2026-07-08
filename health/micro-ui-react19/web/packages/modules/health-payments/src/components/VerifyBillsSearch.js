@@ -3,6 +3,7 @@ import React, { useEffect, Fragment, useState, } from "react";
 import { useTranslation } from "react-i18next";
 import DateRangePicker from "./DateRangePicker";
 import { Dropdown } from "@egovernments/digit-ui-react-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * MyBillsSearch component allows users to search for bills based on bill ID and date range.
@@ -20,27 +21,27 @@ const VerifyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
     const [selectedStatus, setSelectedStatus] = useState(null);
 
     const statusValues = [{
-        "title": t("PENDING_VERIFICATION"),
+        "title": t(I18N_KEYS.COMPONENTS_BILLS.PENDING_VERIFICATION),
         "value": "PENDING_VERIFICATION"
     },
     {
-        "title": t("PARTIALLY_VERIFIED"),
+        "title": t(I18N_KEYS.COMPONENTS_BILLS.PARTIALLY_VERIFIED),
         "value": "PARTIALLY_VERIFIED"
     },
     {
-        "title": t("FULLY_VERIFIED"),
+        "title": t(I18N_KEYS.COMPONENTS_BILLS.FULLY_VERIFIED),
         "value": "FULLY_VERIFIED"
     },
     {
-        "title": t("PARTIALLY_PAID"),
+        "title": t(I18N_KEYS.COMPONENTS_BILLS.PARTIALLY_PAID),
         "value": "PARTIALLY_PAID"
     },
     {
-        "title": t("FULLY_PAID"),
+        "title": t(I18N_KEYS.COMPONENTS_BILLS.FULLY_PAID),
         "value": "FULLY_PAID"
     },
     {
-        "title": t("PAYMENT_FAILED"),
+        "title": t(I18N_KEYS.COMPONENTS_BILLS.PAYMENT_FAILED),
         "value": "PAYMENT_FAILED"
     },
 ]
@@ -66,7 +67,7 @@ const VerifyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
     return (
         <Card variant="search" style={{ marginBottom: "1.5rem" }}>
             <div style={{ width: "80%" }}>
-                <TextBlock body={`${t("HCM_AM_BILL_ID")}`}></TextBlock>
+                <TextBlock body={`${t(I18N_KEYS.COMMON.HCM_AM_BILL_ID)}`}></TextBlock>
                 <TextInput
                     value={billID}
                     onChange={(e) => {
@@ -75,7 +76,7 @@ const VerifyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
                 />
             </div>
             <div style={{ width: "80%" }}>
-                <TextBlock body={`${t("HCM_AM_STATUS")}`}></TextBlock>
+                <TextBlock body={`${t(I18N_KEYS.COMMON.HCM_AM_STATUS)}`}></TextBlock>
                 <Dropdown
                     option={statusValues}
                     optionKey="title"
@@ -84,13 +85,13 @@ const VerifyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
                         setSelectedStatus(option);
                         setBillStatus(option.value);
                     }}
-                    placeholder={t("HCM_AM_STATUS")}
+                    placeholder={t(I18N_KEYS.COMMON.HCM_AM_STATUS)}
                 />
             </div>
             <ButtonGroup
                 buttonsArray={[
-                    <Button variation="teritiary" label={t(`HCM_AM_CLEAR`)} type="button" onClick={handleClear} size="large" />,
-                    <Button variation="primary" label={t(`HCM_AM_SEARCH`)} type="button" onClick={handleSearch} size="large" />,
+                    <Button variation="teritiary" label={t(I18N_KEYS.COMMON.HCM_AM_CLEAR)} type="button" onClick={handleClear} size="large" />,
+                    <Button variation="primary" label={t(I18N_KEYS.COMMON.HCM_AM_SEARCH)} type="button" onClick={handleSearch} size="large" />,
                 ]}
             ></ButtonGroup>
 

@@ -5,6 +5,7 @@ import { ZoomableGroup, Geographies, ComposableMap, Geography } from "react-simp
 import { getTitleHeading } from "../../../utils/locale";
 import { Button } from "@egovernments/digit-ui-components";
 import { getBoundaryTypeByLevel } from "../../../utils/getBoundaryTypeByLevel";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 const Map = ({
   chartId,
   mapData,
@@ -127,9 +128,9 @@ const Map = ({
     return (
       <Button
         type={"button"}
-        label={t("DSS_MAP_RECENTRE")}
+        label={t(I18N_KEYS.CHARTS.DSS_MAP_RECENTRE)}
         variation={"secondary"}
-        title={t("DSS_MAP_RECENTRE")}
+        title={t(I18N_KEYS.CHARTS.DSS_MAP_RECENTRE)}
         t={t}
         className={"digit-heat-map-recenter"}
         icon={"AssistantNavigation"}

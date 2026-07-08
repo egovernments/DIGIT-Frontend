@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { UploadFile } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Toast, Button } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const SupportingDocumentUpload = ({
   multiple = false,
@@ -29,11 +30,11 @@ const SupportingDocumentUpload = ({
           setUploadedFiles(updated);
           if (onUpload) onUpload(updated);
         } else {
-          setShowToast({ key: "error", label: t("HCM_FILE_UPLOAD_FAILED") });
+          setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_FILE_UPLOAD_FAILED) });
         }
       } catch (err) {
         console.error("Upload Error:", err);
-        setShowToast({ key: "error", label: t("HCM_FILE_UPLOAD_FAILED") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_FILE_UPLOAD_FAILED) });
       } finally {
         setLoading(false);
         setPendingFile(null);
@@ -54,10 +55,10 @@ const SupportingDocumentUpload = ({
   };
 
   const uploadMessage = loading
-    ? `${t("LOADING")}...`
+    ? `${t(I18N_KEYS.COMPONENTS_ATTENDANCE.LOADING)}...`
     : uploadedFiles.length > 0 && !multiple
     ? uploadedFiles[0].fileName
-    : t("CS_ACTION_NO_FILEUPLOADED");
+    : t(I18N_KEYS.COMPONENTS_ATTENDANCE.CS_ACTION_NO_FILEUPLOADED);
 
   return (
     <div className="supporting-doc-upload">
@@ -83,7 +84,7 @@ const SupportingDocumentUpload = ({
             >
               <span>{file.fileName}</span>
               <Button
-                label={t("DELETE")}
+                label={t(I18N_KEYS.COMPONENTS_ATTENDANCE.DELETE)}
                 variation="secondary"
                 size="small"
                 onClick={() => handleDelete(index)}

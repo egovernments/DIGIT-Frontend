@@ -1,6 +1,7 @@
 import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const ROLES = {
   ATTENDANCE: ["PROXIMITY_SUPERVISOR"],
@@ -72,7 +73,7 @@ const PaymentsCard = () => {
 
   const propsForModuleCard = {
     Icon: "UpdateExpense",
-    moduleName: t("HCM_PAYMENTS"),
+    moduleName: t(I18N_KEYS.COMPONENTS_MISC.HCM_PAYMENTS),
     kpis: [],
     links: links,
     className: "microplan-employee-module-card",

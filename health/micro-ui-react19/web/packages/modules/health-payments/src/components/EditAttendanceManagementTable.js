@@ -7,6 +7,7 @@ import { defaultPaginationValuesForEditAttendee, defaultRowsPerPageForEditAttend
 import { getCustomPaginationOptions } from "../utils";
 import AlertPopUp from "./alertPopUp";
 import { disableTimeWithSession } from "../utils/time_conversion";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * Component: EditAttendanceManagementTable
@@ -70,10 +71,10 @@ const EditAttendanceManagementTable = ({ ...props }) => {
             textAlign: "start",
           }}
         >
-          {t(`HCM_AM_FRONTLINE_WORKER`)}
+          {t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_FRONTLINE_WORKER)}
         </div>
       ),
-      selector: (row) => <span className="ellipsis-cell">{String(row?.[1] ? row?.[1] : t("ES_COMMON_NA"))}</span>,
+      selector: (row) => <span className="ellipsis-cell">{String(row?.[1] ? row?.[1] : t(I18N_KEYS.COMMON.ES_COMMON_NA))}</span>,
     },
 
     // Column 2: Worker ID
@@ -86,12 +87,12 @@ const EditAttendanceManagementTable = ({ ...props }) => {
             textAlign: "start",
           }}
         >
-          {t("HCM_AM_WORKER_ID")}
+          {t(I18N_KEYS.COMMON.HCM_AM_WORKER_ID)}
         </div>
       ),
       selector: (row) => (
-        <div className="ellipsis-cell" title={row?.[2] || t("NA")}>
-          {row?.[2] || t("NA")}
+        <div className="ellipsis-cell" title={row?.[2] || t(I18N_KEYS.COMMON.NA)}>
+          {row?.[2] || t(I18N_KEYS.COMMON.NA)}
         </div>
       ),
     },
@@ -106,12 +107,12 @@ const EditAttendanceManagementTable = ({ ...props }) => {
             textAlign: "start",
           }}
         >
-          {t("HCM_AM_ROLE")}
+          {t(I18N_KEYS.COMMON.HCM_AM_ROLE)}
         </div>
       ),
       selector: (row) => (
-        <div className="ellipsis-cell" title={t(row?.[3]) || t("NA")}>
-          {t(row?.[3]) || t("NA")}
+        <div className="ellipsis-cell" title={t(row?.[3]) || t(I18N_KEYS.COMMON.NA)}>
+          {t(row?.[3]) || t(I18N_KEYS.COMMON.NA)}
         </div>
       ),
     },
@@ -126,12 +127,12 @@ const EditAttendanceManagementTable = ({ ...props }) => {
             textAlign: "start",
           }}
         >
-          {t("HCM_AM_TAG_LABEL")}
+          {t(I18N_KEYS.COMMON.HCM_AM_TAG_LABEL)}
         </div>
       ),
       selector: (row) => (
-        <div className="ellipsis-cell" title={t(row?.[4]) || t("NA")}>
-          {t(row?.[4]) || t("NA")}
+        <div className="ellipsis-cell" title={t(row?.[4]) || t(I18N_KEYS.COMMON.NA)}>
+          {t(row?.[4]) || t(I18N_KEYS.COMMON.NA)}
         </div>
       ),
     },
@@ -144,24 +145,24 @@ const EditAttendanceManagementTable = ({ ...props }) => {
    */
   if (props.editAction) {
     columns.push({
-      name: t("HCM_AM_ACTION"),
+      name: t(I18N_KEYS.COMMON.HCM_AM_ACTION),
       selector: (row) => (
         <div className="ellipsis-cell" title={t(row?.[5] || "0")}>
           {/* Show 'Disabled' tag if attendee already disabled */}
           {row?.[5] == false ? (
-            <Tag label={t("HCM_AM_VIEW_REGISTER_DISABLED_TAG")} type="error" stroke={false} />
+            <Tag label={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_VIEW_REGISTER_DISABLED_TAG)} type="error" stroke={false} />
           ) : (
             // Show 'Disable User' button for active attendees
             <Button
               type='button'
               icon="Edit"
-              label={t(`HCM_AM_VIEW_REGISTER_DISABLE_USER`)}
+              label={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_VIEW_REGISTER_DISABLE_USER)}
               onClick={() => {
                 setSelectedRowId(row?.[0]);
                 setOpenAlertPopUp(true);
               }}
               variation="secondary"
-              title={t(`HCM_AM_VIEW_REGISTER_DISABLE_USER`)}
+              title={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_VIEW_REGISTER_DISABLE_USER)}
             />
           )}
         </div>
@@ -182,12 +183,12 @@ const EditAttendanceManagementTable = ({ ...props }) => {
               textAlign: "start",
             }}
           >
-            {t("HCM_AM_STATUS_LABEL")}
+            {t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_STATUS_LABEL)}
           </div>
         ),
         selector: (row) => (
-          <div className="ellipsis-cell" title={row?.[5] == false ? t("HCM_AM_VIEW_REGISTER_DISABLED_TAG") : t("HCM_AM_VIEW_REGISTER_ACTIVE")}>
-            {row?.[5] == false ? t("HCM_AM_VIEW_REGISTER_DISABLED_TAG") : t("HCM_AM_VIEW_REGISTER_ACTIVE")}
+          <div className="ellipsis-cell" title={row?.[5] == false ? t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_VIEW_REGISTER_DISABLED_TAG) : t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_VIEW_REGISTER_ACTIVE)}>
+            {row?.[5] == false ? t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_VIEW_REGISTER_DISABLED_TAG) : t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_VIEW_REGISTER_ACTIVE)}
           </div>
         ),
       }
@@ -218,7 +219,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
           // Show error toast
           setShowToast({
             key: "error",
-            label: t(`HCM_AM_ERROR_MESSAGE`),
+            label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_ERROR_MESSAGE),
             transitionTime: 3000,
           });
         },
@@ -226,7 +227,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
           // Show success toast and refresh parent data
           setShowToast({
             key: "success",
-            label: t(`HCM_AM_ATTENDEE_DE_ENROLL_SUCCESS_MESSAGE`),
+            label: t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_ATTENDEE_DE_ENROLL_SUCCESS_MESSAGE),
             transitionTime: 3000,
           });
           props.disableUser("");
@@ -280,10 +281,10 @@ const EditAttendanceManagementTable = ({ ...props }) => {
           onClose={() => {
             setOpenAlertPopUp(false);
           }}
-          alertHeading={t(`HCM_AM_WARNING`)}
-          alertMessage={t(`HCM_AM_NOT_RE_ENABLED_DESCRIPTION`)}
-          submitLabel={t(`HCM_AM_YES_DISABLE_USER`)}
-          cancelLabel={t(`HCM_AM_CANCEL`)}
+          alertHeading={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_WARNING)}
+          alertMessage={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_NOT_RE_ENABLED_DESCRIPTION)}
+          submitLabel={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_YES_DISABLE_USER)}
+          cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
           onPrimaryAction={() => {
             setOpenAlertPopUp(false);
             if (selectedRowId) {

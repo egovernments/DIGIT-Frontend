@@ -7,6 +7,7 @@ import MyBillsSearch from "../../components/MyBillsSearch";
 import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
 import VerifyBillsSearch from "../../components/VerifyBillsSearch";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const FetchBills = (props) => {
 
@@ -148,7 +149,7 @@ const FetchBills = (props) => {
     return (
         <React.Fragment>
             <HeaderComponent className="payment-screen-headers">
-                {t("HCM_AM_FETCH_BILLS")}
+                {t(I18N_KEYS.COMMON.HCM_AM_FETCH_BILLS)}
             </HeaderComponent>
 
 

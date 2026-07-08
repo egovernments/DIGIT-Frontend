@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Routes, Route, useLocation } from "react-router-dom";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const EmployeeApp = ({ stateCode, userType, tenants }) => {
   const { t } = useTranslation();
@@ -19,23 +20,23 @@ const EmployeeApp = ({ stateCode, userType, tenants }) => {
           location={location}
           crumbs={[
             {
-              content: t("ACTION_TEST_HOME"),
+              content: t(I18N_KEYS.PAGES_INBOX.ACTION_TEST_HOME),
               internalLink: `/${window?.contextPath}/employee`,
               show: !location.pathname.includes("complaint-success"),
             },
             {
               internalLink: `/${window?.contextPath}/employee/pgr/create-complaint`,
-              content: t("ACTION_TEST_CREATE_COMPLAINT"),
+              content: t(I18N_KEYS.PAGES_INBOX.ACTION_TEST_CREATE_COMPLAINT),
               show: location.pathname.includes("create-complaint"),
             },
             {
               internalLink: `/${window?.contextPath}/employee/pgr/inbox-v2`,
-              content: t("PGR_INBOX"),
+              content: t(I18N_KEYS.PAGES_INBOX.PGR_INBOX),
               show: location.pathname.includes("inbox") || location.pathname.includes("complaint-details"),
             },
             {
               internalLink: `/${window?.contextPath}/employee/pgr/complaint-details`,
-              content: t("CS_COMPLAINT_DETAILS_COMPLAINT_DETAILS"),
+              content: t(I18N_KEYS.PAGES_INBOX.CS_COMPLAINT_DETAILS_COMPLAINT_DETAILS),
               show: location.pathname.includes("complaint-details"),
             },
           ]}

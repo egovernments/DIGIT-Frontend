@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { Dropdown, Loader } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const AssigneeComponent = ({ config, onSelect, formState, defaultValues }) => {
   const { t } = useTranslation();
@@ -79,7 +80,7 @@ const AssigneeComponent = ({ config, onSelect, formState, defaultValues }) => {
   };
   
 
-  if (error) return <div>{t("CS_COMMON_EMPLOYEE_FETCH_ERROR")}</div>;
+  if (error) return <div>{t(I18N_KEYS.COMPONENTS.CS_COMMON_EMPLOYEE_FETCH_ERROR)}</div>;
   if (isEmployeeDataLoading) return <Loader />;
 
   return (
@@ -92,7 +93,7 @@ const AssigneeComponent = ({ config, onSelect, formState, defaultValues }) => {
         select={(value) => {
           handleEmployeeSelect(value);
         }}
-        placeholder={t("CS_COMMON_SELECT_EMPLOYEE")}
+        placeholder={t(I18N_KEYS.COMPONENTS.CS_COMMON_SELECT_EMPLOYEE)}
         label={t(config.label)}
         variant="nesteddropdown"
       />

@@ -15,6 +15,7 @@ import {
 import { getPattern } from "../../utils/utlis";
 import ActionPopUp from "../../components/pageComponents/popup";
 import { CreateEmployeeConfig } from "../../components/config/createEmployeeConfig";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const CreateEmployee = ({ editUser = false }) => {
   const { boundaryCode } = Digit.Hooks.useQueryParams();
@@ -119,11 +120,11 @@ const CreateEmployee = ({ editUser = false }) => {
               state: {
                 isCampaign: ReposeScreenType.CREAT_EUSER,
                 state: "success",
-                info: t("HR_EMPLOYEE_ID_LABEL"),
+                info: t(I18N_KEYS.COMMON.HR_EMPLOYEE_ID_LABEL),
                 fileName: res?.Employees?.[0],
-                description: t(`HRMS_CREATE_EMPLOYEE_INFO`),
-                message: t(`EMPLOYEE_RESPONSE_CREATE`),
-                back: t(`CORE_COMMON_GO_TO_HOME_CREATE_SUCCESS`),
+                description: t(I18N_KEYS.PAGES_CREATE_EMPLOYEE.HRMS_CREATE_EMPLOYEE_INFO),
+                message: t(I18N_KEYS.PAGES_CREATE_EMPLOYEE.EMPLOYEE_RESPONSE_CREATE),
+                back: t(I18N_KEYS.PAGES_CREATE_EMPLOYEE.CORE_COMMON_GO_TO_HOME_CREATE_SUCCESS),
                 backlink: `/${window.contextPath}/employee`,
               },
             });
@@ -138,13 +139,13 @@ const CreateEmployee = ({ editUser = false }) => {
                 info: null,
                 fileName: error?.Employees?.[0],
                 description: null,
-                message: t(`EMPLOYEE_RESPONSE_CREATE_ACTION_ERROR`),
-                back: t(`CORE_COMMON_GO_TO_HOME_CREATE_ERROR`),
+                message: t(I18N_KEYS.PAGES_CREATE_EMPLOYEE.EMPLOYEE_RESPONSE_CREATE_ACTION_ERROR),
+                back: t(I18N_KEYS.PAGES_CREATE_EMPLOYEE.CORE_COMMON_GO_TO_HOME_CREATE_ERROR),
                 backlink: `/${window.contextPath}/employee`,
               },
             });
 
-            //t(`ERR_PLAN_UPDATE_FAILED`)
+            //t(I18N_KEYS.PAGES_CREATE_EMPLOYEE.ERR_PLAN_UPDATE_FAILED)
             // setTriggerEstimate(true);
           },
         }
@@ -170,11 +171,11 @@ const CreateEmployee = ({ editUser = false }) => {
               state: {
                 isCampaign: ReposeScreenType.EDIT_USER,
                 state: "success",
-                info: t("HR_EMPLOYEE_ID_LABEL"),
+                info: t(I18N_KEYS.COMMON.HR_EMPLOYEE_ID_LABEL),
                 fileName: res?.Employees?.[0],
                 description: null,
-                message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION`),
-                back: t(`CORE_COMMON_GO_TO_HOME_UPDATE_SUCCESS`),
+                message: t(I18N_KEYS.PAGES_CREATE_EMPLOYEE.EMPLOYEE_RESPONSE_UPDATE_ACTION),
+                back: t(I18N_KEYS.PAGES_CREATE_EMPLOYEE.CORE_COMMON_GO_TO_HOME_UPDATE_SUCCESS),
                 backlink: `/${window.contextPath}/employee`,
               },
             });
@@ -186,11 +187,11 @@ const CreateEmployee = ({ editUser = false }) => {
               state: {
                 isCampaign: ReposeScreenType.EDIT_USER_ERROR,
                 state: "error",
-                info: t("HR_EMPLOYEE_ID_LABEL"),
+                info: t(I18N_KEYS.COMMON.HR_EMPLOYEE_ID_LABEL),
                 fileName: error?.Employees?.[0],
                 description: t(error ? `${error[0]?.code}` : ""),
-                message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION_ERROR`),
-                back: t(`CORE_COMMON_GO_TO_HOME_UPDATE_ERROR`),
+                message: t(I18N_KEYS.COMMON.EMPLOYEE_RESPONSE_UPDATE_ACTION_ERROR),
+                back: t(I18N_KEYS.PAGES_CREATE_EMPLOYEE.CORE_COMMON_GO_TO_HOME_UPDATE_ERROR),
                 backlink: `/${window.contextPath}/employee`,
               },
             });
@@ -210,7 +211,7 @@ const CreateEmployee = ({ editUser = false }) => {
       if (editUser == false) {
         const type = await checkIfUserExist(formData, tenantId);
         if (type == true) {
-          setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID", type: "error" });
+          setShowToast({ key: true, label: I18N_KEYS.PAGES_CREATE_EMPLOYEE.ERR_HRMS_USER_EXIST_ID, type: "error" });
           setShowModal(false);
         } else {
           const payload = formPayloadToCreateUser(formData, tenantId);
@@ -231,7 +232,7 @@ const CreateEmployee = ({ editUser = false }) => {
   const openModal = async (e) => {
     // Check validations first — show specific toast and stop if any fail
     if (!isEdit && e?.SelectEmployeeName && !e.SelectEmployeeName.match(Digit.Utils.getPattern("Name"))) {
-      setShowToast({ key: true, label: "CORE_COMMON_APPLICANT_NAME_INVALID", type: "error" });
+      setShowToast({ key: true, label: I18N_KEYS.PAGES_CREATE_EMPLOYEE.CORE_COMMON_APPLICANT_NAME_INVALID, type: "error" });
       return;
     }
 
@@ -239,29 +240,29 @@ const CreateEmployee = ({ editUser = false }) => {
     const confirmPassword = e?.employeeConfirmPassword;
     const passwordPattern = getPattern("Password");
     if (password && !password.match(passwordPattern)) {
-      setShowToast({ key: true, label: "CORE_COMMON_APPLICANT_PASSWORD_INVALID", type: "error" });
+      setShowToast({ key: true, label: I18N_KEYS.COMMON.CORE_COMMON_APPLICANT_PASSWORD_INVALID, type: "error" });
       return;
     }
     if (confirmPassword && password !== confirmPassword) {
-      setShowToast({ key: true, label: "CORE_COMMON_APPLICANT_CONFIRM_PASSWORD_INVALID", type: "error" });
+      setShowToast({ key: true, label: I18N_KEYS.PAGES_CREATE_EMPLOYEE.CORE_COMMON_APPLICANT_CONFIRM_PASSWORD_INVALID, type: "error" });
       return;
     }
 
     const emailPattern = getPattern("Email");
     if (e?.SelectEmployeeEmailId && !e.SelectEmployeeEmailId.match(emailPattern)) {
-      setShowToast({ key: true, label: "CS_PROFILE_EMAIL_ERRORMSG", type: "error" });
+      setShowToast({ key: true, label: I18N_KEYS.PAGES_CREATE_EMPLOYEE.CS_PROFILE_EMAIL_ERRORMSG, type: "error" });
       return;
     }
 
     if (e?.SelectEmployeePhoneNumber && !validatePhoneNumber(e.SelectEmployeePhoneNumber)) {
-      setShowToast({ key: true, label: "CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID", type: "error" });
+      setShowToast({ key: true, label: I18N_KEYS.PAGES_CREATE_EMPLOYEE.CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID, type: "error" });
       return;
     }
 
     if (isEdit && mobile) {
       const type = await checkIfUserExistWithPhoneNumber(e, tenantId);
       if (type == true) {
-        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID", type: "error" });
+        setShowToast({ key: true, label: I18N_KEYS.PAGES_CREATE_EMPLOYEE.ERR_HRMS_USER_EXIST_ID, type: "error" });
         setShowModal(false);
       } else {
         setCreateEmployeeData(e);
@@ -273,7 +274,7 @@ const CreateEmployee = ({ editUser = false }) => {
     } else {
       const type = await checkIfUserExistWithPhoneNumber(e, tenantId);
       if (type == true) {
-        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_MOBILE_NUMBER", type: "error" });
+        setShowToast({ key: true, label: I18N_KEYS.PAGES_CREATE_EMPLOYEE.ERR_HRMS_USER_EXIST_MOBILE_NUMBER, type: "error" });
         setShowModal(false);
       } else {
         setCreateEmployeeData(e);
@@ -383,20 +384,20 @@ const CreateEmployee = ({ editUser = false }) => {
         >
           {
             <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
-              {t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}
+              {t(I18N_KEYS.COMMON.HR_COMMON_CREATE_EMPLOYEE_HEADER)}
             </HeaderComponent>
           }
         </div>
 
         <FormComposerV2
           defaultValues={memoizedDefaultValues}
-          heading={t("")}
+          heading={""}
           config={config}
           onSubmit={openModal}
           className={"custom-form"}
           onFormValueChange={onFormValueChange}
           isDisabled={!canSubmit}
-          label={t("HR_COMMON_BUTTON_SUBMIT")}
+          label={t(I18N_KEYS.COMMON.HR_COMMON_BUTTON_SUBMIT)}
           actionClassName={"actionBarClass"}
           className="custom-form-employee-create"
         />
@@ -413,7 +414,7 @@ const CreateEmployee = ({ editUser = false }) => {
             style={{zIndex:10001}}
           />
         )}
-        {showModal && <ActionPopUp headingMsg={"READY_TO_SUBMIT"} onClose={closeModal} onSubmit={() => onSubmit(createEmployeeData)} />}
+        {showModal && <ActionPopUp headingMsg={I18N_KEYS.COMMON.READY_TO_SUBMIT} onClose={closeModal} onSubmit={() => onSubmit(createEmployeeData)} />}
       </div>
     </React.Fragment>
   );

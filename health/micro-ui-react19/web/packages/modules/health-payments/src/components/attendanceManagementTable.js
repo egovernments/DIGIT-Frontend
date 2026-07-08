@@ -7,6 +7,7 @@ import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues, defaultRowsPerPage } from "../utils/constants";
 import { getCustomPaginationOptions } from "../utils";
 import {parse, format} from "date-fns";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * A React component for displaying a paginated table of frontline workers
@@ -43,11 +44,11 @@ const AttendanceManagementTable = ({ ...props }) => {
     {
       name: (
         <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-          {t(`HCM_AM_FRONTLINE_WORKER`)}
+          {t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_FRONTLINE_WORKER)}
         </div>
       ),
       selector: (row) => {
-        const name = String(row?.[1] ? row?.[1] : t("ES_COMMON_NA"));
+        const name = String(row?.[1] ? row?.[1] : t(I18N_KEYS.COMMON.ES_COMMON_NA));
         return props.onAttendeeClick ? (
           <span
             className="ellipsis-cell"
@@ -67,13 +68,13 @@ const AttendanceManagementTable = ({ ...props }) => {
     {
       name: (
         <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-          {t("HCM_AM_WORKER_ID")}
+          {t(I18N_KEYS.COMMON.HCM_AM_WORKER_ID)}
         </div>
       ),
       selector: (row) => {
         return (
-          <div  className="ellipsis-cell" title={row?.[2] || t("NA")}>
-            {row?.[2] || t("ES_COMMON_NA")}
+          <div  className="ellipsis-cell" title={row?.[2] || t(I18N_KEYS.COMMON.NA)}>
+            {row?.[2] || t(I18N_KEYS.COMMON.ES_COMMON_NA)}
           </div>
         );
       },
@@ -81,11 +82,11 @@ const AttendanceManagementTable = ({ ...props }) => {
     {
       name: (
         <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-          {t("HCM_AM_ROLE")}
+          {t(I18N_KEYS.COMMON.HCM_AM_ROLE)}
         </div>
       ),
       selector: (row) => {
-        const roleText = row?.[3] ? t(row?.[3]) : t("ES_COMMON_NA");
+        const roleText = row?.[3] ? t(row?.[3]) : t(I18N_KEYS.COMMON.ES_COMMON_NA);
         return (
           <div className="ellipsis-cell" title={roleText}>
             {roleText}
@@ -96,11 +97,11 @@ const AttendanceManagementTable = ({ ...props }) => {
     {
       name: (
         <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start", whiteSpace: "normal", wordBreak: "break-word" }}>
-          {t("HCM_AM_PERFORMANCE_METRIC")}
+          {t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_PERFORMANCE_METRIC)}
         </div>
       ),
       selector: (row) => {
-        const value = row?.[12] != null ? String(row[12]) : t("ES_COMMON_NA");
+        const value = row?.[12] != null ? String(row[12]) : t(I18N_KEYS.COMMON.ES_COMMON_NA);
         return (
           <div className="ellipsis-cell" title={value}>
             {value}
@@ -112,7 +113,7 @@ const AttendanceManagementTable = ({ ...props }) => {
       },
     },
     {
-      name: t("HCM_AM_NO_OF_DAYS_WORKED"),
+      name: t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_NO_OF_DAYS_WORKED),
       selector: (row) => {
         return props.editAttendance ? (
           <div >
@@ -157,12 +158,12 @@ const AttendanceManagementTable = ({ ...props }) => {
 
     // Check if both current value and previous value are 0
     if (value === 0 && previousValue === 0) {
-      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_CAN_NOT_BE_LESS_THAN_ZERO"), transitionTime: 3000 });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_ATTENDANCE_CAN_NOT_BE_LESS_THAN_ZERO), transitionTime: 3000 });
       return;
     }
 
     if (value > props.duration) {
-      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_CAN_NOT_EXCEED_EVENT_DURATION_ERROR"), transitionTime: 3000 });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_ATTENDANCE_CAN_NOT_EXCEED_EVENT_DURATION_ERROR), transitionTime: 3000 });
       return;
     }
 

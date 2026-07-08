@@ -7,6 +7,7 @@ import FilterContext from './FilterContext';
 import NoData from "./NoData";
 import { Loader } from '@egovernments/digit-ui-components';
 import { getDuration } from "../utils/getDuration";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 // Initialize the VennModule
 VennModule(Highcharts);
 
@@ -151,7 +152,7 @@ const VennDiagramChart = ({data, isNational = false,}) => {
       enabled: false, // Remove the Highcharts watermark
     },
     tooltip: {
-      pointFormat: `{point.name} </i><br><b>${t("CAMPAIGN_VALUE_LABEL")}: {point.value}</v>`,
+      pointFormat: `{point.name} </i><br><b>${t(I18N_KEYS.CHARTS.CAMPAIGN_VALUE_LABEL)}: {point.value}</v>`,
       style: {
         fontSize: "16px",
         color: "#505A5F",

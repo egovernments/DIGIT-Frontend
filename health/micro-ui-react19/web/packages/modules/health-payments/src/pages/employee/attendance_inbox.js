@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { HeaderComponent } from "@egovernments/digit-ui-components";
 import { useLocation } from "react-router-dom";
 import AttendanceInboxComponent from "../../components/attendance_inbox/attendance_inbox";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /**
 * Business Flow Description:
@@ -40,7 +41,7 @@ const AttendanceInbox = () => {
 
   return (
     <div>
-      <HeaderComponent className="payment-screen-headers" styles={{marginBottom:"1.5rem"}}>{t("HCM_AM_ATTENDANCE_INBOX")}</HeaderComponent>
+      <HeaderComponent className="payment-screen-headers" styles={{marginBottom:"1.5rem"}}>{t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ATTENDANCE_INBOX)}</HeaderComponent>
       {
         <div
           className="inbox-search-wrapper"

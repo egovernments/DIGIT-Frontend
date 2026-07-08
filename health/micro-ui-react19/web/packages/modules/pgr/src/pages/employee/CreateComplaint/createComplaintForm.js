@@ -17,6 +17,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { formPayloadToCreateComplaint } from "../../../utils";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 const CreateComplaintForm = ({
   createComplaintConfig,      // Form configuration for Create Complaint screen
@@ -172,7 +173,7 @@ const CreateComplaintForm = ({
       if (!formState.errors.ComplainantName) {
         setError("ComplainantName", {
           type: "custom",
-          message: t("CORE_COMMON_APPLICANT_NAME_INVALID")
+          message: t(I18N_KEYS.CREATE_COMPLAINT.CORE_COMMON_APPLICANT_NAME_INVALID)
         }, { shouldFocus: false });
       }
     } else if (ComplainantName && formState.errors.ComplainantName) {
@@ -187,7 +188,7 @@ const CreateComplaintForm = ({
       if (!formState.errors.ComplainantContactNumber) {
         setError("ComplainantContactNumber", {
           type: "custom",
-          message: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID")
+          message: t(I18N_KEYS.CREATE_COMPLAINT.CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID)
         }, { shouldFocus: false });
       }
     } else if (ComplainantContactNumber && formState.errors.ComplainantContactNumber) {
@@ -237,12 +238,12 @@ const CreateComplaintForm = ({
   const handleResponseForCreateComplaint = async (payload) => {
     await CreateComplaintMutation(payload, {
       onError: async () => {
-        setToast({ show: true, label: t("FAILED_TO_CREATE_COMPLAINT"), type: "error" });
+        setToast({ show: true, label: t(I18N_KEYS.CREATE_COMPLAINT.FAILED_TO_CREATE_COMPLAINT), type: "error" });
         setIsSubmitting(false);
       },
       onSuccess: async (responseData) => {
         if (responseData?.ResponseInfo?.Errors) {
-          setToast({ show: true, label: t("FAILED_TO_CREATE_COMPLAINT"), type: "error" });
+          setToast({ show: true, label: t(I18N_KEYS.CREATE_COMPLAINT.FAILED_TO_CREATE_COMPLAINT), type: "error" });
           setIsSubmitting(false);
         } else {
           sendDataToResponsePage(
@@ -277,7 +278,7 @@ const CreateComplaintForm = ({
         className="custom-form-complaints"
         onFormValueChange={onFormValueChange}
         isDisabled={isSubmitting}
-        label={t("CS_COMMON_SUBMIT")}
+        label={t(I18N_KEYS.CREATE_COMPLAINT.CS_COMMON_SUBMIT)}
         actionClassName={"actionBarClass"}
       />
 

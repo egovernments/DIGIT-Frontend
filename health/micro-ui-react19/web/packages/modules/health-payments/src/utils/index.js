@@ -1,6 +1,7 @@
 import _ from "lodash";
 import axios from "axios";
 import { UICustomizations } from "../config/UIcustomizations";
+import { I18N_KEYS } from "./i18nKeyConstants";
 
 
 
@@ -162,8 +163,8 @@ export function formatTimestampToDateTime(timestamp) {
 
 // pagination options for table
 export const getCustomPaginationOptions = (t) => ({
-  rowsPerPageText: t("HCM_AM_ROWS_PER_PAGE"),
-  rangeSeparatorText: t("HCM_AM_OF"),
+  rowsPerPageText: t(I18N_KEYS.UTILS.HCM_AM_ROWS_PER_PAGE),
+  rangeSeparatorText: t(I18N_KEYS.UTILS.HCM_AM_OF),
 });
 
 export {//todo check

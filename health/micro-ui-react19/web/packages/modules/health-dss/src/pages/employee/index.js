@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { BreadCrumb } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import L1Main from "./L1Main";
 import L2Main from "./L2Main";
 import ViewDashboard from "./ViewDashboard";
@@ -22,22 +23,22 @@ const ProjectBreadCrumb = ({ location }) => {
   const crumbs = [
     {
       internalLink: `/${window?.contextPath}/employee`,
-      content: t("HOME"),
+      content: t(I18N_KEYS.NAVIGATION.HOME),
       show: true,
     },
     {
       internalLink: `/${window?.contextPath}/employee/dss/past-campaigns`,
-      content: t("HCM_BREADCRUMBS_PAST_CAMPAIGNS"),
+      content: t(I18N_KEYS.NAVIGATION.HCM_BREADCRUMBS_PAST_CAMPAIGNS),
       show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "PAST_CAMPAIGNS",
     },
     {
       internalLink: `/${window?.contextPath}/employee/dss/live-campaigns`,
-      content: t("HCM_BREADCRUMBS_LIVE_CAMPAIGNS"),
+      content: t(I18N_KEYS.NAVIGATION.HCM_BREADCRUMBS_LIVE_CAMPAIGNS),
       show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LIVE_CAMPAIGNS",
     },
     {
       internalLink: `/${window?.contextPath}/employee/dss/my-campaigns`,
-      content: t("ACTION_TEST_MY_CAMPAIGNS"),
+      content: t(I18N_KEYS.COMPONENTS.ACTION_TEST_MY_CAMPAIGNS),
       show:
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "MY_CAMPAIGNS" ||
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").slice(-2, -1)[0]) === "LEVEL_ONE" ||
@@ -47,17 +48,17 @@ const ProjectBreadCrumb = ({ location }) => {
     },
     {
       internalLink: `/${window?.contextPath}/employee/dss/view-dashboard`,
-      content: t("VIEW_DASHBOARD"),
+      content: t(I18N_KEYS.NAVIGATION.VIEW_DASHBOARD),
       show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_DASHBOARD",
     },
     {
       internalLink: `/${window?.contextPath}/employee/dss/l1-dashboard`,
-      content: t("L1_DASHBOARD"),
+      content: t(I18N_KEYS.NAVIGATION.L1_DASHBOARD),
       show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "L1_DASHBOARD",
     },
     {
       internalLink: `/${window?.contextPath}/employee/dss/level-one/${dashboardId}`,
-      content: t("LEVEL_ONE_DASHBOARD"),
+      content: t(I18N_KEYS.NAVIGATION.LEVEL_ONE_DASHBOARD),
       query: `campaignNumber=${campaignNumber}&boundaryType=${boundaryType}&boundaryValue=${boundaryValue}`,
       show:
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").slice(-2, -1)[0]) === "LEVEL_ONE" ||
@@ -66,12 +67,12 @@ const ProjectBreadCrumb = ({ location }) => {
     },
     {
       internalLink: `/${window?.contextPath}/employee/dss/level-two`,
-      content: t("LEVEL_TWO_DASHBOARD"),
+      content: t(I18N_KEYS.NAVIGATION.LEVEL_TWO_DASHBOARD),
       show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").slice(-2, -1)[0]) === "LEVEL_TWO",
     },
     {
       internalLink: `/${window?.contextPath}/employee/dss/user-activity-tracking`,
-      content: t("USER_ACTIVITY_TRACKING"),
+      content: t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_TRACKING),
       show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "USER_ACTIVITY_TRACKING",
     },
     {
@@ -79,7 +80,7 @@ const ProjectBreadCrumb = ({ location }) => {
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "CAMPAIGN_REPORTS"
           ? ""
           : `/${window?.contextPath}/employee/dss/campaign-reports`,
-      content: t("HCM_CAMPAIGN_REPORTS"),
+      content: t(I18N_KEYS.NAVIGATION.HCM_CAMPAIGN_REPORTS),
       query: `campaignNumber=${Digit.SessionStorage.get("campaignSelected")?.campaignNumber}&campaignName=${Digit.SessionStorage.get("campaignSelected")?.campaignName}`,
       show:
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "CAMPAIGN_REPORTS" ||
@@ -87,7 +88,7 @@ const ProjectBreadCrumb = ({ location }) => {
     },
     {
       internalLink: "",
-      content: t("HCM_REPORT_DETAIL"),
+      content: t(I18N_KEYS.NAVIGATION.HCM_REPORT_DETAIL),
       show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "REPORT_DETAIL",
     },
   ];

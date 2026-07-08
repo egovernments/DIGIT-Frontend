@@ -1,6 +1,7 @@
 import _ from "lodash";
 import React, { useState, Fragment } from "react";
 import { Button as ButtonNew, Toast } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const getMDMSUrl = (v2 = false) => {
   if (v2) {
@@ -49,7 +50,7 @@ const renderText = (value, t) => {
   } else {
     return (
       <div>
-        <p>{t("NA")}</p>
+        <p>{t(I18N_KEYS.COMMON.NA)}</p>
       </div>
     );
   }
@@ -140,8 +141,8 @@ export const UICustomizations = {
             <ButtonNew
               type="actionButton"
               variation="secondary"
-              label={t("TAKE_ACTION")}
-              title={t("TAKE_ACTION")}
+              label={t(I18N_KEYS.COMPONENTS.TAKE_ACTION)}
+              title={t(I18N_KEYS.COMPONENTS.TAKE_ACTION)}
               options={options}
               style={{ width: "20rem" }}
               optionsKey="name"

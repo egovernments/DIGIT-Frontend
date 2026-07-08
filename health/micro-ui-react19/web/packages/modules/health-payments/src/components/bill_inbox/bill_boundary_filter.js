@@ -5,6 +5,7 @@ import BoundaryComponent from "../BoundaryComponent";
 import { Card, SVG, Toast } from "@egovernments/digit-ui-components";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { getValidPeriods,formatDate } from "../../utils/time_conversion";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /**
  * BillBoundaryFilter component allows users to filter boundaries
@@ -40,14 +41,14 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
     //Clear the toast if the input is valid
     setShowToast(null);
     if (!boundary || boundary?.boundaryType !== selectedLevel?.code) {
-      setShowToast({ key: "error", label: t("HCM_AM_SELECT_BOUNDARY_TILL_LAST_LEVEL"), transitionTime: 3000 });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_SELECT_BOUNDARY_TILL_LAST_LEVEL), transitionTime: 3000 });
       return;
     }
 
     if (periods.length > 0) {
       onFilterChange(boundary.code,"",selectedPeriod);
     } else {
-      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PAYMENT_PERIOD_FAILED"), transitionTime: 3000 });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_PAYMENT_PERIOD_FAILED), transitionTime: 3000 });
       return;
     }
   };
@@ -202,7 +203,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         >
           <div style={{ display: "flex", alignItems: "center" }}>
             <SVG.FilterAlt width={"32px"} height={"32px"} fill={"#C84C0E"} />
-            <span className="custom-inbox-filter-heading">{t("HCM_AM_FILTER")}</span>
+            <span className="custom-inbox-filter-heading">{t(I18N_KEYS.COMMON.HCM_AM_FILTER)}</span>
           </div>
 
           <span onClick={() => {}} style={{ border: "1px solid #E0E0E0", padding: "6px", marginBottom: "10px" }}>
@@ -233,7 +234,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         {selectedProject && (
           <div style={{ width: "100%", marginTop: "1.5rem" }}>
             <div className="comment-label">
-              {t("HCM_AM_BILL_PERIOD_DATE")}
+              {t(I18N_KEYS.COMMON.HCM_AM_BILL_PERIOD_DATE)}
               <span className="required comment-label"> *</span>
             </div>
 
@@ -269,7 +270,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         }}
       >
         {selectedProject?.address?.boundary && selectedLevel && (
-          <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("HCM_AM_COMMON_APPLY")} style={{width:"100%"}}/>
+          <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t(I18N_KEYS.COMMON.HCM_AM_COMMON_APPLY)} style={{width:"100%"}}/>
         )}
         {showToast && <Toast style={{ zIndex: 10001 }} label={showToast.label} type={showToast.key} onClose={() => setShowToast(null)} />}
       </div>

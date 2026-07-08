@@ -9,6 +9,7 @@ import { getTitleHeading } from "../utils/locale";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./TableCustomStyles";
 import Icon from "./Icon";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const rowNamesToBeLocalised = ["Department", "", "Usage Type", "Ward", "Wards", "City Name", "Complaint Type", "Event Type"];
 
@@ -530,7 +531,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
       {/* Filters stack */}
       {filterStack?.length > 1 && (
         <div className="digit-tag-container customTable">
-          <div className="digit-tag-filter-text">{t("DSS_FILTERS_APPLIED")}: </div>
+          <div className="digit-tag-filter-text">{t(I18N_KEYS.COMMON.DSS_FILTERS_APPLIED)}: </div>
           {filterStack.map((filter, id) =>
             id > 0 ? <Chip key={id} text={`${filter?.label}: ${filter?.name}`} onClick={() => removeFilter(id)} hideClose={false} /> : null
           )}
@@ -551,7 +552,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
           customStyles={tableCustomStyle}
           defaultSortFieldId={tableColumns[0]?.id}
           fixedHeader={true}
-          paginationComponentOptions={{ rowsPerPageText: t("CS_COMMON_ROWS_PER_PAGE") }}
+          paginationComponentOptions={{ rowsPerPageText: t(I18N_KEYS.COMMON.CS_COMMON_ROWS_PER_PAGE) }}
           sortIcon={<SVG.ArrowUpward width={"16px"} height={"16px"} fill={"#0b4b66"}/>}
         />
       )}
