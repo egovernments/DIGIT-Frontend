@@ -2,17 +2,16 @@ server {
     listen 80;
     underscores_in_headers on;
 
-    location /${BUILD_VARIANT}/ {
-        root /var/web;
-        index index.html index.htm;
-        try_files $uri $uri/ /${BUILD_VARIANT}/index.html;
+    # Health check endpoint for Kubernetes probes
+    location = / {
+        return 200 'OK';
+        add_header Content-Type text/plain;
     }
 
-    # Cache static assets
-    location ~* /${BUILD_VARIANT}/.*\.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)$ {
-        root /var/web;
-        expires 30d;
-        add_header Cache-Control "public, immutable";
+    location /${COUNTRY_PREFIX}/${BUILD_VARIANT}/ {
+        alias /var/web/app/;
+        index index.html index.htm;
+        try_files $uri $uri/ /${COUNTRY_PREFIX}/${BUILD_VARIANT}/index.html;
     }
 
     # Gzip compression

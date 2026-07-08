@@ -22,10 +22,10 @@ DIGIT-Frontend/
 │   │   │   ├── index.js                    # Core-specific entry point
 │   │   │   ├── package.json                # Core dependencies & config
 │   │   │   └── public/                     # Core-specific assets
-│   │   └── workbench-ui/                   # Workbench variant (default)
-│   │       ├── index.js                    # Workbench-specific entry point
-│   │       ├── package.json                # Workbench dependencies & config
-│   │       └── public/                     # Workbench-specific assets
+│   │   └── hcm-digit-ui/                   # HCM DIGIT UI variant (default)
+│   │       ├── index.js                    # HCM-specific entry point
+│   │       ├── package.json                # HCM dependencies & config
+│   │       └── public/                     # HCM-specific assets
 │   ├── docker/                             # Docker configuration
 │   │   ├── Dockerfile                      # Multi-variant Dockerfile
 │   │   └── nginx.conf.template             # Dynamic nginx configuration
@@ -43,19 +43,19 @@ DIGIT-Frontend/
 
 This application supports three distinct build variants:
 
-### 🏥 **Console** (`/console/`)
+### **Console** (`/console/`)
 - **Purpose**: Administrative console interface
 - **Modules**: Core, Admin, Console
 - **Users**: System administrators
 - **Features**: User management, system configuration
 
-### 🩺 **Core-UI** (`/core-ui/`)
+### **Core-UI** (`/core-ui/`)
 - **Purpose**: Basic healthcare application
-- **Modules**: Core modules only  
+- **Modules**: Core modules only
 - **Users**: Healthcare workers
 - **Features**: Patient management, basic workflows
 
-### 📊 **Workbench-UI** (`/workbench-ui/`)
+### **HCM-DIGIT-UI** (`/hcm-digit-ui/`)
 - **Purpose**: Campaign management and analytics
 - **Modules**: Core, Workbench, Campaign Manager
 - **Users**: Program managers, data analysts
@@ -63,70 +63,95 @@ This application supports three distinct build variants:
 
 
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 ### Building Docker Images
 
-The project uses a unified Dockerfile that can build different variants:
+The project uses a unified Dockerfile that can build different variants. The `COUNTRY_PREFIX` build arg is required for country-specific deployments:
 
 ```bash
-# Build Workbench UI variant
+# Build HCM DIGIT UI variant for Chad
 docker build -f health/micro-ui/web/docker/Dockerfile \
-  --build-arg BUILD_VARIANT=workbench-ui \
-  -t health-workbench:latest .
+  --build-arg BUILD_VARIANT=hcm-digit-ui \
+  --build-arg COUNTRY_PREFIX=chad \
+  --build-arg PUBLIC_PATH=/chad/hcm-digit-ui/ \
+  -t health-hcm-digit-ui-chad:latest .
+
+# Build HCM DIGIT UI variant for Congo-B
+docker build -f health/micro-ui/web/docker/Dockerfile \
+  --build-arg BUILD_VARIANT=hcm-digit-ui \
+  --build-arg COUNTRY_PREFIX=congob \
+  --build-arg PUBLIC_PATH=/congob/hcm-digit-ui/ \
+  -t health-hcm-digit-ui-congob:latest .
 
 # Build Core UI variant
 docker build -f health/micro-ui/web/docker/Dockerfile \
   --build-arg BUILD_VARIANT=core-ui \
-  -t health-core:latest .
+  --build-arg COUNTRY_PREFIX=chad \
+  --build-arg PUBLIC_PATH=/chad/core-ui/ \
+  -t health-core-chad:latest .
 
 # Build Console variant
 docker build -f health/micro-ui/web/docker/Dockerfile \
   --build-arg BUILD_VARIANT=console \
-  -t health-console:latest .
+  --build-arg COUNTRY_PREFIX=chad \
+  --build-arg PUBLIC_PATH=/chad/console/ \
+  -t health-console-chad:latest .
 ```
 
 ### Running Docker Containers
 
 ```bash
-# Run Workbench UI
-docker run -p 80:80 health-workbench:latest
-# Access at: http://localhost/workbench-ui/
+# Run HCM DIGIT UI (Chad)
+docker run -p 80:80 health-hcm-digit-ui-chad:latest
+# Access at: http://localhost/chad/hcm-digit-ui/
 
-# Run Core UI  
-docker run -p 80:80 health-core:latest
-# Access at: http://localhost/core-ui/
+# Run Core UI (Chad)
+docker run -p 80:80 health-core-chad:latest
+# Access at: http://localhost/chad/core-ui/
 
-# Run Console
-docker run -p 80:80 health-console:latest  
-# Access at: http://localhost/console/
+# Run Console (Chad)
+docker run -p 80:80 health-console-chad:latest
+# Access at: http://localhost/chad/console/
 ```
+
+### Docker Build Arguments
+
+| Argument | Required | Description | Example |
+|----------|----------|-------------|---------|
+| `BUILD_VARIANT` | Yes | Which build variant to use | `hcm-digit-ui`, `core-ui`, `console` |
+| `COUNTRY_PREFIX` | Yes | Country code for URL path prefix | `chad`, `congob` |
+| `PUBLIC_PATH` | Yes | Full public path for webpack | `/chad/hcm-digit-ui/` |
 
 ### Docker Compose (Optional)
 
 ```yaml
 version: '3.8'
 services:
-  workbench-ui:
+  hcm-digit-ui-chad:
     build:
       context: .
       dockerfile: health/micro-ui/web/docker/Dockerfile
       args:
-        BUILD_VARIANT: workbench-ui
+        BUILD_VARIANT: hcm-digit-ui
+        COUNTRY_PREFIX: chad
+        PUBLIC_PATH: /chad/hcm-digit-ui/
     ports:
       - "3001:80"
-      
-  core-ui:
+
+  core-ui-chad:
     build:
       context: .
-      dockerfile: health/micro-ui/web/docker/Dockerfile  
+      dockerfile: health/micro-ui/web/docker/Dockerfile
       args:
         BUILD_VARIANT: core-ui
+        COUNTRY_PREFIX: chad
+        PUBLIC_PATH: /chad/core-ui/
     ports:
       - "3002:80"
 ```
 
-## 🛠 Tech Stack
+## Tech Stack
 
 ### Core Technologies
 - **[React 19.0.0](https://react.dev/)** - Modern UI framework with latest features
@@ -143,13 +168,13 @@ services:
 - **Compression**: Gzip compression for production
 
 
-## 📖 Documentation
+## Documentation
 
 - **[DIGIT UI Developer Guide](https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)** - Official documentation
 - **[API Documentation](https://core.digit.org/)** - Backend API reference
 - **[Component Library](https://github.com/egovernments/DIGIT-UI-LIBRARIES)** - Reusable UI components
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -157,7 +182,7 @@ services:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 🆘 Support
+## Support
 
 For support and issues:
 
@@ -165,25 +190,26 @@ For support and issues:
 - **DIGIT Core Issues**: [DIGIT-Core Issues](https://github.com/egovernments/DIGIT-core/issues)
 - **Documentation**: [DIGIT Docs](https://core.digit.org/)
 
-## 📄 License
+## License
 
 This project is licensed under the [MIT License](https://choosealicense.com/licenses/mit/) - see the LICENSE file for details.
 
-## 👥 Authors
+## Authors
 
 - **[@jagankumar-egov](https://www.github.com/jagankumar-egov)** - Lead Developer
 - **DIGIT Team** - Core platform development
 
-## 🏗 Architecture
+## Architecture
 
 ### Multi-Variant Build System
 
 The application uses a sophisticated build system that allows:
 
 - **Single Codebase**: Maintain one codebase for multiple applications
-- **Optimized Bundles**: Each variant only includes necessary dependencies  
+- **Optimized Bundles**: Each variant only includes necessary dependencies
 - **Dynamic Configuration**: Webpack configs adapt to build variant
 - **CI/CD Integration**: Automated builds for different variants
+- **Country-Specific Deployments**: Each country gets its own URL prefix
 
 ### Performance Optimizations
 
@@ -197,7 +223,7 @@ The application uses a sophisticated build system that allows:
 ![DIGIT](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)
 
 
-**Built with ❤️ by the eGov Team**
+**Built by the eGov Team**
 
 
 ![eGov](https://egov-dev-assets.s3.ap-south-1.amazonaws.com/egov.png)

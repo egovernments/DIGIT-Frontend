@@ -5,7 +5,11 @@ RUN apk add --no-cache git>2.30.0
 
 # Build argument to specify which variant to build
 ARG BUILD_VARIANT=core-ui
+ARG COUNTRY_PREFIX
+ARG PUBLIC_PATH
 ARG WORK_DIR
+
+ENV PUBLIC_PATH=${PUBLIC_PATH}
 
 WORKDIR /app
 
@@ -30,14 +34,19 @@ RUN yarn install \
 # Production stage
 FROM nginx:mainline-alpine
 ARG BUILD_VARIANT=core-ui
+ARG COUNTRY_PREFIX
 ENV BUILD_VARIANT=${BUILD_VARIANT}
-ENV WORK_DIR=/var/web/${BUILD_VARIANT}
+ENV COUNTRY_PREFIX=${COUNTRY_PREFIX}
 
-RUN mkdir -p ${WORK_DIR}
+# Copy built files to a known location
+RUN mkdir -p /var/web/app
+COPY --from=build /app/web/build /var/web/app/
 
-COPY --from=build /app/web/build ${WORK_DIR}/
-
-# Copy the nginx template and substitute the BUILD_VARIANT
+# Copy nginx template (will be processed at container startup)
 COPY health/micro-ui-react19/web/docker/nginx.conf.template /tmp/nginx.conf.template
-RUN envsubst '${BUILD_VARIANT}' < /tmp/nginx.conf.template > /etc/nginx/conf.d/default.conf \
-    && rm /tmp/nginx.conf.template
+
+# Copy and set up entrypoint script
+COPY health/micro-ui-react19/web/docker/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]

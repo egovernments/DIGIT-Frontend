@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 
 // Load package.json to get the homepage/publicPath
 const packageJson = require("./package.json");
-const publicPath = packageJson.homepage || "/";
+const publicPath = process.env.PUBLIC_PATH || "auto";
 
 // Load .env variables
 const envFile = dotenv.config().parsed || {};
