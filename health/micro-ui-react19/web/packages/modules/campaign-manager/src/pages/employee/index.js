@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect } from "react";
 import { Routes, useLocation, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -400,11 +400,9 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
  * the `Switch` component, there are several `Route` components with different paths and
  * corresponding components such as `UploadBoundaryData`, `CycleConfiguration`, `DeliveryRule`, `
  */
-const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: propsHierarchyData }) => {
+const App = ({ path }) => {
   const location = useLocation();
   const userId = Digit.UserService.getUser().info.uuid;
-  const BOUNDARY_HIERARCHY_TYPE = useMemo(() => BoundaryHierarchy, [BoundaryHierarchy]);
-  const hierarchyData = useMemo(() => propsHierarchyData, [propsHierarchyData]);
   const microplanStatus = "RESOURCE_ESTIMATIONS_APPROVED";
   const UploadBoundaryData = Digit?.ComponentRegistryService?.getComponent("UploadBoundaryData");
   const CycleConfiguration = Digit?.ComponentRegistryService?.getComponent("CycleConfiguration");
@@ -471,7 +469,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`create-campaign/delivery-details`} element={<DeliveryRule />} />
           <Route
             path={`setup-campaign`}
-            element={<SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
+            element={<SetupCampaign />}
           />
           <Route path={`my-campaign`} element={<MyCampaign />} />
           <Route path={`my-campaign-new`} element={<MyCampaignNew />} />
@@ -486,7 +484,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`checklist/search`} element={<SearchChecklist />} />
           <Route path={`checklist/view`} element={<ViewChecklist />} />
           <Route path={`checklist/update`} element={<UpdateChecklist />} />
-          <Route path={`update-campaign`} element={<UpdateCampaign hierarchyData={hierarchyData} />} />
+          <Route path={`update-campaign`} element={<UpdateCampaign />} />
           <Route path={`setup-from-microplan`} element={<ApprovedMicroplans />} />
           <Route path={`new-app-configuration-redesign`} element={<FullConfigWrapper path={path} location={location} />} />
           <Route path={`app-config-save`} element={<AppConfigSaveLoader />} />
