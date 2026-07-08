@@ -187,7 +187,7 @@ const HorBarChart = ({ data, setselectState = "" }) => {
     });
   };
   const renderLegend = (value) => (
-    <span style={{ fontSize: "16px", color: "#505A5F" }}>{t(`DSS_${Digit.Utils.locale.getTransformedLocale(value)}`)}</span>
+    <span style={{ fontSize: "16px", color: "#505A5F", marginRight: "16px" }}>{t(`DSS_${Digit.Utils.locale.getTransformedLocale(value)}`)}</span>
   );
   const chartData = useMemo(() => constructChartData(response?.responseData?.data));
 

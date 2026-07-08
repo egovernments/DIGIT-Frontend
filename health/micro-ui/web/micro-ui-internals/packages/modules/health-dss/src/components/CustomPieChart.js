@@ -51,7 +51,9 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
             endDate: value?.range?.endDate?.getTime(),
           }
         : requestDate,
-    filters: isPieClicked ? { ...value?.filters, selectedType: pieSelected, campaignNumber: campaignNumber } : { ...value?.filters, campaignNumber: campaignNumber },
+    filters: isPieClicked
+      ? { ...value?.filters, selectedType: pieSelected, campaignNumber: campaignNumber }
+      : { ...value?.filters, campaignNumber: campaignNumber },
     moduleLevel: value?.moduleLevel,
     aggregationFactors: null,
   };
@@ -98,7 +100,11 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
         }, []);
   }, [response]);
 
-  const renderLegend = (value) => <span className="digit-pie-chart-legend-text">{getTitleHeading(t(`${value}`))}</span>;
+  const renderLegend = (value) => (
+    <span className="digit-pie-chart-legend-text" style={{ marginRight: "16px" }}>
+      {getTitleHeading(t(`${value}`))}
+    </span>
+  );
 
   const isSwitchMode = response?.responseData?.plotLabel === "switch";
 
@@ -232,7 +238,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
         </div>
       )}
 
-      <div className={"digit-donut-chart-container"}>
+      <div className={"digit-donut-chart-container"} style={{ display: "flex", flexDirection: "column" }}>
         <ResponsiveContainer width="99%">
           {chartData?.length === 0 || !chartData ? (
             <NoData t={t} />
@@ -245,8 +251,8 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
                 dataKey={dataKey}
                 cy={200}
                 style={{ cursor: response?.responseData?.drillDownChartId !== "none" ? "pointer" : "default", outline: "none" }}
-                innerRadius={!mobileView ? 80 : 100} ///Charts in rows(which contains 2 charts) are little bigger in size than charts in rows(which contains 3 charts) charts
-                outerRadius={!mobileView ? 100 : 130}
+                innerRadius={!mobileView ? 140 : 120} ///Charts in rows(which contains 2 charts) are little bigger in size than charts in rows(which contains 3 charts) charts
+                outerRadius={!mobileView ? 170 : 150}
                 margin={{ top: isPieClicked ? 0 : 5 }}
                 fill="#8884d8"
                 label={response?.responseData?.showLabel ? renderCustomLabel : ""}
@@ -272,29 +278,25 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
                 )}
               </Pie>
               {showTooltip && <Tooltip content={renderTooltip} />}
-              <Legend
-                layout="vertical"
-                verticalAlign="middle"
-                align="right"
-                iconType="circle"
-                formatter={renderLegend}
-                iconSize={13}
-                wrapperStyle={
-                  chartData?.length > 6
-                    ? {
-                        paddingRight: !mobileView ? 60 : 0, ///Padding for 2 charts in a row cases
-                        overflowY: "scroll",
-                        height: 250,
-                        width: "35%",
-                        overflowX: "auto",
-                        paddingTop: -20,
-                      }
-                    : { paddingRight: !mobileView ? 60 : 0, overflowX: "auto", paddingTop: -20 } ///Padding for 2 charts in a row cases
-                }
-              />
             </PieChart>
           )}
         </ResponsiveContainer>
+        {chartData?.length > 0 && (
+          <Legend
+            layout="horizontal"
+            verticalAlign="bottom"
+            align="center"
+            iconType="circle"
+            formatter={renderLegend}
+            iconSize={13}
+            payload={response?.responseData?.data?.[0]?.plots.map((entry, index) => ({
+              value: entry.name,
+              type: "circle",
+              color: COLORS[index % COLORS.length],
+            }))}
+            wrapperStyle={{ position: "static", display: "flex", flexWrap: "wrap", justifyContent: "center", width: "100%" }}
+          />
+        )}
       </div>
     </Fragment>
   );

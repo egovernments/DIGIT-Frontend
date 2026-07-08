@@ -274,7 +274,7 @@ const CustomHorizontalBarChart = ({
   const chartData = useMemo(() => constructChartData(response?.responseData?.data, value?.denomination), [response, value?.denomination]);
 
   const renderLegend = (value) => (
-    <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`DSS_LEGEND_${Digit.Utils.locale.getTransformedLocale(value)}`)}</span>
+    <span style={{ fontSize: "14px", color: "#505A5F", marginRight: "16px" }}>{t(`DSS_LEGEND_${Digit.Utils.locale.getTransformedLocale(value)}`)}</span>
   );
 
   const tickFormatter = (value) => {
