@@ -158,9 +158,13 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
     }
   };
 
-  const renderLegend = () => <span style={{ fontSize: "16px", color: "#505A5F" }}>{t(`DSS_${Digit.Utils.locale.getTransformedLocale(id)}`)}</span>;
+  const renderLegend = () => (
+    <span style={{ fontSize: "16px", color: "#505A5F", marginRight: "16px" }}>{t(`DSS_${Digit.Utils.locale.getTransformedLocale(id)}`)}</span>
+  );
 
-  const renderLegendForLine = (ss, sss, index) => <span style={{ fontSize: "16px", color: "#505A5F" }}>{keysArr?.[index]}</span>;
+  const renderLegendForLine = (ss, sss, index) => (
+    <span style={{ fontSize: "16px", color: "#505A5F", marginRight: "16px" }}>{keysArr?.[index]}</span>
+  );
 
   const tickFormatter = (value) => {
     if (typeof value === "string") {
