@@ -1,6 +1,7 @@
 import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const ROLES = {
   PGR: ["HELPDESK_USER", "PGR_ADMIN", "PGR-ADMIN"],
@@ -38,8 +39,8 @@ const PGRCard = () => {
   }
 
   let links = [
-    generateLink("ACTION_TEST_CREATE_COMPLAINT", "create-complaint"),
-    generateLink("ACTION_TEST_SEARCH_COMPLAINT", "inbox-v2"),
+    generateLink(I18N_KEYS.PAGES_INBOX.ACTION_TEST_CREATE_COMPLAINT, "create-complaint"),
+    generateLink(I18N_KEYS.PAGES_INBOX.ACTION_TEST_SEARCH_COMPLAINT, "inbox-v2"),
   ];
   const hasRequiredRoles = (link) => { 
     if (!link?.roles?.length) return true;
@@ -49,7 +50,7 @@ const PGRCard = () => {
 
   const propsForModuleCard = {
     Icon: "UpdateExpense",
-    moduleName: t("PGR"),
+    moduleName: t(I18N_KEYS.COMPONENTS.PGR),
     kpis: [],
     links: links,
     className: "microplan-employee-module-card",

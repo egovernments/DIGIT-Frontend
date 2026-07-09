@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { configEmployeeActiveApplication } from "./Modal/EmployeeActivation";
 import { configEmployeeApplication } from "./Modal/EmployeeAppliaction";
 import { configEmployeePasswordReset } from "./Modal/EmployeePasswordReset";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * handles multiple employee-related actions
@@ -104,7 +105,7 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
       setError(null);
       if (file) {
         if (file.size >= 5242880) {
-          setError(t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED"));
+          setError(t(I18N_KEYS.EMPLOYEE_ACTION.CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED));
         } else {
           try {
             setUploadedFile(null);
@@ -112,10 +113,10 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
             if (response?.data?.files?.length > 0) {
               setUploadedFile(response?.data?.files[0]?.fileStoreId);
             } else {
-              setError(t("CS_FILE_UPLOAD_ERROR"));
+              setError(t(I18N_KEYS.EMPLOYEE_ACTION.CS_FILE_UPLOAD_ERROR));
             }
           } catch (err) {
-            setError(t("CS_FILE_UPLOAD_ERROR"));
+            setError(t(I18N_KEYS.EMPLOYEE_ACTION.CS_FILE_UPLOAD_ERROR));
           }
         }
       }
@@ -175,12 +176,12 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
         if (data?.password && data?.confirmPassword && data.password === data.confirmPassword) {
           if (otp.length !== 6) {
             setResendOtpToast({ key: "error", action: "CS_OTP_INVALID" });
-            setError(t("CS_OTP_INVALID"));
+            setError(t(I18N_KEYS.EMPLOYEE_ACTION.CS_OTP_INVALID));
             return;
           }
           if (!data.password.match(Digit.Utils.getPattern("Password"))) {
             setResendOtpToast({ key: "error", action: "CORE_COMMON_APPLICANT_PASSWORD_INVALID" });
-            setError(t("CORE_COMMON_APPLICANT_PASSWORD_INVALID"));
+            setError(t(I18N_KEYS.COMMON.CORE_COMMON_APPLICANT_PASSWORD_INVALID));
             return;
           }
           const requestData = {
@@ -193,15 +194,15 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
 
           Digit.UserService.changePassword(requestData, tenantId)
             .then((response) => {
-              setToast({ key: "success", action: t("PASSWORD_RESET_SUCCESS") });
+              setToast({ key: "success", action: t(I18N_KEYS.EMPLOYEE_ACTION.PASSWORD_RESET_SUCCESS) });
               closeModal();
             })
             .catch((err) => {
-              setResendOtpToast({ key: "error", action: err?.response?.data?.error?.fields?.[0]?.message || t("ES_SOMETHING_WRONG") });
+              setResendOtpToast({ key: "error", action: err?.response?.data?.error?.fields?.[0]?.message || t(I18N_KEYS.EMPLOYEE_ACTION.ES_SOMETHING_WRONG) });
             });
         } else {
           setResendOtpToast({ key: "error", action: "CS_PASSWORD_NOT_EQUAL" });
-          setError(t("CS_PASSWORD_NOT_EQUAL"));
+          setError(t(I18N_KEYS.EMPLOYEE_ACTION.CS_PASSWORD_NOT_EQUAL));
         }
     }
   }
@@ -210,14 +211,14 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
     case "CREATE_EMPLOYEE":
       return (
         <Modal
-          headerBarMain={<Heading label={t("READY_TO_SUBMIT")} />}
-          actionCancelLabel={t("CANCEL")}
+          headerBarMain={<Heading label={t(I18N_KEYS.COMMON.READY_TO_SUBMIT)} />}
+          actionCancelLabel={t(I18N_KEYS.EMPLOYEE_ACTION.CANCEL)}
           actionCancelOnSubmit={closeModal}
-          actionSaveLabel={t("SUBMIT")}
+          actionSaveLabel={t(I18N_KEYS.EMPLOYEE_ACTION.SUBMIT)}
           actionSaveOnSubmit={submitAction}
           formId="modal-action"
         >
-          <CardText style={{ margin: "9px" }}>{t("HR_READY_TO_SUBMIT_TEXT")}</CardText>
+          <CardText style={{ margin: "9px" }}>{t(I18N_KEYS.COMMON.HR_READY_TO_SUBMIT_TEXT)}</CardText>
         </Modal>
       );
     default:

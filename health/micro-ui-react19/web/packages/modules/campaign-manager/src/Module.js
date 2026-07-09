@@ -147,7 +147,6 @@ function initPopupZIndexFix() {
  */
 const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-  const moduleName = Digit.Utils.campaign.getModuleName();
   const location = useLocation();
 
   // Derive path from location pathname (replaces useRouteMatch)
@@ -162,34 +161,15 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
     return `/${window?.contextPath}/employee/campaign`;
   }, [location.pathname]);
 
-  const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: "HierarchySchema",
-        filter: `[?(@.type=='${moduleName}')]`,
-      },
-    ],
-    {
-      select: (data) => {
-        return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
-      },
-    },
-    { schemaCode: "HierarchySchema" }
-  );
-
-  const { data: hierarchyData } = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE, tenantId });
   const modulePrefix = "hcm";
 
   useEffect(() => {
     initPopupZIndexFix();
   }, []);
-  const moduleCode = BOUNDARY_HIERARCHY_TYPE
-    ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`]
-    : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration", "dummy-module"];
+  // Boundary localizations (boundary-${hierarchyType}) are loaded in the boundary selection screens
+  // (SelectingBoundariesDuplicate / UpdateBoundaryWrapper) where the hierarchy type is already known.
+  const moduleCode = ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration", "dummy-module"];
 
-  // const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
@@ -207,10 +187,8 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
       <TourProvider>
         <EmployeeApp
           path={path}
-          BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE}
           stateCode={stateCode}
           userType={userType}
-          hierarchyData={hierarchyData}
         />
       </TourProvider>
     </ErrorBoundary>

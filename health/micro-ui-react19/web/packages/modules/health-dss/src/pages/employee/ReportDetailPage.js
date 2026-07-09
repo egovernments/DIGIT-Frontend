@@ -16,6 +16,7 @@ import {
   NoResultsFound,
 } from "@egovernments/digit-ui-components";
 import axios from "axios";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const downloadFileFromStore = ({ fileStoreId, customName }) => {
   if (!fileStoreId) return;
@@ -82,7 +83,7 @@ const FrequencyContent = ({ reports, t, reportType }) => {
               <div className="digit-report-detail__file-date">{report.dateLabel}</div>
             </div>
             <div className="digit-report-detail__file-actions">
-              <Button label={t("HCM_DOWNLOAD_REPORT")} onClick={() => handleDownload(report)} variation="link" icon="FileDownload" size="medium" />
+              <Button label={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_REPORT)} onClick={() => handleDownload(report)} variation="link" icon="FileDownload" size="medium" />
             </div>
           </div>
         </Card>
@@ -124,7 +125,7 @@ const ReportDetailPage = () => {
 
   const handleTriggerCustomReport = async () => {
     if (!customStartDate || !customEndDate) {
-      setShowToast({ key: "error", label: t("HCM_CUSTOM_DATE_REQUIRED") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_CUSTOM_DATE_REQUIRED) });
       return;
     }
     setIsTriggering(true);
@@ -160,10 +161,10 @@ const ReportDetailPage = () => {
       setShowCustomPopup(false);
       setCustomStartDate("");
       setCustomEndDate("");
-      setShowToast({ key: "success", label: t("HCM_CUSTOM_REPORT_TRIGGERED") });
+      setShowToast({ key: "success", label: t(I18N_KEYS.PAGES.HCM_CUSTOM_REPORT_TRIGGERED) });
     } catch (error) {
       console.error("Error triggering custom report:", error);
-      setShowToast({ key: "error", label: t("HCM_CUSTOM_REPORT_TRIGGER_FAILED") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_CUSTOM_REPORT_TRIGGER_FAILED) });
     } finally {
       setIsTriggering(false);
     }
@@ -244,7 +245,7 @@ const ReportDetailPage = () => {
           <div className="digit-report-detail__header">
             <div className="digit-report-detail__header-with-tag">
               <HeaderComponent className="digit-report-detail__header-with-tag-header">{t(reportLabel)}</HeaderComponent>
-              <Tag label={t("HCM_CONTAINS_PII")} showIcon={true} type="error" stroke={true} />
+              <Tag label={t(I18N_KEYS.PAGES.HCM_CONTAINS_PII)} showIcon={true} type="error" stroke={true} />
             </div>
             {/* <p className="digit-report-detail__subtitle">
               {t("HCM_REPORTS_GENERATED_BY_FREQUENCY")}
@@ -252,7 +253,7 @@ const ReportDetailPage = () => {
           </div>
           <div className="digit-report-detail__custom-btn">
             <Button
-              label={t("HCM_DOWNLOAD_CUSTOM_RANGE")}
+              label={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_CUSTOM_RANGE)}
               onClick={() => setShowCustomPopup(true)}
               variation="secondary"
               icon="CalendarMonth"
@@ -274,7 +275,7 @@ const ReportDetailPage = () => {
           >
             <SVG.NoResultsFoundIcon height={280} width={220} />
             <span style={{marginTop:"0.5rem"}}>
-              {t("HCM_NO_REPORTS_GENERATED")}
+              {t(I18N_KEYS.PAGES.HCM_NO_REPORTS_GENERATED)}
             </span>
           </div>
         ) : (
@@ -285,7 +286,7 @@ const ReportDetailPage = () => {
                 title={
                 <div className="digit-accordion-titile-dashboard-wrap">
                   <div className="digit-accordion-titile-dashboard">{t(`HCM_REPORT_FREQUENCY_${frequency}`)}</div>
-                  <Tag label={`${reports.length} ${reports.length === 1 ? t("HCM_REPORTS_COUNT_SINGLE") : t("HCM_REPORTS_COUNT")}`} stroke={true} type={"monochrome"}/>
+                  <Tag label={`${reports.length} ${reports.length === 1 ? t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT_SINGLE) : t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT)}`} stroke={true} type={"monochrome"}/>
                 </div>
                 }
                 isOpenInitially={false}
@@ -305,23 +306,23 @@ const ReportDetailPage = () => {
         <PopUp
           onClose={handleClosePopup}
           onOverlayClick={handleClosePopup}
-          heading={t("HCM_DOWNLOAD_CUSTOM_RANGE_POPUP")}
-          description={t("HCM_DOWNLOAD_CUSTOM_RANGE_DESC")}
+          heading={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_CUSTOM_RANGE_POPUP)}
+          description={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_CUSTOM_RANGE_DESC)}
           className={"digit-report-detail__popup"}
           footerChildren={[
-            <Button key="cancel" label={t("HCM_CANCEL")} onClick={handleClosePopup} variation="secondary" />,
+            <Button key="cancel" label={t(I18N_KEYS.PAGES.HCM_CANCEL)} onClick={handleClosePopup} variation="secondary" />,
             <Button
               key="trigger"
-              label={t("HCM_GENERATE_REPORT")}
+              label={t(I18N_KEYS.PAGES.HCM_GENERATE_REPORT)}
               onClick={handleTriggerCustomReport}
               variation="primary"
               isDisabled={!customStartDate || !customEndDate || isTriggering}
             />,
           ]}
-          subHeading={t("HCM_CUSTOM_RANGE_DESC")}
+          subHeading={t(I18N_KEYS.PAGES.HCM_CUSTOM_RANGE_DESC)}
         >
           <div className="digit-report-detail__custom-popup-field">
-            <label>{t("HCM_CUSTOM_START_DATE")}</label>
+            <label>{t(I18N_KEYS.PAGES.HCM_CUSTOM_START_DATE)}</label>
             <FieldV1
               withoutLabel={true}
               type="date"
@@ -334,7 +335,7 @@ const ReportDetailPage = () => {
             />
           </div>
           <div className="digit-report-detail__custom-popup-field">
-            <label>{t("HCM_CUSTOM_END_DATE")}</label>
+            <label>{t(I18N_KEYS.PAGES.HCM_CUSTOM_END_DATE)}</label>
             <FieldV1
               withoutLabel={true}
               type="date"

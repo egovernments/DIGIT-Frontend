@@ -4,6 +4,7 @@ import { Loader } from "@egovernments/digit-ui-components";
 import { ResponsiveContainer } from "recharts";
 import { format } from "date-fns";
 import { getDuration } from "../utils/getDuration";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 
 const Backsvg = ({ onClick }) => (
@@ -76,7 +77,7 @@ const MapDrillChart = ({
 
     if (error) {
           console.error('Chart data fetch failed:', error);
-        return <div>{t("DSS_ERROR_LOADING_DATA")}</div>;
+        return <div>{t(I18N_KEYS.CHARTS.DSS_ERROR_LOADING_DATA)}</div>;
         }
 
 
@@ -111,7 +112,7 @@ const MapDrillChart = ({
           </div>
           {data2 && data2.length == 0 && (
             <div style={{ paddingTop: "60px" }}>
-              {t("DSS_NO_DATA")}
+              {t(I18N_KEYS.COMMON.DSS_NO_DATA)}
             </div>
           )}
           {data2 && data2[0] && (

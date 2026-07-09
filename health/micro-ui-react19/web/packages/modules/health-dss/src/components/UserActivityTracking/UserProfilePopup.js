@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Card, Tag, Button, TextInput, Dropdown, SVG, Loader, PopUp } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import XLSX from "xlsx";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 var formatTime = function (timestamp) {
   if (!timestamp) return "-";
@@ -227,19 +228,19 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
     .toUpperCase();
 
   var summaryCards = [
-    { label: "RECORDS_TODAY", value: recordsToday, description: t("RECORDS_TODAY_DESC"), color: "#0B4B66" },
+    { label: I18N_KEYS.USER_ACTIVITY.RECORDS_TODAY, value: recordsToday, description: t(I18N_KEYS.USER_ACTIVITY.RECORDS_TODAY_DESC), color: "#0B4B66" },
     {
-      label: "LAST_SYNC",
+      label: I18N_KEYS.USER_ACTIVITY.LAST_SYNC,
       value: lastSyncFormatted,
-      description: online ? t("WITHIN_THRESHOLD") : t("SYNC_GAP"),
+      description: online ? t(I18N_KEYS.USER_ACTIVITY.WITHIN_THRESHOLD) : t(I18N_KEYS.USER_ACTIVITY.SYNC_GAP),
       color: "#0B4B66",
     },
     // TODO: totalSyncs — mobile app doesn't capture sync count per user, showing fallback
-    { label: "TOTAL_SYNCS", value: totalSyncs, description: t("TODAY"), color: "#0B4B66" },
+    { label: I18N_KEYS.USER_ACTIVITY.TOTAL_SYNCS, value: totalSyncs, description: t(I18N_KEYS.USER_ACTIVITY.TODAY), color: "#0B4B66" },
     {
-      label: "FAILED_ACTIONS",
+      label: I18N_KEYS.USER_ACTIVITY.FAILED_ACTIONS,
       value: failedActions,
-      description: failedActions > 0 ? t("NEEDS_REVIEW") : t("NONE"),
+      description: failedActions > 0 ? t(I18N_KEYS.USER_ACTIVITY.NEEDS_REVIEW) : t(I18N_KEYS.USER_ACTIVITY.NONE),
       color: failedActions > 0 ? "#C84C0E" : "#0B4B66",
     }
   ];
@@ -247,12 +248,12 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
   // Derive unique filter options from activity log data
   const actionTypeOptions = useMemo(() => {
     const unique = [...new Set(activityLog.map((a) => a.actionType).filter(Boolean))];
-    return [{ name: t("ALL_ACTION_TYPES"), code: "ALL" }, ...unique.map((a) => ({ name: a, code: a }))];
+    return [{ name: t(I18N_KEYS.USER_ACTIVITY.ALL_ACTION_TYPES), code: "ALL" }, ...unique.map((a) => ({ name: a, code: a }))];
   }, [activityLog, t]);
 
   const outcomeOptions = useMemo(() => {
     const unique = [...new Set(activityLog.map((a) => a.outcome).filter(Boolean))];
-    return [{ name: t("ALL_OUTCOMES"), code: "ALL" }, ...unique.map((o) => ({ name: o, code: o.toUpperCase() }))];
+    return [{ name: t(I18N_KEYS.USER_ACTIVITY.ALL_OUTCOMES), code: "ALL" }, ...unique.map((o) => ({ name: o, code: o.toUpperCase() }))];
   }, [activityLog, t]);
 
   const filteredLog = useMemo(() => {
@@ -301,7 +302,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
 
   const columns = useMemo(() => [
     {
-      name: t("TIMESTAMP"),
+      name: t(I18N_KEYS.USER_ACTIVITY.TIMESTAMP),
       selector: (row) => formatTime(row.timestamp),
       sortable: true,
       sortFunction: (a, b) => new Date(a.timestamp) - new Date(b.timestamp),
@@ -309,7 +310,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
       grow: 1.0,
     },
     {
-      name: t("ACTION_TYPE"),
+      name: t(I18N_KEYS.USER_ACTIVITY.ACTION_TYPE),
       selector: (row) => row.actionType,
       cell: (row) => (
           <span title={row.actionType} style={ellipsisStyle}>{row.actionType}</span>
@@ -319,7 +320,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
       grow: 1,
     },
     {
-      name: t("DETAIL"),
+      name: t(I18N_KEYS.USER_ACTIVITY.DETAIL),
       cell: (row) => (
         <span title={row.detail} style={{ ...ellipsisStyle, color: row.outcome.toUpperCase() === "FAILED" ? "#D4351C" : "#363636", fontWeight: row.outcome.toUpperCase() === "FAILED" ? 600 : 400 }}>{row.detail}</span>
       ),
@@ -327,14 +328,14 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
       minWidth: "180px",
     },
     {
-      name: t("OUTCOME"),
+      name: t(I18N_KEYS.USER_ACTIVITY.OUTCOME),
       cell: (row) => (<Tag label={row.outcome} type={row.outcome.toUpperCase() === "SUCCESS" ? "success" : row.outcome.toUpperCase() !== "FAILURE" ? "warning" : "error"} showIcon={true} />),
       sortable: true,
       minWidth: "190px",
       grow: 1.25,
     },
     {
-      name: t("GPS"),
+      name: t(I18N_KEYS.USER_ACTIVITY.GPS),
       selector: (row) => row.gps,
       minWidth: "140px",
       grow: 1,
@@ -368,7 +369,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
           <div style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "flex-start",justifyContent:"center" }}>
             <div style={{ display: "flex", flexDirection: "row", gap: "12px", alignItems: "center",justifyContent:"center" }}>
               <span style={{ color: "#0b4b66" }}>{user.userName}</span>
-              <Tag label={online ? t("ONLINE") : t("OFFLINE")} type={online ? "success" : "error"} showIcon={true} className={"user-profile-popup-tag"} stroke={true}/>
+              <Tag label={online ? t(I18N_KEYS.USER_ACTIVITY.ONLINE) : t(I18N_KEYS.USER_ACTIVITY.OFFLINE)} type={online ? "success" : "error"} showIcon={true} className={"user-profile-popup-tag"} stroke={true}/>
             </div>
             <span style={{ color: "#787878", fontSize: "14px" }}>{`${user.userId} · ${t("HCM_ROLE_" + (user.role || "").toUpperCase())} · ${user.geoBoundary}`}</span>
           </div>
@@ -379,11 +380,11 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
     >
       {/* Info Tags */}
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-        <Tag label={`${t("ROLE_LABEL")}: ${t("HCM_ROLE_" + (user.role || "").toUpperCase())}`} type="monochrome" showIcon={false} stroke={true} />
+        <Tag label={`${t(I18N_KEYS.USER_ACTIVITY.ROLE_LABEL)}: ${t("HCM_ROLE_" + (user.role || "").toUpperCase())}`} type="monochrome" showIcon={false} stroke={true} />
         <Tag label={user.geoBoundary} type="monochrome" showIcon={false} stroke={true} />
-        <Tag label={`${t("CAMPAIGN_LABEL")}: ${user.campaign || Digit.SessionStorage.get("campaignSelected")?.campaignName || Digit.SessionStorage.get("projectSelected")?.project?.name || t("NA")}`} type="monochrome" showIcon={false} stroke={true} />
-        <Tag label={`${t("LAST_SYNC_LABEL")}: ${lastSyncFormatted}`} type="monochrome" showIcon={false} stroke={true} />
-        <Tag label={`${t("GPS_LABEL")}: ${latestGps}`} type="monochrome" showIcon={false} stroke={true} />
+        <Tag label={`${t(I18N_KEYS.USER_ACTIVITY.CAMPAIGN_LABEL)}: ${user.campaign || Digit.SessionStorage.get("campaignSelected")?.campaignName || Digit.SessionStorage.get("projectSelected")?.project?.name || t(I18N_KEYS.COMMON.NA)}`} type="monochrome" showIcon={false} stroke={true} />
+        <Tag label={`${t(I18N_KEYS.USER_ACTIVITY.LAST_SYNC_LABEL)}: ${lastSyncFormatted}`} type="monochrome" showIcon={false} stroke={true} />
+        <Tag label={`${t(I18N_KEYS.USER_ACTIVITY.GPS_LABEL)}: ${latestGps}`} type="monochrome" showIcon={false} stroke={true} />
       </div>
 
       {/* Summary Cards */}
@@ -400,10 +401,10 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
       {/* Activity Log Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <span style={{ fontSize: "18px", fontWeight: 700, color: "#0B4B66" }}>{t("ACTIVITY_LOG")}</span>
-          <Tag label={`${filteredLog.length} ${t("ENTRIES")}`} type="monochrome" showIcon={false} />
+          <span style={{ fontSize: "18px", fontWeight: 700, color: "#0B4B66" }}>{t(I18N_KEYS.USER_ACTIVITY.ACTIVITY_LOG)}</span>
+          <Tag label={`${filteredLog.length} ${t(I18N_KEYS.USER_ACTIVITY.ENTRIES)}`} type="monochrome" showIcon={false} />
         </div>
-        <Button label={t("EXPORT_XLSX")} variation="secondary" icon="FileDownload" size="small" onClick={handleExportCSV} />
+        <Button label={t(I18N_KEYS.USER_ACTIVITY.EXPORT_XLSX)} variation="secondary" icon="FileDownload" size="small" onClick={handleExportCSV} />
       </div>
 
       {/* Filters */}
@@ -432,9 +433,9 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
           <Dropdown
             t={t}
             option={[
-              { name: t("FILTER_TODAY"), code: "TODAY" },
-              { name: t("FILTER_LAST_7_DAYS"), code: "LAST_7_DAYS" },
-              { name: t("FILTER_LAST_30_DAYS"), code: "LAST_30_DAYS" },
+              { name: t(I18N_KEYS.USER_ACTIVITY.FILTER_TODAY), code: "TODAY" },
+              { name: t(I18N_KEYS.USER_ACTIVITY.FILTER_LAST_7_DAYS), code: "LAST_7_DAYS" },
+              { name: t(I18N_KEYS.USER_ACTIVITY.FILTER_LAST_30_DAYS), code: "LAST_30_DAYS" },
             ]}
             optionKey="name"
             selected={{ name: t("FILTER_" + timeFilter), code: timeFilter }}
@@ -443,7 +444,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
           />
         </div>
         <div style={{ minWidth: "200px" }}>
-          <TextInput type="text" placeholder={t("SEARCH_RECORD_ID")} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+          <TextInput type="text" placeholder={t(I18N_KEYS.USER_ACTIVITY.SEARCH_RECORD_ID)} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
         </div>
       </div>
 
@@ -457,10 +458,10 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
           pagination
           paginationPerPage={10}
           progressComponent={<Loader />}
-          noDataComponent={<div style={{ padding: "24px", color: "#787878" }}>{t("NO_DATA")}</div>}
+          noDataComponent={<div style={{ padding: "24px", color: "#787878" }}>{t(I18N_KEYS.USER_ACTIVITY.NO_DATA)}</div>}
           sortIcon={<SVG.ArrowUpward width={"14px"} height={"14px"} fill={"#0b4b66"} />}
           persistTableHead
-          paginationComponentOptions={{ rowsPerPageText: t("CS_COMMON_ROWS_PER_PAGE") }}
+          paginationComponentOptions={{ rowsPerPageText: t(I18N_KEYS.COMMON.CS_COMMON_ROWS_PER_PAGE) }}
           className={`data-table user-tracking-inbox-table`}
           noHeader={false}
           fixedHeader={true}

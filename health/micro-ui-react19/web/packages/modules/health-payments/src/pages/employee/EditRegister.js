@@ -7,6 +7,7 @@ import { formatTimestampToDate } from "../../utils";
 
 import EditAttendeePopUp from "../../components/editAttendeesPopUp";
 import EditAttendanceManagementTable from "../../components/EditAttendanceManagementTable";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /**
  * @function EditRegister
@@ -146,9 +147,9 @@ const EditRegister = ({ editAttendance = false }) => {
       const matchingIndividual = individualsData?.Individual?.find((individual) => individual.id === individualId);
 
       if (matchingIndividual) {
-        const userName = matchingIndividual.name?.givenName || t("NA");
-        const userId = matchingIndividual?.userDetails?.username || t("NA");
-        const userRole = t(matchingIndividual.skills?.[0]?.type) || t("NA");
+        const userName = matchingIndividual.name?.givenName || t(I18N_KEYS.COMMON.NA);
+        const userId = matchingIndividual?.userDetails?.username || t(I18N_KEYS.COMMON.NA);
+        const userRole = t(matchingIndividual.skills?.[0]?.type) || t(I18N_KEYS.COMMON.NA);
         const tag = individualEntry?.tag || "N/A";
         const id = individualEntry.individualId || 0;
         const status = individualEntry?.denrollmentDate == null ? true : false;
@@ -239,7 +240,7 @@ const EditRegister = ({ editAttendance = false }) => {
           <div className="label-pair">
             <span className="view-label-heading">
               <Button
-                label={showMore ? t("HCM_AM_VIEW_LESS") : t("HCM_AM_VIEW_MORE")}
+                label={showMore ? t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_VIEW_LESS) : t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_VIEW_MORE)}
                 onClick={() => setShowMore((prev) => !prev)}
                 variation="link"
                 style={{ whiteSpace: "nowrap", width: "auto" }}
@@ -254,10 +255,10 @@ const EditRegister = ({ editAttendance = false }) => {
             <h2 className="card-heading-title"></h2>
             <Button
               icon="Edit"
-              label={t(`HCM_AM_EDIT_REGISTER`)}
+              label={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_EDIT_REGISTER)}
               onClick={handleDeEnrollClick}
               variation="secondary"
-              title={t(`HCM_AM_EDIT_REGISTER`)}
+              title={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_EDIT_REGISTER)}
             />
           </div>
 
@@ -279,7 +280,7 @@ const EditRegister = ({ editAttendance = false }) => {
             businessId={registerNumber}
             registerId={registerId}
             boundaryCode={boundaryCode}
-            heading={`${t("HCM_AM_ATTENDANCE_EDIT_REGISTER")}`}
+            heading={`${t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ATTENDANCE_EDIT_REGISTER)}`}
             sessionType={attendanceType || 0}
           />
         )}

@@ -6,6 +6,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from 
 import FilterContext from "./FilterContext";
 import NoData from "./NoData";
 import { getDuration } from "../utils/getDuration";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const formatValue = (value, symbol) => {
   if (symbol?.toLowerCase() === "percentage") {
@@ -157,7 +158,7 @@ const CustomBarChart = ({
       </ResponsiveContainer>
       {chartData?.length > 3 && showDrillDown && (
         <p className="showMore" onClick={goToDrillDownCharts}>
-          {t("DSS_SHOW_MORE")}
+          {t(I18N_KEYS.COMMON.DSS_SHOW_MORE)}
         </p>
       )}
     </Fragment>

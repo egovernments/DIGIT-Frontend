@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { CustomSVG } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * Component to display a placeholder when there are no search is performed.
@@ -24,7 +25,7 @@ const SearchResultsPlaceholder = (props) => {
             <SearchCustomSVG height={iconHeight} width={iconWidth} />
             <div style={{ display: "flex", gap: ".5rem", marginTop: "1rem" }}>
                 {<CustomSVG.InfoIconOutline width={"20px"} height={"20px"} fill={"#c84c0e"} />}
-                <div style={{ color: "#0b4b66" }}>{t(props?.placeholderText) || t("COMMON_NO_RESULTS_FOUND")}</div>
+                <div style={{ color: "#0b4b66" }}>{t(props?.placeholderText) || t(I18N_KEYS.COMPONENTS_MISC.COMMON_NO_RESULTS_FOUND)}</div>
             </div>
         </div>
     );

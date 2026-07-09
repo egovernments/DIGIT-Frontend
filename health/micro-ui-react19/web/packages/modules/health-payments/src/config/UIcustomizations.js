@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, PopUp, TextInput, Toast, Loader } from "@egovernments/digit-ui-components";
 import { enrolmentTimeWithSession } from "../utils/time_conversion";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 // Proper React component so hooks work correctly (additionalCustomizations is called as a function, not a component)
 const AttendeeAssignCell = ({ row, t }) => {
@@ -38,7 +39,7 @@ const AttendeeAssignCell = ({ row, t }) => {
           setOpenPopUp(false);
           setToast({
             key: "success",
-            label: `${t("HCM_AM_NEW_EMPLOYEE")} (${row.name?.givenName || ""}) ${t("HCM_AM_ENROLLED")}`,
+            label: `${t(I18N_KEYS.CONFIGS.HCM_AM_NEW_EMPLOYEE)} (${row.name?.givenName || ""}) ${t(I18N_KEYS.CONFIGS.HCM_AM_ENROLLED)}`,
             transitionTime: 3000,
           });
           setTimeout(() => window.history.back(), 800);
@@ -61,7 +62,7 @@ const AttendeeAssignCell = ({ row, t }) => {
     <>
       <Button
         variation="primary"
-        label={t("HCM_AM_ASSIGN_BT")}
+        label={t(I18N_KEYS.CONFIGS.HCM_AM_ASSIGN_BT)}
         style={{ minWidth: "10rem" }}
         onClick={() => setOpenPopUp(true)}
       />
@@ -77,7 +78,7 @@ const AttendeeAssignCell = ({ row, t }) => {
       {openPopUp && (
         <PopUp
           style={{ minWidth: "500px" }}
-          heading={t("HCM_AM_ACTION_NEEDED_TEAM_CODE")}
+          heading={t(I18N_KEYS.CONFIGS.HCM_AM_ACTION_NEEDED_TEAM_CODE)}
           onClose={() => { setTag(""); setIsTag(false); setOpenPopUp(false); }}
           onOverlayClick={() => { setTag(""); setIsTag(false); setOpenPopUp(false); }}
           footerChildren={[
@@ -97,20 +98,20 @@ const AttendeeAssignCell = ({ row, t }) => {
               type="button"
               size="large"
               variation="primary"
-              label={t("HCM_AM_ASSIGN_BT")}
+              label={t(I18N_KEYS.CONFIGS.HCM_AM_ASSIGN_BT)}
               onClick={handleCreate}
             />,
           ]}
           sortFooterChildren={true}
         >
           {!isTag
-            ? <div>{t("HCM_AM_INFO_TAG_CODE_MSG")}</div>
+            ? <div>{t(I18N_KEYS.CONFIGS.HCM_AM_INFO_TAG_CODE_MSG)}</div>
             : <div>
-                <span>{t("HCM_AM_TAG_LABEL")}</span>
+                <span>{t(I18N_KEYS.COMMON.HCM_AM_TAG_LABEL)}</span>
                 <TextInput
                   type="text"
                   name="title"
-                  placeholder={t("HCM_AM_ENTER_TEAM_CODE")}
+                  placeholder={t(I18N_KEYS.CONFIGS.HCM_AM_ENTER_TEAM_CODE)}
                   value={tag}
                   onChange={(e) => setTag(e.target.value)}
                 />
@@ -179,16 +180,16 @@ export const UICustomizations = {
     additionalCustomizations: (row, key, column, value, t) => {
       switch (key) {
         case "HCM_HR_EMP_NAME_LABEL":
-          return value ? `${value}` : t("ES_COMMON_NA");
+          return value ? `${value}` : t(I18N_KEYS.COMMON.ES_COMMON_NA);
 
         case "HCM_HR_EMP_MOBILE_LABEL":
-          return value ? `${value}` : t("ES_COMMON_NA");
+          return value ? `${value}` : t(I18N_KEYS.COMMON.ES_COMMON_NA);
 
         case "HCM_HR_ROLE_NO_LABEL":
-          return Array.isArray(value) && value.length > 0 ? value.length : t("ES_COMMON_NA");
+          return Array.isArray(value) && value.length > 0 ? value.length : t(I18N_KEYS.COMMON.ES_COMMON_NA);
 
         case "HCM_HR_JURIDICTIONS_LABEL":
-          return value ? t(value) : t("ES_COMMON_NA");
+          return value ? t(value) : t(I18N_KEYS.COMMON.ES_COMMON_NA);
 
         case "HCM_ASSIGNMENT":
           return <AttendeeAssignCell row={row} t={t} />;

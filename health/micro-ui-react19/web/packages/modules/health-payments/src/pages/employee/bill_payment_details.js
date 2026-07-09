@@ -27,6 +27,7 @@ import BillDetailsTable from "../../components/BillDetailsTable";
 import { getManageBillsRole, getManageBillsConfig, MANAGE_BILLS_ROLE_STORAGE_KEY, normalizeManageBillsRoleParam } from "../../utils/roleUtils";
 import { MANAGE_BILLS_ROLES } from "../../config/manageBillsRoleConfig";
 import SendForApprovalPopUp from "../../components/SendForApprovalPopUp";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 // Fallback view map (used when role config is not available)
 const BILL_STATUS_VIEW = {
@@ -207,8 +208,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [activeLink, setActiveLink] = useState({
     code: editBillDetails ? "PENDING_FOR_EDIT" : "NOT_VERIFIED",
     name: editBillDetails
-      ? `${t("HCM_AM_PENDING_FOR_EDIT")} `
-      : `${t("HCM_AM_NOT_VERIFIED")} `,
+      ? `${t(I18N_KEYS.COMMON.HCM_AM_PENDING_FOR_EDIT)} `
+      : `${t(I18N_KEYS.PAGES_BILLS.HCM_AM_NOT_VERIFIED)} `,
   });
 
   const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
@@ -506,7 +507,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             await updateBillDetailWorkflow(bill, selectedRows, "EDIT");
             setShowToast({
               key: "success",
-              label: t("HCM_AM_BILL_DETAIL_UPDATE_SUCCESS"),//TODO UPDATE TOAST MSG
+              label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_BILL_DETAIL_UPDATE_SUCCESS),//TODO UPDATE TOAST MSG
               transitionTime: 6000,
             });
 
@@ -567,12 +568,12 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             if (wfAction === "EDIT") { //move to success response page after edit success
               navigate(`/${window.contextPath}/employee/payments/edit-bill-success`, { replace: true, state: {
                 state: "success",
-                info: t("HCM_AM_BILL_NUMBER"),
-                fileName: BillData?.bills?.[0]?.billNumber || t("NA"),
-                description: t(`HCM_AM_BILL_DETAIL_UPDATE_SUCCESS_DESCRIPTION`),
-                message: t(`HCM_AM_BILL_DETAIL_UPDATE_SUCCESS`),
+                info: t(I18N_KEYS.COMMON.HCM_AM_BILL_NUMBER),
+                fileName: BillData?.bills?.[0]?.billNumber || t(I18N_KEYS.COMMON.NA),
+                description: t(I18N_KEYS.PAGES_BILLS.HCM_AM_BILL_DETAIL_UPDATE_SUCCESS_DESCRIPTION),
+                message: t(I18N_KEYS.PAGES_BILLS.HCM_AM_BILL_DETAIL_UPDATE_SUCCESS),
                 isShowButton: false,
-                back: t(`GO_BACK_TO_HOME`),
+                back: t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME),
                 backlink: `/${window.contextPath}/employee`
               } });
             }
@@ -630,7 +631,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             console.error("Bill update failed:", error);
             setShowToast({
               key: "error",
-              label: t("HCM_AM_SOMETHING_WENT_WRONG"),
+              label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
               transitionTime: 3000,
             });
           },
@@ -668,7 +669,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             console.error("Bill update failed:", error);
             setShowToast({
               key: "error",
-              label: t("HCM_AM_SOMETHING_WENT_WRONG"),
+              label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
               transitionTime: 3000,
             });
           },
@@ -684,7 +685,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     if (!billData?.id || !tenantId) {
       setShowToast({
         key: "error",
-        label: t("HCM_AM_SOMETHING_WENT_WRONG"),
+        label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
         transitionTime: 3000,
       });
       return;
@@ -696,7 +697,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       setShowToast({
         key: "error",
         label:
-          t("HCM_AM_ATTENDANCE_EXCEEDS_BILLING_PERIOD") ||
+          t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_EXCEEDS_BILLING_PERIOD) ||
           `Attendance cannot exceed ${maxAttendanceDays} day(s) for this billing period`,
         transitionTime: 4000,
       });
@@ -795,14 +796,14 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         },
         {
           onSuccess: () => {
-            setShowToast({ key: "success", label: t("HCM_AM_SAVE_CHANGES_SUCCESS"), transitionTime: 3000 });
+            setShowToast({ key: "success", label: t(I18N_KEYS.COMMON.HCM_AM_SAVE_CHANGES_SUCCESS), transitionTime: 3000 });
             setIsReviewerEdit(false);
             refetchBill();
           },
           onError: (error) => {
             setShowToast({
               key: "error",
-              label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
+              label: error?.response?.data?.Errors?.[0]?.message || t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
               transitionTime: 3000,
             });
           },
@@ -812,7 +813,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       console.error("Reviewer save failed:", err);
       setShowToast({
         key: "error",
-        label: err?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
+        label: err?.response?.data?.Errors?.[0]?.message || t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
         transitionTime: 3000,
       });
     }
@@ -841,7 +842,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             const taskId = verifyResponse?.taskId;
             if (!taskId) {
               setIsLoading(false);
-              setShowToast({ key: "error", label: t("HCM_AM_TASK_ID_NOT_FOUND"), transitionTime: 2000 }); //TODO UPDATE TOAST MSG 
+              setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_TASK_ID_NOT_FOUND), transitionTime: 2000 }); //TODO UPDATE TOAST MSG 
               return;
             }
 
@@ -866,14 +867,14 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                   setIsSelectionDisabledVerify(false);
                   setShowToast({
                     key: "info",
-                    label: t("HCM_AM_BILL_VERIFICATION_COMPLETED"),
+                    label: t(I18N_KEYS.COMMON.HCM_AM_BILL_VERIFICATION_COMPLETED),
                     transitionTime: 5000,
                   });
                   refetchBill();
                 } else if (status === "IN_PROGRESS") {
                   setIsLoading(true); // start loader
 
-                  setShowToast({ key: "info", label: t("HCM_AM_BILL_VERIFICATION_IN_PROGRESS"), transitionTime: 2000 });
+                  setShowToast({ key: "info", label: t(I18N_KEYS.COMMON.HCM_AM_BILL_VERIFICATION_IN_PROGRESS), transitionTime: 2000 });
 
                   if (attempts < MAX_ATTEMPTS) {
                     attempts++;
@@ -881,7 +882,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                   } else {
                     setIsLoading(false);
                     setIsSelectionDisabledVerify(true);
-                    setShowToast({ key: "info", label: t("HCM_AM_PLEASE_CHECK_AFTER_SOME_TIME"), transitionTime: 3000 });
+                    setShowToast({ key: "info", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_PLEASE_CHECK_AFTER_SOME_TIME), transitionTime: 3000 });
                   }
                 } else {
                   setIsLoading(false);
@@ -890,7 +891,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               } catch (err) {
                 setIsLoading(false);
                 console.error("Polling failed for taskId", taskId, err);
-                setShowToast({ key: "error", label: t("HCM_AM_TASK_STATUS_ERROR"), transitionTime: 3000 });//TODO UPDATE TOAST MSG
+                setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_TASK_STATUS_ERROR), transitionTime: 3000 });//TODO UPDATE TOAST MSG
               }
             };
 
@@ -912,7 +913,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       // Selection cleared (no-op — row selection removed)
       setShowToast({
         key: "error",
-        label: t("HCM_AM_BILL_VERIFY_EXCEPTION"),//TODO UPDATE TOAST MSG
+        label: t(I18N_KEYS.COMMON.HCM_AM_BILL_VERIFY_EXCEPTION),//TODO UPDATE TOAST MSG
         transitionTime: 3000,
       });
     }
@@ -950,7 +951,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         info: "HCM_AM_BILL_NUMBER",
         fileName: billData?.billNumber || billID || "NA",
         message: "HCM_AM_REPORT_GENERATION_IN_PROGRESS",
-        description: `<p>${t("HCM_AM_REPORT_GENERATION_IN_PROGRESS")}</p>`,
+        description: `<p>${t(I18N_KEYS.COMMON.HCM_AM_REPORT_GENERATION_IN_PROGRESS)}</p>`,
         showFooter: false,
         back: "HCM_AM_BACK",
         backlink: `/${window.contextPath}/employee/payments/manage-bills/${resolvedRole}`,
@@ -958,7 +959,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     } catch (error) {
       setShowToast({
         key: "error",
-        label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
+        label: error?.response?.data?.Errors?.[0]?.message || t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
         transitionTime: 5000,
       });
     }
@@ -993,7 +994,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       const report = (res?.billReports || []).find((r) => r?.billId === billId && r?.status === "GENERATED" && r?.fileStoreId);
       const fileStoreId = report?.fileStoreId;
       if (!fileStoreId) {
-        setShowToast({ key: "error", label: t("HCM_AM_REPORT_DOWNLOAD_FAILED"), transitionTime: 3000 });
+        setShowToast({ key: "error", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_REPORT_DOWNLOAD_FAILED), transitionTime: 3000 });
         return;
       }
 
@@ -1005,7 +1006,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     } catch (error) {
       setShowToast({
         key: "error",
-        label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_REPORT_DOWNLOAD_FAILED"),
+        label: error?.response?.data?.Errors?.[0]?.message || t(I18N_KEYS.PAGES_BILLS.HCM_AM_REPORT_DOWNLOAD_FAILED),
         transitionTime: 3000,
       });
     }
@@ -1028,7 +1029,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             const taskId = paymentResponse?.taskId;
             if (!taskId) {
               setIsLoading(false);
-              setShowToast({ key: "error", label: t("HCM_AM_TASK_ID_NOT_FOUND"), transitionTime: 2000 });//TODO UPDATE TOAST MSG
+              setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_TASK_ID_NOT_FOUND), transitionTime: 2000 });//TODO UPDATE TOAST MSG
               return;
             }
 
@@ -1053,21 +1054,21 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                   setIsSelectionDisabledTransfer(false);
                   setShowToast({
                     key: "info",
-                    label: t("HCM_AM_PAYMENT_GENERATION_COMPLETED"),
+                    label: t(I18N_KEYS.COMMON.HCM_AM_PAYMENT_GENERATION_COMPLETED),
                     transitionTime: 5000,
                   });
                   refetchBill();
                 } else if (status === "IN_PROGRESS") {
                   setIsSelectionDisabledTransfer(true);
                   //TODO UPDATE TOAST MSG
-                  setShowToast({ key: "info", label: t("HCM_AM_PAYMENT_GENERATION_IN_PROGRESS"), transitionTime: 2000 });//TODO UPDATE TOAST MSG
+                  setShowToast({ key: "info", label: t(I18N_KEYS.COMMON.HCM_AM_PAYMENT_GENERATION_IN_PROGRESS), transitionTime: 2000 });//TODO UPDATE TOAST MSG
 
                   if (attempts < MAX_ATTEMPTS) {
                     attempts++;
                     setTimeout(pollStatus, POLLING_INTERVAL);
                   } else {
                     setIsLoading(false);
-                    setShowToast({ key: "info", label: t("HCM_AM_PLEASE_CHECK_AFTER_SOME_TIME"), transitionTime: 3000 });
+                    setShowToast({ key: "info", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_PLEASE_CHECK_AFTER_SOME_TIME), transitionTime: 3000 });
                   }
                 } else {
                   setIsLoading(false);
@@ -1075,7 +1076,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                 }
               } catch (err) {
                 setIsLoading(false);
-                setShowToast({ key: "error", label: t("HCM_AM_TASK_STATUS_ERROR"), transitionTime: 3000 });
+                setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_TASK_STATUS_ERROR), transitionTime: 3000 });
               }
             };
 
@@ -1097,7 +1098,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       // Selection cleared (no-op — row selection removed)
       setShowToast({
         key: "error",
-        label: t("HCM_AM_PAYMENT_GENERATION_EXCEPTION"),//TODO UPDATE TOAST MSG
+        label: t(I18N_KEYS.COMMON.HCM_AM_PAYMENT_GENERATION_EXCEPTION),//TODO UPDATE TOAST MSG
         transitionTime: 3000,
       });
     }
@@ -1116,7 +1117,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             });
         } catch (err) {
             console.error("Polling failed for", billId, err);
-            setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
+            setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG), transitionTime: 2000 });
             return;
         }
     }
@@ -1181,7 +1182,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   //   } catch (e) {
   //     setReportError(
   //       e?.response?.data?.Errors?.[0]?.message ||
-  //       t("HCM_AM_REPORT_FETCH_FAILED")
+  //       t(I18N_KEYS.PAGES_BILLS.HCM_AM_REPORT_FETCH_FAILED)
   //     );
   //   } finally {
   //     setReportLoading(false);
@@ -1204,7 +1205,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           console.error("Bill not found for billID:", billID);
           setShowToast({
             key: "error",
-            label: t("HCM_AM_BILL_NOT_FOUND"),
+            label: t(I18N_KEYS.COMMON.HCM_AM_BILL_NOT_FOUND),
             transitionTime: 3000,
           });
           return;
@@ -1237,7 +1238,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       //     }
       //   } catch (e) {
       //     console.warn("Task status check failed for", billId, e);
-      //     setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
+      //     setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG), transitionTime: 2000 });
       //   };
 
       //   //Verify polling
@@ -1264,7 +1265,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       //     }
       //   } catch (e) {
       //     console.warn("Task status check failed for", billId, e);
-      //     setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
+      //     setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG), transitionTime: 2000 });
       //   };
       //   // fetchReports(billId);
       // }
@@ -1289,11 +1290,11 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   useEffect(() => {
     if (!billData) return;
     if (editBillDetails) {
-      setActiveLink({ code: "PENDING_FOR_EDIT", name: t("HCM_AM_PENDING_FOR_EDIT") });
+      setActiveLink({ code: "PENDING_FOR_EDIT", name: t(I18N_KEYS.COMMON.HCM_AM_PENDING_FOR_EDIT) });
     } else if (billData?.status === "PARTIALLY_VERIFIED") {
-      setActiveLink({ code: "VERIFICATION_FAILED", name: t("HCM_AM_VERIFICATION_FAILED") });
+      setActiveLink({ code: "VERIFICATION_FAILED", name: t(I18N_KEYS.COMMON.HCM_AM_VERIFICATION_FAILED) });
     } else if (billData?.status === "PARTIALLY_PAID" && activeRole === MANAGE_BILLS_ROLES.PAYMENT_APPROVER) {
-      setActiveLink({ code: "FAILED", name: t("HCM_AM_FAILED") });
+      setActiveLink({ code: "FAILED", name: t(I18N_KEYS.COMMON.HCM_AM_FAILED) });
     }
   }, [billData?.status]);
 
@@ -1407,7 +1408,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
 //     setShowToast({
 //       key: "info",
-//       label: t("HCM_AM_TXN_REPORT_GENERATION_STARTED"),
+//       label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_TXN_REPORT_GENERATION_STARTED),
 //       transitionTime: 10000,
 //     });
 
@@ -1416,7 +1417,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 //       key: "error",
 //       label:
 //         e?.response?.data?.Errors?.[0]?.message ||
-//         t("HCM_AM_TXN_REPORT_GENERATION_FAILED"),
+//         t(I18N_KEYS.PAGES_BILLS.HCM_AM_TXN_REPORT_GENERATION_FAILED),
 //       transitionTime: 10000,
 //     });
 //   } finally {
@@ -1456,11 +1457,11 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 //   const downloadOptions = [
 //     {
 //       code: "DOWNLOAD_EXCEL",
-//       name: t("HCM_AM_DOWNLOAD_EXCEL"),
+//       name: t(I18N_KEYS.PAGES_BILLS.HCM_AM_DOWNLOAD_EXCEL),
 //     },
 //     {
 //       code: "DOWNLOAD_PDF",
-//       name: t("HCM_AM_DOWNLOAD_PDF"),
+//       name: t(I18N_KEYS.PAGES_BILLS.HCM_AM_DOWNLOAD_PDF),
 //     },
 //   ];
 
@@ -1491,7 +1492,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 //     } catch {
 //       setShowToast({
 //         key: "error",
-//         label: t("HCM_AM_REPORT_DOWNLOAD_FAILED"),
+//         label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_REPORT_DOWNLOAD_FAILED),
 //         transitionTime: 3000,
 //       });
 //     }
@@ -1502,7 +1503,7 @@ const renderActionBar = (ctaButton) => (
     actionFields={[
       <Button
         variation="secondary"
-        label={t("HCM_AM_BACK")}
+        label={t(I18N_KEYS.COMMON.HCM_AM_BACK)}
         icon="ArrowBack"
         onClick={() => navigate(-1)}
         style={{ flexShrink: 0, minWidth: "10rem", whiteSpace: "normal", marginLeft: "2rem" }}
@@ -1514,21 +1515,21 @@ const renderActionBar = (ctaButton) => (
 
 const downloadOptions = [
   // Always available
-  { code: "BILL", name: t("HCM_AM_DOWNLOAD_BILL") },
+  { code: "BILL", name: t(I18N_KEYS.COMMON.HCM_AM_DOWNLOAD_BILL) },
 
   // Conditional options
   ...((["REVIEWER_SENT_FOR_APPROVAL_VIEW", "APPROVER_NOT_INITIATED_VIEW"].includes(currentView) || activeTabCode === "GENERATED_ADVISORIES")
-    ? [{ code: "JUSTIFICATION", name: t("HCM_AM_DOWNLOAD_JUSTIFICATION") }]
+    ? [{ code: "JUSTIFICATION", name: t(I18N_KEYS.PAGES_BILLS.HCM_AM_DOWNLOAD_JUSTIFICATION) }]
     : []),
 
   ...(activeTabCode === "GENERATED_ADVISORIES"
-    ? [{ code: "ADVISORY", name: t("HCM_AM_DOWNLOAD_ADVISORY") }]
+    ? [{ code: "ADVISORY", name: t(I18N_KEYS.COMMON.HCM_AM_DOWNLOAD_ADVISORY) }]
     : []),
 ];
 
   const billDownloadFormatOptions = [
-    { code: "BILL_EXCEL", name: t("HCM_AM_EXCEL") },
-    { code: "BILL_PDF", name: t("HCM_AM_PDF") },
+    { code: "BILL_EXCEL", name: t(I18N_KEYS.COMMON.HCM_AM_EXCEL) },
+    { code: "BILL_PDF", name: t(I18N_KEYS.COMMON.HCM_AM_PDF) },
   ];
 
   const hasOnlyBillDownloadOption =
@@ -1544,7 +1545,7 @@ const downloadOptions = [
       if (doc?.filestoreId) {
         downloadFileWithName({ fileStoreId: doc.filestoreId, customName: doc.filename || "justification", type: "excel" });
       } else {
-        setShowToast({ key: "error", label: t("HCM_AM_NO_JUSTIFICATION_FOUND"), transitionTime: 3000 });
+        setShowToast({ key: "error", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_JUSTIFICATION_FOUND), transitionTime: 3000 });
       }
       return;
     }
@@ -1575,12 +1576,12 @@ const downloadOptions = [
       });
       return;
     }
-    setShowToast({ key: "warning", label: t("HCM_AM_DOWNLOAD_NOT_AVAILABLE"), transitionTime: 5000 });
+    setShowToast({ key: "warning", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_DOWNLOAD_NOT_AVAILABLE), transitionTime: 5000 });
   
   } else if(billData?.additionalDetails?.reportDetails?.status ==="INITIATED"){
-    setShowToast({ key: "info", label: t("HCM_AM_REPORT_GENERATION_IN_PROGRESS"), transitionTime: 5000 });
+    setShowToast({ key: "info", label: t(I18N_KEYS.COMMON.HCM_AM_REPORT_GENERATION_IN_PROGRESS), transitionTime: 5000 });
   } else {
-    setShowToast({ key: "error", label: t("HCM_AM_DOWNLOAD_NOT_AVAILABLE"), transitionTime: 5000 });
+    setShowToast({ key: "error", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_DOWNLOAD_NOT_AVAILABLE), transitionTime: 5000 });
    }
 };
   const currencySuffix = workerRatesData?.currency ? ` (${workerRatesData.currency})` : "";
@@ -1589,26 +1590,26 @@ const downloadOptions = [
       <div style={{ marginBottom: "2.5rem" }}>
         <HeaderComponent styles={{ marginBottom: "1rem" }} className="payment-screen-headers pop-inbox-header">
           {editBillDetails
-              ? t('HCM_AM_EDIT_BILL')
-              : t('HCM_AM_VIEW_BILL')
+              ? t(I18N_KEYS.COMMON.HCM_AM_EDIT_BILL)
+              : t(I18N_KEYS.PAGES_BILLS.HCM_AM_VIEW_BILL)
           }
         </HeaderComponent>
         {/* Summary cards row */}
         <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
           {[
             {
-              label: t("HCM_AM_BILL_AMOUNT"),
+              label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_BILL_AMOUNT),
               value: billData?.billDetails
               ? `${billData?.totalAmount}${currencySuffix}`
-              : t("NA"),
+              : t(I18N_KEYS.COMMON.NA),
             },
             {
-              label: t("HCM_AM_NUMBER_OF_WORKERS"),
-              value: billData?.billDetails?.length || t("NA"),
+              label: t(I18N_KEYS.COMMON.HCM_AM_NUMBER_OF_WORKERS),
+              value: billData?.billDetails?.length || t(I18N_KEYS.COMMON.NA),
             },
             {
-              label: t("HCM_AM_NO_OF_REGISTERS"),
-              value: billData?.additionalDetails?.noOfRegisters || t("NA"),
+              label: t(I18N_KEYS.COMMON.HCM_AM_NO_OF_REGISTERS),
+              value: billData?.additionalDetails?.noOfRegisters || t(I18N_KEYS.COMMON.NA),
             },
           ].map((item, idx) => (
             <Card
@@ -1628,14 +1629,14 @@ const downloadOptions = [
 
         <Card type="primary" className="bottom-gap-card-payment">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-            <span style={{ fontSize: "24px", fontWeight: "700", color: "#0B4B66" }}>{t("HCM_AM_BILL_DETAILS")}</span>
+            <span style={{ fontSize: "24px", fontWeight: "700", color: "#0B4B66" }}>{t(I18N_KEYS.PAGES_BILLS.HCM_AM_BILL_DETAILS)}</span>
             <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
               {downloadOptions.length > 0 && (
                 hasOnlyBillDownloadOption ? (
                   <Button
                     icon="ArrowDropDown"
                     isSuffix
-                    label={t("HCM_AM_DOWNLOAD_BILL")}
+                    label={t(I18N_KEYS.COMMON.HCM_AM_DOWNLOAD_BILL)}
                     variation="secondary"
                     type="actionButton"
                     size="medium"
@@ -1649,7 +1650,7 @@ const downloadOptions = [
                   <Button
                     icon="ArrowDropDown"
                     isSuffix
-                    label={t("HCM_AM_DOWNLOAD")}
+                    label={t(I18N_KEYS.PAGES_BILLS.HCM_AM_DOWNLOAD)}
                     variation="secondary"
                     type="actionButton"
                     size="medium"
@@ -1663,7 +1664,7 @@ const downloadOptions = [
               )}
               {/* <Button
                 variation="secondary"
-                label={t("HCM_AM_VIEW_REGISTERS")}
+                label={t(I18N_KEYS.PAGES_BILLS.HCM_AM_VIEW_REGISTERS)}
                 // icon="OpenInNew"
                 isSuffix
                 size="medium"
@@ -1676,11 +1677,11 @@ const downloadOptions = [
             renderCenteredLoader()
           ) : (
             <>
-              {renderLabelPair('HCM_AM_BILL_NUMBER', billData?.billNumber || t("NA"))}
-              {renderLabelPair('HCM_AM_BILL_DATE', billData?.billDate ? formatTimestampToDate(billData.billDate) : t("NA"))}
-              {/* {renderLabelPair('HCM_AM_NO_OF_REGISTERS', billData?.additionalDetails.noOfRegisters || t("NA"))} */}
-              {/* {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData?.billDetails.length || t("NA"))} */}
-              {renderLabelPair('HCM_AM_BOUNDARY_CODE', billData?.localityCode || t("NA"))}
+              {renderLabelPair('HCM_AM_BILL_NUMBER', billData?.billNumber || t(I18N_KEYS.COMMON.NA))}
+              {renderLabelPair('HCM_AM_BILL_DATE', billData?.billDate ? formatTimestampToDate(billData.billDate) : t(I18N_KEYS.COMMON.NA))}
+              {/* {renderLabelPair('HCM_AM_NO_OF_REGISTERS', billData?.additionalDetails.noOfRegisters || t(I18N_KEYS.COMMON.NA))} */}
+              {/* {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData?.billDetails.length || t(I18N_KEYS.COMMON.NA))} */}
+              {renderLabelPair('HCM_AM_BOUNDARY_CODE', billData?.localityCode || t(I18N_KEYS.COMMON.NA))}
               {renderLabelPair(
                 'HCM_AM_STATUS',
                 <span
@@ -1730,17 +1731,17 @@ const downloadOptions = [
         width: "fit-content",
       }}
     >
-      {t("HCM_AM_TRANSACTION_REPORT")}
+      {t(I18N_KEYS.PAGES_BILLS.HCM_AM_TRANSACTION_REPORT)}
     </span>
 
     <span className="view-label-text">
       {lastGeneratedAt ? (
         <>
-          <strong>{t("HCM_AM_LAST_GENERATED_ON")}{" : "}</strong>
+          <strong>{t(I18N_KEYS.PAGES_BILLS.HCM_AM_LAST_GENERATED_ON)}{" : "}</strong>
           {formatTimestampToDateTime(lastGeneratedAt)}
         </>
       ) : (
-        <>{t("HCM_AM_REPORT_NOT_GENERATED")}</>
+        <>{t(I18N_KEYS.PAGES_BILLS.HCM_AM_REPORT_NOT_GENERATED)}</>
 
       )}
     </span>
@@ -1749,7 +1750,7 @@ const downloadOptions = [
       <InfoCard
         variant="error"
         style={{ marginTop: "6px" }}
-        label={t("HCM_AM_REPORT_ERROR")}
+        label={t(I18N_KEYS.PAGES_BILLS.HCM_AM_REPORT_ERROR)}
         text={reportError}
       />
     )}
@@ -1764,14 +1765,14 @@ const downloadOptions = [
     }}
   >
     <Button
-      label={t("HCM_AM_GENERATE_REPORT")}
+      label={t(I18N_KEYS.PAGES_BILLS.HCM_AM_GENERATE_REPORT)}
       variation="primary"
       isDisabled={reportLoading}
       onClick={async () => {
         if (!hasPaidWorker) {
           setShowToast({
             key: "error",
-            label: t("HCM_AM_NO_PAID_WORKERS"),
+            label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_PAID_WORKERS),
             transitionTime: 4000,
           });
           return;
@@ -1789,7 +1790,7 @@ const downloadOptions = [
     <Button
       icon="ArrowDropDown"
       isSuffix
-      label={t("HCM_AM_DOWNLOAD")}
+      label={t(I18N_KEYS.PAGES_BILLS.HCM_AM_DOWNLOAD)}
       variation="secondary"
       type="actionButton"
       options={downloadOptions}
@@ -1813,14 +1814,14 @@ const downloadOptions = [
     className="view-label-text"
     style={{ fontSize: "12px",}}
   >
-    <strong>{t("HCM_AM_REPORT_DISCLAIMER_HEADER")}{" : "}</strong>
+    <strong>{t(I18N_KEYS.PAGES_BILLS.HCM_AM_REPORT_DISCLAIMER_HEADER)}{" : "}</strong>
   </span>
 
   <span
     className="view-label-text"
     style={{ fontSize: "12px", color: "#6B6B6B" }}
   >
-    {t("HCM_AM_REPORT_DISCLAIMER_INFO")}
+    {t(I18N_KEYS.PAGES_BILLS.HCM_AM_REPORT_DISCLAIMER_INFO)}
   </span>
   </div>
 </div> */}
@@ -1857,8 +1858,8 @@ const downloadOptions = [
                               </div>
                             </div>
                            {isSelectionDisabledTransfer
-    ? t("HCM_AM_PAYMENT_IN_PROGRESS_TEXT_INFO")  
-      : t("HCM_AM_VERIFICATION_IN_PROGRESS_TEXT_INFO")}
+    ? t(I18N_KEYS.PAGES_BILLS.HCM_AM_PAYMENT_IN_PROGRESS_TEXT_INFO)  
+      : t(I18N_KEYS.PAGES_BILLS.HCM_AM_VERIFICATION_IN_PROGRESS_TEXT_INFO)}
                           </span>
                         </div>
                   )
@@ -1868,8 +1869,8 @@ const downloadOptions = [
                     <InfoCard
                       variant="error"
                       style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "90px" }}
-                      label={t(`HCM_AM_BILL_ERROR_CARD_HEADING`)}
-                      text={t(`HCM_AM_BILL_ERROR_INFO_TEXT`)}
+                      label={t(I18N_KEYS.PAGES_BILLS.HCM_AM_BILL_ERROR_CARD_HEADING)}
+                      text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_BILL_ERROR_INFO_TEXT)}
                     />
                   ) : null             
                   }
@@ -1914,7 +1915,7 @@ const downloadOptions = [
           {isBillLoading || isFetching ? (
             renderCenteredLoader()
           ) : tableData.length === 0 ? (
-            <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
+            <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_DATA_FOUND_FOR_BILLS)} />
           ) : (
             <Fragment>
               {/* TODO: Restore status check: activeRole === "PAYMENT_REVIEWER" && billData?.status === "SENT_FOR_REVIEW" */}
@@ -1922,7 +1923,7 @@ const downloadOptions = [
                 <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem", gap: "1rem" }}>
                   <Button
                     variation="secondary"
-                    label={isReviewerEdit ? t("HCM_AM_CANCEL_EDIT") : t("HCM_AM_EDIT")}
+                    label={isReviewerEdit ? t(I18N_KEYS.PAGES_BILLS.HCM_AM_CANCEL_EDIT) : t(I18N_KEYS.PAGES_BILLS.HCM_AM_EDIT)}
                     size="medium"
                     icon={isReviewerEdit ? "Close" : "Edit"}
                     onClick={() => {
@@ -1937,7 +1938,7 @@ const downloadOptions = [
                   {!isReviewerEdit && (
                     <Button
                       variation="secondary"
-                      label={t("HCM_AM_EDIT_ON_EXCEL")}
+                      label={t(I18N_KEYS.COMMON.HCM_AM_EDIT_ON_EXCEL)}
                       icon="TableView"
                       size="medium"
                       onClick={() => navigate(
@@ -2014,8 +2015,8 @@ const downloadOptions = [
           type="alert"
           onClose={() => setOpenReviewerEditWarningPopUp(false)}
           onOverlayClick={() => setOpenReviewerEditWarningPopUp(false)}
-          alertHeading={t(`HCM_AM_DOWNLOAD_BILL_BEFORE_MAKING_CHANGES`)}
-          alertMessage={t(`HCM_AM_DOWNLOAD_BILL_BEFORE_MAKING_CHANGES_DESCRIPTION`)}
+          alertHeading={t(I18N_KEYS.PAGES_BILLS.HCM_AM_DOWNLOAD_BILL_BEFORE_MAKING_CHANGES)}
+          alertMessage={t(I18N_KEYS.PAGES_BILLS.HCM_AM_DOWNLOAD_BILL_BEFORE_MAKING_CHANGES_DESCRIPTION)}
           equalWidthButtons={true}
           footerChildren={[
             <Button
@@ -2023,8 +2024,8 @@ const downloadOptions = [
               type="button"
               size="large"
               variation="secondary"
-              label={t(`HCM_AM_DOWNLOAD_BILL`)}
-              title={t(`HCM_AM_DOWNLOAD_BILL`)}
+              label={t(I18N_KEYS.COMMON.HCM_AM_DOWNLOAD_BILL)}
+              title={t(I18N_KEYS.COMMON.HCM_AM_DOWNLOAD_BILL)}
               onClick={handleDownloadBill}
             />,
             <Button
@@ -2032,8 +2033,8 @@ const downloadOptions = [
               type="button"
               size="large"
               variation="primary"
-              label={t(`HCM_AM_CONTINUE_TO_EDIT`)}
-              title={t(`HCM_AM_CONTINUE_TO_EDIT`)}
+              label={t(I18N_KEYS.PAGES_BILLS.HCM_AM_CONTINUE_TO_EDIT)}
+              title={t(I18N_KEYS.PAGES_BILLS.HCM_AM_CONTINUE_TO_EDIT)}
               onClick={() => {
                 setOpenReviewerEditWarningPopUp(false);
                 setHasTriedSaveReviewer(false);
@@ -2048,10 +2049,10 @@ const downloadOptions = [
         onClose={() => {
           setOpenSendForEditPopUp(false);
         }}
-        alertHeading={t(`HCM_AM_SEND_FOR_EDIT`)}
-        alertMessage={t(`HCM_AM_ALERT_SEND_FOR_EDIT_DESCRIPTION`)}
-        submitLabel={t(`HCM_AM_APPROVE`)}
-        cancelLabel={t(`HCM_AM_CANCEL`)}
+        alertHeading={t(I18N_KEYS.COMMON.HCM_AM_SEND_FOR_EDIT)}
+        alertMessage={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_ALERT_SEND_FOR_EDIT_DESCRIPTION)}
+        submitLabel={t(I18N_KEYS.COMMON.HCM_AM_APPROVE)}
+        cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
         onPrimaryAction={() => {
           updateBillDetailWorkflow(billData, tableData, "SEND_FOR_EDIT");
           setOpenSendForEditPopUp(false);
@@ -2075,7 +2076,7 @@ const downloadOptions = [
           if (currentView === "NOT_VERIFIED_VIEW") {
             return (
               <Button
-                label={t(`HCM_AM_VERIFY`)}
+                label={t(I18N_KEYS.COMMON.HCM_AM_VERIFY)}
                 onClick={() => setOpenVerifyAlertPopUp(true)}
                 style={ctaStyle}
                 textStyles={ctaTextStyles}
@@ -2088,7 +2089,7 @@ const downloadOptions = [
           if (currentView === "VERIFIED_VIEW") {
             return (
               <Button
-                label={t(`HCM_AM_GENERATE_PAYMENT`)}
+                label={t(I18N_KEYS.COMMON.HCM_AM_GENERATE_PAYMENT)}
                 onClick={() => setOpenApprovePaymentAlertPopUp(true)}
                 style={ctaStyle}
                 textStyles={ctaTextStyles}
@@ -2101,7 +2102,7 @@ const downloadOptions = [
           if (currentView === "PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFICATION_FAILED") {
             return (
               <Button
-                label={t(`HCM_AM_SEND_FOR_EDIT`)}
+                label={t(I18N_KEYS.COMMON.HCM_AM_SEND_FOR_EDIT)}
                 onClick={() => setOpenSendForEditPopUp(true)}
                 style={ctaStyle}
                 textStyles={ctaTextStyles}
@@ -2114,8 +2115,8 @@ const downloadOptions = [
           if (currentView === "PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFIED") {
             return (
               <Button
-                label={t(`HCM_AM_GENERATE_PAYMENT`)}
-                title={t(`HCM_AM_GENERATE_PAYMENT`)}
+                label={t(I18N_KEYS.COMMON.HCM_AM_GENERATE_PAYMENT)}
+                title={t(I18N_KEYS.COMMON.HCM_AM_GENERATE_PAYMENT)}
                 onClick={() => setOpenApprovePaymentAlertPopUp(true)}
                 style={ctaStyle}
                 textStyles={ctaTextStyles}
@@ -2128,7 +2129,7 @@ const downloadOptions = [
           if (currentView === "EDITOR_NOT_VERIFIED_VIEW") {
             return (
               <Button
-                label={t(`HCM_AM_VERIFY`)}
+                label={t(I18N_KEYS.COMMON.HCM_AM_VERIFY)}
                 onClick={() => setOpenVerifyAlertPopUp(true)}
                 style={ctaStyle}
                 textStyles={ctaTextStyles}
@@ -2141,7 +2142,7 @@ const downloadOptions = [
           if (currentView === "EDITOR_VERIFIED_VIEW") {
             return (
               <Button
-                label={t(`HCM_AM_SEND_FOR_REVIEW`)}
+                label={t(I18N_KEYS.COMMON.HCM_AM_SEND_FOR_REVIEW)}
                 onClick={() => setOpenSendForReviewPopUp(true)}
                 style={ctaStyle}
                 textStyles={ctaTextStyles}
@@ -2154,7 +2155,7 @@ const downloadOptions = [
           if (currentView === "EDITOR_PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFICATION_FAILED") {
             return (
               <Button
-                label={t(`HCM_AM_VERIFY`)}
+                label={t(I18N_KEYS.COMMON.HCM_AM_VERIFY)}
                 onClick={() => setOpenVerifyAlertPopUp(true)}
                 style={ctaStyle}
                 textStyles={ctaTextStyles}
@@ -2167,7 +2168,7 @@ const downloadOptions = [
           if (currentView === "REVIEWER_PENDING_VIEW" && !isReviewerEdit) {
             return (
               <Button
-                label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
+                label={t(I18N_KEYS.COMMON.HCM_AM_SEND_FOR_APPROVAL)}
                 onClick={() => setOpenSendForApprovalPopUp(true)}
                 style={{ ...ctaStyle, minWidth: "18rem" }}
                 textStyles={ctaTextStyles}
@@ -2180,7 +2181,7 @@ const downloadOptions = [
           if (currentView === "APPROVER_NOT_INITIATED_VIEW" && activeTabCode !== "GENERATED_ADVISORIES") {
             return (
               <Button
-                label={t("HCM_AM_GENERATE_PAYMENT_ADVISORY")}
+                label={t(I18N_KEYS.PAGES_BILLS.HCM_AM_GENERATE_PAYMENT_ADVISORY)}
                 onClick={() => triggerGenerateAdvisoryForBill()}
                 style={{ ...ctaStyle, minWidth: "20rem" }}
                 textStyles={ctaTextStyles}
@@ -2193,8 +2194,8 @@ const downloadOptions = [
           if (currentView === "APPROVER_PARTIALLY_PAID_VIEW" && activeLink?.code === "FAILED") {
             return (
               <Button
-                label={t(`HCM_AM_RETRY_PAYMENT`)}
-                onClick={() => setShowToast({ key: "info", label: t("HCM_AM_RETRY_PAYMENT_PLACEHOLDER"), transitionTime: 3000 })}
+                label={t(I18N_KEYS.PAGES_BILLS.HCM_AM_RETRY_PAYMENT)}
+                onClick={() => setShowToast({ key: "info", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_RETRY_PAYMENT_PLACEHOLDER), transitionTime: 3000 })}
                 style={ctaStyle}
                 textStyles={ctaTextStyles}
                 type="button"
@@ -2212,7 +2213,7 @@ const downloadOptions = [
               setactionFieldsToRight={true}
               actionFields={[
                 <Button
-                  label={t(`HCM_AM_SAVE_CHANGES`)}
+                  label={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_SAVE_CHANGES)}
                   onClick={() => setOpenSaveChangesPopUp(true)}
                   style={ctaStyle}
                   textStyles={ctaTextStyles}
@@ -2232,10 +2233,10 @@ const downloadOptions = [
         onClose={() => {
           setOpenVerifyAlertPopUp(false);//todo check
         }}
-        alertHeading={t(`HCM_AM_ALERT_VERIFY_HEADING`)}
-        alertMessage={t(`HCM_AM_ALERT_VERIFY_DESCRIPTION`)}
-        submitLabel={t(`HCM_AM_APPROVE`)}
-        cancelLabel={t(`HCM_AM_CANCEL`)}
+        alertHeading={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_ALERT_VERIFY_HEADING)}
+        alertMessage={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_ALERT_VERIFY_DESCRIPTION)}
+        submitLabel={t(I18N_KEYS.COMMON.HCM_AM_APPROVE)}
+        cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
         onPrimaryAction={() => {
           triggerUpdateBill(billData, "VERIFY");
           setOpenVerifyAlertPopUp(false);
@@ -2245,10 +2246,10 @@ const downloadOptions = [
         onClose={() => {
           setOpenEditAlertPopUp(false);
         }}
-        alertHeading={t(`HCM_AM_ALERT_BILL_EDIT_HEADING`)}
-        alertMessage={t(`HCM_AM_ALERT_BILL_EDIT_DESCRIPTION`)}
-        submitLabel={t(`HCM_AM_APPROVE`)}
-        cancelLabel={t(`HCM_AM_CANCEL`)}
+        alertHeading={t(I18N_KEYS.PAGES_BILLS.HCM_AM_ALERT_BILL_EDIT_HEADING)}
+        alertMessage={t(I18N_KEYS.PAGES_BILLS.HCM_AM_ALERT_BILL_EDIT_DESCRIPTION)}
+        submitLabel={t(I18N_KEYS.COMMON.HCM_AM_APPROVE)}
+        cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
         onPrimaryAction={() => {
           triggerIndividualBulkUpdate(AllIndividualsData, tableData, billData);
           setOpenEditAlertPopUp(false);
@@ -2258,10 +2259,10 @@ const downloadOptions = [
         onClose={() => {
           setOpenApprovePaymentAlertPopUp(false);
         }}
-        alertHeading={t(`HCM_AM_ALERT_PAYMENT_HEADING`)}
-        alertMessage={t(`HCM_AM_ALERT_PAYMENT_DESCRIPTION`)}
-        submitLabel={t(`HCM_AM_APPROVE`)}
-        cancelLabel={t(`HCM_AM_CANCEL`)}
+        alertHeading={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_ALERT_PAYMENT_HEADING)}
+        alertMessage={t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_ALERT_PAYMENT_DESCRIPTION)}
+        submitLabel={t(I18N_KEYS.COMMON.HCM_AM_APPROVE)}
+        cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
         onPrimaryAction={() => {
           triggerGeneratePayment(billData, tableData);
           setOpenApprovePaymentAlertPopUp(false);
@@ -2269,22 +2270,22 @@ const downloadOptions = [
       />} */}
       {openSendForReviewPopUp && <AlertPopUp
         onClose={() => setOpenSendForReviewPopUp(false)}
-        alertHeading={t("HCM_AM_CONFIRM_SEND_FOR_REVIEW")}
-        alertMessage={t("HCM_AM_CONFIRM_SEND_FOR_REVIEW_BILL_MESSAGE")}
-        submitLabel={t("HCM_AM_CONFIRM")}
-        cancelLabel={t("HCM_AM_CANCEL")}
+        alertHeading={t(I18N_KEYS.PAGES_BILLS.HCM_AM_CONFIRM_SEND_FOR_REVIEW)}
+        alertMessage={t(I18N_KEYS.PAGES_BILLS.HCM_AM_CONFIRM_SEND_FOR_REVIEW_BILL_MESSAGE)}
+        submitLabel={t(I18N_KEYS.COMMON.HCM_AM_CONFIRM)}
+        cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
         onPrimaryAction={() => {
           setOpenSendForReviewPopUp(false);
           triggerUpdateBill(billData, "SEND_FOR_REVIEW");
-          // setShowToast({ key: "success", label: t("HCM_AM_SEND_FOR_REVIEW_SUCCESS"), transitionTime: 3000 });
+          // setShowToast({ key: "success", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_SEND_FOR_REVIEW_SUCCESS), transitionTime: 3000 });
         }}
       />}
       {openSaveChangesPopUp && <AlertPopUp
         onClose={() => setOpenSaveChangesPopUp(false)}
-        alertHeading={t("HCM_AM_CONFIRM_SAVE_CHANGES")}
-        alertMessage={t("HCM_AM_CONFIRM_SAVE_CHANGES_MESSAGE")}
-        submitLabel={t("HCM_AM_CONFIRM")}
-        cancelLabel={t("HCM_AM_CANCEL")}
+        alertHeading={t(I18N_KEYS.PAGES_BILLS.HCM_AM_CONFIRM_SAVE_CHANGES)}
+        alertMessage={t(I18N_KEYS.PAGES_BILLS.HCM_AM_CONFIRM_SAVE_CHANGES_MESSAGE)}
+        submitLabel={t(I18N_KEYS.COMMON.HCM_AM_CONFIRM)}
+        cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
         onPrimaryAction={() => {
           setOpenSaveChangesPopUp(false);
           setHasTriedSaveReviewer(true);
@@ -2297,14 +2298,14 @@ const downloadOptions = [
             maxAttendanceDays != null &&
             (tableData || []).some((row) => Number(row?.totalAttendance) > maxAttendanceDays);
           if (hasEmpty) {
-            setShowToast({ key: "error", label: t("HCM_AM_PLEASE_FILL_REQUIRED_FIELDS") || t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 3000 });
+            setShowToast({ key: "error", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_PLEASE_FILL_REQUIRED_FIELDS) || t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG), transitionTime: 3000 });
             return;
           }
           if (hasAttendanceExceedingBillingPeriod) {
             setShowToast({
               key: "error",
               label:
-                t("HCM_AM_ATTENDANCE_EXCEEDS_BILLING_PERIOD") ||
+                t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_EXCEEDS_BILLING_PERIOD) ||
                 `Attendance cannot exceed ${maxAttendanceDays} day(s) for this billing period`,
               transitionTime: 4000,
             });

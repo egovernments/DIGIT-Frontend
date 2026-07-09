@@ -729,7 +729,7 @@ const CampaignSummary = (props) => {
     updatedObject.cards[0].sections[0].values[3].value = Digit.Utils.date.convertEpochToDate(endDate);
   }, [startDate, endDate]);
 
-  if (updatedObject?.cards?.[1]?.sections?.[0]?.values?.[0]?.value == t("MR-DN")) {
+  if (updatedObject?.cards?.[1]?.sections?.[0]?.values?.[0]?.value == t(I18N_KEYS.COMPONENTS["MR-DN"])) {
     updatedObject.cards.forEach((card) => {
       if (card.name && card.name.startsWith("CYCLE_")) {
         const cycleId = card.name.split("_")[1];

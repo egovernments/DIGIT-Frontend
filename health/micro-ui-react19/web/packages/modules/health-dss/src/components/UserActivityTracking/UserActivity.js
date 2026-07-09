@@ -4,6 +4,7 @@ import { Card, TextInput, Button, HeaderComponent, Tag, SVG, Loader, Dropdown } 
 import DataTable from "react-data-table-component";
 import useUserActivityData from "../../hooks/useUserActivityData";
 import UserProfilePopup from "./UserProfilePopup";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const roleTagType = {
   CDD: "monochrome",
@@ -180,27 +181,27 @@ const UserActivity = () => {
   // Summary cards from overallUsersMetrics API
   var offlineCount = overallMetrics.totalFieldWorkers - overallMetrics.onlineNow;
   var summaryCards = [
-    { label: "TOTAL_FIELD_WORKERS", value: overallMetrics.totalFieldWorkers, description: t("ACTIVE_CAMPAIGN") },
-    { label: "ONLINE_NOW", value: overallMetrics.onlineNow, description: offlineCount + " " + t("OFFLINE").toLowerCase() },
-    { label: "RECORDS_TODAY", value: overallMetrics.recordsToday, description: t("ACROSS_ALL_CDDS") },
-    { label: "SYNC_WARNINGS", value: overallMetrics.syncWarnings, description: t("SYNC_GAP_DETECTED") },
+    { label: I18N_KEYS.USER_ACTIVITY.TOTAL_FIELD_WORKERS, value: overallMetrics.totalFieldWorkers, description: t(I18N_KEYS.USER_ACTIVITY.ACTIVE_CAMPAIGN) },
+    { label: I18N_KEYS.USER_ACTIVITY.ONLINE_NOW, value: overallMetrics.onlineNow, description: offlineCount + " " + t(I18N_KEYS.USER_ACTIVITY.OFFLINE).toLowerCase() },
+    { label: I18N_KEYS.USER_ACTIVITY.RECORDS_TODAY, value: overallMetrics.recordsToday, description: t(I18N_KEYS.USER_ACTIVITY.ACROSS_ALL_CDDS) },
+    { label: I18N_KEYS.USER_ACTIVITY.SYNC_WARNINGS, value: overallMetrics.syncWarnings, description: t(I18N_KEYS.USER_ACTIVITY.SYNC_GAP_DETECTED) },
   ];
 
   // Derive unique filter options from data
   const statusOptions = [
-    { name: t("HCM_ALL_STATUS"), code: "ALL" },
-    { name: t("HCM_ONLINE"), code: "ONLINE" },
-    { name: t("HCM_OFFLINE"), code: "OFFLINE" },
+    { name: t(I18N_KEYS.USER_ACTIVITY.HCM_ALL_STATUS), code: "ALL" },
+    { name: t(I18N_KEYS.USER_ACTIVITY.HCM_ONLINE), code: "ONLINE" },
+    { name: t(I18N_KEYS.USER_ACTIVITY.HCM_OFFLINE), code: "OFFLINE" },
   ];
 
   const roleOptions = useMemo(() => {
     const unique = [...new Set(enrichedData.map((r) => r.role).filter(Boolean))];
-    return [{ name: t("HCM_ALL_ROLES"), code: "ALL" }, ...unique.map((r) => ({ name: t(`HCM_ROLE_${r.toUpperCase()}`), code: r }))];
+    return [{ name: t(I18N_KEYS.USER_ACTIVITY.HCM_ALL_ROLES), code: "ALL" }, ...unique.map((r) => ({ name: t(`HCM_ROLE_${r.toUpperCase()}`), code: r }))];
   }, [enrichedData, t]);
 
   const boundaryOptions = useMemo(() => {
     const unique = [...new Set(enrichedData.map((r) => r.geoBoundary).filter(Boolean))];
-    return [{ name: t("HCM_ALL_BOUNDARIES"), code: "ALL" }, ...unique.map((b) => ({ name: b, code: b }))];
+    return [{ name: t(I18N_KEYS.USER_ACTIVITY.HCM_ALL_BOUNDARIES), code: "ALL" }, ...unique.map((b) => ({ name: b, code: b }))];
   }, [enrichedData, t]);
 
   const filteredData = useMemo(() => {
@@ -232,7 +233,7 @@ const UserActivity = () => {
 
   const columns = [
     {
-      name: t("USER_ACTIVITY_USER"),
+      name: t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_USER),
       cell: (row) => (
         <div>
           <div style={{ fontWeight: 600, color: "#0B4B66" }}>{row.userName}</div>
@@ -245,21 +246,21 @@ const UserActivity = () => {
       minWidth: "150px",
     },
     {
-      name: t("USER_ACTIVITY_ROLE"),
+      name: t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_ROLE),
       cell: (row) => <Tag label={t(row.role)} type={roleTagType[row.role] || "monochrome"} showIcon={false} stroke={true} />,
       sortable: true,
       grow: 1,
       minWidth: "120px",
     },
     {
-      name: t("USER_ACTIVITY_GEO_BOUNDARY"),
+      name: t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_GEO_BOUNDARY),
       selector: (row) => row.geoBoundary,
       sortable: true,
       grow: 1.5,
       minWidth: "160px",
     },
     {
-      name: t("USER_ACTIVITY_LAST_SYNC"),
+      name: t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_LAST_SYNC),
       cell: (row) => (
         <div>
           <div style={{ color: row.syncWarning ? "#D4351C" : "#363636", fontWeight: row.syncWarning ? 600 : 400 }}>
@@ -275,7 +276,7 @@ const UserActivity = () => {
       minWidth: "120px",
     },
     {
-      name: t("USER_ACTIVITY_RECORDS_TODAY"),
+      name: t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_RECORDS_TODAY),
       cell: (row) => <span style={{ fontWeight: 600, color: row.recordsToday === 0 ? "#D4351C" : "#363636" }}>{row.recordsToday}</span>,
       sortable: true,
       sortFunction: (a, b) => a.recordsToday - b.recordsToday,
@@ -283,7 +284,7 @@ const UserActivity = () => {
       minWidth: "120px",
     },
     {
-      name: t("USER_ACTIVITY_STATUS"),
+      name: t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_STATUS),
       cell: (row) => <Tag label={row.status} type={row.status === "ONLINE" ? "success" : "error"} showIcon={true} />,
       sortable: true,
       grow: 0.8,
@@ -293,7 +294,7 @@ const UserActivity = () => {
       name: "",
       cell: (row) => (
         <Button
-          label={t("VIEW_PROFILE")}
+          label={t(I18N_KEYS.USER_ACTIVITY.VIEW_PROFILE)}
           variation="teritiary"
           onClick={() => {
             setSelectedUser(row);
@@ -316,7 +317,7 @@ const UserActivity = () => {
   return (
     <div style={{ padding: "0" }}>
       {/* Page Header */}
-      <HeaderComponent className={"digit-dss-user-tracking-header-text"}>{t("USER_ACTIVITY_TRACKING")}</HeaderComponent>
+      <HeaderComponent className={"digit-dss-user-tracking-header-text"}>{t(I18N_KEYS.USER_ACTIVITY.USER_ACTIVITY_TRACKING)}</HeaderComponent>
       {/* Summary Cards */}
       <div style={{ display: "grid", gridTemplateColumns: `repeat(${summaryCards.length}, 1fr)`, gap: "24px", marginBottom: "24px" }}>
         {summaryCards.map((card, index) => (
@@ -330,16 +331,16 @@ const UserActivity = () => {
           <div>
             <HeaderComponent>
               <span className={`digit-generic-chart-header`} style={{ color: "#0B4B66" }}>
-                {t("DEVICE_MANAGEMENT")}
+                {t(I18N_KEYS.USER_ACTIVITY.DEVICE_MANAGEMENT)}
               </span>
             </HeaderComponent>
 
             <div style={{ fontSize: "14px", color: "#787878", marginTop: "8px" }}>
-              {t("DEVICE_MANAGEMENT_DESC")}
+              {t(I18N_KEYS.USER_ACTIVITY.DEVICE_MANAGEMENT_DESC)}
             </div>
           </div>
           <Button
-            label={t("EXPORT_CSV")}
+            label={t(I18N_KEYS.USER_ACTIVITY.EXPORT_CSV)}
             variation="secondary"
             icon="FileDownload"
             style={{ fontSize: "14px" }}
@@ -353,7 +354,7 @@ const UserActivity = () => {
           <div style={{ minWidth: "240px" }}>
             <TextInput
               type="text"
-              placeholder={t("SEARCH_PLACEHOLDER")}
+              placeholder={t(I18N_KEYS.USER_ACTIVITY.SEARCH_PLACEHOLDER)}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{ height: "40px" }}
@@ -399,14 +400,14 @@ const UserActivity = () => {
             pagination
             paginationPerPage={5}
             progressComponent={<Loader />}
-            noDataComponent={<div style={{ padding: "24px", color: "#787878" }}>{t("NO_DATA")}</div>}
+            noDataComponent={<div style={{ padding: "24px", color: "#787878" }}>{t(I18N_KEYS.USER_ACTIVITY.NO_DATA)}</div>}
             className={`data-table user-tracking-inbox-table`}
             sortIcon={<SVG.ArrowUpward width={"16px"} height={"16px"} fill={"#0b4b66"} />}
             persistTableHead
             noHeader={false}
             fixedHeader={true}
             paginationComponentOptions={{
-              rowsPerPageText: t("CS_COMMON_ROWS_PER_PAGE"),
+              rowsPerPageText: t(I18N_KEYS.COMMON.CS_COMMON_ROWS_PER_PAGE),
             }}
           />
         </div>

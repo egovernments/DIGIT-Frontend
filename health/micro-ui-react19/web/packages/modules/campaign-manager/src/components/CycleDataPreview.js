@@ -79,7 +79,7 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
           {data?.startDate && (
             <Row
               key={t("startDate")}
-              label={`${t("Start Date")}`}
+              label={`${t(I18N_KEYS.COMPONENTS["Start Date"])}`}
               text={data?.startDate}
               className="border-none"
               rowContainerStyle={{ display: "flex" }}
@@ -89,7 +89,7 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
           {data?.endDate && (
             <Row
               key={t("endDate")}
-              label={`${t("End Date")}`}
+              label={`${t(I18N_KEYS.COMPONENTS["End Date"])}`}
               text={data?.endDate}
               className="border-none"
               rowContainerStyle={{ display: "flex" }}

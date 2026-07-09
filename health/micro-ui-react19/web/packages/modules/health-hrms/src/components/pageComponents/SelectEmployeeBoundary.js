@@ -1,6 +1,7 @@
 import { LabelFieldPair, CardLabel, Loader, Dropdown } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const BoundaryComponent = ({ t, config, onSelect, formData, index, hierarchy }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -109,7 +110,7 @@ const BoundaryComponent = ({ t, config, onSelect, formData, index, hierarchy }) 
   return (
     <LabelFieldPair removeMargin={true}>
       <CardLabel style={{ width: "33%" }} className="digit-card-label-smaller">
-        {t("HRMS_BOUNDARY_LABEL")} {index}<span style={{color:"#B91900"}}>*</span>
+        {t(I18N_KEYS.SELECT_EMPLOYEE_BOUNDARY.HRMS_BOUNDARY_LABEL)} {index}<span style={{color:"#B91900"}}>*</span>
       </CardLabel>
       <div style={{ width: "100%",display:"flex",flexDirection:"column",gap:"1.5rem" }}>
         {levels.map((lvl) =>

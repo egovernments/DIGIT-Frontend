@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import BoundaryComponent from "./SelectEmployeeBoundary";
 import { Loader,Card,Button,DeleteIcon } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const Jurisdictions = ({ config, onSelect, formData }) => {
   const { t } = useTranslation();
@@ -73,7 +74,7 @@ const Jurisdictions = ({ config, onSelect, formData }) => {
         </Card>
       ))}
       {selectedHierarchy && (<div>
-        <Button label={t("ADD_JURISDICTION")} variation={"primary"} onClick={handleAdd} isDisabled={(boundaryList.length > 0 && !isLastBoundaryValid()) ? true : false} />
+        <Button label={t(I18N_KEYS.JURISDICTIONS.ADD_JURISDICTION)} variation={"primary"} onClick={handleAdd} isDisabled={(boundaryList.length > 0 && !isLastBoundaryValid()) ? true : false} />
       </div>)}
     </div>
   );

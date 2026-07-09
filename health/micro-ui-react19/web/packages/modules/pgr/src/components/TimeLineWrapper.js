@@ -5,6 +5,7 @@ import { useMyContext } from "../utils/context";
 import { convertEpochFormateToDate } from "../utils";
 import { downloadFileWithCustomName } from "../utils/downloadFileWithCustomName";
 import { DownloadIcon, FileIcon } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const TimelineWrapper = ({ businessId, isWorkFlowLoading, workflowData, labelPrefix = "" }) => {
   const { state } = useMyContext();
@@ -52,29 +53,29 @@ const TimelineWrapper = ({ businessId, isWorkFlowLoading, workflowData, labelPre
               `${instance.assignes?.[0]?.name} - ${
                 instance?.assignes?.[0]?.roles
                   ?.map((role) => t(Digit.Utils.locale.getTransformedLocale(`ACCESSCONTROL_ROLES_ROLES_${role.code}`)))
-                  ?.join(", ") || t("NA")
+                  ?.join(", ") || t(I18N_KEYS.COMMON.NA)
               }`
             : instance?.assigner &&
               `${instance.assigner?.name} - ${
                 instance.assigner?.roles
                   ?.map((role) => t(Digit.Utils.locale.getTransformedLocale(`ACCESSCONTROL_ROLES_ROLES_${role.code}`)))
-                  ?.join(", ") || t("NA")
+                  ?.join(", ") || t(I18N_KEYS.COMMON.NA)
               }`,
           instance?.action === "ASSIGN"
-            ? `${t("ES_COMMON_CONTACT_DETAILS")}: ${instance?.assignes?.[0]?.mobileNumber}`
-            : `${t("ES_COMMON_CONTACT_DETAILS")}: ${instance?.assigner?.mobileNumber}`,
-          instance?.comment && <CommentBox header={t("CS_COMMON_EMPLOYEE_COMMENTS")} description={instance.comment} />,
+            ? `${t(I18N_KEYS.COMPONENTS.ES_COMMON_CONTACT_DETAILS)}: ${instance?.assignes?.[0]?.mobileNumber}`
+            : `${t(I18N_KEYS.COMPONENTS.ES_COMMON_CONTACT_DETAILS)}: ${instance?.assigner?.mobileNumber}`,
+          instance?.comment && <CommentBox header={t(I18N_KEYS.COMPONENTS.CS_COMMON_EMPLOYEE_COMMENTS)} description={instance.comment} />,
           ...(instance?.documents && instance.documents.length > 0
             ? instance.documents.map((doc, docIndex) => {
                 return (
                   <div key={`doc-${index}-${docIndex}`} style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" }}>
                     <FileIcon />
-                    <span>{doc.documentName || t("ES_COMMON_FILE_UPLOADED")}</span>
+                    <span>{doc.documentName || t(I18N_KEYS.COMPONENTS.ES_COMMON_FILE_UPLOADED)}</span>
                     <button
                       onClick={() => handleDownloadDocument(doc.fileStoreId, doc.documentName || "document")}
                       className="pgr-download-button"
-                      title={t("CS_COMMON_DOWNLOAD")}
-                      aria-label={t("CS_COMMON_DOWNLOAD")}
+                      title={t(I18N_KEYS.COMPONENTS.CS_COMMON_DOWNLOAD)}
+                      aria-label={t(I18N_KEYS.COMPONENTS.CS_COMMON_DOWNLOAD)}
                     >
                       <DownloadIcon />
                     </button>

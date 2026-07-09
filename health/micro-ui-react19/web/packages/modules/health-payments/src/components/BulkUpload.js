@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useRef, useCallback } from "react"
 import { UploadIcon } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Toast, CustomSVG, Button as ButtonNew } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const ACCEPTED_EXTENSIONS = [".xls", ".xlsx", ".csv"];
 
@@ -37,7 +38,7 @@ const BulkUpload = ({ multiple = false, onSubmit, fileData, onFileDelete, onFile
       const filesArray = Array.from(fileList);
       const invalid = filesArray.find((f) => !isValidFile(f));
       if (invalid) {
-        setShowToast({ key: "error", label: t("HCM_ERROR_INVALID_FILE_TYPE") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_MISC.HCM_ERROR_INVALID_FILE_TYPE) });
         return;
       }
       onSubmit(filesArray);
@@ -80,7 +81,7 @@ const BulkUpload = ({ multiple = false, onSubmit, fileData, onFileDelete, onFile
         </div>
         <div className="delete-and-download-button" style={{ flexShrink: 0 }}>
           <ButtonNew
-            label={t("WBH_DOWNLOAD")}
+            label={t(I18N_KEYS.COMMON.WBH_DOWNLOAD)}
             variation="secondary"
             type="button"
             size="medium"
@@ -91,7 +92,7 @@ const BulkUpload = ({ multiple = false, onSubmit, fileData, onFileDelete, onFile
             }}
           />
           <ButtonNew
-            label={t("WBH_DELETE")}
+            label={t(I18N_KEYS.COMPONENTS_MISC.WBH_DELETE)}
             variation="secondary"
             size="medium"
             type="button"
@@ -119,8 +120,8 @@ const BulkUpload = ({ multiple = false, onSubmit, fileData, onFileDelete, onFile
         >
           <UploadIcon />
           <p className="drag-drop-text">
-            <span className="drag-drop">{t("WBH_DRAG_DROP")}</span>{" "}
-            <span className="browse-text">{t("WBH_BULK_BROWSE_FILES")}</span>
+            <span className="drag-drop">{t(I18N_KEYS.COMPONENTS_MISC.WBH_DRAG_DROP)}</span>{" "}
+            <span className="browse-text">{t(I18N_KEYS.COMPONENTS_MISC.WBH_BULK_BROWSE_FILES)}</span>
           </p>
           <input
             ref={fileInputRef}

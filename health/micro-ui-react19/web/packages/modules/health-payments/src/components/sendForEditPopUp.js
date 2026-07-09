@@ -2,6 +2,7 @@ import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-components";
 import { Dropdown } from "@egovernments/digit-ui-react-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * Component to show a pop-up to allow the user to enter a comment before approving an attendance register.
@@ -31,7 +32,7 @@ const SendForEditPopUp = ({ ...props }) => {
         if (!selectedUser) {
             setShowToast({
                 key: "error",
-                label: t("HCM_AM_SELECT_USER_REQUIRED"),
+                label: t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_SELECT_USER_REQUIRED),
                 transitionTime: 3000
             });
             return;
@@ -42,7 +43,7 @@ const SendForEditPopUp = ({ ...props }) => {
             // Show toast if comment is empty
             setShowToast({
                 key: "error",
-                label: t("HCM_AM_COMMENT_REQUIRED_ERROR_TOAST_MESSAGE"),
+                label: t(I18N_KEYS.COMMON.HCM_AM_COMMENT_REQUIRED_ERROR_TOAST_MESSAGE),
                 transitionTime: 3000
             });
             return;
@@ -63,7 +64,7 @@ const SendForEditPopUp = ({ ...props }) => {
             <PopUp
                 style={{ width: "700px" }}
                 onClose={props?.onClose}
-                heading={props?.isEditTrue ? t(`HCM_AM_FORWARD`) : t(`HCM_AM_SEND_FOR_EDIT`)}
+                heading={props?.isEditTrue ? t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_FORWARD) : t(I18N_KEYS.COMMON.HCM_AM_SEND_FOR_EDIT)}
                 onOverlayClick={props?.onClose}
                 equalWidthButtons={true}
                 footerChildren={[
@@ -74,8 +75,8 @@ const SendForEditPopUp = ({ ...props }) => {
                         size="large"
                         style={{ minWidth: "270px" }}
                         variation="secondary"
-                        label={t(`HCM_AM_CANCEL`)}
-                        title={t(`HCM_AM_CANCEL`)}
+                        label={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
+                        title={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
                         onClick={props?.onClose}
                     />,
                     <Button
@@ -85,27 +86,27 @@ const SendForEditPopUp = ({ ...props }) => {
                         size="large"
                         variation="primary"
                         style={{ minWidth: "270px" }}
-                        label={props?.isEditTrue ? t(`HCM_AM_FORWARD`) : t(`HCM_AM_SEND`)}
-                        title={props?.isEditTrue ? t(`HCM_AM_FORWARD`) : t(`HCM_AM_SEND`)}
+                        label={props?.isEditTrue ? t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_FORWARD) : t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_SEND)}
+                        title={props?.isEditTrue ? t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_FORWARD) : t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_SEND)}
                         onClick={() => handleSave()}
                     />,
                 ]}
             >
                 <div key="comment-section">
                     <div className="comment-label">
-                        {props?.isEditTrue ? t(`HCM_AM_FORWARD_TO`) : t(`HCM_AM_SEND_FOR_EDIT`)}<span className="required"> *</span>
+                        {props?.isEditTrue ? t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_FORWARD_TO) : t(I18N_KEYS.COMMON.HCM_AM_SEND_FOR_EDIT)}<span className="required"> *</span>
                     </div>
                     <Dropdown
                         option={props?.dropdownOptions}
                         optionKey="title"
                         selected={selectedUser}
                         select={(option) => setSelectedUser(option)}
-                        placeholder={t("HCM_AM_SELECT_EDITOR")}
+                        placeholder={t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_SELECT_EDITOR)}
                     />
                 </div>
                 <div key="comment-section">
                     <div className="comment-label">
-                        {t(`HCM_AM_APPROVE_COMMENT_LABEL`)}<span className="required"> *</span>
+                        {t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_APPROVE_COMMENT_LABEL)}<span className="required"> *</span>
                     </div>
                     <TextArea
                         style={{ maxWidth: "100%" }}

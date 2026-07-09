@@ -22,6 +22,7 @@ import { tableCustomStyle } from "../table_inbox_custom_style";
 import { defaultPaginationValues } from "../../utils/constants";
 import { getCustomPaginationOptions } from "../../utils";
 import CommentPopUp from "../commentPopUp";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /**
  * BillInboxTable component is used to render the table for the employee's payment inbox.
@@ -82,7 +83,7 @@ const BillInboxTable = ({ ...props }) => {
 
   const columns = [
     {
-      name: <div className="custom-inbox-table-row">{t("HCM_AM_ATTENDANCE_ID")}</div>,
+      name: <div className="custom-inbox-table-row">{t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_ID)}</div>,
       selector: (row) => {
         return (
           <Button
@@ -110,11 +111,11 @@ const BillInboxTable = ({ ...props }) => {
       },
     },
     {
-      name: <div className="custom-inbox-table-row">{t("HCM_AM_ATTENDANCE_BOUNDARY")}</div>,
+      name: <div className="custom-inbox-table-row">{t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_BOUNDARY)}</div>,
       selector: (row) => {
         return (
-          <div className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
-            {t(row.boundary) || t("NA")}
+          <div className="ellipsis-cell" title={t(row?.boundary) || t(I18N_KEYS.COMMON.NA)}>
+            {t(row.boundary) || t(I18N_KEYS.COMMON.NA)}
           </div>
         );
       },
@@ -122,13 +123,13 @@ const BillInboxTable = ({ ...props }) => {
     {
       name: (
         <div className="custom-inbox-table-row">
-          {props.status === "APPROVED" ? t("HCM_AM_ATTENDANCE_APPROVED_BY") : t("HCM_AM_ATTENDANCE_MARKED_BY")}
+          {props.status === "APPROVED" ? t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_APPROVED_BY) : t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_MARKED_BY)}
         </div>
       ),
       selector: (row) => {
         return (
-          <div className="ellipsis-cell" title={row?.markby || t("NA")}>
-            {props.status === "APPROVED" ? row?.approvedBy : row?.markedBy || t("NA")}
+          <div className="ellipsis-cell" title={row?.markby || t(I18N_KEYS.COMMON.NA)}>
+            {props.status === "APPROVED" ? row?.approvedBy : row?.markedBy || t(I18N_KEYS.COMMON.NA)}
           </div>
         );
       },
@@ -137,9 +138,9 @@ const BillInboxTable = ({ ...props }) => {
     {
       name:
         props.status === "APPROVED" ? (
-          <div className="custom-inbox-table-row">{t("HCM_AM_ATTENDANCE_ATTENDEES")}</div>
+          <div className="custom-inbox-table-row">{t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_ATTENDEES)}</div>
         ) : (
-          t("HCM_AM_ATTENDANCE_ATTENDEES")
+          t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_ATTENDEES)
         ),
       selector: (row) => {
         return (
@@ -156,10 +157,10 @@ const BillInboxTable = ({ ...props }) => {
 
   if (props.status === "APPROVED") {
     columns.push({
-      name: t("HCM_AM_COMMENT_LOGS"),
+      name: t(I18N_KEYS.COMMON.HCM_AM_COMMENT_LOGS),
       selector: (row) => (
         <Button
-          label={t("HCM_AM_VIEW_COMMENT_LOGS")}
+          label={t(I18N_KEYS.COMMON.HCM_AM_VIEW_COMMENT_LOGS)}
           onClick={() => {
             triggerMusterRollSearch(row?.registerId);
           }}
@@ -193,7 +194,7 @@ const BillInboxTable = ({ ...props }) => {
           {props.isFetching ? (
             <Loader className={"digit-center-loader"} />
           ) : (
-            <NoResultsFound style={{ height: "38vh", backgroundColor: "transparent" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
+            <NoResultsFound style={{ height: "38vh", backgroundColor: "transparent" }} text={t(I18N_KEYS.COMMON.HCM_AM_NO_DATA_FOUND)} />
           )}{" "}
         </div>
       ) : (
@@ -219,7 +220,7 @@ const BillInboxTable = ({ ...props }) => {
         />
       )}
       {commentLogs && (
-        <CommentPopUp onClose={onCommentLogClose} businessId={data?.musterRollNumber} heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`} />
+        <CommentPopUp onClose={onCommentLogClose} businessId={data?.musterRollNumber} heading={`${t(I18N_KEYS.COMMON.HCM_AM_STATUS_LOG_FOR_LABEL)}`} />
       )}
       {showToast && (
         <Toast

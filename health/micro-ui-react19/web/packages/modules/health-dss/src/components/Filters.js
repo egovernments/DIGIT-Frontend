@@ -6,6 +6,7 @@ import Switch from "./Switch";
 import { format } from "date-fns";
 import FilterByCycleDropdown from "./FilterByCycle";
 import { getDuration } from "../utils/getDuration";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const Filters = ({
   t,
@@ -142,7 +143,7 @@ const Filters = ({
       {isOpen && (
         <div className="filter-header">
           <FilterIcon />
-          <p>{t(`DSS_FILTERS`)}</p>
+          <p>{t(I18N_KEYS.FILTERS.DSS_FILTERS)}</p>
           <span onClick={handleClear}>
             <RefreshIcon />
           </span>
@@ -185,7 +186,7 @@ const Filters = ({
         <div className={"digit-filter-by-cycle-wrapper"}>
           {value?.filters?.cycle && (
             <div className="digit-tag-container">
-              <Chip text={`${t(`CYCLE`)} ${value?.filters?.cycle}`} onClick={(e) => clearCycleFilter(e)} hideClose={false} />
+              <Chip text={`${t(I18N_KEYS.FILTERS.CYCLE)} ${value?.filters?.cycle}`} onClick={(e) => clearCycleFilter(e)} hideClose={false} />
             </div>
           )}
           <FilterByCycleDropdown
@@ -199,20 +200,20 @@ const Filters = ({
       )}
       {showDDR && (
         <div className="filters-input">
-          <div className="mbsm">{t(isNational ? "ES_DSS_STATE" : "ES_DSS_DDR")}</div>
+          <div className="mbsm">{t(isNational ? I18N_KEYS.FILTERS.ES_DSS_STATE : I18N_KEYS.FILTERS.ES_DSS_DDR)}</div>
           <MultiSelectDropdown
             options={ulbTenants?.ddr && ulbTenants.ddr?.sort((x, y) => x?.ddrKey?.localeCompare(y?.ddrKey))}
             optionsKey="ddrKey"
             onSelect={selectDDR}
             selected={selectedDDRs}
-            defaultLabel={t(isNational ? "ES_DSS_ALL_STATE_SELECTED" : "ES_DSS_ALL_DDR_SELECTED")}
-            defaultUnit={t(isNational ? "ES_DSS_STATE_SELECTED" : "ES_DSS_DDR_SELECTED")}
+            defaultLabel={t(isNational ? I18N_KEYS.FILTERS.ES_DSS_ALL_STATE_SELECTED : I18N_KEYS.FILTERS.ES_DSS_ALL_DDR_SELECTED)}
+            defaultUnit={t(isNational ? I18N_KEYS.FILTERS.ES_DSS_STATE_SELECTED : I18N_KEYS.FILTERS.ES_DSS_DDR_SELECTED)}
           />
         </div>
       )}
       {showUlb && (
         <div className="filters-input">
-          <div className="mbsm">{t("ES_DSS_ULB")}</div>
+          <div className="mbsm">{t(I18N_KEYS.FILTERS.ES_DSS_ULB)}</div>
           <MultiSelectDropdown
             options={
               ulbTenants?.ulb?.sort((x, y) => x?.ulbKey?.localeCompare(y?.ulbKey))
@@ -223,20 +224,20 @@ const Filters = ({
             optionsKey="ulbKey"
             onSelect={selectFilters}
             selected={selected}
-            defaultLabel={t("ES_DSS_ALL_ULB_SELECTED")}
-            defaultUnit={t("ES_DSS_DDR_SELECTED")}
+            defaultLabel={t(I18N_KEYS.FILTERS.ES_DSS_ALL_ULB_SELECTED)}
+            defaultUnit={t(I18N_KEYS.FILTERS.ES_DSS_DDR_SELECTED)}
           />
         </div>
       )}
       {!isNational && showModuleFilter && (
         <div className="filters-input">
-          <div className="mbsm">{t("ES_DSS_SERVICES")}</div>
+          <div className="mbsm">{t(I18N_KEYS.FILTERS.ES_DSS_SERVICES)}</div>
           <Dropdown
             option={services}
             optionKey="name"
             select={selectServicesFilters}
             selected={selectService}
-            placeholder={t("ES_DSS_ALL_SERVICES_SELECTED")}
+            placeholder={t(I18N_KEYS.FILTERS.ES_DSS_ALL_SERVICES_SELECTED)}
           />
         </div>
       )}

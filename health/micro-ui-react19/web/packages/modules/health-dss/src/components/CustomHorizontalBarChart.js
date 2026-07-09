@@ -7,6 +7,7 @@ import FilterContext from "./FilterContext";
 import NoData from "./NoData";
 import { getTitleHeading } from "../utils/locale";
 import { getDuration } from "../utils/getDuration";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const barColors = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE", "#6E8459", "#D4351C", "#0CF7E4", "#F80BF4", "#22F80B"];
 
@@ -352,7 +353,7 @@ const CustomHorizontalBarChart = ({
     <Fragment>
       {filterStack?.length > 1 && (
         <div className="digit-tag-container digit-pie-chart-tags">
-          <div className="digit-tag-filter-text">{t("DSS_FILTERS_APPLIED")}: </div>
+          <div className="digit-tag-filter-text">{t(I18N_KEYS.COMMON.DSS_FILTERS_APPLIED)}: </div>
           {filterStack.map((filter, id) =>
             id > 0 ? (
               <Chip
@@ -489,7 +490,7 @@ const CustomHorizontalBarChart = ({
       </div>
       {showDrillDown && (
         <p className="showMore" onClick={goToDrillDownCharts}>
-          {t("DSS_SHOW_MORE")}
+          {t(I18N_KEYS.COMMON.DSS_SHOW_MORE)}
         </p>
       )}
     </Fragment>

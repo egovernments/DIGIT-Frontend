@@ -414,7 +414,9 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       select: (data) => {
         const hierarchyType = paramsData?.hierarchy?.hierarchyType || Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")?.name;
         const schemas = data?.["HCM-ADMIN-CONSOLE"]?.HierarchySchema || [];
-        return schemas.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
+        // Only use lowestHierarchy from a matching "console" type entry for the selected hierarchy
+        const consoleSchema = schemas.find((item) => item.type === "console" && item.hierarchy === hierarchyType);
+        return consoleSchema?.lowestHierarchy;
       },
     },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
@@ -913,8 +915,8 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "User Usage")?.name)] === "Inactive" ? true : false}
                     variation="link"
-                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t("ADD _BOUNDARY")}
-                    title={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t("ADD _BOUNDARY")}
+                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t(I18N_KEYS.COMPONENTS["ADD _BOUNDARY"])}
+                    title={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t(I18N_KEYS.COMPONENTS["ADD _BOUNDARY"])}
                     onClick={() => {
                       setShowPopUp(row);
                     }}
@@ -933,7 +935,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   isDisabled={row?.editable ? false : true}
                   variation={"primary"}
                   icon={"Edit"}
-                  // label={listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t("ADD _BOUNDARY")}
+                  // label={listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t(I18N_KEYS.COMPONENTS["ADD _BOUNDARY"])}
                   label={t(I18N_KEYS.COMPONENTS.MAPPING_EDIT)}
                   title={t(I18N_KEYS.COMPONENTS.MAPPING_EDIT)}
                   onClick={() => {
@@ -1062,8 +1064,8 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)] === "Inactive" ? true : false}
                     variation={"link"}
-                    title={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t("ADD _BOUNDARY")}
-                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t("ADD _BOUNDARY")}
+                    title={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t(I18N_KEYS.COMPONENTS["ADD _BOUNDARY"])}
+                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(I18N_KEYS.COMPONENTS.CHANGE_BOUNDARY) : t(I18N_KEYS.COMPONENTS["ADD _BOUNDARY"])}
                     onClick={() => {
                       setShowPopUp(row);
                     }}

@@ -161,11 +161,11 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
             styles={{maxWidth:"80%"}}
             className="digit-header-content digit-card-section-header titleStyle date-selection"
           >
-            {t("HCM_SELECT_HIERARCHY_HEADER")}
+            {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SELECT_HIERARCHY_HEADER)}
           </HeaderComponent>
           <Button
             variation="secondary"
-            label={t("CREATE_NEW_HIERARCHY")}
+            label={t(I18N_KEYS.CAMPAIGN_CREATE.CREATE_NEW_HIERARCHY)}
             size="large"
             icon="AddCircle"
             onClick={() => {

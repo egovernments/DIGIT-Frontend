@@ -42,6 +42,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName");
   const [uploadLoader, setUploadLoader] = useState(false);
   const [showUploadToast, setShowUploadToast] = useState(null);
+  const [validationStatus, setValidationStatus] = useState(null);
+  // Shape: { type: "success" | "error" | "warning", label: string } or null
   // const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
   //   tenantId,
   //   CONSOLE_MDMS_MODULENAME,
@@ -987,6 +989,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       setUploadLoader(false);
       setUploadedFile(fileData);
       setErrorsType(0);
+      setValidationStatus(null);
       // const validate = await validateExcel(file[0]);
     } catch (error) {
       setShowUploadToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_ERROR_FILE_UPLOAD) });
@@ -1003,6 +1006,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     setApiError(null);
     setErrorsType({});
     setShowToast(null);
+    setValidationStatus(null);
   };
 
   const downloadGeneratedUnifiedFile = async () => {
@@ -1086,6 +1090,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     const fetchData = async () => {
       if ((!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) || notValid == 1) {
         setIsValidation(true);
+        setValidationStatus(null);
         setIsError(true);
         setLoaderText("CAMPAIGN_VALIDATION_INPROGRESS");
         setLoader(true);
@@ -1107,6 +1112,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setIsValidation(false);
             const errorMessage = temp?.error.replaceAll(":", "-");
             setShowToast({ key: "error", label: temp?.additionalDetails?.error?.code || "HCM_PROCESS_ERROR", transitionTime: 5000000 });
+            setValidationStatus({ type: "error", label: temp?.additionalDetails?.error?.code || "HCM_PROCESS_ERROR" });
             setIsError(true);
             setApiError(errorMessage);
             setNotValid(2);
@@ -1117,6 +1123,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setIsValidation(false);
             // const errorMessage = temp?.error.replaceAll(":", "-");
             setShowToast({ key: "error", label: temp?.additionalDetails?.error?.code || "HCM_PROCESS_ERROR", transitionTime: 5000000 });
+            setValidationStatus({ type: "error", label: temp?.additionalDetails?.error?.code || "HCM_PROCESS_ERROR" });
             setIsError(true);
             setApiError(errorMessage);
             setNotValid(2);
@@ -1135,6 +1142,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
             if (isValidFile) {
               setShowToast({ key: "success", label: t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_COMPLETED) });
+              setValidationStatus({ type: "success", label: I18N_KEYS.COMPONENTS.HCM_VALIDATION_COMPLETED });
               if (temp?.id) {
                 setResourceId(temp?.id);
               }
@@ -1151,6 +1159,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               const processedFileStore = temp?.processedFilestoreId || temp?.processedFileStoreId;
               if (!processedFileStore) {
                 setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED) });
+                setValidationStatus({ type: "error", label: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED });
                 // setIsValidation(true);
                 return;
               } else {
@@ -1173,6 +1182,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 // onFileDelete(uploadedFile);
                 setUploadedFile(fileData);
                 setShowToast({ key: "warning", label: t(I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN) });
+                setValidationStatus({ type: "warning", label: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN });
                 setIsError(true);
               }
             }
@@ -1184,6 +1194,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             const processedFileStore = temp?.processedFilestoreId || temp?.processedFileStoreId;
             if (!processedFileStore) {
               setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED), transitionTime: 5000000 });
+              setValidationStatus({ type: "error", label: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED });
               return;
             } else {
               setIsError(true);
@@ -1205,6 +1216,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               // onFileDelete(uploadedFile);
               setUploadedFile(fileData);
               setShowToast({ key: "warning", label: t(I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN), transitionTime: 5000000 });
+              setValidationStatus({ type: "warning", label: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN });
               setIsError(true);
             }
           }
@@ -1640,6 +1652,13 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               </div>
             )}
             <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
+            {validationStatus && (
+              <AlertCard
+                variant={validationStatus.type === "success" ? "success" : validationStatus.type === "warning" ? "warning" : "error"}
+                style={{ marginLeft: "0rem", maxWidth: "100%", marginTop: "1rem" }}
+                label={t(validationStatus.label)}
+              />
+            )}
             {showInfoCard && (
               <AlertCard
                 populators={{

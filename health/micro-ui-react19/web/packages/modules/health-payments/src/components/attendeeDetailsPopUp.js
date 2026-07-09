@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp } from "@egovernments/digit-ui-components";
 import { formatTimestampToDate } from "../utils";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * AttendeeDetailsPopUp displays a popup with attendee details.
@@ -14,14 +15,14 @@ const AttendeeDetailsPopUp = ({ attendee, onClose }) => {
 
   if (!attendee) return null;
 
-  const name = attendee[1] || t("ES_COMMON_NA");
-  const username = attendee[2] || t("ES_COMMON_NA");
-  const role = attendee[3] ? t(attendee[3]) : t("ES_COMMON_NA");
-  const gender = attendee[5] || t("ES_COMMON_NA");
-  const dob = attendee[6] || t("ES_COMMON_NA");
-  const phone = attendee[7] || t("ES_COMMON_NA");
-  const enrollmentDate = attendee[10] ? formatTimestampToDate(attendee[10]) : t("ES_COMMON_NA");
-  const denrollmentDate = attendee[11] ? formatTimestampToDate(attendee[11]) : t("ES_COMMON_NA");
+  const name = attendee[1] || t(I18N_KEYS.COMMON.ES_COMMON_NA);
+  const username = attendee[2] || t(I18N_KEYS.COMMON.ES_COMMON_NA);
+  const role = attendee[3] ? t(attendee[3]) : t(I18N_KEYS.COMMON.ES_COMMON_NA);
+  const gender = attendee[5] || t(I18N_KEYS.COMMON.ES_COMMON_NA);
+  const dob = attendee[6] || t(I18N_KEYS.COMMON.ES_COMMON_NA);
+  const phone = attendee[7] || t(I18N_KEYS.COMMON.ES_COMMON_NA);
+  const enrollmentDate = attendee[10] ? formatTimestampToDate(attendee[10]) : t(I18N_KEYS.COMMON.ES_COMMON_NA);
+  const denrollmentDate = attendee[11] ? formatTimestampToDate(attendee[11]) : t(I18N_KEYS.COMMON.ES_COMMON_NA);
   const isActive = !attendee[11];
 
   const details = [
@@ -42,7 +43,7 @@ const AttendeeDetailsPopUp = ({ attendee, onClose }) => {
       onOverlayClick={onClose}
       heading={
         <span style={{ color: "#0B4B66" }}>
-          {t("HCM_AM_USER_DETAILS")}
+          {t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_USER_DETAILS)}
         </span>
       }
       children={[
@@ -59,7 +60,7 @@ const AttendeeDetailsPopUp = ({ attendee, onClose }) => {
                 color: isActive ? "#256625" : "#B71C1C",
               }}
             >
-              {isActive ? t("HCM_AM_USER_STATUS_ACTIVE") : t("HCM_AM_USER_STATUS_INACTIVE")}
+              {isActive ? t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_USER_STATUS_ACTIVE) : t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_USER_STATUS_INACTIVE)}
             </span>
           </div>
           {details.map((item, index) => (

@@ -2,6 +2,7 @@ import { Card, TextInput, Button, HeaderComponent, TooltipWrapper, SVG } from "@
 import React, { useRef, Fragment, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { PDFDownload, ChartImageDownload, SharePDF, ShareChartImage } from "../utils/PDFDownload";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const GenericChart = ({
   header,
@@ -27,18 +28,18 @@ const GenericChart = ({
   const menuItems = [
     {
       code: "image",
-      i18nKey: t("ES_COMMON_DOWNLOAD_IMAGE"),
+      i18nKey: t(I18N_KEYS.CHARTS.ES_COMMON_DOWNLOAD_IMAGE),
       icon: "FileDownload",
     },
     {
       code: "shareImage",
-      i18nKey: t("ES_DSS_SHARE_IMAGE"),
+      i18nKey: t(I18N_KEYS.COMMON.ES_DSS_SHARE_IMAGE),
       target: "mail",
       icon: "Email",
     },
     {
       code: "shareImage",
-      i18nKey: t("ES_DSS_SHARE_IMAGE"),
+      i18nKey: t(I18N_KEYS.COMMON.ES_DSS_SHARE_IMAGE),
       target: "whatsapp",
       icon: "Whatsapp",
     },
@@ -118,7 +119,7 @@ const GenericChart = ({
             <span className="digit-table-search-wrapper">
               {showSearch && (
                 <div className="digit-field">
-                  <TextInput className={"digit-generic-chart-search-field"} placeholder={t("DSS_SEARCH")} onChange={onChange} type={"search"} />
+                  <TextInput className={"digit-generic-chart-search-field"} placeholder={t(I18N_KEYS.CHARTS.DSS_SEARCH)} onChange={onChange} type={"search"} />
                 </div>
               )}
               {showDownload && <SVG.FileDownload onClick={handleExcelDownload} fill={"#505A5F"} style={{ cursor: "pointer" }} />}

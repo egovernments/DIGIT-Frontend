@@ -2,6 +2,7 @@ import React, { useState, Fragment } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button, PanelCard, Footer } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const Response = () => {
   const { t } = useTranslation();
@@ -30,7 +31,7 @@ const Response = () => {
             : [
                 <Button
                   key="view-another-register"
-                  label={t("HCM_AM_VIEW_ANOTHER_REGISTER")}
+                  label={t(I18N_KEYS.COMPONENTS_MISC.HCM_AM_VIEW_ANOTHER_REGISTER)}
                   onClick={() => {
                     navigate(`/${window.contextPath}/employee/payments/registers-inbox`);
                   }}

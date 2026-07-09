@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Card, Header, Button, Dropdown, Toast, HeaderComponent, Footer } from "@egovernments/digit-ui-components";
 import { MANAGE_BILLS_ROLE_STORAGE_KEY, normalizeManageBillsRoleParam } from "../../utils/roleUtils";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /* --------------------------- Media Query Hook --------------------------- */
 const useMediaQuery = (query) => {
@@ -136,14 +137,14 @@ const ProjectSelect = ({ nextScreen }) => {
     const handleNextClick = () => {
         if (billScreen) {
             if (!selectedProject || !selectedLevel) {
-                setShowToast({ key: "error", label: t("HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS"), transitionTime: 3000 });
+                setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS), transitionTime: 3000 });
                 return;
             }
             Digit.SessionStorage.set("selectedProject", selectedProject);
             navigate(`/${window.contextPath}/employee/payments/generate-bill`);
         } else if (manageBillsScreen) {
             if (!selectedProject) {
-                setShowToast({ key: "error", label: t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY"), transitionTime: 3000 });
+                setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_PROJECT_SELECTION_IS_MANDATORY), transitionTime: 3000 });
                 return;
             }
             const normalizedRoleFromParam = normalizeManageBillsRoleParam(role);
@@ -151,7 +152,7 @@ const ProjectSelect = ({ nextScreen }) => {
             const normalizedRoleFromStorage = normalizeManageBillsRoleParam(storedRole);
             const resolvedRole = normalizedRoleFromParam || normalizedRoleFromStorage;
             if (!resolvedRole) {
-                setShowToast({ key: "error", label: t("HCM_AM_UNAUTHORIZED"), transitionTime: 3000 });
+                setShowToast({ key: "error", label: t(I18N_KEYS.PAGES_PROJECT_SELECTION.HCM_AM_UNAUTHORIZED), transitionTime: 3000 });
                 navigate(`/${window.contextPath}/employee`);
                 return;
             }
@@ -160,7 +161,7 @@ const ProjectSelect = ({ nextScreen }) => {
             navigate(`/${window.contextPath}/employee/payments/manage-bills/${resolvedRole}`);
         } else {
             if (!selectedProject) {
-                setShowToast({ key: "error", label: t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY"), transitionTime: 3000 });
+                setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_PROJECT_SELECTION_IS_MANDATORY), transitionTime: 3000 });
                 return;
             }
             Digit.SessionStorage.set("selectedProject", selectedProject);
@@ -173,20 +174,20 @@ const ProjectSelect = ({ nextScreen }) => {
       <div style={{ marginBottom: "2.5rem" }}>
         <Card type="primary" className="bottom-gap-card-payment">
           <HeaderComponent className="payment-screen-headers">
-              {billScreen ? t("HCM_AM_PAYEMENT_BILL_AGGREGATION_HEAD") : t("HCM_AM_PAYEMENT_PROJECT_HEAD")}
+              {billScreen ? t(I18N_KEYS.PAGES_PROJECT_SELECTION.HCM_AM_PAYEMENT_BILL_AGGREGATION_HEAD) : t(I18N_KEYS.PAGES_PROJECT_SELECTION.HCM_AM_PAYEMENT_PROJECT_HEAD)}
           </HeaderComponent>
           <div>
             {billScreen
-              ? t("HCM_AM_PROJECT_AND_BILL_AGGREGATION_DESCRIPTION")
+              ? t(I18N_KEYS.PAGES_PROJECT_SELECTION.HCM_AM_PROJECT_AND_BILL_AGGREGATION_DESCRIPTION)
               : manageBillsScreen
-              ? t("HCM_AM_PROJECT_CHOOSE_DESCRIPTION_MANAGE_BILLS")
-              : t("HCM_AM_PROJECT_CHOOSE_DESCRIPTION")}
+              ? t(I18N_KEYS.PAGES_PROJECT_SELECTION.HCM_AM_PROJECT_CHOOSE_DESCRIPTION_MANAGE_BILLS)
+              : t(I18N_KEYS.PAGES_PROJECT_SELECTION.HCM_AM_PROJECT_CHOOSE_DESCRIPTION)}
           </div>
 
           {/* ------------ Project Dropdown ------------ */}
           <div style={labelPairStyle}>
             <div style={labelItemStyle}>
-              {t("ATTENDANCE_PROJECT_NAME")}
+              {t(I18N_KEYS.PAGES_PROJECT_SELECTION.ATTENDANCE_PROJECT_NAME)}
               <span style={{ color: "#b91900" }}> *</span>
             </div>
 
@@ -207,7 +208,7 @@ const ProjectSelect = ({ nextScreen }) => {
           {billScreen && selectedProject && (
             <div style={labelPairStyle}>
               <div style={labelItemStyle}>
-                {t("HCM_AM_BILL_AGGREGATION_FOR_EMPLOYEE_MAPPED_AT")}
+                {t(I18N_KEYS.PAGES_PROJECT_SELECTION.HCM_AM_BILL_AGGREGATION_FOR_EMPLOYEE_MAPPED_AT)}
                 <span style={{ color: "#b91900" }}> *</span>
               </div>
 
@@ -230,7 +231,7 @@ const ProjectSelect = ({ nextScreen }) => {
         actionFields={[
           <Button
             icon="ArrowBack"
-            label={t("HCM_AM_BACK_LABEL")}
+            label={t(I18N_KEYS.COMMON.HCM_AM_BACK_LABEL)}
             onClick={() => navigate(`/${window.contextPath}/employee`)}
             style={{ marginLeft: "2.5rem", minWidth: "10rem" }}
             type="button"
@@ -239,7 +240,7 @@ const ProjectSelect = ({ nextScreen }) => {
           <Button
             icon="ArrowForward"
             isSuffix
-            label={t("HCM_AM_NEXT_LABEL")}
+            label={t(I18N_KEYS.COMMON.HCM_AM_NEXT_LABEL)}
             onClick={handleNextClick}
             style={{ minWidth: "10rem" }}
             type="button"

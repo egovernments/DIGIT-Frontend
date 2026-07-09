@@ -16,6 +16,7 @@ import VerifyAndGeneratePayments from "./verify_generate_payements";
 import BillPaymentDetails from "./bill_payment_details";
 import ManageBills from "./manage_bills";
 import EditBillOnExcel from "./EditBillOnExcel";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -27,26 +28,26 @@ const ProjectBreadCrumb = ({ location }) => {
   const crumbs = [
     {
       internalLink: `/${window?.contextPath}/employee`,
-      content: t("HOME"),
+      content: t(I18N_KEYS.PAGES_NAVIGATION.HOME),
       show: true,
     },
     {
       internalLink: `/${window?.contextPath}/employee/payments/project-selection`,
-      content: t("HCM_AM_BREADCRUMBS_PROJECT_SELECTION"),
+      content: t(I18N_KEYS.PAGES_NAVIGATION.HCM_AM_BREADCRUMBS_PROJECT_SELECTION),
       show:
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "REGISTERS_INBOX" || ((Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_ATTENDANCE" ||
           Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE") && !fromCampaignSupervisor)
     },
     {
       internalLink: `/${window?.contextPath}/employee/payments/project-and-aggregation-selection`,
-      content: t("HCM_AM_BREADCRUMBS_PROJECT_AND_AGGREGATION_SELECTION"),
+      content: t(I18N_KEYS.PAGES_NAVIGATION.HCM_AM_BREADCRUMBS_PROJECT_AND_AGGREGATION_SELECTION),
       show:
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "GENERATE_BILL" || ((Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_ATTENDANCE" ||
           Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE") && fromCampaignSupervisor)
     },
     {
       internalLink: fromCampaignSupervisor ? `/${window?.contextPath}/employee/payments/generate-bill` : `/${window?.contextPath}/employee/payments/registers-inbox`,
-      content: fromCampaignSupervisor ? t("HCM_AM_BREADCRUMBS_GENERATE_BILLS") : t("HCM_AM_BREADCRUMBS_REGISTERS_INBOX"),
+      content: fromCampaignSupervisor ? t(I18N_KEYS.PAGES_NAVIGATION.HCM_AM_BREADCRUMBS_GENERATE_BILLS) : t(I18N_KEYS.PAGES_NAVIGATION.HCM_AM_BREADCRUMBS_REGISTERS_INBOX),
       show:
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_ATTENDANCE" ||
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE" ||

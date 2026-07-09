@@ -2,6 +2,7 @@ import React from "react";
 import _ from "lodash";
 import { Link } from "react-router-dom";
 import { Tag} from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
@@ -102,13 +103,13 @@ export const UICustomizations = {
             <div style={{ display: "grid" }}>
               <span className="link" style={{ display: "grid" }}>
                 <Link to={`/${window.contextPath}/employee/pgr/complaint-details/${value}`}>
-                  {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                  {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t(I18N_KEYS.COMMON.ES_COMMON_NA))}
                 </Link>
               </span>
               <span>
                 {row?.businessObject?.service?.serviceCode
                   ? t(`SERVICEDEFS.${row.businessObject.service.serviceCode.toUpperCase()}`)
-                  : t("ES_COMMON_NA")}
+                  : t(I18N_KEYS.COMMON.ES_COMMON_NA)}
               </span>
             </div>
           );
@@ -119,18 +120,18 @@ export const UICustomizations = {
                 ? value.split(".").pop() 
                 : (typeof value === "string" && value.length > 0 ? value : null); 
           
-            return formattedValue ? <span>{t(`${formattedValue}`)}</span> : <span>{t("NA")}</span>;
+            return formattedValue ? <span>{t(`${formattedValue}`)}</span> : <span>{t(I18N_KEYS.COMMON.NA)}</span>;
           }     
 
         case "CS_COMPLAINT_DETAILS_CURRENT_STATUS":
-          return value && value?.length > 0 ? <span>{t(`WF_INBOX_${value}`)}</span> : <span>{t("NA")}</span>;
+          return value && value?.length > 0 ? <span>{t(`WF_INBOX_${value}`)}</span> : <span>{t(I18N_KEYS.COMMON.NA)}</span>;
 
         case "WF_INBOX_HEADER_CURRENT_OWNER":
-          return <span>{value?.assignes?.[0]?.name || t("NA")}</span>; // simplified and tightened
+          return <span>{value?.assignes?.[0]?.name || t(I18N_KEYS.COMMON.NA)}</span>; // simplified and tightened
 
         case "WF_INBOX_HEADER_CREATED_DATE":
           if (!value || value <= 0) {
-            return <Tag label={t("ES_COMMON_NA")} showIcon={false} type="error" />;
+            return <Tag label={t(I18N_KEYS.COMMON.ES_COMMON_NA)} showIcon={false} type="error" />;
           }
           const createdDate = new Date(value);
           const createdDay = createdDate.getDate();
@@ -141,7 +142,7 @@ export const UICustomizations = {
           return <Tag label={createdDateLabel} showIcon={false} type="success" />;
 
         default:
-          return t("ES_COMMON_NA");
+          return t(I18N_KEYS.COMMON.ES_COMMON_NA);
       }
     },
   }

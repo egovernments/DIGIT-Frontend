@@ -1,6 +1,7 @@
 import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const ROLES = {
   HRMS: ["HRMS_ADMIN"],
@@ -24,8 +25,8 @@ const HRMSCard = () => {
   }
 
   let links = [
-    generateLink("SEARCH_EMPLOYEE", "inbox"),
-    generateLink("CREATE_EMPLOYEE", "create",),
+    generateLink(I18N_KEYS.HRMS_CARD.SEARCH_EMPLOYEE, "inbox"),
+    generateLink(I18N_KEYS.HRMS_CARD.CREATE_EMPLOYEE, "create",),
   ];
   const hasRequiredRoles = (link) => {
     if (!link?.roles?.length) return true;
@@ -35,7 +36,7 @@ const HRMSCard = () => {
 
   const propsForModuleCard = {
     Icon: "UpdateExpense",
-    moduleName: t("HRMS"),
+    moduleName: t(I18N_KEYS.HRMS_CARD.HRMS),
     kpis: [],
     links: links,
     className: "microplan-employee-module-card",

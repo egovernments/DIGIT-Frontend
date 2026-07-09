@@ -3,13 +3,14 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button, PanelCard, Footer } from "@egovernments/digit-ui-components";
 import { ReposeScreenType } from "../../constants/enums";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const ResponseScreen = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   const { state } = useLocation();
-  const back = state?.back ? state?.back : "BACK";
+  const back = state?.back ? state?.back : I18N_KEYS.PAGES_RESPONSE.BACK;
 
   return (
     <>
@@ -57,7 +58,7 @@ const ResponseScreen = () => {
             key="back"
             // style={{ margin: "0.5rem", marginLeft: "6rem", width: "25%" }}
             variation="primary"
-            label={state.isCampaign == ReposeScreenType.CREAT_EUSER ? t("CORE_COMMON_CONTINUE_CAMPAIGN_ASSIGNMENTS") : t(back)}
+            label={state.isCampaign == ReposeScreenType.CREAT_EUSER ? t(I18N_KEYS.PAGES_RESPONSE.CORE_COMMON_CONTINUE_CAMPAIGN_ASSIGNMENTS) : t(back)}
             icon={"ArrowForward"}
             isSuffix
             onClick={() => {

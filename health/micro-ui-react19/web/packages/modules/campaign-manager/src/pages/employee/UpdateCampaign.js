@@ -19,7 +19,7 @@ import { I18N_KEYS } from "../../utils/i18nKeyConstants";
  * triggers API calls to create or update the campaign
  */
 
-const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
+const UpdateCampaign = () => {
   const resourceDatas = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_SET_UP");
   Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", resourceDatas);
 
@@ -117,10 +117,12 @@ const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
   const { data: hierarchyData, isLoading: isBoundaryLoading } = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE: hierarchyType, tenantId });
 
   const lowestHierarchy = useMemo(() => {
-    // Try MDMS first
-    const fromMdms = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
-    if (fromMdms) return fromMdms;
-    // Fallback: derive from boundary hierarchy definition (leaf = type not used as any other's parent)
+    // Only use lowestHierarchy from MDMS if a matching "console" type entry exists for the selected hierarchy
+    const consoleSchema = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find(
+      (item) => item.type === "console" && item.hierarchy === hierarchyType
+    );
+    if (consoleSchema?.lowestHierarchy) return consoleSchema.lowestHierarchy;
+    // No matching "console" type entry — show all levels (use the natural leaf from boundary hierarchy definition)
     const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
     if (!boundaryHierarchy.length) return undefined;
     const typesUsedAsParent = new Set(boundaryHierarchy.map((b) => b.parentBoundaryType).filter(Boolean));

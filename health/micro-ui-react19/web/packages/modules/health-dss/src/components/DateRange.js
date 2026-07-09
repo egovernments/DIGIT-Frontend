@@ -25,6 +25,7 @@ import {
 import React, { useEffect, Fragment, useMemo, useRef, useState } from "react";
 import { createStaticRanges, DateRangePicker } from "react-date-range";
 import { getDuration } from "../utils/getDuration";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 function isEndDateFocused(focusNumber) {
   return focusNumber === 1;
@@ -70,28 +71,28 @@ const DateRange = ({ values, onFilterChange, t }) => {
   const staticRanges = useMemo(() => {
     return createStaticRanges([
       {
-        label: t("DSS_TODAY"),
+        label: t(I18N_KEYS.FILTERS.DSS_TODAY),
         range: () => ({
           startDate: startOfToday(new Date()),
           endDate: endOfToday(new Date()),
         }),
       },
       {
-        label: t("DSS_YESTERDAY"),
+        label: t(I18N_KEYS.FILTERS.DSS_YESTERDAY),
         range: () => ({
           startDate: startOfYesterday(new Date()),
           endDate: subSeconds(endOfYesterday(new Date()), 1),
         }),
       },
       {
-        label: t("DSS_THIS_WEEK"),
+        label: t(I18N_KEYS.FILTERS.DSS_THIS_WEEK),
         range: () => ({
           startDate: startOfWeek(new Date()),
           endDate: endOfToday(new Date()),
         }),
       },
       {
-        label: t("DSS_THIS_MONTH"),
+        label: t(I18N_KEYS.FILTERS.DSS_THIS_MONTH),
         range: () => ({
           startDate: startOfMonth(new Date()),
           endDate: endOfToday(new Date()),
@@ -99,7 +100,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
         }),
       },
       {
-        label: t("DSS_THIS_QUARTER"),
+        label: t(I18N_KEYS.FILTERS.DSS_THIS_QUARTER),
         range: () => ({
           startDate: startOfQuarter(new Date()),
           endDate: subSeconds(endOfToday(new Date()), 1),
@@ -107,7 +108,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
         }),
       },
       {
-        label: t("DSS_PREVIOUS_YEAR"),
+        label: t(I18N_KEYS.FILTERS.DSS_PREVIOUS_YEAR),
         range: () => {
           if (new Date().getMonth() < 3) {
             return {
@@ -123,7 +124,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
         },
       },
       {
-        label: t("DSS_THIS_YEAR"),
+        label: t(I18N_KEYS.FILTERS.DSS_THIS_YEAR),
         range: () => {
           return {
             startDate: Digit.Utils.dss.getDefaultFinacialYear().startDate,
@@ -181,7 +182,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
   const dssFiltersValue = JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value;
   return (
     <div className="digit-date-range-label-field">
-      <div className="digit-date-range-label">{t(`ES_DSS_DATE_RANGE`)}</div>
+      <div className="digit-date-range-label">{t(I18N_KEYS.FILTERS.ES_DSS_DATE_RANGE)}</div>
       <div className="employee-select-wrap" ref={wrapperRef}>
         <div className={`select ${dateFilterSelected!=="DSS_CUSTOM_DATE_RANGE" ? "disabled" : ""} ${isModalOpen ? "dss-input-active-border" : ""}`} style={{position: "sticky"}}>
           <input

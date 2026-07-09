@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { I18N_KEYS } from "./i18nKeyConstants";
 
 export const useAttendanceSummary = ({ businessId, tenantId, t }) => {
      const attendanceContextPath =
@@ -70,9 +71,9 @@ export const useAttendanceSummary = ({ businessId, tenantId, t }) => {
         );
 
         if (matchingIndividual) {
-          const userName = matchingIndividual.name?.givenName || t("NA");
-          const userId = matchingIndividual?.userDetails?.username || t("NA");
-          const userRole = t(matchingIndividual.skills?.[0]?.type) || t("NA");
+          const userName = matchingIndividual.name?.givenName || t(I18N_KEYS.COMMON.NA);
+          const userId = matchingIndividual?.userDetails?.username || t(I18N_KEYS.COMMON.NA);
+          const userRole = t(matchingIndividual.skills?.[0]?.type) || t(I18N_KEYS.COMMON.NA);
           const noOfDaysWorked =
             individualEntry?.denrollmentDate == null ? true : false;
 

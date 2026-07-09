@@ -24,6 +24,7 @@ import CommentPopUp from "../../components/commentPopUp";
 
 import EditAttendeePopUp from "../../components/editAttendeesPopUp";
 import AttendeeDetailsPopUp from "../../components/attendeeDetailsPopUp";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /**
  * @function ViewAttendance
@@ -190,7 +191,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
       } else {
         if (triggerCreate) {
           if (searchCount > 3) {
-            setShowToast({ key: "info", label: t(`HCM_AM_MUSTOROLE_GENERATION_INPROGRESS_INFO_MESSAGE`), transitionTime: 3000 });
+            setShowToast({ key: "info", label: t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_MUSTOROLE_GENERATION_INPROGRESS_INFO_MESSAGE), transitionTime: 3000 });
             setTriggerEstimate(true);
             setDisabledAction(true);
           } else {
@@ -271,11 +272,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
               replace: true,
               state: {
                 state: "success",
-                info: t("HCM_AM_MUSTER_ROLL_ID"),
+                info: t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_MUSTER_ROLL_ID),
                 fileName: data?.musterRolls?.[0]?.musterRollNumber,
-                description: t(`HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION`),
-                message: t(`HCM_AM_ATTENDANCE_APPROVE_SUCCESS`),
-                back: t(`GO_BACK_TO_HOME`),
+                description: t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION),
+                message: t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ATTENDANCE_APPROVE_SUCCESS),
+                back: t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME),
                 backlink: `/${window.contextPath}/employee`,
               },
             });
@@ -285,8 +286,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
               replace: true,
               state: {
                 state: "error",
-                message: t(`HCM_AM_ATTENDANCE_APPROVE_FAILED`),
-                back: t(`GO_BACK_TO_HOME`),
+                message: t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ATTENDANCE_APPROVE_FAILED),
+                back: t(I18N_KEYS.PAYMENT_SETUP.GO_BACK_TO_HOME),
                 backlink: `/${window.contextPath}/employee`,
               },
             });
@@ -329,7 +330,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         },
         {
           onSuccess: (data) => {
-            setShowToast({ key: "success", label: t("HCM_AM_ATTENDANCE_UPDATED_SUCCESSFULLY"), transitionTime: 3000 });
+            setShowToast({ key: "success", label: t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ATTENDANCE_UPDATED_SUCCESSFULLY), transitionTime: 3000 });
             setTimeout(() => {
               setUpdateDisabled(false);
               navigate(
@@ -552,17 +553,17 @@ const ViewAttendance = ({ editAttendance = false }) => {
       const matchingAttendee = attendees.find((att) => att.individualId === individualId);
 
       if (matchingIndividual) {
-        const userName = matchingIndividual.name?.givenName || t("NA");
-        const uniqueId = matchingIndividual?.name?.familyName || t("NA");
-        const userId = matchingIndividual?.userDetails?.username || t("NA");
+        const userName = matchingIndividual.name?.givenName || t(I18N_KEYS.COMMON.NA);
+        const uniqueId = matchingIndividual?.name?.familyName || t(I18N_KEYS.COMMON.NA);
+        const userId = matchingIndividual?.userDetails?.username || t(I18N_KEYS.COMMON.NA);
         const matchedSkill = matchingIndividual?.skills?.find((skill) =>
           !skill?.isDeleted && workerRatesData?.rates?.some(
             (rate) => rate?.skillCode === skill?.type
           )
         );
-        // const userRole = matchedSkill ? t(matchedSkill.type) : t("NA"); //todo uncomment
+        // const userRole = matchedSkill ? t(matchedSkill.type) : t(I18N_KEYS.COMMON.NA); //todo uncomment
         const userRole =
-          t(matchingIndividual.skills?.[0]?.type) || t("NA"); //todo remove
+          t(matchingIndividual.skills?.[0]?.type) || t(I18N_KEYS.COMMON.NA); //todo remove
         const noOfDaysWorked = individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0;
         const id = individualEntry.individualId || 0;
         const gender = matchingIndividual?.gender;
@@ -635,7 +636,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     ) || [];
 
     if (reports.length === 0) {
-      setShowToast({ key: "error", label: t("HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE"), transitionTime: 3000 });
+      setShowToast({ key: "error", label: t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE), transitionTime: 3000 });
       return;
     }
 
@@ -650,11 +651,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
         type: "excel",
       });
     } else if (initiatedReport) {
-      setShowToast({ key: "info", label: t("HCM_AM_REPORT_GENERATION_IN_PROGRESS"), transitionTime: 5000 });
+      setShowToast({ key: "info", label: t(I18N_KEYS.COMMON.HCM_AM_REPORT_GENERATION_IN_PROGRESS), transitionTime: 5000 });
     } else if (failedReport) {
-      setShowToast({ key: "error", label: t("HCM_AM_REPORT_GENERATION_FAILED"), transitionTime: 5000 });
+      setShowToast({ key: "error", label: t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_REPORT_GENERATION_FAILED), transitionTime: 5000 });
     } else {
-      setShowToast({ key: "error", label: t("HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE"), transitionTime: 5000 });
+      setShowToast({ key: "error", label: t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE), transitionTime: 5000 });
     }
   };
 
@@ -707,7 +708,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
         <HeaderComponent styles={{ marginBottom: "1rem" }} className="payment-screen-headers pop-inbox-header">
-              {editAttendance ? t("HCM_AM_EDIT_ATTENDANCE") : t("HCM_AM_VIEW_ATTENDANCE")}
+              {editAttendance ? t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_EDIT_ATTENDANCE) : t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_VIEW_ATTENDANCE)}
         </HeaderComponent>
 
         {/* Metrics Summary Card */}
@@ -719,18 +720,18 @@ const ViewAttendance = ({ editAttendance = false }) => {
                   const targetPerUserPerDay = deliveryTargetPerUserPerDay || 0;
                   const totalTarget = targetPerUserPerDay * (attendanceDuration || 0) * attendanceSummary.length;
                   const actual = attendanceSummary.reduce((sum, row) => sum + (row[12] != null ? row[12] : 0), 0);
-                  if (totalTarget === 0) return t("ES_COMMON_NA");
+                  if (totalTarget === 0) return t(I18N_KEYS.COMMON.ES_COMMON_NA);
                   return `${Math.round((actual / totalTarget) * 100)}%`;
                 })()}
               </div>
-              <div style={{ fontSize: "0.875rem", color: "#505A5F", marginTop: "0.25rem" }}>{t("HCM_AM_TARGET_ACHIEVED")}</div>
+              <div style={{ fontSize: "0.875rem", color: "#505A5F", marginTop: "0.25rem" }}>{t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_TARGET_ACHIEVED)}</div>
             </div>
             <div style={{ width: "1px", height: "3rem", backgroundColor: "#D6D5D4" }} />
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "#0B4B66" }}>
                 {attendanceSummary.reduce((sum, row) => sum + (row[12] != null ? row[12] : 0), 0)}
               </div>
-              <div style={{ fontSize: "0.875rem", color: "#505A5F", marginTop: "0.25rem" }}>{t("HCM_AM_ACTUAL_INTERVENTIONS")}</div>
+              <div style={{ fontSize: "0.875rem", color: "#505A5F", marginTop: "0.25rem" }}>{t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ACTUAL_INTERVENTIONS)}</div>
             </div>
 
           </div>
@@ -738,14 +739,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
         <Card type="primary" className="bottom-gap-card-payment">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
-            <span style={{ fontSize: "24px", fontWeight: 700, color: "#0B4B66", lineHeight: "1.5rem" }}>{t("HCM_AM_REGISTER_DETAILS")}</span>
+            <span style={{ fontSize: "24px", fontWeight: 700, color: "#0B4B66", lineHeight: "1.5rem" }}>{t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_REGISTER_DETAILS)}</span>
             {hasMusterRoll && (
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 {enableMapView && (
                   <>
                     <Button
-                      label={t("HCM_AM_VIEW_MAPS")}
-                      title={t("HCM_AM_VIEW_MAPS")}
+                      label={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_VIEW_MAPS)}
+                      title={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_VIEW_MAPS)}
                       variation="link"
                       icon="Map"
                       isSuffix={false}
@@ -757,8 +758,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
                   </>
                 )}
                 <Button
-                  label={t("HCM_AM_DOWNLOAD_REPORT")}
-                  title={t("HCM_AM_DOWNLOAD_REPORT")}
+                  label={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_DOWNLOAD_REPORT)}
+                  title={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_DOWNLOAD_REPORT)}
                   variation="secondary"
                   icon="FileDownload"
                   size="medium"
@@ -788,18 +789,18 @@ const ViewAttendance = ({ editAttendance = false }) => {
             `${formatTimestampToDate(selectedPeriod?.periodStartDate)} - ${formatTimestampToDate(selectedPeriod?.periodEndDate)}`
           )}
           {renderLabelPair("HCM_AM_DURATION", attendanceDuration || 0)}
-          {renderLabelPair("HCM_AM_STATUS", t(data?.[0]?.musterRollStatus) || t("APPROVAL_PENDING"))}
+          {renderLabelPair("HCM_AM_STATUS", t(data?.[0]?.musterRollStatus) || t(I18N_KEYS.PAGES_ATTENDANCE.APPROVAL_PENDING))}
         </Card>
         <Card className="bottom-gap-card-payment">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", marginBottom: "0.75rem" }}>
             <span style={{ fontSize: "1.25rem", fontWeight: 700, color: "#0B4B66", lineHeight: "1.5rem" }}>
-              {t("HCM_AM_ATTENDANCE_TABLE_HEADER")}
+              {t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ATTENDANCE_TABLE_HEADER)}
             </span>
             {canCampaignSupervisorEdit && !editAttendance && (
               <Button
                 icon="Edit"
-                label={t("HCM_AM_EDIT_ATTENDANCE")}
-                title={t("HCM_AM_EDIT_ATTENDANCE")}
+                label={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_EDIT_ATTENDANCE)}
+                title={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_EDIT_ATTENDANCE)}
                 size="medium"
                 variation="secondary"
                 onClick={() => {
@@ -840,18 +841,18 @@ const ViewAttendance = ({ editAttendance = false }) => {
         {showLogs && (
           <Card>
             <div className="card-heading">
-              <h2 className="card-heading-title">{t(`HCM_AM_COMMENT_LOG_HEADING`)}</h2>
+              <h2 className="card-heading-title">{t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_COMMENT_LOG_HEADING)}</h2>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <Button
                   icon="Visibility"
                   iconFill=""
-                  label={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
+                  label={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL)}
                   onClick={handleCommentLogClick}
                   options={[]}
                   optionsKey=""
                   size="medium"
                   style={{}}
-                  title={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
+                  title={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL)}
                   variation="secondary"
                   type="button"
                 />
@@ -859,14 +860,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
             </div>
             {data?.[0]?.additionalDetails?.attendanceSupportingDocuments?.length > 0 && (
               <div style={{ marginTop: "1rem" }}>
-                <span style={{ fontWeight: 600, fontSize: "0.875rem" }}>{t("HCM_AM_SUPPORTING_DOCUMENT_LABEL")}</span>
+                <span style={{ fontWeight: 600, fontSize: "0.875rem" }}>{t(I18N_KEYS.COMMON.HCM_AM_SUPPORTING_DOCUMENT_LABEL)}</span>
                 <div style={{ marginTop: "0.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                   {data[0].additionalDetails.attendanceSupportingDocuments.map((doc, index) => (
                     <div key={index} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <span style={{ fontSize: "0.875rem" }}>{doc.fileName}</span>
                       <Button
                         icon="FileDownload"
-                        label={t("WBH_DOWNLOAD")}
+                        label={t(I18N_KEYS.COMMON.WBH_DOWNLOAD)}
                         variation="secondary"
                         size=""
                         isDisabled={!doc.fileStoreId}
@@ -881,7 +882,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         )}
 
         {showCommentLogPopup && (
-          <CommentPopUp onClose={onCommentLogClose} businessId={data?.[0]?.musterRollNumber} heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`} />
+          <CommentPopUp onClose={onCommentLogClose} businessId={data?.[0]?.musterRollNumber} heading={`${t(I18N_KEYS.COMMON.HCM_AM_STATUS_LOG_FOR_LABEL)}`} />
         )}
 
         {enableMapView && showMapPopup && (
@@ -892,12 +893,12 @@ const ViewAttendance = ({ editAttendance = false }) => {
             style={{ width: "98vw", maxWidth: "98vw", height: "99vh", padding: "0.15rem 0.5rem" }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.15rem" }}>
-              <span style={{ fontSize: "0.9rem", fontWeight: 600 }}>{t("HCM_AM_VIEW_MAPS")}</span>
+              <span style={{ fontSize: "0.9rem", fontWeight: 600 }}>{t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_VIEW_MAPS)}</span>
             </div>
             <div style={{ width: "100%", height: "calc(99vh - 2rem)", display: "flex", flexDirection: "column" }}>
               <iframe
                 src={mapLink}
-                title={t("HCM_AM_VIEW_MAPS")}
+                title={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_VIEW_MAPS)}
                 style={{ width: "100%", flex: 1, border: "none", borderRadius: "4px" }}
                 allowFullScreen
               />
@@ -927,10 +928,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
       {openEditAlertPopUp && (
         <AlertPopUp
           onClose={closeActionBarPopUp}
-          alertHeading={t(`HCM_AM_ALERT_HEADING`)}
-          alertMessage={t(`HCM_AM_ALERT_EDIT_DESCRIPTION`)}
-          submitLabel={t(`HCM_AM_PROCEED`)}
-          cancelLabel={t(`HCM_AM_CANCEL`)}
+          alertHeading={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ALERT_HEADING)}
+          alertMessage={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ALERT_EDIT_DESCRIPTION)}
+          submitLabel={t(I18N_KEYS.COMMON.HCM_AM_PROCEED)}
+          cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
           onPrimaryAction={() => {
             closeActionBarPopUp();
             navigate(
@@ -947,10 +948,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
           onClose={() => {
             setOpenApproveAlertPopUp(false);
           }}
-          alertHeading={t(`HCM_AM_ALERT_APPROVE_HEADING`)}
-          alertMessage={t(`HCM_AM_ALERT_APPROVE_DESCRIPTION`)}
-          submitLabel={t(`HCM_AM_APPROVE`)}
-          cancelLabel={t(`HCM_AM_CANCEL`)}
+          alertHeading={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ALERT_APPROVE_HEADING)}
+          alertMessage={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ALERT_APPROVE_DESCRIPTION)}
+          submitLabel={t(I18N_KEYS.COMMON.HCM_AM_APPROVE)}
+          cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
           isDisabled={approveMutation.isLoading}
           onPrimaryAction={() => {
             triggerMusterRollApprove();
@@ -985,8 +986,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
           setactionFieldsToRight={true}
           actionFields={[
             <Button
-              label={t("HCM_AM_CANCEL")}
-              title={t("HCM_AM_CANCEL")}
+              label={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
+              title={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
               onClick={() => navigate(
                 `/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`,
                 { state: { fromCampaignSupervisor } }
@@ -996,8 +997,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
               variation="secondary"
             />,
             <Button
-              label={t("HCM_AM_SAVE_CHANGES")}
-              title={t("HCM_AM_SAVE_CHANGES")}
+              label={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_SAVE_CHANGES)}
+              title={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_SAVE_CHANGES)}
               onClick={() => { setUpdateDisabled(true); triggerMusterRollUpdate(); }}
               style={{ minWidth: "14rem", whiteSpace: "normal", marginRight: "2rem" }}
               type="button"
@@ -1011,8 +1012,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
           actionFields={[
             ...(!(editAttendance && fromCampaignSupervisor && canCampaignSupervisorEdit) ? [
               <Button
-                label={t(`HCM_AM_GO_BACK`)}
-                title={t(`HCM_AM_GO_BACK`)}
+                label={t(I18N_KEYS.COMMON.HCM_AM_GO_BACK)}
+                title={t(I18N_KEYS.COMMON.HCM_AM_GO_BACK)}
                 onClick={handleGoBack}
                 type="button"
                 style={{ minWidth: "13rem", whiteSpace: "normal", marginLeft: "2rem" }}
@@ -1025,8 +1026,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
               : editAttendance
               ? [
                 <Button
-                  label={t(`HCM_AM_SUBMIT_LABEL`)}
-                  title={t(`HCM_AM_SUBMIT_LABEL`)}
+                  label={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_SUBMIT_LABEL)}
+                  title={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_SUBMIT_LABEL)}
                   onClick={() => { setUpdateDisabled(true); triggerMusterRollUpdate(); }}
                   style={{ minWidth: "14rem", whiteSpace: "normal", marginRight: "2rem" }}
                   type="button"
@@ -1036,15 +1037,15 @@ const ViewAttendance = ({ editAttendance = false }) => {
               ]
               : [
                 <Button
-                  label={t(`HCM_AM_ACTIONS`)}
+                  label={t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ACTIONS)}
                   menuStyles={{ bottom: "40px" }}
                   onOptionSelect={(value) => {
                     if (value.code === "EDIT_ATTENDANCE") setOpenEditAlertPopUp(true);
                     if (value.code === "APPROVE") setOpenApproveCommentPopUp(true);
                   }}
                   options={[
-                    { code: "EDIT_ATTENDANCE", name: t(`HCM_AM_ACTIONS_EDIT_ATTENDANCE`) },
-                    { code: "APPROVE", name: t(`HCM_AM_ACTIONS_APPROVE`) },
+                    { code: "EDIT_ATTENDANCE", name: t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ACTIONS_EDIT_ATTENDANCE) },
+                    { code: "APPROVE", name: t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_ACTIONS_APPROVE) },
                   ]}
                   variation={"primary"}
                   optionsKey="name"

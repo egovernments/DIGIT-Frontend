@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Area, AreaChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import FilterContext from "./FilterContext";
 import NoData from "./NoData";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 const COLORS = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE", "#6E8459", "#D4351C", "#0CF7E4", "#F80BF4", "#22F80B"];
 const getColors = (index = 0) => {
   index = COLORS.length > index ? index : 0;
@@ -34,11 +35,11 @@ const renderUnits = (t, denomination, symbol) => {
   }
   switch (denomination) {
     case "Unit":
-      return `(${t("DSS_UNIT")})`;
+      return `(${t(I18N_KEYS.CHARTS.DSS_UNIT)})`;
     case "Lac":
-      return `(${t("DSS_LAC")})`;
+      return `(${t(I18N_KEYS.CHARTS.DSS_LAC)})`;
     case "Cr":
-      return `(${t("DSS_CR")})`;
+      return `(${t(I18N_KEYS.CHARTS.DSS_CR)})`;
     default:
       return null;
   }

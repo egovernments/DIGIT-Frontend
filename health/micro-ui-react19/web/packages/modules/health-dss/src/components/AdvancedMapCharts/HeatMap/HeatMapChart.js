@@ -12,6 +12,7 @@ import { subDays, addMinutes } from "date-fns";
 import { getDuration } from "../../../utils/getDuration";
 import { getQueryParam } from "../../../utils/getQueryParam";
 import { isLevelOneBoundary } from "../../../utils/isLevelOneBoundary";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 export default function HeatMapChart({ chartId, visualizer, initialRange, isNational, showLabel, pageZoom }) {
   const { t } = useTranslation();
@@ -227,7 +228,7 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
       <React.Fragment>
         {drillDownStack?.length > 1 && (
           <div className="digit-tag-container">
-            <div className="digit-tag-filter-text">{t("DSS_FILTERS_APPLIED")}: </div>
+            <div className="digit-tag-filter-text">{t(I18N_KEYS.COMMON.DSS_FILTERS_APPLIED)}: </div>
             {drillDownStack.map((filter, id) =>
               id > 0 ? (
                 <Chip

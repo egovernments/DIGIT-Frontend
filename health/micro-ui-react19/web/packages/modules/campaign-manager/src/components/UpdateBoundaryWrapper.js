@@ -30,6 +30,15 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   );
   const campaignName = searchParams.get("campaignName");
   const [hierarchyType, SetHierarchyType] = useState(props?.props?.hierarchyType);
+  // Load boundary localizations using the hierarchyType state (updated from campaign API when available)
+  const stateCode = Digit.ULBService.getStateId();
+  const language = Digit.StoreData.getCurrentLanguage();
+  Digit.Services.useStore({
+    stateCode,
+    moduleCode: hierarchyType ? [`boundary-${hierarchyType}`] : [],
+    language,
+    modulePrefix: "hcm",
+  });
   const [showPopUp, setShowPopUp] = useState(false);
   const [restrictSelection, setRestrictSelection] = useState(null);
   const [isUnifiedCampaign, setIsUnifiedCampaign] = useState(
@@ -54,10 +63,12 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteriaHierarchy);
 
   const lowestHierarchy = useMemo(() => {
-    // Try MDMS first
-    const fromMdms = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
-    if (fromMdms) return fromMdms;
-    // Fallback: derive from boundary hierarchy definition (leaf = type not used as any other's parent)
+    // Only use lowestHierarchy from MDMS if a matching "console" type entry exists for the selected hierarchy
+    const consoleSchema = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find(
+      (item) => item.type === "console" && item.hierarchy === hierarchyType
+    );
+    if (consoleSchema?.lowestHierarchy) return consoleSchema.lowestHierarchy;
+    // No matching "console" type entry — show all levels (use the natural leaf from boundary hierarchy definition)
     const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
     if (!boundaryHierarchy.length) return undefined;
     const typesUsedAsParent = new Set(boundaryHierarchy.map((b) => b.parentBoundaryType).filter(Boolean));
