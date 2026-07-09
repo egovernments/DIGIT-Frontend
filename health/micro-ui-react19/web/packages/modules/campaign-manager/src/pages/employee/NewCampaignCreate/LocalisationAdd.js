@@ -47,43 +47,106 @@ const LocalisationBulkUpload = () => {
 
   // Allowed modules for this campaign with their base module mappings
   // Base modules contain default messages (e.g., hcm-base-complaints-mr-dn)
-  const allowedModules = [
-    {
-      name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_REGISTRATION_MODULE),
-      value: `hcm-registration-${campaignNumber}`,
-      baseModule: projectTypeSuffix ? `hcm-base-registrationflow-${projectTypeSuffix}` : null
-    },
-    {
-      name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_STOCKREPORTS_MODULE),
-      value: `hcm-stockreports-${campaignNumber}`,
-      baseModule: projectTypeSuffix ? `hcm-base-stockreports-${projectTypeSuffix}` : null
-    },
-    {
-      name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_HFREFERRAL_MODULE),
-      value: `hcm-hfreferral-${campaignNumber}`,
-      baseModule: projectTypeSuffix ? `hcm-base-hfreferralflow-${projectTypeSuffix}` : null
-    },
-    {
-      name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_COMPLAINTS_MODULE),
-      value: `hcm-complaints-${campaignNumber}`,
-      baseModule: projectTypeSuffix ? `hcm-base-complaints-${projectTypeSuffix}` : null
-    },
-    {
-      name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_INVENTORY_MODULE),
-      value: `hcm-inventory-${campaignNumber}`,
-      baseModule: projectTypeSuffix ? `hcm-base-inventory-${projectTypeSuffix}` : null
-    },
-    {
-      name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_STOCKRECONCILIATION_MODULE),
-      value: `hcm-stockreconciliation-${campaignNumber}`,
-      baseModule: projectTypeSuffix ? `hcm-base-stockreconciliation-${projectTypeSuffix}` : null
-    },
-    {
-      name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_CLOSEHOUSEHOLD_MODULE),
-      value: `hcm-closehousehold-${campaignNumber}`,
-      baseModule: projectTypeSuffix ? `hcm-base-closehousehold-${projectTypeSuffix}` : null
-    },
-  ];
+  const allowedModules =
+    campaignData?.projectType === "POLIO"
+      ? [
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_REGISTRATION_MODULE),
+            value: `hcm-registration-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-registrationflow-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_COMPLAINTS_MODULE),
+            value: `hcm-complaints-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-complaints-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_CLOSEHOUSEHOLD_MODULE),
+            value: `hcm-closehousehold-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-closehousehold-${projectTypeSuffix}`
+              : null,
+          },
+
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_STOCK_POLIO_MODULE),
+            value: `hcm-stock-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-stock-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_LQA_POLIO_MODULE),
+            value: `hcm-lqa-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-lqa-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(
+              I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_INSIDEMONITORING_POLIO_MODULE,
+            ),
+            value: `hcm-insidemonitoring-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-insidemonitoring-${projectTypeSuffix}`
+              : null,
+          },
+        ]
+      : [
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_REGISTRATION_MODULE),
+            value: `hcm-registration-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-registrationflow-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_STOCKREPORTS_MODULE),
+            value: `hcm-stockreports-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-stockreports-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_HFREFERRAL_MODULE),
+            value: `hcm-hfreferral-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-hfreferralflow-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_COMPLAINTS_MODULE),
+            value: `hcm-complaints-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-complaints-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_INVENTORY_MODULE),
+            value: `hcm-inventory-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-inventory-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_STOCKRECONCILIATION_MODULE),
+            value: `hcm-stockreconciliation-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-stockreconciliation-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_CLOSEHOUSEHOLD_MODULE),
+            value: `hcm-closehousehold-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-closehousehold-${projectTypeSuffix}`
+              : null,
+          },
+        ];
 
   // Fetch localizations for allowed modules only
   useEffect(() => {
