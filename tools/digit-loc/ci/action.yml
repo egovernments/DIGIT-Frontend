@@ -1,0 +1,52 @@
+name: "DIGIT Localization Check"
+description: "Scans PR for missing localization keys and posts AI-generated suggestions"
+
+inputs:
+  module:
+    description: "Localization module name (e.g., hcm-base-campaign)"
+    required: true
+  env-url:
+    description: "DIGIT environment URL to check against"
+    required: false
+    default: ""
+  scan-path:
+    description: "Path to scan for localization keys"
+    required: false
+    default: "."
+  anthropic-api-key:
+    description: "Anthropic API key for AI-enhanced messages (optional)"
+    required: false
+    default: ""
+  fail-on-missing:
+    description: "Fail the check if missing translations are found"
+    required: false
+    default: "true"
+  base-ref:
+    description: "Base git ref to diff against (default: auto-detect from PR)"
+    required: false
+    default: ""
+
+outputs:
+  missing-count:
+    description: "Number of missing localization keys"
+  payload-file:
+    description: "Path to generated upsert payload JSON"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+
+    - name: Run localization check
+      shell: bash
+      env:
+        ANTHROPIC_API_KEY: ${{ inputs.anthropic-api-key }}
+        INPUT_MODULE: ${{ inputs.module }}
+        INPUT_ENV_URL: ${{ inputs.env-url }}
+        INPUT_SCAN_PATH: ${{ inputs.scan-path }}
+        INPUT_FAIL_ON_MISSING: ${{ inputs.fail-on-missing }}
+        INPUT_BASE_REF: ${{ inputs.base-ref }}
+      run: node ${{ github.action_path }}/check-localizations.js

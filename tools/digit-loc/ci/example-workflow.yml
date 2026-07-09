@@ -1,0 +1,82 @@
+# Example GitHub Actions workflow for DIGIT localization checks.
+#
+# Copy this file to .github/workflows/localization-check.yml in your repo
+# and adjust the inputs to match your project.
+
+name: Localization Check
+
+on:
+  pull_request:
+    paths:
+      - "**/*.js"
+      - "**/*.jsx"
+      - "**/*.ts"
+      - "**/*.tsx"
+      - "**/i18nKeyConstants*"
+
+jobs:
+  check-localizations:
+    name: Check Missing Translations
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history needed for git diff
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run localization check
+        uses: ./tools/digit-loc/ci
+        with:
+          module: "hcm-base-campaign"
+          scan-path: "./packages/modules/campaign-manager"
+          fail-on-missing: "true"
+          # Optional: set ANTHROPIC_API_KEY secret for AI-enhanced messages
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Optional: cross-reference against a DIGIT environment
+          # env-url: "https://uat.digit.org"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload payload artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: loc-payload
+          path: loc-payload.json
+          if-no-files-found: ignore
+
+  # Optional: Multi-module check
+  # Uncomment and adjust for checking multiple modules in one PR
+  #
+  # check-all-modules:
+  #   name: Check All Modules
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       include:
+  #         - module: hcm-base-campaign
+  #           path: ./packages/modules/campaign-manager
+  #         - module: hcm-base-stock
+  #           path: ./packages/modules/stock
+  #         - module: hcm-base-attendance
+  #           path: ./packages/modules/attendance
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: "20"
+  #     - uses: ./tools/digit-loc/ci
+  #       with:
+  #         module: ${{ matrix.module }}
+  #         scan-path: ${{ matrix.path }}
+  #         anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

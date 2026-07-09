@@ -18,13 +18,16 @@
   "homepage": "/workbench-ui/",
   "husky": {},
   "lint-staged": {
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,jsx}": ["eslint --max-warnings=0", "prettier --write"],
+    "*.{css,md}": "prettier --write",
+    "*/i18nKeyConstants.js": ["node ../../../tools/digit-loc/hooks/new-key-detector.js"]
   },
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
     "concurrently": "^8.2.2",
     "dotenv-webpack": "^8.0.0",
     "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-digit-i18n": "file:../../../tools/eslint-plugin-digit-i18n",
     "html-webpack-plugin": "^5.6.3",
     "husky": "7.0.4",
     "lint-staged": "12.3.7",
@@ -103,7 +106,8 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app"
+      "react-app",
+      "plugin:digit-i18n/recommended"
     ]
   },
   "browserslist": {

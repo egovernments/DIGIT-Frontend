@@ -1,0 +1,19 @@
+{
+  "name": "digit-loc",
+  "version": "1.0.0",
+  "description": "DIGIT localization CLI — scan, check, sync, generate, detect dead keys, and push localization payloads",
+  "bin": {
+    "digit-loc": "./src/index.js"
+  },
+  "main": "./src/index.js",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "digit",
+    "localization",
+    "i18n",
+    "cli"
+  ]
+}

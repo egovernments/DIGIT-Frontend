@@ -1,0 +1,17 @@
+{
+  "name": "eslint-plugin-digit-i18n",
+  "version": "1.0.0",
+  "description": "ESLint plugin for DIGIT localization enforcement — catches hardcoded strings, requires constant keys, enforces naming conventions",
+  "main": "index.js",
+  "license": "MIT",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "digit",
+    "i18n",
+    "localization"
+  ],
+  "peerDependencies": {
+    "eslint": ">=7.0.0"
+  }
+}
