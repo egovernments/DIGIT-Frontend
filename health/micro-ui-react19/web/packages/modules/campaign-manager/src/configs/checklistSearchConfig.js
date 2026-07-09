@@ -36,11 +36,11 @@
             formClassName: "custom-both-clear-search",
             primaryLabel: "ES_COMMON_SEARCH",
             secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
-            minReqFields: 0,
+            minReqFields: 2,
             fields: [
               {
                   label: "CHECKLIST_ROLE",
-                  isMandatory: "false",
+                  isMandatory: false,
                   key: "Role",
                   type: "dropdown",
                   populators: {
@@ -54,7 +54,7 @@
               },
               {
                 label: "CHECKLIST_TYPE",
-                isMandatory: "false",
+                isMandatory: false,
                 key: "Type",
                 type: "dropdown",
                 populators: {
