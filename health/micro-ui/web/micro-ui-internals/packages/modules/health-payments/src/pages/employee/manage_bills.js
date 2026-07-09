@@ -14,6 +14,7 @@ import _ from "lodash";
 import { getManageBillsRole, getManageBillsConfig, MANAGE_BILLS_ROLE_STORAGE_KEY, normalizeManageBillsRoleParam } from "../../utils/roleUtils";
 import { MANAGE_BILLS_ROLES } from "../../config/manageBillsRoleConfig";
 import AlertPopUp from "../../components/alertPopUp";
+import SignaturePopUp from "../../components/SignaturePopUp";
 
 const ManageBills = () => {
   const { t } = useTranslation();
@@ -24,6 +25,8 @@ const ManageBills = () => {
   const [selectedBills, setSelectedBills] = useState([]);
   const [clearSelectedRows, setClearSelectedRows] = useState(false);
   const [activePopUpAction, setActivePopUpAction] = useState(null);
+  // Bulk workflow action awaiting the mandatory sign-off (printed name + signature)
+  const [signatureFlow, setSignatureFlow] = useState(null);
 
   // Role-based config
   const normalizedRoleFromParam = normalizeManageBillsRoleParam(role);
@@ -245,7 +248,7 @@ const ManageBills = () => {
     url: `/${expenseContextPath}/bill/v1/report/_search`,
   });
 
-  const triggerBulkUpdateBills = async (bills, action) => {
+  const triggerBulkUpdateBills = async (bills, action, signature = null) => {
     try {
       await bulkUpdateMutation.mutateAsync(
         {
@@ -259,6 +262,7 @@ const ManageBills = () => {
               comments: `Bulk ${action} triggered`,
               assignes: [],
             },
+            ...(signature ? { signature } : {}),
           },
         },
         {
@@ -725,11 +729,29 @@ const ManageBills = () => {
               if (!selectedBills?.length) return;
               const action = activePopUpAction;
               setActivePopUpAction(null);
+              if (["SEND_FOR_REVIEW", "SEND_FOR_APPROVAL"].includes(action)) {
+                setSignatureFlow({ action, count: selectedBills.length });
+                return;
+              }
               await triggerBulkUpdateBills(selectedBills, action);
             }}
           />
         );
       })()}
+
+      {signatureFlow && (
+        <SignaturePopUp
+          heading={t(`HCM_AM_SIGNATURE_POPUP_HEADING_${signatureFlow.action}`)}
+          description={t("HCM_AM_SIGNATURE_POPUP_BULK_DESCRIPTION", { count: signatureFlow.count })}
+          submitLabel={t(`HCM_AM_${signatureFlow.action}`)}
+          onClose={() => setSignatureFlow(null)}
+          onSubmit={async (signature) => {
+            const { action } = signatureFlow;
+            setSignatureFlow(null);
+            await triggerBulkUpdateBills(selectedBills, action, signature);
+          }}
+        />
+      )}
     </React.Fragment>
   );
 };
