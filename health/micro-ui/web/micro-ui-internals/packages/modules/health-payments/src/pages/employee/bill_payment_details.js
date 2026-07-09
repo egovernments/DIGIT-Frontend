@@ -28,6 +28,8 @@ import "./loader_size.css";
 import { getManageBillsRole, getManageBillsConfig, MANAGE_BILLS_ROLE_STORAGE_KEY, normalizeManageBillsRoleParam } from "../../utils/roleUtils";
 import { MANAGE_BILLS_ROLES } from "../../config/manageBillsRoleConfig";
 import SendForApprovalPopUp from "../../components/SendForApprovalPopUp";
+import SignaturePopUp from "../../components/SignaturePopUp";
+import BillSignaturesView from "../../components/BillSignaturesView";
 
 // Fallback view map (used when role config is not available)
 const BILL_STATUS_VIEW = {
@@ -168,6 +170,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [openReviewerEditWarningPopUp, setOpenReviewerEditWarningPopUp] = useState(false);
   const [openSendForApprovalPopUp, setOpenSendForApprovalPopUp] = useState(false);
   const [openSendForReviewPopUp, setOpenSendForReviewPopUp] = useState(false);
+  // Pending workflow action awaiting the mandatory sign-off (printed name + signature)
+  const [signatureFlow, setSignatureFlow] = useState(null);
   const [openSaveChangesPopUp, setOpenSaveChangesPopUp] = useState(false);
   // --------------------
 // Report (PDF / EXCEL)
@@ -607,7 +611,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     }
   }
 
-  const triggerUpdateBill = async (bill, action) => {
+  const triggerUpdateBill = async (bill, action, signature = null) => {
     try {
       await bulkUpdateMutation.mutateAsync(
         {
@@ -620,6 +624,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               comments: `Bill ${action} triggered`,
               assignes: [],
             },
+            ...(signature ? { signature } : {}),
           },
         },
         {
@@ -1742,6 +1747,7 @@ const downloadOptions = [
               billData?.additionalDetails?.justificationDetails?.comment
                 ? renderLabelPair("HCM_AM_PAYMENT_REVIEWER_COMMENTS", billData?.additionalDetails?.justificationDetails?.comment, { whiteSpace: "pre-wrap" })
                 : null}
+              <BillSignaturesView signatures={billData?.signatures} />
 
  {/* uncomment this block to show report generation and download section               */}
 {/* <div>
@@ -2021,10 +2027,11 @@ const downloadOptions = [
       {openSendForApprovalPopUp && (
         <SendForApprovalPopUp
           onClose={() => setOpenSendForApprovalPopUp(false)}
-          onSubmit={({ comment, supportingDocs }) => {
+          onSubmit={({ comment, supportingDocs, signature }) => {
             setOpenSendForApprovalPopUp(false);
             const updatedBill = {
               ...billData,
+              signatures: [...(billData?.signatures || []), signature],
               additionalDetails: {
                 ...(billData?.additionalDetails || {}),
                 justificationDetails: {
@@ -2303,10 +2310,21 @@ const downloadOptions = [
         cancelLabel={t("HCM_AM_CANCEL")}
         onPrimaryAction={() => {
           setOpenSendForReviewPopUp(false);
-          triggerUpdateBill(billData, "SEND_FOR_REVIEW");
-          // setShowToast({ key: "success", label: t("HCM_AM_SEND_FOR_REVIEW_SUCCESS"), transitionTime: 3000 });
+          setSignatureFlow({ action: "SEND_FOR_REVIEW" });
         }}
       />}
+      {signatureFlow && (
+        <SignaturePopUp
+          heading={t(`HCM_AM_SIGNATURE_POPUP_HEADING_${signatureFlow.action}`)}
+          submitLabel={t(`HCM_AM_${signatureFlow.action}`)}
+          onClose={() => setSignatureFlow(null)}
+          onSubmit={(signature) => {
+            const { action } = signatureFlow;
+            setSignatureFlow(null);
+            triggerUpdateBill(billData, action, signature);
+          }}
+        />
+      )}
       {openSaveChangesPopUp && <AlertPopUp
         onClose={() => setOpenSaveChangesPopUp(false)}
         alertHeading={t("HCM_AM_CONFIRM_SAVE_CHANGES")}

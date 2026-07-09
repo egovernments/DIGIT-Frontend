@@ -2,6 +2,7 @@ import React, { useState,Fragment, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-components";
 import BulkUpload from "./BulkUpload";
+import SignatureCapture from "./SignatureCapture";
 import { downloadFileWithName } from "../utils";
 
 const sanitizeComment = (value) =>
@@ -17,6 +18,10 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
   const [comment, setComment] = useState("");
   const [uploadedFile, setUploadedFile] = useState([]);
   const [showToast, setShowToast] = useState(null);
+  const [signatureState, setSignatureState] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSignatureStateChange = useCallback((state) => setSignatureState(state), []);
 
   const handleUpload = useCallback(
     async (filesArray) => {
@@ -55,17 +60,51 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
     onClose();
   }, [onClose]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (isSubmitting) return;
     setShowToast(null);
     const trimmedComment = comment.trim();
     if (!uploadedFile?.length || !trimmedComment) {
       setShowToast({ key: "error", label: t("HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS") });
       return;
     }
-    onSubmit({
-      comment: trimmedComment,
-      supportingDocs: uploadedFile,
-    });
+    const printedName = signatureState?.printedName?.trim() || "";
+    if (!printedName) {
+      setShowToast({ key: "error", label: t("HCM_AM_SIGNATURE_PRINTED_NAME_REQUIRED") });
+      return;
+    }
+    if (!signatureState?.hasSignature) {
+      setShowToast({
+        key: "error",
+        label: t(signatureState?.method === "UPLOAD" ? "HCM_AM_SIGNATURE_UPLOAD_REQUIRED" : "HCM_AM_SIGNATURE_DRAW_REQUIRED"),
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const signatureFile = await signatureState.getSignatureFile();
+      if (!signatureFile) {
+        setShowToast({ key: "error", label: t("HCM_AM_SIGNATURE_DRAW_REQUIRED") });
+        return;
+      }
+      const response = await Digit.UploadServices.Filestorage("health-payments", signatureFile, tenantId);
+      const signatureFileStoreId = response?.data?.files?.[0]?.fileStoreId;
+      if (!signatureFileStoreId) {
+        setShowToast({ key: "error", label: t("HCM_AM_FILE_UPLOAD_FAILED") });
+        return;
+      }
+      onSubmit({
+        comment: trimmedComment,
+        supportingDocs: uploadedFile,
+        signature: { printedName, fileStoreId: signatureFileStoreId },
+      });
+    } catch (err) {
+      console.error("Signature upload error:", err);
+      setShowToast({ key: "error", label: t("HCM_AM_FILE_UPLOAD_FAILED") });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -103,6 +142,9 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
               onChange={(e) => setComment(sanitizeComment(e.target.value))}
             />
           </div>,
+          <div key="signature-section" style={{ marginTop: "1rem" }}>
+            <SignatureCapture onStateChange={handleSignatureStateChange} />
+          </div>,
         ]}
         footerChildren={[
           <Button
@@ -126,7 +168,7 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
             label={t("HCM_AM_SEND_FOR_APPROVAL")}
             title={t("HCM_AM_SEND_FOR_APPROVAL")}
             onClick={handleSave}
-            //isDisabled={!uploadedFile?.length || !comment.trim()}
+            isDisabled={isSubmitting}
           />,
         ]}
       />
