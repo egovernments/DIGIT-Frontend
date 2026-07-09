@@ -52,6 +52,13 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
   const stockData = useMemo(() => {
     if (!rawRecords?.length) return [];
     return rawRecords.map((record) => {
+      const getAdditionalFieldValue = (key) => {
+        const fields = record?.additionalFields?.fields;
+        if (!Array.isArray(fields)) return undefined;
+        const field = fields.find((f) => (f?.key || "").toLowerCase() === key.toLowerCase());
+        return field?.value;
+      };
+
       const stockEntryType = record.stockEntryType || "";
       const eventType = record.eventType || record.transactionType || "";
 
@@ -72,7 +79,7 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
 
       return {
         id: record.id,
-        productVariantId: record.productVariantId,
+        productVariantId: record.productVariantId || record.productVariant,
         senderId,
         receiverId,
         transactionType: record.transactionType || record.eventType,
@@ -85,11 +92,23 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
         productName: record.productName,
         userName: record.userName,
         nameOfUser: record.nameOfUser,
+        reason: record.reason,
+        comments:
+          record.comments ||
+          record.additionalDetails?.comments ||
+          getAdditionalFieldValue("comments") ||
+          getAdditionalFieldValue("comment") ||
+          getAdditionalFieldValue("remarks") ||
+          getAdditionalFieldValue("remark") ||
+          getAdditionalFieldValue("note"),
         status: record.status || "",
         additionalFields: record.additionalFields || null,
+        additionalDetails: record.additionalDetails || null,
         auditDetails: {
           createdTime: record.createdTime || record.dateOfEntry,
+          createdBy: record.createdBy,
         },
+        createdBy: record.createdBy,
         boundaryHierarchyCode : record.boundaryHierarchyCode
       };
     });

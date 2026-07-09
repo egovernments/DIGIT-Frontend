@@ -10,21 +10,79 @@ import GenericChart from "./GenericChart";
 import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 
-const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
+const normalizeStock = (stock) => stock?._source?.Data || stock?.Data || stock || {};
+
+const getStockPartyIds = (stock) => {
+  const normalizedStock = normalizeStock(stock);
+  if (normalizedStock.senderId || normalizedStock.receiverId) {
+    return {
+      senderId: normalizedStock.senderId || "",
+      receiverId: normalizedStock.receiverId || "",
+    };
+  }
+
+  if (normalizedStock.stockEntryType === "RETURNED") {
+    return {
+      senderId: normalizedStock.facilityId || "",
+      receiverId: normalizedStock.transactingFacilityId || "",
+    };
+  }
+
+  const eventType = normalizedStock.eventType || normalizedStock.transactionType;
+  const isInbound = eventType === "RECEIVED";
+  return {
+    senderId: isInbound ? normalizedStock.transactingFacilityId || "" : normalizedStock.facilityId || "",
+    receiverId: isInbound ? normalizedStock.facilityId || "" : normalizedStock.transactingFacilityId || "",
+  };
+};
+
+const transformStock = (stock, facilityNameMap = {}, productNameMap = {}, stockDetailsById = {}) => {
+  const normalizedStock = normalizeStock(stock);
+  const detailStock = stockDetailsById[normalizedStock?.id] || {};
+
   const getFieldValue = (fieldKey) => {
-    const field = stock?.additionalFields?.fields?.find(
+    const fields =
+      normalizedStock?.additionalFields?.fields ||
+      detailStock?.additionalFields?.fields ||
+      [];
+    const field = fields.find(
       (f) => f.key === fieldKey,
     );
     return field?.value || "N/A";
   };
 
-  const productName = productNameMap[stock?.productVariantId] || getFieldValue("productName");
-  const quantity = stock?.quantity || 0;
+  const { senderId, receiverId } = getStockPartyIds(
+    Object.keys(detailStock).length ? detailStock : normalizedStock,
+  );
+
+  const productVariantId =
+    normalizedStock?.productVariantId ||
+    normalizedStock?.productVariant ||
+    detailStock?.productVariantId ||
+    detailStock?.productVariant;
+  const productName =
+    productNameMap[productVariantId] ||
+    normalizedStock?.productName ||
+    detailStock?.productName ||
+    getFieldValue("productName");
+  const quantity = normalizedStock?.quantity || detailStock?.quantity || 0;
   const quantitySent = getFieldValue("quantitySent");
   const quantityReceived = getFieldValue("quantityReceived");
   const comments =
-    stock?.comments ||
-    stock?.reason ||
+    normalizedStock?.comments ||
+    detailStock?.comments ||
+    normalizedStock?.reason ||
+    detailStock?.reason ||
+    normalizedStock?.additionalDetails?.comments ||
+    detailStock?.additionalDetails?.comments ||
+    normalizedStock?.additionalDetails?.comment ||
+    detailStock?.additionalDetails?.comment ||
+    normalizedStock?.additionalDetails?.remarks ||
+    detailStock?.additionalDetails?.remarks ||
+    normalizedStock?.additionalDetails?.remark ||
+    detailStock?.additionalDetails?.remark ||
+    normalizedStock?.additionalDetails?.note ||
+    detailStock?.additionalDetails?.note ||
     getFieldValue("comments") ||
     getFieldValue("comment") ||
     getFieldValue("remarks") ||
@@ -37,8 +95,18 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
 
   // Derive display status from stockEntryType + status
   // Fall back to additionalFields for stock API responses where these are not top-level
-  const stockEntryType = stock?.stockEntryType || getFieldValue("stockEntryType");
-  const rawStatus = stock?.status || getFieldValue("status");
+  const stockEntryType =
+    normalizedStock?.stockEntryType ||
+    detailStock?.stockEntryType ||
+    normalizedStock?.additionalDetails?.stockEntryType ||
+    detailStock?.additionalDetails?.stockEntryType ||
+    getFieldValue("stockEntryType");
+  const rawStatus =
+    normalizedStock?.status ||
+    detailStock?.status ||
+    normalizedStock?.additionalDetails?.status ||
+    detailStock?.additionalDetails?.status ||
+    getFieldValue("status");
   let status = "N/A";
   if (stockEntryType === "ISSUED") {
     if (rawStatus === "ACCEPTED") status = "Completed";
@@ -54,10 +122,21 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   const txType =
     stockEntryType === "RETURNED" ? "Reverse - Logistics" : "Logistics";
 
-  const trn = stock?.id || "N/A";
+  const trn =
+    normalizedStock?.id ||
+    detailStock?.id ||
+    normalizedStock?.clientReferenceId ||
+    detailStock?.clientReferenceId ||
+    "N/A";
 
   // Format creation date
-  const createdTime = stock?.auditDetails?.createdTime;
+  const createdTime =
+    normalizedStock?.auditDetails?.createdTime ||
+    detailStock?.auditDetails?.createdTime ||
+    normalizedStock?.createdTime ||
+    detailStock?.createdTime ||
+    normalizedStock?.dateOfEntry ||
+    detailStock?.dateOfEntry;
   const creationDate = createdTime
     ? new Date(createdTime).toLocaleString("en-US", {
         year: "numeric",
@@ -74,17 +153,27 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
     trn,
     creationDate,
     createdTime,
-    sentFrom: facilityNameMap[stock?.senderId] || stock?.senderId || "N/A",
-    sentTo: facilityNameMap[stock?.receiverId] || stock?.receiverId || "N/A",
-    senderId: stock?.senderId || "",
-    receiverId: stock?.receiverId || "",
-    nameOfUser: stock?.nameOfUser || "",
-    userName: stock?.userName || "",
-    createdBy: stock?.auditDetails?.createdBy || "N/A",
+    sentFrom: facilityNameMap[senderId] || senderId || "N/A",
+    sentTo: facilityNameMap[receiverId] || receiverId || "N/A",
+    senderId,
+    receiverId,
+    nameOfUser: normalizedStock?.nameOfUser || detailStock?.nameOfUser || "",
+    userName: normalizedStock?.userName || detailStock?.userName || "",
+    createdBy:
+      normalizedStock?.auditDetails?.createdBy ||
+      detailStock?.auditDetails?.createdBy ||
+      normalizedStock?.createdBy ||
+      detailStock?.createdBy ||
+      "N/A",
     status,
     commodity,
     transactionType: txType,
-    rawTransactionType: stock?.transactionType || "N/A",
+    rawTransactionType:
+      normalizedStock?.transactionType ||
+      detailStock?.transactionType ||
+      normalizedStock?.eventType ||
+      detailStock?.eventType ||
+      "N/A",
     productName,
     quantity,
     quantitySent: quantitySent !== "N/A" ? parseInt(quantitySent) || 0 : 0,
@@ -126,15 +215,48 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   }), [tenantId, userStaffProjectId]);
   const { data: projectFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
 
+  // Enrich chart rows with stock API details by transaction IDs (comments are often absent in chart response)
+  const stockIds = useMemo(() => {
+    const ids = new Set();
+    (rawStockData || []).forEach((stock) => {
+      const normalizedStock = normalizeStock(stock);
+      if (normalizedStock?.id) ids.add(normalizedStock.id);
+    });
+    return [...ids];
+  }, [rawStockData]);
+
+  const stockDetailsCriteria = useMemo(
+    () => ({
+      url: `/stock/v1/_search`,
+      params: { tenantId, limit: stockIds.length || 10, offset: 0 },
+      body: { Stock: { id: stockIds } },
+      config: {
+        enabled: !!tenantId && !!stockIds.length,
+        select: (data) => {
+          const detailMap = {};
+          (data?.Stock || []).forEach((s) => {
+            if (s?.id) detailMap[s.id] = s;
+          });
+          return detailMap;
+        },
+      },
+    }),
+    [tenantId, stockIds],
+  );
+  const { data: stockDetailsById = {}, isLoading: stockDetailsLoading } = Digit.Hooks.useCustomAPIHook(stockDetailsCriteria);
+
   // Extract unique facility IDs and product variant IDs from stock data
   const { facilityIds, productVariantIds } = useMemo(() => {
     const stocks = rawStockData || [];
     const fIds = new Set();
     const pvIds = new Set();
     stocks.forEach(stock => {
-      if (stock.senderId) fIds.add(stock.senderId);
-      if (stock.receiverId) fIds.add(stock.receiverId);
-      if (stock.productVariantId) pvIds.add(stock.productVariantId);
+      const normalizedStock = normalizeStock(stock);
+      const { senderId, receiverId } = getStockPartyIds(normalizedStock);
+      if (senderId) fIds.add(senderId);
+      if (receiverId) fIds.add(receiverId);
+      const productVariantId = normalizedStock?.productVariantId || normalizedStock?.productVariant;
+      if (productVariantId) pvIds.add(productVariantId);
     });
     return { facilityIds: [...fIds], productVariantIds: [...pvIds] };
   }, [rawStockData]);
@@ -219,11 +341,12 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     return rawStockData
       .filter(stock => {
         if (projectFacilityIds.size === 0) return false;
-        return projectFacilityIds.has(stock.senderId) || projectFacilityIds.has(stock.receiverId);
+        const { senderId, receiverId } = getStockPartyIds(stock);
+        return projectFacilityIds.has(senderId) || projectFacilityIds.has(receiverId);
       })
-      .map(stock => transformStock(stock, facilityNameMap, productNameMap))
+      .map(stock => transformStock(stock, facilityNameMap, productNameMap, stockDetailsById))
       .sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
-  }, [rawStockData, facilityNameMap, productNameMap, projectFacilityIds]);
+  }, [rawStockData, facilityNameMap, productNameMap, projectFacilityIds, stockDetailsById]);
 
   // Compute summary stats from the facility-filtered tableData (not the unfiltered stockSummary)
   const filteredSummaryStats = useMemo(() => {
@@ -239,7 +362,13 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     return stats;
   }, [tableData]);
 
-  const isLoading = stockLoading || facilitiesLoading || variantsLoading || productsLoading || projectFacilitiesLoading;
+  const isLoading =
+    stockLoading ||
+    facilitiesLoading ||
+    variantsLoading ||
+    productsLoading ||
+    projectFacilitiesLoading ||
+    stockDetailsLoading;
 
   const { dataSyncStats: syncStats } = stockSummary || {};
   const dataSyncStats = {
