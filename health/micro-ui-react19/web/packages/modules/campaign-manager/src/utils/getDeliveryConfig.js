@@ -1,4 +1,3 @@
-import { useProductVariantSearch } from "../hooks/useProductVariantSearch";
 const getDeliveryConfig = ({ data, projectType }) => {
   function parseCondition(condition) {
     let operatorValue = "";

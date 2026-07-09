@@ -1,5 +1,5 @@
 import { TourProvider } from "@egovernments/digit-ui-react-components";
-import { Loader, lazyWithFallback } from "@egovernments/digit-ui-components";
+import { Loader, lazyWithFallback ,ErrorBoundary} from "@egovernments/digit-ui-components";
 import React, { useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -22,7 +22,6 @@ import CampaignDocumentsPreview from "./components/CampaignDocumentsPreview";
 import AddProduct from "./pages/employee/AddProduct";
 import AddProductField from "./components/AddProductField";
 import CycleDataPreview from "./components/CycleDataPreview";
-import { ErrorBoundary } from "@egovernments/digit-ui-components";
 import CampaignResourceDocuments from "./components/CampaignResourceDocuments";
 import ConfigureApp from "./pages/employee/ConfigureApp";
 import TimelineComponent from "./components/TimelineComponent";
