@@ -1,6 +1,6 @@
 import React, { useState, forwardRef, useImperativeHandle, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Dropdown, TextInput, LabelFieldPair, CardLabel, MultiSelectDropdown } from "@egovernments/digit-ui-components";
+import { Dropdown, TextInput, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allSelectedBoundary, typeOfOperation, curData }, ref) => {
@@ -115,7 +115,6 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
               addCategorySelectAllCheck={true}
               addSelectAllCheck={true}
             />
-            {/* </LabelFieldPair> */}
           </div>
         );
       } else {

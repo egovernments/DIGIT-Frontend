@@ -78,6 +78,14 @@ const retryCampaign = async (row, searchResult) => {
 export const UICustomizations = {
   HCM_MODULE_NAME,
   MyChecklistSearchConfig: {
+    customValidationCheck: (formData) => {
+      const roleFilled = !!formData?.Role?.code;
+      const typeFilled = !!formData?.Type?.list;
+      if (!roleFilled || !typeFilled) {
+        return { type: "warning", label: I18N_KEYS.CONFIGS.HCM_CHECKLIST_SEARCH_BOTH_MANDATORY };
+      }
+      return false;
+    },
     preProcess: (data, additionalDetails) => {
       if (data?.state?.searchForm?.Role?.code) {
         let ro = data.state.searchForm.Role.code;

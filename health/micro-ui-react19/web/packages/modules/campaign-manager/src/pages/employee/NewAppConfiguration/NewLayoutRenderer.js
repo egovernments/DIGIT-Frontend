@@ -109,6 +109,8 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
         <PopUp
           type={popupConfig.type || "default"}
           heading={t(popupConfig.title) || t(I18N_KEYS.APP_CONFIGURATION.DEFAULT_POPUP_HEADING)}
+          alertHeading={t(popupConfig.title) || t(I18N_KEYS.APP_CONFIGURATION.DEFAULT_POPUP_HEADING)}
+          alertMessage={t(popupConfig.description) || ""}
           onClose={() => {
             dispatch(setShowPopupPreview(false));
           }}

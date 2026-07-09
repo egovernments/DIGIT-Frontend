@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
-import { EditIcon, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";

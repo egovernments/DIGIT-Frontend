@@ -685,6 +685,7 @@ export const I18N_KEYS = {
     ES_COMMON_NA: "ES_COMMON_NA",
     HCM_CHECKLIST_CREATE: "HCM_CHECKLIST_CREATE",
     HCM_CHECKLIST_VIEW: "HCM_CHECKLIST_VIEW",
+    HCM_CHECKLIST_SEARCH_BOTH_MANDATORY: "HCM_CHECKLIST_SEARCH_BOTH_MANDATORY",
   },
 
   // ─── PAGES (unique to pages/employee direct files) ─────────────────────────

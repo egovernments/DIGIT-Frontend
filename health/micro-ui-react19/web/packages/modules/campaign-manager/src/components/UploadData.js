@@ -1,4 +1,3 @@
-import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import React, { useRef, useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import BulkUpload from "./BulkUpload";
