@@ -46,6 +46,15 @@ const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessReque
   updatedMdmsCriteria.filters = { ...body?.MdmsCriteria?.filters, 
     campaignType
  };
+  // Explicitly apply the current page's limit/offset (mirrors useFacilityCatchmentMapping),
+  // so a page/rows-per-page change always sends a fresh, correctly-scoped MDMS request
+  // instead of depending on the composer's implicit tableForm merge. Only search-composer
+  // callers pass `state`; other callers (e.g. CampaignDetails.js) rely on their own fixed
+  // limit/offset and must not be overridden here.
+  const pageLimit = state?.tableForm ? state.tableForm.limit || 10 : updatedMdmsCriteria.limit;
+  const pageOffset = state?.tableForm ? state.tableForm.offset || 0 : updatedMdmsCriteria.offset;
+  updatedMdmsCriteria.limit = pageLimit;
+  updatedMdmsCriteria.offset = pageOffset;
   const fetchMDMSData = async () => {
     try {
       // First API Call: Fetch MDMS Data
@@ -79,7 +88,7 @@ const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessReque
   };
 
   const { data: mdmsData, isFetching, refetch, isLoading: isMDMSLoading, error: mdmsError } = useQuery({
-    queryKey:["mdmsData", tenantId, updatedMdmsCriteria, campaignName],
+    queryKey:["mdmsData", tenantId, updatedMdmsCriteria, campaignName, pageLimit, pageOffset],
     queryFn:fetchMDMSData,
     gcTime:0,
     enabled,
