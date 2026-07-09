@@ -122,7 +122,7 @@ const CommodityShipmentPopup = ({
   // Fetch facility details (names) for the To facilities
   const facilityDetailsCriteria = useMemo(
     () => ({
-      url: `/${projectServicePath}/facility/v1/_search`,
+      url: `/facility/v1/_search`,
       params: {
         tenantId,
         limit: toFacilityIds.length || 10,
