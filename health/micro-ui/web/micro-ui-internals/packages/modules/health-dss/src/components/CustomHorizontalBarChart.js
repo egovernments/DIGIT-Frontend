@@ -7,6 +7,7 @@ import FilterContext from "./FilterContext";
 import NoData from "./NoData";
 import { getTitleHeading } from "../utils/locale";
 import { getDuration } from "../utils/getDuration";
+import { CHART_LEGEND_HEIGHT, CHART_LEGEND_HEIGHT_DOWNLOAD, CHART_PLOT_AREA_HEIGHT } from "../utils/chartLayoutConstants";
 
 const barColors = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE", "#6E8459", "#D4351C", "#0CF7E4", "#F80BF4", "#22F80B"];
 
@@ -56,6 +57,7 @@ const CustomHorizontalBarChart = ({
   pageZoom,
   downloadChartsId = null,
   isNational = false,
+  cardId,
 }) => {
   const { id, chartType } = data;
   const { t } = useTranslation();
@@ -368,7 +370,7 @@ const CustomHorizontalBarChart = ({
       <div style={{ zoom: pageZoom ? 1 : showOnDownload ? 0.75 : 1.25 }}>
         <ResponsiveContainer
           width="94%"
-          height={500}
+          height={CHART_PLOT_AREA_HEIGHT}
           margin={{
             top: 5,
             right: 5,
@@ -479,7 +481,16 @@ const CustomHorizontalBarChart = ({
                   })}
                 </Bar>
               ))}
-              <Legend formatter={renderLegend} iconType="circle" wrapperStyle={{ paddingTop: showOnDownload ? "50px" : "10px" }} />
+              <Legend
+                formatter={renderLegend}
+                iconType="circle"
+                height={36}
+                wrapperStyle={{
+                  paddingTop: showOnDownload ? "50px" : "10px",
+                  height: showOnDownload ? `${CHART_LEGEND_HEIGHT_DOWNLOAD}px` : `${CHART_LEGEND_HEIGHT}px`,
+                  overflow: "hidden",
+                }}
+              />
               {!showOnDownload && chartData.length > 1 ? (
                 <Brush dataKey="name" endIndex={chartData.length > 14 ? 14 : chartData.length - 1} height={24} travellerWidth={5} stroke="#F47738" />
               ) : null}

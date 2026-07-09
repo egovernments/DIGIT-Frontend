@@ -6,6 +6,7 @@ import NoData from "./NoData";
 import { getTitleHeading } from "../utils/locale";
 import { Loader, Chip } from "@egovernments/digit-ui-components";
 import { getDuration } from "../utils/getDuration";
+import { CHART_LEGEND_HEIGHT, CHART_PLOT_AREA_HEIGHT } from "../utils/chartLayoutConstants";
 const COLORS = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE", "#6E8459", "#D4351C", "#0CF7E4", "#F80BF4", "#22F80B"];
 const mobileView = innerWidth <= 640;
 
@@ -17,7 +18,7 @@ const getInitialRange = () => {
   return { startDate, endDate, interval };
 };
 
-const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNational = false }) => {
+const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNational = false, isPaired = false }) => {
   const { id } = data;
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
@@ -239,17 +240,17 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
       )}
 
       <div className={"digit-donut-chart-container"} style={{ display: "flex", flexDirection: "column" }}>
-        <ResponsiveContainer width="99%">
+        <ResponsiveContainer width="99%" height={isPaired ? CHART_PLOT_AREA_HEIGHT : 420}>
           {chartData?.length === 0 || !chartData ? (
             <NoData t={t} />
           ) : (
-            <PieChart cy={150}>
+            <PieChart>
               <Pie
                 activeIndex={activeIndex}
                 activeShape={activeIndex !== numberOfSlices ? renderActiveShape : null}
                 data={chartData}
                 dataKey={dataKey}
-                cy={200}
+                cy="50%"
                 style={{ cursor: response?.responseData?.drillDownChartId !== "none" ? "pointer" : "default", outline: "none" }}
                 innerRadius={!mobileView ? 140 : 120} ///Charts in rows(which contains 2 charts) are little bigger in size than charts in rows(which contains 3 charts) charts
                 outerRadius={!mobileView ? 170 : 150}
@@ -282,20 +283,22 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
           )}
         </ResponsiveContainer>
         {chartData?.length > 0 && (
-          <Legend
-            layout="horizontal"
-            verticalAlign="bottom"
-            align="center"
-            iconType="circle"
-            formatter={renderLegend}
-            iconSize={13}
-            payload={response?.responseData?.data?.[0]?.plots.map((entry, index) => ({
-              value: entry.name,
-              type: "circle",
-              color: COLORS[index % COLORS.length],
-            }))}
-            wrapperStyle={{ position: "static", display: "flex", flexWrap: "wrap", justifyContent: "center", width: "100%" }}
-          />
+          <div style={{ minHeight: `${CHART_LEGEND_HEIGHT}px`, overflow: "hidden" }}>
+            <Legend
+              layout="horizontal"
+              verticalAlign="bottom"
+              align="center"
+              iconType="circle"
+              formatter={renderLegend}
+              iconSize={13}
+              payload={response?.responseData?.data?.[0]?.plots.map((entry, index) => ({
+                value: entry.name,
+                type: "circle",
+                color: COLORS[index % COLORS.length],
+              }))}
+              wrapperStyle={{ position: "static", display: "flex", flexWrap: "wrap", justifyContent: "center", width: "100%" }}
+            />
+          </div>
         )}
       </div>
     </Fragment>

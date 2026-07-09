@@ -515,7 +515,11 @@ const L2Main = ({}) => {
         <div className="digit-dss-options-header-wrapper">
           <HeaderComponent className={"digit-dss-options-header-text level-two"}>
             {t(dashboardConfig?.[0]?.name)}
-            {boundaryName && <span className="digit-dss-options-header-boundary">({t(getTitleHeading(boundaryName))})</span>}
+            {boundaryName && (
+              <span className="digit-dss-options-header-boundary" style={{ marginLeft: "0.5rem", fontSize: "2.5rem" }}>
+                ({t(getTitleHeading(boundaryName))})
+              </span>
+            )}
           </HeaderComponent>
           {mobileView ? null : (
             <div className="digit-dss-options-header-options">

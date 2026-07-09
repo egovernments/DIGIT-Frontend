@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useEffect, useContext } from "react";
+import React, { useMemo, useRef, useState, useEffect, useContext, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { Loader, Card, TooltipWrapper, Button } from "@egovernments/digit-ui-components";
@@ -21,6 +21,7 @@ import VennDiagramChart from "../../components/VennDiagramChart";
 import { getDuration } from "../../utils/getDuration";
 import { PDFDownload } from "../../utils/PDFDownload";
 import Filters from "../../components/Filters";
+import { RowHeightSyncProvider, useSyncedSlotHeight } from "../../utils/rowHeightSync";
 
 const key = "DSS_FILTERS";
 const getInitialRange = () => {
@@ -136,6 +137,50 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
       {subText && <div className="digit-dss-insight-card-sub-text">{subText}</div>}
       {response?.responseData?.data?.[0]?.insight?.value ? <Insight /> : null}
     </div>
+  );
+};
+
+const StackedCollectionItem = ({ chart, chartKey, cardId, isLast, moduleLevel, overview }) => {
+  const [itemRef, itemHeight] = useSyncedSlotHeight(`stacked-item-${chartKey}`, cardId);
+  return (
+    <div
+      ref={itemRef}
+      className={`digit-dss-card-item ${!isLast ? "digit-dss-card-item-border" : ""}`}
+      style={{ minHeight: itemHeight ? `${itemHeight}px` : undefined }}
+    >
+      <Chart data={chart} moduleLevel={moduleLevel} overview={overview} />
+    </div>
+  );
+};
+
+const StackedCollectionCard = ({ item, cardId }) => {
+  const { t } = useTranslation();
+  const [headerRef, headerHeight] = useSyncedSlotHeight("stacked-header", cardId);
+
+  return (
+    <Card className={"digit-stacked-collection-card"}>
+      <div
+        ref={headerRef}
+        className={"digit-stacked-collection-card-header-wrapper"}
+        style={{ alignItems: "flex-start", minHeight: headerHeight ? `${headerHeight}px` : undefined }}
+      >
+        <Icon type={item.name} iconColor={"#C84C0E"} width="1.5rem" height="1.5rem" className="digit-dss-stacked-card-icon" />
+        <div className={"digit-stacked-collection-card-header-text"}>{t(item.name)}</div>
+      </div>
+      <div className="digit-dss-card-body-stacked">
+        {item.charts.map((chart, chartKey) => (
+          <StackedCollectionItem
+            key={chartKey}
+            chart={chart}
+            chartKey={chartKey}
+            cardId={cardId}
+            isLast={chartKey === item.charts.length - 1}
+            moduleLevel={item.moduleLevel}
+            overview={item.vizType === "collection"}
+          />
+        ))}
+      </div>
+    </Card>
   );
 };
 
@@ -509,7 +554,8 @@ const L1Main = () => {
         ) : null}
         {dashboardConfig?.[0]?.visualizations.map((row, key) => {
           return (
-            <div className={`digit-dss-card add-margin`} key={key}>
+            <RowHeightSyncProvider key={key}>
+            <div className={`digit-dss-card add-margin`}>
               {row.vizArray.map((item, index) => {
                 if (item?.charts?.[0]?.chartType == "bar") {
                   return null;
@@ -605,21 +651,7 @@ const L1Main = () => {
                     </div>
                   );
                 } else if (item?.vizType === "stacked-collection") {
-                  return (
-                    <Card key={index} className={"digit-stacked-collection-card"}>
-                      <div className={"digit-stacked-collection-card-header-wrapper"}>
-                        <Icon type={item.name} iconColor={"#C84C0E"} width="1.5rem" height="1.5rem" className="digit-dss-stacked-card-icon" />
-                        <div className={"digit-stacked-collection-card-header-text"}>{t(item.name)}</div>
-                      </div>
-                      <div className="digit-dss-card-body-stacked">
-                        {item.charts.map((chart, key) => (
-                          <div className={`digit-dss-card-item ${key !== item.charts.length - 1 ? "digit-dss-card-item-border" : ""}`}>
-                            <Chart data={chart} key={key} moduleLevel={item.moduleLevel} overview={item.vizType === "collection"} />
-                          </div>
-                        ))}
-                      </div>
-                    </Card>
-                  );
+                  return <StackedCollectionCard key={index} item={item} cardId={index} />;
                 } else if (item?.charts?.[0]?.chartType == "donut") {
                   const pieChart = item?.charts?.[0];
                   return (
@@ -711,6 +743,7 @@ const L1Main = () => {
                 }
               })}
             </div>
+            </RowHeightSyncProvider>
           );
         })}
       </div>

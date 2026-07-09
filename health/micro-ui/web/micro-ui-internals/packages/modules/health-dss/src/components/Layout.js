@@ -17,6 +17,7 @@ import KibanaCard from "./KibanaCard";
 import VennDiagram from "./VennDiagramChart";
 import UserActivityMetrics from "./UserActivityTracking/UserActivityMetrics";
 import UserActivitySummaryTable from "./UserActivityTracking/UserActivitySummaryTable";
+import { RowHeightSyncProvider } from "../utils/rowHeightSync";
 
 let index = 1;
 
@@ -36,12 +37,14 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
   const [chip, updateChip] = useState({});
   const [downloadChartsId, setDownloadChartsId] = useState(null);
 
+  const isPaired = rowData.vizArray.length > 1;
+
   const renderChart = (chart, title) => {
     switch (chart.chartType) {
       case "table":
         return <CustomTable data={chart} onSearch={searchQuery} chip={chip} title={title} />;
       case "donut":
-        return <CustomPieChart data={chart} title={title} />;
+        return <CustomPieChart data={chart} title={title} isPaired={isPaired} />;
       case "line":
         return <CustomAreaChart data={chart} title={title} pageZoom={pageZoom} />;
       case "horizontalBar":
@@ -85,6 +88,7 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
         return (
           <GenericChart
             key={key}
+            cardId={key}
             value={value}
             header={
               visualizer?.charts?.[chip ? chip.filter((ele) => ele.active)?.[0]?.index : 0].chartType === "line"
@@ -152,23 +156,25 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
     updateChip({ ...chipData });
   }, [rowData.vizArray]);
   return (
-    <div className="digit-chart-row">
-      {rowData.vizArray.map(
-        useCallback(
-          (chart, key) => {
-            let chipData = chip?.[chart.name];
-            let onChipChange = (index) =>
-              updateChip((oldState) => {
-                let prevChip = oldState[chart.name];
-                oldState[chart.name] = prevChip.map((ele) => ({ ...ele, active: ele.index === index }));
-                return { ...oldState };
-              });
-            return renderVisualizer(chart, key, chipData, onChipChange);
-          },
-          [renderVisualizer, chip]
-        )
-      )}
-    </div>
+    <RowHeightSyncProvider>
+      <div className="digit-chart-row">
+        {rowData.vizArray.map(
+          useCallback(
+            (chart, key) => {
+              let chipData = chip?.[chart.name];
+              let onChipChange = (index) =>
+                updateChip((oldState) => {
+                  let prevChip = oldState[chart.name];
+                  oldState[chart.name] = prevChip.map((ele) => ({ ...ele, active: ele.index === index }));
+                  return { ...oldState };
+                });
+              return renderVisualizer(chart, key, chipData, onChipChange);
+            },
+            [renderVisualizer, chip]
+          )
+        )}
+      </div>
+    </RowHeightSyncProvider>
   );
 };
 

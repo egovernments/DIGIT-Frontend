@@ -109,7 +109,7 @@ const Chart = ({ data, showDivider }) => {
   const chartData = response?.responseData?.data?.[0];
 
   return (
-    <div className={`digit-metric-details-chart ${showDivider ? "add-divider" : ""}`}>
+    <div className={`digit-metric-details-chart ${showDivider ? "add-divider" : ""}`} style={{ justifyContent: "start" }}>
       {chartData?.headerSymbol !== "percentage" ? (
         <div className="digit-metric-data-header">
           {`${Digit.Utils.dss.formatter(chartData?.headerValue, chartData?.headerSymbol, value?.denomination, true, t)}`}

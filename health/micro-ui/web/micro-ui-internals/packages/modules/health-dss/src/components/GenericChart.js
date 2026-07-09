@@ -1,6 +1,7 @@
 import { Card, TextInput, Button, HeaderComponent, TooltipWrapper, SVG } from "@egovernments/digit-ui-components";
 import React, { useRef, Fragment, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useSyncedSlotHeight } from "../utils/rowHeightSync";
 
 const GenericChart = ({
   header,
@@ -16,6 +17,7 @@ const GenericChart = ({
   updateChip,
   value = {},
   setDownloadChartsId = null,
+  cardId,
 }) => {
   const { t } = useTranslation();
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
@@ -94,9 +96,17 @@ const GenericChart = ({
     return Digit.Download.Excel(chartData, t(header));
   };
 
+  const [headerRef, headerHeight] = useSyncedSlotHeight("chart-header", cardId);
+  const [subHeaderRef, subHeaderHeight] = useSyncedSlotHeight("chart-subheader", cardId);
+  const hasSubHeaderContent = Boolean(subHeader) || Boolean(caption);
+
   return (
     <Card className={`digit-chart-item ${className}`} ReactRef={chart}>
-      <div className={`digit-chart-header ${showSearch && "digit-chart-column-direction"}`}>
+      <div
+        ref={cardId !== undefined ? headerRef : undefined}
+        className={`digit-chart-header ${showSearch && "digit-chart-column-direction"}`}
+        style={cardId !== undefined && headerHeight ? { minHeight: `${headerHeight}px` } : undefined}
+      >
         <div className="digit-chart-header-wrapper">
           {showHeader && (
             <TooltipWrapper header={t(`TIP_${Digit.Utils.locale.getTransformedLocale(header)}`)} placement={"top"}>
@@ -142,9 +152,16 @@ const GenericChart = ({
           )}
         </div>
       </div>
-      {subHeader && <div className="digit-generic-chart-subheader">{t(subHeader)}</div>}
-      {caption && <div className="digit-generic-chart-caption">{t(caption)}</div>}
-      {React.cloneElement(children, { setChartData, setChartDenomination })}
+      {(hasSubHeaderContent || cardId !== undefined) && (
+        <div
+          ref={cardId !== undefined ? subHeaderRef : undefined}
+          style={cardId !== undefined && subHeaderHeight ? { minHeight: `${subHeaderHeight}px` } : undefined}
+        >
+          {subHeader && <div className="digit-generic-chart-subheader">{t(subHeader)}</div>}
+          {caption && <div className="digit-generic-chart-caption">{t(caption)}</div>}
+        </div>
+      )}
+      {React.cloneElement(children, { setChartData, setChartDenomination, cardId })}
     </Card>
   );
 };
