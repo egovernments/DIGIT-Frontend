@@ -1020,6 +1020,13 @@ export const UICustomizations = {
           hierarchyType: data?.state?.searchForm?.Name,
         },
       };
+      data.body.BoundaryTypeHierarchySearchCriteria.limit = data.state.tableForm.limit;
+      data.body.BoundaryTypeHierarchySearchCriteria.offset = data.state.tableForm.offset;
+      data.params = {
+        ...data.params,
+        limit: data.state.tableForm.limit,
+        offset: data.state.tableForm.offset,
+      };
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {

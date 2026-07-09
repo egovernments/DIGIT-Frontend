@@ -598,14 +598,12 @@ const ViewHierarchy = () => {
             )}
           </Card>
           {/* Info Alert Card */}
-          <div style={{ marginTop: "1rem" }}>
-            <AlertCard
+          <AlertCard
               label={t("INFO")}
               text={t("BOUNDARY_DOWNLOAD_MESSAGE")}
               variant="default"
               style={{ maxWidth: "100%" }}
-            />
-          </div>
+          />
           {/* Footer with Back and Submit buttons */}
           <Footer
             actionFields={[
