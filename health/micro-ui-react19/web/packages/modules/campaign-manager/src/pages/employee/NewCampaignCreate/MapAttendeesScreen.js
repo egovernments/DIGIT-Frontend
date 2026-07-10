@@ -121,6 +121,7 @@ const MapAttendeesScreen = () => {
                 message: t(I18N_KEYS.PAGES.HCM_ATTENDEE_MAPPING_SUCCESS),
                 text: t(I18N_KEYS.PAGES.HCM_ATTENDEE_MAPPING_SUCCESS_TEXT),
                 actionLabel: "HCM_BACK_TO_SETUP_ATTENDANCE",
+                primaryActionIcon : "Undo",
                 actionLink: `/${window.contextPath}/employee/campaign/setup-attendance?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
               },
             }

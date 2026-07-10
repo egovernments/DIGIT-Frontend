@@ -1,11 +1,9 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-import { Loader, Card, TooltipWrapper, Button } from "@egovernments/digit-ui-components";
-import { HeaderComponent } from "@egovernments/digit-ui-components";
+import { Loader, Card, TooltipWrapper, Button,HeaderComponent,DownloadIcon, ShareIcon } from "@egovernments/digit-ui-components";
 import Icon from "../../components/Icon";
 import { MultiLink } from "@egovernments/digit-ui-react-components";
-import { DownloadIcon, ShareIcon } from "@egovernments/digit-ui-components";
 import { format } from "date-fns";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import FilterContext from "../../components/FilterContext";

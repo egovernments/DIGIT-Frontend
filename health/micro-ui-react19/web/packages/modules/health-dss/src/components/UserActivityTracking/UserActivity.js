@@ -388,7 +388,7 @@ const UserActivity = () => {
             />
           </div>
           <div style={{ marginLeft: "auto", fontSize: "13px", color: "#787878" }}>
-            Showing {filteredData.length} of {enrichedData.length} users
+            {`${t(I18N_KEYS.USER_ACTIVITY.SHOWING)} {filteredData.length} ${t(I18N_KEYS.USER_ACTIVITY.OF)} {enrichedData.length} ${t(I18N_KEYS.USER_ACTIVITY.USERS)}`}
           </div>
         </div>
         <div className={`user-tracking-inbox-table-wrapper`}>

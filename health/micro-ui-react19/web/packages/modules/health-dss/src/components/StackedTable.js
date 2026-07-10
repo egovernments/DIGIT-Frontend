@@ -4,10 +4,9 @@ import GenericChart from "./GenericChart";
 import { getTitleHeading } from "../utils/locale";
 import FilterContext from "./FilterContext";
 import { Button } from "@egovernments/digit-ui-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import { getDuration } from "../utils/getDuration";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
-import { useLocation } from "react-router-dom";
 
 export default function StackedTable({ chartId, visualizer, initialRange, isNational, routeTo, redirectUrl }) {
   const { t } = useTranslation();

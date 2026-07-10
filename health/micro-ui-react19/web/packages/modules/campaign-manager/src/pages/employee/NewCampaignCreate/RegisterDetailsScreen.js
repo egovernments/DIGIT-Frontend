@@ -276,6 +276,9 @@ const RegisterDetailsScreen = () => {
 
   return (
     <div style={{ paddingBottom: "4.5rem" }}>
+      <HeaderComponent className="attendance-screen-headers" styles={{marginBottom:"1.5rem"}}>
+          {t(I18N_KEYS.PAGES.VIEW_REGISTER)}
+      </HeaderComponent>
       {/* ── Register Details Card ── */}
       <Card style={{marginBottom: "1.5rem" }}>
         {campaignName && (
@@ -285,7 +288,7 @@ const RegisterDetailsScreen = () => {
           )}
         </div>
         )}
-        <HeaderComponent className="attendance-screen-headers">
+        <HeaderComponent className="attendance-screen-headers register-details">
           {t(I18N_KEYS.PAGES.REGISTER_DETAILS)}
         </HeaderComponent>
 
@@ -299,13 +302,13 @@ const RegisterDetailsScreen = () => {
       {/* ── Attendees Table Card ── */}
       <Card style={{ overflow: "hidden" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <HeaderComponent className="attendance-screen-headers">
+          <HeaderComponent className="attendance-screen-headers register-details">
             {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_USERS_TABLE_HEADING)}
           </HeaderComponent>
           <Button
               label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_EXCEL_BUTTON)}
               variation="secondary"
-              size="large"
+              size="medium"
               icon="FileUpload"
               onClick={() => navigate(
                 `/${window.contextPath}/employee/campaign/map-attendees-screen?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}&registerId=${registerId}&registerNumber=${registerNumber}&registerName=${encodeURIComponent(registerName || "")}`

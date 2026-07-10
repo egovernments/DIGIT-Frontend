@@ -653,6 +653,7 @@ export const I18N_KEYS = {
     Count: "Count",
     Days: "Days",
     "ADD _BOUNDARY": "ADD _BOUNDARY",
+    WBH_DELETE_REGISTER:"WBH_DELETE_REGISTER"
   },
 
   // ─── UTILS (unique to utils/) ──────────────────────────────────────────────
@@ -828,6 +829,7 @@ export const I18N_KEYS = {
     UPDATE_DATE_AND_CYCLE_HEADER: "UPDATE_DATE_AND_CYCLE_HEADER",
     UPDATE_DATE_CHANGE_INFO_TEXT1: "UPDATE_DATE_CHANGE_INFO_TEXT1",
     UPDATE_DATE_CHANGE_INFO_TEXT2: "UPDATE_DATE_CHANGE_INFO_TEXT2",
+    VIEW_REGISTER :"VIEW_REGISTER"
   },
 
   // ─── COMMODITY_MANAGEMENT (CommodityManagement components) ─────────────────
