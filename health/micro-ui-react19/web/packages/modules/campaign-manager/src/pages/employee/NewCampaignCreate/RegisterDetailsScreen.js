@@ -24,6 +24,7 @@ const RegisterDetailsScreen = () => {
   const attendanceContextPath = window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") || "health-attendance";
   const [showToast, setShowToast] = useState(null);
   const [deletePopup, setDeletePopup] = useState(null);
+  const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
 
   // Mutation hook for de-enrolling an attendee
   const deenrollReqCriteria = {
@@ -117,7 +118,7 @@ const RegisterDetailsScreen = () => {
 
   // Fetch individual details (name, username, role, etc.)
   const individualReqCriteria = {
-    url: `/health-individual/v1/_search`,
+    url: `/${individualContextPath}/v1/_search`,
     params: { tenantId, limit: individualIds.length + 1, offset: 0 },
     body: { Individual: { id: individualIds } },
     config: {
