@@ -4,6 +4,11 @@
   white-space: nowrap;
   font-weight: 700;
   line-height: normal;
+
+  &.register-details{
+    font-size: var(--digitv2-fontSize-heading-m-desktop);
+    font-family: Roboto;
+  }
 }
 
 .digit-map-users-to-registers-table{

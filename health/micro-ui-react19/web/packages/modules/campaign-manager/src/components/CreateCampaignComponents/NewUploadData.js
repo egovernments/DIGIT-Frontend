@@ -1711,6 +1711,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         {showPopUp && (
           <PopUp
             type={"default"}
+            showIcon={true}
             className={"popUpClass"}
             footerclassName={"popUpFooter"}
             heading={

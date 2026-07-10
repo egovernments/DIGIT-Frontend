@@ -352,7 +352,7 @@ const MapUsersToRegistersScreen = () => {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DELETE_REGISTER_BUTTON),
       cell: (row) => (
         <Button
-          label={t(I18N_KEYS.COMPONENTS.WBH_DELETE)}
+          label={t(I18N_KEYS.COMPONENTS.WBH_DELETE_REGISTER)}
           variation="secondary"
           size="small"
           icon="Delete"

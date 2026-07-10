@@ -115,6 +115,8 @@ const CreateRegistersScreen = () => {
                 text: t(I18N_KEYS.PAGES.HCM_REGISTER_CREATION_SUCCESS_TEXT),
                 actionLabel: "HCM_BACK_TO_SETUP_ATTENDANCE",
                 actionLink: `/${window.contextPath}/employee/campaign/setup-attendance?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+                primaryActionIcon : "ArrowBack",
+                isPrimaryIconSuffix:false
               },
             }
           );

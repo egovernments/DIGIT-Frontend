@@ -1,8 +1,6 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React,{ useEffect, useState, Fragment } from "react";
+import { useNavigate ,useLocation} from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState, Fragment } from "react";
-import { useLocation } from "react-router-dom";
 import { Loader } from "@egovernments/digit-ui-components";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 

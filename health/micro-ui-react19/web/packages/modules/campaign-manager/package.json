@@ -23,8 +23,8 @@
     "react-i18next": "15.0.0",
     "styled-components": "5.x || 6.x",
     "@egovernments/digit-ui-react-components": "2.0.0-dev-16",
-    "@egovernments/digit-ui-svg-components": "2.0.0-dev-05",
-    "@egovernments/digit-ui-components": "2.0.0-dev-54"
+    "@egovernments/digit-ui-svg-components": "2.0.0-dev-08",
+    "@egovernments/digit-ui-components": "2.0.0-dev-55"
   },
   "dependencies": {
     "@cyntler/react-doc-viewer": "1.17.1",

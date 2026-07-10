@@ -100,6 +100,7 @@ import SummaryCard from "./components/CommodityManagement/SummaryCard";
 import TransactionSummaryTab from "./components/CommodityManagement/TransactionSummaryTab";
 import StockSummaryTab from "./components/CommodityManagement/StockSummaryTab";
 import GenericChart from "./components/CommodityManagement/GenericChart";
+import { UndrawPeopleSearch } from "./pages/employee/NewAppConfiguration/components/UndrawPeopleSearch";
 
 /**
  * MDMS Module name
@@ -293,7 +294,8 @@ const componentsToRegister = {
   SummaryCard,
   TransactionSummaryTab,
   StockSummaryTab,
-  GenericChart
+  GenericChart,
+  UndrawPeopleSearch
 };
 
 const overrideHooks = () => {
