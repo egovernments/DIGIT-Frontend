@@ -355,7 +355,7 @@ const MapUsersToRegistersScreen = () => {
           label={t(I18N_KEYS.COMPONENTS.WBH_DELETE_REGISTER)}
           variation="secondary"
           size="small"
-          icon="Delete"
+          icon="DeleteOutline"
           onClick={() => handleDeleteRegister(row)}
         />
       ),

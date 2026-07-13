@@ -1635,6 +1635,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   ? t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_UNIFIED_DATA)
                   : type === "attendanceRegister"
                   ? t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_ATTENDANCE_REGISTER)
+                  : type === "attendanceRegisterAttendee"
+                  ? t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_ATTENDANCE_REGISTER_ATTENDEE)
                   : t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_USER)}
               </HeaderComponent>
             </div>
@@ -1648,6 +1650,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   ? t(I18N_KEYS.COMPONENTS.HCM_UNIFIED_DATA_MESSAGE)
                   : type === "attendanceRegister"
                   ? t(I18N_KEYS.COMPONENTS.HCM_ATTENDANCE_REGISTER_MESSAGE)
+                  : type === "attendanceRegisterAttendee"
+                  ? t(I18N_KEYS.COMPONENTS.HCM_ATTENDANCE_REGISTER_ATTENDEE_MESSAGE)
                   : t(I18N_KEYS.COMPONENTS.HCM_USER_MESSAGE)}
               </div>
             )}
@@ -1723,6 +1727,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_HEADER)
                 : type === "attendanceRegister"
                 ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_HEADER)
+                : type === "attendanceRegisterAttendee"
+                ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_ATTENDEE_MODAL_HEADER)
                 : t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER)
             }
             children={[
@@ -1735,6 +1741,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT)
                   : type === "attendanceRegister"
                   ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_TEXT)
+                  : type === "attendanceRegisterAttendee"
+                  ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_ATTENDEE_MODAL_TEXT)
                   : t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT)}
               </div>,
             ]}

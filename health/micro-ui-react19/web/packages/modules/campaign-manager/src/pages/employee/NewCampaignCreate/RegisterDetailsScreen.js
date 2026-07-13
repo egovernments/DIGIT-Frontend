@@ -249,17 +249,17 @@ const RegisterDetailsScreen = () => {
       ),
     },
     {
-      name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DELETE_USER_COLUMN),
+      name: t(I18N_KEYS.COMPONENTS.WBH_DELETE_USER),
       cell: (row) =>
         row.status === "Inactive" ? (
           <span style={{ color: "#888", fontSize: "0.8rem", fontStyle: "italic" }}>{t(I18N_KEYS.PAGES.HCM_ALREADY_REMOVED)}</span>
         ) : (
           <span title={!isCampaignStarted ? t(I18N_KEYS.PAGES.HCM_DELETE_DISABLED_CAMPAIGN_NOT_STARTED) : ""}>
             <Button
-              label={t(I18N_KEYS.COMPONENTS.WBH_DELETE)}
+              label={t(I18N_KEYS.COMPONENTS.WBH_DELETE_USER)}
               variation="secondary"
               size="small"
-              icon="Delete"
+              icon="DeleteOutline"
               isDisabled={!isCampaignStarted}
               onClick={() => handleDeleteUser(row)}
             />
@@ -310,13 +310,14 @@ const RegisterDetailsScreen = () => {
               label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_EXCEL_BUTTON)}
               variation="secondary"
               size="medium"
-              icon="FileUpload"
+              icon="XlsxFile"
               onClick={() => navigate(
                 `/${window.contextPath}/employee/campaign/map-attendees-screen?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}&registerId=${registerId}&registerNumber=${registerNumber}&registerName=${encodeURIComponent(registerName || "")}`
               )}
             />
         </div>
         <DataTable
+          className="digit-map-users-to-registers-table"
           columns={columns}
           data={tableData}
           customStyles={tableCustomStyle}
