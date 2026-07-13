@@ -78,6 +78,7 @@ const updateAppConfigForFeature = (dataConfig = {}, selectedFeaturesByModule, av
   // Update each page's properties based on feature selection
   dataConfig.data.pages = dataConfig.data.pages.map((page) => {
     const updatedProperties = page?.properties?.map((property) => {
+      const wasHidden = property?.hidden === true;
       let hidden = property?.hidden;
 
       // Check if field is required (should always be visible)
@@ -90,9 +91,15 @@ const updateAppConfigForFeature = (dataConfig = {}, selectedFeaturesByModule, av
         hidden = !selectedFeaturesByModule?.[currentModule]?.includes(property?.format);
       }
 
+      // Only when a field actually transitions from hidden -> visible here, force it into
+      // the form and summary. Fields that were already visible keep whatever includeInForm/
+      // includeInSummary an admin explicitly configured for them.
+      const isBeingEnabled = wasHidden && hidden === false;
+
       return {
         ...property,
         hidden,
+        ...(isBeingEnabled ? { includeInForm: true, includeInSummary: true } : {}),
       };
     });
 
