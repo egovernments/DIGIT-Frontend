@@ -92,6 +92,18 @@ const CommodityProjectProvider = ({ children }) => {
     { schemaCode: "HierarchySchema" },
   );
 
+  // Load boundary localizations. All Commodity
+  // Management screens render boundary codes, so this shared provider fetches the matching
+  // hcm-boundary-<hierarchyType> module once for every descendant screen.
+  const stateCode = Digit.ULBService.getStateId();
+  const language = Digit.StoreData.getCurrentLanguage();
+  Digit.Services.useStore({
+    stateCode,
+    moduleCode: BOUNDARY_HIERARCHY_TYPE ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] : [],
+    language,
+    modulePrefix: "hcm",
+  });
+
   // Fetch hierarchy definition to determine top-level boundary type
   const hierarchyDefCriteria = useMemo(() => ({
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
