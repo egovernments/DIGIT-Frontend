@@ -10,6 +10,22 @@ export const tableCustomStyle = {
   },
   responsiveWrapper: {
     style: {
+      overflowX: "auto",
+      scrollbarWidth: "thin",
+      scrollbarColor: "#9E9E9E #EEEEEE",
+      "&::-webkit-scrollbar": {
+        height: "10px",
+      },
+      "&::-webkit-scrollbar-track": {
+        backgroundColor: "#EEEEEE",
+      },
+      "&::-webkit-scrollbar-thumb": {
+        backgroundColor: "#9E9E9E",
+        borderRadius: "6px",
+      },
+      "&::-webkit-scrollbar-thumb:hover": {
+        backgroundColor: "#757575",
+      },
     },
   },
   contextMenu: {
@@ -106,6 +122,22 @@ export const getTableCustomStyle = (freezeFirstColumn = false) => ({
   },
   responsiveWrapper: {
     style: {
+      overflowX: "auto",
+      scrollbarWidth: "thin",
+      scrollbarColor: "#9E9E9E #EEEEEE",
+      "&::-webkit-scrollbar": {
+        height: "10px",
+      },
+      "&::-webkit-scrollbar-track": {
+        backgroundColor: "#EEEEEE",
+      },
+      "&::-webkit-scrollbar-thumb": {
+        backgroundColor: "#9E9E9E",
+        borderRadius: "6px",
+      },
+      "&::-webkit-scrollbar-thumb:hover": {
+        backgroundColor: "#757575",
+      },
     },
   },
   contextMenu: {
