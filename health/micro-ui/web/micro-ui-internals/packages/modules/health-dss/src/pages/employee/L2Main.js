@@ -70,14 +70,20 @@ const getInitialRange = () => {
     let nestedData = campaignData[projectType];
     let descendantDateRange = Digit.SessionStorage.get("descendantDateRange");
 
+    const isValidDate = (d) => d instanceof Date && !isNaN(d);
+
     if (nestedData) {
       // legacy nested format: { [projectType]: [{ startDate, endDate, boundaries }] }
       startDate = nestedData?.[0].startDate ? new Date(nestedData?.[0].startDate) : Digit.Utils.dss.getDefaultFinacialYear().startDate;
       endDate = nestedData?.[0].endDate ? new Date(nestedData?.[0].endDate) : Digit.Utils.dss.getDefaultFinacialYear().endDate;
       boundaries = nestedData?.[0].boundaries;
       if (descendantDateRange?.[boundaryValue]) {
-        startDate = new Date(descendantDateRange[boundaryValue]?.startDate);
-        endDate = new Date(descendantDateRange[boundaryValue]?.endDate);
+        const descendantStart = new Date(descendantDateRange[boundaryValue]?.startDate);
+        const descendantEnd = new Date(descendantDateRange[boundaryValue]?.endDate);
+        if (isValidDate(descendantStart) && isValidDate(descendantEnd)) {
+          startDate = descendantStart;
+          endDate = descendantEnd;
+        }
       }
       if (filteredInfo !== null && filteredInfo?.length !== 0) {
         startDate = new Date(filteredInfo[0]["startDate"]);
@@ -85,13 +91,24 @@ const getInitialRange = () => {
       }
     } else if (campaignData.startDate) {
       // flat campaign object: { startDate, endDate, ... }
-      startDate = new Date(campaignData.startDate);
-      endDate = new Date(campaignData.endDate);
+      const campaignStart = new Date(campaignData.startDate);
+      const campaignEnd = new Date(campaignData.endDate);
+      if (isValidDate(campaignStart) && isValidDate(campaignEnd)) {
+        startDate = campaignStart;
+        endDate = campaignEnd;
+      }
       if (descendantDateRange?.[boundaryValue]) {
-        startDate = new Date(descendantDateRange[boundaryValue]?.startDate);
-        endDate = new Date(descendantDateRange[boundaryValue]?.endDate);
+        const descendantStart = new Date(descendantDateRange[boundaryValue]?.startDate);
+        const descendantEnd = new Date(descendantDateRange[boundaryValue]?.endDate);
+        if (isValidDate(descendantStart) && isValidDate(descendantEnd)) {
+          startDate = descendantStart;
+          endDate = descendantEnd;
+        }
       }
     }
+
+    if (!isValidDate(startDate)) startDate = Digit.Utils.dss.getDefaultFinacialYear().startDate;
+    if (!isValidDate(endDate)) endDate = Digit.Utils.dss.getDefaultFinacialYear().endDate;
 
     const resolvedTitle = `${format(startDate, "MMM d, yyyy")} - ${format(endDate, "MMM d, yyyy")}`;
     const resolvedInterval = getDuration(startDate, endDate);

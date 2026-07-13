@@ -350,6 +350,11 @@ const CustomHorizontalBarChart = ({
   };
   let showOnDownload = downloadChartsId === response?.responseData?.visualizationCode ? true : false;
   const bars = response?.responseData?.data?.map((bar) => bar?.headerName);
+  const showBrush = !showOnDownload && chartData.length > 1;
+  const brushEdgeLabelLength = showBrush
+    ? Math.max(tickFormatter(chartData?.[0]?.name)?.length || 0, tickFormatter(chartData?.[chartData.length - 1]?.name)?.length || 0)
+    : 0;
+  const brushLabelMargin = brushEdgeLabelLength ? brushEdgeLabelLength * 9 + 20 : 5;
   return (
     <Fragment>
       {filterStack?.length > 1 && (
@@ -386,8 +391,8 @@ const CustomHorizontalBarChart = ({
               height="100%"
               margin={{
                 top: 18,
-                right: 5,
-                left: 5,
+                right: brushLabelMargin,
+                left: brushLabelMargin,
                 bottom: 5,
               }}
               layout={layout}
@@ -491,7 +496,7 @@ const CustomHorizontalBarChart = ({
                   overflow: "hidden",
                 }}
               />
-              {!showOnDownload && chartData.length > 1 ? (
+              {showBrush ? (
                 <Brush dataKey="name" endIndex={chartData.length > 14 ? 14 : chartData.length - 1} height={24} travellerWidth={5} stroke="#F47738" />
               ) : null}
             </BarChart>
