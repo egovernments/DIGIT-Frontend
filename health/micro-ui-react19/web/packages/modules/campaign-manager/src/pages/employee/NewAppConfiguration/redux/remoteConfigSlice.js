@@ -705,6 +705,10 @@ const remoteConfigSlice = createSlice({
           );
           if (field) {
             field.hidden = !field.hidden;
+            if (field.hidden === false) {
+              field.includeInForm = true;
+              field.includeInSummary = true;
+            }
           }
         }
       } else {
@@ -727,6 +731,10 @@ const remoteConfigSlice = createSlice({
                 (key === undefined || node.key === undefined || node.key === key) &&
                 (!role || node.role === role)) {
               node.hidden = !node.hidden;
+              if (node.hidden === false) {
+                node.includeInForm = true;
+                node.includeInSummary = true;
+              }
               return true;
             }
 
