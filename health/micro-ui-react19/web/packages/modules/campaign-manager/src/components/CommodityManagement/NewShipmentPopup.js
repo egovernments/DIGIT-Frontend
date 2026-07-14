@@ -25,7 +25,7 @@ const NewShipmentPopup = ({
   isTopLevel,
   onClose,
   onSuccess,
-  onBatchStart,
+  onBatchStart, 
 }) => {
   const { t } = useTranslation();
   const moduleName = Digit.Utils.campaign.getModuleName();
@@ -144,7 +144,7 @@ const NewShipmentPopup = ({
 
   const { data: campaignData, isLoading: campaignLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
 
-  const projectId = campaignData?.projectId || projectIdProp;
+  const projectId = projectIdProp || campaignData?.projectId;
   const campaignName = campaignData?.campaignName || "";
   const projectServicePath = window.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || `health-project`;
 
