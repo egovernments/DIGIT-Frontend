@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Card, Button, Loader, Toast, PopUp, HeaderComponent, SummaryCardFieldPair } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import TagComponent from "../../../components/TagComponent";
+import NoResultsFound from "../../../components/NoResultsFound";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import { tableCustomStyle } from "../../../components/tableCustomStyle";
 
@@ -283,13 +284,13 @@ const RegisterDetailsScreen = () => {
       {/* ── Register Details Card ── */}
       <Card style={{marginBottom: "1.5rem" }}>
         {campaignName && (
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",marginBottom:"1rem"}}>
           {campaignName && (
             <TagComponent campaignName={campaignName} />
           )}
         </div>
         )}
-        <HeaderComponent className="attendance-screen-headers register-details">
+        <HeaderComponent className="attendance-screen-headers register-details" styles={{marginBottom:"1rem"}}>
           {t(I18N_KEYS.PAGES.REGISTER_DETAILS)}
         </HeaderComponent>
 
@@ -316,24 +317,22 @@ const RegisterDetailsScreen = () => {
               )}
             />
         </div>
-        <DataTable
-          className="digit-map-users-to-registers-table"
-          columns={columns}
-          data={tableData}
-          customStyles={tableCustomStyle}
-          pagination
-          paginationPerPage={10}
-          paginationRowsPerPageOptions={[10, 20, 50, 100]}
-          paginationComponentOptions={{
-            rowsPerPageText: t(I18N_KEYS.APP_CONFIGURATION.CS_COMMON_ROWS_PER_PAGE),
-          }}
-          persistTableHead
-          noDataComponent={
-            <div style={{ padding: "2rem", color: "#888", fontSize: "0.875rem" }}>
-              {t(I18N_KEYS.COMPONENTS.NO_RESULTS_FOUND)}
-            </div>
-          }
-        />
+        {tableData.length === 0 ? (
+          <NoResultsFound text={I18N_KEYS.CAMPAIGN_CREATE.HCM_USERS_YET_TO_BE_MAPPED} />
+        ) : (
+          <DataTable
+            className="digit-map-users-to-registers-table"
+            columns={columns}
+            data={tableData}
+            customStyles={tableCustomStyle}
+            pagination
+            paginationPerPage={10}
+            paginationRowsPerPageOptions={[10, 20, 50, 100]}
+            paginationComponentOptions={{
+              rowsPerPageText: t(I18N_KEYS.APP_CONFIGURATION.CS_COMMON_ROWS_PER_PAGE),
+            }}
+          />
+        )}
       </Card>
 
       <div className="map-users-footer">

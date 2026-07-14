@@ -12,6 +12,7 @@ import {
   HeaderComponent,
 } from "@egovernments/digit-ui-components";
 import TagComponent from "../../../components/TagComponent";
+import NoResultsFound from "../../../components/NoResultsFound";
 import DataTable from "react-data-table-component";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import { tableCustomStyle } from "../../../components/tableCustomStyle";
@@ -487,36 +488,32 @@ const MapUsersToRegistersScreen = () => {
 
       {/* ── Registers Table Card ── */}
       <Card style={{ padding: "1.5rem", overflow: "hidden" }}>
-        <DataTable
-          className="digit-map-users-to-registers-table"
-          columns={columns}
-          data={filteredRegisters}
-          customStyles={tableCustomStyle}
-          pagination
-          paginationServer
-          paginationTotalRows={totalRegisters}
-          paginationPerPage={rowsPerPage}
-          paginationDefaultPage={currentPage}
-          paginationRowsPerPageOptions={[10, 20, 50, 100]}
-          onChangePage={(page) => setCurrentPage(page)}
-          onChangeRowsPerPage={(newPerPage) => {
-            setRowsPerPage(newPerPage);
-            setCurrentPage(1);
-          }}
-          paginationComponentOptions={{
-            rowsPerPageText: t(I18N_KEYS.APP_CONFIGURATION.CS_COMMON_ROWS_PER_PAGE),
-          }}
-          progressPending={isFetching}
-          progressComponent={<Loader />}
-          persistTableHead
-          noDataComponent={
-            <div
-              style={{ padding: "2rem", color: "#888", fontSize: "0.875rem" }}
-            >
-              {t(I18N_KEYS.COMPONENTS.NO_RESULTS_FOUND)}
-            </div>
-          }
-        />
+        {!isFetching && filteredRegisters.length === 0 ? (
+          <NoResultsFound text={I18N_KEYS.CAMPAIGN_CREATE.HCM_NO_REGISTERS_FOUND} />
+        ) : (
+          <DataTable
+            className="digit-map-users-to-registers-table"
+            columns={columns}
+            data={filteredRegisters}
+            customStyles={tableCustomStyle}
+            pagination
+            paginationServer
+            paginationTotalRows={totalRegisters}
+            paginationPerPage={rowsPerPage}
+            paginationDefaultPage={currentPage}
+            paginationRowsPerPageOptions={[10, 20, 50, 100]}
+            onChangePage={(page) => setCurrentPage(page)}
+            onChangeRowsPerPage={(newPerPage) => {
+              setRowsPerPage(newPerPage);
+              setCurrentPage(1);
+            }}
+            paginationComponentOptions={{
+              rowsPerPageText: t(I18N_KEYS.APP_CONFIGURATION.CS_COMMON_ROWS_PER_PAGE),
+            }}
+            progressPending={isFetching}
+            progressComponent={<Loader />}
+          />
+        )}
       </Card>
 
       <div className="map-users-footer">
