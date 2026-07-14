@@ -66,7 +66,6 @@ const EditAttendanceManagementTable = ({ ...props }) => {
       name: (
         <div
           style={{
-            borderRight: "2px solid #787878",
             width: "100%",
             textAlign: "start",
           }}
@@ -82,7 +81,6 @@ const EditAttendanceManagementTable = ({ ...props }) => {
       name: (
         <div
           style={{
-            borderRight: "2px solid #787878",
             width: "100%",
             textAlign: "start",
           }}
@@ -102,7 +100,6 @@ const EditAttendanceManagementTable = ({ ...props }) => {
       name: (
         <div
           style={{
-            borderRight: "2px solid #787878",
             width: "100%",
             textAlign: "start",
           }}
@@ -122,7 +119,6 @@ const EditAttendanceManagementTable = ({ ...props }) => {
       name: (
         <div
           style={{
-            borderRight: "2px solid #787878",
             width: "100%",
             textAlign: "start",
           }}
@@ -178,7 +174,6 @@ const EditAttendanceManagementTable = ({ ...props }) => {
         name: (
           <div
             style={{
-              borderRight: "2px solid #787878",
               width: "100%",
               textAlign: "start",
             }}
@@ -244,7 +239,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
     <>
       {/* Main Data Table */}
       <DataTable
-        className={`search-component-table ${props.className}`}
+        className={`search-component-table digit-attendance-inbox-table ${props.className}`}
         columns={columns}
         data={paginatedData}
         progressPending={false}

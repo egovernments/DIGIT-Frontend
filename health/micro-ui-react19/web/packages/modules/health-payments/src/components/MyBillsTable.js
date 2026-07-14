@@ -28,7 +28,7 @@ const MyBillsTable = ({ ...props }) => {
   const columns = useMemo(() => {
     const baseColumns = [
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMMON.HCM_AM_BILL_ID)}</div>,
+        name: <div style={{ width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMMON.HCM_AM_BILL_ID)}</div>,
         selector: (row) => {
           return (
             <div
@@ -53,7 +53,7 @@ const MyBillsTable = ({ ...props }) => {
       },
 
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BILL_TYPE_COLOUMN)}</div>,
+        name: <div style={{width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BILL_TYPE_COLOUMN)}</div>,
         selector: (row) => {
           return (
             <div className="ellipsis-cell" style={{ alignItems: "flex-start" }}>
@@ -69,7 +69,7 @@ const MyBillsTable = ({ ...props }) => {
       },
 
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMMON.HCM_AM_BILL_DATE)}</div>,
+        name: <div style={{ width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMMON.HCM_AM_BILL_DATE)}</div>,
         selector: (row) => {
           return <div className="ellipsis-cell">{formatTimestampToDate(row.billDate) || t(I18N_KEYS.COMMON.NA)}</div>;
         },
@@ -81,7 +81,7 @@ const MyBillsTable = ({ ...props }) => {
       },
 
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMMON.HCM_AM_BILL_PERIOD_DATE)}</div>,
+        name: <div style={{ width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMMON.HCM_AM_BILL_PERIOD_DATE)}</div>,
         selector: (row) => {
           return (
             <div
@@ -104,7 +104,7 @@ const MyBillsTable = ({ ...props }) => {
       },
       // INFO:: no of registers commented
        {
-         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "right", paddingRight: "1rem" }}>{t(I18N_KEYS.COMMON.HCM_AM_NO_OF_REGISTERS)}</div>,
+         name: <div style={{ width: "100%", textAlign: "right", paddingRight: "1rem" }}>{t(I18N_KEYS.COMMON.HCM_AM_NO_OF_REGISTERS)}</div>,
          selector: (row) => {
            return (
              <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
@@ -119,7 +119,7 @@ const MyBillsTable = ({ ...props }) => {
         },
        },
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "right", paddingRight: "1rem" }}>{t(I18N_KEYS.COMMON.HCM_AM_NUMBER_OF_WORKERS)}</div>,
+        name: <div style={{ width: "100%", textAlign: "right", paddingRight: "1rem" }}>{t(I18N_KEYS.COMMON.HCM_AM_NUMBER_OF_WORKERS)}</div>,
         selector: (row) => {
           return (
             <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
@@ -135,7 +135,7 @@ const MyBillsTable = ({ ...props }) => {
         },
       },
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BOUNDARY_NAME)}</div>,
+        name: <div style={{ width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_BOUNDARY_NAME)}</div>,
         selector: (row) => {
           return <div className="ellipsis-cell">{t(row.localityCode) || t(I18N_KEYS.COMMON.NA)}</div>;
         },
@@ -147,7 +147,7 @@ const MyBillsTable = ({ ...props }) => {
       },
 
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_PROJECT_NAME)}</div>,
+        name: <div style={{ width: "100%", textAlign: "start" }}>{t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_PROJECT_NAME)}</div>,
         selector: (row) => {
           return (
             <div
@@ -256,7 +256,7 @@ const MyBillsTable = ({ ...props }) => {
     return (
         <>
             <DataTable
-            className="search-component-table"
+            className="search-component-table my-bills-table"
                 columns={columns}
                 data={props.data}
                 pagination

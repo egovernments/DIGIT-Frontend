@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { CustomSVG } from "@egovernments/digit-ui-components";
+import { CustomSVG,Tag } from "@egovernments/digit-ui-components";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
@@ -18,14 +18,15 @@ import { I18N_KEYS } from "../utils/i18nKeyConstants";
 const SearchResultsPlaceholder = (props) => {
     const { t } = useTranslation();
 
-    const iconHeight = props?.height || 262;
-    const iconWidth = props?.width || 336;
+    const iconHeight = props?.height || 220;
+    const iconWidth = props?.width || 280;
     return (
         <div className={`digit-no-data-found ${props?.className ? props?.className : ""}`} style={props?.style}>
             <SearchCustomSVG height={iconHeight} width={iconWidth} />
             <div style={{ display: "flex", gap: ".5rem", marginTop: "1rem" }}>
-                {<CustomSVG.InfoIconOutline width={"20px"} height={"20px"} fill={"#c84c0e"} />}
-                <div style={{ color: "#0b4b66" }}>{t(props?.placeholderText) || t(I18N_KEYS.COMPONENTS_MISC.COMMON_NO_RESULTS_FOUND)}</div>
+                <Tag label={t(props?.placeholderText) || t(I18N_KEYS.COMPONENTS_MISC.COMMON_NO_RESULTS_FOUND)} showIcon={true} type="monochrome" stroke={false} className="search-results-placeholder-tag" icon="Info" iconColor={"#0057BD"}/>
+                {/* {<CustomSVG.InfoIconOutline width={"20px"} height={"20px"} fill={"#c84c0e"} />}
+                <div style={{ color: "#0b4b66" }}>{t(props?.placeholderText) || t(I18N_KEYS.COMPONENTS_MISC.COMMON_NO_RESULTS_FOUND)}</div> */}
             </div>
         </div>
     );

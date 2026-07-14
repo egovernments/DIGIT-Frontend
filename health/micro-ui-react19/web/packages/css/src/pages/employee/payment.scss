@@ -32,9 +32,9 @@
 }
 
 .custom-inbox-table-row {
-  border-right: 2px solid #787878;
   width: 100%;
   text-align: start;
+  border: 0px !important
 }
 
 /* Main Wrapper */
@@ -186,20 +186,90 @@
 }
 
 .edit-attendance-mangement-table{
+  border-radius: 8px 8px 0px 0px;
+
   .rdt_TableBody{
     border: none !important;
+    border-radius: 8px 8px 0px 0px;
+  }
+
+  .rdt_Table {
+    border-radius: 8px 8px 0px 0px;
+  }
+
+  .rdt_TableHead {
+    border-radius: 8px 8px 0px 0px;
+  }
+
+  .rdt_TableHeadRow {
+    border-radius: 8px 8px 0px 0px;
+
+    .rdt_TableCol{
+      &:first-of-type{
+        border-top-left-radius: 8px !important;
+      }
+      &:last-of-type{
+        border-top-right-radius: 8px !important;
+      }
+    }
   }
 }
 
-.payment-setup-table{
+.payment-setup-table,
+.attendance-management-table,
+.digit-attendance-inbox-table,
+.digit-bill-inbox-table,
+.bill-details-table,
+.manage-bills-table,
+.my-bills-table,
+.verify-generate-payments-table,
+.digit-attendee-inbox-table{
+  border-radius: 8px 8px 0px 0px;
+
   .rdt_TableBody{
     border: none !important;
-    border-bottom: 1px solid #d6d5d4 !important;
+    border-radius: 8px 8px 0px 0px;
+  }
+
+  .rdt_Table {
+    border-radius: 8px 8px 0px 0px;
+  }
+
+  .rdt_TableHead {
+    border-radius: 8px 8px 0px 0px;
+  }
+
+  .rdt_TableHeadRow {
+    border-radius: 8px 8px 0px 0px;
+
+    .rdt_TableCol{
+      &:first-of-type{
+        border-top-left-radius: 8px !important;
+      }
+      &:last-of-type{
+        border-top-right-radius: 8px !important;
+      }
+    }
   }
 }
 
-.attendance-management-table{
-  .rdt_TableBody{
-    border: none !important;
+.digit-inbox-payments-table-wrapper{
+  .rdt_Pagination{
+    margin-top:0rem !important;
+  }
+}
+
+.date-range-pair{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.digit-tag-wrapper {
+  &.search-results-placeholder-tag {
+    .digit-tag-text {
+      color: #0057BD !important;
+    }
+    background-color: #EFF8FF !important;
   }
 }

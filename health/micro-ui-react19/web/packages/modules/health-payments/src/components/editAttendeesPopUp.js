@@ -354,6 +354,7 @@ const EditAttendeePopUp = ({
                                 placeholder={t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_VIEW_REGISTER_PLACE_HOLDER)}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                className={"select-hierarchy-search-bar"}
                             />
 
                             {/* Attendance Table */}

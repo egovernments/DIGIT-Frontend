@@ -325,7 +325,7 @@ const getAvailableActions = (status) => {
         const commonColumns = [
             {
                 name: (
-                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                    <div style={{ width: "100%", textAlign: "start" }}>
                         {t(I18N_KEYS.COMMON.HCM_AM_BILL_ID)}
                     </div>
                 ),
@@ -362,7 +362,7 @@ const getAvailableActions = (status) => {
             },
             {
                 name: (
-                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                    <div style={{ width: "100%", textAlign: "start" }}>
                         {t(I18N_KEYS.COMMON.HCM_AM_NUMBER_OF_WORKERS)}
                     </div>
                 ),
@@ -375,7 +375,7 @@ const getAvailableActions = (status) => {
             },
             {
                 name: (
-                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                    <div style={{ width: "100%", textAlign: "start" }}>
                         {props?.editBill ? t(I18N_KEYS.COMMON.HCM_AM_PENDING_FOR_EDIT) : t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_PENDING_VERIFICATION)}
                     </div>
                 ),
@@ -403,7 +403,7 @@ const getAvailableActions = (status) => {
         const nonEditColumns = [
             {
                 name: (
-                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                    <div style={{ width: "100%", textAlign: "start" }}>
                         {t(I18N_KEYS.COMMON.HCM_AM_VERIFIED)}
                     </div>
                 ),
@@ -423,7 +423,7 @@ const getAvailableActions = (status) => {
             },
             {
                 name: (
-                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                    <div style={{ width: "100%", textAlign: "start" }}>
                         {t(I18N_KEYS.COMMON.HCM_AM_PAID)}
                     </div>
                 ),
@@ -443,7 +443,7 @@ const getAvailableActions = (status) => {
         const editColumns = [
             {
                 name: (
-                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                    <div style={{ width: "100%", textAlign: "start" }}>
                         {t(I18N_KEYS.COMPONENTS_BILLS.HCM_AM_EDITED)}
                     </div>
                 ),
@@ -461,7 +461,7 @@ const getAvailableActions = (status) => {
 
         const statusColumn = {
             name: (
-                <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                <div style={{ width: "100%", textAlign: "start" }}>
                     {t(I18N_KEYS.COMMON.HCM_AM_STATUS)}
                 </div>
             ),
@@ -498,7 +498,7 @@ const getAvailableActions = (status) => {
 
         const actionsColumn = {
             name: (
-                <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                <div style={{ width: "100%", textAlign: "start" }}>
                     {t(I18N_KEYS.COMMON.HCM_AM_BILL_ACTIONS)}
                 </div>
             ),
@@ -618,7 +618,7 @@ const getAvailableActions = (status) => {
     return (
         <>
             <DataTable
-            className="search-component-table"
+            className="search-component-table verify-generate-payments-table"
                 columns={columns}
                 data={props?.data}
                 pagination

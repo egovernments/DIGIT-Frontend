@@ -39,6 +39,18 @@ const getActionButtons = (rowData, tabData, navigate, t, boundaryCodeResponse, c
   const actions = {};
   const boundaryValue = boundaryCodeResponse?.message || t(rowData?.address?.boundary);
 
+  actions.reportsLink = {
+    label: "VIEW_REPORTS",
+    size: "medium",
+    onClick: () =>
+      navigate(
+        `/${window?.contextPath}/employee/dss/campaign-reports?campaignNumber=${rowData?.referenceID}&campaignName=${encodeURIComponent(rowData?.name || "")}`
+      ),
+    icon: "Visibility",
+    variation: "secondary",
+    style: { height: "32px" },
+  };
+
   actions.dashboardLink = {
     label: "VIEW_DASHBOARD",
     size: "medium",
@@ -52,20 +64,8 @@ const getActionButtons = (rowData, tabData, navigate, t, boundaryCodeResponse, c
           },
         }
       ),
-    icon: "",
-    variation: "link",
-    style: { height: "32px" },
-  };
-
-  actions.reportsLink = {
-    label: "VIEW_REPORTS",
-    size: "medium",
-    onClick: () =>
-      navigate(
-        `/${window?.contextPath}/employee/dss/campaign-reports?campaignNumber=${rowData?.referenceID}&campaignName=${encodeURIComponent(rowData?.name || "")}`
-      ),
-    icon: "",
-    variation: "link",
+    icon: "Visibility",
+    variation: "primary",
     style: { height: "32px" },
   };
 

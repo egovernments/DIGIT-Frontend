@@ -167,12 +167,14 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
             // },
           ],
           totalCountJsonPath: "TotalCount",
-          rowClassName: "table-row-mdms table-row-mdms-hover", // Table row styles
-          tableClassName: "pqm-table", // Table styles
           resultsJsonPath: "Individual", // API response path for results
           enableColumnSort: false, // Enables sorting on columns
           enableGlobalSearch: false, // Disables global search
-          isPaginationRequired: true, // enables pagination
+          isPaginationRequired: true, // enables pagination,
+          tableProps: {
+            rowClassName: "table-row-mdms table-row-mdms-hover", // Table row styles
+            tableClassName: "pqm-table digit-attendee-inbox-table", // Table styles
+          },
         },
       },
     },

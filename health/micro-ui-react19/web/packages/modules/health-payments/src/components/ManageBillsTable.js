@@ -51,7 +51,6 @@ const ManageBillsTable = ({ ...props }) => {
         const colHeader = (label, textAlign = "start") => (
             <div
                 style={{
-                    borderRight: "2px solid #787878",
                     width: "100%",
                     textAlign,
                     ...(textAlign === "right" ? { paddingRight: "1rem", boxSizing: "border-box" } : {}),

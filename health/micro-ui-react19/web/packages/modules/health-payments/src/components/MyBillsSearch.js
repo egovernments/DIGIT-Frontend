@@ -57,9 +57,9 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { }, headerConten
   };
 
   return (
-    <Card style={{ marginBottom: "1.5rem", padding: "1.5rem" }}>
+    <Card style={{ marginBottom: "1.5rem"}}>
       {headerContent && (
-        <div style={{ marginBottom: "1rem" }}>
+        <div>
           {headerContent}
         </div>
       )}
