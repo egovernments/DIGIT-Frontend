@@ -1,7 +1,7 @@
 import React, { useMemo,useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
-import { Card, HeaderComponent, SVG, Loader } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, SVG, Loader, Tag } from "@egovernments/digit-ui-components";
 
 const ReportsListPage = () => {
   const { t } = useTranslation();
@@ -53,6 +53,16 @@ const ReportsListPage = () => {
 
   const { isLoading: isMdmsLoading, data: mdmsData } = Digit.Hooks.useCustomAPIHook(mdmsReqCriteria);
 
+  // Campaign-wide (no reportName filter) so every report-type card can show a hint
+  // of activity without the user having to open each one.
+  const { data: inProgressRuns = [] } = Digit.Hooks.DSS.useReportsInProgress({
+    tenantId,
+    campaignIdentifier: campaignNumber,
+    config: { enabled: !!campaignNumber },
+  });
+
+  const inProgressReportNames = useMemo(() => new Set((inProgressRuns || []).map((run) => run?.reportname)), [inProgressRuns]);
+
   // Find the MDMS entry matching the current campaign's projectType
   const reportTypes = useMemo(() => {
     if (!mdmsData || !projectType) return [];
@@ -91,7 +101,12 @@ const ReportsListPage = () => {
                 <SVG.Description height="24" width="24" fill={"#0B4B66"} />
               </div>
               <div className="digit-reports-list__row-content">
-                <div className="digit-reports-list__row-title">{t(report.label)}</div>
+                <div className="digit-reports-list__row-title">
+                  {t(report.label)}
+                  {inProgressReportNames.has(report.code) && (
+                    <Tag label={t("HCM_IN_PROGRESS")} type="warning" style={{ marginLeft: "8px" }} />
+                  )}
+                </div>
                 <div className="digit-reports-list__row-desc">{t(report.description)}</div>
               </div>
               <div className="digit-reports-list__row-chevron">

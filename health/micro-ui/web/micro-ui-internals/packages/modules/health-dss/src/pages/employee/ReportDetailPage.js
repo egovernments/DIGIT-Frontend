@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import {
@@ -13,8 +13,11 @@ import {
   PopUp,
   TextInput,
   Toast,
+  TooltipWrapper,
 } from "@egovernments/digit-ui-components";
 import axios from "axios";
+import { checkExistingCustomReport } from "../../utils/reportsApi";
+import { getStageLabelKey, formatDuration, formatFileSize, formatRowCount } from "../../utils/reportStatus";
 
 // Currently downloads as zip since backend returns zip files.
 // TODO: Update to xlsx download once backend supports excel format.
@@ -93,7 +96,36 @@ const formatDateForPayload = (dateStr) => {
   return `${dd}-${mm}-${yyyy} 00:00:00+0530`;
 };
 
-const FrequencyContent = ({ reports, t, reportType }) => {
+// One in-progress dagRunId's current stage - no download action until it completes,
+// at which point it disappears from here and shows up as a completed report instead.
+const InProgressCard = ({ run, t }) => (
+  <Card type="secondary" className="digit-report-detail__file-card">
+    <div className="digit-report-detail__file-row">
+      <div className="digit-report-detail__file-info">
+        <div className="digit-report-detail__file-date">{t(getStageLabelKey(run.status))}</div>
+        <div style={{ height: 6, borderRadius: 3, background: "#e6e6e6", marginTop: 6, overflow: "hidden", maxWidth: 240 }}>
+          <div
+            style={{ height: "100%", borderRadius: 3, background: "#0B4B66", width: `${run.progressPercent || 0}%` }}
+          />
+        </div>
+        {formatDuration(run.elapsedSeconds) && (
+          <div className="digit-report-detail__file-meta">{t("HCM_RUNNING_FOR")}: {formatDuration(run.elapsedSeconds)}</div>
+        )}
+        {(run.expectedRows || run.expectedGenerationTimeSeconds) && (
+          <div className="digit-report-detail__file-meta">
+            {run.expectedRows && <span>{t("HCM_ESTIMATED_ROWS")}: ~{formatRowCount(run.expectedRows)}</span>}
+            {run.expectedRows && run.expectedGenerationTimeSeconds && <span> &middot; </span>}
+            {run.expectedGenerationTimeSeconds && (
+              <span>{t("HCM_ESTIMATED_TIME")}: ~{formatDuration(run.expectedGenerationTimeSeconds)}</span>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  </Card>
+);
+
+const FrequencyContent = ({ reports, inProgressRuns = [], t, reportType }) => {
   const handleDownload = (report) => {
     downloadFileFromStore({
       fileStoreId: report.filestoreid,
@@ -103,11 +135,36 @@ const FrequencyContent = ({ reports, t, reportType }) => {
 
   return (
     <div className="digit-report-detail__files-list">
+      {inProgressRuns.map((run) => (
+        <InProgressCard key={run.dagrunid || run.eventid} run={run} t={t} />
+      ))}
       {reports.map((report) => (
         <Card key={report.id} type="secondary" className="digit-report-detail__file-card">
           <div className="digit-report-detail__file-row">
-            <div className="digit-report-detail__file-info">
+            <div className="digit-report-detail__file-info" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
               <div className="digit-report-detail__file-date">{report.dateLabel}</div>
+              {report.hasMeta && (
+                <TooltipWrapper
+                  placement="right"
+                  header={t("HCM_REPORT_DETAILS")}
+                  content={
+                    <div>
+                      {report.reportTimeLabel && <div>{t("HCM_REPORT_TIME")}: {report.reportTimeLabel}</div>}
+                      {report.processingTimeLabel && <div>{t("HCM_PROCESSING_TIME")}: {report.processingTimeLabel}</div>}
+                      {report.fileSizeLabel && <div>{t("HCM_FILE_SIZE")}: {report.fileSizeLabel}</div>}
+                      {report.rowCountLabel && <div>{t("HCM_ROW_COUNT")}: {report.rowCountLabel}</div>}
+                    </div>
+                  }
+                >
+                  <button
+                    type="button"
+                    aria-label={t("HCM_REPORT_DETAILS")}
+                    style={{ display: "inline-flex", background: "none", border: "none", padding: 0, cursor: "pointer" }}
+                  >
+                    <SVG.Info width="16" height="16" fill="#505A5F" />
+                  </button>
+                </TooltipWrapper>
+              )}
             </div>
             <div className="digit-report-detail__file-actions">
               <Button label={t("HCM_DOWNLOAD")} onClick={() => handleDownload(report)} variation="link" icon="FileDownload" size="medium" />
@@ -133,13 +190,20 @@ const ReportDetailPage = () => {
   const [customStartDate, setCustomStartDate] = useState("");
   const [customEndDate, setCustomEndDate] = useState("");
   const [isTriggering, setIsTriggering] = useState(false);
+  const [isCheckingExisting, setIsCheckingExisting] = useState(false);
   const [showToast, setShowToast] = useState(null);
+  // Pre-flight result for the CUSTOM range just requested - { variant: "exists" |
+  // "in_progress" | "failed", data }. Non-null blocks triggering until the user acts.
+  const [existingReportPopup, setExistingReportPopup] = useState(null);
 
-  const handleTriggerCustomReport = async () => {
-    if (!customStartDate || !customEndDate) {
-      setShowToast({ key: "error", label: t("HCM_CUSTOM_DATE_REQUIRED") });
-      return;
-    }
+  const { data: inProgressRuns = [], refetch: refetchInProgress } = Digit.Hooks.DSS.useReportsInProgress({
+    tenantId,
+    campaignIdentifier: campaignNumber,
+    reportName: reportType,
+    config: { enabled: !!campaignNumber && !!reportType },
+  });
+
+  const triggerCustomReport = async () => {
     setIsTriggering(true);
     try {
       await Digit.CustomService.getResponse({
@@ -171,9 +235,11 @@ const ReportDetailPage = () => {
         },
       });
       setShowCustomPopup(false);
+      setExistingReportPopup(null);
       setCustomStartDate("");
       setCustomEndDate("");
       setShowToast({ key: "success", label: t("HCM_CUSTOM_REPORT_TRIGGERED") });
+      refetchInProgress();
     } catch (error) {
       console.error("Error triggering custom report:", error);
       setShowToast({ key: "error", label: t("HCM_CUSTOM_REPORT_TRIGGER_FAILED") });
@@ -182,12 +248,53 @@ const ReportDetailPage = () => {
     }
   };
 
-  // Fetch report metadata from airflow API
-  useEffect(() => {
-    if (!campaignNumber || !reportType) return;
-    const fetchReports = async () => {
+  // Pre-flight check before triggering: does a completed/in-progress/failed run
+  // already exist for this exact campaign+report+date-range?
+  const handleGenerateReportClick = async () => {
+    if (!customStartDate || !customEndDate) {
+      setShowToast({ key: "error", label: t("HCM_CUSTOM_DATE_REQUIRED") });
+      return;
+    }
+    setIsCheckingExisting(true);
+    try {
+      const response = await checkExistingCustomReport({
+        tenantId,
+        campaignIdentifier: campaignNumber,
+        reportName: reportType,
+        customStartDate: formatDateForPayload(customStartDate),
+        customEndDate: formatDateForPayload(customEndDate),
+      });
+      const existing = response?.exists ? response.data : null;
+
+      if (!existing) {
+        await triggerCustomReport();
+        return;
+      }
+
+      setShowCustomPopup(false);
+      if (existing.isFailed) {
+        setExistingReportPopup({ variant: "failed", data: existing });
+      } else if (existing.isTerminal) {
+        setExistingReportPopup({ variant: "exists", data: existing });
+      } else {
+        setExistingReportPopup({ variant: "in_progress", data: existing });
+      }
+    } catch (error) {
+      console.error("Error checking for existing custom report:", error);
+      setShowToast({ key: "error", label: t("HCM_CUSTOM_REPORT_CHECK_FAILED") });
+    } finally {
+      setIsCheckingExisting(false);
+    }
+  };
+
+  // Fetch report metadata from airflow API. showLoader is only true for the initial
+  // mount fetch - the completion-triggered refresh below must not flash the
+  // full-page Loader over content the user is already looking at.
+  const fetchReports = useCallback(
+    async ({ showLoader = false } = {}) => {
+      if (!campaignNumber || !reportType) return;
       try {
-        setIsLoading(true);
+        if (showLoader) setIsLoading(true);
         const response = await Digit.CustomService.getResponse({
           url: `/airflow-trigger-api/api/reports-metadata`,
           body: {
@@ -195,17 +302,38 @@ const ReportDetailPage = () => {
             reportName: reportType,
             campaignIdentifier: campaignNumber,
           },
+          // This body never varies for a given report, so CustomService's default
+          // useCache:true would otherwise replay the very first response forever -
+          // exactly why a newly-completed report only ever showed up after a reload.
+          useCache: false,
         });
         setReportsMetadata(response);
       } catch (error) {
         console.error("Error fetching reports metadata:", error);
         setReportsMetadata(null);
       } finally {
-        setIsLoading(false);
+        if (showLoader) setIsLoading(false);
       }
-    };
-    fetchReports();
-  }, [campaignNumber, reportType, tenantId]);
+    },
+    [campaignNumber, reportType, tenantId]
+  );
+
+  useEffect(() => {
+    fetchReports({ showLoader: true });
+  }, [fetchReports]);
+
+  // /reports-in-progress polls every 20s, but a run dropping out of that list (because
+  // it just completed or failed) doesn't by itself update the completed-reports list -
+  // without this, a just-finished report only appears after a manual page reload.
+  const prevInProgressIdsRef = useRef(new Set());
+  useEffect(() => {
+    const currentIds = new Set((inProgressRuns || []).map((run) => run.dagrunid));
+    const hasNewlyFinished = [...prevInProgressIdsRef.current].some((id) => !currentIds.has(id));
+    prevInProgressIdsRef.current = currentIds;
+    if (hasNewlyFinished) {
+      fetchReports();
+    }
+  }, [inProgressRuns, fetchReports]);
   // Group reports by triggerfrequency from actual API response
   const reportsByFrequency = useMemo(() => {
     const reports = reportsMetadata?.data || [];
@@ -236,10 +364,20 @@ const ReportDetailPage = () => {
         }
       }
 
+      const reportTimeLabel = formatDuration(item?.reportTimeSeconds);
+      const processingTimeLabel = formatDuration(item?.processingTimeSeconds);
+      const fileSizeLabel = formatFileSize(item?.filesizebytes);
+      const rowCountLabel = formatRowCount(item?.rowcount);
+
       grouped[freq].push({
         id: item?.id,
         dateLabel: dateLabel,
         filestoreid: item?.filestoreid,
+        reportTimeLabel,
+        processingTimeLabel,
+        fileSizeLabel,
+        rowCountLabel,
+        hasMeta: Boolean(reportTimeLabel || processingTimeLabel || fileSizeLabel || rowCountLabel),
       });
     });
 
@@ -251,8 +389,29 @@ const ReportDetailPage = () => {
     return grouped;
   }, [reportsMetadata]);
 
+  // Group in-progress runs by frequency too, so a frequency with nothing completed
+  // yet still gets its own accordion section instead of being invisible.
+  const inProgressByFrequency = useMemo(() => {
+    const grouped = {};
+    (inProgressRuns || []).forEach((run) => {
+      const freq = run?.triggerfrequency || "DAILY";
+      if (!grouped[freq]) grouped[freq] = [];
+      grouped[freq].push(run);
+    });
+    Object.keys(grouped).forEach((freq) => {
+      grouped[freq].sort((a, b) => (b.reporttriggeredtimems || 0) - (a.reporttriggeredtimems || 0));
+    });
+    return grouped;
+  }, [inProgressRuns]);
+
+  const allFrequencies = useMemo(
+    () => Array.from(new Set([...Object.keys(reportsByFrequency), ...Object.keys(inProgressByFrequency)])),
+    [reportsByFrequency, inProgressByFrequency]
+  );
+
   const reportLabel = `HCM_${reportType?.toUpperCase()}`;
   const totalReports = Object.values(reportsByFrequency).flat().length;
+  const totalInProgress = inProgressRuns?.length || 0;
 
   if (isLoading) return <Loader />;
 
@@ -279,23 +438,33 @@ const ReportDetailPage = () => {
           </div>
         </div>
 
-        {totalReports === 0 ? (
+        {totalReports === 0 && totalInProgress === 0 ? (
           <p>{t("HCM_NO_REPORTS_GENERATED")}</p>
         ) : (
           <AccordionList allowMultipleOpen={true}>
-            {Object.entries(reportsByFrequency).map(([frequency, reports]) => (
-              <Accordion
-                key={frequency}
-                title={`${t(`HCM_REPORT_FREQUENCY_${frequency}`)} : ${reports.length} ${t("HCM_REPORTS_COUNT")}`}
-                icon="CalendarMonth"
-                isOpenInitially={false}
-                hideCardBorder={false}
-                hideCardBg={true}
-                hideBorderRadius={true}
-              >
-                <FrequencyContent reports={reports} t={t} reportType={reportType} />
-              </Accordion>
-            ))}
+            {allFrequencies.map((frequency) => {
+              const reports = reportsByFrequency[frequency] || [];
+              const inProgress = inProgressByFrequency[frequency] || [];
+              const title =
+                inProgress.length > 0
+                  ? `${t(`HCM_REPORT_FREQUENCY_${frequency}`)} : ${reports.length} ${t("HCM_REPORTS_COUNT")} (${inProgress.length} ${t(
+                      "HCM_IN_PROGRESS"
+                    )})`
+                  : `${t(`HCM_REPORT_FREQUENCY_${frequency}`)} : ${reports.length} ${t("HCM_REPORTS_COUNT")}`;
+              return (
+                <Accordion
+                  key={frequency}
+                  title={title}
+                  icon="CalendarMonth"
+                  isOpenInitially={false}
+                  hideCardBorder={false}
+                  hideCardBg={true}
+                  hideBorderRadius={true}
+                >
+                  <FrequencyContent reports={reports} inProgressRuns={inProgress} t={t} reportType={reportType} />
+                </Accordion>
+              );
+            })}
           </AccordionList>
         )}
       </Card>
@@ -311,9 +480,9 @@ const ReportDetailPage = () => {
             <Button
               key="trigger"
               label={t("HCM_GENERATE_REPORT")}
-              onClick={handleTriggerCustomReport}
+              onClick={handleGenerateReportClick}
               variation="primary"
-              isDisabled={!customStartDate || !customEndDate || isTriggering}
+              isDisabled={!customStartDate || !customEndDate || isTriggering || isCheckingExisting}
             />,
           ]}
           subHeading={t("HCM_CUSTOM_RANGE_DESC")}
@@ -326,6 +495,69 @@ const ReportDetailPage = () => {
             <label>{t("HCM_CUSTOM_END_DATE")}</label>
             <TextInput type="date" value={customEndDate} onChange={(e) => setCustomEndDate(e.target.value)} min={customStartDate} />
           </div>
+        </PopUp>
+      )}
+
+      {existingReportPopup && (
+        <PopUp
+          onClose={() => setExistingReportPopup(null)}
+          onOverlayClick={() => setExistingReportPopup(null)}
+          heading={
+            existingReportPopup.variant === "exists"
+              ? t("HCM_REPORT_ALREADY_EXISTS")
+              : existingReportPopup.variant === "in_progress"
+              ? t("HCM_REPORT_ALREADY_IN_PROGRESS")
+              : t("HCM_REPORT_GENERATION_FAILED_TITLE")
+          }
+          className={"digit-report-detail__popup"}
+          footerChildren={
+            existingReportPopup.variant === "exists"
+              ? [
+                  <Button key="close" label={t("HCM_CLOSE")} onClick={() => setExistingReportPopup(null)} variation="secondary" />,
+                  <Button
+                    key="download"
+                    label={t("HCM_DOWNLOAD")}
+                    onClick={() => {
+                      downloadFileFromStore({ fileStoreId: existingReportPopup.data.filestoreid, customName: `${reportType}_custom` });
+                      setExistingReportPopup(null);
+                    }}
+                    variation="primary"
+                    icon="FileDownload"
+                  />,
+                ]
+              : existingReportPopup.variant === "in_progress"
+              ? [<Button key="close" label={t("HCM_CLOSE")} onClick={() => setExistingReportPopup(null)} variation="secondary" />]
+              : [
+                  <Button key="cancel" label={t("HCM_CANCEL")} onClick={() => setExistingReportPopup(null)} variation="secondary" />,
+                  <Button key="retry" label={t("HCM_RETRY")} onClick={triggerCustomReport} variation="primary" isDisabled={isTriggering} />,
+                ]
+          }
+          subHeading={
+            existingReportPopup.variant === "exists"
+              ? t("HCM_REPORT_ALREADY_EXISTS_DESC")
+              : existingReportPopup.variant === "in_progress"
+              ? t("HCM_REPORT_ALREADY_IN_PROGRESS_DESC")
+              : t("HCM_REPORT_GENERATION_FAILED_DESC")
+          }
+        >
+          {existingReportPopup.variant === "in_progress" && (
+            <div className="digit-report-detail__file-info">
+              <div className="digit-report-detail__file-date">{t(getStageLabelKey(existingReportPopup.data.status))}</div>
+              <div style={{ height: 6, borderRadius: 3, background: "#e6e6e6", marginTop: 6, overflow: "hidden" }}>
+                <div
+                  style={{
+                    height: "100%",
+                    borderRadius: 3,
+                    background: "#0B4B66",
+                    width: `${existingReportPopup.data.progressPercent || 0}%`,
+                  }}
+                />
+              </div>
+            </div>
+          )}
+          {existingReportPopup.variant === "failed" && (
+            <div className="digit-report-detail__file-info">{existingReportPopup.data.errormessage || t("HCM_REPORT_GENERATION_FAILED_DESC")}</div>
+          )}
         </PopUp>
       )}
 

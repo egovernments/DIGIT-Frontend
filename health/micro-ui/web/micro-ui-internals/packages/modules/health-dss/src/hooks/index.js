@@ -6,6 +6,7 @@ import useGetChartV2 from "./useGetChartV2";
 import useDSSGeoJson from "./useDSSGeoJson";
 import useUserActivityData from "./useUserActivityData";
 import useSearchCampaign from "./useSearchCampaign";
+import useReportsInProgress from "./useReportsInProgress";
 
 const DSS = {
   useProjectSearch,
@@ -14,7 +15,8 @@ const DSS = {
   useGetChartV2,
   useDSSGeoJson,
   useUserActivityData,
-  useSearchCampaign
+  useSearchCampaign,
+  useReportsInProgress
 };
 
 const Hooks = {
