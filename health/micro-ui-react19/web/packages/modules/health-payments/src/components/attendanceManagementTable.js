@@ -200,6 +200,7 @@ const AttendanceManagementTable = ({ ...props }) => {
         fixedHeader={true}
         fixedHeaderScrollHeight={"70vh"}
         paginationComponentOptions={getCustomPaginationOptions(t)}
+        className={props.className}
       />
       {showToast && (
         <Toast
