@@ -96,13 +96,38 @@ const formatDateForPayload = (dateStr) => {
   return `${dd}-${mm}-${yyyy} 00:00:00+0530`;
 };
 
+// reportrange: "2026-04-30 18:30:00+0000_2026-05-30 18:30:00+0000" (UTC) - parse the full
+// datetime with timezone so it converts to the correct local date, not just the raw string.
+const formatRangeDate = (dateStr) => {
+  const trimmed = dateStr?.trim();
+  if (!trimmed) return "";
+  // "2026-04-30 18:30:00+0000" → "2026-04-30T18:30:00+00:00" for ISO parse
+  const isoStr = trimmed.replace(" ", "T").replace(/([+-])(\d{2})(\d{2})$/, "$1$2:$3");
+  const d = new Date(isoStr);
+  if (isNaN(d.getTime())) return trimmed;
+  return d.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+};
+
+// Shared by completed reports and in-progress runs alike, so an in-progress card can show
+// *which* range/day it's generating instead of just the pipeline stage with no other context.
+const getReportDateLabel = (item, freq) => {
+  if (freq === "CUSTOM" && item?.reportrange) {
+    const parts = item.reportrange.split("_");
+    if (parts.length === 2) {
+      return `${formatRangeDate(parts[0])} — ${formatRangeDate(parts[1])}`;
+    }
+  }
+  return formatCreatedTime(item?.createdtime);
+};
+
 // One in-progress dagRunId's current stage - no download action until it completes,
 // at which point it disappears from here and shows up as a completed report instead.
 const InProgressCard = ({ run, t }) => (
   <Card type="secondary" className="digit-report-detail__file-card">
     <div className="digit-report-detail__file-row">
       <div className="digit-report-detail__file-info">
-        <div className="digit-report-detail__file-date">{t(getStageLabelKey(run.status))}</div>
+        {run.dateLabel && <div className="digit-report-detail__file-date">{run.dateLabel}</div>}
+        <div className="digit-report-detail__file-meta">{t(getStageLabelKey(run.status))}</div>
         <div style={{ height: 6, borderRadius: 3, background: "#e6e6e6", marginTop: 6, overflow: "hidden", maxWidth: 240 }}>
           <div
             style={{ height: "100%", borderRadius: 3, background: "#0B4B66", width: `${run.progressPercent || 0}%` }}
@@ -195,6 +220,10 @@ const ReportDetailPage = () => {
   // Pre-flight result for the CUSTOM range just requested - { variant: "exists" |
   // "in_progress" | "failed", data }. Non-null blocks triggering until the user acts.
   const [existingReportPopup, setExistingReportPopup] = useState(null);
+  // Live countdown (seconds) for the "exists" variant's retryAvailableInSeconds -
+  // null when there's no active cooldown to show. Ticks client-side once a second;
+  // the backend check is still the source of truth when the user actually retries.
+  const [retryCountdown, setRetryCountdown] = useState(null);
 
   const { data: inProgressRuns = [], refetch: refetchInProgress } = Digit.Hooks.DSS.useReportsInProgress({
     tenantId,
@@ -287,6 +316,22 @@ const ReportDetailPage = () => {
     }
   };
 
+  // (Re)starts a 1-second countdown whenever a fresh "exists" popup carries a
+  // retryAvailableInSeconds, and tears it down on close/unmount so no stray
+  // interval keeps ticking after the popup is gone.
+  useEffect(() => {
+    const seconds = existingReportPopup?.variant === "exists" ? existingReportPopup.data?.retryAvailableInSeconds : null;
+    if (seconds == null) {
+      setRetryCountdown(null);
+      return;
+    }
+    setRetryCountdown(seconds);
+    const intervalId = setInterval(() => {
+      setRetryCountdown((prev) => (prev !== null && prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [existingReportPopup]);
+
   // Fetch report metadata from airflow API. showLoader is only true for the initial
   // mount fetch - the completion-triggered refresh below must not flash the
   // full-page Loader over content the user is already looking at.
@@ -344,25 +389,7 @@ const ReportDetailPage = () => {
       const freq = item?.triggerfrequency || "DAILY";
       if (!grouped[freq]) grouped[freq] = [];
 
-      let dateLabel = formatCreatedTime(item?.createdtime);
-      // For CUSTOM frequency, show the date range from reportrange
-      // reportrange: "2026-04-30 18:30:00+0000_2026-05-30 18:30:00+0000" (UTC)
-      // Parse full datetime with timezone so it converts to correct local date
-      if (freq === "CUSTOM" && item?.reportrange) {
-        const parts = item.reportrange.split("_");
-        if (parts.length === 2) {
-          const formatRangeDate = (dateStr) => {
-            const trimmed = dateStr?.trim();
-            if (!trimmed) return "";
-            // Convert "2026-04-30 18:30:00+0000" → "2026-04-30T18:30:00+00:00" for ISO parse
-            const isoStr = trimmed.replace(" ", "T").replace(/([+-])(\d{2})(\d{2})$/, "$1$2:$3");
-            const d = new Date(isoStr);
-            if (isNaN(d.getTime())) return trimmed;
-            return d.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-          };
-          dateLabel = `${formatRangeDate(parts[0])} — ${formatRangeDate(parts[1])}`;
-        }
-      }
+      const dateLabel = getReportDateLabel(item, freq);
 
       const reportTimeLabel = formatDuration(item?.reportTimeSeconds);
       const processingTimeLabel = formatDuration(item?.processingTimeSeconds);
@@ -396,7 +423,7 @@ const ReportDetailPage = () => {
     (inProgressRuns || []).forEach((run) => {
       const freq = run?.triggerfrequency || "DAILY";
       if (!grouped[freq]) grouped[freq] = [];
-      grouped[freq].push(run);
+      grouped[freq].push({ ...run, dateLabel: getReportDateLabel(run, freq) });
     });
     Object.keys(grouped).forEach((freq) => {
       grouped[freq].sort((a, b) => (b.reporttriggeredtimems || 0) - (a.reporttriggeredtimems || 0));
@@ -521,9 +548,20 @@ const ReportDetailPage = () => {
                       downloadFileFromStore({ fileStoreId: existingReportPopup.data.filestoreid, customName: `${reportType}_custom` });
                       setExistingReportPopup(null);
                     }}
-                    variation="primary"
+                    variation={retryCountdown === 0 ? "secondary" : "primary"}
                     icon="FileDownload"
                   />,
+                  ...(retryCountdown === 0
+                    ? [
+                        <Button
+                          key="retry-now"
+                          label={t("HCM_GENERATE_NOW")}
+                          onClick={handleGenerateReportClick}
+                          variation="primary"
+                          isDisabled={isTriggering || isCheckingExisting}
+                        />,
+                      ]
+                    : []),
                 ]
               : existingReportPopup.variant === "in_progress"
               ? [<Button key="close" label={t("HCM_CLOSE")} onClick={() => setExistingReportPopup(null)} variation="secondary" />]
@@ -540,6 +578,20 @@ const ReportDetailPage = () => {
               : t("HCM_REPORT_GENERATION_FAILED_DESC")
           }
         >
+          {existingReportPopup.variant === "exists" && existingReportPopup.data?.retryBlocked && (
+            <div className="digit-report-detail__file-info">{t("HCM_REPORT_RETRY_BLOCKED")}</div>
+          )}
+          {existingReportPopup.variant === "exists" && retryCountdown !== null && (
+            <div className="digit-report-detail__file-info">
+              {retryCountdown > 0 ? (
+                <div>
+                  {t("HCM_REPORT_RETRY_AVAILABLE_IN")}: {formatDuration(retryCountdown)}
+                </div>
+              ) : (
+                <div>{t("HCM_REPORT_RETRY_AVAILABLE_NOW")}</div>
+              )}
+            </div>
+          )}
           {existingReportPopup.variant === "in_progress" && (
             <div className="digit-report-detail__file-info">
               <div className="digit-report-detail__file-date">{t(getStageLabelKey(existingReportPopup.data.status))}</div>
