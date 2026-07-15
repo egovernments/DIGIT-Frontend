@@ -2,7 +2,8 @@ import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import React, { useRef, useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import BulkUpload from "../BulkUpload";
-import { AlertCard, PopUp, Toast, Button, Card, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
+import XlsPreview from "../XlsPreview";
+import { AlertCard, PopUp, Toast, Button, Card, HeaderComponent, Loader,InfoButton } from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../TagComponent";
@@ -24,6 +25,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const [downloadId, setDownloadId] = useState({});
   const [errorsType, setErrorsType] = useState({});
   const [showToast, setShowToast] = useState(null);
+  const [showErrorFilePreview, setShowErrorFilePreview] = useState(false);
   const type = props?.props?.screenType;
   const [executionCount, setExecutionCount] = useState(0);
   const [isError, setIsError] = useState(false);
@@ -1187,6 +1189,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   label: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN_ALERTCARD_TITLE,
                   text: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN_ALERTCARD,
                   toastLabel: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN,
+                  showOpenFileButton: true,
                 });
                 setIsError(true);
               }
@@ -1226,6 +1229,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 label: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN_ALERTCARD_TITLE,
                 text: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN_ALERTCARD,
                 toastLabel: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN,
+                showOpenFileButton: true,
               });
               setIsError(true);
             }
@@ -1672,6 +1676,29 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 style={{ marginLeft: "0rem", maxWidth: "100%", marginTop: "1rem" }}
                 label={t(validationStatus.label)}
                 text={validationStatus.text ? t(validationStatus.text) : undefined}
+                className="validation-alert-card"
+                additionalElements={
+                  validationStatus.showOpenFileButton
+                    ? [
+                        <InfoButton
+                          infobuttontype="error"
+                          label={t(I18N_KEYS.COMPONENTS.VIEW_ERRORS)}
+                          title={t(I18N_KEYS.COMPONENTS.VIEW_ERRORS)}
+                          variation="primary"
+                          type="button"
+                          size="large"
+                          onClick={() => setShowErrorFilePreview(true)}
+                        />
+                      ]
+                    : []
+                }
+              />
+            )}
+            {showErrorFilePreview && (
+              <XlsPreview
+                file={uploadedFile?.[0]}
+                onDownload={() => onFileDownload(uploadedFile?.[0])}
+                onBack={() => setShowErrorFilePreview(false)}
               />
             )}
             {showInfoCard && (
