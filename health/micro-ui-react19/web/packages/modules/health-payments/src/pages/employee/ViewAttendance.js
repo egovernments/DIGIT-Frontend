@@ -924,8 +924,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
           alertMessage={t(`HCM_AM_ALERT_APPROVE_DESCRIPTION`)}
           submitLabel={t(`HCM_AM_APPROVE`)}
           cancelLabel={t(`HCM_AM_CANCEL`)}
+          isDisabled={approveMutation.isLoading}
           onPrimaryAction={() => {
             triggerMusterRollApprove();
+            setOpenApproveAlertPopUp(false);
           }}
         />
       )}
