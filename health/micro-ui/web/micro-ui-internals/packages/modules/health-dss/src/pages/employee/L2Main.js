@@ -336,9 +336,11 @@ const L2Main = ({}) => {
     Digit.SessionStorage.set(key, updatedData);
     setFilters(updatedData);
     const sessionCampaignDates = JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.filters;
-    if (sessionCampaignDates?.campaignStartDate && sessionCampaignDates?.campaignEndDate) {
+    if (sessionCampaignDates?.campaignStartDate && sessionCampaignDates?.campaignEndDate && updatedData?.dateFilterSelected === "DSS_TODAY") {
       setShowProgressBar(true);
       setProgressDuration(getValuesForProgressBar);
+    } else {
+      setShowProgressBar(false);
     }
   };
   const fullPageRef = useRef();
@@ -768,16 +770,14 @@ const L2Main = ({}) => {
               </div>
             </div>
           )}
-          {tabArray && tabArray?.length > 1 && (
+          {tabArray && tabArray?.length > 1 && showProgressBar && (
             <div className="digit-dss-switch-tabs progressBar">
-              {showProgressBar && (
-                <ProgressBar
-                  className="digit-dss-switch-tab-wrapper"
-                  bgcolor="#00703C"
-                  total={progressDuration?.campaignDuration}
-                  completed={progressDuration?.daysElapsed}
-                />
-              )}
+              <ProgressBar
+                className="digit-dss-switch-tab-wrapper"
+                bgcolor="#00703C"
+                total={progressDuration?.campaignDuration}
+                completed={progressDuration?.daysElapsed}
+              />
             </div>
           )}
         </div>
