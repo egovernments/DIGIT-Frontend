@@ -275,12 +275,8 @@
 }
 
 .date-range-picker-payments{
-  .rdrDateDisplayItem input{
-    outline: none !important;
-    cursor: not-allowed !important;
-    border: none !important;
-  }
-  .rdrDateDisplayItemActive input{
+  .rdrDateDisplayItem input,
+    .rdrDateDisplayItemActive input{
     outline: none !important;
     cursor: not-allowed !important;
     border: none !important;
