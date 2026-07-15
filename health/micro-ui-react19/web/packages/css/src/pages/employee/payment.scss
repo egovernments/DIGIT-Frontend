@@ -273,3 +273,16 @@
     background-color: #EFF8FF !important;
   }
 }
+
+.date-range-picker-payments{
+  .rdrDateDisplayItem input{
+    outline: none !important;
+    cursor: not-allowed !important;
+    border: none !important;
+  }
+  .rdrDateDisplayItemActive input{
+    outline: none !important;
+    cursor: not-allowed !important;
+    border: none !important;
+  }
+}

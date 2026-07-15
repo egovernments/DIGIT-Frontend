@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { Calender } from "@egovernments/digit-ui-react-components";
 import { DateRange, createStaticRanges } from "react-date-range";
 import { TextBlock } from "@egovernments/digit-ui-components";
 import {
@@ -228,7 +227,7 @@ const DateRangePicker = ({ values, onFilterChange, t, labelClass, title, epochSt
           {isModalOpen && (
             <div className="digit-options-card" style={{ overflow: "visible", width: "unset", maxWidth: "fit-content" }}>
               <DateRange
-                className="pickerShadow"
+                className="pickerShadow date-range-picker-payments"
                 focusedRange={focusedRange}
                 values={values}
                 ranges={[selectionRange]}

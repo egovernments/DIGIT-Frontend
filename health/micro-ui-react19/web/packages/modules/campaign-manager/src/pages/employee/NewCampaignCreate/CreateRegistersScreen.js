@@ -79,7 +79,10 @@ const CreateRegistersScreen = () => {
     }
 
     if (uploadedData?.isError || uploadedData?.apiError) {
-      return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.ENTER_VALID_FILE));
+      // Reshow the same message NewUploadData already showed for this outcome, as a reminder.
+      // toastLabel is the exact key NewUploadData showed in its own toast for this outcome.
+      const toastKey = uploadedData?.validationStatus?.toastLabel;
+      return showErrorToast(toastKey ? t(toastKey) : t(I18N_KEYS.CAMPAIGN_CREATE.ENTER_VALID_FILE));
     }
 
     const filestoreId = uploadedData?.uploadedFile?.[0]?.filestoreId || uploadedData?.uploadedFile?.[0]?.fileStoreId;

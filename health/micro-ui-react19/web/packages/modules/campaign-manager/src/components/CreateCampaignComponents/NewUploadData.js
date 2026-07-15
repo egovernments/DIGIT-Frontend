@@ -122,19 +122,19 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   useEffect(() => {
     if (type === "facility") {
-      onSelect("uploadFacility", { uploadedFile, isError, isValidation, apiError, isSuccess });
+      onSelect("uploadFacility", { uploadedFile, isError, isValidation, apiError, isSuccess, validationStatus });
     } else if (type === "boundary") {
-      onSelect("uploadBoundary", { uploadedFile, isError, isValidation, apiError, isSuccess });
+      onSelect("uploadBoundary", { uploadedFile, isError, isValidation, apiError, isSuccess, validationStatus });
     } else if (type === "unified-console") {
-      onSelect("uploadUnified", { uploadedFile, isError, isValidation, apiError, isSuccess });
+      onSelect("uploadUnified", { uploadedFile, isError, isValidation, apiError, isSuccess, validationStatus });
     } else if (type === "attendanceRegister") {
-      onSelect("uploadAttendanceRegister", { uploadedFile, isError, isValidation, apiError, isSuccess });
+      onSelect("uploadAttendanceRegister", { uploadedFile, isError, isValidation, apiError, isSuccess, validationStatus });
     } else if (type === "attendanceRegisterAttendee") {
-      onSelect("uploadAttendanceRegisterAttendee", { uploadedFile, isError, isValidation, apiError, isSuccess });
+      onSelect("uploadAttendanceRegisterAttendee", { uploadedFile, isError, isValidation, apiError, isSuccess, validationStatus });
     } else {
-      onSelect("uploadUser", { uploadedFile, isError, isValidation, apiError, isSuccess });
+      onSelect("uploadUser", { uploadedFile, isError, isValidation, apiError, isSuccess, validationStatus });
     }
-  }, [uploadedFile, isError, isValidation, apiError, isSuccess]);
+  }, [uploadedFile, isError, isValidation, apiError, isSuccess, validationStatus]);
 
   useEffect(() => {
     if (resourceId) {
@@ -347,7 +347,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       } else if (type === "attendanceRegister") {
         uploadType = "uploadAttendanceRegister";
       }
-      onSelect(uploadType, { uploadedFile, isError, isValidation: false, apiError: false, isSuccess: uploadedFile?.length > 0 });
+      onSelect(uploadType, { uploadedFile, isError, isValidation: false, apiError: false, isSuccess: uploadedFile?.length > 0, validationStatus });
       setExecutionCount((prevCount) => prevCount + 1);
     }
   });
@@ -1111,8 +1111,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setLoader(false);
             setIsValidation(false);
             const errorMessage = temp?.error.replaceAll(":", "-");
-            setShowToast({ key: "error", label: temp?.additionalDetails?.error?.code || "HCM_PROCESS_ERROR", transitionTime: 5000000 });
-            setValidationStatus({ type: "error", label: temp?.additionalDetails?.error?.code || "HCM_PROCESS_ERROR" });
+            setShowToast({ key: "error", label: temp?.additionalDetails?.error?.code ? t(temp.additionalDetails.error.code) : t(I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR), transitionTime: 5000000 });
+            setValidationStatus({ type: "error", label: temp?.additionalDetails?.error?.code || I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR, toastLabel: temp?.additionalDetails?.error?.code || I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR });
             setIsError(true);
             setApiError(errorMessage);
             setNotValid(2);
@@ -1122,8 +1122,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setLoader(false);
             setIsValidation(false);
             // const errorMessage = temp?.error.replaceAll(":", "-");
-            setShowToast({ key: "error", label: temp?.additionalDetails?.error?.code || "HCM_PROCESS_ERROR", transitionTime: 5000000 });
-            setValidationStatus({ type: "error", label: temp?.additionalDetails?.error?.code || "HCM_PROCESS_ERROR" });
+            setShowToast({ key: "error", label: temp?.additionalDetails?.error?.code ? t(temp.additionalDetails.error.code) : t(I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR), transitionTime: 5000000 });
+            setValidationStatus({ type: "error", label: temp?.additionalDetails?.error?.code || I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR, toastLabel: temp?.additionalDetails?.error?.code || I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR });
             setIsError(true);
             setApiError(errorMessage);
             setNotValid(2);
@@ -1142,7 +1142,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
             if (isValidFile) {
               setShowToast({ key: "success", label: t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_COMPLETED) });
-              setValidationStatus({ type: "success", label: I18N_KEYS.COMPONENTS.HCM_VALIDATION_COMPLETED });
+              setValidationStatus({ type: "success", label: I18N_KEYS.COMPONENTS.HCM_VALIDATION_COMPLETED, toastLabel: I18N_KEYS.COMPONENTS.HCM_VALIDATION_COMPLETED });
               if (temp?.id) {
                 setResourceId(temp?.id);
               }
@@ -1159,7 +1159,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               const processedFileStore = temp?.processedFilestoreId || temp?.processedFileStoreId;
               if (!processedFileStore) {
                 setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED) });
-                setValidationStatus({ type: "error", label: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED });
+                setValidationStatus({ type: "error", label: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD, toastLabel: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED });
                 // setIsValidation(true);
                 return;
               } else {
@@ -1181,8 +1181,13 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   .map(({ id, ...rest }) => rest);
                 // onFileDelete(uploadedFile);
                 setUploadedFile(fileData);
-                setShowToast({ key: "warning", label: t(I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN) });
-                setValidationStatus({ type: "warning", label: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN });
+                setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN) });
+                setValidationStatus({
+                  type: "error",
+                  label: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN_ALERTCARD_TITLE,
+                  text: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN_ALERTCARD,
+                  toastLabel: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN,
+                });
                 setIsError(true);
               }
             }
@@ -1194,7 +1199,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             const processedFileStore = temp?.processedFilestoreId || temp?.processedFileStoreId;
             if (!processedFileStore) {
               setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED), transitionTime: 5000000 });
-              setValidationStatus({ type: "error", label: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED });
+              setValidationStatus({ type: "error", label: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD, toastLabel: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED });
               return;
             } else {
               setIsError(true);
@@ -1215,8 +1220,13 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 .map(({ id, ...rest }) => rest);
               // onFileDelete(uploadedFile);
               setUploadedFile(fileData);
-              setShowToast({ key: "warning", label: t(I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN), transitionTime: 5000000 });
-              setValidationStatus({ type: "warning", label: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN });
+              setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN), transitionTime: 5000000 });
+              setValidationStatus({
+                type: "error",
+                label: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN_ALERTCARD_TITLE,
+                text: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN_ALERTCARD,
+                toastLabel: I18N_KEYS.COMPONENTS.HCM_CHECK_FILE_AGAIN,
+              });
               setIsError(true);
             }
           }
@@ -1661,6 +1671,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 variant={validationStatus.type === "success" ? "success" : validationStatus.type === "warning" ? "warning" : "error"}
                 style={{ marginLeft: "0rem", maxWidth: "100%", marginTop: "1rem" }}
                 label={t(validationStatus.label)}
+                text={validationStatus.text ? t(validationStatus.text) : undefined}
               />
             )}
             {showInfoCard && (
