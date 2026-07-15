@@ -1575,4 +1575,8 @@
 
 .validation-alert-card {
   margin: 0rem !important;
+  .icon-label-container{
+    height: unset;
+    min-height: unset;
+  }
 }
