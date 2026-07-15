@@ -1686,7 +1686,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                           title={t(I18N_KEYS.COMPONENTS.VIEW_ERRORS)}
                           variation="primary"
                           type="button"
-                          size="medium"
+                          size="small"
                           onClick={() => setShowErrorFilePreview(true)}
                         />
                       ]
