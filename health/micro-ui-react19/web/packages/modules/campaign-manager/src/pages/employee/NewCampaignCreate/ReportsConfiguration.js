@@ -39,12 +39,12 @@ const getTimezoneOffset = (date) => {
 
 
 const ALL_FREQUENCY_OPTIONS = [
-  { code: "DAILY", label: "HCM_REPORT_FREQUENCY_DAILY" },
-  { code: "WEEKLY", label: "HCM_REPORT_FREQUENCY_WEEKLY" },
-  { code: "MONTHLY", label: "HCM_REPORT_FREQUENCY_MONTHLY" },
-  { code: "END_OF_CAMPAIGN", label: "HCM_REPORT_FREQUENCY_END_OF_CAMPAIGN" },
+  { code: "DAILY", label: "HCM_REPORT_FREQUENCY_DAILY", name: "HCM_REPORT_FREQUENCY_DAILY" },
+  { code: "WEEKLY", label: "HCM_REPORT_FREQUENCY_WEEKLY", name: "HCM_REPORT_FREQUENCY_WEEKLY" },
+  { code: "MONTHLY", label: "HCM_REPORT_FREQUENCY_MONTHLY", name: "HCM_REPORT_FREQUENCY_MONTHLY" },
+  { code: "END_OF_CAMPAIGN", label: "HCM_REPORT_FREQUENCY_END_OF_CAMPAIGN", name: "HCM_REPORT_FREQUENCY_END_OF_CAMPAIGN" },
   // TODO: Uncomment when CUSTOM frequency is re-enabled
-  // { code: "CUSTOM", label: "HCM_REPORT_FREQUENCY_CUSTOM" },
+  // { code: "CUSTOM", label: "HCM_REPORT_FREQUENCY_CUSTOM", name: "HCM_REPORT_FREQUENCY_CUSTOM" },
 ];
 
 const STEP_SELECTION = 0;
@@ -584,7 +584,8 @@ const ReportsConfiguration = () => {
                               }
                               style={{ width: "100%" }}
                               disablePortal={true}
-                              config={{ isDropdownWithChip: false }}
+                              chipsKey="name"
+                              config={{ isDropdownWithChip: true }}
                             />
                           )}
                         </div>

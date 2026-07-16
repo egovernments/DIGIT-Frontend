@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Card, Button, Loader, Toast, PopUp, HeaderComponent, SummaryCardFieldPair } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import TagComponent from "../../../components/TagComponent";
+import NoResultsFound from "../../../components/NoResultsFound";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import { tableCustomStyle } from "../../../components/tableCustomStyle";
 
@@ -249,17 +250,17 @@ const RegisterDetailsScreen = () => {
       ),
     },
     {
-      name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DELETE_USER_COLUMN),
+      name: t(I18N_KEYS.COMPONENTS.WBH_DELETE_USER),
       cell: (row) =>
         row.status === "Inactive" ? (
           <span style={{ color: "#888", fontSize: "0.8rem", fontStyle: "italic" }}>{t(I18N_KEYS.PAGES.HCM_ALREADY_REMOVED)}</span>
         ) : (
           <span title={!isCampaignStarted ? t(I18N_KEYS.PAGES.HCM_DELETE_DISABLED_CAMPAIGN_NOT_STARTED) : ""}>
             <Button
-              label={t(I18N_KEYS.COMPONENTS.WBH_DELETE)}
+              label={t(I18N_KEYS.COMPONENTS.WBH_DELETE_USER)}
               variation="secondary"
               size="small"
-              icon="Delete"
+              icon="DeleteOutline"
               isDisabled={!isCampaignStarted}
               onClick={() => handleDeleteUser(row)}
             />
@@ -283,13 +284,13 @@ const RegisterDetailsScreen = () => {
       {/* ── Register Details Card ── */}
       <Card style={{marginBottom: "1.5rem" }}>
         {campaignName && (
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",marginBottom:"1rem"}}>
           {campaignName && (
             <TagComponent campaignName={campaignName} />
           )}
         </div>
         )}
-        <HeaderComponent className="attendance-screen-headers register-details">
+        <HeaderComponent className="attendance-screen-headers register-details" styles={{marginBottom:"1rem"}}>
           {t(I18N_KEYS.PAGES.REGISTER_DETAILS)}
         </HeaderComponent>
 
@@ -310,29 +311,28 @@ const RegisterDetailsScreen = () => {
               label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_EXCEL_BUTTON)}
               variation="secondary"
               size="medium"
-              icon="FileUpload"
+              icon="XlsxFile"
               onClick={() => navigate(
                 `/${window.contextPath}/employee/campaign/map-attendees-screen?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}&registerId=${registerId}&registerNumber=${registerNumber}&registerName=${encodeURIComponent(registerName || "")}`
               )}
             />
         </div>
-        <DataTable
-          columns={columns}
-          data={tableData}
-          customStyles={tableCustomStyle}
-          pagination
-          paginationPerPage={10}
-          paginationRowsPerPageOptions={[10, 20, 50, 100]}
-          paginationComponentOptions={{
-            rowsPerPageText: t(I18N_KEYS.APP_CONFIGURATION.CS_COMMON_ROWS_PER_PAGE),
-          }}
-          persistTableHead
-          noDataComponent={
-            <div style={{ padding: "2rem", color: "#888", fontSize: "0.875rem" }}>
-              {t(I18N_KEYS.COMPONENTS.NO_RESULTS_FOUND)}
-            </div>
-          }
-        />
+        {tableData.length === 0 ? (
+          <NoResultsFound text={I18N_KEYS.CAMPAIGN_CREATE.HCM_USERS_YET_TO_BE_MAPPED} />
+        ) : (
+          <DataTable
+            className="digit-map-users-to-registers-table"
+            columns={columns}
+            data={tableData}
+            customStyles={tableCustomStyle}
+            pagination
+            paginationPerPage={10}
+            paginationRowsPerPageOptions={[10, 20, 50, 100]}
+            paginationComponentOptions={{
+              rowsPerPageText: t(I18N_KEYS.APP_CONFIGURATION.CS_COMMON_ROWS_PER_PAGE),
+            }}
+          />
+        )}
       </Card>
 
       <div className="map-users-footer">

@@ -228,7 +228,7 @@ const CustomInboxTable = ({
         <div>{t(`ATTENDANCE_${Digit.SessionStorage.get("selectedProject")?.address?.boundaryType}`)}</div>
 
         {!tableData ? (
-          <NoResultsFound text={t(I18N_KEYS.COMMON.HCM_AM_NO_DATA_FOUND)} />
+          <NoResultsFound text={t(I18N_KEYS.COMMON.HCM_AM_NO_DATA_FOUND)} width={280} height={220}/>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
             {/* Fixed Tab Section */}
@@ -238,8 +238,6 @@ const CustomInboxTable = ({
                 top: 0,
                 zIndex: 10,
                 background: "#fff",
-                paddingBottom: "0.5rem",
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
               }}
             >
               <Tab
@@ -274,6 +272,7 @@ const CustomInboxTable = ({
                 maxHeight: "70vh",
                 paddingRight: "0.5rem",
               }}
+              className="digit-inbox-payments-table-wrapper"
             >
               {isLoading ? (
                 <div
@@ -287,17 +286,17 @@ const CustomInboxTable = ({
                   <Loader />
                 </div>
               ) : tableData && tableData.length === 0 ? (
-                <NoResultsFound style={{ height: "40vh" }} text={t(I18N_KEYS.COMMON.HCM_AM_NO_DATA_FOUND)} />
+                <NoResultsFound style={{ height: "40vh" }} width={280} height={220} text={t(I18N_KEYS.COMMON.HCM_AM_NO_DATA_FOUND)} />
               ) : (
                 <DataTable
                   columns={columns}
-                  className="search-component-table"
+                  className="search-component-table digit-attendance-inbox-table"
                   data={tableData}
                   progressPending={isLoading}
                   progressComponent={<Loader />}
                   pagination
                   paginationServer
-                  customStyles={tableCustomStyle(true)}
+                  customStyles={tableCustomStyle(false)}
                   onRowClicked={handleRowClick}
                   pointerOnHover
                   paginationTotalRows={totalCount}

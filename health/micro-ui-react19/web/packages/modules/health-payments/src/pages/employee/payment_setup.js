@@ -723,7 +723,7 @@ const PaymentSetUpPage = () => {
     return (
       <div>
         <Card type="primary" className="bottom-gap-card-payment">
-          <NoResultsFound style={{ height: "35rem" }} text={t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_NO_UPCOMING_CAMPAIGN_FOUND)} />
+          <NoResultsFound style={{ height: "35rem" }} text={t(I18N_KEYS.PAYMENT_SETUP.HCM_AM_NO_UPCOMING_CAMPAIGN_FOUND)}  width={280} height={220}/>
         </Card>
 
         {/* Action Bar */}

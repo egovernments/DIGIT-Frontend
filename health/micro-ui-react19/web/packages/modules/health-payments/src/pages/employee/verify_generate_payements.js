@@ -268,7 +268,7 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
                 {isFetching ? (
                     <Loader />
                 ) : tableData.length === 0 ? (
-                    <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_DATA_FOUND_FOR_BILLS)} />
+                    <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_DATA_FOUND_FOR_BILLS)} width={280} height={220} />
                 ) : (
                     <VerifyAndGeneratePaymentsTable
                     editBill={editBills}

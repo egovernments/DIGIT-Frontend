@@ -176,7 +176,7 @@ const ProjectSelect = ({ nextScreen }) => {
           <HeaderComponent className="payment-screen-headers">
               {billScreen ? t(I18N_KEYS.PAGES_PROJECT_SELECTION.HCM_AM_PAYEMENT_BILL_AGGREGATION_HEAD) : t(I18N_KEYS.PAGES_PROJECT_SELECTION.HCM_AM_PAYEMENT_PROJECT_HEAD)}
           </HeaderComponent>
-          <div>
+          <div className="info-text">
             {billScreen
               ? t(I18N_KEYS.PAGES_PROJECT_SELECTION.HCM_AM_PROJECT_AND_BILL_AGGREGATION_DESCRIPTION)
               : manageBillsScreen

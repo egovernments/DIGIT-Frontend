@@ -1915,7 +1915,7 @@ const downloadOptions = [
           {isBillLoading || isFetching ? (
             renderCenteredLoader()
           ) : tableData.length === 0 ? (
-            <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_DATA_FOUND_FOR_BILLS)} />
+            <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_DATA_FOUND_FOR_BILLS)} width={280} height={220} />
           ) : (
             <Fragment>
               {/* TODO: Restore status check: activeRole === "PAYMENT_REVIEWER" && billData?.status === "SENT_FOR_REVIEW" */}

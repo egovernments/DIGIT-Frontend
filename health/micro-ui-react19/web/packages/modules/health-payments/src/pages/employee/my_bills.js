@@ -258,11 +258,11 @@ const MyBills = (props) => {
     const totalAmount = getTotalAmount(props?.selectedBills);
     return (
         <React.Fragment>
-            <HeaderComponent className="payment-screen-headers">{t(I18N_KEYS.PAGES_BILLS.HCM_AM_MY_BILLS)}</HeaderComponent>
+            <HeaderComponent className="payment-screen-headers" styles={{marginBottom:"1.5rem"}}>{t(I18N_KEYS.PAGES_BILLS.HCM_AM_MY_BILLS)}</HeaderComponent>
             <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
             <Card>
                 {isFetching ? ( <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
-) : tableData.length === 0 ? (<NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_DATA_FOUND_FOR_BILLS)} />)
+) : tableData.length === 0 ? (<NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_DATA_FOUND_FOR_BILLS)} width={280} height={220} />)
                     :
                     (
                         <React.Fragment>

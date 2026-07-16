@@ -43,7 +43,7 @@ const AttendanceManagementTable = ({ ...props }) => {
   const columns = [
     {
       name: (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+        <div style={{ width: "100%", textAlign: "start" }}>
           {t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_FRONTLINE_WORKER)}
         </div>
       ),
@@ -67,7 +67,7 @@ const AttendanceManagementTable = ({ ...props }) => {
 
     {
       name: (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+        <div style={{ width: "100%", textAlign: "start" }}>
           {t(I18N_KEYS.COMMON.HCM_AM_WORKER_ID)}
         </div>
       ),
@@ -81,7 +81,7 @@ const AttendanceManagementTable = ({ ...props }) => {
     },
     {
       name: (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+        <div style={{ width: "100%", textAlign: "start" }}>
           {t(I18N_KEYS.COMMON.HCM_AM_ROLE)}
         </div>
       ),
@@ -96,7 +96,7 @@ const AttendanceManagementTable = ({ ...props }) => {
     },
     {
       name: (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start", whiteSpace: "normal", wordBreak: "break-word" }}>
+        <div style={{ width: "100%", textAlign: "start", whiteSpace: "normal", wordBreak: "break-word" }}>
           {t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_PERFORMANCE_METRIC)}
         </div>
       ),

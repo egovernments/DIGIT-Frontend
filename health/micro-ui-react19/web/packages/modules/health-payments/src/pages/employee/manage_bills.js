@@ -515,7 +515,7 @@ const ManageBills = () => {
       <React.Fragment>
         <HeaderComponent className="payment-screen-headers">{t(I18N_KEYS.PAGES_BILLS.HCM_AM_MANAGE_BILLS)}</HeaderComponent>
         <Card>
-          <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_ACCESS)} />
+          <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_ACCESS)} width={280} height={220} />
         </Card>
       </React.Fragment>
     );
@@ -530,7 +530,7 @@ const ManageBills = () => {
       <React.Fragment>
         <HeaderComponent className="payment-screen-headers">{t(I18N_KEYS.PAGES_BILLS.HCM_AM_MANAGE_BILLS)}</HeaderComponent>
         <Card>
-          <NoResultsFound text={t(I18N_KEYS.COMMON.HCM_AM_PROJECT_SELECTION_IS_MANDATORY)} />
+          <NoResultsFound text={t(I18N_KEYS.COMMON.HCM_AM_PROJECT_SELECTION_IS_MANDATORY)} width={280} height={220} />
         </Card>
         {showToast && (
           <Toast
@@ -557,12 +557,12 @@ const ManageBills = () => {
         headerContent={
           <>
             {projectName && (
-              <Tag label={t(projectName)} type="monochrome" showIcon={false} className="campaign-tag" style={{ marginBottom: "0.5rem" }} />
+              <Tag label={t(projectName)} type="monochrome" showIcon={false} className="campaign-tag" style={{ marginBottom: "1rem" }} />
             )}
-            <HeaderComponent styles={{ marginBottom: "0.5rem" }} className="payment-screen-headers">
+            <HeaderComponent styles={{ marginBottom: "1rem" }} className="payment-screen-headers">
               {t(I18N_KEYS.PAGES_BILLS.HCM_AM_MANAGE_BILLS)}
             </HeaderComponent>
-            <p style={{ color: "#505A5F", fontSize: "16px", lineHeight: "1.5", marginBottom: "0.5rem" }}>
+            <p style={{ color: "#505A5F", fontSize: "16px", lineHeight: "1.5"}}>
               {t(I18N_KEYS.PAGES_BILLS.HCM_AM_MANAGE_BILLS_DESCRIPTION)}
             </p>
           </>
@@ -607,7 +607,7 @@ const ManageBills = () => {
         {isFetching || isBillReportLoading || isBillCountFetching ? (
           <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
         ) : tableData.length === 0 ? (
-          <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_DATA_FOUND_FOR_BILLS)} />
+          <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_DATA_FOUND_FOR_BILLS)} width={280} height={220} />
         ) : (
           <ManageBillsTable
             data={tableData.sort((a, b) => (a?.auditDetails?.createdTime || 0) - (b?.auditDetails?.createdTime || 0))}

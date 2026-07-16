@@ -114,7 +114,7 @@ const ReportDetailPage = () => {
     const d = new Date(epoch);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   };
-  const campaignMinDate = epochToDateStr(campaignSelected?.startDate);
+  const campaignMinDate = epochToDateStr(campaignSelected?.auditDetails?.createdTime);
   const campaignMaxDate = epochToDateStr(campaignSelected?.endDate);
 
   const handleClosePopup = () => {
@@ -285,11 +285,11 @@ const ReportDetailPage = () => {
                 key={frequency}
                 title={
                 <div className="digit-accordion-titile-dashboard-wrap">
-                  <div className="digit-accordion-titile-dashboard">{t(`HCM_REPORT_FREQUENCY_${frequency}`)}</div>
+                  <div className="digit-accordion-titile-dashboard">{t(`HCM_REPORT_FREQUENCY_${frequency}_REPORTS`)}</div>
                   <Tag label={`${reports.length} ${reports.length === 1 ? t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT_SINGLE) : t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT)}`} stroke={true} type={"monochrome"}/>
                 </div>
                 }
-                isOpenInitially={false}
+                isOpenInitially={Object.keys(reportsByFrequency).length === 1}
                 hideCardBorder={false}
                 hideCardBg={true}
                 hideBorderRadius={true}

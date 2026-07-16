@@ -287,7 +287,7 @@ const AttendanceInboxComponent = ({ fromBill = false }) => {
           </div>
 
           <div className="custom-inbox-outer-table-section">
-            <div className="inner-table-section" style={{ height: "61vh" }}>
+            <div className="inner-table-section" style={{ height: "60vh" }}>
               {card == false ? (
                 <Card className="card-overide" style={{ gap: "0.5rem" }}>
                   <div className="summary-sub-heading" style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center" }}>

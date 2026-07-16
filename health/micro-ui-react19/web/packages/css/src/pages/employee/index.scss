@@ -1522,6 +1522,13 @@ tbody {
     }
   }
 }
+.input-container.withIcon {
+  .digit-cursor-pointer {
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+  }
+}
 .digit-submit-bar {
   width: auto;
   float: right;
@@ -1593,6 +1600,8 @@ tbody {
 
 .digit-popup-heading{
   color:var(--digitv2-lightTheme-primary-2) !important;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .digit-tag-wrapper {

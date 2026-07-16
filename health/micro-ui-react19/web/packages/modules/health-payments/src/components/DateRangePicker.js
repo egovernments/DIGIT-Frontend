@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { Calender } from "@egovernments/digit-ui-react-components";
 import { DateRange, createStaticRanges } from "react-date-range";
 import { TextBlock } from "@egovernments/digit-ui-components";
 import {
@@ -212,7 +211,7 @@ const DateRangePicker = ({ values, onFilterChange, t, labelClass, title, epochSt
     <div className="">
       <div className="row border-none date-range-pair">
         <TextBlock body={t(`${title}`)}></TextBlock>
-        <div className="employee-select-wrap attendence-date-picker" style={{ marginBottom: "0" }} ref={wrapperRef}>
+        <div className="digit-employee-select-wrap attendence-date-picker" style={{ marginBottom: "0" }} ref={wrapperRef}>
           <TextInput
             title={initialDate.startDate === "" ? null : formatDateRange(selectionRange)}
             type="text"
@@ -221,14 +220,14 @@ const DateRangePicker = ({ values, onFilterChange, t, labelClass, title, epochSt
               setIsModalOpen((prevState) => !prevState);
             }}
             onChange={() => {}}
-            populators={{ customIcon: "DateRange" }}
+            populators={{ customIcon: "CalendarToday" }}
             value={initialDate.startDate === "" ? null : formatDateRange(selectionRange)}
           />
 
           {isModalOpen && (
-            <div className="options-card" style={{ overflow: "visible", width: "unset", maxWidth: "fit-content" }}>
+            <div className="digit-options-card" style={{ overflow: "visible", width: "unset", maxWidth: "fit-content" }}>
               <DateRange
-                className="pickerShadow"
+                className="pickerShadow date-range-picker-payments"
                 focusedRange={focusedRange}
                 values={values}
                 ranges={[selectionRange]}

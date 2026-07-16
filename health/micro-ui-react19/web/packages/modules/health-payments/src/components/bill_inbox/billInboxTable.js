@@ -194,17 +194,17 @@ const BillInboxTable = ({ ...props }) => {
           {props.isFetching ? (
             <Loader className={"digit-center-loader"} />
           ) : (
-            <NoResultsFound style={{ height: "38vh", backgroundColor: "transparent" }} text={t(I18N_KEYS.COMMON.HCM_AM_NO_DATA_FOUND)} />
+            <NoResultsFound style={{ height: "38vh", backgroundColor: "transparent" }} text={t(I18N_KEYS.COMMON.HCM_AM_NO_DATA_FOUND)} width={280} height={220} />
           )}{" "}
         </div>
       ) : (
         <DataTable
           columns={columns}
-          className="search-component-table"
+          className="search-component-table digit-bill-inbox-table"
           data={props.tableData}
           pagination
           paginationServer
-          customStyles={tableCustomStyle(true)}
+          customStyles={tableCustomStyle(false)}
           paginationDefaultPage={props?.currentPage}
           onRowClicked={props?.selectedPeriod?.id === "AGGREGATE" ? () => {} : handleRowClick}
           pointerOnHover

@@ -11,10 +11,33 @@
   }
 }
 
-.digit-map-users-to-registers-table{
-    .rdt_TableBody{
-        border:none !important;
+.digit-map-users-to-registers-table {
+  border-radius: 8px 8px 0px 0px;
+  .rdt_TableBody {
+    border: none !important;
+    border-radius: 8px 8px 0px 0px;
+  }
+
+  .rdt_Table {
+    border-radius: 8px 8px 0px 0px;
+  }
+
+  .rdt_TableHead {
+    border-radius: 8px 8px 0px 0px;
+  }
+
+  .rdt_TableHeadRow {
+    border-radius: 8px 8px 0px 0px;
+
+    .rdt_TableCol{
+      &:first-of-type{
+        border-top-left-radius: 8px !important;
+      }
+      &:last-of-type{
+        border-top-right-radius: 8px !important;
+      }
     }
+  }
 }
 
 .map-users-heading{
