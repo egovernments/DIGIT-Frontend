@@ -116,16 +116,9 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
           primaryLabel: "Search", // Label for primary search button
 
           defaultValues: {
-            // Default search parameters
-            codes: "",
-            limit: 10,
             names: "",
+            codes: "",
             phone: "",
-            roles: "",
-            offset: 0,
-            //   /sortBy: "lastModifiedTime",
-            tenantId: tenantId,
-            sortOrder: "DESC",
           },
 
           secondaryLabel: "ES_COMMON_CLEAR_SEARCH", // Label for clear search button
@@ -187,24 +180,19 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
     apiDetails: {
       masterName: "commonUiConfig", // Master data module for UI config
       moduleName: "AttendeeSearchInboxConfig", // Configuration module name
-      requestBody: {}, // Request body (empty for now)
+      requestBody: {},
       serviceName: `/${individualContextPath}/v1/_search`, // API endpoint for search
       requestParam: {
-        // Default request parameters for API call
-        // limit: 10,
-        // names: "",
-        // roles: "",
+        limit: 10,
         offset: 0,
-        //sortBy: "lastModifiedTime",
+        sortOrder: "asc",
         tenantId: tenantId,
-        // sortOrder: "DESC",
-        //   includeUnassigned:true
       },
-      tableFormJsonPath: "requestParam", // JSON path for table form data
-      filterFormJsonPath: "requestParam", // JSON path for filter form data
-      searchFormJsonPath: "requestParam", // JSON path for search form data
-      minParametersForFilterForm: 0, // No minimum required fields for filter
-      minParametersForSearchForm: 0, // No minimum required fields for search
+      tableFormJsonPath: "requestParam",
+      filterFormJsonPath: "requestParam",
+      searchFormJsonPath: "requestParam",
+      minParametersForFilterForm: 0,
+      minParametersForSearchForm: 0,
     },
     //component: BoundaryComponent,
 
