@@ -112,7 +112,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
   const renderCustomLabel = (args) => {
     const { value, endAngle, startAngle, x, cx, y, cy, percent, name } = args;
     const diffAngle = endAngle - startAngle;
-    const displayValue = isSwitchMode ? `${Number(percent * 100).toFixed(1)}%` : value;
+    const displayValue = isSwitchMode ? `${Digit.Utils.dss.formatter(Number(Number(percent * 100).toFixed(1)), "number", "", true, t)}%` : value;
     if (diffAngle > 1.5 && diffAngle < 7) {
       return (
         <text
@@ -154,7 +154,13 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
   };
 
   const renderTooltip = ({ payload, label }) => {
-    const percentValue = Number((payload?.[0]?.value / response?.responseData?.data?.[0]?.headerValue) * 100).toFixed(1);
+    const percentValue = Digit.Utils.dss.formatter(
+      Number(Number((payload?.[0]?.value / response?.responseData?.data?.[0]?.headerValue) * 100).toFixed(1)),
+      "number",
+      "",
+      true,
+      t
+    );
     const formattedNumber = `${Digit.Utils.dss.formatter(payload?.[0]?.value, payload?.[0]?.payload?.payload?.symbol, value?.denomination, true, t)}`;
     return (
       <div

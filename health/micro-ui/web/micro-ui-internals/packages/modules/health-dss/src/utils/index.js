@@ -39,6 +39,13 @@ const setupLibraries = (Library, service, method) => {
   window.Digit[Library][service] = method;
 };
 
+const FRENCH_LANGUAGE_CODES = ["fr", "fr_NG", "fr_FR", "fr_IN"];
+
+const getNumberLocale = () => {
+  const selectedLanguage = window?.Digit?.SessionStorage?.get("initData")?.selectedLanguage;
+  return FRENCH_LANGUAGE_CODES.includes(selectedLanguage) ? "fr-FR" : "en-US";
+};
+
 /* To Overide any existing config/middlewares  we need to use similar method */
 export const updateCustomConfigs = () => {
   setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...UICustomizations });
@@ -47,12 +54,13 @@ export const updateCustomConfigs = () => {
     ...window?.Digit?.Utils?.dss,
     formatter: (value, symbol, unit, commaSeparated = true, t) => {
       if (!value && value !== 0) return "";
+      const locale = getNumberLocale();
       if (symbol === "number") {
         if (!commaSeparated) return parseInt(value);
-        return new Intl.NumberFormat("en-US").format(value);
+        return new Intl.NumberFormat(locale).format(value);
       }
       if (symbol === "percentage") {
-        return `${new Intl.NumberFormat("en-US", { maximumSignificantDigits: 3 }).format(Number(value).toFixed(2))} %`;
+        return `${new Intl.NumberFormat(locale, { maximumSignificantDigits: 3 }).format(Number(value).toFixed(2))} %`;
       }
       return _originalFormatter ? _originalFormatter(value, symbol, unit, commaSeparated, t) : "";
     },

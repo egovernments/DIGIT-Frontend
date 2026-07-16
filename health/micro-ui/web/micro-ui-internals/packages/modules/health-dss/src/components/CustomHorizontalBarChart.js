@@ -330,7 +330,7 @@ const CustomHorizontalBarChart = ({
     let rotateAngle = 0;
     let formattedValue = `${value}`;
     if (symbol === "percentage") {
-      formattedValue = `${value.toFixed(1)}%`;
+      formattedValue = `${Digit.Utils.dss.formatter(Number(value.toFixed(1)), "number", "", true, t)}%`;
     } else if (formattedValue.length > 4 || data.length > 1) {
       rotateAngle = -60;
     }
