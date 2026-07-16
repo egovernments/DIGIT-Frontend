@@ -73,7 +73,7 @@ const Insight = ({ data, t }) => {
   );
 };
 
-const Chart = ({ data, showDivider }) => {
+const Chart = ({ data, showDivider, moduleLevel, overview }) => {
   const { id, chartType } = data;
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
@@ -90,6 +90,7 @@ const Chart = ({ data, showDivider }) => {
       ...value?.filters,
       campaignNumber: campaignNumber,
     },
+    moduleLevel,
     aggregationFactors: null,
   };
   const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
@@ -145,9 +146,32 @@ const Chart = ({ data, showDivider }) => {
   );
 };
 
-const RichSummary = ({ data }) => {
+const RichSummary = ({ data, isVertical }) => {
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
+
+  if (isVertical) {
+    return (
+      <Card className={"digit-stacked-collection-card"}>
+        <div className={"digit-stacked-collection-card-header-wrapper"}>
+          <Icon type={data?.name} iconColor={"#C84C0E"} width="1.5rem" height="1.5rem" className="digit-dss-stacked-card-icon" />
+          <div className={"digit-stacked-collection-card-header-text"}>{t(data?.name)}</div>
+        </div>
+        <div className="digit-dss-card-body-stacked">
+          {data.charts.map((chart, key) => (
+            <div
+              key={key}
+              className={`digit-dss-card-item ${key !== data.charts.length - 1 ? "digit-dss-card-item-border" : ""}`}
+              style={{ alignItems: "center" }}
+            >
+              <Chart data={chart} moduleLevel={data?.moduleLevel} overview={data?.vizType === "collection"} />
+            </div>
+          ))}
+        </div>
+      </Card>
+    );
+  }
+
   return (
     <Card className="digit-chart-item">
       <div className="digit-dss-card-header-wrapper">
