@@ -15,8 +15,6 @@ import {
 import BulkUpload from "../BulkUpload";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
-const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
-
 const NewShipmentPopup = ({
   campaignNumber,
   campaignId,
@@ -29,7 +27,6 @@ const NewShipmentPopup = ({
   onBatchStart,
 }) => {
   const { t } = useTranslation();
-  const moduleName = Digit.Utils.campaign.getModuleName();
 
   const [fromFacilityId, setFromFacilityId] = useState("");
   const [selectedFacilityIds, setSelectedFacilityIds] = useState(new Set());
@@ -53,20 +50,28 @@ const NewShipmentPopup = ({
     { schemaCode: "HCM-PROJECT-TYPES.projectTypes" }
   );
 
-  // Fetch BOUNDARY_HIERARCHY_TYPE from MDMS
-  const {
-    data: BOUNDARY_HIERARCHY_TYPE,
-    isLoading: hierarchyTypeLoading,
-  } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [{ name: "HierarchySchema", filter: `[?(@.type=='${moduleName}')]` }],
-    {
-      select: (data) =>
-        data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy,
+  // Fetch campaign data to get projectId, product variants, and hierarchyType
+  const campaignReqCriteria = useMemo(() => ({
+    url: `/project-factory/v1/project-type/search`,
+    body: {
+      CampaignDetails: {
+        tenantId,
+        campaignNumber,
+        isOverrideDatesFromProject: true,
+      },
     },
-    { schemaCode: "HierarchySchema" },
-  );
+    config: {
+      enabled: !!campaignNumber,
+      staleTime: 0,
+      cacheTime: 0,
+      select: (data) => data?.CampaignDetails?.[0],
+    },
+  }), [tenantId, campaignNumber]);
+
+  const { data: campaignData, isLoading: campaignLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
+
+  // Derive BOUNDARY_HIERARCHY_TYPE from the campaign's actual hierarchyType
+  const BOUNDARY_HIERARCHY_TYPE = campaignData?.hierarchyType;
 
   const hierarchyDefinitionReqCriteria = useMemo(
     () => ({
@@ -125,27 +130,7 @@ const NewShipmentPopup = ({
     return map;
   }, [boundaryRelationships]);
 
-  // Fetch campaign data to get projectId and product variants
-  const campaignReqCriteria = useMemo(() => ({
-    url: `/project-factory/v1/project-type/search`,
-    body: {
-      CampaignDetails: {
-        tenantId,
-        campaignNumber,
-        isOverrideDatesFromProject: true,
-      },
-    },
-    config: {
-      enabled: !!campaignNumber,
-      staleTime: 0,
-      cacheTime: 0,
-      select: (data) => data?.CampaignDetails?.[0],
-    },
-  }), [tenantId, campaignNumber]);
-
-  const { data: campaignData, isLoading: campaignLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
-
-  const projectId = campaignData?.projectId || projectIdProp;
+  const projectId = projectIdProp || campaignData?.projectId;
   const campaignName = campaignData?.campaignName || "";
   const projectServicePath = window.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || `health-project`;
 
@@ -1312,7 +1297,6 @@ const NewShipmentPopup = ({
 
   const isLoadingInitialData =
     campaignLoading ||
-    hierarchyTypeLoading ||
     hierarchyLoading ||
     boundaryRelLoading ||
     projectsLoading ||

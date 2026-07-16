@@ -117,7 +117,7 @@ module.exports = merge(common, {
           "/census-service",
           "/airflow-trigger-api"
         ],
-        target: process.env.REACT_APP_PROXY_URL || "https://unified-uat.digit.org",
+        target: process.env.REACT_APP_PROXY_API || "https://unified-dev.digit.org",
         changeOrigin: true,
         secure: false,
       },

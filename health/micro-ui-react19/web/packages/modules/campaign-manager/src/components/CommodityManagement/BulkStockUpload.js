@@ -8,8 +8,6 @@ import BulkUpload from "../BulkUpload";
 import XLSX from "xlsx";
 import useBatchStockCreation from "../../hooks/useBatchStockCreation";
 
-const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
-
 const BulkStockUpload = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -20,7 +18,6 @@ const BulkStockUpload = () => {
   const campaignId = searchParams.get("campaignId");
   const projectType = searchParams.get("projectType");
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const moduleName = Digit.Utils.campaign.getModuleName();
 
   const [fromFacilityId, setFromFacilityId] = useState("");
   const [selectedFacilityIds, setSelectedFacilityIds] = useState(new Set());
@@ -135,23 +132,28 @@ const BulkStockUpload = () => {
     { schemaCode: "HCM-PROJECT-TYPES.projectTypes" }
   );
 
-  // Fetch BOUNDARY_HIERARCHY_TYPE from MDMS
-  const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyTypeLoading } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: "HierarchySchema",
-        filter: `[?(@.type=='${moduleName}')]`,
-      },
-    ],
-    {
-      select: (data) => {
-        return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
+  // Fetch campaign data to get projectId, product variants, and hierarchyType
+  const campaignReqCriteria = useMemo(() => ({
+    url: `/project-factory/v1/project-type/search`,
+    body: {
+      CampaignDetails: {
+        tenantId: tenantId,
+        campaignNumber: campaignNumber,
+        isOverrideDatesFromProject: true,
       },
     },
-    { schemaCode: "HierarchySchema" }
-  );
+    config: {
+      enabled: !!campaignNumber,
+      staleTime: 0,
+      cacheTime: 0,
+      select: (data) => data?.CampaignDetails?.[0],
+    },
+  }), [tenantId, campaignNumber]);
+
+  const { data: campaignData, isLoading: campaignLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
+
+  // Derive BOUNDARY_HIERARCHY_TYPE from the campaign's actual hierarchyType
+  const BOUNDARY_HIERARCHY_TYPE = campaignData?.hierarchyType;
 
   // Fetch boundary hierarchy definition
   const hierarchyDefinitionReqCriteria = useMemo(() => {
@@ -210,26 +212,6 @@ const BulkStockUpload = () => {
     boundaries.forEach((root) => traverse(root, {}));
     return map;
   }, [boundaryRelationships]);
-
-  // Fetch campaign data to get projectId, product variants
-  const campaignReqCriteria = useMemo(() => ({
-    url: `/project-factory/v1/project-type/search`,
-    body: {
-      CampaignDetails: {
-        tenantId: tenantId,
-        campaignNumber: campaignNumber,
-        isOverrideDatesFromProject: true,
-      },
-    },
-    config: {
-      enabled: !!campaignNumber,
-      staleTime: 0,
-      cacheTime: 0,
-      select: (data) => data?.CampaignDetails?.[0],
-    },
-  }), [tenantId, campaignNumber]);
-
-  const { data: campaignData, isLoading: campaignLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
 
   // Step 1: Fetch all project IDs for this campaign
   const projectId = campaignData?.projectId;
@@ -1026,7 +1008,7 @@ const BulkStockUpload = () => {
     }
   }, [uploadedFileData, productVariants, tenantId, campaignData, campaignId, campaignNumber, navigate, t, processBatches, fromFacility, sortedHierarchy, projectBoundaryMap]);
 
-  if (hierarchyTypeLoading || hierarchyLoading || campaignLoading || projectsLoading || boundaryRelLoading || allFacilitiesLoading || projectTypeLoading) {
+  if (campaignLoading || hierarchyLoading || projectsLoading || boundaryRelLoading || allFacilitiesLoading || projectTypeLoading) {
     return <Loader />;
   }
 
