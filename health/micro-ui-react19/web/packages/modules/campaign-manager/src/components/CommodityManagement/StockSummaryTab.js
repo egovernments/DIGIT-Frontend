@@ -7,7 +7,6 @@ import ReusableTableWrapper from "./ReusableTableWrapper";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import CommodityShipmentPopup from "./CommodityShipmentPopup";
-import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
@@ -16,7 +15,7 @@ const toCamelCase = (str) =>
     .map((word, i) => (i === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()))
     .join("");
 
-const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted, userBoundary, userBoundaries, isTopLevel }) => {
+const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted, userBoundary, userBoundaries, isTopLevel, sortedHierarchy }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [summarySearchQuery, setSummarySearchQuery] = useState("");
@@ -147,9 +146,6 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     });
     return map;
   }, [productVariants, products]);
-
-  // Use the selected projectId (passed from CommodityDashboard) for facility lookup
-  const { sortedHierarchy } = useCommodityProject();
 
   // Fetch project facilities using the selected project (not derived from context)
   const projectFacilityCriteria = useMemo(() => ({

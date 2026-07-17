@@ -82,8 +82,8 @@ const CommodityDashboard = () => {
   // Read campaign data from navigation state (passed from HCMCommodityRowCard)
   const { projectId: projectIdFromState, campaignStartDate: campaignStartEpoch, campaignEndDate: campaignEndEpoch, projectCreatedTime, isCompleted } = location.state || {};
 
-  // Read userBoundary, userBoundaries, and isTopLevel from context
-  const { userBoundary, userBoundaries, isTopLevel, projects: contextProjects } = useCommodityProject();
+  // Read userBoundaries and projects from context
+  const { userBoundaries, projects: contextProjects } = useCommodityProject();
 
   // Resolve projectId: URL param > navigation state > sessionStorage > context fallback
   // Key is scoped per campaign so switching campaigns never reuses a stale projectId
@@ -96,6 +96,61 @@ const CommodityDashboard = () => {
     }
     return resolved;
   }, [projectIdFromUrl, projectIdFromState, contextProjects, campaignNumber, sessionProjectKey]);
+
+  // Derive hierarchyType from the selected project's additionalDetails
+  const selectedProject = useMemo(() => {
+    if (!projectId || !contextProjects?.length) return null;
+    return contextProjects.find((p) => p.id === projectId) || null;
+  }, [projectId, contextProjects]);
+
+  // Derive userBoundary from the selected project (not the first project in context)
+  const userBoundary = useMemo(() => {
+    if (!selectedProject?.address?.boundary || !selectedProject?.address?.boundaryType) return null;
+    return {
+      boundary: selectedProject.address.boundary,
+      boundaryType: selectedProject.address.boundaryType,
+    };
+  }, [selectedProject]);
+
+  const hierarchyType = selectedProject?.additionalDetails?.hierarchyType || null;
+
+  // Fetch hierarchy definition based on the project's hierarchyType
+  const hierarchyDefCriteria = useMemo(() => ({
+    url: `/boundary-service/boundary-hierarchy-definition/_search`,
+    changeQueryName: `commodityDash_${hierarchyType}`,
+    body: {
+      BoundaryTypeHierarchySearchCriteria: {
+        tenantId,
+        limit: 2,
+        offset: 0,
+        hierarchyType,
+      },
+    },
+    config: { enabled: !!hierarchyType },
+  }), [tenantId, hierarchyType]);
+
+  const { data: hierarchyDefinition, isLoading: hierarchyLoading } = Digit.Hooks.useCustomAPIHook(hierarchyDefCriteria);
+
+  // Build sorted hierarchy and determine top-level boundary type
+  const sortedHierarchy = useMemo(() => {
+    const boundaryHierarchy =
+      hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
+    if (!boundaryHierarchy.length) return [];
+    const sorted = [];
+    let current = boundaryHierarchy.find((item) => !item?.parentBoundaryType);
+    while (current) {
+      sorted.push(current);
+      const next = boundaryHierarchy.find(
+        (item) => item?.parentBoundaryType === current?.boundaryType,
+      );
+      if (!next) break;
+      current = next;
+    }
+    return sorted;
+  }, [hierarchyDefinition]);
+
+  const topLevelBoundaryType = sortedHierarchy[0]?.boundaryType || null;
+  const isTopLevel = !!(userBoundary?.boundaryType && topLevelBoundaryType && userBoundary.boundaryType === topLevelBoundaryType);
 
   // Fetch campaign details (for campaignId fallback + auditDetails.createdTime)
   const campaignReqCriteria = useMemo(() => ({
@@ -400,7 +455,7 @@ const CommodityDashboard = () => {
     { key: "pending", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_PENDING_TRANSACTIONS) },
   ];
 
-  if (campaignIdLoading) {
+  if (campaignIdLoading || hierarchyLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
@@ -635,6 +690,7 @@ const CommodityDashboard = () => {
           userBoundary={userBoundary}
           userBoundaries={userBoundaries}
           isTopLevel={isTopLevel}
+          sortedHierarchy={sortedHierarchy}
         />
       )}
       {activeTab === "pending" && (

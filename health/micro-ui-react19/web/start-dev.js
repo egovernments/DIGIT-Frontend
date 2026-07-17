@@ -31,13 +31,16 @@ function checkDistFiles() {
   return required.every((p) => fs.existsSync(path.join(__dirname, p)));
 }
 
+const isWindows = process.platform === 'win32';
+
 async function buildPackages() {
   log('🔨 Building local packages...', colors.yellow);
 
   return new Promise((resolve, reject) => {
     const buildProcess = spawn('npm', ['run', 'build:packages'], {
       stdio: 'inherit',
-      cwd: __dirname
+      cwd: __dirname,
+      shell: isWindows
     });
 
     buildProcess.on('close', (code) => {
@@ -63,21 +66,35 @@ async function startDevelopment() {
 
     log('🔄 Starting development servers...', colors.blue);
 
+    // Build commands — use platform-appropriate path separators and shell syntax
+    const sep = isWindows ? '\\' : '/';
+    const cssDir = `packages${sep}css`;
+    const campaignDir = `packages${sep}modules${sep}campaign-manager`;
+    const hrmsDir = `packages${sep}modules${sep}health-hrms`;
+    const pgrDir = `packages${sep}modules${sep}pgr`;
+    const paymentsDir = `packages${sep}modules${sep}health-payments`;
+    const dssDir = `packages${sep}modules${sep}health-dss`;
+
+    const commands = [
+      `cd ${cssDir} && npm run start`,
+      `cd ${campaignDir} && npm run build:dev -- --watch`,
+      `cd ${hrmsDir} && npm run build:dev -- --watch`,
+      `cd ${pgrDir} && npm run build:dev -- --watch`,
+      `cd ${paymentsDir} && npm run build:dev -- --watch`,
+      `cd ${dssDir} && npm run build:dev -- --watch`,
+      'webpack serve --config webpack.dev.js --port 3000'
+    ];
+
     // Start the concurrent processes
     const devProcess = spawn('npx', [
       'concurrently',
       '--names', 'CSS,Campaign,HRMS,PGR,Payments,DSS,Webpack',
       '--prefix-colors', 'yellow,magenta,green,blue,red,white,cyan',
-      '"cd packages/css && npm run start"',
-      '"cd packages/modules/campaign-manager && npm run build:dev -- --watch"',
-      '"cd packages/modules/health-hrms && npm run build:dev -- --watch"',
-      '"cd packages/modules/pgr && npm run build:dev -- --watch"',
-      '"cd packages/modules/health-payments && npm run build:dev -- --watch"',
-      '"cd packages/modules/health-dss && npm run build:dev -- --watch"',
-      '"webpack serve --config webpack.dev.js --port 3000"'
+      ...commands
     ], {
       stdio: 'inherit',
-      cwd: __dirname
+      cwd: __dirname,
+      shell: isWindows
     });
 
     devProcess.on('close', (code) => {
@@ -85,10 +102,10 @@ async function startDevelopment() {
     });
 
     // Handle process termination
+    const shutdownSignal = isWindows ? 'SIGTERM' : 'SIGINT';
     process.on('SIGINT', () => {
       log('🛑 Stopping development servers...', colors.red);
-      devProcess.kill('SIGINT');
-      process.exit(0);
+      devProcess.kill(shutdownSignal);
     });
 
   } catch (error) {

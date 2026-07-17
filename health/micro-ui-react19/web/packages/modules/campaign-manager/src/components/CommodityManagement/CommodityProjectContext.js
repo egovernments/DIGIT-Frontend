@@ -3,11 +3,8 @@ import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 
 const CommodityProjectContext = createContext(null);
 
-const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
-
 const CommodityProjectProvider = ({ children }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const moduleName = Digit.Utils.campaign.getModuleName();
   const user = Digit.SessionStorage.get("User");
   const uuid = user?.info?.uuid;
 
@@ -80,81 +77,7 @@ const CommodityProjectProvider = ({ children }) => {
     return boundaries;
   }, [projects]);
 
-  // Fetch BOUNDARY_HIERARCHY_TYPE from MDMS
-  const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyTypeLoading } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [{ name: "HierarchySchema", filter: `[?(@.type=='${moduleName}')]` }],
-    {
-      select: (data) =>
-        data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy,
-    },
-    { schemaCode: "HierarchySchema" },
-  );
-
-  // Load boundary localizations. All Commodity
-  // Management screens render boundary codes, so this shared provider fetches the matching
-  // hcm-boundary-<hierarchyType> module once for every descendant screen.
-  const stateCode = Digit.ULBService.getStateId();
-  const language = Digit.StoreData.getCurrentLanguage();
-  Digit.Services.useStore({
-    stateCode,
-    moduleCode: BOUNDARY_HIERARCHY_TYPE ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] : [],
-    language,
-    modulePrefix: "hcm",
-  });
-
-  // Fetch hierarchy definition to determine top-level boundary type
-  const hierarchyDefCriteria = useMemo(() => ({
-    url: `/boundary-service/boundary-hierarchy-definition/_search`,
-    changeQueryName: `commodityCtx_${BOUNDARY_HIERARCHY_TYPE}`,
-    body: {
-      BoundaryTypeHierarchySearchCriteria: {
-        tenantId,
-        limit: 2,
-        offset: 0,
-        hierarchyType: BOUNDARY_HIERARCHY_TYPE,
-      },
-    },
-    config: { enabled: !!BOUNDARY_HIERARCHY_TYPE },
-  }), [tenantId, BOUNDARY_HIERARCHY_TYPE]);
-
-  const { data: hierarchyDefinition, isLoading: hierarchyDefLoading } = Digit.Hooks.useCustomAPIHook(hierarchyDefCriteria);
-
-  // Build sorted hierarchy and determine top-level boundary type
-  const sortedHierarchy = useMemo(() => {
-    const boundaryHierarchy =
-      hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
-    if (!boundaryHierarchy.length) return [];
-    const sorted = [];
-    let current = boundaryHierarchy.find((item) => !item?.parentBoundaryType);
-    while (current) {
-      sorted.push(current);
-      const next = boundaryHierarchy.find(
-        (item) => item?.parentBoundaryType === current?.boundaryType,
-      );
-      if (!next) break;
-      current = next;
-    }
-    return sorted;
-  }, [hierarchyDefinition]);
-
-  const topLevelBoundaryType = sortedHierarchy[0]?.boundaryType || null;
-  const isTopLevel = !!(userBoundary?.boundaryType && topLevelBoundaryType && userBoundary.boundaryType === topLevelBoundaryType);
-
-  const userLevelIndex = useMemo(() => {
-    if (!userBoundary?.boundaryType || !sortedHierarchy.length) return -1;
-    const idx = sortedHierarchy.findIndex((h) => h.boundaryType === userBoundary.boundaryType);
-    return idx >= 0 ? idx : -1;
-  }, [userBoundary, sortedHierarchy]);
-
-  const isAuthorizedForCommodity = useMemo(() => {
-    if (sortedHierarchy.length < 3) return false;
-    if (userLevelIndex < 0) return false;
-    return userLevelIndex <= sortedHierarchy.length - 3;
-  }, [sortedHierarchy, userLevelIndex]);
-
-  const isLoading = staffLoading || projectsLoading || hierarchyTypeLoading || hierarchyDefLoading;
+  const isLoading = staffLoading || projectsLoading;
   const hasStaff = !!(projectStaff?.length > 0);
 
   const value = useMemo(() => ({
@@ -162,14 +85,9 @@ const CommodityProjectProvider = ({ children }) => {
     userBoundary,
     userBoundaries,
     userAssignments,
-    isTopLevel,
-    topLevelBoundaryType,
-    sortedHierarchy,
-    userLevelIndex,
-    isAuthorizedForCommodity,
     isLoading,
     hasStaff,
-  }), [projects, userBoundary, userBoundaries, userAssignments, isTopLevel, topLevelBoundaryType, sortedHierarchy, userLevelIndex, isAuthorizedForCommodity, isLoading, hasStaff]);
+  }), [projects, userBoundary, userBoundaries, userAssignments, isLoading, hasStaff]);
 
   return (
     <CommodityProjectContext.Provider value={value}>
