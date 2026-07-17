@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Provider } from "react-redux";
 import { Routes, useLocation, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -13,6 +14,9 @@ import AppConfigInitializer from "./NewCampaignCreate/AppConfigInitializer";
 import LocalisationAdd from "./NewCampaignCreate/LocalisationAdd";
 import { PRIMARY_COLOR } from "../../utils";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import { campaignStore, clearCampaignFormData, clearUploadId, hydrateFromIndexedDB } from "../../store/campaignStore";
+import { useSelector } from "react-redux";
+import { Loader as ComponentLoader } from "@egovernments/digit-ui-components";
 
 // Create lazy components with fallbacks using the utility
 const SetupCampaign = lazyWithFallback(
@@ -400,6 +404,21 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
  * the `Switch` component, there are several `Route` components with different paths and
  * corresponding components such as `UploadBoundaryData`, `CycleConfiguration`, `DeliveryRule`, `
  */
+// Gate component that waits for IndexedDB hydration before rendering children
+const HydrationGate = ({ children }) => {
+  const hydrated = useSelector((state) => state.hydration.hydrated);
+
+  useEffect(() => {
+    hydrateFromIndexedDB();
+  }, []);
+
+  if (!hydrated) {
+    return <ComponentLoader />;
+  }
+
+  return children;
+};
+
 const App = ({ path }) => {
   const location = useLocation();
   const userId = Digit.UserService.getUser().info.uuid;
@@ -417,17 +436,17 @@ const App = ({ path }) => {
 
   useEffect(() => {
     if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
-      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+      campaignStore.dispatch(clearCampaignFormData());
+      campaignStore.dispatch(clearUploadId());
     }
     if (window.location.pathname === "/workbench-ui/employee/campaign/response") {
-      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+      campaignStore.dispatch(clearCampaignFormData());
+      campaignStore.dispatch(clearUploadId());
     }
     return () => {
       if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
-        window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-        window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+        campaignStore.dispatch(clearCampaignFormData());
+        campaignStore.dispatch(clearUploadId());
       }
     };
   }, []);
@@ -451,6 +470,8 @@ const App = ({ path }) => {
   }, [location.pathname]);
 
   return (
+    <Provider store={campaignStore}>
+    <HydrationGate>
     <React.Fragment>
       <div className="wbh-header-container">
         {window?.location?.pathname === "/workbench-ui/employee/campaign/add-product" ||
@@ -555,6 +576,8 @@ const App = ({ path }) => {
         </AppContainer>
       </Switch> */}
     </React.Fragment>
+    </HydrationGate>
+    </Provider>
   );
 };
 

@@ -12,6 +12,7 @@ import { downloadExcelWithCustomName } from "../../../utils";
 import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDateFormat";
 import QRButton from "../../../components/CreateCampaignComponents/QRButton";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import useCampaignStore from "../../../hooks/useCampaignStore";
 
 function transformCampaignData(inputObj = {}) {
   const deliveryRule = inputObj.deliveryRules?.[0] || {};
@@ -151,6 +152,12 @@ const CampaignDetails = () => {
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
   const url = getMDMSUrl(true);
 
+  const [, setAdminConsole] = useCampaignStore("HCM_ADMIN_CONSOLE_DATA", {});
+  const [, setAdminUpload] = useCampaignStore("HCM_ADMIN_CONSOLE_UPLOAD_DATA", {});
+  const [, setUploadId] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
+  const [, setHierarchy] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
+  const [, setCampaignNumberInfo] = useCampaignStore("HCM_CAMPAIGN_NUMBER", null);
+
   // useEffect(() => {
   //   window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   //   window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
@@ -277,7 +284,7 @@ const CampaignDetails = () => {
 
   useEffect(() => {
     if (campaignData) {
-      sessionStorage.setItem("HCM_CAMPAIGN_NUMBER", JSON.stringify({ id: campaignData?.id, campaignNumber: campaignNumber }));
+      setCampaignNumberInfo({ id: campaignData?.id, campaignNumber: campaignNumber });
     }
   }, [campaignData]);
 
@@ -326,30 +333,12 @@ const CampaignDetails = () => {
       hierarchyType: BOUNDARY_HIERARCHY_TYPE,
       hierarchy: hierarchyDefinition?.BoundaryHierarchy?.[0],
     };
-    Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_DATA", campaignSessionData);
-    Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_UPLOAD_DATA", tranformedManagerUploadData);
-    Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", hierarchyData);
-    Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", tranformedManagerUploadData);
+    setAdminConsole(campaignSessionData);
+    setAdminUpload(tranformedManagerUploadData);
+    setUploadId(hierarchyData);
     if (campaignData?.hierarchyType) {
-      Digit.SessionStorage.set("HCM_CAMPAIGN_SELECTED_HIERARCHY", { name: campaignData.hierarchyType });
+      setHierarchy({ name: campaignData.hierarchyType });
     }
-    // Update HCM_CAMPAIGN_MANAGER_FORM_DATA with fresh campaign dates for CycleConfiguration
-    const existingFormData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA") || {};
-    Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_FORM_DATA", {
-      ...existingFormData,
-      HCM_CAMPAIGN_DATE: {
-        campaignDates: {
-          startDate: Digit.DateUtils.ConvertEpochToDate(campaignData?.startDate)?.split("/")?.reverse()?.join("-"),
-          endDate: Digit.DateUtils.ConvertEpochToDate(campaignData?.endDate)?.split("/")?.reverse()?.join("-"),
-        },
-      },
-      HCM_CAMPAIGN_TYPE: {
-        projectType: { code: campaignData?.projectType },
-      },
-      HCM_CAMPAIGN_NAME: {
-        campaignName: campaignData?.campaignName,
-      },
-    });
   }, [campaignData, BOUNDARY_HIERARCHY_TYPE, hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy]);
 
   const data = {

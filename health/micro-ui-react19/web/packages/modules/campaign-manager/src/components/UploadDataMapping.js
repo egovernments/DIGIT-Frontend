@@ -22,6 +22,7 @@ import NoResultsFound from "./NoResultsFound";
 import AddOrEditMapping from "./AddOrEditMapping";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import Ajv from "ajv";
+import useCampaignStore from "../hooks/useCampaignStore";
 
 const initialState = {
   data: [],
@@ -341,8 +342,11 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const [chipPopUpRowId, setChipPopUpRowId] = useState(null);
   const [allLowestHierarchyCodes, setAllLowestHierarchyCodes] = useState(null);
   const [allSelectedBoundary, setAllSelectedBoundary] = useState([]);
-  const sessionData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
-  const paramsData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+  const [adminUploadData] = useCampaignStore("HCM_ADMIN_CONSOLE_UPLOAD_DATA", null);
+  const [paramsStoreData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", null);
+  const [storedHierarchy] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
+  const sessionData = adminUploadData;
+  const paramsData = paramsStoreData;
   const selectedBoundaryData = sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData;
   const schemaFilter = currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? "facility" : "user";
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -350,7 +354,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [translatedSchema, setTranslatedSchema] = useState({});
   const [convertedSchema, setConvertedSchema] = useState({});
-  const totalData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
+  const totalData = adminUploadData;
   const [showToast, setShowToast] = useState(false);
   const type = formData?.validationType;
 
@@ -412,7 +416,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     {
       enabled: true,
       select: (data) => {
-        const hierarchyType = paramsData?.hierarchy?.hierarchyType || Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")?.name;
+        const hierarchyType = paramsData?.hierarchy?.hierarchyType || storedHierarchy?.name;
         const schemas = data?.["HCM-ADMIN-CONSOLE"]?.HierarchySchema || [];
         // Only use lowestHierarchy from a matching "console" type entry for the selected hierarchy
         const consoleSchema = schemas.find((item) => item.type === "console" && item.hierarchy === hierarchyType);
@@ -426,7 +430,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     url: `/boundary-service/boundary-relationships/_search`,
     params: {
       tenantId: tenantId,
-      hierarchyType: paramsData?.hierarchy?.hierarchyType || Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")?.name,
+      hierarchyType: paramsData?.hierarchy?.hierarchyType || storedHierarchy?.name,
       includeChildren: true,
       codes: allLowestHierarchyCodes?.join(","),
     },
@@ -535,7 +539,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       }
     }
     enrichSchema(convertData, properties, required, columns);
-    const newData = JSON.parse(JSON.stringify(convertData));
+    const newData = structuredClone(convertData);
     delete newData.campaignType;
     return newData;
   }

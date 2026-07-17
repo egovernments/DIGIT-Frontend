@@ -8,6 +8,7 @@ import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import useCampaignStore from "../hooks/useCampaignStore";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -20,8 +21,10 @@ import { I18N_KEYS } from "../utils/i18nKeyConstants";
 const UploadData = ({ formData, onSelect, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [uploadIdData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", null);
+  const [formStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", null);
   const [uploadedFile, setUploadedFile] = useState([]);
-  const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+  const params = uploadIdData;
   const [showInfoCard, setShowInfoCard] = useState(false);
   const [errorsType, setErrorsType] = useState({});
   const [showToast, setShowToast] = useState(null);
@@ -71,7 +74,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-  const totalData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  const totalData = formStorageData;
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
@@ -227,7 +230,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       }
     }
     enrichSchema(convertData, properties, required, columns);
-    const newData = JSON.parse(JSON.stringify(convertData));
+    const newData = structuredClone(convertData);
     delete newData.campaignType;
     return newData;
   }

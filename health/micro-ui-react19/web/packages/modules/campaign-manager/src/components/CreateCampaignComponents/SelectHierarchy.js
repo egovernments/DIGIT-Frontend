@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import useCampaignStore from "../../hooks/useCampaignStore";
+import {
+  clearCampaignFormData,
+  clearUploadId,
+  clearAdminSetup,
+  clearSelectedHierarchyCode,
+  clearAdminUploadData,
+} from "../../store/campaignStore";
 import {
   Card,
   LabelFieldPair,
@@ -12,24 +21,15 @@ import {
   TextInput,
 } from "@egovernments/digit-ui-components";
 
-const SESSION_KEYS_TO_CLEAR = [
-  "HCM_CAMPAIGN_MANAGER_FORM_DATA",
-  "HCM_CAMPAIGN_MANAGER_UPLOAD_ID",
-  "HCM_ADMIN_CONSOLE_SET_UP",
-  "HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE",
-  "HCM_ADMIN_CONSOLE_UPLOAD_DATA",
-];
-const HIERARCHY_CODE_KEY = "HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE";
 const MAX_VISIBLE_LEVELS = 5;
 
-const hasDependentData = () => {
-  const formData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA") || {};
+const hasDependentData = (formData) => {
   return !!(
-    formData.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA ||
-    formData.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA ||
-    formData.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA ||
-    formData.HCM_CAMPAIGN_UPLOAD_USER_DATA ||
-    formData.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA
+    formData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA ||
+    formData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA ||
+    formData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA ||
+    formData?.HCM_CAMPAIGN_UPLOAD_USER_DATA ||
+    formData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA
   );
 };
 
@@ -53,6 +53,10 @@ const sortBoundaryHierarchy = (boundaryHierarchy = []) => {
 const SelectHierarchy = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [formStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
+  const [hierarchyValue, setHierarchyValue] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
+  const [hierarchyCodeValue, setHierarchyCodeValue] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE", null);
+  const reduxDispatch = useDispatch();
 
   // Single API call to get all hierarchies with their boundary levels
   const { data: hierarchyData, isLoading } = Digit.Hooks.useCustomAPIHook({
@@ -70,7 +74,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
 
   const [selected, setSelected] = useState(
     formData?.SelectHierarchy?.hierarchy ||
-      Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY") ||
+      hierarchyValue ||
       null,
   );
   const [pendingSelection, setPendingSelection] = useState(null);
@@ -83,8 +87,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
   // enrich it with the code from the dedicated code key — runs once on mount
   useEffect(() => {
     if (selected?.name && !selected?.code) {
-      const storedCode = Digit.SessionStorage.get(HIERARCHY_CODE_KEY);
-      if (storedCode) setSelected({ name: selected.name, code: storedCode });
+      if (hierarchyCodeValue) setSelected({ name: selected.name, code: hierarchyCodeValue });
     }
   }, []);
 
@@ -107,9 +110,8 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
 
   const onHierarchySelect = (value) => {
     if (isSameHierarchy(selected, value)) return;
-    const stored = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
-    const isHierarchyChanged = stored && !isSameHierarchy(stored, value);
-    const hasData = hasDependentData() || !!(formData?.SelectHierarchy?.hasBoundaryData);
+    const isHierarchyChanged = hierarchyValue && !isSameHierarchy(hierarchyValue, value);
+    const hasData = hasDependentData(formStorageData) || !!(formData?.SelectHierarchy?.hasBoundaryData);
     if (isHierarchyChanged && hasData) {
       setPendingSelection(value);
       setShowConfirmPopup(true);
@@ -119,7 +121,11 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
   };
 
   const onConfirmChange = () => {
-    SESSION_KEYS_TO_CLEAR.forEach((key) => Digit.SessionStorage.del(key));
+    reduxDispatch(clearCampaignFormData());
+    reduxDispatch(clearUploadId());
+    reduxDispatch(clearAdminSetup());
+    reduxDispatch(clearSelectedHierarchyCode());
+    reduxDispatch(clearAdminUploadData());
     setSelected(pendingSelection);
     setPendingSelection(null);
     setShowConfirmPopup(false);
@@ -132,8 +138,8 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
 
   useEffect(() => {
     if (selected) {
-      Digit.SessionStorage.set("HCM_CAMPAIGN_SELECTED_HIERARCHY", selected);
-      if (selected.code) Digit.SessionStorage.set(HIERARCHY_CODE_KEY, selected.code);
+      setHierarchyValue(selected);
+      if (selected.code) setHierarchyCodeValue(selected.code);
       onSelect("SelectHierarchy", {
         hierarchy: selected,
         hasBoundaryData: !!(boundaryData && boundaryData.length > 0),

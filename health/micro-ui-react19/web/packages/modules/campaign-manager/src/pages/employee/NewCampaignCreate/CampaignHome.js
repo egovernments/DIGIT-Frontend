@@ -14,24 +14,19 @@ import { AppHelpContent } from "../../../components/HelpInfoCard";
 import { CopyAll } from "../../../components/icons/CopyAll";
 import { MobileLayout } from "../../../components/icons/MobileLayout";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import useCampaignStore from "../../../hooks/useCampaignStore";
+import { useDispatch } from "react-redux";
+import { resetCreateCampaignData } from "../../../store/campaignStore";
 
 const CampaignHome = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showPopUp, setShowPopUp] = useState(false);
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   useEffect(() => {
-    window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
-    window.Digit.SessionStorage.del("SelectedFeaturesByModule");
-    window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
-    window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UNIFIED_UPLOAD_DATA");
-    window.Digit.SessionStorage.del("CAMPAIGN_NAME_INFO_VISIBLE");
-    window.Digit.SessionStorage.del("HCM_ATTENDANCE_REGISTER_DATA");
-    window.Digit.SessionStorage.del("HCM_ATTENDANCE_UPLOAD_DATA");
-    window.Digit.SessionStorage.del("HCM_CREATE_REGISTERS_DATA");
-    sessionStorage.removeItem("HCM_CAMPAIGN_NUMBER");
-
+    dispatch(resetCreateCampaignData());
   }, []);
 
   //TODO @bhavya @jagan integrate with a master similar to   "commonUiConfig", "HelpInfo",

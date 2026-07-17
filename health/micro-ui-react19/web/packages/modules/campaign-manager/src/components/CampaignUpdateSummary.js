@@ -5,6 +5,7 @@ import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import useCampaignStore from "../hooks/useCampaignStore";
 
 function boundaryDataGrp(boundaryData, hierarchyDefinition) {
   if (!hierarchyDefinition || !boundaryData) return [];
@@ -45,6 +46,7 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [uploadIdData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", null);
 
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
@@ -61,7 +63,7 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
   const campaignData = props?.campaignData;
   const summaryErrors = props?.summaryErrors || {};
 
-  const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+  const params = uploadIdData;
   const hierarchyType = params?.hierarchyType || campaignData?.CampaignDetails?.[0]?.hierarchyType;
 
   const hierarchyReq = {

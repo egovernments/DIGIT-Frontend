@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { unifiedUploadConfig } from "../../../configs/unifiedUploadConfig";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
+import useCampaignStore from "../../../hooks/useCampaignStore";
 
 const UnifiedUploadScreen = () => {
   const { t } = useTranslation();
@@ -14,11 +15,13 @@ const UnifiedUploadScreen = () => {
   const [loader, setLoader] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
-  const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_UNIFIED_UPLOAD_DATA", {});
+  const [params, setParams] = useCampaignStore("HCM_ADMIN_CONSOLE_UNIFIED_UPLOAD_DATA", {});
+  const [uploadIdData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", null);
+  const [adminConsoleData] = useCampaignStore("HCM_ADMIN_CONSOLE_DATA", null);
 
-  const hirechyType = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID")?.hierarchyType || null;
+  const hirechyType = uploadIdData?.hierarchyType || null;
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const id = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA")?.id;
+  const id = adminConsoleData?.id;
 
   const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(
     tenantId,

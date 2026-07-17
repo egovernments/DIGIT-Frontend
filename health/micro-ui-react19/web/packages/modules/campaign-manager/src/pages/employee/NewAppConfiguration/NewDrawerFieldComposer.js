@@ -237,7 +237,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     if (bindTo.includes(".")) {
       // Handle nested properties with deep copy to avoid frozen object issues
       const keys = bindTo.split(".");
-      const newField = JSON.parse(JSON.stringify(selectedField));
+      const newField = structuredClone(selectedField);
       let current = newField;
       for (let i = 0; i < keys.length - 1; i++) {
         if (!current[keys[i]]) {
@@ -300,7 +300,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         if (bindTo.includes(".")) {
           // Handle nested properties with deep copy to avoid frozen object issues
           const keys = bindTo.split(".");
-          const newField = JSON.parse(JSON.stringify(currentSelectedField));
+          const newField = structuredClone(currentSelectedField);
           let current = newField;
           for (let i = 0; i < keys.length - 1; i++) {
             if (!current[keys[i]]) {
@@ -335,7 +335,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         if (bindTo.includes(".")) {
           // Handle nested properties with deep copy to avoid frozen object issues
           const keys = bindTo.split(".");
-          const newField = JSON.parse(JSON.stringify(currentSelectedField));
+          const newField = structuredClone(currentSelectedField);
           let current = newField;
           for (let i = 0; i < keys.length - 1; i++) {
             if (!current[keys[i]]) {
@@ -371,7 +371,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         // Non-localizable text: save raw value directly
         if (bindTo.includes(".")) {
           const keys = bindTo.split(".");
-          const newField = JSON.parse(JSON.stringify(currentSelectedField));
+          const newField = structuredClone(currentSelectedField);
           let current = newField;
           for (let i = 0; i < keys.length - 1; i++) {
             if (!current[keys[i]]) current[keys[i]] = {};
@@ -410,7 +410,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         }
         if (bindTo.includes(".")) {
           const keys = bindTo.split(".");
-          const newField = JSON.parse(JSON.stringify(currentSelectedField));
+          const newField = structuredClone(currentSelectedField);
           let current = newField;
           for (let i = 0; i < keys.length - 1; i++) {
             if (!current[keys[i]]) current[keys[i]] = {};
@@ -427,7 +427,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       const numValue = currentLocalValue === "" || currentLocalValue === null || currentLocalValue === undefined ? null : currentLocalValue;
       if (bindTo.includes(".")) {
         const keys = bindTo.split(".");
-        const newField = JSON.parse(JSON.stringify(currentSelectedField));
+        const newField = structuredClone(currentSelectedField);
         let current = newField;
         for (let i = 0; i < keys.length - 1; i++) {
           if (!current[keys[i]]) current[keys[i]] = {};
@@ -470,7 +470,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           // Handle nested properties with deep copy (e.g., "visibilityCondition.expression")
           if (bindTo.includes(".")) {
             const keys = bindTo.split(".");
-            updatedField = JSON.parse(JSON.stringify(selectedField));
+            updatedField = structuredClone(selectedField);
             let current = updatedField;
             for (let i = 0; i < keys.length - 1; i++) {
               if (!current[keys[i]]) {
@@ -687,7 +687,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 // Update the date field
                 if (panelItem.bindTo.includes(".")) {
                   const keys = panelItem.bindTo.split(".");
-                  const newField = JSON.parse(JSON.stringify(selectedField));
+                  const newField = structuredClone(selectedField);
                   let current = newField;
                   for (let i = 0; i < keys.length - 1; i++) {
                     if (!current[keys[i]]) {
@@ -732,7 +732,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             const expression = panelItem.validationExpression;
             // Create a plain object copy to avoid "object is not extensible" errors
             // This allows expressions to reference properties directly (e.g., "range.max > range.min")
-            const plainFieldCopy = JSON.parse(JSON.stringify(selectedField));
+            const plainFieldCopy = structuredClone(selectedField);
 
             // Extract field paths from expression (e.g., "lengthRange.minLength", "lengthRange.maxLength")
             const fieldPaths = expression.match(/[\w.]+/g)?.filter((p) => p.includes(".")) || [];
@@ -1710,7 +1710,7 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
         if (panelItem.fieldType === "group" && panelItem.validationExpression) {
           try {
             const expression = panelItem.validationExpression;
-            const plainFieldCopy = JSON.parse(JSON.stringify(selectedField));
+            const plainFieldCopy = structuredClone(selectedField);
 
             // Extract field paths from expression (e.g., "lengthRange.minLength", "lengthRange.maxLength")
             const fieldPaths = expression.match(/[\w.]+/g)?.filter((p) => p.includes(".")) || [];

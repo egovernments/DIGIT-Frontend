@@ -5,6 +5,7 @@ import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import useCampaignStore from "../hooks/useCampaignStore";
 
 function mergeObjects(item) {
   const arr = item;
@@ -200,6 +201,7 @@ const DeliveryDetailsSummary = (props) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [formStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", null);
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const noAction = searchParams.get("action");
@@ -212,7 +214,7 @@ const DeliveryDetailsSummary = (props) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-  const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName;
+  const campaignName = formStorageData?.HCM_CAMPAIGN_NAME?.campaignName;
   const handleRedirect = (step, activeCycle) => {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");

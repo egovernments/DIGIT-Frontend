@@ -16,6 +16,13 @@ import {
 import { handleValidate } from "../../utils/setupCampaignValidators";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import useCampaignStore from "../../hooks/useCampaignStore";
+import { useDispatch } from "react-redux";
+import {
+  clearAdminSetup,
+  clearAdminUploadData,
+  clearUnifiedUploadData,
+} from "../../store/campaignStore";
 
 /**
  * The `SetupCampaign` function in JavaScript handles the setup and management of campaign details,
@@ -28,11 +35,11 @@ import { I18N_KEYS } from "../../utils/i18nKeyConstants";
  */
 
 const SetupCampaign = () => {
-  const resourceDatas = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_SET_UP");
-  Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", resourceDatas);
+  const dispatch = useDispatch();
+  const [resourceDatas] = useCampaignStore("HCM_ADMIN_CONSOLE_SET_UP", null);
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const storedHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
+  const [storedHierarchy, setStoredHierarchy] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
   const [hierarchyType, setDerivedHierarchyType] = useState(storedHierarchy?.name);
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -41,8 +48,9 @@ const SetupCampaign = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData, null, isSubmitting));
   const [shouldUpdate, setShouldUpdate] = useState(false);
-  const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
-  const [dataParams, setDataParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
+  const [params, setParams, clearParams] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
+  const [dataParams, setDataParams] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
+  const [adminConsoleData, setAdminConsoleData] = useCampaignStore("HCM_ADMIN_CONSOLE_DATA", null);
   const [showToast, setShowToast] = useState(null);
   const [summaryErrors, setSummaryErrors] = useState({});
   const { mutate } = Digit.Hooks.campaign.useCreateCampaign(tenantId);
@@ -141,7 +149,7 @@ const SetupCampaign = () => {
   useEffect(() => {
     if (draftData?.hierarchyType && draftData.hierarchyType !== hierarchyType) {
       setDerivedHierarchyType(draftData.hierarchyType);
-      Digit.SessionStorage.set("HCM_CAMPAIGN_SELECTED_HIERARCHY", { name: draftData.hierarchyType });
+      setStoredHierarchy({ name: draftData.hierarchyType });
     }
   }, [draftData?.hierarchyType]);
 
@@ -643,7 +651,7 @@ const SetupCampaign = () => {
       isChanged = hasSelectedBoundaryChanged(sessionBoundary, formBoundary);
     }
     if (isChanged) {
-      Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_SET_UP");
+      dispatch(clearAdminSetup());
     }
 
     setIsSubmitting(true);
@@ -674,8 +682,8 @@ const SetupCampaign = () => {
         [name]: { ...formData },
       });
     } else if (name === "HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA" && formData?.boundaryType?.updateBoundary === true) {
-      window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
-      window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UNIFIED_UPLOAD_DATA");
+      dispatch(clearAdminUploadData());
+      dispatch(clearUnifiedUploadData());
       setTotalFormData((prevData) => ({
         ...prevData,
         [name]: formData,
@@ -985,7 +993,7 @@ const SetupCampaign = () => {
         [name]: { ...formData },
       });
       if (formData?.cycleConfigure?.cycleData?.length > 0) {
-        const tempSession = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA") || {};
+        const tempSession = adminConsoleData || {};
         const updated = {
           ...tempSession,
           additionalDetails: {
@@ -994,7 +1002,7 @@ const SetupCampaign = () => {
             cycleConfgureDate: formData?.cycleConfigure?.cycleConfgureDate,
           },
         };
-        Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_DATA", updated);
+        setAdminConsoleData(updated);
       }
     }
 

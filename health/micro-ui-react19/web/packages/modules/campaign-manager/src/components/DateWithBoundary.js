@@ -6,6 +6,7 @@ import { Button, Card, Dropdown, MultiSelectDropdown, Toast,HeaderComponent } fr
 import BoundaryWithDate from "./BoundaryWithDate";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import useCampaignStore from "../hooks/useCampaignStore";
 
 const initialState = (projectData) => {
   return projectData;
@@ -102,6 +103,8 @@ const reducer = (state, action) => {
 const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [storedHierarchy] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
+  const [uploadIdData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", null);
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const campaignId = searchParams.get("id");
@@ -130,8 +133,8 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   // Campaign API is the authoritative source; session keys are fallbacks for the create flow
   const BOUNDARY_HIERARCHY_TYPE =
     campaignData?.hierarchyType ||
-    Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")?.name ||
-    Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID")?.hierarchyType;
+    storedHierarchy?.name ||
+    uploadIdData?.hierarchyType;
   const { isLoading, data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,

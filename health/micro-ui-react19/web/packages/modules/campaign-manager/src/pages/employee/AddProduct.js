@@ -5,11 +5,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { addProductConfig } from "../../configs/addProductConfig";
 import { Toast ,SVG} from "@egovernments/digit-ui-components";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import useCampaignStore from "../../hooks/useCampaignStore";
 
 function AddProduct() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [formStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", null);
   const [showToast, setShowToast] = useState(null);
   const { state } = useLocation();
   const { mutate: createProduct } = Digit.Hooks.campaign.useCreateProduct(tenantId);
@@ -176,7 +178,7 @@ function AddProduct() {
   const onSecondayActionClick = () => {
     
     // Preserve current campaign session data when navigating back
-    const currentSessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+    const currentSessionData = formStorageData;
     
 
     

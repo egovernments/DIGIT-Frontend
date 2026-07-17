@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { uploadConfig } from "../../../configs/uploadConfig";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import useCampaignStore from "../../../hooks/useCampaignStore";
 
 const NewUploadScreen = () => {
   const { t } = useTranslation();
@@ -17,15 +18,17 @@ const NewUploadScreen = () => {
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const [summaryErrors, setSummaryErrors] = useState({});
-  const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_UPLOAD_DATA", {});
+  const [params, setParams] = useCampaignStore("HCM_ADMIN_CONSOLE_UPLOAD_DATA", {});
+  const [uploadIdData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", null);
+  const [adminConsoleData] = useCampaignStore("HCM_ADMIN_CONSOLE_DATA", null);
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
 
-  const hirechyType = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID")?.hierarchyType || null;
+  const hirechyType = uploadIdData?.hierarchyType || null;
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const id = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA")?.id;
+  const id = adminConsoleData?.id;
 
   // React Router-safe URL update - only updates if URL key differs from state
   const updateUrlParams = (p) => {

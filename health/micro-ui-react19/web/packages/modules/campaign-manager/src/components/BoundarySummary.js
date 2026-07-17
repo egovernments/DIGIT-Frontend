@@ -4,6 +4,7 @@ import { LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-compon
 import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import useCampaignStore from "../hooks/useCampaignStore";
 
 function boundaryDataGrp(boundaryData) {
   // Create an empty object to hold grouped data by type
@@ -34,11 +35,12 @@ function boundaryDataGrp(boundaryData) {
 const BoundarySummary = (props) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [formStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", null);
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const [showToast, setShowToast] = useState(null);
   const currentKey = searchParams.get("key");
-  const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName || t(I18N_KEYS.COMMON.NA);
+  const campaignName = formStorageData?.HCM_CAMPAIGN_NAME?.campaignName || t(I18N_KEYS.COMMON.NA);
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;

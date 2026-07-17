@@ -7,6 +7,7 @@ import { Wrapper } from "./SelectingBoundaryComponent";
 import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, CardText, Tag } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import useCampaignStore from "../hooks/useCampaignStore";
 
 // Default value for unified campaign mode. Change this to `false` to revert to normal campaign mode.
 const DEFAULT_IS_UNIFIED_CAMPAIGN = true;
@@ -25,9 +26,18 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const queryParams = Digit.Hooks.useQueryParams();
   const tenantId = Digit.ULBService.getStateId();
   const searchParams = new URLSearchParams(location.search);
-  const hierarchyType = props?.props?.dataParams?.hierarchyType || Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")?.name;
   const campaignNumber = searchParams.get("campaignNumber");
   const draft = searchParams.get("draft");
+
+  // Campaign store hooks — declared early so hierarchyType can use hierarchyStoreData
+  const [hierarchyStoreData] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
+  const [uploadIdData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
+  const [formStorageData, setFormStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
+  const [adminSetupData] = useCampaignStore("HCM_ADMIN_CONSOLE_SET_UP", {});
+  const [unifiedUploadData] = useCampaignStore("HCM_ADMIN_CONSOLE_UNIFIED_UPLOAD_DATA", {});
+
+  const hierarchyType = props?.props?.dataParams?.hierarchyType || hierarchyStoreData?.name;
+
   const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
@@ -42,14 +52,19 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.mailConfig` }
   );
-  // Load boundary localizations (boundary-${hierarchyType}) here where the hierarchy type is known
+  // Load boundary localizations — only when hierarchyType is known (prevents empty module= call)
   const stateCode = Digit.ULBService.getStateId();
   const language = Digit.StoreData.getCurrentLanguage();
+  const boundaryModuleCode = useMemo(
+    () => (hierarchyType ? [`boundary-${hierarchyType}`] : []),
+    [hierarchyType]
+  );
   Digit.Services.useStore({
     stateCode,
-    moduleCode: hierarchyType ? [`boundary-${hierarchyType}`] : [],
+    moduleCode: boundaryModuleCode,
     language,
     modulePrefix: "hcm",
+    enabled: boundaryModuleCode.length > 0,
   });
   const lowestHierarchy = useMemo(() => {
     // Only use lowestHierarchy from MDMS if a matching "console" type entry exists for the selected hierarchy
@@ -205,12 +220,12 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       setRestrictSelection(false);
 
       // Clear upload session data when updating boundaries
-      const currentSessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-      const formData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-      const campaignSetupData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_SET_UP");
-      const unifiedUploadData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_UNIFIED_UPLOAD_DATA");
-      if (currentSessionData || formData || campaignSetupData || unifiedUploadData) {
-        Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_FORM_DATA", {
+      const currentSessionData = uploadIdData;
+      const formDataStorage = formStorageData;
+      const campaignSetupData = adminSetupData;
+      const unifiedUploadDataVal = unifiedUploadData;
+      if (currentSessionData || formDataStorage || campaignSetupData || unifiedUploadDataVal) {
+        setFormStorageData({
           ...currentSessionData,
           HCM_CAMPAIGN_UPLOAD_FACILITY_DATA: {
             uploadFacility: {

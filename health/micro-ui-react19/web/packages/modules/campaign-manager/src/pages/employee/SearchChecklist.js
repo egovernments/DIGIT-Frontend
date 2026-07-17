@@ -113,7 +113,7 @@ const SearchChecklist = () => {
   const configWithOptions = useMemo(() => {
     if (!checklistSearchConfig[0]) return null;
 
-    const config = JSON.parse(JSON.stringify(checklistSearchConfig[0]));
+    const config = structuredClone(checklistSearchConfig[0]);
     config.sections.search.uiConfig.fields[0].populators.options = codesopt;
     config.sections.search.uiConfig.fields[1].populators.options = listsopt;
     config.additionalDetails = { campaignName };
