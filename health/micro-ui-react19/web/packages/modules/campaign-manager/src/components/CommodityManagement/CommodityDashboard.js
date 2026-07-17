@@ -82,8 +82,8 @@ const CommodityDashboard = () => {
   // Read campaign data from navigation state (passed from HCMCommodityRowCard)
   const { projectId: projectIdFromState, campaignStartDate: campaignStartEpoch, campaignEndDate: campaignEndEpoch, projectCreatedTime, isCompleted } = location.state || {};
 
-  // Read userBoundary, userBoundaries from context
-  const { userBoundary, userBoundaries, projects: contextProjects } = useCommodityProject();
+  // Read userBoundaries and projects from context
+  const { userBoundaries, projects: contextProjects } = useCommodityProject();
 
   // Resolve projectId: URL param > navigation state > sessionStorage > context fallback
   // Key is scoped per campaign so switching campaigns never reuses a stale projectId
@@ -103,6 +103,15 @@ const CommodityDashboard = () => {
     return contextProjects.find((p) => p.id === projectId) || null;
   }, [projectId, contextProjects]);
 
+  // Derive userBoundary from the selected project (not the first project in context)
+  const userBoundary = useMemo(() => {
+    if (!selectedProject?.address?.boundary || !selectedProject?.address?.boundaryType) return null;
+    return {
+      boundary: selectedProject.address.boundary,
+      boundaryType: selectedProject.address.boundaryType,
+    };
+  }, [selectedProject]);
+
   const hierarchyType = selectedProject?.additionalDetails?.hierarchyType || null;
 
   // Fetch hierarchy definition based on the project's hierarchyType
@@ -120,7 +129,7 @@ const CommodityDashboard = () => {
     config: { enabled: !!hierarchyType },
   }), [tenantId, hierarchyType]);
 
-  const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(hierarchyDefCriteria);
+  const { data: hierarchyDefinition, isLoading: hierarchyLoading } = Digit.Hooks.useCustomAPIHook(hierarchyDefCriteria);
 
   // Build sorted hierarchy and determine top-level boundary type
   const sortedHierarchy = useMemo(() => {
@@ -446,7 +455,7 @@ const CommodityDashboard = () => {
     { key: "pending", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_PENDING_TRANSACTIONS) },
   ];
 
-  if (campaignIdLoading) {
+  if (campaignIdLoading || hierarchyLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 

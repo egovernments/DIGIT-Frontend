@@ -106,7 +106,6 @@ async function startDevelopment() {
     process.on('SIGINT', () => {
       log('🛑 Stopping development servers...', colors.red);
       devProcess.kill(shutdownSignal);
-      process.exit(0);
     });
 
   } catch (error) {
