@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-workbench",
-  "version": "2.0.0-dev-18",
+  "version": "2.0.0-dev-19",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -23,8 +23,9 @@
     "styled-components": "5.x"
   },
   "dependencies": {
-    "@egovernments/digit-ui-components": "2.0.0-dev-53",
-    "@egovernments/digit-ui-react-components": "2.0.0-dev-16",
+    "@cyntler/react-doc-viewer": "1.17.1",
+    "@egovernments/digit-ui-components": "2.0.0-dev-56",
+    "@egovernments/digit-ui-react-components": "2.0.0-dev-17",
     "@egovernments/digit-ui-libraries": "2.0.0-dev-12",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",
@@ -43,6 +44,9 @@
     "xlsx": "0.17.5"
   },
   "sideEffects": false,
+  "resolutions": {
+    "**/pdfjs-dist": "4.8.69"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
