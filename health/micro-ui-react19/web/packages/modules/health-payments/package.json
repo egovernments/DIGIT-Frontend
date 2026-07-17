@@ -21,7 +21,7 @@
     "react-hook-form": ">=6.0.0",
     "@tanstack/react-query": ">=4.0.0",
     "@egovernments/digit-ui-react-components": "*",
-    "@egovernments/digit-ui-components": "2.0.0-dev-55"
+    "@egovernments/digit-ui-components": "2.0.0-dev-56"
   },
   "dependencies": {
     "react-date-range": "^1.4.0",

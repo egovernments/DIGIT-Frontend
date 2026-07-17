@@ -771,7 +771,7 @@ const CampaignDetails = () => {
           <Edit width={"18"} height={"18"} />
         </div>
         <span style={{ color: "#D6D5D4", fontWeight: "300", fontSize: "32px", lineHeight: 1 }}>|</span>
-        <div className="dates" style={{fontSize:"16px"}}>{campaignData?.hierarchyType}</div>
+        <div className="dates" style={{fontSize:"16px"}}>{t(campaignData?.hierarchyType)}</div>
         {campaignData?.status !== "created" && (
           <div
             className="hover"
