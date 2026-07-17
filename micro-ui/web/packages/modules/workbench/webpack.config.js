@@ -77,6 +77,7 @@ module.exports = {
       commonjs: "react/jsx-dev-runtime",
       commonjs2: "react/jsx-dev-runtime",
     },
+    '@cyntler/react-doc-viewer': '@cyntler/react-doc-viewer',
     // DIGIT UI cross-dependencies
     "@egovernments/digit-ui-components": "@egovernments/digit-ui-components",
     "@egovernments/digit-ui-react-components": "@egovernments/digit-ui-react-components",

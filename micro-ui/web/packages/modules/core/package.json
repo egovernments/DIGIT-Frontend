@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-core",
-  "version": "2.0.0-dev-25",
+  "version": "2.0.0-dev-26",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@egovernments/digit-ui-components": "2.0.0-dev-56",
-    "@egovernments/digit-ui-react-components": "2.0.0-dev-17",
+    "@egovernments/digit-ui-react-components": "2.0.0-dev-18",
     "@egovernments/digit-ui-libraries": "2.0.0-dev-12",
     "react-i18next": "15.0.0",
     "react-redux": "7.2.8",
