@@ -76,13 +76,13 @@ async function startDevelopment() {
     const dssDir = `packages${sep}modules${sep}health-dss`;
 
     const commands = [
-      `"cd ${cssDir} && npm run start"`,
-      `"cd ${campaignDir} && npm run build:dev -- --watch"`,
-      `"cd ${hrmsDir} && npm run build:dev -- --watch"`,
-      `"cd ${pgrDir} && npm run build:dev -- --watch"`,
-      `"cd ${paymentsDir} && npm run build:dev -- --watch"`,
-      `"cd ${dssDir} && npm run build:dev -- --watch"`,
-      '"webpack serve --config webpack.dev.js --port 3000"'
+      `cd ${cssDir} && npm run start`,
+      `cd ${campaignDir} && npm run build:dev -- --watch`,
+      `cd ${hrmsDir} && npm run build:dev -- --watch`,
+      `cd ${pgrDir} && npm run build:dev -- --watch`,
+      `cd ${paymentsDir} && npm run build:dev -- --watch`,
+      `cd ${dssDir} && npm run build:dev -- --watch`,
+      'webpack serve --config webpack.dev.js --port 3000'
     ];
 
     // Start the concurrent processes
