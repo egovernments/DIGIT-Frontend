@@ -150,10 +150,13 @@ const useCampaignStore = (key, defaultValue = null) => {
   const setValue = useCallback(
     (newValue) => {
       if (config) {
-        campaignStore.dispatch(config.setAction(newValue));
+        const resolved = typeof newValue === 'function'
+          ? newValue(selectorFn(campaignStore.getState()))
+          : newValue;
+        campaignStore.dispatch(config.setAction(resolved));
       }
     },
-    [config]
+    [config, selectorFn]
   );
 
   const clearValue = useCallback(() => {

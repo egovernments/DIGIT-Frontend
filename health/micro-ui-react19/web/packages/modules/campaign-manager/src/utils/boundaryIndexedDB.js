@@ -66,14 +66,14 @@ async function setBoundaryData(key, data) {
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(STORE_NAME, "readwrite");
       const store = transaction.objectStore(STORE_NAME);
-      const request = store.put(data, key);
+      store.put(data, key);
 
-      request.onsuccess = () => {
+      transaction.oncomplete = () => {
         resolve();
       };
 
-      request.onerror = () => {
-        reject(request.error);
+      transaction.onerror = () => {
+        reject(transaction.error);
       };
     });
   } catch (e) {
@@ -92,14 +92,14 @@ async function clearBoundaryData(key) {
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(STORE_NAME, "readwrite");
       const store = transaction.objectStore(STORE_NAME);
-      const request = store.delete(key);
+      store.delete(key);
 
-      request.onsuccess = () => {
+      transaction.oncomplete = () => {
         resolve();
       };
 
-      request.onerror = () => {
-        reject(request.error);
+      transaction.onerror = () => {
+        reject(transaction.error);
       };
     });
   } catch (e) {
@@ -117,14 +117,14 @@ async function clearAllBoundaryData() {
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(STORE_NAME, "readwrite");
       const store = transaction.objectStore(STORE_NAME);
-      const request = store.clear();
+      store.clear();
 
-      request.onsuccess = () => {
+      transaction.oncomplete = () => {
         resolve();
       };
 
-      request.onerror = () => {
-        reject(request.error);
+      transaction.onerror = () => {
+        reject(transaction.error);
       };
     });
   } catch (e) {

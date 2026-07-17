@@ -343,7 +343,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const [allLowestHierarchyCodes, setAllLowestHierarchyCodes] = useState(null);
   const [allSelectedBoundary, setAllSelectedBoundary] = useState([]);
   const [adminUploadData] = useCampaignStore("HCM_ADMIN_CONSOLE_UPLOAD_DATA", null);
-  const [paramsStoreData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", null);
+  const [paramsStoreData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", null);
   const [storedHierarchy] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
   const sessionData = adminUploadData;
   const paramsData = paramsStoreData;

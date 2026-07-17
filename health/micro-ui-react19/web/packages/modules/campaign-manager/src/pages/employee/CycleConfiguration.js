@@ -175,13 +175,12 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   //   Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure ||
   //   campaignData?.additionalDetails?.cycleData || filteredDeliveryConfig?.cycleConfig;
   // const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
-  const sessionData = formStorageData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleConfgureDate;
+  const sessionData = formStorageData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
   // const campaignCycleData = campaignData?.additionalDetails?.cycleData;
   const filteredCycleConfig = filteredDeliveryConfig?.cycleConfig;
 
   let saved = sessionData?.cycleData?.length > 0 ? sessionData : filteredCycleConfig;
-  const refetch = formStorageData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleConfgureDate
-    ?.refetch;
+  const refetch = sessionData?.cycleConfgureDate?.refetch;
   const tempSession = formStorageData;
   const [state, dispatch] = useReducer(reducer, initialState(saved, filteredDeliveryConfig, refetch));
   const { cycleConfgureDate, cycleData } = state;
@@ -232,7 +231,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
 
   useEffect(() => {
     // const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
-    const sessionData = formStorageData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleConfgureDate;
+    const sessionData = formStorageData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
     const campaignCycleData = campaignData?.additionalDetails?.cycleData;
     const filteredCycleConfig = filteredDeliveryConfig?.cycleConfig;
 

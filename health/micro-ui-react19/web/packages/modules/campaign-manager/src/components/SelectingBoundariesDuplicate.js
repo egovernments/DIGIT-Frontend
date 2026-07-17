@@ -220,33 +220,27 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       setRestrictSelection(false);
 
       // Clear upload session data when updating boundaries
-      const currentSessionData = uploadIdData;
-      const formDataStorage = formStorageData;
-      const campaignSetupData = adminSetupData;
-      const unifiedUploadDataVal = unifiedUploadData;
-      if (currentSessionData || formDataStorage || campaignSetupData || unifiedUploadDataVal) {
-        setFormStorageData({
-          ...currentSessionData,
-          HCM_CAMPAIGN_UPLOAD_FACILITY_DATA: {
-            uploadFacility: {
-              uploadedFile: [],
-              isSuccess: false,
-            },
+      setFormStorageData({
+        ...formStorageData,
+        HCM_CAMPAIGN_UPLOAD_FACILITY_DATA: {
+          uploadFacility: {
+            uploadedFile: [],
+            isSuccess: false,
           },
-          HCM_CAMPAIGN_UPLOAD_USER_DATA: {
-            uploadUser: {
-              uploadedFile: [],
-              isSuccess: false,
-            },
+        },
+        HCM_CAMPAIGN_UPLOAD_USER_DATA: {
+          uploadUser: {
+            uploadedFile: [],
+            isSuccess: false,
           },
-          HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA: {
-            uploadUnified: {
-              uploadedFile: [],
-              isSuccess: false,
-            },
+        },
+        HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA: {
+          uploadUnified: {
+            uploadedFile: [],
+            isSuccess: false,
           },
-        });
-      }
+        },
+      });
 
       return;
     }

@@ -140,6 +140,7 @@ const CreateCampaign = () => {
     if (!id) {
       dispatch(clearSelectedHierarchy());
       dispatch(clearSelectedHierarchyCode());
+      setParams({});  // Clear stale campaign name/date/type from previous flow
     }
   }, []);
 

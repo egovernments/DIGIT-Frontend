@@ -366,6 +366,10 @@ const MultiSelectDropdown = ({
 
   useEffect(() => {
     if (!active) {
+      if (searchDebounceRef.current) {
+        clearTimeout(searchDebounceRef.current);
+        searchDebounceRef.current = null;
+      }
       setSearchQuery("");
       setSearchInputValue("");
       onSelect(
@@ -381,6 +385,12 @@ const MultiSelectDropdown = ({
         );
       }
     }
+    return () => {
+      if (searchDebounceRef.current) {
+        clearTimeout(searchDebounceRef.current);
+        searchDebounceRef.current = null;
+      }
+    };
   }, [active]);
 
   useEffect(() => {

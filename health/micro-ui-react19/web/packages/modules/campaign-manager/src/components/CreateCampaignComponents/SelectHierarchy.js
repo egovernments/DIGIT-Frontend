@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import useCampaignStore from "../../hooks/useCampaignStore";
-import {
-  clearCampaignFormData,
-  clearUploadId,
-  clearAdminSetup,
-  clearSelectedHierarchyCode,
-  clearAdminUploadData,
-} from "../../store/campaignStore";
 import {
   Card,
   LabelFieldPair,
@@ -53,10 +45,10 @@ const sortBoundaryHierarchy = (boundaryHierarchy = []) => {
 const SelectHierarchy = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [formStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
+  const [formStorageData, , clearFormStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
+  const [, , clearUploadIdData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", null);
   const [hierarchyValue, setHierarchyValue] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
-  const [hierarchyCodeValue, setHierarchyCodeValue] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE", null);
-  const reduxDispatch = useDispatch();
+  const [hierarchyCodeValue, setHierarchyCodeValue, clearHierarchyCodeValue] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE", null);
 
   // Single API call to get all hierarchies with their boundary levels
   const { data: hierarchyData, isLoading } = Digit.Hooks.useCustomAPIHook({
@@ -121,11 +113,9 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
   };
 
   const onConfirmChange = () => {
-    reduxDispatch(clearCampaignFormData());
-    reduxDispatch(clearUploadId());
-    reduxDispatch(clearAdminSetup());
-    reduxDispatch(clearSelectedHierarchyCode());
-    reduxDispatch(clearAdminUploadData());
+    clearFormStorageData();
+    clearUploadIdData();
+    clearHierarchyCodeValue();
     setSelected(pendingSelection);
     setPendingSelection(null);
     setShowConfirmPopup(false);
@@ -139,7 +129,11 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
   useEffect(() => {
     if (selected) {
       setHierarchyValue(selected);
-      if (selected.code) setHierarchyCodeValue(selected.code);
+      if (selected.code) {
+        setHierarchyCodeValue(selected.code);
+      } else {
+        clearHierarchyCodeValue();
+      }
       onSelect("SelectHierarchy", {
         hierarchy: selected,
         hasBoundaryData: !!(boundaryData && boundaryData.length > 0),

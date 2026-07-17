@@ -10,7 +10,7 @@ import { compareIdentical, groupByTypeRemap, resourceData, updateUrlParams } fro
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import useCampaignStore from "../../hooks/useCampaignStore";
 import { useDispatch } from "react-redux";
-import { clearAdminUploadData, clearUnifiedUploadData } from "../../store/campaignStore";
+import { clearUnifiedUploadData, resetAllCampaignData, campaignStore } from "../../store/campaignStore";
 
 /**
  * The `UpdateCampaign` function in JavaScript handles the Updating of campaign details,
@@ -366,7 +366,8 @@ const UpdateCampaign = () => {
                   setShowToast({ key: "error", label: error?.message ? error?.message : error });
                 },
                 onSuccess: async (data) => {
-                  // No need to refetch - navigating away immediately
+                  // Clear campaign store state before navigating away
+                  campaignStore.dispatch(resetAllCampaignData());
                   navigate(
                     `/${window.contextPath}/employee/campaign/response?campaignId=${
                       data?.CampaignDetails?.campaignNumber
@@ -823,7 +824,6 @@ const UpdateCampaign = () => {
         [name]: { ...formData },
       });
     } else if (name === "HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA" && formData?.boundaryType?.updateBoundary === true) {
-      dispatch(clearAdminUploadData());
       dispatch(clearUnifiedUploadData());
       setTotalFormData((prevData) => ({
         ...prevData,

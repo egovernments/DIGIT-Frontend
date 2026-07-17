@@ -177,11 +177,6 @@ function AddProduct() {
 
   const onSecondayActionClick = () => {
     
-    // Preserve current campaign session data when navigating back
-    const currentSessionData = formStorageData;
-    
-
-    
     // Get the return path
     const returnPath = getReturnPath();
     navigate(returnPath);

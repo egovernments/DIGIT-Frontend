@@ -239,14 +239,18 @@ campaignStore.subscribe(() => {
   if (writeBackTimeout) {
     clearTimeout(writeBackTimeout);
   }
-  writeBackTimeout = setTimeout(() => {
+  writeBackTimeout = setTimeout(async () => {
     const stateNow = campaignStore.getState();
     const persistPayload = {
       campaign: stateNow.campaign,
       attendance: stateNow.attendance,
     };
-    setBoundaryData(IDB_PERSIST_KEY, persistPayload).catch(() => {});
-    previousState = stateNow;
+    try {
+      await setBoundaryData(IDB_PERSIST_KEY, persistPayload);
+      previousState = stateNow;
+    } catch (error) {
+      console.warn("[campaignStore] IndexedDB write-back failed:", error);
+    }
   }, WRITE_BACK_DELAY);
 });
 
@@ -264,6 +268,8 @@ const resetCreateCampaignData = () => (dispatch) => {
   dispatch(campaignSlice.actions.clearFormData());
   dispatch(campaignSlice.actions.clearUploadMeta());
   dispatch(campaignSlice.actions.clearUnifiedUploadConfig());
+  dispatch(campaignSlice.actions.clearHierarchy());
+  dispatch(campaignSlice.actions.clearHierarchyCode());
   dispatch(attendanceSlice.actions.clearAllAttendanceData());
   dispatch(uiSlice.actions.clearCampaignNameInfoVisible());
   dispatch(uiSlice.actions.clearCampaignNumberInfo());

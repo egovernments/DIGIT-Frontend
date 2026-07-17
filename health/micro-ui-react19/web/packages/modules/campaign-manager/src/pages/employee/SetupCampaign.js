@@ -19,8 +19,6 @@ import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import useCampaignStore from "../../hooks/useCampaignStore";
 import { useDispatch } from "react-redux";
 import {
-  clearAdminSetup,
-  clearAdminUploadData,
   clearUnifiedUploadData,
 } from "../../store/campaignStore";
 
@@ -198,6 +196,13 @@ const SetupCampaign = () => {
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
   );
+
+  // Clear stale form data from previous campaign before draft data arrives
+  useEffect(() => {
+    if (id) {
+      clearParams();
+    }
+  }, []);
 
   useEffect(() => {
     if (fetchUpload) {
@@ -650,9 +655,6 @@ const SetupCampaign = () => {
     if (sessionBoundary && formBoundary) {
       isChanged = hasSelectedBoundaryChanged(sessionBoundary, formBoundary);
     }
-    if (isChanged) {
-      dispatch(clearAdminSetup());
-    }
 
     setIsSubmitting(true);
     // validating the screen data on clicking next button
@@ -682,7 +684,6 @@ const SetupCampaign = () => {
         [name]: { ...formData },
       });
     } else if (name === "HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA" && formData?.boundaryType?.updateBoundary === true) {
-      dispatch(clearAdminUploadData());
       dispatch(clearUnifiedUploadData());
       setTotalFormData((prevData) => ({
         ...prevData,

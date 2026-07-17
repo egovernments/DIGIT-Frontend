@@ -16,7 +16,7 @@ const SelectionCard = ({ field, t, props }) => {
       || field?.fieldName?.toLowerCase()?.includes("product")
       || props?.field?.fieldName?.toLowerCase()?.includes("product"));
 
-  // Fetch product variants from session storage for resourceCard
+  // Read product variants from campaign store (adminUploadData) for resourceCard
   const productVariants = useMemo(() => {
     if (!isResourceCard) return [];
 

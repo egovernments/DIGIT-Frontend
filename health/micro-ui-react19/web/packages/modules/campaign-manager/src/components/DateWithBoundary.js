@@ -131,10 +131,9 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   const { isLoading: campaignDataLoading, data: campaignData } = Digit.Hooks.useCustomAPIHook(reqCriteriaProject);
 
   // Campaign API is the authoritative source; session keys are fallbacks for the create flow
-  const BOUNDARY_HIERARCHY_TYPE =
-    campaignData?.hierarchyType ||
-    storedHierarchy?.name ||
-    uploadIdData?.hierarchyType;
+  const BOUNDARY_HIERARCHY_TYPE = campaignId
+    ? campaignData?.hierarchyType
+    : campaignData?.hierarchyType || storedHierarchy?.name || uploadIdData?.hierarchyType;
   const { isLoading, data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,

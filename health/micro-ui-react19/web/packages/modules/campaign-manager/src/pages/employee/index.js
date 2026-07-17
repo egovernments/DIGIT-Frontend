@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useSyncExternalStore } from "react";
 import { Provider } from "react-redux";
 import { Routes, useLocation, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,7 @@ import AppConfigInitializer from "./NewCampaignCreate/AppConfigInitializer";
 import LocalisationAdd from "./NewCampaignCreate/LocalisationAdd";
 import { PRIMARY_COLOR } from "../../utils";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
-import { campaignStore, clearCampaignFormData, clearUploadId, hydrateFromIndexedDB } from "../../store/campaignStore";
+import { campaignStore, clearCampaignFormData, clearUploadId, resetCreateCampaignData, hydrateFromIndexedDB } from "../../store/campaignStore";
 import { useSelector } from "react-redux";
 import { Loader as ComponentLoader } from "@egovernments/digit-ui-components";
 
@@ -434,22 +434,21 @@ const App = ({ path }) => {
   const DeliveryDetailsSummary = Digit?.ComponentRegistryService?.getComponent("DeliveryDetailsSummary");
   const AppConfigurationParentRedesign = Digit?.ComponentRegistryService?.getComponent("AppConfigurationParentRedesign");
 
+  // Read hydration state directly from campaignStore (App is outside <Provider>)
+  const getHydrated = useCallback(() => campaignStore.getState().hydration.hydrated, []);
+  const hydrated = useSyncExternalStore(campaignStore.subscribe, getHydrated);
+
   useEffect(() => {
-    if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
-      campaignStore.dispatch(clearCampaignFormData());
-      campaignStore.dispatch(clearUploadId());
+    if (!hydrated) return;
+
+    const isSetupCampaign = location.pathname.includes("setup-campaign");
+    const isCreateCampaign = location.pathname.includes("create-campaign");
+    const isUpdateCampaign = location.pathname.includes("update-campaign");
+
+    if (!isSetupCampaign && !isCreateCampaign && !isUpdateCampaign) {
+      campaignStore.dispatch(resetCreateCampaignData());
     }
-    if (window.location.pathname === "/workbench-ui/employee/campaign/response") {
-      campaignStore.dispatch(clearCampaignFormData());
-      campaignStore.dispatch(clearUploadId());
-    }
-    return () => {
-      if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
-        campaignStore.dispatch(clearCampaignFormData());
-        campaignStore.dispatch(clearUploadId());
-      }
-    };
-  }, []);
+  }, [location.pathname, hydrated]);
 
   useEffect(() => {
     // Remove footer element when URL contains "new-app-configuration-redesign"

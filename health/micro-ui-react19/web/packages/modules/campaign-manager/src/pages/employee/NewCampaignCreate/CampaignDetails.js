@@ -13,6 +13,7 @@ import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDat
 import QRButton from "../../../components/CreateCampaignComponents/QRButton";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import useCampaignStore from "../../../hooks/useCampaignStore";
+import { resetCreateCampaignData, campaignStore } from "../../../store/campaignStore";
 
 function transformCampaignData(inputObj = {}) {
   const deliveryRule = inputObj.deliveryRules?.[0] || {};
@@ -157,6 +158,11 @@ const CampaignDetails = () => {
   const [, setUploadId] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
   const [, setHierarchy] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
   const [, setCampaignNumberInfo] = useCampaignStore("HCM_CAMPAIGN_NUMBER", null);
+
+  // Clear stale store data when navigating to view-details for a different campaign
+  useEffect(() => {
+    campaignStore.dispatch(resetCreateCampaignData());
+  }, []);
 
   // useEffect(() => {
   //   window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
