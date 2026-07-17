@@ -624,6 +624,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               comments: `Bill ${action} triggered`,
               assignes: [],
             },
+            // Sign-off for signature-required workflow actions; the backend clones it
+            // onto each bill and stamps id/signedTime/signedBy/role.
             ...(signature ? { signature } : {}),
           },
         },
@@ -1747,7 +1749,7 @@ const downloadOptions = [
               billData?.additionalDetails?.justificationDetails?.comment
                 ? renderLabelPair("HCM_AM_PAYMENT_REVIEWER_COMMENTS", billData?.additionalDetails?.justificationDetails?.comment, { whiteSpace: "pre-wrap" })
                 : null}
-              <BillSignaturesView signatures={billData?.signatures} />
+              <BillSignaturesView signatures={billData?.signatures || billData?.additionalDetails?.signatures} />
 
  {/* uncomment this block to show report generation and download section               */}
 {/* <div>
@@ -2031,7 +2033,13 @@ const downloadOptions = [
             setOpenSendForApprovalPopUp(false);
             const updatedBill = {
               ...billData,
-              signatures: [...(billData?.signatures || []), signature],
+              // Sign-off travels as the first-class bill.signatures list; the backend
+              // enriches it (id, signedTime, signedBy, role, action) and mirrors it
+              // into additionalDetails.signatures itself.
+              signatures: [
+                ...(billData?.signatures || []),
+                ...(signature ? [{ printedName: signature.printedName, fileStoreId: signature.fileStoreId }] : []),
+              ],
               additionalDetails: {
                 ...(billData?.additionalDetails || {}),
                 justificationDetails: {
@@ -2321,7 +2329,12 @@ const downloadOptions = [
           onSubmit={(signature) => {
             const { action } = signatureFlow;
             setSignatureFlow(null);
-            triggerUpdateBill(billData, action, signature);
+            // Sign-off goes as the top-level signature on _bulkupdatestatus; the
+            // backend stamps id/signedTime/signedBy/role and persists it.
+            triggerUpdateBill(billData, action, {
+              printedName: signature.printedName,
+              fileStoreId: signature.fileStoreId,
+            });
           }}
         />
       )}
