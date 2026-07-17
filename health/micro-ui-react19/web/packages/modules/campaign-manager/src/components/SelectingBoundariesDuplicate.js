@@ -1,4 +1,4 @@
-import React, { useState, useMemo, Fragment, useEffect } from "react";
+import React, { useState, useMemo, useRef, Fragment, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
@@ -13,11 +13,16 @@ import useCampaignStore from "../hooks/useCampaignStore";
 const DEFAULT_IS_UNIFIED_CAMPAIGN = true;
 
 const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
-  // Stabilize props reference to prevent unnecessary re-renders
-  const sessionData = useMemo(
-    () => props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType,
-    [JSON.stringify(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType)]
-  );
+  // Stabilize props reference — use ref-based comparison instead of JSON.stringify (avoids 55k-item serialization on every render)
+  const sessionDataRaw = props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType;
+  const sessionDataRef = useRef(sessionDataRaw);
+  const sessionData = useMemo(() => {
+    // Only update when the reference actually changes
+    if (sessionDataRaw !== sessionDataRef.current) {
+      sessionDataRef.current = sessionDataRaw;
+    }
+    return sessionDataRef.current;
+  }, [sessionDataRaw]);
 
   const { t } = useTranslation();
   const location = useLocation();
@@ -139,11 +144,11 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       //   setIsUnifiedCampaign(campaignData?.additionalDetails?.isUnifiedCampaign);
       // }
     } else if (sessionData) {
-      // Session data takes priority - only set if different to avoid unnecessary re-renders
-      if (sessionData?.selectedData && JSON.stringify(sessionData.selectedData) !== JSON.stringify(selectedData)) {
+      // Session data takes priority - use reference check to avoid expensive JSON.stringify on 55k items
+      if (sessionData?.selectedData && sessionData.selectedData !== selectedData) {
         setSelectedData(sessionData.selectedData);
       }
-      if (sessionData?.boundaryData && JSON.stringify(sessionData.boundaryData) !== JSON.stringify(boundaryOptions)) {
+      if (sessionData?.boundaryData && sessionData.boundaryData !== boundaryOptions) {
         setBoundaryOptions(sessionData.boundaryData);
       }
       // Commented: isUnifiedCampaign is now always controlled by DEFAULT_IS_UNIFIED_CAMPAIGN, user toggle removed
@@ -156,7 +161,13 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     if (!isDataLoaded) {
       setIsDataLoaded(true);
     }
-    setTimeout(() => setIsLoading(false), 10);
+    // Yield to browser so the loader can paint before heavy child components mount.
+    // Use double-rAF to guarantee the loader frame is actually rendered.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setIsLoading(false);
+      });
+    });
   }, [isFetching, campaignNumber]);
 
   // Only save to session after data is loaded to prevent overwriting with empty values
@@ -279,7 +290,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
 
   const isBoundaryDataLoading = !!hierarchyType && props?.props?.hierarchyData === undefined;
 
-  if ((draft && isLoading) || isBoundaryDataLoading) {
+  if (isLoading || isBoundaryDataLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 

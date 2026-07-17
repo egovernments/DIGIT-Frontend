@@ -79,27 +79,31 @@ const SelectingBoundaryComponent = ({
 
   const { isLoading: hierarchyLoading, data: hierarchy } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  function processData(data, parentPath = "", lowestBoundaryType) {
+  function processData(rootNode, parentPath = "", lowestBoundaryType) {
+    // Iterative tree walk with explicit stack — avoids deep recursion overhead
+    // and uses direct property assignment instead of object spread for O(n) instead of O(n²)
     const result = {};
+    const stack = [{ node: rootNode, parentPath }];
 
-    const currentPath = parentPath ? `${data?.code}.${parentPath}` : data?.code;
+    while (stack.length > 0) {
+      const { node, parentPath: pPath } = stack.pop();
+      if (!node) continue;
 
-    result[data?.boundaryType] = result[data?.boundaryType] || {};
-    result[data?.boundaryType][data?.code] = parentPath || "mz";
+      const bType = node.boundaryType;
+      const code = node.code;
+      const currentPath = pPath ? `${code}.${pPath}` : code;
 
-    if (data?.boundaryType === lowestBoundaryType) {
-      return result;
-    }
-    if (data?.children && data?.children.length > 0) {
-      data?.children.forEach((child) => {
-        const childResult = processData(child, currentPath, lowestBoundaryType);
-        Object.keys(childResult).forEach((key) => {
-          result[key] = {
-            ...result[key],
-            ...childResult[key],
-          };
-        });
-      });
+      if (!result[bType]) result[bType] = {};
+      result[bType][code] = pPath || "mz";
+
+      if (bType === lowestBoundaryType) continue;
+
+      const children = node.children;
+      if (children && children.length > 0) {
+        for (let i = children.length - 1; i >= 0; i--) {
+          stack.push({ node: children[i], parentPath: currentPath });
+        }
+      }
     }
     return result;
   }
@@ -107,27 +111,40 @@ const SelectingBoundaryComponent = ({
   const boundaryData = useMemo(() => processData(data?.[0], "", lowest), [data, lowest]);
 
   const updateBoundaryOptions = (selectedData1, boundaryData, hierarchy) => {
-    selectedData1?.forEach((item) => {
-      const { type, code } = item;
-      const childBoundaryType = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find(
-        (boundary) => boundary.parentBoundaryType === type
-      )?.boundaryType;
-      if (boundaryData[childBoundaryType]) {
-        const filteredBoundaries = Object.entries(boundaryData[childBoundaryType])
-          .filter(([key, value]) => value.includes(code))
-          .reduce((acc, [key, value]) => {
-            acc[key] = value;
-            return acc;
-          }, {});
-        setBoundaryOptions((prevOptions) => ({
-          ...prevOptions,
-          [childBoundaryType]: {
-            ...prevOptions[childBoundaryType],
-            ...filteredBoundaries,
-          },
-        }));
+    // Pre-build a lookup from parentBoundaryType → childBoundaryType
+    const parentToChild = {};
+    hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.forEach((boundary) => {
+      if (boundary.parentBoundaryType) {
+        parentToChild[boundary.parentBoundaryType] = boundary.boundaryType;
       }
     });
+
+    // Collect all updates, then apply as a single setBoundaryOptions call
+    const updates = {};
+    selectedData1?.forEach((item) => {
+      const { type, code } = item;
+      const childBoundaryType = parentToChild[type];
+      if (childBoundaryType && boundaryData[childBoundaryType]) {
+        if (!updates[childBoundaryType]) updates[childBoundaryType] = {};
+        const childEntries = boundaryData[childBoundaryType];
+        for (const key in childEntries) {
+          if (childEntries[key].includes(code)) {
+            updates[childBoundaryType][key] = childEntries[key];
+          }
+        }
+      }
+    });
+
+    // Single state update instead of N updates
+    if (Object.keys(updates).length > 0) {
+      setBoundaryOptions((prevOptions) => {
+        const newOptions = { ...prevOptions };
+        for (const childType in updates) {
+          newOptions[childType] = { ...newOptions[childType], ...updates[childType] };
+        }
+        return newOptions;
+      });
+    }
   };
 
   useEffect(() => {
@@ -144,7 +161,9 @@ const SelectingBoundaryComponent = ({
 
   useEffect(() => {
     if (isBoundaryDataValid && hierarchy && selectedData1?.length > 0 && boundaryOptions?.[parentRoot]) {
-      updateBoundaryOptions(selectedData1, boundaryData, hierarchy);
+      startTransition(() => {
+        updateBoundaryOptions(selectedData1, boundaryData, hierarchy);
+      });
     }
   }, [hierarchy, isBoundaryDataValid, boundaryOptions?.[parentRoot]]);
 
@@ -376,7 +395,7 @@ const SelectingBoundaryComponent = ({
 
     timerRef.current = setTimeout(() => {
       onSelect({ selectedData: selectedData, boundaryOptions: boundaryOptions, restrictSelection: restrictSelection });
-    }, 1);
+    }, 150);
   }, [selectedData, boundaryOptions, restrictSelection]);
 
   // Memoize visible boundary levels (filter once, not per-render)
@@ -390,47 +409,50 @@ const SelectingBoundaryComponent = ({
   const optionsPerType = useMemo(() => {
     const result = {};
     const frozenSet = frozenData?.length > 0
-      ? new Map(frozenData.map((f) => [`${f.code}::${f.type}`, true]))
+      ? new Set(frozenData.map((f) => `${f.code}::${f.type}`))
       : null;
 
     visibleBoundaryLevels.forEach((boundary) => {
       const bType = boundary.boundaryType;
-      const entries = Object.entries(boundaryOptions || {}).filter(([key]) => key.startsWith(bType));
+      // Direct lookup by boundary type instead of iterating all entries with startsWith
+      const value = boundaryOptions?.[bType];
 
       if (boundary.parentBoundaryType == null) {
         // Root level — flat options
-        result[bType] = entries.flatMap(([, value]) =>
-          Object.entries(value || {}).map(([subkey]) => ({
-            code: subkey,
-            name: subkey,
-            type: bType,
-          }))
-        );
+        if (value) {
+          const keys = Object.keys(value);
+          const arr = new Array(keys.length);
+          for (let i = 0; i < keys.length; i++) {
+            arr[i] = { code: keys[i], name: keys[i], type: bType };
+          }
+          result[bType] = arr;
+        } else {
+          result[bType] = [];
+        }
       } else {
         // Nested level — grouped options with frozen filtering
-        result[bType] = entries.flatMap(([, value]) =>
-          Object.entries(value || {})
-            .filter(([subkey]) => {
-              if (restrictSelection === false) return true;
-              if (frozenSet) {
-                const isFrozen = frozenSet.has(`${subkey}::${bType}`);
-                return frozenType === "filter" ? !isFrozen : true;
-              }
-              return true;
-            })
-            .map(([subkey, item]) => ({
-              code: item?.split(".")?.[0],
-              name: item?.split(".")?.[0],
-              options: [
-                {
-                  code: subkey,
-                  name: subkey,
-                  type: bType,
-                  parent: `${item?.split(".")?.[0]}`,
-                },
-              ],
-            }))
-        );
+        if (value) {
+          const entries = Object.entries(value);
+          const arr = [];
+          const skipFilter = restrictSelection === false;
+          for (let i = 0; i < entries.length; i++) {
+            const subkey = entries[i][0];
+            const item = entries[i][1];
+            if (!skipFilter && frozenSet) {
+              const isFrozen = frozenSet.has(`${subkey}::${bType}`);
+              if (frozenType === "filter" && isFrozen) continue;
+            }
+            const parentCode = item ? item.split(".")[0] : "";
+            arr.push({
+              code: parentCode,
+              name: parentCode,
+              options: [{ code: subkey, name: subkey, type: bType, parent: parentCode }],
+            });
+          }
+          result[bType] = arr;
+        } else {
+          result[bType] = [];
+        }
       }
     });
     return result;
