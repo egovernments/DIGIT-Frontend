@@ -51,7 +51,8 @@
     "**/minimatch": "7.4.6",
     "**/splaytree": "3.1.1",
     "**/node-releases": "2.0.19",
-    "**/sass": "1.26.11"
+    "**/sass": "1.26.11",
+    "**/pdfjs-dist": "4.4.168"
   },
   "devDependencies": {
     "husky": "7.0.4",
