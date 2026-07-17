@@ -15,8 +15,8 @@
   "dependencies": {
     "@egovernments/digit-ui-components": "2.0.0-dev-56",
     "@egovernments/digit-ui-libraries": "2.0.0-dev-12",
-    "@egovernments/digit-ui-module-core": "2.0.0-dev-25",
-    "@egovernments/digit-ui-react-components": "2.0.0-dev-17",
+    "@egovernments/digit-ui-module-core": "2.0.0-dev-26",
+    "@egovernments/digit-ui-react-components": "2.0.0-dev-18",
     "@tanstack/react-query": "^5.62.16",
     "babel-loader": "8.1.0",
     "clean-webpack-plugin": "4.0.0",
