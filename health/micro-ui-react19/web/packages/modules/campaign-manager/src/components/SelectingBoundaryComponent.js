@@ -128,7 +128,7 @@ const SelectingBoundaryComponent = ({
         if (!updates[childBoundaryType]) updates[childBoundaryType] = {};
         const childEntries = boundaryData[childBoundaryType];
         for (const key in childEntries) {
-          if (childEntries[key].includes(code)) {
+          if (childEntries[key].split(".").includes(code)) {
             updates[childBoundaryType][key] = childEntries[key];
           }
         }
