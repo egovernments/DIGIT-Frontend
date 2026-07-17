@@ -20,7 +20,7 @@ const localizeIfExists = (t, key, fallback) => {
 const InsightView = ({ rowValue, insight, t, shouldHideInsights }) => {
   return (
     <span>
-      {rowValue}
+      {typeof rowValue === "number" ? Digit.Utils.dss.formatter(rowValue, "number", "Lac", true, t) : rowValue}
       {!shouldHideInsights ? (
         <React.Fragment>
           {` `}
@@ -448,7 +448,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
               );
             }
 
-            return String(t(cellValue));
+            return typeof cellValue === "number" ? Digit.Utils.dss.formatter(cellValue, "number", "Lac", true, t) : String(t(cellValue));
           },
 
           sortable: true,
