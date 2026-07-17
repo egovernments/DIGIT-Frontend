@@ -12,6 +12,17 @@ var formatTime = function (timestamp) {
   return date + ", " + time;
 };
 
+var formatGps = function (gps, t) {
+  if (!gps || gps === "-") return "-";
+  return gps
+    .split(",")
+    .map(function (part) {
+      var num = Number(part.trim());
+      return isNaN(num) ? part.trim() : Digit.Utils.dss.formatter(num, "number", "", true, t);
+    })
+    .join(" / ");
+};
+
 const tableCustomStyles = {
   tableWrapper: {
     style: {
@@ -280,7 +291,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
 
   const handleExportCSV = useCallback(() => {
     const headers = ["Timestamp", "Action Type", "Detail", "Outcome", "GPS"];
-    const rows = filteredLog.map((entry) => [formatTime(entry.timestamp), entry.actionType, entry.detail, entry.outcome, entry.gps]);
+    const rows = filteredLog.map((entry) => [formatTime(entry.timestamp), entry.actionType, t(entry.detail), t(entry.outcome), formatGps(entry.gps, t)]);
     const allData = [headers, ...rows];
     const ws = XLSX.utils.aoa_to_sheet(allData);
     ws["!cols"] = headers.map((_, colIdx) => {
@@ -321,21 +332,21 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
     {
       name: t("DETAIL"),
       cell: (row) => (
-        <span title={row.detail} style={{ ...ellipsisStyle, color: row.outcome.toUpperCase() === "FAILED" ? "#D4351C" : "#363636", fontWeight: row.outcome.toUpperCase() === "FAILED" ? 600 : 400 }}>{row.detail}</span>
+        <span title={t(row.detail)} style={{ ...ellipsisStyle, color: row.outcome.toUpperCase() === "FAILED" ? "#D4351C" : "#363636", fontWeight: row.outcome.toUpperCase() === "FAILED" ? 600 : 400 }}>{t(row.detail)}</span>
       ),
       grow: 1.75,
       minWidth: "180px",
     },
     {
       name: t("OUTCOME"),
-      cell: (row) => (<Tag label={row.outcome} type={row.outcome.toUpperCase() === "SUCCESS" ? "success" : row.outcome.toUpperCase() !== "FAILURE" ? "warning" : "error"} showIcon={true} />),
+      cell: (row) => (<Tag label={t(row.outcome)} type={row.outcome.toUpperCase() === "SUCCESS" ? "success" : row.outcome.toUpperCase() !== "FAILURE" ? "warning" : "error"} showIcon={true} />),
       sortable: true,
       minWidth: "190px",
       grow: 1.25,
     },
     {
       name: t("GPS"),
-      selector: (row) => row.gps,
+      selector: (row) => formatGps(row.gps, t),
       minWidth: "140px",
       grow: 1,
       style: { color: "#787878" },
