@@ -571,8 +571,8 @@ const SelectingBoundaryComponent = ({
                 const options = Object.entries(boundaryOptions || {})
                   .filter(([key]) => key.startsWith(bType))
                   .flatMap(([, value]) =>
-                    Object.entries(value || {}).map(([subkey, item]) => ({
-                      code: item?.split(".")?.[0],
+                    Object.entries(value || {}).map(([subkey]) => ({
+                      code: subkey,
                       name: subkey,
                       type: bType,
                     }))

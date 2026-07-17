@@ -534,7 +534,9 @@ const MultiSelectDropdown = ({
                 ? flattenedOptions.filter((option) => !option.options).map((option) => option.code)
                 : options.map((option) => option.code)
             );
-            const remainingSelections = alreadyQueuedSelectedState.filter((selected) => !currentOptionCodesSet.has(selected.code));
+            const remainingSelections = alreadyQueuedSelectedState.filter(
+              (selected) => !currentOptionCodesSet.has(selected.code) || frozenCodesSet.has(selected.code)
+            );
             dispatch({ type: "REPLACE_COMPLETE_STATE", payload: remainingSelections });
             setSelectAllChecked(false);
           } else {
@@ -597,7 +599,7 @@ const MultiSelectDropdown = ({
           } else {
             // Remove all children in a single batch dispatch
             const childCodes = new Set(childoptions?.map((o) => o.code));
-            newState = alreadyQueuedSelectedState.filter((s) => !childCodes.has(s.code));
+            newState = alreadyQueuedSelectedState.filter((s) => !childCodes.has(s.code) || frozenCodesSet.has(s.code));
           }
           dispatch({ type: "REPLACE_COMPLETE_STATE", payload: newState });
           setCategorySelected((prev) => ({
