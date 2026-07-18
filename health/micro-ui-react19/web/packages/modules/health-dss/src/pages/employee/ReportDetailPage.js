@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import {
@@ -14,9 +14,13 @@ import {
   FieldV1,
   Toast,
   NoResultsFound,
+  TooltipWrapper,
 } from "@egovernments/digit-ui-components";
+import { InfoOutline } from "@egovernments/digit-ui-svg-components";
 import axios from "axios";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import { checkExistingCustomReport } from "../../utils/reportsApi";
+import { getStageLabelKey, formatDuration, formatFileSize, formatRowCount } from "../../utils/reportStatus";
 
 const downloadFileFromStore = ({ fileStoreId, customName }) => {
   if (!fileStoreId) return;
@@ -66,7 +70,69 @@ const formatDateForPayload = (dateStr) => {
   return `${dd}-${mm}-${yyyy} 00:00:00+0530`;
 };
 
-const FrequencyContent = ({ reports, t, reportType }) => {
+// reportrange: "2026-06-29 00:00:00+0530_2026-07-04 00:00:00+0530" - parse the full
+// datetime with its own offset so it converts to the correct date, then format WITHOUT
+// forcing UTC - toOrdinalDate's getUTCDate() would read a +0530 midnight as 18:30 the
+// previous day in UTC, silently shifting the whole custom range back by one calendar day.
+const formatRangeDate = (dateStr) => {
+  const trimmed = dateStr?.trim();
+  if (!trimmed) return "";
+  // "2026-06-29 00:00:00+0530" → "2026-06-29T00:00:00+05:30" for ISO parse
+  const isoStr = trimmed.replace(" ", "T").replace(/([+-])(\d{2})(\d{2})$/, "$1$2:$3");
+  const d = new Date(isoStr);
+  if (isNaN(d.getTime())) return trimmed;
+  return d.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+};
+
+// Shared by completed reports and in-progress runs alike, so an in-progress card can show
+// *which* range/day it's generating instead of just the pipeline stage with no other context.
+const getReportDateLabel = (item, freq) => {
+  if (freq === "CUSTOM" && item?.reportrange) {
+    const parts = item.reportrange.split("_");
+    if (parts.length === 2) {
+      return `${formatRangeDate(parts[0])} — ${formatRangeDate(parts[1])}`;
+    }
+  }
+  return formatCreatedTime(item?.createdtime);
+};
+
+// One in-progress dagRunId's current stage - no download action until it completes, at
+// which point it disappears from here and shows up as a completed report instead.
+const InProgressCard = ({ run, t }) => (
+  <Card type="secondary" className="digit-report-detail__file-card">
+    <div className="digit-report-detail__file-row">
+      <div className="digit-report-detail__file-info">
+        {run.dateLabel && <div className="digit-report-detail__file-date">{run.dateLabel}</div>}
+        <div className="digit-report-detail__file-meta">{t(getStageLabelKey(run.status))}</div>
+        <div className="digit-report-detail__progress-bar">
+          <div className="digit-report-detail__progress-bar-fill" style={{ width: `${run.progressPercent || 0}%` }} />
+        </div>
+        {formatDuration(run.elapsedSeconds) && (
+          <div className="digit-report-detail__file-meta">
+            {t(I18N_KEYS.PAGES.HCM_RUNNING_FOR)}: {formatDuration(run.elapsedSeconds)}
+          </div>
+        )}
+        {(run.expectedRows != null || run.expectedGenerationTimeSeconds != null) && (
+          <div className="digit-report-detail__file-meta">
+            {run.expectedRows != null && (
+              <span>
+                {t(I18N_KEYS.PAGES.HCM_ESTIMATED_ROWS)}: ~{formatRowCount(run.expectedRows)}
+              </span>
+            )}
+            {run.expectedRows != null && run.expectedGenerationTimeSeconds != null && <span> &middot; </span>}
+            {run.expectedGenerationTimeSeconds != null && (
+              <span>
+                {t(I18N_KEYS.PAGES.HCM_ESTIMATED_TIME)}: ~{formatDuration(run.expectedGenerationTimeSeconds)}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  </Card>
+);
+
+const FrequencyContent = ({ reports, inProgressRuns = [], t, reportType }) => {
   const handleDownload = (report) => {
     downloadFileFromStore({
       fileStoreId: report.filestoreid,
@@ -76,11 +142,48 @@ const FrequencyContent = ({ reports, t, reportType }) => {
 
   return (
     <div className="digit-report-detail__files-list">
+      {inProgressRuns.map((run) => (
+        <InProgressCard key={run.dagrunid || run.eventid} run={run} t={t} />
+      ))}
       {reports.map((report) => (
         <Card key={report.id} type="secondary" className="digit-report-detail__file-card">
           <div className="digit-report-detail__file-row">
-            <div className="digit-report-detail__file-info">
+            <div className="digit-report-detail__file-info digit-report-detail__file-info-inline">
               <div className="digit-report-detail__file-date">{report.dateLabel}</div>
+              {report.hasMeta && (
+                <TooltipWrapper
+                  placement="right"
+                  header={t(I18N_KEYS.PAGES.HCM_REPORT_DETAILS)}
+                  content={
+                    <div>
+                      {report.reportTimeLabel && (
+                        <div>
+                          {t(I18N_KEYS.PAGES.HCM_REPORT_TIME)}: {report.reportTimeLabel}
+                        </div>
+                      )}
+                      {report.processingTimeLabel && (
+                        <div>
+                          {t(I18N_KEYS.PAGES.HCM_PROCESSING_TIME)}: {report.processingTimeLabel}
+                        </div>
+                      )}
+                      {report.fileSizeLabel && (
+                        <div>
+                          {t(I18N_KEYS.PAGES.HCM_FILE_SIZE)}: {report.fileSizeLabel}
+                        </div>
+                      )}
+                      {report.rowCountLabel && (
+                        <div>
+                          {t(I18N_KEYS.PAGES.HCM_ROW_COUNT)}: {report.rowCountLabel}
+                        </div>
+                      )}
+                    </div>
+                  }
+                >
+                  <span className="digit-report-detail__info-trigger" aria-label={t(I18N_KEYS.PAGES.HCM_REPORT_DETAILS)}>
+                    <InfoOutline width="16px" height="16px" fill="#505A5F" />
+                  </span>
+                </TooltipWrapper>
+              )}
             </div>
             <div className="digit-report-detail__file-actions">
               <Button label={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_REPORT)} onClick={() => handleDownload(report)} variation="link" icon="FileDownload" size="medium" />
@@ -106,7 +209,22 @@ const ReportDetailPage = () => {
   const [customStartDate, setCustomStartDate] = useState("");
   const [customEndDate, setCustomEndDate] = useState("");
   const [isTriggering, setIsTriggering] = useState(false);
+  const [isCheckingExisting, setIsCheckingExisting] = useState(false);
   const [showToast, setShowToast] = useState(null);
+  // Pre-flight result for the CUSTOM range just requested - { variant: "exists" |
+  // "in_progress" | "failed", data }. Non-null blocks triggering until the user acts.
+  const [existingReportPopup, setExistingReportPopup] = useState(null);
+  // Live countdown (seconds) for the "exists" variant's retryAvailableInSeconds -
+  // null when there's no active cooldown to show. Ticks client-side once a second;
+  // the backend check is still the source of truth when the user actually retries.
+  const [retryCountdown, setRetryCountdown] = useState(null);
+
+  const { data: inProgressRuns = [], refetch: refetchInProgress } = Digit.Hooks.DSS.useReportsInProgress({
+    tenantId,
+    campaignIdentifier: campaignNumber,
+    reportName: reportType,
+    config: { enabled: !!campaignNumber && !!reportType },
+  });
 
   const campaignSelected = Digit.SessionStorage.get("campaignSelected");
   const epochToDateStr = (epoch) => {
@@ -123,11 +241,7 @@ const ReportDetailPage = () => {
     setCustomEndDate("");
   };
 
-  const handleTriggerCustomReport = async () => {
-    if (!customStartDate || !customEndDate) {
-      setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_CUSTOM_DATE_REQUIRED) });
-      return;
-    }
+  const triggerCustomReport = async () => {
     setIsTriggering(true);
     try {
       await Digit.CustomService.getResponse({
@@ -135,6 +249,10 @@ const ReportDetailPage = () => {
         body: {
           tenantId: tenantId,
           dag_id: "hcm_dynamic_campaigns",
+          locale:
+              Digit?.SessionStorage?.get("locale") ||
+              Digit?.SessionStorage.get("initData")?.selectedLanguage ||
+              Digit?.Utils?.getDefaultLanguage(),
           logical_date: new Date().toISOString(),
           conf: {
             matched_campaigns: [
@@ -159,9 +277,11 @@ const ReportDetailPage = () => {
         },
       });
       setShowCustomPopup(false);
+      setExistingReportPopup(null);
       setCustomStartDate("");
       setCustomEndDate("");
       setShowToast({ key: "success", label: t(I18N_KEYS.PAGES.HCM_CUSTOM_REPORT_TRIGGERED) });
+      refetchInProgress();
     } catch (error) {
       console.error("Error triggering custom report:", error);
       setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_CUSTOM_REPORT_TRIGGER_FAILED) });
@@ -170,29 +290,112 @@ const ReportDetailPage = () => {
     }
   };
 
+  // Pre-flight check before triggering: does a completed/in-progress/failed run
+  // already exist for this exact campaign+report+date-range?
+  const handleGenerateReportClick = async () => {
+    if (!customStartDate || !customEndDate) {
+      setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_CUSTOM_DATE_REQUIRED) });
+      return;
+    }
+    setIsCheckingExisting(true);
+    try {
+      const response = await checkExistingCustomReport({
+        tenantId,
+        campaignIdentifier: campaignNumber,
+        reportName: reportType,
+        customStartDate: formatDateForPayload(customStartDate),
+        customEndDate: formatDateForPayload(customEndDate),
+      });
+      const existing = response?.exists ? response.data : null;
+
+      if (!existing) {
+        await triggerCustomReport();
+        return;
+      }
+
+      setShowCustomPopup(false);
+      if (existing.isFailed) {
+        setExistingReportPopup({ variant: "failed", data: existing });
+      } else if (existing.isTerminal) {
+        setExistingReportPopup({ variant: "exists", data: existing });
+      } else {
+        setExistingReportPopup({ variant: "in_progress", data: existing });
+      }
+    } catch (error) {
+      console.error("Error checking for existing custom report:", error);
+      setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_CUSTOM_REPORT_CHECK_FAILED) });
+    } finally {
+      setIsCheckingExisting(false);
+    }
+  };
+
+  // (Re)starts a 1-second countdown whenever a fresh "exists" popup carries a
+  // retryAvailableInSeconds, and tears it down on close/unmount so no stray
+  // interval keeps ticking after the popup is gone.
   useEffect(() => {
-    if (!campaignNumber || !reportType) return;
-    const fetchReports = async () => {
+    const seconds = existingReportPopup?.variant === "exists" ? existingReportPopup.data?.retryAvailableInSeconds : null;
+    if (seconds == null) {
+      setRetryCountdown(null);
+      return;
+    }
+    setRetryCountdown(seconds);
+    const intervalId = setInterval(() => {
+      setRetryCountdown((prev) => (prev !== null && prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [existingReportPopup]);
+
+  // Fetch report metadata from airflow API. showLoader is only true for the initial
+  // mount fetch - the completion-triggered refresh below must not flash the full-page
+  // Loader over content the user is already looking at.
+  const fetchReports = useCallback(
+    async ({ showLoader = false } = {}) => {
+      if (!campaignNumber || !reportType) return;
       try {
-        setIsLoading(true);
+        if (showLoader) setIsLoading(true);
         const response = await Digit.CustomService.getResponse({
           url: `/airflow-trigger-api/api/reports-metadata`,
           body: {
             tenantId: tenantId,
             reportName: reportType,
             campaignIdentifier: campaignNumber,
+            locale:
+              Digit?.SessionStorage?.get("locale") ||
+              Digit?.SessionStorage.get("initData")?.selectedLanguage ||
+              Digit?.Utils?.getDefaultLanguage(),
           },
+          // This body never varies for a given report, so CustomService's default
+          // useCache:true would otherwise replay the very first response forever -
+          // exactly why a newly-completed report would only ever show up after a reload.
+          useCache: false,
         });
         setReportsMetadata(response);
       } catch (error) {
         console.error("Error fetching reports metadata:", error);
         setReportsMetadata(null);
       } finally {
-        setIsLoading(false);
+        if (showLoader) setIsLoading(false);
       }
-    };
-    fetchReports();
-  }, [campaignNumber, reportType, tenantId]);
+    },
+    [campaignNumber, reportType, tenantId]
+  );
+
+  useEffect(() => {
+    fetchReports({ showLoader: true });
+  }, [fetchReports]);
+
+  // /reports-in-progress polls every 20s, but a run dropping out of that list (because it
+  // just completed or failed) doesn't by itself update the completed-reports list - without
+  // this, a just-finished report would only appear after a manual page reload.
+  const prevInProgressIdsRef = useRef(new Set());
+  useEffect(() => {
+    const currentIds = new Set((inProgressRuns || []).map((run) => run.dagrunid));
+    const hasNewlyFinished = [...prevInProgressIdsRef.current].some((id) => !currentIds.has(id));
+    prevInProgressIdsRef.current = currentIds;
+    if (hasNewlyFinished) {
+      fetchReports();
+    }
+  }, [inProgressRuns, fetchReports]);
 
   const reportsByFrequency = useMemo(() => {
     const reports = reportsMetadata?.data || [];
@@ -203,26 +406,21 @@ const ReportDetailPage = () => {
       const freq = item?.triggerfrequency || "DAILY";
       if (!grouped[freq]) grouped[freq] = [];
 
-      let dateLabel = formatCreatedTime(item?.createdtime);
-      if (freq === "CUSTOM" && item?.reportrange) {
-        const parts = item.reportrange.split("_");
-        if (parts.length === 2) {
-          const formatRangeDate = (dateStr) => {
-            const trimmed = dateStr?.trim();
-            if (!trimmed) return "";
-            const isoStr = trimmed.replace(" ", "T").replace(/([+-])(\d{2})(\d{2})$/, "$1$2:$3");
-            const d = new Date(isoStr);
-            if (isNaN(d.getTime())) return trimmed;
-            return toOrdinalDate(d);
-          };
-          dateLabel = `${formatRangeDate(parts[0])} — ${formatRangeDate(parts[1])}`;
-        }
-      }
+      const dateLabel = getReportDateLabel(item, freq);
+      const reportTimeLabel = formatDuration(item?.reportTimeSeconds);
+      const processingTimeLabel = formatDuration(item?.processingTimeSeconds);
+      const fileSizeLabel = formatFileSize(item?.filesizebytes);
+      const rowCountLabel = formatRowCount(item?.rowcount);
 
       grouped[freq].push({
         id: item?.id,
         dateLabel: dateLabel,
         filestoreid: item?.filestoreid,
+        reportTimeLabel,
+        processingTimeLabel,
+        fileSizeLabel,
+        rowCountLabel,
+        hasMeta: Boolean(reportTimeLabel || processingTimeLabel || fileSizeLabel || rowCountLabel),
       });
     });
 
@@ -233,8 +431,29 @@ const ReportDetailPage = () => {
     return grouped;
   }, [reportsMetadata]);
 
+  // Group in-progress runs by frequency too, so a frequency with nothing completed yet
+  // still gets its own accordion section instead of being invisible.
+  const inProgressByFrequency = useMemo(() => {
+    const grouped = {};
+    (inProgressRuns || []).forEach((run) => {
+      const freq = run?.triggerfrequency || "DAILY";
+      if (!grouped[freq]) grouped[freq] = [];
+      grouped[freq].push({ ...run, dateLabel: getReportDateLabel(run, freq) });
+    });
+    Object.keys(grouped).forEach((freq) => {
+      grouped[freq].sort((a, b) => (b.reporttriggeredtimems || 0) - (a.reporttriggeredtimems || 0));
+    });
+    return grouped;
+  }, [inProgressRuns]);
+
+  const allFrequencies = useMemo(
+    () => Array.from(new Set([...Object.keys(reportsByFrequency), ...Object.keys(inProgressByFrequency)])),
+    [reportsByFrequency, inProgressByFrequency]
+  );
+
   const reportLabel = `HCM_${reportType?.toUpperCase()}`;
   const totalReports = Object.values(reportsByFrequency).flat().length;
+  const totalInProgress = inProgressRuns?.length || 0;
 
   if (isLoading) return <Loader />;
 
@@ -263,7 +482,7 @@ const ReportDetailPage = () => {
           </div>
         </div>
 
-        {totalReports === 0 ? (
+        {totalReports === 0 && totalInProgress === 0 ? (
           <div
             className="digit-no-data-found"
             style={{
@@ -280,24 +499,31 @@ const ReportDetailPage = () => {
           </div>
         ) : (
           <AccordionList allowMultipleOpen={true}>
-            {Object.entries(reportsByFrequency).map(([frequency, reports]) => (
-              <Accordion
-                key={frequency}
-                title={
-                <div className="digit-accordion-titile-dashboard-wrap">
-                  <div className="digit-accordion-titile-dashboard">{t(`HCM_REPORT_FREQUENCY_${frequency}_REPORTS`)}</div>
-                  <Tag label={`${reports.length} ${reports.length === 1 ? t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT_SINGLE) : t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT)}`} stroke={true} type={"monochrome"}/>
-                </div>
-                }
-                isOpenInitially={Object.keys(reportsByFrequency).length === 1}
-                hideCardBorder={false}
-                hideCardBg={true}
-                hideBorderRadius={true}
-                customClassName={"digit-report-details-accordion"}
-              >
-                <FrequencyContent reports={reports} t={t} reportType={reportType} />
-              </Accordion>
-            ))}
+            {allFrequencies.map((frequency) => {
+              const reports = reportsByFrequency[frequency] || [];
+              const inProgress = inProgressByFrequency[frequency] || [];
+              return (
+                <Accordion
+                  key={frequency}
+                  title={
+                  <div className="digit-accordion-titile-dashboard-wrap">
+                    <div className="digit-accordion-titile-dashboard">{t(`HCM_REPORT_FREQUENCY_${frequency}_REPORTS`)}</div>
+                    <Tag label={`${reports.length} ${reports.length === 1 ? t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT_SINGLE) : t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT)}`} stroke={true} type={"monochrome"}/>
+                    {inProgress.length > 0 && (
+                      <Tag label={`${inProgress.length} ${t(I18N_KEYS.PAGES.HCM_IN_PROGRESS)}`} type="warning" />
+                    )}
+                  </div>
+                  }
+                  isOpenInitially={allFrequencies.length === 1}
+                  hideCardBorder={false}
+                  hideCardBg={true}
+                  hideBorderRadius={true}
+                  customClassName={"digit-report-details-accordion"}
+                >
+                  <FrequencyContent reports={reports} inProgressRuns={inProgress} t={t} reportType={reportType} />
+                </Accordion>
+              );
+            })}
           </AccordionList>
         )}
       </Card>
@@ -314,9 +540,9 @@ const ReportDetailPage = () => {
             <Button
               key="trigger"
               label={t(I18N_KEYS.PAGES.HCM_GENERATE_REPORT)}
-              onClick={handleTriggerCustomReport}
+              onClick={handleGenerateReportClick}
               variation="primary"
-              isDisabled={!customStartDate || !customEndDate || isTriggering}
+              isDisabled={!customStartDate || !customEndDate || isTriggering || isCheckingExisting}
             />,
           ]}
           subHeading={t(I18N_KEYS.PAGES.HCM_CUSTOM_RANGE_DESC)}
@@ -344,6 +570,98 @@ const ReportDetailPage = () => {
               onChange={(d) => setCustomEndDate(d)}
             />
           </div>
+        </PopUp>
+      )}
+
+      {existingReportPopup && (
+        <PopUp
+          onClose={() => setExistingReportPopup(null)}
+          onOverlayClick={() => setExistingReportPopup(null)}
+          heading={
+            existingReportPopup.variant === "exists"
+              ? t(I18N_KEYS.PAGES.HCM_REPORT_ALREADY_EXISTS)
+              : existingReportPopup.variant === "in_progress"
+              ? t(I18N_KEYS.PAGES.HCM_REPORT_ALREADY_IN_PROGRESS)
+              : t(I18N_KEYS.PAGES.HCM_REPORT_GENERATION_FAILED_TITLE)
+          }
+          className={"digit-report-detail__popup"}
+          footerChildren={
+            existingReportPopup.variant === "exists"
+              ? [
+                  <Button key="close" label={t(I18N_KEYS.PAGES.HCM_CLOSE)} onClick={() => setExistingReportPopup(null)} variation="secondary" />,
+                  <Button
+                    key="download"
+                    label={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_REPORT)}
+                    onClick={() => {
+                      downloadFileFromStore({ fileStoreId: existingReportPopup.data.filestoreid, customName: `${reportType}_custom` });
+                      setExistingReportPopup(null);
+                    }}
+                    variation={retryCountdown === 0 ? "secondary" : "primary"}
+                    icon="FileDownload"
+                  />,
+                  ...(retryCountdown === 0
+                    ? [
+                        <Button
+                          key="retry-now"
+                          label={t(I18N_KEYS.PAGES.HCM_GENERATE_NOW)}
+                          onClick={handleGenerateReportClick}
+                          variation="primary"
+                          isDisabled={isTriggering || isCheckingExisting}
+                        />,
+                      ]
+                    : []),
+                ]
+              : existingReportPopup.variant === "in_progress"
+              ? [<Button key="close" label={t(I18N_KEYS.PAGES.HCM_CLOSE)} onClick={() => setExistingReportPopup(null)} variation="secondary" />]
+              : [
+                  <Button key="cancel" label={t(I18N_KEYS.PAGES.HCM_CANCEL)} onClick={() => setExistingReportPopup(null)} variation="secondary" />,
+                  <Button
+                    key="retry"
+                    label={t(I18N_KEYS.PAGES.HCM_RETRY)}
+                    onClick={triggerCustomReport}
+                    variation="primary"
+                    isDisabled={isTriggering}
+                  />,
+                ]
+          }
+          subHeading={
+            existingReportPopup.variant === "exists"
+              ? t(I18N_KEYS.PAGES.HCM_REPORT_ALREADY_EXISTS_DESC)
+              : existingReportPopup.variant === "in_progress"
+              ? t(I18N_KEYS.PAGES.HCM_REPORT_ALREADY_IN_PROGRESS_DESC)
+              : t(I18N_KEYS.PAGES.HCM_REPORT_GENERATION_FAILED_DESC)
+          }
+        >
+          {existingReportPopup.variant === "exists" && existingReportPopup.data?.retryBlocked && (
+            <div className="digit-report-detail__file-info">{t(I18N_KEYS.PAGES.HCM_REPORT_RETRY_BLOCKED)}</div>
+          )}
+          {existingReportPopup.variant === "exists" && retryCountdown !== null && (
+            <div className="digit-report-detail__file-info">
+              {retryCountdown > 0 ? (
+                <div>
+                  {t(I18N_KEYS.PAGES.HCM_REPORT_RETRY_AVAILABLE_IN)}: {formatDuration(retryCountdown)}
+                </div>
+              ) : (
+                <div>{t(I18N_KEYS.PAGES.HCM_REPORT_RETRY_AVAILABLE_NOW)}</div>
+              )}
+            </div>
+          )}
+          {existingReportPopup.variant === "in_progress" && (
+            <div className="digit-report-detail__file-info">
+              <div className="digit-report-detail__file-date">{t(getStageLabelKey(existingReportPopup.data.status))}</div>
+              <div className="digit-report-detail__progress-bar">
+                <div
+                  className="digit-report-detail__progress-bar-fill"
+                  style={{ width: `${existingReportPopup.data.progressPercent || 0}%` }}
+                />
+              </div>
+            </div>
+          )}
+          {existingReportPopup.variant === "failed" && (
+            <div className="digit-report-detail__file-info">
+              {existingReportPopup.data.errormessage || t(I18N_KEYS.PAGES.HCM_REPORT_GENERATION_FAILED_DESC)}
+            </div>
+          )}
         </PopUp>
       )}
 
