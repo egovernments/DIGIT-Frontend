@@ -6,11 +6,13 @@ import { lowerBoundaryDefaultSet } from "../../utils/constants";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { getValidPeriods } from "../../utils/time_conversion";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import { useMyContext } from "../../utils/context";
 
 const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
   const { t } = useTranslation();
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-  const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentsConfig")?.lowestLevelBoundary || "DISTRICT";
+  const { lowestBoundaryLevel } = useMyContext();
+  const lowestLevelBoundaryType = lowestBoundaryLevel || "DISTRICT";
 
   // State variables
   const [reset, setReset] = useState(false);
@@ -230,7 +232,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
             }}
             onChange={onChangeId}
             selectedProject={projectSelected}
-            lowestLevel={Digit.SessionStorage.get("paymentsConfig")?.lowestLevelBoundary || lowerBoundaryDefaultSet}
+            lowestLevel={lowestBoundaryLevel || lowerBoundaryDefaultSet}
           />
         )}
 

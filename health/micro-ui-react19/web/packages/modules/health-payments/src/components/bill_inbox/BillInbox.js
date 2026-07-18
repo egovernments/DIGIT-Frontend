@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
 import { Button, Card, AlertCard as InfoCard, Loader, Tab, Toast, Footer } from "@egovernments/digit-ui-components";
@@ -11,6 +11,7 @@ import AlertPopUp from "../alertPopUp";
 import InboxSearchLinkHeader from "../InboxSearchLinkHeader";
 import { renderProjectPeriod } from "../../utils/time_conversion";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import { useMyContext } from "../../utils/context";
 
 /**
  * @returns {React.ReactElement} BillInboxComponent
@@ -29,12 +30,26 @@ const BillInboxComponent = () => {
   const { state: locationState } = window.location || {};
   const fromViewScreen = locationState?.fromViewScreen || false;
 
+  const { hierarchyType: hierachyTypeContextPath, lowestBoundaryLevel } = useMyContext();
+
+  const stateCode = Digit.ULBService.getStateId();
+  const language = Digit.StoreData.getCurrentLanguage();
+  const boundaryModuleCode = useMemo(
+    () => (hierachyTypeContextPath ? [`boundary-${hierachyTypeContextPath}`] : []),
+    [hierachyTypeContextPath]
+  );
+  const { isLoading: isBoundaryLocLoading } = Digit.Services.useStore({
+    stateCode,
+    moduleCode: boundaryModuleCode,
+    language,
+    modulePrefix: "hcm",
+    enabled: boundaryModuleCode.length > 0,
+  });
+
   // context path variables
   const attendanceContextPath = window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") || "health-attendance";
   const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
   const expenseCalculatorContextPath = window?.globalConfigs?.getConfig("EXPENSE_CALCULATOR_CONTEXT_PATH") || "health-expense-calculator";
-
-  const hierachyTypeContextPath = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
 
   // State Variables
   const [showToast, setShowToast] = useState(null);
@@ -47,7 +62,7 @@ const BillInboxComponent = () => {
   // FIX: Make selectedPeriod a state variable
   const [selectedPeriod, setSelectedPeriod] = useState(() => Digit.SessionStorage.get("selectedPeriod") || null);
 
-  const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentsConfig")?.lowestLevelBoundary || "DISTRICT";
+  const lowestLevelBoundaryType = lowestBoundaryLevel || "DISTRICT";
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
   const [approvalCount, setApprovalCount] = useState(null);
@@ -340,6 +355,9 @@ const BillInboxComponent = () => {
     }
   };
 
+  if (isBoundaryLocLoading) {
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
+  }
   if (generateBillMutation.isLoading) {
     return <LoaderWithGap />;
   }
