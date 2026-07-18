@@ -42,10 +42,10 @@
     "@babel/preset-env": "^7.26.9",
     "@babel/preset-react": "^7.26.3",
     "@egovernments/digit-ui-libraries": "2.0.0-dev-12",
-    "@egovernments/digit-ui-module-core": "2.0.0-dev-23",
-    "@egovernments/digit-ui-react-components": "2.0.0-dev-16",
+    "@egovernments/digit-ui-module-core": "2.0.0-dev-26",
+    "@egovernments/digit-ui-react-components": "2.0.0-dev-18",
     "@egovernments/digit-ui-svg-components": "2.0.0-dev-08",
-    "@egovernments/digit-ui-components": "2.0.0-dev-55",
+    "@egovernments/digit-ui-components": "2.0.0-dev-56",
     "@egovernments/digit-ui-module-health-pgr": "0.0.2",
     "@egovernments/digit-ui-module-health-hrms": "1.0.0",
     "@egovernments/digit-ui-module-health-payments": "1.0.0",
@@ -78,7 +78,8 @@
     "**/react": "19.0.0",
     "**/react-dom": "19.0.0",
     "**/react-query": "@tanstack/react-query@^5.62.16",
-    "**/@tanstack/react-query": "^5.62.16"
+    "**/@tanstack/react-query": "^5.62.16",
+    "**/pdfjs-dist": "4.8.69"
   },
   "scripts": {
     "start": "node start-dev.js",
