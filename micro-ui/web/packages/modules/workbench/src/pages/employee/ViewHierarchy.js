@@ -258,8 +258,8 @@ const ViewHierarchy = () => {
                 preText: "ES_BOUNDARY_DATA_CREATED_SUCCESS_RESPONSE_PRE_TEXT",
                 actionLabel: "CS_BOUNDARY_DATA_NEW_RESPONSE_ACTION",
                 actionLink: `/${window.contextPath}/employee/workbench/boundary/data?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`,
-                secondaryActionLabel: "CS_HOME",
-                secondaryActionLink: `/${window?.contextPath}/employee`,
+                secondaryActionLabel: "BOUNDARY_DATA_MANAGEMENT",
+                secondaryActionLink: `/${window?.contextPath}/employee/workbench/boundary/home`,
                 mdmsModuleName,
               },
             }

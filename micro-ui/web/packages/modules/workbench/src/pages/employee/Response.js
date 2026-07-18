@@ -14,6 +14,10 @@ const Response = () => {
     navigate(`/${window.contextPath}/employee/`);
   };
 
+  const goToSecondaryAction = () => {
+    navigate(state?.secondaryActionLink);
+  };
+
   const children = [
     <div style={{ display: "flex" }} key="response-text">
       {state?.boldText ? (
@@ -41,12 +45,23 @@ const Response = () => {
       <Footer
         actionFields={[
           <Button
-            icon="ArrowBack"
+            icon={state?.primaryActionIcon || "UndoIcon"}
             label={t("GO_BACK_TO_HOME")}
             onClick={goToHome}
             type="button"
             variation="primary"
-          />
+          />,
+          ...(state?.secondaryActionLabel && state?.secondaryActionLink
+            ? [
+                <Button
+                  label={t(state?.secondaryActionLabel)}
+                  onClick={goToSecondaryAction}
+                  type="button"
+                  variation="secondary"
+                  icon={state?.secondaryActionIcon || "ArrowBack"}
+                />,
+              ]
+            : []),
         ]}
         className=""
         maxActionFieldsAllowed={5}
