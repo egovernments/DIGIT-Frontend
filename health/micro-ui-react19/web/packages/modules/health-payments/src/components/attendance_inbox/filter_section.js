@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from "react"
 import { useTranslation } from "react-i18next";
 import BoundaryComponent from "../BoundaryComponent";
 import { Card, SVG, SubmitBar, Dropdown, Loader, Toast } from "@egovernments/digit-ui-components";
-import { lowerBoundaryDefaultSet } from "../../utils/constants";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { getValidPeriods } from "../../utils/time_conversion";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
@@ -232,7 +231,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
             }}
             onChange={onChangeId}
             selectedProject={projectSelected}
-            lowestLevel={lowestBoundaryLevel || lowerBoundaryDefaultSet}
+            lowestLevel={lowestLevelBoundaryType}
           />
         )}
 

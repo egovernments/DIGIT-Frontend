@@ -423,8 +423,13 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         }
       }
     } else if (panelItem.fieldType === "number") {
-      // Number: save value directly
-      const numValue = currentLocalValue === "" || currentLocalValue === null || currentLocalValue === undefined ? null : currentLocalValue;
+      // Number: clamp min on blur (allows incremental typing in onChange)
+      let numValue = currentLocalValue === "" || currentLocalValue === null || currentLocalValue === undefined ? null : currentLocalValue;
+      if (numValue !== null && panelItem.min !== undefined && numValue < panelItem.min) {
+        numValue = panelItem.min;
+        setLocalValue(numValue);
+        localValueRef.current = numValue;
+      }
       if (bindTo.includes(".")) {
         const keys = bindTo.split(".");
         const newField = structuredClone(currentSelectedField);
@@ -445,6 +450,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     panelItem?.isLocalisable,
     panelItem.bindTo,
     panelItem.defaultValue,
+    panelItem.min,
     dispatch,
     currentLocale,
     onFieldChange,
@@ -639,10 +645,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               let value = parseInt(inputValue, 10);
               // Only set if it's a valid number
               if (!isNaN(value)) {
-                // Clamp to configured min/max range
-                if (configMin !== undefined && value < configMin) {
-                  value = configMin;
-                }
+                // Only clamp max on change (prevents exceeding maximum)
+                // Min is enforced on blur to allow incremental typing (e.g., typing "2" then "0" for 20)
                 if (configMax !== undefined && value > configMax) {
                   value = configMax;
                 }
@@ -1471,6 +1475,16 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
     const currentSelectedField = selectedFieldRef.current;
     const currentFieldValue = fieldValueRef.current;
 
+    // Clamp min on blur for number conditional fields (allows incremental typing in onChange)
+    if (cField.type === "number" && currentLocalValue !== "" && currentLocalValue !== null && currentLocalValue !== undefined) {
+      const numVal = parseInt(currentLocalValue, 10);
+      if (!isNaN(numVal) && cField.min !== undefined && numVal < cField.min) {
+        const clampedValue = String(cField.min);
+        setConditionalLocalValue(clampedValue);
+        localValueRef.current = clampedValue;
+      }
+    }
+
     // Immediately dispatch the current value with localization handling
     let finalValueToSave;
 
@@ -1507,7 +1521,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
     newField[cField.bindTo] = finalValueToSave;
     onFieldChange(newField);
     isEditingRef.current = false;
-  }, [cField.bindTo, onFieldChange, dispatch, currentLocale, shouldSkipLocalization]);
+  }, [cField.bindTo, cField.type, cField.min, onFieldChange, dispatch, currentLocale, shouldSkipLocalization]);
 
   // Check if this is a prefix field for mobileNumber : should only accept numbers
   const isMobileNumberPrefix = selectedField?.format === "mobileNumber" && cField.bindTo === "prefixText";
@@ -1557,13 +1571,11 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
                 return;
               }
 
-              // Enforce min/max for number conditional fields
+              // Enforce max on change for number conditional fields
+              // Min is enforced on blur to allow incremental typing (e.g., typing "2" then "0" for 20)
               if (cField.type === "number" && newValue !== "" && newValue !== null && newValue !== undefined) {
                 const numVal = parseInt(newValue, 10);
                 if (!isNaN(numVal)) {
-                  if (cFieldMin !== undefined && numVal < cFieldMin) {
-                    newValue = String(cFieldMin);
-                  }
                   if (cFieldMax !== undefined && numVal > cFieldMax) {
                     newValue = String(cFieldMax);
                   }

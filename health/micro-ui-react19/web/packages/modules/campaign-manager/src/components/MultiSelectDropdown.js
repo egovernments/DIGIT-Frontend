@@ -303,6 +303,7 @@ const MultiSelectDropdown = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPending, startTransition] = useTransition();
   const dropdownRef = useRef();
+  const listRef = useRef(null);
 
   const { t } = useTranslation();
 
@@ -670,19 +671,17 @@ const MultiSelectDropdown = ({
   const keyChange = (e) => {
     const optionToScroll = variant === "nestedmultiselect" ? flattenedOptions : filteredOptions;
     if (e.key == "ArrowDown") {
-      setOptionIndex((state) => (state + 1 == optionToScroll.length ? 0 : state + 1));
-      if (optionIndex + 1 == optionToScroll.length) {
-        e?.target?.parentElement?.parentElement?.children?.namedItem("jk-dropdown-unique")?.scrollTo?.(0, 0);
-      } else {
-        optionIndex > 2 && e?.target?.parentElement?.parentElement?.children?.namedItem("jk-dropdown-unique")?.scrollBy?.(0, 45);
+      const newIndex = optionIndex + 1 >= optionToScroll.length ? 0 : optionIndex + 1;
+      setOptionIndex(newIndex);
+      if (listRef.current) {
+        listRef.current.scrollToItem(newIndex);
       }
       e.preventDefault();
     } else if (e.key == "ArrowUp") {
-      setOptionIndex((state) => (state !== 0 ? state - 1 : optionToScroll.length - 1));
-      if (optionIndex === 0) {
-        e?.target?.parentElement?.parentElement?.children?.namedItem("jk-dropdown-unique")?.scrollTo?.(100000, 100000);
-      } else {
-        optionIndex > 2 && e?.target?.parentElement?.parentElement?.children?.namedItem("jk-dropdown-unique")?.scrollBy?.(0, -45);
+      const newIndex = optionIndex !== 0 ? optionIndex - 1 : optionToScroll.length - 1;
+      setOptionIndex(newIndex);
+      if (listRef.current) {
+        listRef.current.scrollToItem(newIndex);
       }
       e.preventDefault();
     } else if (e.key == "Enter") {
@@ -914,6 +913,7 @@ const MultiSelectDropdown = ({
       <div>
         {selectAllOption}
         <List
+          ref={listRef}
           height={listHeight}
           itemCount={optionsToRender.length}
           itemSize={ITEM_HEIGHT}
