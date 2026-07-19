@@ -568,6 +568,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       case "text": {
         const isMandatory = selectedField?.mandatory === true;
         const isDisabled = viewMode || (panelItem?.disableForRequired && isMandatory);
+        const maxLength = panelItem.maxLength;
         return (
           <FieldV1
             type="text"
@@ -575,19 +576,21 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             value={localValue}
             onChange={(event) => {
               isEditingRef.current = true;
-              setLocalValue(event.target.value);
-              localValueRef.current = event.target.value;
+              let newValue = event.target.value;
+              if (maxLength && newValue.length > maxLength) return;
+              setLocalValue(newValue);
+              localValueRef.current = newValue;
               // If isLocalisable is false, save directly without localization
               // If undefined or true, use localization
               if (panelItem?.isLocalisable === false) {
-                handleFieldChange(event.target.value);
+                handleFieldChange(newValue);
               } else {
-                handleFieldChangeWithLoc(fieldValue, event.target.value);
+                handleFieldChangeWithLoc(fieldValue, newValue);
               }
             }}
             onBlur={handleBlur}
             placeholder={t(panelItem.innerLabel) || ""}
-            populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
+            populators={{ fieldPairClassName: "drawer-toggle-conditional-field", ...(maxLength && { maxLength }) }}
             disabled={isDisabled}
           />
         );
@@ -600,6 +603,11 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const isLengthField = panelItem.bindTo?.toLowerCase()?.includes("length");
         const isRangeField = panelItem.label?.toLowerCase()?.includes("minimum") || panelItem.label?.toLowerCase()?.includes("maximum");
         const shouldPreventNegative = isLengthField || isRangeField;
+
+        // Read min/max from MDMS config (fully configurable, no hardcoded limits)
+        const configMin = panelItem.min !== undefined ? panelItem.min : (shouldPreventNegative ? 0 : undefined);
+        const configMax = panelItem.max !== undefined ? panelItem.max : undefined;
+        const preventNegative = configMin !== undefined && configMin >= 0;
 
         return (
           <FieldV1
@@ -628,16 +636,15 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 return;
               }
 
-              const value = parseInt(inputValue, 10);
+              let value = parseInt(inputValue, 10);
               // Only set if it's a valid number
               if (!isNaN(value)) {
-                // Prevent negative values for length-related fields
-                if (shouldPreventNegative && value < 0) {
-                  // Clear the field for negative values in length/range fields
-                  setLocalValue("");
-                  localValueRef.current = "";
-                  handleNumberChange(null);
-                  return;
+                // Clamp to configured min/max range
+                if (configMin !== undefined && value < configMin) {
+                  value = configMin;
+                }
+                if (configMax !== undefined && value > configMax) {
+                  value = configMax;
                 }
                 setLocalValue(value);
                 localValueRef.current = value;
@@ -652,11 +659,12 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             onBlur={handleBlur}
             placeholder={t(panelItem.innerLabel) || ""}
             populators={{
-              allowNegativeValues: !shouldPreventNegative,
+              allowNegativeValues: !preventNegative,
               fieldPairClassName: "drawer-toggle-conditional-field",
               validation: {
-                min: shouldPreventNegative ? 0 : undefined,
-                pattern: shouldPreventNegative ? "^\\d+$" : "^-?\\d+$",
+                min: configMin,
+                max: configMax,
+                pattern: preventNegative ? "^\\d+$" : "^-?\\d+$",
               },
             }}
             disabled={isDisabled}
@@ -1104,6 +1112,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                         dispatch={dispatch}
                         t={t}
                         viewMode={viewMode}
+                        maxLength={panelItem.maxLength}
                       />
                     );
                   })}
@@ -1143,6 +1152,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                         onColumnToggle={handleColumnVisibilityToggle}
                         isLastVisible={isLastVisible}
                         viewMode={viewMode}
+                        maxLength={panelItem.maxLength}
                       />
                     );
                   })}
@@ -1178,6 +1188,7 @@ const LocalizationInput = React.memo(
     onColumnToggle = null,
     isLastVisible = false,
     viewMode = false,
+    maxLength = null,
   }) => {
     // Get the localized value - don't fallback to code, empty string is valid
     const localizedValue = useCustomT(code);
@@ -1247,6 +1258,7 @@ const LocalizationInput = React.memo(
             placeholder={placeholder || t(I18N_KEYS.COMMON.ADD_LOCALIZATION)}
             onChange={(e) => {
               const val = e.target.value;
+              if (maxLength && val.length > maxLength) return;
               // Update localization for the code
               dispatch(
                 updateLocalizationEntry({
@@ -1258,6 +1270,7 @@ const LocalizationInput = React.memo(
             }}
             populators={{
               fieldPairClassName: "drawer-toggle-conditional-field",
+              ...(maxLength && { maxLength }),
             }}
             disabled={viewMode || isColumnHidden}
           />
@@ -1502,6 +1515,12 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
   const isIntegerPrefixOrSuffix = selectedField?.type === "integer" && (cField.bindTo === "prefixText" || cField.bindTo === "suffixText");
   const maxPrefixSuffixLength = 5; // Maximum length for prefix/suffix to prevent UI breaking
 
+  // Read maxLength from config for text/textarea conditional fields
+  const cFieldMaxLength = cField.maxLength;
+  // Read min/max from config for number conditional fields
+  const cFieldMin = cField.min;
+  const cFieldMax = cField.max;
+
   switch (cField.type) {
     case "text":
     case "number":
@@ -1533,6 +1552,24 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
                 }
               }
 
+              // Enforce maxLength for text/textarea conditional fields
+              if ((cField.type === "text" || cField.type === "textarea") && cFieldMaxLength && newValue.length > cFieldMaxLength) {
+                return;
+              }
+
+              // Enforce min/max for number conditional fields
+              if (cField.type === "number" && newValue !== "" && newValue !== null && newValue !== undefined) {
+                const numVal = parseInt(newValue, 10);
+                if (!isNaN(numVal)) {
+                  if (cFieldMin !== undefined && numVal < cFieldMin) {
+                    newValue = String(cFieldMin);
+                  }
+                  if (cFieldMax !== undefined && numVal > cFieldMax) {
+                    newValue = String(cFieldMax);
+                  }
+                }
+              }
+
               isEditingRef.current = true;
               setConditionalLocalValue(newValue);
               localValueRef.current = newValue;
@@ -1540,7 +1577,16 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
             }}
             onBlur={handleConditionalBlur}
             placeholder={cField.innerLabel ? t(cField.innerLabel) : null}
-            populators={{ fieldPairClassName: "drawer-toggle-conditional-field", validation: cField.validation,...((isMobileNumberPrefix || isIntegerPrefixOrSuffix) && { maxLength: maxPrefixSuffixLength }) }}
+            populators={{
+              fieldPairClassName: "drawer-toggle-conditional-field",
+              validation: {
+                ...cField.validation,
+                ...(cField.type === "number" && cFieldMin !== undefined && { min: cFieldMin }),
+                ...(cField.type === "number" && cFieldMax !== undefined && { max: cFieldMax }),
+              },
+              ...((isMobileNumberPrefix || isIntegerPrefixOrSuffix) && { maxLength: maxPrefixSuffixLength }),
+              ...((cField.type === "text" || cField.type === "textarea") && cFieldMaxLength && { maxLength: cFieldMaxLength }),
+            }}
           />
         </div>
       );

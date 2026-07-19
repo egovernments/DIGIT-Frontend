@@ -54,7 +54,10 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
   }, [value, generateLocCode, currentLocale, cardIndex, index, fieldKey, dispatch]);
 
   const handleChange = useCallback((e) => {
-    const newValue = e.target.value;
+    let newValue = e.target.value;
+    if (newValue.length > 30) {
+      newValue = newValue.slice(0, 30);
+    }
     setLocalValue(newValue);
 
     // Clear previous timer
@@ -92,6 +95,7 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
             onChange={handleChange}
             onBlur={handleBlur}
             disabled={viewMode}
+            maxLength={30}
           />
         ) : (
           <TextInput
@@ -101,6 +105,7 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
             onChange={handleChange}
             onBlur={handleBlur}
             disabled={viewMode}
+            maxLength={30}
           />
         )}
       </div>
