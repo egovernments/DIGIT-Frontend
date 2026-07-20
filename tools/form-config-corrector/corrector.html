@@ -366,6 +366,7 @@ input[type="file"] { display: none; }
               <option value="https://unified-uat.digit.org">unified-uat.digit.org</option>
               <option value="https://unified-qa.digit.org">unified-qa.digit.org</option>
               <option value="https://unified-dev.digit.org">unified-dev.digit.org</option>
+              <option value="https://hcm-demo.digit.org">hcm-demo.digit.org</option>
               <option value="__other__">Other...</option>
             </select>
             <input type="text" id="olUrl" class="combo-custom" placeholder="https://custom-env.example.org">
@@ -432,6 +433,7 @@ input[type="file"] { display: none; }
                 <option value="https://unified-uat.digit.org">unified-uat.digit.org</option>
                 <option value="https://unified-qa.digit.org">unified-qa.digit.org</option>
                 <option value="https://unified-dev.digit.org">unified-dev.digit.org</option>
+                <option value="https://hcm-demo.digit.org">hcm-demo.digit.org</option>
                 <option value="__other__">Other...</option>
               </select>
               <input type="text" id="mgSrcUrl" class="combo-custom" placeholder="https://custom-env.example.org">
@@ -483,6 +485,7 @@ input[type="file"] { display: none; }
                   <option value="https://unified-uat.digit.org">unified-uat.digit.org</option>
                   <option value="https://unified-qa.digit.org">unified-qa.digit.org</option>
                   <option value="https://unified-dev.digit.org">unified-dev.digit.org</option>
+                  <option value="https://hcm-demo.digit.org">hcm-demo.digit.org</option>
                   <option value="__other__">Other...</option>
                 </select>
                 <input type="text" id="mgTgtUrl" class="combo-custom" placeholder="https://custom-env.example.org">
@@ -589,16 +592,13 @@ input[type="file"] { display: none; }
 const MAX_WALK_DEPTH = 50;
 const LFPC_SCHEMA = 'HCM-ADMIN-CONSOLE.LabelFieldPairConfig';
 const MDMS_REF_SCHEMAS = [
-  'RAINMAKER-PGR.ServiceDefs',
-  'HCM.HOUSE_STRUCTURE_TYPES',
-  'HCM.REFERRAL_REASONS',
-  'HCM.REFUSAL_REASONS',
-  'HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR',
   'common-masters.GenderType',
+  'HCM.HOUSE_STRUCTURE_TYPES',
   'HCM.ID_TYPE_OPTIONS_POPULATOR',
+  'HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR',
+  'RAINMAKER-PGR.ServiceDefs',
+  'HCM.REFERRAL_REASONS',
   'HCM.SEARCH_HOUSEHOLD_FILTERS',
-  'HCM.SYMPTOM_TYPES',
-  'HCM.TRANSPORT_TYPES',
 ];
 const LOCALIZATION_FIELDS = ['fieldName','label','heading','title','description','message','helpText','infoText','actionLabel','primaryActionLabel','secondaryActionLabel','expandLabel','collapseLabel','innerLabel','tooltip','errorMessage','key'];
 
@@ -616,6 +616,7 @@ function isCode(s){if(!s||s.length===0)return false;if(s.includes(' ')&&!s.inclu
 function splitCompound(w){let r=w.toUpperCase(),p=[];while(r.length>0){let f=false;for(const d of DOMAIN_WORDS){if(r.startsWith(d)){p.push(d);r=r.substring(d.length);f=true;break;}}if(!f){p.push(r);break;}}return p.map((x,i)=>{const l=x.toLowerCase();return(i>0&&SMALL_WORDS.has(l))?l:x.charAt(0).toUpperCase()+x.slice(1).toLowerCase();}).join(' ');}
 function humanize(s){if(!s)return'';if(/[a-z]/.test(s)&&/[A-Z]/.test(s))return s.replace(/([a-z])([A-Z])/g,'$1 $2').replace(/^./,c=>c.toUpperCase());if(/^[A-Z0-9]+$/.test(s))return splitCompound(s);return s.charAt(0).toUpperCase()+s.slice(1);}
 function humanizeField(f){if(!f)return null;if(FIELD_MAP[f])return FIELD_MAP[f];return f.replace(/([a-z])([A-Z])/g,'$1 $2').replace(/^./,c=>c.toUpperCase());}
+function fnKeyToCode(fnExpr,mod){let inner=fnExpr.replace(/^\{\{fn:/,'').replace(/\}\}$/,'').trim();const pi=inner.indexOf('(');const fn=pi>=0?inner.substring(0,pi):inner;let s=fn.replace(/^get/,'').replace(/Label$/,'');if(!s)s=fn;const snake=s.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase();const code=(mod||'MODULE').toUpperCase()+'_'+snake;const msg=snake.split('_').filter(Boolean).map((x,i)=>{const l=x.toLowerCase();return(i>0&&SMALL_WORDS.has(l))?l:x.charAt(0).toUpperCase()+x.slice(1).toLowerCase();}).join(' ');return{code,message:msg};}
 function labelToFieldName(l){if(!l||typeof l!=='string')return null;const p=l.split('_').filter(x=>x.length>0);if(!p.length)return null;const u=p.length>4?p.slice(-3):p;return u.map((x,i)=>{const lo=x.toLowerCase();return i===0?lo:lo.charAt(0).toUpperCase()+lo.slice(1);}).join('');}
 function smartMsg(code,mod){if(!code)return code;let c=code;if(mod){const p=mod.toUpperCase()+'_';if(c.startsWith(p))c=c.substring(p.length);}for(const p of['HCM_','APPONE_','APP_CONFIG_','CLF_']){if(c.startsWith(p)){c=c.substring(p.length);break;}}const S=['_SECONDARY_ACTION_LABEL','_PRIMARY_ACTION_LABEL','_ERROR_MESSAGE','_EXPAND_LABEL','_COLLAPSE_LABEL','_ACTION_LABEL','_INNER_LABEL','_FIELD_NAME','_DESCRIPTION','_HELP_TEXT','_INFO_TEXT','_HEADING','_MESSAGE','_TOOLTIP','_LABEL','_TITLE','_ERROR'];for(const s of S){if(c.endsWith(s)){c=c.substring(0,c.length-s.length);break;}}return c.split('_').filter(Boolean).map(x=>splitCompound(x)).join(' ');}
 function genValMsg(fn,vt,l,vv,allV){const r=smartMsg(l||fn||'Field');const val=vv!=null&&vv!==''&&vv!==true?String(vv):null;const comp=(pt)=>{if(!allV)return null;const p=allV.find(x=>x.type===pt);return p&&p.value!=null&&p.value!==''&&p.value!==true?String(p.value):null;};switch(vt){case'required':return`${r} is required`;case'min':{const mx=comp('max');if(val&&mx)return`${r} must be between ${val} and ${mx}`;if(val)return`${r} must be at least ${val}`;return`${r} must meet the minimum value`;}case'max':{const mn=comp('min');if(val&&mn)return`${r} must be between ${mn} and ${val}`;if(val)return`${r} must not exceed ${val}`;return`${r} exceeds the maximum value`;}case'minLength':{const mxl=comp('maxLength');if(val&&mxl)return`${r} must be between ${val} and ${mxl} characters`;if(val)return`${r} must be at least ${val} characters`;return`${r} is too short`;}case'maxLength':{const mnl=comp('minLength');if(val&&mnl)return`${r} must be between ${mnl} and ${val} characters`;if(val)return`${r} must not exceed ${val} characters`;return`${r} is too long`;}case'pattern':case'regex':return`${r} has an invalid format`;default:return`${r} validation error`;}}
@@ -632,13 +633,13 @@ function analyzeAndFix(configData, opts = {}) {
 
   // R1&2: type+fieldName
   const visited1 = new WeakSet();
-  function chkTF(o,p,st,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach((x,i)=>chkTF(x,`${p}[${i}]`,st,d+1));return;}if(visited1.has(o))return;visited1.add(o);const sT=o.screenType||st;if(sT==='FORM'){for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}return;}if(o.format&&typeof o.format==='string'&&o.format!=='backLink'){if(sT==='TEMPLATE'){if(!o.type||o.type!=='template'){if(autoFix){o.type='template';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "template"'});}}if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}}else{if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}if(!o.type||!o.type.trim()){if(autoFix){o.type='string';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "string"'});}}}}if(autoFix&&o.format&&o.fieldName){const _isGenericFN=o.fieldName===o.format||(o.fieldName.startsWith(o.format)&&/^\d+$/.test(o.fieldName.substring(o.format.length)));if(_isGenericFN){const oldFN=o.fieldName;let derived=null,derivedFrom='';const valSrc=o.value||o.cellValue||'';const vm=valSrc.match(/item\.(?:items\[\d+\]\.)?(?:additionalFields\.fields\.)?(\w+)/);if(vm){derived=vm[1];derivedFrom='value expression';}if(!derived){const _lhSrc=o.label||o.heading||'';if(_lhSrc&&typeof _lhSrc==='string'&&_lhSrc.trim()&&isCode(_lhSrc)){const readable=smartMsg(_lhSrc,moduleName);if(readable&&readable.trim()){const words=readable.trim().split(/\s+/).filter(w=>w.length>0);derived=words.map((w,i)=>{const cl=w.replace(/[^a-zA-Z0-9]/g,'');return cl?(i===0?cl.toLowerCase():cl.charAt(0).toUpperCase()+cl.slice(1).toLowerCase()):'';}).filter(w=>w).join('');derivedFrom='label/heading';}}}if(!derived){const _vSrc=o.value||'';if(_vSrc&&typeof _vSrc==='string'&&isCode(_vSrc)&&!_vSrc.startsWith('{{')&&!_vSrc.startsWith('item.')){const readable=smartMsg(_vSrc,moduleName);if(readable&&readable.trim()){const words=readable.trim().split(/\s+/).filter(w=>w.length>0);derived=words.map((w,i)=>{const cl=w.replace(/[^a-zA-Z0-9]/g,'');return cl?(i===0?cl.toLowerCase():cl.charAt(0).toUpperCase()+cl.slice(1).toLowerCase()):'';}).filter(w=>w).join('');derivedFrom='value';}}}if(derived&&derived!==oldFN){o.fieldName=derived;report.fixes.push({rule:'generic-fieldName',path:p,format:o.format,fixed:`fieldName "${oldFN}" → "${derived}" (from ${derivedFrom})`});}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}}
+  function chkTF(o,p,st,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach((x,i)=>chkTF(x,`${p}[${i}]`,st,d+1));return;}if(visited1.has(o))return;visited1.add(o);const sT=o.screenType||st;if(sT==='FORM'){for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}return;}if(o.format&&typeof o.format==='string'&&o.format!=='backLink'){if(sT==='TEMPLATE'){if(!o.type||o.type!=='template'){if(autoFix){o.type='template';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "template"'});}}if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}}else{if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}if(!o.type||!o.type.trim()){if(autoFix){o.type='string';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "string"'});}}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}}
   chkTF(data,'data',null,0);
 
   // R3: dup fieldNames (per-page scope — same fieldName on different pages is valid)
   // Skip page-level 'properties' array (summary/review fields that intentionally share fieldNames with body)
   function cfn(o,p,e,d,vis,isPage){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return e;if(Array.isArray(o)){o.forEach((x,i)=>cfn(x,`${p}[${i}]`,e,d+1,vis,false));return e;}if(vis.has(o))return e;vis.add(o);if(o.fieldName&&typeof o.fieldName==='string'&&o.fieldName.trim())e.push({obj:o,fieldName:o.fieldName,path:p});for(const[k,v]of Object.entries(o)){if(k==='fieldName')continue;if(isPage&&k==='properties'&&Array.isArray(v))continue;if(typeof v==='object'&&v!==null)cfn(v,p?`${p}.${k}`:k,e,d+1,vis,false);}return e;}
-  if(data.flows){for(const fl of data.flows){const screens=[];if(fl.body||fl.header||fl.footer)screens.push({s:fl,n:fl.name||''});if(fl.pages)fl.pages.forEach(pg=>screens.push({s:pg,n:pg.page||pg.name||''}));for(const{s,n}of screens){const entries=cfn(s,'',[],0,new WeakSet(),true);const seen=new Map();for(const e of entries){if(seen.has(e.fieldName)){const rec=seen.get(e.fieldName);if(!rec.keyed){rec.obj.key=1;rec.keyed=true;}rec.count++;e.obj.key=rec.count;report.fixes.push({rule:'duplicate-fieldName',screen:n,path:e.path,fixed:`"${e.fieldName}" duplicate #${rec.count} \u2192 added key: ${rec.count}`});}else seen.set(e.fieldName,{obj:e.obj,keyed:false,count:1});}}}}
+  if(data.flows){for(const fl of data.flows){const screens=[];if(fl.body||fl.header||fl.footer)screens.push({s:fl,n:fl.name||''});if(fl.pages)fl.pages.forEach(pg=>screens.push({s:pg,n:pg.page||pg.name||''}));for(const{s,n}of screens){const entries=cfn(s,'',[],0,new WeakSet(),true);const seen=new Map();for(const e of entries){if(seen.has(e.fieldName)){const rec=seen.get(e.fieldName);if(!rec.ided){if(!rec.obj.id){rec.obj.id=e.fieldName+'_1';}rec.ided=true;}rec.count++;if(!e.obj.id){e.obj.id=e.fieldName+'_'+rec.count;report.fixes.push({rule:'duplicate-fieldName',screen:n,path:e.path,fixed:`"${e.fieldName}" duplicate #${rec.count} \u2192 added id: ${e.obj.id}`});}}else seen.set(e.fieldName,{obj:e.obj,ided:false,count:1});}}}}
 
   // R4: flow categories (inherit from previous flow, then moduleName)
   if(data.flows){let lastCategory='';for(const fl of data.flows){if(fl.category&&fl.category.trim()){lastCategory=fl.category;}else if((fl.screenType||fl.body)&&(!fl.category||!fl.category.trim())){fl.category=lastCategory||moduleName||fl.name||'UNKNOWN';report.fixes.push({rule:'missing-category',flow:fl.name,path:fl.name,fixed:`category \u2192 "${fl.category}"`});}}}
@@ -669,7 +670,7 @@ function analyzeAndFix(configData, opts = {}) {
 
   // R10: collect loc codes
   const APP_CONFIG_FIELDS = new Set(['fieldName','labelPairList']);
-  const visited10=new WeakSet();function wLoc(o,ctx,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach(x=>wLoc(x,ctx,d+1));return;}if(visited10.has(o))return;visited10.add(o);const c={...ctx};if(o.screenType)c.sT=o.screenType;if(o.name&&!o.format)c.pN=o.name;if(o.page)c.pN=o.page;for(const f of LOCALIZATION_FIELDS){const v=o[f];if(v&&typeof v==='string'&&v.trim()){const cd=v.trim();allConfigCodes.add(cd);const tplM=cd.match(/\{\{[^}]*\}\}/g);if(tplM){const withoutTpl=cd.replace(/\{\{[^}]*\}\}/g,'').trim();if(withoutTpl.length>0&&autoFix&&HARDCODED_FIX_FIELDS.has(f)){let msg=cd,args=[];let idx=1;msg=msg.replace(/\{\{[^}]*\}\}/g,(m)=>{args.push(m);return'{'+idx+++'}';});let nc;if(isCode(withoutTpl)){nc=withoutTpl;const readable=smartLocMsg(nc,f,o.format?o.fieldName:null,c.pN,moduleName);msg=msg.replace(nc,readable);}else{const textPart=withoutTpl.toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_|_$/g,'');const sfx=HARDCODED_SUFFIX[f]||'_'+f.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase();nc=(moduleName.toUpperCase()+'_'+textPart+sfx).replace(/_+/g,'_');}o[f]=nc;o[f+'Args']=args;report.fixes.push({rule:'template-'+f,path:'wLoc',fixed:`"${cd}" → "${nc}" + ${f}Args`});if(!allNew.has(nc)){allNew.set(nc,msg);report.missingLocalizations.push({code:nc,fieldType:f,message:msg});}if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(nc);}continue;}if(cd.includes(' ')&&!cd.includes('_')){if(autoFix&&HARDCODED_FIX_FIELDS.has(f)){const sfx=HARDCODED_SUFFIX[f]||'_'+f.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase();const fnPart=o.fieldName&&typeof o.fieldName==='string'?o.fieldName.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase():(c.pN||'').toUpperCase();const nc=(moduleName.toUpperCase()+(fnPart?'_'+fnPart:'')+sfx).replace(/[^A-Z0-9_]/g,'_').replace(/_+/g,'_');if(!existingLocCodes.has(nc)&&!allNew.has(nc)){const orig=cd;o[f]=nc;allNew.set(nc,orig);report.fixes.push({rule:'hardcoded-'+f,path:'wLoc',fixed:`"${orig}" → "${nc}"`});report.missingLocalizations.push({code:nc,fieldType:f,message:orig});if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(nc);}}continue;}if(cd.startsWith('{{'))continue;if(cd.includes('(')||cd.includes('.'))continue;if(!existingLocCodes.has(cd)&&!allNew.has(cd)){const msg=smartLocMsg(cd,f,o.format?o.fieldName:null,c.pN,moduleName);allNew.set(cd,msg);report.missingLocalizations.push({code:cd,fieldType:f,message:msg});}if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(cd);}}if(c.inFooter&&o.fieldName&&typeof o.fieldName==='string'){const fn=o.fieldName.trim();if(fn){const faCode='FOOTER_ACTION_'+fn+'_LABEL';appConfigCodes.add(faCode);if(!existingLocCodes.has(faCode)&&!allNew.has(faCode)){const faMsg=smartMsg(fn,null);allNew.set(faCode,faMsg);report.missingLocalizations.push({code:faCode,fieldType:'footer',message:faMsg});}}}const _lpArr=Array.isArray(o.labelPairList)?o.labelPairList:(o.format==='labelPairList'&&Array.isArray(o.data)?o.data:null);if(_lpArr){for(const pr of _lpArr){for(const kf of['key','label']){if(pr&&pr[kf]&&typeof pr[kf]==='string'&&/^[A-Za-z0-9_]+$/.test(pr[kf])){appConfigCodes.add(pr[kf]);if(!existingLocCodes.has(pr[kf])&&!allNew.has(pr[kf])){const msg=smartMsg(pr[kf],null);allNew.set(pr[kf],msg);report.missingLocalizations.push({code:pr[kf],fieldType:'labelPairList',message:msg});}}}if(pr&&pr.key&&typeof pr.key==='string'&&/^[A-Za-z0-9_]+$/.test(pr.key)){const lpCode='LABEL_PAIR_'+pr.key;appConfigCodes.add(lpCode);if(!existingLocCodes.has(lpCode)&&!allNew.has(lpCode)){const lpMsg=smartMsg(pr.key,null);allNew.set(lpCode,lpMsg);report.missingLocalizations.push({code:lpCode,fieldType:'labelPairList',message:lpMsg});}}}}for(const ea of['enums','dropDownOptions']){if(Array.isArray(o[ea])){for(const en of o[ea]){if(en&&en.name&&typeof en.name==='string'&&en.name.trim()){let nc=en.name.trim();if(nc.startsWith('{{'))continue;if(nc.includes(' ')&&!nc.includes('_')&&autoFix){const origName=nc;nc=moduleName.toUpperCase()+'_ENUM_'+nc.toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/_+$/,'');en.name=nc;report.fixes.push({rule:'hardcoded-enum-name',path:'enum',fixed:`"${origName}" → "${nc}"`});allNew.set(nc,origName);appConfigCodes.add(nc);continue;}appConfigCodes.add(nc);if(!existingLocCodes.has(nc)&&!allNew.has(nc)){const msg=smartLocMsg(nc,'enum',o.fieldName||null,c.pN,moduleName);allNew.set(nc,msg);report.missingLocalizations.push({code:nc,fieldType:'enum',message:msg});}}}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null){const nc=k==='footer'?{...c,inFooter:true}:c;wLoc(v,nc,d+1);}}}
+  const visited10=new WeakSet();function wLoc(o,ctx,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach(x=>wLoc(x,ctx,d+1));return;}if(visited10.has(o))return;visited10.add(o);const c={...ctx};if(o.screenType)c.sT=o.screenType;if(o.name&&!o.format)c.pN=o.name;if(o.page)c.pN=o.page;for(const f of LOCALIZATION_FIELDS){const v=o[f];if(v&&typeof v==='string'&&v.trim()){const cd=v.trim();allConfigCodes.add(cd);const tplM=cd.match(/\{\{[^}]*\}\}/g);if(tplM){const withoutTpl=cd.replace(/\{\{[^}]*\}\}/g,'').trim();if(withoutTpl.length>0&&autoFix&&HARDCODED_FIX_FIELDS.has(f)){let msg=cd,args=[];let idx=1;msg=msg.replace(/\{\{[^}]*\}\}/g,(m)=>{args.push(m);return'{'+idx+++'}';});let nc;if(isCode(withoutTpl)){nc=withoutTpl;const readable=smartLocMsg(nc,f,o.format?o.fieldName:null,c.pN,moduleName);msg=msg.replace(nc,readable);}else{const textPart=withoutTpl.toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_|_$/g,'');const sfx=HARDCODED_SUFFIX[f]||'_'+f.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase();nc=(moduleName.toUpperCase()+'_'+textPart+sfx).replace(/_+/g,'_');}o[f]=nc;o[f+'Args']=args;report.fixes.push({rule:'template-'+f,path:'wLoc',fixed:`"${cd}" → "${nc}" + ${f}Args`});if(!allNew.has(nc)){allNew.set(nc,msg);report.missingLocalizations.push({code:nc,fieldType:f,message:msg});}if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(nc);}continue;}if(cd.includes(' ')&&!cd.includes('_')){if(autoFix&&HARDCODED_FIX_FIELDS.has(f)){const sfx=HARDCODED_SUFFIX[f]||'_'+f.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase();const fnPart=o.fieldName&&typeof o.fieldName==='string'?o.fieldName.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase():(c.pN||'').toUpperCase();const nc=(moduleName.toUpperCase()+(fnPart?'_'+fnPart:'')+sfx).replace(/[^A-Z0-9_]/g,'_').replace(/_+/g,'_');const orig=cd;o[f]=nc;report.fixes.push({rule:'hardcoded-'+f,path:'wLoc',fixed:`"${orig}" → "${nc}"`});if(!existingLocCodes.has(nc)&&!allNew.has(nc)){allNew.set(nc,orig);report.missingLocalizations.push({code:nc,fieldType:f,message:orig});}if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(nc);}continue;}if(cd.startsWith('{{'))continue;if(cd.includes('(')||cd.includes('.'))continue;if(!existingLocCodes.has(cd)&&!allNew.has(cd)){const msg=smartLocMsg(cd,f,o.format?o.fieldName:null,c.pN,moduleName);allNew.set(cd,msg);report.missingLocalizations.push({code:cd,fieldType:f,message:msg});}if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(cd);}}if(c.inFooter&&o.fieldName&&typeof o.fieldName==='string'){const fn=o.fieldName.trim();if(fn){const faCode='FOOTER_ACTION_'+fn+'_LABEL';appConfigCodes.add(faCode);if(!existingLocCodes.has(faCode)&&!allNew.has(faCode)){const faMsg=smartMsg(fn,null);allNew.set(faCode,faMsg);report.missingLocalizations.push({code:faCode,fieldType:'footer',message:faMsg});}}}const _lpArr=Array.isArray(o.labelPairList)?o.labelPairList:(o.format==='labelPairList'&&Array.isArray(o.data)?o.data:null);if(_lpArr){for(const pr of _lpArr){for(const kf of['key','label']){if(pr&&pr[kf]&&typeof pr[kf]==='string'){const _pv=pr[kf].trim();if(_pv.startsWith('{{fn:')){const _fnR=fnKeyToCode(_pv,moduleName);appConfigCodes.add(_fnR.code);if(!existingLocCodes.has(_fnR.code)&&!allNew.has(_fnR.code)){allNew.set(_fnR.code,_fnR.message);report.missingLocalizations.push({code:_fnR.code,fieldType:'labelPairList',message:_fnR.message});}}else if(/^[A-Za-z0-9_]+$/.test(_pv)){appConfigCodes.add(_pv);if(!existingLocCodes.has(_pv)&&!allNew.has(_pv)){const msg=smartMsg(_pv,null);allNew.set(_pv,msg);report.missingLocalizations.push({code:_pv,fieldType:'labelPairList',message:msg});}}}}if(pr&&pr.key&&typeof pr.key==='string'){const _pkv=pr.key.trim();if(_pkv.startsWith('{{fn:')){const _fnR2=fnKeyToCode(_pkv,moduleName);const lpCode='LABEL_PAIR_'+_fnR2.code;appConfigCodes.add(lpCode);if(!existingLocCodes.has(lpCode)&&!allNew.has(lpCode)){allNew.set(lpCode,_fnR2.message);report.missingLocalizations.push({code:lpCode,fieldType:'labelPairList',message:_fnR2.message});}}else if(/^[A-Za-z0-9_]+$/.test(_pkv)){const lpCode='LABEL_PAIR_'+_pkv;appConfigCodes.add(lpCode);if(!existingLocCodes.has(lpCode)&&!allNew.has(lpCode)){const lpMsg=smartMsg(_pkv,null);allNew.set(lpCode,lpMsg);report.missingLocalizations.push({code:lpCode,fieldType:'labelPairList',message:lpMsg});}}}}}for(const ea of['enums','dropDownOptions']){if(Array.isArray(o[ea])){for(const en of o[ea]){if(en&&en.name&&typeof en.name==='string'&&en.name.trim()){let nc=en.name.trim();if(nc.startsWith('{{'))continue;if(nc.includes(' ')&&!nc.includes('_')&&autoFix){const origName=nc;nc=moduleName.toUpperCase()+'_ENUM_'+nc.toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/_+$/,'');en.name=nc;report.fixes.push({rule:'hardcoded-enum-name',path:'enum',fixed:`"${origName}" → "${nc}"`});allNew.set(nc,origName);appConfigCodes.add(nc);continue;}appConfigCodes.add(nc);if(!existingLocCodes.has(nc)&&!allNew.has(nc)){const msg=smartLocMsg(nc,'enum',o.fieldName||null,c.pN,moduleName);allNew.set(nc,msg);report.missingLocalizations.push({code:nc,fieldType:'enum',message:msg});}}}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null){const nc=k==='footer'?{...c,inFooter:true}:c;wLoc(v,nc,d+1);}}}
 
   wLoc(data,{},0);
 
@@ -768,7 +769,9 @@ function cleanupMemory() {
   for (const r of results) {
     if (r._existingLocs) { r._existingLocs.clear(); r._existingLocs = null; }
     if (r._appConfigCodes) { r._appConfigCodes.clear(); r._appConfigCodes = null; }
+    if (r._allConfigCodes) { r._allConfigCodes.clear(); r._allConfigCodes = null; }
     if (r.originalData) r.originalData = null;
+    if (r.newLocalizations) r.newLocalizations = [];
   }
   results = [];
   onlineRecords = [];
@@ -821,7 +824,7 @@ function renderSplitDiff(oldText, newText) {
   const n = oldLines.length, m = newLines.length;
 
   // LCS diff
-  const MAX_DP = 5000;
+  const MAX_DP = 2000;
   let ops; // [{type:'ctx'|'del'|'add', oLine, nLine, oldIdx, newIdx}]
   if (n * m < MAX_DP * MAX_DP) {
     const dp = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
@@ -1548,14 +1551,15 @@ const refDataCache = new Map();
 async function fetchRefDataCodes(envUrl, tenantId, token, locale, contextPath) {
   const cacheKey = `${envUrl}|${tenantId}|${locale}`;
   if (refDataCache.has(cacheKey)) return refDataCache.get(cacheKey);
-  const codes = new Map(); // code -> schemaCode (for tracking source)
+  const codes = new Map(); // code -> { schema, name }
   for (const schema of MDMS_REF_SCHEMAS) {
     try {
       const records = await apiMdmsSearch(envUrl, tenantId, schema, {}, token, locale, contextPath);
       for (const rec of records) {
         const code = rec.data?.code;
+        const name = rec.data?.name || rec.data?.value;
         if (code && typeof code === 'string' && code.trim()) {
-          codes.set(code.trim(), schema);
+          codes.set(code.trim(), { schema, name: (name && typeof name === 'string') ? name.trim() : null });
         }
       }
     } catch (e) { console.warn(`Ref data fetch skipped for ${schema}:`, e.message); }
@@ -1701,33 +1705,39 @@ function collectLabelPairEntries(data) {
   const entries = [];
   const moduleName = data.name || 'UNKNOWN';
   const visited = new WeakSet();
-  function walk(obj, pageName, depth) {
+  function walk(obj, pageName, entityCtx, depth) {
     if (depth > MAX_WALK_DEPTH || !obj || typeof obj !== 'object') return;
-    if (Array.isArray(obj)) { obj.forEach(x => walk(x, pageName, depth + 1)); return; }
+    if (Array.isArray(obj)) { obj.forEach(x => walk(x, pageName, entityCtx, depth + 1)); return; }
     if (visited.has(obj)) return;
     visited.add(obj);
     const pn = obj.page || (obj.screenType ? obj.name : null) || pageName;
-    if (obj.format === 'labelPairList' && Array.isArray(obj.labelPairList)) {
-      for (const pair of obj.labelPairList) {
+    // Propagate entity context from dataSource or wrapperConfig.rootEntity
+    let ec = entityCtx;
+    if (obj.dataSource) ec = obj.dataSource;
+    if (obj.wrapperConfig && obj.wrapperConfig.rootEntity) ec = obj.wrapperConfig.rootEntity;
+    const lpArr = obj.format === 'labelPairList' ? (Array.isArray(obj.data) ? obj.data : Array.isArray(obj.labelPairList) ? obj.labelPairList : null) : null;
+    if (lpArr) {
+      for (const pair of lpArr) {
         if (pair && pair.key && typeof pair.key === 'string') {
+          const entity = inferEntityFromPath(pair.value) || ec || null;
           entries.push({
             key: pair.key,
             value: pair.value || '',
             pageName: pn || '',
             moduleName,
-            entity: inferEntityFromPath(pair.value),
+            entity,
             fieldKey: extractFieldKey(pair.value),
           });
         }
       }
     }
     for (const [k, v] of Object.entries(obj)) {
-      if (typeof v === 'object' && v !== null) walk(v, pn, depth + 1);
+      if (typeof v === 'object' && v !== null) walk(v, pn, ec, depth + 1);
     }
   }
   if (data.flows) {
     for (const fl of data.flows) {
-      walk(fl, fl.name || '', 0);
+      walk(fl, fl.name || '', null, 0);
     }
   }
   return entries;
@@ -1893,7 +1903,26 @@ function buildConfigSummary(result) {
       if (!obj || typeof obj !== 'object') return;
       if (Array.isArray(obj)) { obj.forEach(x => extractFields(x, fields)); return; }
       if (obj.format && obj.fieldName) {
-        fields.push({ fieldName: obj.fieldName, format: obj.format, label: obj.label || '', labelMsg: _resolveMsg(obj.label), heading: obj.heading || '', headingMsg: _resolveMsg(obj.heading) });
+        const field = { fieldName: obj.fieldName, format: obj.format, label: obj.label || '', labelMsg: _resolveMsg(obj.label), heading: obj.heading || '', headingMsg: _resolveMsg(obj.heading) };
+        // Include validation info for context-aware messages
+        if (Array.isArray(obj.validations) && obj.validations.length > 0) {
+          field.validations = obj.validations.map(v => {
+            const vi = { type: v.type || '' };
+            if (v.value != null && v.value !== '' && v.value !== true) vi.value = v.value;
+            return vi;
+          });
+        }
+        // Include placeholder/args info so AI knows which codes need named placeholders
+        for (const pf of ['label', 'heading', 'description', 'title']) {
+          const argsArr = obj[pf + 'Args'] || obj[pf + 'PlaceHolders'];
+          if (Array.isArray(argsArr) && argsArr.length > 0) {
+            field[pf + 'Placeholders'] = argsArr.map(expr => {
+              if (typeof expr === 'string') { const km = expr.match(/\.(\w+)\s*\}?\}?\s*$/); return km ? km[1] : expr; }
+              return expr;
+            });
+          }
+        }
+        fields.push(field);
       }
       for (const [k, v] of Object.entries(obj)) {
         if (typeof v === 'object' && v !== null && k !== 'validations') extractFields(v, fields);
@@ -2081,7 +2110,11 @@ async function aiEnhance(resultsList, resume = false) {
             : (r._existingLocs && r._existingLocs.size > 0)
               ? [...r._existingLocs.entries()].filter(([, m]) => m && m.trim()).map(([code, message]) => ({ code, message }))
               : [];
-          if (existingArr.length === 0) continue;
+          if (existingArr.length === 0) {
+            const allFromSrc = r.newLocalizations.filter(l => l._fromSource).length;
+            addAiLog('warn', `Skipping review for ${r.report.moduleName}: 0 reviewable locs (fromSource=${allFromSrc}, configCodes=${configCodes.size}, existingLocs=${r._existingLocs?.size || 0})`);
+            continue;
+          }
           reviewModIdx++;
           const totalBatches = Math.ceil(existingArr.length / REVIEW_BATCH);
           aiEnhanceState.moduleName = r.report.moduleName;
@@ -2111,16 +2144,23 @@ async function aiEnhance(resultsList, resume = false) {
               if (data.improved && Object.keys(data.improved).length > 0) {
                 for (const [code, message] of Object.entries(data.improved)) {
                   let found = false;
-                  for (const loc of r.newLocalizations) { if (loc.code === code) { loc.message = message; found = true; } }
+                  for (const loc of r.newLocalizations) {
+                    if (loc.code === code) {
+                      loc._originalMessage = loc._originalMessage || loc.message; // preserve original for diff
+                      loc.message = message;
+                      loc._aiModified = true;
+                      found = true;
+                    }
+                  }
                   if (!found) {
                     // Derive module from result's stored locModule, and locale from existing entries
                     const existingLoc = r.newLocalizations[0];
                     const isAppCfg = r._appConfigCodes && r._appConfigCodes.has(code);
                     const baseModule = existingLoc?.module || r._locModule || r._tgtLocModule;
-                    const loc = { code, message, module: baseModule, locale: existingLoc?.locale };
+                    const loc = { code, message, module: baseModule, locale: existingLoc?.locale, _aiModified: true };
                     if (isAppCfg) loc._appConfig = true;
                     r.newLocalizations.push(loc);
-                    if (isAppCfg) r.newLocalizations.push({ code, message, module: 'hcm-appconfiguration', locale: existingLoc?.locale, _appConfig: true });
+                    if (isAppCfg) r.newLocalizations.push({ code, message, module: 'hcm-appconfiguration', locale: existingLoc?.locale, _appConfig: true, _aiModified: true });
                   }
                   existingImproved++;
                   batchImproved++;
@@ -2140,6 +2180,7 @@ async function aiEnhance(resultsList, resume = false) {
           }
         }
         if (existingImproved > 0) addAiLog('info', `${existingImproved} existing localizations improved.`);
+        addAiLog('info', `Review complete: ${reviewModIdx}/${resultsList.length} modules had reviewable locs`);
       }
     }
 
@@ -2242,6 +2283,12 @@ async function refreshMgTgtProjectOptions() {
     if ($('#olSchema').value.includes('FormConfigTemplate')) refreshProjectOptions('ol');
   });
 });
+// Auto-switch context path based on environment URL
+if ($('#olUrlSel')) $('#olUrlSel').addEventListener('change', () => {
+  const url = $('#olUrlSel').value;
+  const ctx = $('#olContextPath');
+  if (ctx) ctx.value = url.includes('hcm-demo') ? 'mdms-v2' : 'egov-mdms-service';
+});
 ['mgSrcUrlSel', 'mgSrcUrl', 'mgSrcTenantSel', 'mgSrcTenant'].forEach(id => {
   const el = $(`#${id}`);
   if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'blur', () => {
@@ -2250,11 +2297,23 @@ async function refreshMgTgtProjectOptions() {
     if (!$('#mgDiffEnv')?.checked && $('#mgTgtSchema').value.includes('FormConfigTemplate')) refreshMgTgtProjectOptions();
   });
 });
+// Auto-switch context path for migrate source
+if ($('#mgSrcUrlSel')) $('#mgSrcUrlSel').addEventListener('change', () => {
+  const url = $('#mgSrcUrlSel').value;
+  const ctx = $('#mgSrcContextPath');
+  if (ctx) ctx.value = url.includes('hcm-demo') ? 'mdms-v2' : 'egov-mdms-service';
+});
 ['mgTgtUrlSel', 'mgTgtUrl', 'mgTgtTenantSel', 'mgTgtTenant'].forEach(id => {
   const el = $(`#${id}`);
   if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'blur', () => {
     if ($('#mgTgtSchema').value.includes('FormConfigTemplate')) refreshMgTgtProjectOptions();
   });
+});
+// Auto-switch context path for migrate target
+if ($('#mgTgtUrlSel')) $('#mgTgtUrlSel').addEventListener('change', () => {
+  const url = $('#mgTgtUrlSel').value;
+  const ctx = $('#mgTgtContextPath');
+  if (ctx) ctx.value = url.includes('hcm-demo') ? 'mdms-v2' : 'egov-mdms-service';
 });
 // Also refresh target project when source context path changes (target may use source ctx)
 const mgSrcCtxEl = $('#mgSrcContextPath');
@@ -2438,7 +2497,11 @@ async function onlineFetch() {
       try {
         const msgs = await apiLocSearch(envUrl, locModule, tenant, onlineLocale, onlineToken);
         existingLocCodes = new Map(msgs.map(m => [m.code, m.message]));
-      } catch (e) { console.warn(`Loc search skipped for ${locModule}:`, e.message); }
+        console.log(`[Corrector] Loc search for "${locModule}": ${existingLocCodes.size} existing messages found`);
+      } catch (e) { console.warn(`[Corrector] Loc search FAILED for "${locModule}":`, e.message); }
+      if (existingLocCodes.size === 0) {
+        console.warn(`[Corrector] No existing locs for "${locModule}" — AI review will skip this module`);
+      }
 
       // Save module-specific locs before merging appConfig (for AI context & display)
       const moduleExistingLocs = new Map(existingLocCodes);
@@ -2511,25 +2574,32 @@ async function onlineFetch() {
     }
     console.log('[Corrector] LFPC records:', allLfpcRecs.length, '| entity categories:', [...lfpcLocCodes].filter(c => c.startsWith('LABEL_PAIR_CATEGORY_')), '| total LFPC codes:', lfpcLocCodes.size);
 
-    // Add ref data codes + LFPC codes to the FIRST result only (shared codes — not per-module)
-    if (results.length > 0) {
-      const firstResult = results[0];
-      const existingCodes = new Set(firstResult.newLocalizations.map(l => l.code));
-      const locModule = firstResult._locModule;
+    // Add ref data codes + LFPC codes to ALL results (every module gets ref data localizations)
+    for (const result of results) {
+      const existingCodes = new Set(result.newLocalizations.map(l => l.code));
+      const locModule = result._locModule;
       // Reference data codes (both module and appConfig)
-      for (const [code, schema] of refDataCodes) {
+      for (const [code, info] of refDataCodes) {
         if (!existingCodes.has(code)) {
-          const msg = smartMsg(code, null) || humanize(code);
-          firstResult.newLocalizations.push({ code, message: msg, module: locModule, locale: onlineLocale, _refData: true });
-          firstResult.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: onlineLocale, _appConfig: true, _refData: true });
+          const msg = info.name || smartMsg(code, null) || humanize(code);
+          result.newLocalizations.push({ code, message: msg, module: locModule, locale: onlineLocale, _refData: true });
+          result.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: onlineLocale, _appConfig: true, _refData: true });
           existingCodes.add(code);
+        } else {
+          // Code already exists — mark as _refData and ensure appConfig entry exists with existing message
+          const existingLoc = result.newLocalizations.find(l => l.code === code);
+          if (existingLoc) existingLoc._refData = true;
+          const msg = existingLoc ? existingLoc.message : (info.name || smartMsg(code, null) || humanize(code));
+          if (!result.newLocalizations.some(l => l.code === code && l.module === 'hcm-appconfiguration')) {
+            result.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: onlineLocale, _appConfig: true, _refData: true, _fromSource: true });
+          }
         }
       }
       // LFPC entity category + labelField codes (appConfig only)
       for (const code of lfpcLocCodes) {
         if (!existingCodes.has(code)) {
           const msg = smartMsg(code, null) || humanize(code);
-          firstResult.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: onlineLocale, _appConfig: true, _fromLfpc: true });
+          result.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: onlineLocale, _appConfig: true, _fromLfpc: true });
           existingCodes.add(code);
         }
       }
@@ -2763,25 +2833,32 @@ async function migrateFetch() {
     }
     console.log('[Corrector] LFPC records:', allLfpcRecs.length, '| entity categories:', [...lfpcLocCodes].filter(c => c.startsWith('LABEL_PAIR_CATEGORY_')), '| total LFPC codes:', lfpcLocCodes.size);
 
-    // Add ref data codes + LFPC codes to the FIRST result only (shared codes — not per-module)
-    if (results.length > 0) {
-      const firstResult = results[0];
-      const existingCodes = new Set(firstResult.newLocalizations.map(l => l.code));
-      const tgtLocModule = firstResult._tgtLocModule;
+    // Add ref data codes + LFPC codes to ALL results (every module gets ref data localizations)
+    for (const result of results) {
+      const existingCodes = new Set(result.newLocalizations.map(l => l.code));
+      const tgtLocModule = result._tgtLocModule;
       // Reference data codes (both module and appConfig)
-      for (const [code, schema] of refDataCodes) {
+      for (const [code, info] of refDataCodes) {
         if (!existingCodes.has(code)) {
-          const msg = smartMsg(code, null) || humanize(code);
-          firstResult.newLocalizations.push({ code, message: msg, module: tgtLocModule, locale: tgtLocale, _refData: true });
-          firstResult.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: tgtLocale, _appConfig: true, _refData: true });
+          const msg = info.name || smartMsg(code, null) || humanize(code);
+          result.newLocalizations.push({ code, message: msg, module: tgtLocModule, locale: tgtLocale, _refData: true });
+          result.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: tgtLocale, _appConfig: true, _refData: true });
           existingCodes.add(code);
+        } else {
+          // Code already exists — mark as _refData and ensure appConfig entry exists with existing message
+          const existingLoc = result.newLocalizations.find(l => l.code === code);
+          if (existingLoc) existingLoc._refData = true;
+          const msg = existingLoc ? existingLoc.message : (info.name || smartMsg(code, null) || humanize(code));
+          if (!result.newLocalizations.some(l => l.code === code && l.module === 'hcm-appconfiguration')) {
+            result.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: tgtLocale, _appConfig: true, _refData: true, _fromSource: true });
+          }
         }
       }
       // LFPC entity category + labelField codes (appConfig only)
       for (const code of lfpcLocCodes) {
         if (!existingCodes.has(code)) {
           const msg = smartMsg(code, null) || humanize(code);
-          firstResult.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: tgtLocale, _appConfig: true, _fromLfpc: true });
+          result.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: tgtLocale, _appConfig: true, _fromLfpc: true });
           existingCodes.add(code);
         }
       }
@@ -2866,6 +2943,8 @@ async function pushOnlineToEnv() {
       const locModule = r._locModule || getLocModule(onlineSchema, r.report.moduleName, onlineProject, onlineCampaign);
       const allRaw = [];
       for (const m of r.newLocalizations) {
+        // Skip _fromSource entries that were NOT modified by AI review — they're already correct in the environment
+        if (m._fromSource && !m._aiModified) continue;
         allRaw.push({ code: m.code, message: m.message, module: m.module || locModule, locale: onlineLocale });
         if (m._appConfig) {
           allRaw.push({ code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: onlineLocale });
@@ -3032,11 +3111,11 @@ function showFilePushDialog() {
         <div class="form-group"><label>Environment URL</label>
           <div class="combo-select-row">
             <select id="fpUrlSel">
-              ${['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].map(u =>
+              ${['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org','https://hcm-demo.digit.org'].map(u =>
                 `<option value="${u}" ${cached.url === u ? 'selected' : ''}>${u.replace('https://','')}</option>`).join('')}
-              <option value="__other__" ${cached.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].includes(cached.url) ? 'selected' : ''}>Other...</option>
+              <option value="__other__" ${cached.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org','https://hcm-demo.digit.org'].includes(cached.url) ? 'selected' : ''}>Other...</option>
             </select>
-            <input type="text" id="fpUrl" class="combo-custom ${cached.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].includes(cached.url) ? 'active' : ''}" placeholder="https://custom-env.example.org" value="${esc(cached.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].includes(cached.url) ? cached.url : '')}">
+            <input type="text" id="fpUrl" class="combo-custom ${cached.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org','https://hcm-demo.digit.org'].includes(cached.url) ? 'active' : ''}" placeholder="https://custom-env.example.org" value="${esc(cached.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org','https://hcm-demo.digit.org'].includes(cached.url) ? cached.url : '')}">
           </div>
         </div>
         <div class="form-group"><label>Username</label><input type="text" id="fpUser" placeholder="SATYA" value="${esc(cached.user || '')}"></div>
@@ -3077,6 +3156,12 @@ function showFilePushDialog() {
     overlay.classList.remove('hidden');
     initComboSelect('fpUrlSel', 'fpUrl');
     initComboSelect('fpTenantSel', 'fpTenant');
+    // Auto-switch context path for file-push
+    const fpUrlSelEl = box.querySelector('#fpUrlSel');
+    if (fpUrlSelEl) fpUrlSelEl.addEventListener('change', () => {
+      const ctx = box.querySelector('#fpContextPath');
+      if (ctx) ctx.value = fpUrlSelEl.value.includes('hcm-demo') ? 'mdms-v2' : 'egov-mdms-service';
+    });
 
     // Toggle Project vs Campaign based on schema + fetch project types
     const schemaEl = box.querySelector('#fpSchema');
@@ -3869,11 +3954,11 @@ function showFileTranslateDialog() {
         <div class="form-group"><label>Environment URL</label>
           <div class="combo-select-row">
             <select id="ftUrlSel">
-              ${['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].map(u =>
+              ${['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org','https://hcm-demo.digit.org'].map(u =>
                 `<option value="${u}" ${fileTranslateEnv?.url === u ? 'selected' : ''}>${u.replace('https://','')}</option>`).join('')}
-              <option value="__other__" ${fileTranslateEnv?.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].includes(fileTranslateEnv.url) ? 'selected' : ''}>Other...</option>
+              <option value="__other__" ${fileTranslateEnv?.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org','https://hcm-demo.digit.org'].includes(fileTranslateEnv.url) ? 'selected' : ''}>Other...</option>
             </select>
-            <input type="text" id="ftUrl" class="combo-custom ${fileTranslateEnv?.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].includes(fileTranslateEnv.url) ? 'active' : ''}" placeholder="https://custom-env.example.org" value="${fileTranslateEnv?.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].includes(fileTranslateEnv.url) ? esc(fileTranslateEnv.url) : ''}">
+            <input type="text" id="ftUrl" class="combo-custom ${fileTranslateEnv?.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org','https://hcm-demo.digit.org'].includes(fileTranslateEnv.url) ? 'active' : ''}" placeholder="https://custom-env.example.org" value="${fileTranslateEnv?.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org','https://hcm-demo.digit.org'].includes(fileTranslateEnv.url) ? esc(fileTranslateEnv.url) : ''}">
           </div>
         </div>
         <div class="form-group"><label>Username</label><input type="text" id="ftUser" placeholder="SATYA" value="${fileTranslateEnv?.user || ''}"></div>
@@ -3902,6 +3987,12 @@ function showFileTranslateDialog() {
     overlay.classList.remove('hidden');
     initComboSelect('ftUrlSel', 'ftUrl');
     initComboSelect('ftTenantSel', 'ftTenant');
+    // Auto-switch context path for file-translate
+    const ftUrlSelEl = box.querySelector('#ftUrlSel');
+    if (ftUrlSelEl) ftUrlSelEl.addEventListener('change', () => {
+      const ctx = box.querySelector('#ftContextPath');
+      if (ctx) ctx.value = ftUrlSelEl.value.includes('hcm-demo') ? 'mdms-v2' : 'egov-mdms-service';
+    });
 
     const restoreBox = () => {
       overlay.classList.add('hidden');
@@ -4303,14 +4394,12 @@ function renderModule(idx) {
       <div id="locTableWrap">${renderLocTable(idx)}</div>
     </div>
 
-    <!-- Diff -->
+    <!-- Diff (lazy-rendered on tab click for performance) -->
     <div class="tab-panel" id="tp-diff">
-      <div class="code-viewer">
-        ${renderSplitDiff(JSON.stringify(originalData, null, 2), JSON.stringify(correctedData, null, 2))}
-      </div>
+      <div class="code-viewer" id="diffViewWrap"><div style="padding:20px;color:var(--subtext)">Click to load diff view...</div></div>
     </div>
 
-    <!-- JSON -->
+    <!-- JSON (lazy-rendered on tab click for performance) -->
     <div class="tab-panel" id="tp-json">
       <div class="code-viewer">
         <div class="code-header"><span>${esc(moduleName)}-corrected.json</span>
@@ -4324,20 +4413,44 @@ function renderModule(idx) {
             <button class="btn btn-sm" onclick="downloadModJson(${idx})">Download</button>
           </div>
         </div>
-        <div id="jsonTreeWrap">${renderJsonTree(correctedData)}</div>
+        <div id="jsonTreeWrap"><div style="padding:20px;color:var(--subtext)">Click to load JSON tree...</div></div>
         <div id="jsonEditError" style="display:none;color:var(--red);padding:4px 12px;font-size:13px"></div>
       </div>
     </div>`;
 
   $('#moduleDetail').innerHTML = html;
 
-  // Tab switching
+  // Tab switching with lazy rendering for diff and JSON tree
+  const _lazyRendered = { diff: false, json: false };
   $$('#modTabs .tab').forEach(tab => {
     tab.onclick = () => {
       $$('#modTabs .tab').forEach(t => t.classList.remove('active'));
       $$('.tab-panel').forEach(p => p.classList.remove('active'));
       tab.classList.add('active');
       $(`#tp-${tab.dataset.t}`).classList.add('active');
+      // Lazy-render diff view on first click
+      if (tab.dataset.t === 'diff' && !_lazyRendered.diff) {
+        _lazyRendered.diff = true;
+        const dw = $('#diffViewWrap');
+        if (dw) {
+          dw.innerHTML = '<div style="padding:20px;color:var(--subtext)">Generating diff...</div>';
+          setTimeout(() => {
+            const r = results[activeModuleIdx];
+            dw.innerHTML = renderSplitDiff(JSON.stringify(r.originalData, null, 2), JSON.stringify(r.correctedData, null, 2));
+          }, 20);
+        }
+      }
+      // Lazy-render JSON tree on first click
+      if (tab.dataset.t === 'json' && !_lazyRendered.json) {
+        _lazyRendered.json = true;
+        const jw = $('#jsonTreeWrap');
+        if (jw) {
+          jw.innerHTML = '<div style="padding:20px;color:var(--subtext)">Rendering JSON tree...</div>';
+          setTimeout(() => {
+            jw.innerHTML = renderJsonTree(results[activeModuleIdx].correctedData);
+          }, 20);
+        }
+      }
     };
   });
 }
