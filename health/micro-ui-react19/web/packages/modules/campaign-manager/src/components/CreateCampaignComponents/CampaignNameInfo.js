@@ -5,10 +5,13 @@ import { CheckCircle, Close, InfoOutline } from "@egovernments/digit-ui-svg-comp
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { validateCampaignName, allRulesMet } from "../../utils/campaignNameValidators";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import useCampaignStore from "../../hooks/useCampaignStore";
 
 const CampaignNameInfo = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [nameInfoVisible] = useCampaignStore("CAMPAIGN_NAME_INFO_VISIBLE", null);
+  const [adminConsoleData] = useCampaignStore("HCM_ADMIN_CONSOLE_DATA", null);
 
   // Local state for campaign name - will be updated via custom event
   const [campaignName, setCampaignName] = useState("");
@@ -35,13 +38,13 @@ const CampaignNameInfo = () => {
     window.addEventListener("campaignNameFocus", handleFocus);
 
     // Check separate session key for persisted focus flag (survives step navigation)
-    const infoVisible = Digit.SessionStorage.get("CAMPAIGN_NAME_INFO_VISIBLE");
+    const infoVisible = nameInfoVisible;
     // Also show immediately when editing an existing campaign's name
     const editName = new URLSearchParams(window.location.search).get("editName");
     if (infoVisible || editName === "true") {
       setHasFocused(true);
     }
-    const consoleData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA");
+    const consoleData = adminConsoleData;
     const sessionName = consoleData?.CampaignName;
     if (sessionName && sessionName.length > 0) {
       setCampaignName(sessionName);

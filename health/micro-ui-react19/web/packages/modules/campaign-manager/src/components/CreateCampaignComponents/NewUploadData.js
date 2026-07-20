@@ -8,6 +8,7 @@ import { downloadExcelWithCustomName } from "../../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../TagComponent";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import useCampaignStore from "../../hooks/useCampaignStore";
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
  * for different types of data in a web application.
@@ -19,8 +20,10 @@ import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 const NewUploadData = ({ formData, onSelect, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [uploadIdData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", null);
+  const [adminUploadData] = useCampaignStore("HCM_ADMIN_CONSOLE_UPLOAD_DATA", null);
   const [uploadedFile, setUploadedFile] = useState([]);
-  const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+  const params = uploadIdData;
   const [showInfoCard, setShowInfoCard] = useState(false);
   const [downloadId, setDownloadId] = useState({});
   const [errorsType, setErrorsType] = useState({});
@@ -75,7 +78,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-  const totalData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
+  const totalData = adminUploadData;
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
   const [loaderText, setLoaderText] = useState("CAMPAIGN_VALIDATION_INPROGRESS");

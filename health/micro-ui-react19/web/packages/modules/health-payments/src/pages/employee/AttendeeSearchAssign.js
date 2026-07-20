@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { InboxSearchComposer } from "@egovernments/digit-ui-components";
+import React, { useState, useMemo } from "react";
+import { InboxSearchComposer, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import inboxAttendeeSearchConfig from "../../config/AttendeeInboxConfig";
+import { useMyContext } from "../../utils/context";
 
 /**
  * Component: InboxAttendeesSearch
@@ -13,12 +14,30 @@ import inboxAttendeeSearchConfig from "../../config/AttendeeInboxConfig";
 
 const InboxAttendeesSearch = () => {
   const { t } = useTranslation();
+  const { hierarchyType } = useMyContext();
+  const stateCode = Digit.ULBService.getStateId();
+  const language = Digit.StoreData.getCurrentLanguage();
+  const boundaryModuleCode = useMemo(
+    () => (hierarchyType ? [`boundary-${hierarchyType}`] : []),
+    [hierarchyType]
+  );
+  const { isLoading: isBoundaryLocLoading } = Digit.Services.useStore({
+    stateCode,
+    moduleCode: boundaryModuleCode,
+    language,
+    modulePrefix: "hcm",
+    enabled: boundaryModuleCode.length > 0,
+  });
 
   // Extracting boundaryCode from the URL query parameters using Digit's hook
   const { boundaryCode } = Digit.Hooks.useQueryParams();
 
   const config = inboxAttendeeSearchConfig(boundaryCode);
 
+
+  if (isBoundaryLocLoading) {
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
+  }
 
   /**
           * InboxSearchComposer:

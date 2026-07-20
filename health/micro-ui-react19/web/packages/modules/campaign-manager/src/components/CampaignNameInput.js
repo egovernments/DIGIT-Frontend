@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import { FieldV1 } from "@egovernments/digit-ui-components";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import useCampaignStore from "../hooks/useCampaignStore";
 
 /**
  * CampaignNameInput component for the create-campaign flow.
@@ -11,6 +12,7 @@ import { I18N_KEYS } from "../utils/i18nKeyConstants";
  */
 const CampaignNameInput = ({ onSelect, formData, customProps, ...props }) => {
   const { t } = useTranslation();
+  const [, setNameInfoVisible] = useCampaignStore("CAMPAIGN_NAME_INFO_VISIBLE", null);
   const sessionData = customProps?.sessionData || props?.props?.sessionData;
 
   // Initializing name from session data or form data
@@ -75,7 +77,7 @@ const CampaignNameInput = ({ onSelect, formData, customProps, ...props }) => {
   const handleFocus = () => {
     window.dispatchEvent(new CustomEvent("campaignNameFocus"));
     // Persist in a separate key so it survives step navigation (HCM_ADMIN_CONSOLE_DATA gets overwritten by setParams)
-    Digit.SessionStorage.set("CAMPAIGN_NAME_INFO_VISIBLE", true);
+    setNameInfoVisible(true);
   };
 
   return (

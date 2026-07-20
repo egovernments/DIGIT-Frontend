@@ -1,14 +1,9 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState, useMemo, useCallback, useDeferredValue, useTransition } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-// import Chip from "./Chip";
-// import { SVG } from "./SVG";
-// import Button from "./Button";
-// import TreeSelect from "./TreeSelect";
-// import { Colors} from "../constants/colors/colorconstants";
-// import { iconRender } from "../utils/iconRender";
+import { FixedSizeList as List } from "react-window";
 
-import { Button, CardHeader, Dropdown, LabelFieldPair } from "@egovernments/digit-ui-components";
+import { Button, CardHeader, Dropdown, LabelFieldPair, Loader } from "@egovernments/digit-ui-components";
 import { TreeSelect } from "@egovernments/digit-ui-components";
 import { SVG } from "@egovernments/digit-ui-components";
 import { Chip } from "@egovernments/digit-ui-components";
@@ -296,13 +291,19 @@ const MultiSelectDropdown = ({
   disableClearAll = false,
 }) => {
   const [active, setActive] = useState(false);
+  const [searchInputValue, setSearchInputValue] = useState("");
   const [searchQuery, setSearchQuery] = useState();
+  const deferredSearchQuery = useDeferredValue(searchQuery);
   const [optionIndex, setOptionIndex] = useState(-1);
+  const searchDebounceRef = useRef(null);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [categorySelected, setCategorySelected] = useState({});
   const [showPopUp, setShowPopUp] = useState(false);
   const [dropDownType, setDropDownType] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const dropdownRef = useRef();
+  const listRef = useRef(null);
 
   const { t } = useTranslation();
 
@@ -329,6 +330,7 @@ const MultiSelectDropdown = ({
         );
         if (onClose && !active) {
           setSearchQuery("");
+          setSearchInputValue("");
           onClose(
             newState.map((e) => e.propsData),
             getCategorySelectAllState(),
@@ -344,12 +346,15 @@ const MultiSelectDropdown = ({
     }
   }
 
+  // Use a content-based key so the sync fires when selected items change, not just count
+  const selectedSyncKey = useMemo(() => selected?.map((s) => s?.code).join(",") ?? "", [selected]);
+
   useEffect(() => {
     dispatch({
       type: "REPLACE_COMPLETE_STATE",
       payload: fnToSelectOptionThroughProvidedSelection(selected),
     });
-  }, [selected?.length]);
+  }, [selectedSyncKey]);
 
   // useEffect(() => {
   //   if (selected?.length == 0) {
@@ -367,7 +372,12 @@ const MultiSelectDropdown = ({
 
   useEffect(() => {
     if (!active) {
+      if (searchDebounceRef.current) {
+        clearTimeout(searchDebounceRef.current);
+        searchDebounceRef.current = null;
+      }
       setSearchQuery("");
+      setSearchInputValue("");
       onSelect(
         alreadyQueuedSelectedState?.map((e) => e.propsData),
         getCategorySelectAllState(),
@@ -381,35 +391,20 @@ const MultiSelectDropdown = ({
         );
       }
     }
+    return () => {
+      if (searchDebounceRef.current) {
+        clearTimeout(searchDebounceRef.current);
+        searchDebounceRef.current = null;
+      }
+    };
   }, [active]);
 
-  useEffect(() => {
-    const initialCategorySelectedState = options.reduce((acc, category) => {
-      if (category.options) {
-        var filteredCategoryOptions = category?.options;
-        if (searchQuery?.length > 0) {
-          filteredCategoryOptions = category?.options?.filter((option) =>
-            t(option?.code)?.toLowerCase()?.includes(searchQuery?.toLowerCase())
-          );
-        }
-        acc[category.code] = filteredCategoryOptions.every((option) =>
-          alreadyQueuedSelectedState.some((selectedOption) => selectedOption.code === option.code)
-        );
-      }
-      return acc;
-    }, {});
-    setCategorySelected(initialCategorySelectedState);
-  }, [options, alreadyQueuedSelectedState, searchQuery]);
-
-  const checkSelection = (optionstobeiterated) => {
+  const checkSelection = useCallback((optionstobeiterated) => {
     if (optionstobeiterated && optionstobeiterated.length > 0) {
-      return optionstobeiterated?.every((option) =>
-        alreadyQueuedSelectedState.some((selectedOption) => selectedOption.code === option.code)
-      );
-    } else {
-      return false;
+      return optionstobeiterated.every((option) => selectedCodesSet.has(option.code));
     }
-  };
+    return false;
+  }, [selectedCodesSet]);
 
   useEffect(() => {
     const allOptionsSelected =
@@ -417,61 +412,56 @@ const MultiSelectDropdown = ({
 
     setSelectAllChecked(allOptionsSelected);
 
-    const newCategorySelected = { ...categorySelected };
+    const query = deferredSearchQuery?.toLowerCase();
+    const newCategorySelected = {};
     options
       .filter((option) => option.options)
       .forEach((category) => {
-        newCategorySelected[category.code] = undefined;
-      });
-    options
-      .filter((option) => option.options)
-      .forEach((category) => {
-        // If the category has already been marked as false, skip further processing for this category.
-        if (newCategorySelected[category.code] === false) return;
+        let filteredCategoryOptions = category.options;
 
-        let filteredCategoryOptions = category?.options;
-
-        if (searchQuery?.length > 0) {
-          filteredCategoryOptions = category?.options?.filter((option) =>
-            t(option?.code)?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+        if (query?.length > 0) {
+          filteredCategoryOptions = category.options.filter((option) =>
+            t(option?.code)?.toLowerCase()?.includes(query)
           );
         }
 
         if (filteredCategoryOptions?.length > 0) {
-          const allChildrenSelected = checkSelection(filteredCategoryOptions);
-
-          if (!allChildrenSelected) {
-            newCategorySelected[category.code] = false; // Mark as false if any child is not selected.
-          } else {
-            newCategorySelected[category.code] = true; // Mark as true if all children are selected.
-          }
+          newCategorySelected[category.code] = checkSelection(filteredCategoryOptions);
         }
       });
 
     setCategorySelected(newCategorySelected);
-  }, [options, alreadyQueuedSelectedState, searchQuery]);
+  }, [options, selectedCodesSet, deferredSearchQuery, checkSelection, flattenedOptions, variant, t]);
 
   function handleOutsideClickAndSubmitSimultaneously() {
     setActive(false);
   }
 
   window?.Digit?.Hooks.useClickOutside(dropdownRef, handleOutsideClickAndSubmitSimultaneously, active, { capture: true });
-  const filtOptns =
-    searchQuery?.length > 0
-      ? options?.filter(
-          (option) =>
-            t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey].toUpperCase())
-              .toLowerCase()
-              .indexOf(searchQuery.toLowerCase()) >= 0
-        )
-      : options;
+  const filtOptns = useMemo(() => {
+    if (!deferredSearchQuery || deferredSearchQuery.length === 0) return options;
+    const query = deferredSearchQuery.toLowerCase();
+    return options?.filter(
+      (option) =>
+        t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey].toUpperCase())
+          .toLowerCase()
+          .indexOf(query) >= 0
+    );
+  }, [options, deferredSearchQuery, optionsKey, t]);
 
   useEffect(() => {
     setOptionIndex(0);
   }, [searchQuery]);
 
   function onSearch(e) {
-    setSearchQuery(e.target.value);
+    const value = e.target.value;
+    setSearchInputValue(value);
+    if (searchDebounceRef.current) {
+      clearTimeout(searchDebounceRef.current);
+    }
+    searchDebounceRef.current = setTimeout(() => {
+      setSearchQuery(value);
+    }, 300);
   }
 
   function onSelectToAddToQueue(...props) {
@@ -537,48 +527,59 @@ const MultiSelectDropdown = ({
 
   const handleSelectAll = () => {
     if (!restrictSelection) {
-      if (selectAllChecked) {
-        // Only remove items that are in the current options, keep others
-        const currentOptionCodes =
-          variant === "nestedmultiselect"
-            ? flattenedOptions.filter((option) => !option.options).map((option) => option.code)
-            : options.map((option) => option.code);
-        const remainingSelections = alreadyQueuedSelectedState.filter((selected) => !currentOptionCodes.includes(selected.code));
-        dispatch({ type: "REPLACE_COMPLETE_STATE", payload: remainingSelections });
-        setSelectAllChecked(false);
-      } else {
-        const newPayload =
-          variant === "nestedmultiselect"
-            ? flattenedOptions
-                .filter((option) => !option.options)
-                .map((option) => ({
-                  code: option.code,
-                  name: option.name,
-                  propsData: [null, option],
-                }))
-            : options.map((option) => ({
-                code: option.code,
-                name: option.name,
-                propsData: [null, option],
-              }));
+      // Show processing state immediately, then yield to browser before heavy work
+      setIsProcessing(true);
+      requestAnimationFrame(() => {
+        startTransition(() => {
+          if (selectAllChecked) {
+            // Only remove items that are in the current options, keep others
+            const currentOptionCodesSet = new Set(
+              variant === "nestedmultiselect"
+                ? flattenedOptions.filter((option) => !option.options).map((option) => option.code)
+                : options.map((option) => option.code)
+            );
+            const remainingSelections = alreadyQueuedSelectedState.filter(
+              (selected) => !currentOptionCodesSet.has(selected.code) || frozenCodesSet.has(selected.code)
+            );
+            dispatch({ type: "REPLACE_COMPLETE_STATE", payload: remainingSelections });
+            setSelectAllChecked(false);
+          } else {
+            // Build the new selections from current options
+            const sourceOptions =
+              variant === "nestedmultiselect"
+                ? flattenedOptions.filter((option) => !option.options)
+                : options;
 
-        // Merge with existing selections, avoiding duplicates
-        const existingSelections = alreadyQueuedSelectedState.filter(
-          (existing) => !newPayload.some((newItem) => newItem.code === existing.code)
-        );
-        const mergedPayload = [...existingSelections, ...newPayload];
+            // Use Set for O(n) dedup instead of O(n²) .some() check
+            const newCodesSet = new Set(sourceOptions.map((option) => option.code));
 
-        dispatch({
-          type: "REPLACE_COMPLETE_STATE",
-          payload: mergedPayload,
+            // Keep existing selections that aren't in the new set
+            const existingSelections = alreadyQueuedSelectedState.filter(
+              (existing) => !newCodesSet.has(existing.code)
+            );
+
+            const newPayload = sourceOptions.map((option) => ({
+              code: option.code,
+              name: option.name,
+              propsData: [null, option],
+            }));
+
+            const mergedPayload = [...existingSelections, ...newPayload];
+
+            dispatch({
+              type: "REPLACE_COMPLETE_STATE",
+              payload: mergedPayload,
+            });
+            setSelectAllChecked(true);
+          }
+          setIsProcessing(false);
+          onSelect(
+            alreadyQueuedSelectedState?.map((e) => e.propsData),
+            getCategorySelectAllState(),
+            props
+          );
         });
-        setSelectAllChecked(true);
-      }
-      onSelect(
-        alreadyQueuedSelectedState?.map((e) => e.propsData),
-        getCategorySelectAllState(),
-        props
-      );
+      });
     } else {
       onSelect();
     }
@@ -586,34 +587,37 @@ const MultiSelectDropdown = ({
 
   const handleCategorySelection = (parentOption) => {
     if (!restrictSelection) {
-      const childoptions = parentOption.options;
-      if (!categorySelected[parentOption.code]) {
-        childoptions?.forEach((option) => {
-          const isAlreadySelected = alreadyQueuedSelectedState.some((selectedOption) => selectedOption.code === option.code);
-          if (!isAlreadySelected) {
-            dispatch({
-              type: "ADD_TO_SELECTED_EVENT_QUEUE",
-              payload: [null, option],
-            });
+      setIsProcessing(true);
+      requestAnimationFrame(() => {
+        startTransition(() => {
+          const childoptions = parentOption.options;
+          let newState;
+          if (!categorySelected[parentOption.code]) {
+            // Add all children in a single batch dispatch
+            const childCodes = new Set(childoptions?.map((o) => o.code));
+            const existing = alreadyQueuedSelectedState.filter((s) => !childCodes.has(s.code));
+            const toAdd = childoptions
+              ?.filter((option) => !selectedCodesSet.has(option.code))
+              ?.map((option) => ({ code: option.code, name: option.name, propsData: [null, option] })) || [];
+            newState = [...existing, ...alreadyQueuedSelectedState.filter((s) => childCodes.has(s.code)), ...toAdd];
+          } else {
+            // Remove all children in a single batch dispatch
+            const childCodes = new Set(childoptions?.map((o) => o.code));
+            newState = alreadyQueuedSelectedState.filter((s) => !childCodes.has(s.code) || frozenCodesSet.has(s.code));
           }
+          dispatch({ type: "REPLACE_COMPLETE_STATE", payload: newState });
+          setCategorySelected((prev) => ({
+            ...prev,
+            [parentOption.code]: !categorySelected[parentOption.code],
+          }));
+          setIsProcessing(false);
+          onSelect(
+            newState.map((e) => e.propsData),
+            getCategorySelectAllState(),
+            props
+          );
         });
-      } else {
-        childoptions?.forEach((option) => {
-          dispatch({
-            type: "REMOVE_FROM_SELECTED_EVENT_QUEUE",
-            payload: [null, option],
-          });
-        });
-      }
-      setCategorySelected((prev) => ({
-        ...prev,
-        [parentOption.code]: !categorySelected[parentOption.code],
-      }));
-      onSelect(
-        alreadyQueuedSelectedState?.map((e) => e.propsData),
-        getCategorySelectAllState(),
-        props
-      );
+      });
     } else {
       onSelect();
     }
@@ -670,51 +674,52 @@ const MultiSelectDropdown = ({
   const keyChange = (e) => {
     const optionToScroll = variant === "nestedmultiselect" ? flattenedOptions : filteredOptions;
     if (e.key == "ArrowDown") {
-      setOptionIndex((state) => (state + 1 == optionToScroll.length ? 0 : state + 1));
-      if (optionIndex + 1 == optionToScroll.length) {
-        e?.target?.parentElement?.parentElement?.children?.namedItem("jk-dropdown-unique")?.scrollTo?.(0, 0);
-      } else {
-        optionIndex > 2 && e?.target?.parentElement?.parentElement?.children?.namedItem("jk-dropdown-unique")?.scrollBy?.(0, 45);
+      const newIndex = optionIndex + 1 >= optionToScroll.length ? 0 : optionIndex + 1;
+      setOptionIndex(newIndex);
+      if (listRef.current) {
+        listRef.current.scrollToItem(newIndex);
       }
       e.preventDefault();
     } else if (e.key == "ArrowUp") {
-      setOptionIndex((state) => (state !== 0 ? state - 1 : optionToScroll.length - 1));
-      if (optionIndex === 0) {
-        e?.target?.parentElement?.parentElement?.children?.namedItem("jk-dropdown-unique")?.scrollTo?.(100000, 100000);
-      } else {
-        optionIndex > 2 && e?.target?.parentElement?.parentElement?.children?.namedItem("jk-dropdown-unique")?.scrollBy?.(0, -45);
+      const newIndex = optionIndex !== 0 ? optionIndex - 1 : optionToScroll.length - 1;
+      setOptionIndex(newIndex);
+      if (listRef.current) {
+        listRef.current.scrollToItem(newIndex);
       }
       e.preventDefault();
     } else if (e.key == "Enter") {
       selectOptionThroughKeys(e, optionToScroll[optionIndex]);
     }
   };
-  const filteredOptions =
-    searchQuery?.length > 0
-      ? options
-          ?.map((option) => {
-            if (option?.options && option.options.length > 0) {
-              const matchingNestedOptions = option.options.filter((nestedOption) =>
-                t(nestedOption.code).toLowerCase().includes(searchQuery.toLowerCase())
-              );
-              if (matchingNestedOptions.length > 0) {
-                return {
-                  ...option,
-                  options: matchingNestedOptions,
-                };
-              }
-            } else if (option?.code) {
-              if (t(option.code).toLowerCase().includes(searchQuery.toLowerCase())) {
-                return option;
-              }
-            }
+  const filteredOptions = useMemo(() => {
+    if (!deferredSearchQuery || deferredSearchQuery.length === 0) return options;
+    const query = deferredSearchQuery.toLowerCase();
+    return options
+      ?.map((option) => {
+        if (option?.options && option.options.length > 0) {
+          const matchingNestedOptions = option.options.filter((nestedOption) =>
+            t(nestedOption.code).toLowerCase().includes(query)
+          );
+          if (matchingNestedOptions.length > 0) {
+            return {
+              ...option,
+              options: matchingNestedOptions,
+            };
+          }
+        } else if (option?.code) {
+          if (t(option.code).toLowerCase().includes(query)) {
+            return option;
+          }
+        }
+        return null;
+      })
+      .filter(Boolean);
+  }, [options, deferredSearchQuery, t]);
 
-            return null;
-          })
-          .filter(Boolean)
-      : options;
-
-  const parentOptionsWithChildren = filteredOptions.filter((option) => option.options && option.options.length > 0);
+  const parentOptionsWithChildren = useMemo(
+    () => filteredOptions.filter((option) => option.options && option.options.length > 0),
+    [filteredOptions]
+  );
 
   // const flattenOptions = (options) => {
   //   let flattened = [];
@@ -730,40 +735,54 @@ const MultiSelectDropdown = ({
   // };
 
   const flattenOptions = (options) => {
-    let flattened = [];
+    const seenCodes = new Map();
+    const flattened = [];
 
     options?.forEach((option) => {
-      const existingOption = flattened.find((flattenedOption) => flattenedOption?.code === option?.code);
+      const existing = seenCodes.get(option?.code);
 
-      if (existingOption) {
-        // If the code already exists, merge the new options
+      if (existing) {
+        // If the code already exists, merge the new options into the copy
         if (option.options) {
-          existingOption.options = existingOption.options || [];
-          existingOption.options = existingOption.options.concat(option.options);
+          existing.options = (existing.options || []).concat(option.options);
         }
       } else {
-        flattened.push(option);
+        // Create a shallow copy to avoid mutating the original option
+        const copy = option.options ? { ...option, options: [...option.options] } : option;
+        seenCodes.set(option?.code, copy);
+        flattened.push(copy);
       }
 
       // Flatten any nested options
-      if (option.options) {
-        flattened = flattened.concat(option.options);
+      const children = option.options || [];
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        if (!seenCodes.has(child.code)) {
+          seenCodes.set(child.code, child);
+          flattened.push(child);
+        }
       }
     });
 
-    // Remove duplicates by 'code' within the flattened array
-    flattened = flattened.filter((option, index, self) => index === self.findIndex((o) => o.code === option.code));
-
-    flattened.forEach((option) => {
-      if (option.options) {
-        option.options = option.options.filter((opt, idx, arr) => idx === arr.findIndex((o) => o.code === opt.code));
+    // Dedup child options using Map — operates on our copies, not originals
+    for (let i = 0; i < flattened.length; i++) {
+      const option = flattened[i];
+      if (option.options && option.options.length > 0) {
+        const childMap = new Map();
+        for (let j = 0; j < option.options.length; j++) {
+          const opt = option.options[j];
+          if (!childMap.has(opt.code)) {
+            childMap.set(opt.code, opt);
+          }
+        }
+        option.options = Array.from(childMap.values());
       }
-    });
+    }
 
     return flattened;
   };
 
-  const flattenedOptions = flattenOptions(parentOptionsWithChildren);
+  const flattenedOptions = useMemo(() => flattenOptions(parentOptionsWithChildren), [parentOptionsWithChildren]);
 
   function findParentOption(childOption, options) {
     for (const option of options) {
@@ -780,20 +799,27 @@ const MultiSelectDropdown = ({
     return null;
   }
 
-  const MenuItem = ({ option, index }) => {
+  // Build a Set for O(1) selected lookups instead of repeated .find()
+  const selectedCodesSet = useMemo(
+    () => new Set(alreadyQueuedSelectedState.map((s) => s.code)),
+    [alreadyQueuedSelectedState]
+  );
+
+  // Build a Set for frozen codes
+  const frozenCodesSet = useMemo(
+    () => new Set(frozenData.map((f) => f.code)),
+    [frozenData]
+  );
+
+  const MenuItem = React.memo(({ option, index }) => {
     const [isActive, setIsActive] = useState(false);
-    // When disableClearAll is false (user clicked Yes), don't freeze any options
-    // Only use frozenData when disableClearAll is not explicitly set to false
-    const isFrozen = disableClearAll === false ? false : frozenData.some((frozenOption) => frozenOption.code === option.code);
+    const isSelected = selectedCodesSet.has(option.code);
+    const isFrozen = disableClearAll === false ? false : frozenCodesSet.has(option.code);
     return (
       <div
         key={index}
-        className={`digit-multiselectdropodwn-menuitem ${variant ? variant : ""} ${
-          alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? "checked" : ""
-        } ${
-          index === optionIndex && !alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code)
-            ? "keyChange"
-            : ""
+        className={`digit-multiselectdropodwn-menuitem ${variant ? variant : ""} ${isSelected ? "checked" : ""} ${
+          index === optionIndex && !isSelected ? "keyChange" : ""
         }${isFrozen ? "frozen" : ""}`}
         onMouseDown={() => setIsActive(true)}
         onMouseUp={() => setIsActive(false)}
@@ -806,18 +832,7 @@ const MultiSelectDropdown = ({
         <input
           type="checkbox"
           value={option.code}
-          checked={isFrozen || alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false}
-          // checked={alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false}
-          // onChange={(e) => {
-          //   isPropsNeeded
-          //     ? onSelectToAddToQueue(e, option, props)
-          //     : isOBPSMultiple
-          //     ? onSelectToAddToQueue(e, option, BlockNumber)
-          //     : onSelectToAddToQueue(e, option);
-          // }}
-          // className={`digit-multi-select-dropdown-menuitem ${
-          //   variant ? variant : ""
-          // }`}
+          checked={isFrozen || isSelected}
           onChange={(e) => {
             if (!isFrozen) {
               isPropsNeeded ? onSelectToAddToQueue(e, option, props) : onSelectToAddToQueue(e, option);
@@ -836,18 +851,14 @@ const MultiSelectDropdown = ({
           <div className="multiselectdropdown-icon-option">
             {config?.showIcon &&
               option?.icon &&
-              IconRender(
-                option?.icon,
-                isActive,
-                alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false
-              )}
+              IconRender(option?.icon, isActive, isSelected)}
             <p className="digit-label">{t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey])}</p>
           </div>
           {variant === "nestedtextmultiselect" && option.description && <div className="option-description">{option.description}</div>}
         </div>
       </div>
     );
-  };
+  });
 
   const selectAllOption = addSelectAllCheck && (
     <div className={`digit-multiselectdropodwn-menuitem ${variant ? variant : ""} ${addSelectAllCheck ? "selectAll" : ""}`}>
@@ -858,6 +869,10 @@ const MultiSelectDropdown = ({
       <p className={`digit-label ${addSelectAllCheck ? "selectAll" : ""}`}>{selectAllLabel ? selectAllLabel : t(I18N_KEYS.COMMON.SELECT_ALL)}</p>
     </div>
   );
+  const ITEM_HEIGHT = 45;
+  const MAX_VISIBLE_ITEMS = 8;
+  const OVERSCAN_COUNT = 5;
+
   const Menu = () => {
     const optionsToRender = variant === "nestedmultiselect" ? flattenedOptions : filteredOptions;
 
@@ -869,34 +884,73 @@ const MultiSelectDropdown = ({
       );
     }
 
+    // Add 2px buffer to prevent sub-pixel scrollbar when items exactly fill the container
+    const listHeight = Math.min(optionsToRender.length, MAX_VISIBLE_ITEMS) * ITEM_HEIGHT + 2;
+
+    const VirtualizedRow = ({ index, style }) => {
+      const option = optionsToRender[index];
+      if (option.options) {
+        return (
+          <div style={style} key={index} className={`digit-nested-category ${addSelectAllCheck ? "selectAll" : ""}`}>
+            <div className="digit-category-name">{t(option[optionsKey])}</div>
+            {addCategorySelectAllCheck && (
+              <div className="digit-category-selectAll" onClick={() => handleCategorySelection(option)}>
+                <div className="category-selectAll-label">{categorySelectAllLabel ? categorySelectAllLabel : t(I18N_KEYS.COMMON.SELECT_ALL)}</div>
+                <input type="checkbox" checked={selectAllChecked || categorySelected[option.code]} />
+                <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
+                  <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      } else {
+        return (
+          <div style={style}>
+            <MenuItem option={option} index={index} />
+          </div>
+        );
+      }
+    };
+
     return (
       <div>
         {selectAllOption}
-        {optionsToRender?.map((option, index) => {
-          if (option.options) {
-            return (
-              <div key={index} className={`digit-nested-category ${addSelectAllCheck ? "selectAll" : ""}`}>
-                <div className="digit-category-name">{t(option[optionsKey])}</div>
-                {addCategorySelectAllCheck && (
-                  <div className="digit-category-selectAll" onClick={() => handleCategorySelection(option)}>
-                    <div className="category-selectAll-label">{categorySelectAllLabel ? categorySelectAllLabel : t(I18N_KEYS.COMMON.SELECT_ALL)}</div>
-                    <input type="checkbox" checked={selectAllChecked || categorySelected[option.code]} />
-                    <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
-                      <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          } else {
-            return <MenuItem option={option} key={index} index={index} />;
-          }
-        })}
+        <List
+          ref={listRef}
+          height={listHeight}
+          itemCount={optionsToRender.length}
+          itemSize={ITEM_HEIGHT}
+          width="100%"
+          overscanCount={OVERSCAN_COUNT}
+          style={{ overflowX: "hidden" }}
+        >
+          {VirtualizedRow}
+        </List>
       </div>
     );
   };
   return (
-    <div>
+    <div style={{ position: "relative" }}>
+      {(isProcessing || isPending) && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(255,255,255,0.6)",
+            zIndex: 1001,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            pointerEvents: "none",
+          }}
+        >
+          <Loader />
+        </div>
+      )}
       <div
         className={`digit-multiselectdropdown-wrap ${props?.className ? props?.className : ""} ${variant ? variant : ""}`}
         ref={dropdownRef}
@@ -913,7 +967,7 @@ const MultiSelectDropdown = ({
             type="text"
             onKeyDown={keyChange}
             onFocus={() => setActive(true)}
-            value={searchQuery}
+            value={searchInputValue}
             onChange={onSearch}
           />
           <div className="digit-multiselectdropdown-label">

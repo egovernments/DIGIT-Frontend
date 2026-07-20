@@ -1,11 +1,13 @@
 import React, { useMemo } from "react";
 import { Loader, SelectionTag } from "@egovernments/digit-ui-components";
 import { useCustomT, useCustomTranslate } from "../hooks/useCustomT";
+import useCampaignStore from "../../../../hooks/useCampaignStore";
 
 const SelectionCard = ({ field, t, props }) => {
   const selectionField = field || props?.field;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const customT = useCustomTranslate();
+  const [adminUploadData] = useCampaignStore("HCM_ADMIN_CONSOLE_UPLOAD_DATA", null);
 
   // Check if this is a resourceCard field
   const isResourceCard = (field?.format === "custom" || props?.field?.format === "custom")
@@ -14,12 +16,12 @@ const SelectionCard = ({ field, t, props }) => {
       || field?.fieldName?.toLowerCase()?.includes("product")
       || props?.field?.fieldName?.toLowerCase()?.includes("product"));
 
-  // Fetch product variants from session storage for resourceCard
+  // Read product variants from campaign store (adminUploadData) for resourceCard
   const productVariants = useMemo(() => {
     if (!isResourceCard) return [];
 
     try {
-      const sessionData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
+      const sessionData = adminUploadData;
       if (!sessionData) return [];
 
       const deliveryData = sessionData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
@@ -61,7 +63,7 @@ const SelectionCard = ({ field, t, props }) => {
       console.error("Error extracting product variants:", error);
       return [];
     }
-  }, [isResourceCard]);
+  }, [isResourceCard, adminUploadData]);
 
   // Parse schemaCode to get moduleName and masterName
   const { moduleName, masterName, isValidSchema } = useMemo(() => {

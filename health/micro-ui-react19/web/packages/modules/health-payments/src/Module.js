@@ -18,8 +18,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "ADMIN";
-  const moduleCode = ["payments", `boundary-${hierarchyType}`];
+  const moduleCode = ["payments"];
   const modulePrefix = "hcm";
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
@@ -29,7 +28,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
     modulePrefix,
   });
   let user = Digit?.SessionStorage.get("User");
-  const { isLoading: isPaymentsModuleInitializing } = Digit.Hooks.payments.usePaymentsInitialization({
+  const { isLoading: isPaymentsModuleInitializing, data: initData } = Digit.Hooks.payments.usePaymentsInitialization({
     tenantId: tenantId,
   });
 
@@ -80,7 +79,10 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
     return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
   } else {
     return (
-      <ProviderContext>
+      <ProviderContext
+        hierarchyType={initData?.hierarchyType}
+        lowestBoundaryLevel={initData?.lowestBoundaryLevel}
+      >
         <EmployeeApp stateCode={stateCode} userType={userType} tenants={tenants} />
       </ProviderContext>
     );

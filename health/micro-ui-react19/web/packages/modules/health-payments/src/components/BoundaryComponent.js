@@ -2,6 +2,7 @@ import { Dropdown, TextBlock } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ScreenTypeEnum } from "../utils/constants";
+import { useMyContext } from "../utils/context";
 
 /**
  * BoundaryComponent allows users to select boundaries based on the hierarchy.
@@ -22,10 +23,10 @@ const BoundaryComponent = ({
   disableChildOptions,
 }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "NEWTEST00222";
+  const { hierarchyType, lowestBoundaryLevel: ctxLowestBoundary } = useMyContext();
   // Get the hierarchy and boundary configurations from session storage
   const boundaryHierarchy = Digit.SessionStorage.get("boundaryHierarchyOrder").map((item) => item.code);
-  const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentsConfig")?.lowestLevelBoundary || "DISTRICT";
+  const lowestLevelBoundaryType = ctxLowestBoundary || "DISTRICT";
 
   // State to manage boundary data visibility, values, and selected boundaries
   const defaultBoundaryData = boundaryHierarchy.reduce((acc, curr) => {

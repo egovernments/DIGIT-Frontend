@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { myCampaignConfig } from "../../configs/myCampaignConfig";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import { resetAllCampaignData } from "../../store/campaignStore";
+import useCampaignStore from "../../hooks/useCampaignStore";
 
 /**
  * The `MyCampaign` function is a React component that displays a header with a campaign search title
@@ -16,6 +19,8 @@ import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 const MyCampaign = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [timelinePopup] = useCampaignStore("HCM_TIMELINE_POPUP", null);
   const [config, setConfig] = useState(myCampaignConfig?.myCampaignConfig?.[0]);
   const [tabData, setTabData] = useState(
     myCampaignConfig?.myCampaignConfig?.map((configItem, index) => ({ key: index, label: configItem.label, active: index === 0 ? true : false }))
@@ -27,21 +32,17 @@ const MyCampaign = () => {
   };
 
   useEffect(() => {
-    
-    window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-    window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-    window.Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
-    window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
-    window.Digit.SessionStorage.del("HCM_ATTENDANCE_REGISTER_DATA");
-    window.Digit.SessionStorage.del("HCM_ATTENDANCE_UPLOAD_DATA");
-    window.Digit.SessionStorage.del("HCM_CREATE_REGISTERS_DATA");
+    dispatch(resetAllCampaignData());
   }, []);
 
   useEffect(() => {
     const handleStorageChange = () => {
-      const newSession = Digit.SessionStorage.get("HCM_TIMELINE_POPUP");
-      setSession(newSession);
-      setTimeLine(newSession);
+      // NOTE: setSession and setTimeLine are not defined in this component.
+      // This event handler appears to be dead code carried over from another component.
+      // Leaving the structure intact but using the reactive timelinePopup value from useCampaignStore.
+      const newSession = timelinePopup;
+      // setSession(newSession);
+      // setTimeLine(newSession);
     };
 
     window.addEventListener("HCM_TIMELINE_POPUP_CHANGE", handleStorageChange);
@@ -49,7 +50,7 @@ const MyCampaign = () => {
     return () => {
       window.removeEventListener("HCM_TIMELINE_POPUP_CHANGE", handleStorageChange);
     };
-  }, [Digit.SessionStorage.get("HCM_TIMELINE_POPUP")]);
+  }, [timelinePopup]);
 
   const onClickRow = ({ original: row }) => {
     const currentTab = tabData?.find((i) => i?.active === true)?.label;

@@ -1,10 +1,11 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import useCampaignStore from "../hooks/useCampaignStore";
 
 function mergeObjects(item) {
   const arr = item;
@@ -77,6 +78,31 @@ function loopAndReturn(dataa, t) {
   });
   return format;
 }
+
+// Build a fingerprint string from deliveryRules for persistence verification
+const getDeliveryFingerprint = (deliveryRules) => {
+  if (!deliveryRules?.length) return "";
+  try {
+    return deliveryRules
+      .flatMap((rule) =>
+        (rule?.cycles || []).flatMap((cycle) =>
+          (cycle?.deliveries || []).flatMap((delivery) =>
+            (delivery?.doseCriteria || []).map((criteria) => {
+              const variants = (criteria?.ProductVariants || [])
+                .map((pv) => `${pv.productVariantId}:${pv.quantity}`)
+                .sort()
+                .join("|");
+              return `${criteria.condition || ""}~${variants}`;
+            })
+          )
+        )
+      )
+      .sort()
+      .join(",");
+  } catch (e) {
+    return "";
+  }
+};
 
 function reverseDeliveryRemap(data, t) {
   if (!data) return null;
@@ -200,6 +226,7 @@ const DeliveryDetailsSummary = (props) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [formStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", null);
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const noAction = searchParams.get("action");
@@ -212,7 +239,7 @@ const DeliveryDetailsSummary = (props) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-  const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName;
+  const campaignName = formStorageData?.HCM_CAMPAIGN_NAME?.campaignName;
   const handleRedirect = (step, activeCycle) => {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
@@ -329,6 +356,44 @@ const DeliveryDetailsSummary = (props) => {
     },
   });
 
+  // Retry search if delivery rules (cycles) are not yet persisted by the backend
+  const retryCountRef = useRef(0);
+  const retryTimerRef = useRef(null);
+  const [isPolling, setIsPolling] = useState(false);
+  const MAX_PERSISTENCE_RETRIES = 3;
+  const PERSISTENCE_RETRY_DELAY_MS = 5000;
+
+  useEffect(() => {
+    // Compare the update request fingerprint against what the search returned
+    if (isLoading || isFetching) return;
+    const expectedFingerprint = Digit.SessionStorage.get("campaignDeliveryFingerprint");
+    if (!expectedFingerprint) return; // No pending update to verify
+    const serverFingerprint = getDeliveryFingerprint(data?.data?.deliveryRules);
+    const isPersisted = serverFingerprint === expectedFingerprint;
+    if (!isPersisted) {
+      if (retryCountRef.current < MAX_PERSISTENCE_RETRIES) {
+        setIsPolling(true);
+        retryTimerRef.current = setTimeout(() => {
+          retryCountRef.current += 1;
+          refetch();
+        }, PERSISTENCE_RETRY_DELAY_MS);
+      } else {
+        setIsPolling(false);
+        Digit.SessionStorage.del("campaignDeliveryFingerprint");
+      }
+    } else {
+      // Data persisted, stop polling and clear the fingerprint
+      retryCountRef.current = 0;
+      setIsPolling(false);
+      Digit.SessionStorage.del("campaignDeliveryFingerprint");
+    }
+    return () => {
+      if (retryTimerRef.current) {
+        clearTimeout(retryTimerRef.current);
+      }
+    };
+  }, [isLoading, isFetching, data]);
+
   const closeToast = () => {
     setShowToast(null);
   };
@@ -363,7 +428,7 @@ const DeliveryDetailsSummary = (props) => {
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />}
+      {(isLoading || (!data && !error) || isFetching || isPolling) && <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />}
       <div className="container-full">
         {/* <div className="card-container">
           <Card className="card-header-timeline">

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Card, Header, Button, Dropdown, Toast, HeaderComponent, Footer } from "@egovernments/digit-ui-components";
 import { MANAGE_BILLS_ROLE_STORAGE_KEY, normalizeManageBillsRoleParam } from "../../utils/roleUtils";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import { useMyContext } from "../../utils/context";
 
 /* --------------------------- Media Query Hook --------------------------- */
 const useMediaQuery = (query) => {
@@ -69,7 +70,8 @@ const ProjectSelect = ({ nextScreen }) => {
   const [showToast, setShowToast] = useState(null);
 
   const boundaryHierarchyOrder = Digit.SessionStorage.get("boundaryHierarchyOrder");
-  const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentsConfig")?.lowestLevelBoundary || "DISTRICT";
+  const { lowestBoundaryLevel } = useMyContext();
+  const lowestLevelBoundaryType = lowestBoundaryLevel || "DISTRICT";
 
   const AGGREGATION_LEVEL_OPTIONS = boundaryHierarchyOrder
     ?.filter((item) => item.order <= boundaryHierarchyOrder?.find((d) => d.code === lowestLevelBoundaryType)?.order)

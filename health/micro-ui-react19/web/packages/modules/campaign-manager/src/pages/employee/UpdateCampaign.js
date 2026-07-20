@@ -8,6 +8,9 @@ import { UpdateBoundaryConfig } from "../../configs/UpdateBoundaryConfig";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { compareIdentical, groupByTypeRemap, resourceData, updateUrlParams } from "../../utils/setupCampaignHelpers";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import useCampaignStore from "../../hooks/useCampaignStore";
+import { useDispatch } from "react-redux";
+import { clearUnifiedUploadData, resetAllCampaignData, campaignStore } from "../../store/campaignStore";
 
 /**
  * The `UpdateCampaign` function in JavaScript handles the Updating of campaign details,
@@ -20,8 +23,8 @@ import { I18N_KEYS } from "../../utils/i18nKeyConstants";
  */
 
 const UpdateCampaign = () => {
-  const resourceDatas = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_SET_UP");
-  Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", resourceDatas);
+  const [resourceDatas] = useCampaignStore("HCM_ADMIN_CONSOLE_SET_UP", null);
+  const dispatch = useDispatch();
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -36,8 +39,8 @@ const UpdateCampaign = () => {
   const summaryKey = isUnifiedCampaign ? 3 : 5;
   const [campaignConfig, setCampaignConfig] = useState(UpdateBoundaryConfig({ totalFormData, isUnifiedCampaign }));
   const [shouldUpdate, setShouldUpdate] = useState(false);
-  const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_UPLOAD_DATA", {});
-  const [dataParams, setDataParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
+  const [params, setParams] = useCampaignStore("HCM_ADMIN_CONSOLE_UPLOAD_DATA", {});
+  const [dataParams, setDataParams] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
   const [showToast, setShowToast] = useState(null);
   const [summaryErrors, setSummaryErrors] = useState({});
   const { mutate } = Digit.Hooks.campaign.useCreateCampaign(tenantId);
@@ -363,7 +366,8 @@ const UpdateCampaign = () => {
                   setShowToast({ key: "error", label: error?.message ? error?.message : error });
                 },
                 onSuccess: async (data) => {
-                  // No need to refetch - navigating away immediately
+                  // Clear campaign store state before navigating away
+                  campaignStore.dispatch(resetAllCampaignData());
                   navigate(
                     `/${window.contextPath}/employee/campaign/response?campaignId=${
                       data?.CampaignDetails?.campaignNumber
@@ -378,7 +382,6 @@ const UpdateCampaign = () => {
                       },
                     }
                   );
-                  Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
                 },
                 onSettled: () => {
                   // This will always run after the mutation completes
@@ -821,8 +824,7 @@ const UpdateCampaign = () => {
         [name]: { ...formData },
       });
     } else if (name === "HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA" && formData?.boundaryType?.updateBoundary === true) {
-      window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
-      window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UNIFIED_UPLOAD_DATA");
+      dispatch(clearUnifiedUploadData());
       setTotalFormData((prevData) => ({
         ...prevData,
         [name]: formData,

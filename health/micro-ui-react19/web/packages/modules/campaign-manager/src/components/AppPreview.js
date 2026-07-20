@@ -2,6 +2,7 @@ import React, { Fragment, useMemo, useState } from "react";
 import { Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components";
 import MobileBezelFrame from "./MobileBezelFrame";
 import ComponentToRender from "./ComponentToRender";
+import useCampaignStore from "../hooks/useCampaignStore";
 
 
 // Simple tabs component
@@ -41,10 +42,12 @@ const Tabs = React.memo(({ tabs, activeTab, onTabChange, t }) => {
 });
 
 const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
+  const [adminUploadData] = useCampaignStore("HCM_ADMIN_CONSOLE_UPLOAD_DATA", null);
+
     // Extract all unique product variants from sessionStorage
   const productVariants = useMemo(() => {
     try {
-      const sessionData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
+      const sessionData = adminUploadData;
       if (!sessionData) return [];
 
       // const parsedData = JSON.parse(sessionData);
@@ -86,7 +89,7 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
       console.error("Error extracting product variants:", error);
       return [];
     }
-  }, []);
+  }, [adminUploadData]);
 
 
   // Initialize active tab with first product variant

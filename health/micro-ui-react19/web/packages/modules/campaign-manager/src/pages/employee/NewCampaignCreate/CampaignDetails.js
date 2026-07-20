@@ -1,6 +1,6 @@
 import { Button, HeaderComponent, Footer, Loader, Tag, Toast, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import React, { Fragment, useState, useEffect, useMemo } from "react";
+import React, { Fragment, useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
@@ -12,6 +12,8 @@ import { downloadExcelWithCustomName } from "../../../utils";
 import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDateFormat";
 import QRButton from "../../../components/CreateCampaignComponents/QRButton";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import useCampaignStore from "../../../hooks/useCampaignStore";
+import { resetCreateCampaignData, campaignStore } from "../../../store/campaignStore";
 
 function transformCampaignData(inputObj = {}) {
   const deliveryRule = inputObj.deliveryRules?.[0] || {};
@@ -151,6 +153,17 @@ const CampaignDetails = () => {
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
   const url = getMDMSUrl(true);
 
+  const [, setAdminConsole] = useCampaignStore("HCM_ADMIN_CONSOLE_DATA", {});
+  const [, setAdminUpload] = useCampaignStore("HCM_ADMIN_CONSOLE_UPLOAD_DATA", {});
+  const [, setUploadId] = useCampaignStore("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
+  const [, setHierarchy] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
+  const [, setCampaignNumberInfo] = useCampaignStore("HCM_CAMPAIGN_NUMBER", null);
+
+  // Clear stale store data when navigating to view-details for a different campaign
+  useEffect(() => {
+    campaignStore.dispatch(resetCreateCampaignData());
+  }, []);
+
   // useEffect(() => {
   //   window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   //   window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
@@ -177,7 +190,38 @@ const CampaignDetails = () => {
     },
   };
 
-  const { isLoading, data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { isLoading, data: campaignData, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  // Retry search if resources are not yet persisted after upload
+  const retryCountRef = useRef(0);
+  const retryTimerRef = useRef(null);
+  const afterUpload = location.state?.afterUpload;
+  const [isPolling, setIsPolling] = useState(false);
+
+  useEffect(() => {
+    if (!afterUpload) return;
+    if (isLoading || isFetching) return;
+    const resources = campaignData?.resources;
+    if (!resources || resources.length === 0) {
+      if (retryCountRef.current < 3) {
+        setIsPolling(true);
+        retryTimerRef.current = setTimeout(() => {
+          retryCountRef.current += 1;
+          refetch();
+        }, 5000);
+      } else {
+        setIsPolling(false);
+      }
+    } else {
+      retryCountRef.current = 0;
+      setIsPolling(false);
+    }
+    return () => {
+      if (retryTimerRef.current) {
+        clearTimeout(retryTimerRef.current);
+      }
+    };
+  }, [afterUpload, isLoading, isFetching, campaignData]);
 
   const BOUNDARY_HIERARCHY_TYPE = campaignData?.hierarchyType;
 
@@ -277,7 +321,7 @@ const CampaignDetails = () => {
 
   useEffect(() => {
     if (campaignData) {
-      sessionStorage.setItem("HCM_CAMPAIGN_NUMBER", JSON.stringify({ id: campaignData?.id, campaignNumber: campaignNumber }));
+      setCampaignNumberInfo({ id: campaignData?.id, campaignNumber: campaignNumber });
     }
   }, [campaignData]);
 
@@ -326,30 +370,12 @@ const CampaignDetails = () => {
       hierarchyType: BOUNDARY_HIERARCHY_TYPE,
       hierarchy: hierarchyDefinition?.BoundaryHierarchy?.[0],
     };
-    Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_DATA", campaignSessionData);
-    Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_UPLOAD_DATA", tranformedManagerUploadData);
-    Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", hierarchyData);
-    Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", tranformedManagerUploadData);
+    setAdminConsole(campaignSessionData);
+    setAdminUpload(tranformedManagerUploadData);
+    setUploadId(hierarchyData);
     if (campaignData?.hierarchyType) {
-      Digit.SessionStorage.set("HCM_CAMPAIGN_SELECTED_HIERARCHY", { name: campaignData.hierarchyType });
+      setHierarchy({ name: campaignData.hierarchyType });
     }
-    // Update HCM_CAMPAIGN_MANAGER_FORM_DATA with fresh campaign dates for CycleConfiguration
-    const existingFormData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA") || {};
-    Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_FORM_DATA", {
-      ...existingFormData,
-      HCM_CAMPAIGN_DATE: {
-        campaignDates: {
-          startDate: Digit.DateUtils.ConvertEpochToDate(campaignData?.startDate)?.split("/")?.reverse()?.join("-"),
-          endDate: Digit.DateUtils.ConvertEpochToDate(campaignData?.endDate)?.split("/")?.reverse()?.join("-"),
-        },
-      },
-      HCM_CAMPAIGN_TYPE: {
-        projectType: { code: campaignData?.projectType },
-      },
-      HCM_CAMPAIGN_NAME: {
-        campaignName: campaignData?.campaignName,
-      },
-    });
   }, [campaignData, BOUNDARY_HIERARCHY_TYPE, hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy]);
 
   const data = {
@@ -708,7 +734,7 @@ const CampaignDetails = () => {
     setShowQRPopUp(true);
   };
 
-  if (isLoading || isFormConfigLoading) {
+  if (isLoading || isFormConfigLoading || isPolling) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 

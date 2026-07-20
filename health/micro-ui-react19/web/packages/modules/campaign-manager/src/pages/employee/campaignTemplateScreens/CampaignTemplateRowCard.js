@@ -4,12 +4,13 @@ import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import { useNavigate } from "react-router-dom";
 import { Tag, Button, CardText, Card, Toast } from "@egovernments/digit-ui-components";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
+import useCampaignStore from "../../../hooks/useCampaignStore";
 
 const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_DATA", {});
+  const [params, setParams, clearParams] = useCampaignStore("HCM_ADMIN_CONSOLE_DATA", {});
   const [showToast, setShowToast] = useState(null);
 
   const templateName = rowData?.data?.name || "NA";
@@ -143,9 +144,8 @@ const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
                   CycleSelection: "",
                 };
 
-                // Use Digit.SessionStorage.set to directly set the session data
-                // This ensures data is persisted before navigation
-                Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_DATA", sessionData);
+                // Set data via Redux store (persisted via store subscriber)
+                setParams(sessionData);
 
                 // Navigate to campaign create flow - step 2 (campaign name), skipping step 1 (type selection)
                 // fromTemplate=true ensures the campaign type is disabled when going back to step 1

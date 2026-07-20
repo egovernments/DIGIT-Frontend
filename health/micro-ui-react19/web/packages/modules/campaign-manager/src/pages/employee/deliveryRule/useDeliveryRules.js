@@ -29,6 +29,7 @@ import {
   updateObservationStrategy,
 } from './deliveryRulesSlice';
 import { CONSOLE_MDMS_MODULENAME } from '../../../Module';
+import useCampaignStore from "../../../hooks/useCampaignStore";
 
 export const useDeliveryRules = () => {
   const dispatch = useDispatch();
@@ -187,7 +188,8 @@ export const useDeliveryRuleData = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
 
-  const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  const [formStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", null);
+  const sessionData = formStorageData;
   const selectedProjectType = sessionData?.HCM_CAMPAIGN_TYPE?.projectType?.code || searchParams.get("projectType");
 
   // Fetch project configuration from MDMS

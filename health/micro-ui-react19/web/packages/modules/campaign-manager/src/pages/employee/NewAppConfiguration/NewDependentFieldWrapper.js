@@ -20,6 +20,7 @@ import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { fetchFlowPages } from "./redux/flowPagesSlice";
 import { fetchPageFields } from "./redux/pageFieldsSlice";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import useCampaignStore from "../../../hooks/useCampaignStore";
 
 /** Portal so the popup escapes side panels and fills the viewport layer */
 function BodyPortal({ children }) {
@@ -87,6 +88,7 @@ function MdmsValueDropdown({ schemaCode, value, onChange, t, disabled: disabledP
 function NewDependentFieldWrapper({ t, viewMode }) {
     const useT = useCustomTranslate();
     const dispatch = useDispatch();
+    const [adminUploadData] = useCampaignStore("HCM_ADMIN_CONSOLE_UPLOAD_DATA", null);
     const tenantId = Digit?.ULBService?.getCurrentTenantId?.() || "mz";
 
     // Redux selectors
@@ -268,7 +270,7 @@ function NewDependentFieldWrapper({ t, viewMode }) {
     // Extract product variants from session storage
     const productVariants = useMemo(() => {
         try {
-            const sessionData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
+            const sessionData = adminUploadData;
             if (!sessionData) return [];
 
             const deliveryData = sessionData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
@@ -310,7 +312,7 @@ function NewDependentFieldWrapper({ t, viewMode }) {
             console.error("Error extracting product variants:", error);
             return [];
         }
-    }, []);
+    }, [adminUploadData]);
 
     // Get field options for a page
     // IMPORTANT: we exclude the selectedField (the one being configured) from options
@@ -760,7 +762,7 @@ function NewDependentFieldWrapper({ t, viewMode }) {
     const openEditor = (idx) => {
         const r = rules[idx] || { conds: [{ leftPage: currentPageName, leftField: "", comparisonType: {}, isFieldComparison: false, fieldValue: "", joiner: { code: "&&", name: "AND" }, isContains: false }] };
         // Normalize conds: resolve pages/fields metadata if needed later in UI
-        const cloned = JSON.parse(JSON.stringify(r));
+        const cloned = structuredClone(r);
         setDraftRule(cloned);
         setGlobalFormError("");
         setValidationStarted(false);
@@ -836,7 +838,7 @@ function NewDependentFieldWrapper({ t, viewMode }) {
     const addSubCondition = () => {
         setValidationStarted(true);
         setDraftRule((prev) => {
-            const next = JSON.parse(JSON.stringify(prev));
+            const next = structuredClone(prev);
             next.conds.push({
                 leftPage: currentPageName,
                 leftField: "",
@@ -854,7 +856,7 @@ function NewDependentFieldWrapper({ t, viewMode }) {
 
     const removeSubCondition = (idx) => {
         setDraftRule((prev) => {
-            const next = JSON.parse(JSON.stringify(prev));
+            const next = structuredClone(prev);
             next.conds = next.conds.filter((_, i) => i !== idx);
             if (!next.conds.length) {
                 next.conds.push({
@@ -878,7 +880,7 @@ function NewDependentFieldWrapper({ t, viewMode }) {
 
     const updateSubCond = (index, patch) => {
         setDraftRule((prev) => {
-            const next = JSON.parse(JSON.stringify(prev));
+            const next = structuredClone(prev);
             next.conds = next.conds.map((c, i) => (i === index ? { ...c, ...patch } : c));
             return next;
         });
@@ -886,7 +888,7 @@ function NewDependentFieldWrapper({ t, viewMode }) {
 
     const changeJoinerForCond = (idx, joinCode) => {
         setDraftRule((prev) => {
-            const next = JSON.parse(JSON.stringify(prev));
+            const next = structuredClone(prev);
             // joiner sits on the cond that comes AFTER the joiner (we follow earlier navigation scheme)
             if (next.conds[idx]) {
                 next.conds[idx].joiner = { code: joinCode, name: joinCode === "||" ? "OR" : "AND" };
