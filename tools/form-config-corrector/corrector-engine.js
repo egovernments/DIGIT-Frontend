@@ -17,7 +17,7 @@
  *   9. Icon missing in properties when icon at component level
  *  10. Localization: collect all text codes, generate smart messages for missing ones
  *  11. labelPairList keys need localizations
- *  12. enum/dropDownOptions name values need localizations
+ *  12. enum/dropDownOptions name AND code values need localizations
  */
 
 const MAX_WALK_DEPTH = 50;
@@ -60,6 +60,12 @@ const DOMAIN_WORDS = [
   'STATUS', 'DESCRIPTION', 'CONTACT', 'INBOX', 'COMPLAINANT',
   'REFERRAL', 'SYMPTOM', 'ERROR', 'MOBILE',
 ].sort((a, b) => b.length - a.length);
+
+// Fields where hardcoded English text should be auto-converted to localization codes (excludes fieldName, key — those are identifiers)
+const HARDCODED_FIX_FIELDS = new Set(['label', 'heading', 'title', 'description', 'message', 'helpText', 'infoText', 'actionLabel', 'primaryActionLabel', 'secondaryActionLabel', 'expandLabel', 'collapseLabel', 'innerLabel', 'tooltip', 'errorMessage']);
+
+// Suffix appended to generated codes per field type (mirrors smartMsg strip patterns)
+const HARDCODED_SUFFIX = {label:'_LABEL',helpText:'_HELP_TEXT',infoText:'_INFO_TEXT',tooltip:'_TOOLTIP',heading:'_HEADING',title:'_TITLE',description:'_DESCRIPTION',errorMessage:'_ERROR_MESSAGE',message:'_MESSAGE',primaryActionLabel:'_PRIMARY_ACTION_LABEL',secondaryActionLabel:'_SECONDARY_ACTION_LABEL',actionLabel:'_ACTION_LABEL',innerLabel:'_INNER_LABEL',expandLabel:'_EXPAND_LABEL',collapseLabel:'_COLLAPSE_LABEL'};
 
 const SMALL_WORDS = new Set(['a', 'an', 'the', 'to', 'of', 'in', 'for', 'and', 'or', 'but', 'is', 'at', 'by', 'on']);
 
@@ -130,6 +136,33 @@ function humanizeField(fn) {
   if (!fn) return null;
   if (FIELD_LABEL_MAP[fn]) return FIELD_LABEL_MAP[fn];
   return fn.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, (c) => c.toUpperCase());
+}
+
+/**
+ * Convert a {{fn:...}} expression into a localization code and human-readable message.
+ * e.g. "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}" with moduleName "INVENTORY"
+ *   -> { code: "INVENTORY_SECOND_PAGE_PARTY", message: "Second Page Party" }
+ */
+function fnKeyToCode(fnExpression, moduleName) {
+  // Strip {{fn: prefix and trailing }}
+  let inner = fnExpression.replace(/^\{\{fn:/, '').replace(/\}\}$/, '').trim();
+  // Extract function name (before the parenthesis)
+  const parenIdx = inner.indexOf('(');
+  const funcName = parenIdx >= 0 ? inner.substring(0, parenIdx) : inner;
+  // Strip common prefixes: get
+  let stripped = funcName.replace(/^get/, '');
+  // Strip common suffixes: Label
+  stripped = stripped.replace(/Label$/, '');
+  if (!stripped) stripped = funcName;
+  // Convert camelCase to UPPER_SNAKE_CASE
+  const snake = stripped.replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase();
+  const code = (moduleName || 'MODULE').toUpperCase() + '_' + snake;
+  // Derive human-readable message from the snake-cased core
+  const message = snake.split('_').filter(Boolean).map((s, i) => {
+    const lower = s.toLowerCase();
+    return (i > 0 && SMALL_WORDS.has(lower)) ? lower : s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  }).join(' ');
+  return { code, message };
 }
 
 function labelToFieldName(label) {
@@ -341,14 +374,20 @@ function checkAndFixDuplicateFieldNames(data) {
       for (const entry of entries) {
         const fn = entry.fieldName;
         if (seen.has(fn)) {
-          let suffix = 2;
-          let newName = `${fn}${suffix}`;
-          const allNames = new Set(entries.map((e) => e.obj.fieldName));
-          while (allNames.has(newName)) { suffix++; newName = `${fn}${suffix}`; }
-          entry.obj.fieldName = newName;
-          fixes.push({ rule: 'duplicate-fieldName', screen: name, old: fn, new: newName, path: entry.path });
+          const rec = seen.get(fn);
+          if (!rec.ided) {
+            if (!rec.obj.id) {
+              rec.obj.id = fn + '_1';
+            }
+            rec.ided = true;
+          }
+          rec.count++;
+          if (!entry.obj.id) {
+            entry.obj.id = fn + '_' + rec.count;
+            fixes.push({ rule: 'duplicate-fieldName', screen: name, path: entry.path, fixed: `"${fn}" duplicate #${rec.count} → added id: ${entry.obj.id}` });
+          }
         } else {
-          seen.set(fn, true);
+          seen.set(fn, { obj: entry.obj, ided: false, count: 1 });
         }
       }
     }
@@ -695,14 +734,43 @@ function collectLocalizationCodes(data, moduleName, autoFix = false) {
       if (v && typeof v === 'string' && v.trim()) {
         const code = v.trim();
         // Skip non-code values (actual text, template expressions, etc.)
-        if (code.includes(' ') && !code.includes('_')) continue;
+        if (code.includes(' ') && !code.includes('_')) {
+          // Issue 2: Hardcoded text in fields like helpText/infoText — auto-convert to loc code
+          if (autoFix && HARDCODED_FIX_FIELDS.has(f)) {
+            const sfx = HARDCODED_SUFFIX[f] || '_' + f.replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase();
+            const fnPart = obj.fieldName && typeof obj.fieldName === 'string'
+              ? obj.fieldName.replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase()
+              : (c.pageName || '').toUpperCase();
+            const nc = (moduleName.toUpperCase() + (fnPart ? '_' + fnPart : '') + sfx)
+              .replace(/[^A-Z0-9_]/g, '_').replace(/_+/g, '_');
+            const orig = code;
+            obj[f] = nc;
+            fixes.push({ rule: 'hardcoded-to-code', path: f, fixed: `"${orig}" → "${nc}"` });
+            if (!codes.has(nc)) {
+              codes.set(nc, { fieldType: f, message: orig });
+            }
+          }
+          continue;
+        }
         if (code.startsWith('{{')) continue;
         if (code.startsWith('fn:')) continue;
         if (code.includes('(') || code.includes(')')) continue;
         if (code.includes('.')) continue;
 
         if (!codes.has(code)) {
-          const message = generateSmartLocMessage(code, f, isCmp ? obj.fieldName : null, c.pageName, moduleName);
+          let message = generateSmartLocMessage(code, f, isCmp ? obj.fieldName : null, c.pageName, moduleName);
+          // Include named placeholders if component has associated Args/PlaceHolders
+          const phArr = obj[f + 'Args'] || obj[f + 'PlaceHolders'];
+          if (Array.isArray(phArr) && phArr.length > 0 && !message.includes('{')) {
+            const phStr = phArr.map((expr) => {
+              if (typeof expr === 'string') {
+                const km = expr.match(/\.(\w+)\s*\}?\}?\s*$/);
+                return km ? '{' + km[1] + '}' : '{value}';
+              }
+              return '{value}';
+            }).join(', ');
+            message += (f === 'description' ? ' ' + phStr : ': ' + phStr);
+          }
           codes.set(code, { fieldType: f, message, componentFieldName: isCmp ? obj.fieldName : null, pageName: c.pageName });
         }
       }
@@ -717,39 +785,67 @@ function collectLocalizationCodes(data, moduleName, autoFix = false) {
       }
     }
 
-    // labelPairList keys
-    if (Array.isArray(obj.labelPairList)) {
-      for (const pair of obj.labelPairList) {
+    // labelPairList keys (format=labelPairList stores pairs in obj.data)
+    const labelPairArr = obj.format === 'labelPairList' && Array.isArray(obj.data) ? obj.data : Array.isArray(obj.labelPairList) ? obj.labelPairList : null;
+    if (labelPairArr) {
+      for (const pair of labelPairArr) {
         for (const keyField of ['key', 'label']) {
-          if (pair && pair[keyField] && typeof pair[keyField] === 'string' && isCode(pair[keyField])) {
-            if (!codes.has(pair[keyField])) {
-              codes.set(pair[keyField], { fieldType: 'labelPairList', message: smartMessageFromCode(pair[keyField], moduleName) });
+          if (pair && pair[keyField] && typeof pair[keyField] === 'string') {
+            const pairVal = pair[keyField].trim();
+            // {{fn:...}} keys: keep as-is in config, but generate localization entry
+            if (pairVal.startsWith('{{fn:')) {
+              const fnResult = fnKeyToCode(pairVal, moduleName);
+              if (!codes.has(fnResult.code)) {
+                codes.set(fnResult.code, { fieldType: 'labelPairList', message: fnResult.message });
+              }
+            } else if (isCode(pairVal)) {
+              if (!codes.has(pairVal)) {
+                codes.set(pairVal, { fieldType: 'labelPairList', message: smartMessageFromCode(pairVal, moduleName) });
+              }
             }
           }
         }
       }
     }
 
-    // enums and dropDownOptions (dropdown/dropdownTemplate components)
+    // enums and dropDownOptions (dropdown/dropdownTemplate components) — name AND code
     for (const enumArr of ['enums', 'dropDownOptions']) {
       if (Array.isArray(obj[enumArr])) {
         for (const en of obj[enumArr]) {
+          // Localize enum name
           if (en && en.name && typeof en.name === 'string' && en.name.trim()) {
             let nc = en.name.trim();
-            if (nc.startsWith('{{')) continue;
-            // Plain text name (has spaces, no underscores) -> generate a code and replace
-            if (nc.includes(' ') && !nc.includes('_') && autoFix) {
-              const origName = nc;
-              nc = moduleName.toUpperCase() + '_ENUM_' + nc.toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/_+$/, '');
-              en.name = nc;
-              fixes.push({ rule: 'hardcoded-enum-name', path: enumArr, fixed: `"${origName}" \u2192 "${nc}"` });
-              if (!codes.has(nc)) {
-                codes.set(nc, { fieldType: 'enum', message: origName });
+            if (!nc.startsWith('{{')) {
+              // Plain text name (has spaces, no underscores) -> generate a code and replace
+              if (nc.includes(' ') && !nc.includes('_') && autoFix) {
+                const origName = nc;
+                nc = moduleName.toUpperCase() + '_ENUM_' + nc.toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/_+$/, '');
+                en.name = nc;
+                fixes.push({ rule: 'hardcoded-enum-name', path: enumArr, fixed: `"${origName}" \u2192 "${nc}"` });
+                if (!codes.has(nc)) {
+                  codes.set(nc, { fieldType: 'enum', message: origName });
+                }
+              } else if (!codes.has(nc)) {
+                codes.set(nc, { fieldType: 'enum', message: generateSmartLocMessage(nc, 'enum', obj.fieldName || null, c.pageName, moduleName) });
               }
-              continue;
             }
-            if (!codes.has(nc)) {
-              codes.set(nc, { fieldType: 'enum', message: generateSmartLocMessage(nc, 'enum', obj.fieldName || null, c.pageName, moduleName) });
+          }
+          // Localize enum code
+          if (en && en.code && typeof en.code === 'string' && en.code.trim()) {
+            let cc = en.code.trim();
+            if (!cc.startsWith('{{')) {
+              // Plain text code (has spaces, no underscores) -> generate a localization key and replace
+              if (cc.includes(' ') && !cc.includes('_') && autoFix) {
+                const origCode = cc;
+                cc = moduleName.toUpperCase() + '_ENUM_' + cc.toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/_+$/, '');
+                en.code = cc;
+                fixes.push({ rule: 'hardcoded-enum-code', path: enumArr, fixed: `code "${origCode}" \u2192 "${cc}"` });
+                if (!codes.has(cc)) {
+                  codes.set(cc, { fieldType: 'enum', message: origCode });
+                }
+              } else if (!codes.has(cc)) {
+                codes.set(cc, { fieldType: 'enum', message: generateSmartLocMessage(cc, 'enum', obj.fieldName || null, c.pageName, moduleName) });
+              }
             }
           }
         }
@@ -809,13 +905,18 @@ function generateSmartLocMessage(code, fieldType, componentFieldName, pageName, 
 // Rule 11: LabelFieldPairConfig name localizations
 // ──────────────────────────────────────────────────────────────
 
-function collectLfpcCodes(lfpcRecords) {
+function collectLfpcCodes(lfpcRecords, configData) {
   const codes = new Map();
   for (const rec of (lfpcRecords || [])) {
     if (rec.data && Array.isArray(rec.data.labelFields)) {
+      let entity = rec.data.entity;
+      // Entity fallback: if the record's entity is missing, try to infer from config context
+      if (!entity && configData) {
+        entity = configData.dataSource || (configData.wrapperConfig && configData.wrapperConfig.rootEntity) || null;
+      }
       for (const lf of rec.data.labelFields) {
         if (lf.name && typeof lf.name === 'string' && !lf.name.startsWith('{{') && !codes.has(lf.name)) {
-          codes.set(lf.name, { entity: rec.data.entity, message: smartMessageFromCode(lf.name, null) });
+          codes.set(lf.name, { entity: entity || null, message: smartMessageFromCode(lf.name, null) });
         }
       }
     }
@@ -916,7 +1017,7 @@ function analyzeAndFix(configData, options = {}) {
   }
 
   // Rule 11: LFPC codes
-  const lfpcCodes = collectLfpcCodes(lfpcRecords);
+  const lfpcCodes = collectLfpcCodes(lfpcRecords, data);
   for (const [code, info] of lfpcCodes) {
     if (!existingLocCodes.has(code) && !allNewLocCodes.has(code)) {
       allNewLocCodes.set(code, info.message);
@@ -952,6 +1053,7 @@ if (typeof module !== 'undefined' && module.exports) {
     checkAndFixIcons,
     collectLocalizationCodes,
     collectLfpcCodes,
+    fnKeyToCode,
     isCode,
     smartMessageFromCode,
     generateSmartLocMessage,
