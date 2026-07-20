@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-// Polls every 20s, but ONLY while the last known response actually had something in
+// Polls every 5s, but ONLY while the last known response actually had something in
 // progress - otherwise this would hit the network forever even when nothing is running.
 // @tanstack/react-query v5's refetchInterval accepts a (query) => number|false callback,
 // so the on/off toggle is derived straight from query.state.data - no extra local state
@@ -28,7 +28,7 @@ const useReportsInProgress = ({ tenantId, campaignIdentifier, reportName, config
         select: (data) => data?.data || [],
         gcTime: 0,
         refetchIntervalInBackground: false,
-        refetchInterval: (query) => ((query?.state?.data || []).length > 0 ? 20000 : false),
+        refetchInterval: (query) => ((query?.state?.data?.data || []).length > 0 ? 5000 : false),
         ...config,
       },
     }),

@@ -61,6 +61,23 @@ const formatCreatedTime = (createdtime) => {
   return toOrdinalDate(date);
 };
 
+// reporttriggeredtimems is epoch millis - unlike createdtime/toOrdinalDate above (which
+// render in UTC), this must render in the viewer's local time, so no timeZone override
+// and plain getDate()/getFullYear() (local) instead of the UTC variants.
+const toOrdinalDateLocal = (date) => {
+  const d = date.getDate();
+  const suffix = d % 10 === 1 && d !== 11 ? "st" : d % 10 === 2 && d !== 12 ? "nd" : d % 10 === 3 && d !== 13 ? "rd" : "th";
+  return `${d}${suffix} ${date.toLocaleDateString("en-US", { month: "long" })} ${date.getFullYear()}`;
+};
+
+const formatTriggeredTime = (triggeredTimeMs) => {
+  if (!triggeredTimeMs) return "";
+  const date = new Date(Number(triggeredTimeMs));
+  if (isNaN(date.getTime())) return "";
+  const time = date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+  return `${toOrdinalDateLocal(date)}, ${time}`;
+};
+
 const formatDateForPayload = (dateStr) => {
   if (!dateStr) return "";
   const date = new Date(dateStr);
@@ -156,6 +173,11 @@ const FrequencyContent = ({ reports, inProgressRuns = [], t, reportType }) => {
                   header={t(I18N_KEYS.PAGES.HCM_REPORT_DETAILS)}
                   content={
                     <div>
+                      {report.triggeredTimeLabel && (
+                        <div>
+                          {t(I18N_KEYS.PAGES.HCM_REPORT_TRIGGERED_TIME)}: {report.triggeredTimeLabel}
+                        </div>
+                      )}
                       {report.reportTimeLabel && (
                         <div>
                           {t(I18N_KEYS.PAGES.HCM_REPORT_TIME)}: {report.reportTimeLabel}
@@ -180,7 +202,7 @@ const FrequencyContent = ({ reports, inProgressRuns = [], t, reportType }) => {
                   }
                 >
                   <span className="digit-report-detail__info-trigger" aria-label={t(I18N_KEYS.PAGES.HCM_REPORT_DETAILS)}>
-                    <InfoOutline width="16px" height="16px" fill="#505A5F" />
+                    <InfoOutline width="20px" height="20px" fill="#505A5F" />
                   </span>
                 </TooltipWrapper>
               )}
@@ -313,7 +335,7 @@ const ReportDetailPage = () => {
         return;
       }
 
-      setShowCustomPopup(false);
+      handleClosePopup();
       if (existing.isFailed) {
         setExistingReportPopup({ variant: "failed", data: existing });
       } else if (existing.isTerminal) {
@@ -407,6 +429,7 @@ const ReportDetailPage = () => {
       if (!grouped[freq]) grouped[freq] = [];
 
       const dateLabel = getReportDateLabel(item, freq);
+      const triggeredTimeLabel = formatTriggeredTime(item?.reporttriggeredtimems);
       const reportTimeLabel = formatDuration(item?.reportTimeSeconds);
       const processingTimeLabel = formatDuration(item?.processingTimeSeconds);
       const fileSizeLabel = formatFileSize(item?.filesizebytes);
@@ -416,11 +439,12 @@ const ReportDetailPage = () => {
         id: item?.id,
         dateLabel: dateLabel,
         filestoreid: item?.filestoreid,
+        triggeredTimeLabel,
         reportTimeLabel,
         processingTimeLabel,
         fileSizeLabel,
         rowCountLabel,
-        hasMeta: Boolean(reportTimeLabel || processingTimeLabel || fileSizeLabel || rowCountLabel),
+        hasMeta: Boolean(triggeredTimeLabel || reportTimeLabel || processingTimeLabel || fileSizeLabel || rowCountLabel),
       });
     });
 
