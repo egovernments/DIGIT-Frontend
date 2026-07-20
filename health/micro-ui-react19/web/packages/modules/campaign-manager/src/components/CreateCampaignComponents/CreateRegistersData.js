@@ -4,6 +4,7 @@ import BulkUpload from "../BulkUpload";
 import { Card, HeaderComponent, Button, Toast } from "@egovernments/digit-ui-components";
 import XLSX from "xlsx";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import useCampaignStore from "../../hooks/useCampaignStore";
 
 const TEMPLATE_COLUMNS = [
   "Register Name",
@@ -16,6 +17,7 @@ const TEMPLATE_COLUMNS = [
 
 const CreateRegistersData = ({ formData, onSelect, ...props }) => {
   const { t } = useTranslation();
+  const [, setRegistersData, clearRegistersData] = useCampaignStore("HCM_CREATE_REGISTERS_DATA", null);
   const [uploadedFile, setUploadedFile] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const searchParams = new URLSearchParams(location.search);
@@ -74,7 +76,7 @@ const CreateRegistersData = ({ formData, onSelect, ...props }) => {
         ];
         setUploadedFile(fileData);
 
-        Digit.SessionStorage.set("HCM_CREATE_REGISTERS_DATA", {
+        setRegistersData({
           uploadRegisters: {
             uploadedFile: fileData,
             isSuccess: true,
@@ -89,7 +91,7 @@ const CreateRegistersData = ({ formData, onSelect, ...props }) => {
 
   const onFileDelete = () => {
     setUploadedFile([]);
-    Digit.SessionStorage.del("HCM_CREATE_REGISTERS_DATA");
+    clearRegistersData();
     setShowToast(null);
   };
 

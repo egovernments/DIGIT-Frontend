@@ -4,6 +4,7 @@ import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { attendanceUploadConfig } from "../../../configs/attendanceUploadConfig";
+import useCampaignStore from "../../../hooks/useCampaignStore";
 
 const AttendanceUploadScreen = () => {
   const { t } = useTranslation();
@@ -14,7 +15,7 @@ const AttendanceUploadScreen = () => {
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ATTENDANCE_REGISTER_DATA", {});
+  const [params, setParams] = useCampaignStore("HCM_ATTENDANCE_REGISTER_DATA", {});
 
   const reqCriteria = {
     url: `/project-factory/v1/project-type/search`,

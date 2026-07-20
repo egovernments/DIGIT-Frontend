@@ -8,6 +8,9 @@ import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { transformCreateData } from "../../../utils/transformCreateData";
 import { handleCreateValidate } from "../../../utils/handleCreateValidate";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import useCampaignStore from "../../../hooks/useCampaignStore";
+import { resetAllCampaignData, clearSelectedHierarchy, clearSelectedHierarchyCode } from "../../../store/campaignStore";
+import { useDispatch } from "react-redux";
 const CreateCampaign = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -18,11 +21,14 @@ const CreateCampaign = () => {
   const searchParams = new URLSearchParams(location.search);
   const editName = searchParams.get("editName");
   const fromTemplate = searchParams.get("fromTemplate");
-  const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_DATA", {});
+  const [params, setParams] = useCampaignStore("HCM_ADMIN_CONSOLE_DATA", {});
+  const [storedHierarchy] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
+  const dispatch = useDispatch();
   const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData, editName, fromTemplate));
   const [loader, setLoader] = useState(null);
   const skip = searchParams.get("skip");
-  const storedInfo = JSON.parse(sessionStorage.getItem("HCM_CAMPAIGN_NUMBER") || "{}");
+  const [storedCampaignNumber] = useCampaignStore("HCM_CAMPAIGN_NUMBER", {});
+  const storedInfo = storedCampaignNumber || {};
   const id = searchParams.get("id") || storedInfo?.id;
   const isDraft = searchParams.get("draft");
   const campaignNumber = searchParams.get("campaignNumber") || storedInfo?.campaignNumber;
@@ -108,8 +114,8 @@ const CreateCampaign = () => {
         endDate: draftData?.endDate ? Digit.DateUtils.ConvertEpochToDate(draftData?.endDate)?.split("/")?.reverse()?.join("-") : "",
       },
       SelectHierarchy: draftData?.hierarchyType
-        ? { hierarchy: Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")?.name === draftData.hierarchyType
-            ? Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")
+        ? { hierarchy: storedHierarchy?.name === draftData.hierarchyType
+            ? storedHierarchy
             : { name: draftData.hierarchyType } }
         : undefined,
     };
@@ -132,8 +138,9 @@ const CreateCampaign = () => {
 
   useEffect(() => {
     if (!id) {
-      Digit.SessionStorage.del("HCM_CAMPAIGN_SELECTED_HIERARCHY");
-      Digit.SessionStorage.del("HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE");
+      dispatch(clearSelectedHierarchy());
+      dispatch(clearSelectedHierarchyCode());
+      setParams({});  // Clear stale campaign name/date/type from previous flow
     }
   }, []);
 
@@ -210,23 +217,13 @@ const CreateCampaign = () => {
   };
 
   const cleanupSessionAndNavigate = (campNumber, campTenantId) => {
-    Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
-    Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
-    Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-    Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_SET_UP");
-    Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-    Digit.SessionStorage.del("CAMPAIGN_NAME_INFO_VISIBLE");
-    Digit.SessionStorage.del("HCM_ATTENDANCE_REGISTER_DATA");
-    Digit.SessionStorage.del("HCM_ATTENDANCE_UPLOAD_DATA");
-    Digit.SessionStorage.del("HCM_CREATE_REGISTERS_DATA");
-    Digit.SessionStorage.del("HCM_CAMPAIGN_SELECTED_HIERARCHY");
-    Digit.SessionStorage.del("HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE");
+    dispatch(resetAllCampaignData());
     const baseUrl = `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campNumber}&tenantId=${campTenantId}`;
     navigate(isDraft === "true" ? `${baseUrl}&draft=true` : baseUrl);
   };
 
   const handleCampaignMutation = async (formData, hasDateChanged = false) => {
-    const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
+    const sessionHierarchy = storedHierarchy;
     const hierarchyType = sessionHierarchy?.name || formData?.SelectHierarchy?.hierarchy?.name || params?.SelectHierarchy?.hierarchy?.name;
     setLoader(true);
     const isEdit = !!(editName || campaignNumber || id);
@@ -350,7 +347,7 @@ const CreateCampaign = () => {
       boundaries: freshBoundaries,
     };
 
-    const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
+    const sessionHierarchy = storedHierarchy;
     const hierarchyType = sessionHierarchy?.name || updatedParams?.SelectHierarchy?.hierarchy?.name || updatedParams?.hierarchyType;
 
     const payload = transformCreateData({
@@ -518,7 +515,7 @@ const CreateCampaign = () => {
       setShowToast(null);
       setCurrentKey(currentKey + 1);
     } else {
-      const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
+      const sessionHierarchy = storedHierarchy;
       const hierarchySelected = sessionHierarchy || formData?.SelectHierarchy?.hierarchy || params?.SelectHierarchy?.hierarchy;
       if (!hierarchySelected) {
         setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_SELECT_HIERARCHY_REQUIRED) });

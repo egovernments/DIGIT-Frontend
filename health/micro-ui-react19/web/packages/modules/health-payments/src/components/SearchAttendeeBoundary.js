@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ScreenTypeEnum } from "../utils/constants";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import { useMyContext } from "../utils/context";
 
 /**
  * BoundaryComponent allows users to select boundaries based on the hierarchy.
@@ -22,13 +23,13 @@ const AttendeeBoundaryComponent = ({ t, config, onSelect, formData }) => {
     const initialValue = Digit.SessionStorage.get("selectedValues");
     const selectedProject = Digit.SessionStorage.get("selectedProject") || {};
 
-    const lowestLevel = Digit.SessionStorage.get("paymentsConfig")?.lowestLevelBoundary;
+    const { hierarchyType, lowestBoundaryLevel: ctxLowestBoundary } = useMyContext();
+    const lowestLevel = ctxLowestBoundary;
 
     const tenantId = Digit.ULBService.getCurrentTenantId();
-    const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "NEWTEST00222";
     // Get the hierarchy and boundary configurations from session storage
     const boundaryHierarchy = Digit.SessionStorage.get("boundaryHierarchyOrder").map((item) => item.code);
-    const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentsConfig")?.lowestLevelBoundary || "DISTRICT";
+    const lowestLevelBoundaryType = ctxLowestBoundary || "DISTRICT";
 
     // State to manage boundary data visibility, values, and selected boundaries
     const defaultBoundaryData = boundaryHierarchy.reduce((acc, curr) => {

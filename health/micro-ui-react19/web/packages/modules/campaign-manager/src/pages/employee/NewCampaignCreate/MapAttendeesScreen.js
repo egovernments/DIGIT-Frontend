@@ -4,6 +4,7 @@ import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { mapAttendeesConfig } from "../../../configs/mapAttendeesConfig";
+import useCampaignStore from "../../../hooks/useCampaignStore";
 
 const MapAttendeesScreen = () => {
   const { t } = useTranslation();
@@ -17,7 +18,7 @@ const MapAttendeesScreen = () => {
   const registerId = searchParams.get("registerId");
   const registerNumber = searchParams.get("registerNumber");
   const registerName = searchParams.get("registerName");
-  const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ATTENDANCE_ATTENDEE_DATA", {});
+  const [params, setParams] = useCampaignStore("HCM_ATTENDANCE_ATTENDEE_DATA", {});
 
   const reqCriteria = {
     url: `/project-factory/v1/project-type/search`,

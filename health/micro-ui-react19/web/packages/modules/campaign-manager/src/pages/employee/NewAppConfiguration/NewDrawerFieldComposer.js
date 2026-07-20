@@ -237,7 +237,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     if (bindTo.includes(".")) {
       // Handle nested properties with deep copy to avoid frozen object issues
       const keys = bindTo.split(".");
-      const newField = JSON.parse(JSON.stringify(selectedField));
+      const newField = structuredClone(selectedField);
       let current = newField;
       for (let i = 0; i < keys.length - 1; i++) {
         if (!current[keys[i]]) {
@@ -300,7 +300,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         if (bindTo.includes(".")) {
           // Handle nested properties with deep copy to avoid frozen object issues
           const keys = bindTo.split(".");
-          const newField = JSON.parse(JSON.stringify(currentSelectedField));
+          const newField = structuredClone(currentSelectedField);
           let current = newField;
           for (let i = 0; i < keys.length - 1; i++) {
             if (!current[keys[i]]) {
@@ -335,7 +335,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         if (bindTo.includes(".")) {
           // Handle nested properties with deep copy to avoid frozen object issues
           const keys = bindTo.split(".");
-          const newField = JSON.parse(JSON.stringify(currentSelectedField));
+          const newField = structuredClone(currentSelectedField);
           let current = newField;
           for (let i = 0; i < keys.length - 1; i++) {
             if (!current[keys[i]]) {
@@ -371,7 +371,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         // Non-localizable text: save raw value directly
         if (bindTo.includes(".")) {
           const keys = bindTo.split(".");
-          const newField = JSON.parse(JSON.stringify(currentSelectedField));
+          const newField = structuredClone(currentSelectedField);
           let current = newField;
           for (let i = 0; i < keys.length - 1; i++) {
             if (!current[keys[i]]) current[keys[i]] = {};
@@ -410,7 +410,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         }
         if (bindTo.includes(".")) {
           const keys = bindTo.split(".");
-          const newField = JSON.parse(JSON.stringify(currentSelectedField));
+          const newField = structuredClone(currentSelectedField);
           let current = newField;
           for (let i = 0; i < keys.length - 1; i++) {
             if (!current[keys[i]]) current[keys[i]] = {};
@@ -423,11 +423,16 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         }
       }
     } else if (panelItem.fieldType === "number") {
-      // Number: save value directly
-      const numValue = currentLocalValue === "" || currentLocalValue === null || currentLocalValue === undefined ? null : currentLocalValue;
+      // Number: clamp min on blur (allows incremental typing in onChange)
+      let numValue = currentLocalValue === "" || currentLocalValue === null || currentLocalValue === undefined ? null : currentLocalValue;
+      if (numValue !== null && panelItem.min !== undefined && numValue < panelItem.min) {
+        numValue = panelItem.min;
+        setLocalValue(numValue);
+        localValueRef.current = numValue;
+      }
       if (bindTo.includes(".")) {
         const keys = bindTo.split(".");
-        const newField = JSON.parse(JSON.stringify(currentSelectedField));
+        const newField = structuredClone(currentSelectedField);
         let current = newField;
         for (let i = 0; i < keys.length - 1; i++) {
           if (!current[keys[i]]) current[keys[i]] = {};
@@ -445,6 +450,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     panelItem?.isLocalisable,
     panelItem.bindTo,
     panelItem.defaultValue,
+    panelItem.min,
     dispatch,
     currentLocale,
     onFieldChange,
@@ -470,7 +476,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           // Handle nested properties with deep copy (e.g., "visibilityCondition.expression")
           if (bindTo.includes(".")) {
             const keys = bindTo.split(".");
-            updatedField = JSON.parse(JSON.stringify(selectedField));
+            updatedField = structuredClone(selectedField);
             let current = updatedField;
             for (let i = 0; i < keys.length - 1; i++) {
               if (!current[keys[i]]) {
@@ -568,6 +574,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       case "text": {
         const isMandatory = selectedField?.mandatory === true;
         const isDisabled = viewMode || (panelItem?.disableForRequired && isMandatory);
+        const maxLength = panelItem.maxLength;
         return (
           <FieldV1
             type="text"
@@ -575,19 +582,21 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             value={localValue}
             onChange={(event) => {
               isEditingRef.current = true;
-              setLocalValue(event.target.value);
-              localValueRef.current = event.target.value;
+              let newValue = event.target.value;
+              if (maxLength && newValue.length > maxLength) return;
+              setLocalValue(newValue);
+              localValueRef.current = newValue;
               // If isLocalisable is false, save directly without localization
               // If undefined or true, use localization
               if (panelItem?.isLocalisable === false) {
-                handleFieldChange(event.target.value);
+                handleFieldChange(newValue);
               } else {
-                handleFieldChangeWithLoc(fieldValue, event.target.value);
+                handleFieldChangeWithLoc(fieldValue, newValue);
               }
             }}
             onBlur={handleBlur}
             placeholder={t(panelItem.innerLabel) || ""}
-            populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
+            populators={{ fieldPairClassName: "drawer-toggle-conditional-field", ...(maxLength && { maxLength }) }}
             disabled={isDisabled}
           />
         );
@@ -600,6 +609,11 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const isLengthField = panelItem.bindTo?.toLowerCase()?.includes("length");
         const isRangeField = panelItem.label?.toLowerCase()?.includes("minimum") || panelItem.label?.toLowerCase()?.includes("maximum");
         const shouldPreventNegative = isLengthField || isRangeField;
+
+        // Read min/max from MDMS config (fully configurable, no hardcoded limits)
+        const configMin = panelItem.min !== undefined ? panelItem.min : (shouldPreventNegative ? 0 : undefined);
+        const configMax = panelItem.max !== undefined ? panelItem.max : undefined;
+        const preventNegative = configMin !== undefined && configMin >= 0;
 
         return (
           <FieldV1
@@ -628,16 +642,13 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 return;
               }
 
-              const value = parseInt(inputValue, 10);
+              let value = parseInt(inputValue, 10);
               // Only set if it's a valid number
               if (!isNaN(value)) {
-                // Prevent negative values for length-related fields
-                if (shouldPreventNegative && value < 0) {
-                  // Clear the field for negative values in length/range fields
-                  setLocalValue("");
-                  localValueRef.current = "";
-                  handleNumberChange(null);
-                  return;
+                // Only clamp max on change (prevents exceeding maximum)
+                // Min is enforced on blur to allow incremental typing (e.g., typing "2" then "0" for 20)
+                if (configMax !== undefined && value > configMax) {
+                  value = configMax;
                 }
                 setLocalValue(value);
                 localValueRef.current = value;
@@ -652,11 +663,12 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             onBlur={handleBlur}
             placeholder={t(panelItem.innerLabel) || ""}
             populators={{
-              allowNegativeValues: !shouldPreventNegative,
+              allowNegativeValues: !preventNegative,
               fieldPairClassName: "drawer-toggle-conditional-field",
               validation: {
-                min: shouldPreventNegative ? 0 : undefined,
-                pattern: shouldPreventNegative ? "^\\d+$" : "^-?\\d+$",
+                min: configMin,
+                max: configMax,
+                pattern: preventNegative ? "^\\d+$" : "^-?\\d+$",
               },
             }}
             disabled={isDisabled}
@@ -687,7 +699,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 // Update the date field
                 if (panelItem.bindTo.includes(".")) {
                   const keys = panelItem.bindTo.split(".");
-                  const newField = JSON.parse(JSON.stringify(selectedField));
+                  const newField = structuredClone(selectedField);
                   let current = newField;
                   for (let i = 0; i < keys.length - 1; i++) {
                     if (!current[keys[i]]) {
@@ -732,7 +744,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             const expression = panelItem.validationExpression;
             // Create a plain object copy to avoid "object is not extensible" errors
             // This allows expressions to reference properties directly (e.g., "range.max > range.min")
-            const plainFieldCopy = JSON.parse(JSON.stringify(selectedField));
+            const plainFieldCopy = structuredClone(selectedField);
 
             // Extract field paths from expression (e.g., "lengthRange.minLength", "lengthRange.maxLength")
             const fieldPaths = expression.match(/[\w.]+/g)?.filter((p) => p.includes(".")) || [];
@@ -1104,6 +1116,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                         dispatch={dispatch}
                         t={t}
                         viewMode={viewMode}
+                        maxLength={panelItem.maxLength}
                       />
                     );
                   })}
@@ -1143,6 +1156,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                         onColumnToggle={handleColumnVisibilityToggle}
                         isLastVisible={isLastVisible}
                         viewMode={viewMode}
+                        maxLength={panelItem.maxLength}
                       />
                     );
                   })}
@@ -1178,6 +1192,7 @@ const LocalizationInput = React.memo(
     onColumnToggle = null,
     isLastVisible = false,
     viewMode = false,
+    maxLength = null,
   }) => {
     // Get the localized value - don't fallback to code, empty string is valid
     const localizedValue = useCustomT(code);
@@ -1247,6 +1262,7 @@ const LocalizationInput = React.memo(
             placeholder={placeholder || t(I18N_KEYS.COMMON.ADD_LOCALIZATION)}
             onChange={(e) => {
               const val = e.target.value;
+              if (maxLength && val.length > maxLength) return;
               // Update localization for the code
               dispatch(
                 updateLocalizationEntry({
@@ -1258,6 +1274,7 @@ const LocalizationInput = React.memo(
             }}
             populators={{
               fieldPairClassName: "drawer-toggle-conditional-field",
+              ...(maxLength && { maxLength }),
             }}
             disabled={viewMode || isColumnHidden}
           />
@@ -1458,6 +1475,16 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
     const currentSelectedField = selectedFieldRef.current;
     const currentFieldValue = fieldValueRef.current;
 
+    // Clamp min on blur for number conditional fields (allows incremental typing in onChange)
+    if (cField.type === "number" && currentLocalValue !== "" && currentLocalValue !== null && currentLocalValue !== undefined) {
+      const numVal = parseInt(currentLocalValue, 10);
+      if (!isNaN(numVal) && cField.min !== undefined && numVal < cField.min) {
+        const clampedValue = String(cField.min);
+        setConditionalLocalValue(clampedValue);
+        localValueRef.current = clampedValue;
+      }
+    }
+
     // Immediately dispatch the current value with localization handling
     let finalValueToSave;
 
@@ -1494,13 +1521,19 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
     newField[cField.bindTo] = finalValueToSave;
     onFieldChange(newField);
     isEditingRef.current = false;
-  }, [cField.bindTo, onFieldChange, dispatch, currentLocale, shouldSkipLocalization]);
+  }, [cField.bindTo, cField.type, cField.min, onFieldChange, dispatch, currentLocale, shouldSkipLocalization]);
 
   // Check if this is a prefix field for mobileNumber : should only accept numbers
   const isMobileNumberPrefix = selectedField?.format === "mobileNumber" && cField.bindTo === "prefixText";
   // Check if this is a prefix or suffix field for integer/number type
   const isIntegerPrefixOrSuffix = selectedField?.type === "integer" && (cField.bindTo === "prefixText" || cField.bindTo === "suffixText");
   const maxPrefixSuffixLength = 5; // Maximum length for prefix/suffix to prevent UI breaking
+
+  // Read maxLength from config for text/textarea conditional fields
+  const cFieldMaxLength = cField.maxLength;
+  // Read min/max from config for number conditional fields
+  const cFieldMin = cField.min;
+  const cFieldMax = cField.max;
 
   switch (cField.type) {
     case "text":
@@ -1533,6 +1566,22 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
                 }
               }
 
+              // Enforce maxLength for text/textarea conditional fields
+              if ((cField.type === "text" || cField.type === "textarea") && cFieldMaxLength && newValue.length > cFieldMaxLength) {
+                return;
+              }
+
+              // Enforce max on change for number conditional fields
+              // Min is enforced on blur to allow incremental typing (e.g., typing "2" then "0" for 20)
+              if (cField.type === "number" && newValue !== "" && newValue !== null && newValue !== undefined) {
+                const numVal = parseInt(newValue, 10);
+                if (!isNaN(numVal)) {
+                  if (cFieldMax !== undefined && numVal > cFieldMax) {
+                    newValue = String(cFieldMax);
+                  }
+                }
+              }
+
               isEditingRef.current = true;
               setConditionalLocalValue(newValue);
               localValueRef.current = newValue;
@@ -1540,7 +1589,16 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
             }}
             onBlur={handleConditionalBlur}
             placeholder={cField.innerLabel ? t(cField.innerLabel) : null}
-            populators={{ fieldPairClassName: "drawer-toggle-conditional-field", validation: cField.validation,...((isMobileNumberPrefix || isIntegerPrefixOrSuffix) && { maxLength: maxPrefixSuffixLength }) }}
+            populators={{
+              fieldPairClassName: "drawer-toggle-conditional-field",
+              validation: {
+                ...cField.validation,
+                ...(cField.type === "number" && cFieldMin !== undefined && { min: cFieldMin }),
+                ...(cField.type === "number" && cFieldMax !== undefined && { max: cFieldMax }),
+              },
+              ...((isMobileNumberPrefix || isIntegerPrefixOrSuffix) && { maxLength: maxPrefixSuffixLength }),
+              ...((cField.type === "text" || cField.type === "textarea") && cFieldMaxLength && { maxLength: cFieldMaxLength }),
+            }}
           />
         </div>
       );
@@ -1710,7 +1768,7 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
         if (panelItem.fieldType === "group" && panelItem.validationExpression) {
           try {
             const expression = panelItem.validationExpression;
-            const plainFieldCopy = JSON.parse(JSON.stringify(selectedField));
+            const plainFieldCopy = structuredClone(selectedField);
 
             // Extract field paths from expression (e.g., "lengthRange.minLength", "lengthRange.maxLength")
             const fieldPaths = expression.match(/[\w.]+/g)?.filter((p) => p.includes(".")) || [];

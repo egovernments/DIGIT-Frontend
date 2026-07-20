@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import { Dropdown, TextInput, Toast, Button, CardText, LabelFieldPair, Loader } from "@egovernments/digit-ui-components";
 import { Link } from "react-router-dom";
+import useCampaignStore from "../../../hooks/useCampaignStore";
 
 const AddProducts = React.memo(({ 
   stref, 
@@ -19,7 +20,8 @@ const AddProducts = React.memo(({
   const [showToast, setShowToast] = useState(null);
 
   const tenantId = Digit.ULBService.getStateId();
-  const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  const [formStorageData, setFormStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", null);
+  const sessionData = formStorageData;
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const projectType = searchParams.get('projectType');
@@ -130,7 +132,7 @@ const AddProducts = React.memo(({
         deliveryRule: [], // This would be populated from Redux store
       },
     };
-    Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_FORM_DATA", newData);
+    setFormStorageData(newData);
   }, [sessionData]);
 
   const closeToast = useCallback(() => {

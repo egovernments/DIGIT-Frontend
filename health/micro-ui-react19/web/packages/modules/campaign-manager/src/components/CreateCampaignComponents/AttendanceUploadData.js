@@ -4,6 +4,7 @@ import BulkUpload from "../BulkUpload";
 import { Card, HeaderComponent, Button, Toast } from "@egovernments/digit-ui-components";
 import XLSX from "xlsx";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import useCampaignStore from "../../hooks/useCampaignStore";
 
 const TEMPLATE_COLUMNS = [
   "Register ID",
@@ -16,6 +17,7 @@ const TEMPLATE_COLUMNS = [
 
 const AttendanceUploadData = ({ formData, onSelect, ...props }) => {
   const { t } = useTranslation();
+  const [, setAttendanceUploadData, clearAttendanceUploadData] = useCampaignStore("HCM_ATTENDANCE_UPLOAD_DATA", null);
   const [uploadedFile, setUploadedFile] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const searchParams = new URLSearchParams(location.search);
@@ -76,8 +78,7 @@ const AttendanceUploadData = ({ formData, onSelect, ...props }) => {
         ];
         setUploadedFile(fileData);
 
-        // Store in session storage
-        Digit.SessionStorage.set("HCM_ATTENDANCE_UPLOAD_DATA", {
+        setAttendanceUploadData({
           uploadAttendance: {
             uploadedFile: fileData,
             isSuccess: true,
@@ -92,7 +93,7 @@ const AttendanceUploadData = ({ formData, onSelect, ...props }) => {
 
   const onFileDelete = () => {
     setUploadedFile([]);
-    Digit.SessionStorage.del("HCM_ATTENDANCE_UPLOAD_DATA");
+    clearAttendanceUploadData();
     setShowToast(null);
   };
 

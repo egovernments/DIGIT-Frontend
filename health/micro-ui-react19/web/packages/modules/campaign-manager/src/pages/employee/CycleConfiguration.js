@@ -7,6 +7,7 @@ import TagComponent from "../../components/TagComponent";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { convertEpochToNewDateFormat } from "../../utils/convertEpochToNewDateFormat";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import useCampaignStore from "../../hooks/useCampaignStore";
 
 const initialState = (saved, filteredDeliveryConfig, refetch) => {
   const data = {
@@ -105,13 +106,14 @@ const updateCycleData = (cycleData, index, update) => {
 };
 
 function CycleConfiguration({ onSelect, formData, control, ...props }) {
+  const [formStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const selectedProjectType =
-    window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_TYPE?.projectType?.code || searchParams.get("projectType");
-  const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName;
+    formStorageData?.HCM_CAMPAIGN_TYPE?.projectType?.code || searchParams.get("projectType");
+  const campaignName = formStorageData?.HCM_CAMPAIGN_NAME?.campaignName;
   const [filteredDeliveryConfig, setFilterDeliveryConfig] = useState(null);
   const { isLoading: deliveryConfigLoading, data } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -173,14 +175,13 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   //   Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure ||
   //   campaignData?.additionalDetails?.cycleData || filteredDeliveryConfig?.cycleConfig;
   // const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
-  const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleConfgureDate;
+  const sessionData = formStorageData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
   // const campaignCycleData = campaignData?.additionalDetails?.cycleData;
   const filteredCycleConfig = filteredDeliveryConfig?.cycleConfig;
 
   let saved = sessionData?.cycleData?.length > 0 ? sessionData : filteredCycleConfig;
-  const refetch = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleConfgureDate
-    ?.refetch;
-  const tempSession = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  const refetch = sessionData?.cycleConfgureDate?.refetch;
+  const tempSession = formStorageData;
   const [state, dispatch] = useReducer(reducer, initialState(saved, filteredDeliveryConfig, refetch));
   const { cycleConfgureDate, cycleData } = state;
   const { t } = useTranslation();
@@ -230,7 +231,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
 
   useEffect(() => {
     // const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
-    const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleConfgureDate;
+    const sessionData = formStorageData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
     const campaignCycleData = campaignData?.additionalDetails?.cycleData;
     const filteredCycleConfig = filteredDeliveryConfig?.cycleConfig;
 
