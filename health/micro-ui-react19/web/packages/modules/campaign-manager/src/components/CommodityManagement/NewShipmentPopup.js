@@ -848,9 +848,16 @@ const NewShipmentPopup = ({
       // --- Stock Data sheet ---
       const ws = wb.addWorksheet("Stock Data");
       // Set column widths before adding data (ExcelJS handles this more reliably)
-      ws.columns = stockHeaders.map((header) => ({ header, width: 30, style: { font: { bold: false } } }));
-      // Bold header row (row 1 was auto-created by ws.columns)
-      ws.getRow(1).font = { bold: true };
+      ws.columns = stockHeaders.map((header) => ({ header, width: 30, style: { font: { bold: false, size: 12 } } }));
+      // Style header row: bold, larger font, green background, locked
+      const headerRow = ws.getRow(1);
+      headerRow.font = { bold: true, size: 14, color: { argb: 'FF000000' } };
+      headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4CAF50' } };
+      headerRow.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+      headerRow.height = 30;
+      headerRow.eachCell((cell) => {
+        cell.protection = { locked: true };
+      });
       // Row 2: hidden variant ID row
       const variantIdRow = [];
       boundaryHeaders.forEach(() => variantIdRow.push(""));
@@ -910,29 +917,34 @@ const NewShipmentPopup = ({
       // Only unlock product quantity cells — all other columns (boundary, facility, campaign) are locked
       const firstProductCol = boundaryHeaders.length + 6 + 1; // 1-based col index (6 fixed: CampaignNumber, ProjectName, FromCode, FromName, ToCode, ToName)
       const lastProductCol = firstProductCol + productVariants.length - 1;
+      const totalCols = stockHeaders.length;
 
+      // Explicitly lock all non-product cells in data rows (boundary, campaign, facility columns)
       for (let r = 3; r <= dataRowCount + 2; r++) {
-        for (let c = firstProductCol; c <= lastProductCol; c++) {
+        for (let c = 1; c <= totalCols; c++) {
           const cell = ws.getCell(r, c);
-          // Unlock for editing
-          cell.protection = { locked: false };
-          // Force numeric format so Excel rejects non-numeric input
-          cell.numFmt = '0';
-          cell.value = null;
-          // Data validation: only whole numbers >= 0 and <= 10,000,000
-          cell.dataValidation = {
-            type: 'whole',
-            operator: 'between',
-            formulae: [0, 10000000],
-            allowBlank: true,
-            showInputMessage: true,
-            promptTitle: 'Quantity',
-            prompt: 'Enter a whole number between 0 and 10,000,000',
-            showErrorMessage: true,
-            errorStyle: 'stop',
-            errorTitle: 'Invalid quantity',
-            error: 'Quantity must be a whole number between 0 and 10,000,000.',
-          };
+          if (c >= firstProductCol && c <= lastProductCol) {
+            // Unlock product quantity cells for editing
+            cell.protection = { locked: false };
+            cell.numFmt = '0';
+            cell.value = null;
+            cell.dataValidation = {
+              type: 'whole',
+              operator: 'between',
+              formulae: [0, 10000000],
+              allowBlank: true,
+              showInputMessage: true,
+              promptTitle: 'Quantity',
+              prompt: 'Enter a whole number between 0 and 10,000,000',
+              showErrorMessage: true,
+              errorStyle: 'stop',
+              errorTitle: 'Invalid quantity',
+              error: 'Quantity must be a whole number between 0 and 10,000,000.',
+            };
+          } else {
+            // Lock non-product cells
+            cell.protection = { locked: true };
+          }
         }
       }
 
