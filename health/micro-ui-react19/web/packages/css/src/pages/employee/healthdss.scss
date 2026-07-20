@@ -1664,12 +1664,6 @@
   border-radius: 0.75rem;
   background-color: var(--digitv2-lightTheme-paper-secondary);
   border: 0.063em solid var(--digitv2-lightTheme-generic-divider);
-
-  // .digit-accordion-content keeps overflow: hidden even when .open (only max-height
-  // is reset there) - that clips the Report Details tooltip on each row since
-  // TooltipWrapper is absolutely positioned with no collision/flip detection. Scoped to
-  // this accordion only, so other accordions relying on overflow:hidden for their
-  // collapse animation aren't affected.
   .digit-accordion-content.open {
     overflow: visible;
   }

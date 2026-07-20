@@ -479,7 +479,12 @@ const ReportDetailPage = () => {
   const totalReports = Object.values(reportsByFrequency).flat().length;
   const totalInProgress = inProgressRuns?.length || 0;
 
-  if (isLoading) return <Loader />;
+  if (isLoading)
+    return (
+      <div style={{ width: "100%", height: "100%" }}>
+        <Loader className="digit-center-loader" />
+      </div>
+    );
 
   return (
     <React.Fragment>
