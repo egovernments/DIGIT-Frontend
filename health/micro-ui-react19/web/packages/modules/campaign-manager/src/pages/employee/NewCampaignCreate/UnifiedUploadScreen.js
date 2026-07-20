@@ -115,9 +115,10 @@ const UnifiedUploadScreen = () => {
               uploadUnified: uploadedData,
             },
           });
-          // Navigate back to view details
+          // Navigate back to view details with afterUpload flag to trigger persistence polling
           navigate(
-            `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`
+            `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`,
+            { state: { afterUpload: true } }
           );
         },
         onError: (error) => {

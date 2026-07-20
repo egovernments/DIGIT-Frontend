@@ -22,6 +22,31 @@ import {
   clearUnifiedUploadData,
 } from "../../store/campaignStore";
 
+// Build a fingerprint string from deliveryRules for persistence verification
+const getDeliveryFingerprint = (deliveryRules) => {
+  if (!deliveryRules?.length) return "";
+  try {
+    return deliveryRules
+      .flatMap((rule) =>
+        (rule?.cycles || []).flatMap((cycle) =>
+          (cycle?.deliveries || []).flatMap((delivery) =>
+            (delivery?.doseCriteria || []).map((criteria) => {
+              const variants = (criteria?.ProductVariants || [])
+                .map((pv) => `${pv.productVariantId}:${pv.quantity}`)
+                .sort()
+                .join("|");
+              return `${criteria.condition || ""}~${variants}`;
+            })
+          )
+        )
+      )
+      .sort()
+      .join(",");
+  } catch (e) {
+    return "";
+  }
+};
+
 /**
  * The `SetupCampaign` function in JavaScript handles the setup and management of campaign details,
  * including form data handling, validation, and submission.
@@ -323,6 +348,7 @@ const SetupCampaign = () => {
                 },
                 onSuccess: async (data) => {
                   updateUrlParams({ id: data?.CampaignDetails?.id });
+
                   draftRefetch();
                   if (currentKey == 6) {
                     setCurrentKey(16);
@@ -577,6 +603,8 @@ const SetupCampaign = () => {
               delete payloadData?.endDate;
             }
             if (compareIdentical(draftData, payloadData) === false) {
+              // Store fingerprint of the delivery rules being sent for persistence verification
+              Digit.SessionStorage.set("campaignDeliveryFingerprint", getDeliveryFingerprint(payloadData.deliveryRules));
               setIsUpdating(true);
               await updateCampaign(payloadData, {
                 onError: (error, variables) => {

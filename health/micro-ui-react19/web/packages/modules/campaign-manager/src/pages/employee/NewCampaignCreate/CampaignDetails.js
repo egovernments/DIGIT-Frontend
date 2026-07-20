@@ -1,6 +1,6 @@
 import { Button, HeaderComponent, Footer, Loader, Tag, Toast, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import React, { Fragment, useState, useEffect, useMemo } from "react";
+import React, { Fragment, useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
@@ -190,7 +190,38 @@ const CampaignDetails = () => {
     },
   };
 
-  const { isLoading, data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { isLoading, data: campaignData, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  // Retry search if resources are not yet persisted after upload
+  const retryCountRef = useRef(0);
+  const retryTimerRef = useRef(null);
+  const afterUpload = location.state?.afterUpload;
+  const [isPolling, setIsPolling] = useState(false);
+
+  useEffect(() => {
+    if (!afterUpload) return;
+    if (isLoading || isFetching) return;
+    const resources = campaignData?.resources;
+    if (!resources || resources.length === 0) {
+      if (retryCountRef.current < 3) {
+        setIsPolling(true);
+        retryTimerRef.current = setTimeout(() => {
+          retryCountRef.current += 1;
+          refetch();
+        }, 5000);
+      } else {
+        setIsPolling(false);
+      }
+    } else {
+      retryCountRef.current = 0;
+      setIsPolling(false);
+    }
+    return () => {
+      if (retryTimerRef.current) {
+        clearTimeout(retryTimerRef.current);
+      }
+    };
+  }, [afterUpload, isLoading, isFetching, campaignData]);
 
   const BOUNDARY_HIERARCHY_TYPE = campaignData?.hierarchyType;
 
@@ -703,7 +734,7 @@ const CampaignDetails = () => {
     setShowQRPopUp(true);
   };
 
-  if (isLoading || isFormConfigLoading) {
+  if (isLoading || isFormConfigLoading || isPolling) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
