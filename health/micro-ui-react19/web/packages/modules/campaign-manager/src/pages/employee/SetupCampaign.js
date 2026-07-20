@@ -603,8 +603,9 @@ const SetupCampaign = () => {
               delete payloadData?.endDate;
             }
             if (compareIdentical(draftData, payloadData) === false) {
-              // Store fingerprint of the delivery rules being sent for persistence verification
+              // Store fingerprints of the data being sent for persistence verification
               Digit.SessionStorage.set("campaignDeliveryFingerprint", getDeliveryFingerprint(payloadData.deliveryRules));
+              Digit.SessionStorage.set("campaignBoundaryFingerprint", (payloadData.boundaries || []).map((b) => b.code).sort().join(","));
               setIsUpdating(true);
               await updateCampaign(payloadData, {
                 onError: (error, variables) => {

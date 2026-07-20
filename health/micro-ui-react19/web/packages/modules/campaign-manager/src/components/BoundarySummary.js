@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState, useRef, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
@@ -32,6 +32,9 @@ function boundaryDataGrp(boundaryData) {
   return result;
 }
 
+const MAX_PERSISTENCE_RETRIES = 3;
+const PERSISTENCE_RETRY_DELAY_MS = 5000;
+
 const BoundarySummary = (props) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -39,6 +42,9 @@ const BoundarySummary = (props) => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const [showToast, setShowToast] = useState(null);
+  const [isPolling, setIsPolling] = useState(false);
+  const retryCountRef = useRef(0);
+  const retryTimerRef = useRef(null);
   const currentKey = searchParams.get("key");
   const campaignName = formStorageData?.HCM_CAMPAIGN_NAME?.campaignName || t(I18N_KEYS.COMMON.NA);
   const [key, setKey] = useState(() => {
@@ -103,6 +109,37 @@ const BoundarySummary = (props) => {
     },
   });
 
+  // Persistence polling: compare boundary fingerprint from update request against search result
+  useEffect(() => {
+    if (isLoading || isFetching) return;
+    const expectedFingerprint = Digit.SessionStorage.get("campaignBoundaryFingerprint");
+    if (!expectedFingerprint) return;
+
+    const serverFingerprint = (data?.data?.boundaries || []).map((b) => b.code).sort().join(",");
+    const isPersisted = serverFingerprint === expectedFingerprint;
+
+    if (!isPersisted) {
+      if (retryCountRef.current < MAX_PERSISTENCE_RETRIES) {
+        setIsPolling(true);
+        retryTimerRef.current = setTimeout(() => {
+          retryCountRef.current += 1;
+          refetch();
+        }, PERSISTENCE_RETRY_DELAY_MS);
+      } else {
+        setIsPolling(false);
+        Digit.SessionStorage.del("campaignBoundaryFingerprint");
+      }
+    } else {
+      retryCountRef.current = 0;
+      setIsPolling(false);
+      Digit.SessionStorage.del("campaignBoundaryFingerprint");
+    }
+
+    return () => {
+      if (retryTimerRef.current) clearTimeout(retryTimerRef.current);
+    };
+  }, [isLoading, isFetching, data]);
+
   const closeToast = () => {
     setShowToast(null);
   };
@@ -131,7 +168,7 @@ const BoundarySummary = (props) => {
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) && (
+      {(isLoading || (!data && !error) || isFetching || isPolling) && (
         <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />
       )}
       <div className="container-full">

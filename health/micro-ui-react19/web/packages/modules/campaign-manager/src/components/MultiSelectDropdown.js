@@ -923,6 +923,7 @@ const MultiSelectDropdown = ({
           itemSize={ITEM_HEIGHT}
           width="100%"
           overscanCount={OVERSCAN_COUNT}
+          style={{ overflowX: "hidden" }}
         >
           {VirtualizedRow}
         </List>
