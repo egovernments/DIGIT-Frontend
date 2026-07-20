@@ -346,12 +346,15 @@ const MultiSelectDropdown = ({
     }
   }
 
+  // Use a content-based key so the sync fires when selected items change, not just count
+  const selectedSyncKey = useMemo(() => selected?.map((s) => s?.code).join(",") ?? "", [selected]);
+
   useEffect(() => {
     dispatch({
       type: "REPLACE_COMPLETE_STATE",
       payload: fnToSelectOptionThroughProvidedSelection(selected),
     });
-  }, [selected?.length]);
+  }, [selectedSyncKey]);
 
   // useEffect(() => {
   //   if (selected?.length == 0) {
@@ -881,7 +884,8 @@ const MultiSelectDropdown = ({
       );
     }
 
-    const listHeight = Math.min(optionsToRender.length, MAX_VISIBLE_ITEMS) * ITEM_HEIGHT;
+    // Add 2px buffer to prevent sub-pixel scrollbar when items exactly fill the container
+    const listHeight = Math.min(optionsToRender.length, MAX_VISIBLE_ITEMS) * ITEM_HEIGHT + 2;
 
     const VirtualizedRow = ({ index, style }) => {
       const option = optionsToRender[index];
