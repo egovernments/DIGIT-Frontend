@@ -33,9 +33,6 @@ function checkDistFiles() {
 
 const isWindows = process.platform === 'win32';
 
-// Same heap bump used in this repo's Dockerfiles (e.g. health-dss/console) for the
-// same OOM crash - set once here so every concurrently-spawned child process inherits it.
-process.env.NODE_OPTIONS = '--max-old-space-size=4792';
 
 async function buildPackages() {
   log('🔨 Building local packages...', colors.yellow);
