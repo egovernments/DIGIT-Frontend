@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useSyncExternalStore } from "react";
+import { Provider } from "react-redux";
 import { Routes, useLocation, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -13,6 +14,9 @@ import AppConfigInitializer from "./NewCampaignCreate/AppConfigInitializer";
 import LocalisationAdd from "./NewCampaignCreate/LocalisationAdd";
 import { PRIMARY_COLOR } from "../../utils";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import { campaignStore, clearCampaignFormData, clearUploadId, resetCreateCampaignData, hydrateFromIndexedDB } from "../../store/campaignStore";
+import { useSelector } from "react-redux";
+import { Loader as ComponentLoader } from "@egovernments/digit-ui-components";
 
 // Create lazy components with fallbacks using the utility
 const SetupCampaign = lazyWithFallback(
@@ -400,6 +404,21 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
  * the `Switch` component, there are several `Route` components with different paths and
  * corresponding components such as `UploadBoundaryData`, `CycleConfiguration`, `DeliveryRule`, `
  */
+// Gate component that waits for IndexedDB hydration before rendering children
+const HydrationGate = ({ children }) => {
+  const hydrated = useSelector((state) => state.hydration.hydrated);
+
+  useEffect(() => {
+    hydrateFromIndexedDB();
+  }, []);
+
+  if (!hydrated) {
+    return <ComponentLoader />;
+  }
+
+  return children;
+};
+
 const App = ({ path }) => {
   const location = useLocation();
   const userId = Digit.UserService.getUser().info.uuid;
@@ -415,22 +434,21 @@ const App = ({ path }) => {
   const DeliveryDetailsSummary = Digit?.ComponentRegistryService?.getComponent("DeliveryDetailsSummary");
   const AppConfigurationParentRedesign = Digit?.ComponentRegistryService?.getComponent("AppConfigurationParentRedesign");
 
+  // Read hydration state directly from campaignStore (App is outside <Provider>)
+  const getHydrated = useCallback(() => campaignStore.getState().hydration.hydrated, []);
+  const hydrated = useSyncExternalStore(campaignStore.subscribe, getHydrated);
+
   useEffect(() => {
-    if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
-      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+    if (!hydrated) return;
+
+    const isSetupCampaign = location.pathname.includes("setup-campaign");
+    const isCreateCampaign = location.pathname.includes("create-campaign");
+    const isUpdateCampaign = location.pathname.includes("update-campaign");
+
+    if (!isSetupCampaign && !isCreateCampaign && !isUpdateCampaign) {
+      campaignStore.dispatch(resetCreateCampaignData());
     }
-    if (window.location.pathname === "/workbench-ui/employee/campaign/response") {
-      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-    }
-    return () => {
-      if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
-        window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-        window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-      }
-    };
-  }, []);
+  }, [location.pathname, hydrated]);
 
   useEffect(() => {
     // Remove footer element when URL contains "new-app-configuration-redesign"
@@ -451,6 +469,8 @@ const App = ({ path }) => {
   }, [location.pathname]);
 
   return (
+    <Provider store={campaignStore}>
+    <HydrationGate>
     <React.Fragment>
       <div className="wbh-header-container">
         {window?.location?.pathname === "/workbench-ui/employee/campaign/add-product" ||
@@ -555,6 +575,8 @@ const App = ({ path }) => {
         </AppContainer>
       </Switch> */}
     </React.Fragment>
+    </HydrationGate>
+    </Provider>
   );
 };
 

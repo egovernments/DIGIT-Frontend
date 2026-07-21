@@ -8,6 +8,7 @@ import useSearchCampaign from "./useSearchCampaign";
 import useSimpleElasticsearch from "./useSimpleElasticSearch";
 import useUserActivityData from "./useUserActivityData";
 import useUserTrackingData from "./useUserTrackingData";
+import useReportsInProgress from "./useReportsInProgress";
 
 const DSS = {
   useProjectSearch,
@@ -19,6 +20,7 @@ const DSS = {
   useSimpleElasticsearch,
   useUserActivityData,
   useUserTrackingData,
+  useReportsInProgress,
 };
 
 const Hooks = {

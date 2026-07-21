@@ -30,14 +30,19 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   );
   const campaignName = searchParams.get("campaignName");
   const [hierarchyType, SetHierarchyType] = useState(props?.props?.hierarchyType);
-  // Load boundary localizations using the hierarchyType state (updated from campaign API when available)
+  // Load boundary localizations — only when hierarchyType is known (prevents empty module= call)
   const stateCode = Digit.ULBService.getStateId();
   const language = Digit.StoreData.getCurrentLanguage();
+  const boundaryModuleCode = useMemo(
+    () => (hierarchyType ? [`boundary-${hierarchyType}`] : []),
+    [hierarchyType]
+  );
   Digit.Services.useStore({
     stateCode,
-    moduleCode: hierarchyType ? [`boundary-${hierarchyType}`] : [],
+    moduleCode: boundaryModuleCode,
     language,
     modulePrefix: "hcm",
+    enabled: boundaryModuleCode.length > 0,
   });
   const [showPopUp, setShowPopUp] = useState(false);
   const [restrictSelection, setRestrictSelection] = useState(null);

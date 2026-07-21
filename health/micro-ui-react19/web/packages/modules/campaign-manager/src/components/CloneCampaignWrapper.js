@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Button, PopUp, Toast, Loader, FieldV1 } from "@egovernments/digit-ui-components";
 import { useNavigate } from "react-router-dom";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import { resetCreateCampaignData, campaignStore } from "../store/campaignStore";
 
 const CloneCampaignWrapper = (props) => {
   const { t } = useTranslation();
@@ -113,6 +114,8 @@ const CloneCampaignWrapper = (props) => {
     createCampaign(modifiedCampaign, {
       onSuccess: (res) => {
         if (res?.CampaignDetails?.campaignNumber) {
+          // Clear stale store data before navigating to the cloned campaign
+          campaignStore.dispatch(resetCreateCampaignData());
           setToast({
             key: "success",
             label: `${res.CampaignDetails.campaignNumber} ${t(I18N_KEYS.COMPONENTS.CAMPAIGN_CREATED_SUCCESSFULLY)}`,

@@ -67,7 +67,12 @@ const ReportsListPage = () => {
     );
   };
 
-  if (isCampaignLoading || isMdmsLoading) return <Loader />;
+  if (isCampaignLoading || isMdmsLoading)
+    return (
+      <div style={{ width: "100%", height: "100%" }}>
+        <Loader className="digit-center-loader" />
+      </div>
+    );
 
   return (
     <Card className="digit-reports-list__cards_main">

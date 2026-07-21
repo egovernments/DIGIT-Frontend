@@ -117,7 +117,7 @@ const ViewChecklist = () => {
   }, [secondData]);
   function organizeQuestions(questions) {
     // Deep clone the questions to avoid mutating the original tempFormData
-    const clonedQuestions = JSON.parse(JSON.stringify(questions));
+    const clonedQuestions = structuredClone(questions);
 
     const questionMap = new Map();
     const optionMap = new Map();

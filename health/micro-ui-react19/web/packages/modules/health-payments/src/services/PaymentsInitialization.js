@@ -23,9 +23,6 @@ const initializePaymentsModule = async ({ tenantId }) => {
 
   const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_CONTEXT_PATH") || "health-project";
   const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
-  // const hierarchyType = Digit.SessionStorage.get("HIERARCHY_TYPE") || "MICROPLAN";
-
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
 
 
   let user = Digit?.SessionStorage.get("User");
@@ -80,6 +77,31 @@ const initializePaymentsModule = async ({ tenantId }) => {
     if (!projects || projects?.length === 0) {
       throw new Error("No linked projects found");
     }
+
+    const hierarchyType = projects[0]?.additionalDetails?.hierarchyType;
+
+    const hierarchyDefResponse = await Digit.CustomService.getResponse({
+      url: `/boundary-service/boundary-hierarchy-definition/_search`,
+      method: "POST",
+      userService: false,
+      body: {
+        BoundaryTypeHierarchySearchCriteria: { tenantId, hierarchyType, limit: 2, offset: 0 },
+      },
+    });
+
+    // Sort hierarchy: walk parentBoundaryType chain from root to leaf
+    const rawHierarchy = hierarchyDefResponse?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
+    const sortedHierarchy = [];
+    let current = rawHierarchy.find((item) => !item?.parentBoundaryType);
+    while (current) {
+      sortedHierarchy.push(current);
+      const next = rawHierarchy.find((item) => item?.parentBoundaryType === current?.boundaryType);
+      if (!next) break;
+      current = next;
+    }
+    // 3rd level (index 2) is the lowest boundary level for payments
+    const lowestBoundaryLevel = sortedHierarchy[2]?.boundaryType
+      || sortedHierarchy[sortedHierarchy.length - 1]?.boundaryType;
 
     const nationalProjectId = projects?.[0]?.projectHierarchy != null ? projects?.[0]?.projectHierarchy?.split(".")?.[0] : projects?.[0]?.id;
 
@@ -181,6 +203,8 @@ const initializePaymentsModule = async ({ tenantId }) => {
     } catch (e) {
       console.warn("Failed to fetch Kibana map config from MDMS", e);
     }
+
+    return { hierarchyType, lowestBoundaryLevel };
 
   } catch (error) {
     if (error?.response?.data?.Errors) {

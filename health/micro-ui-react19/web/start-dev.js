@@ -33,6 +33,7 @@ function checkDistFiles() {
 
 const isWindows = process.platform === 'win32';
 
+
 async function buildPackages() {
   log('🔨 Building local packages...', colors.yellow);
 
@@ -86,11 +87,13 @@ async function startDevelopment() {
     ];
 
     // Start the concurrent processes
+    // On Windows, each command must be quoted so cmd.exe doesn't interpret && as a shell separator
+    const quotedCommands = isWindows ? commands.map(cmd => `"${cmd}"`) : commands;
     const devProcess = spawn('npx', [
       'concurrently',
       '--names', 'CSS,Campaign,HRMS,PGR,Payments,DSS,Webpack',
       '--prefix-colors', 'yellow,magenta,green,blue,red,white,cyan',
-      ...commands
+      ...quotedCommands
     ], {
       stdio: 'inherit',
       cwd: __dirname,

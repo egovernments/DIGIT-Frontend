@@ -1593,9 +1593,49 @@
     gap: 0.25rem;
   }
 
+  &__file-info-inline {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.375rem;
+    display: flex;
+
+    .tooltip-wrapper {
+      height: 20px;
+      .tooltip-content {
+        max-width: 20rem;
+      }
+    }
+  }
+
+  &__info-trigger {
+    display: inline-flex;
+    cursor: pointer;
+  }
+
   &__file-date {
     font-weight: 500;
     color: var(--digitv2-lightTheme-text-color-primary);
+  }
+
+  &__file-meta {
+    font-size: var(--digitv2-fontSize-caption-desktop);
+    color: var(--digitv2-lightTheme-text-color-secondary);
+  }
+
+  &__progress-bar {
+    height: 0.375rem;
+    border-radius: 0.1875rem;
+    background: var(--digitv2-lightTheme-generic-divider);
+    margin-top: 0.375rem;
+    overflow: hidden;
+    max-width: 15rem;
+  }
+
+  &__progress-bar-fill {
+    height: 100%;
+    border-radius: 0.1875rem;
+    background: var(--digitv2-lightTheme-primary-2);
+    transition: width 0.3s ease;
   }
 
   &__file-actions {
@@ -1621,9 +1661,12 @@
 }
 
 .digit-report-details-accordion {
-  border-radius: 0.75rem;    
+  border-radius: 0.75rem;
   background-color: var(--digitv2-lightTheme-paper-secondary);
   border: 0.063em solid var(--digitv2-lightTheme-generic-divider);
+  .digit-accordion-content.open {
+    overflow: visible;
+  }
 
   .digit-accordion-header-title {
     color: #0b4b66;
@@ -1648,6 +1691,10 @@
       border: 0.5px solid #0B4B66;
       border-radius: 12px;
       height: 1.5rem;
+    }
+    .digit-tag-wrapper.warning{
+      background-color: var(--digitv2-lightTheme-alert-warning-bg);
+      border: 0.5px solid var(--digitv2-lightTheme-alert-warning);
     }
   }
 }

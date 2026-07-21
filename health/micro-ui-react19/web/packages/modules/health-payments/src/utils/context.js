@@ -19,12 +19,12 @@ export const useMyContext = () => {
   return useContext(MyContext)
 }
 
-export const ProviderContext = ({children}) => {
+export const ProviderContext = ({ children, hierarchyType, lowestBoundaryLevel }) => {
 
   const [state,dispatch] = useReducer(reducer,initialState)
 
   return (
-    <MyContext.Provider value={{state,dispatch}}>
+    <MyContext.Provider value={{state,dispatch, hierarchyType, lowestBoundaryLevel}}>
       {children}
     </MyContext.Provider>
   )

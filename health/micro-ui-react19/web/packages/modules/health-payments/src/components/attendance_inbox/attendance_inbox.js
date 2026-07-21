@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
 import CustomFilter from "./filter_section";
 import CustomInboxTable from "./table_inbox";
-import { Toast, Card } from "@egovernments/digit-ui-components";
+import { Toast, Card, Loader } from "@egovernments/digit-ui-components";
 import { defaultRowsPerPage, ScreenTypeEnum, StatusEnum } from "../../utils/constants";
 import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
 import { renderProjectPeriod } from "../../utils/time_conversion";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import { useMyContext } from "../../utils/context";
 
 /**
  * AttendanceInboxComponent: Displays a filterable and paginated inbox for attendance records.
@@ -15,6 +16,20 @@ import { I18N_KEYS } from "../../utils/i18nKeyConstants";
  */
 const AttendanceInboxComponent = ({ fromBill = false }) => {
   const { t } = useTranslation();
+  const { hierarchyType } = useMyContext();
+  const stateCode = Digit.ULBService.getStateId();
+  const language = Digit.StoreData.getCurrentLanguage();
+  const boundaryModuleCode = useMemo(
+    () => (hierarchyType ? [`boundary-${hierarchyType}`] : []),
+    [hierarchyType]
+  );
+  const { isLoading: isBoundaryLocLoading } = Digit.Services.useStore({
+    stateCode,
+    moduleCode: boundaryModuleCode,
+    language,
+    modulePrefix: "hcm",
+    enabled: boundaryModuleCode.length > 0,
+  });
 
   // Context path for the attendance service
   const attendanceContextPath = window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") || "health-attendance";
@@ -275,6 +290,10 @@ const AttendanceInboxComponent = ({ fromBill = false }) => {
   const projectPeriodLabel = React.useMemo(() => {
     return renderProjectPeriod(t, selectedProject, markPeriod);
   }, [t, selectedProject, markPeriod]);
+
+  if (isBoundaryLocLoading) {
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
+  }
 
   return (
     <div>

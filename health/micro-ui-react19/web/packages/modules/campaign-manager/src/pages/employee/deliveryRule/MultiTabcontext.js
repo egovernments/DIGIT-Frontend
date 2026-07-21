@@ -6,6 +6,7 @@ import { useDeliveryRules } from "./useDeliveryRules";
 import AddDeliveryRuleWrapper from "./AddDeliverycontext";
 import TagComponent from "../../../components/TagComponent";
 import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDateFormat";
+import useCampaignStore from "../../../hooks/useCampaignStore";
 
 const Tabs = React.memo(() => {
   const { campaignData, activeTabIndex, changeTab } = useDeliveryRules();
@@ -72,9 +73,10 @@ const TabContent = React.memo(({ project }) => {
 
 const MultiTab = React.memo(({ projectConfig, attributeConfig, operatorConfig, deliveryTypeConfig }) => {
   const { t } = useTranslation();
+  const [formStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", null);
 
   // Get session data for display
-  const tempSession = useMemo(() => Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA") || {}, [projectConfig]);
+  const tempSession = useMemo(() => formStorageData || {}, [formStorageData, projectConfig]);
 
   const campaignName = tempSession?.HCM_CAMPAIGN_NAME?.campaignName;
   const projectType = tempSession?.HCM_CAMPAIGN_TYPE?.projectType || projectConfig?.code;
