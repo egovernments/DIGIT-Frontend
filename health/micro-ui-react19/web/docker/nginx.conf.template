@@ -3,12 +3,41 @@ server {
     underscores_in_headers on;
     server_tokens off;
 
+    # Performance
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+
+    keepalive_timeout 65;
+    keepalive_requests 1000;
+
+    open_file_cache max=10000 inactive=60s;
+    open_file_cache_valid 120s;
+    open_file_cache_min_uses 2;
+    open_file_cache_errors on;
+
     # Health check endpoint for Kubernetes probes
     location = / {
         return 200 'OK';
         add_header Content-Type text/plain;
     }
 
+    # Cache hashed static assets
+    location ~* ^${BASE_PATH}/.*\.(js|css|png|jpg|jpeg|gif|svg|ico|woff2?|ttf|eot|map)$ {
+        root /var/web;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    # Do not cache index.html
+    location = ${BASE_PATH}/index.html {
+        alias /var/web/app/index.html;
+        expires -1;
+        add_header Cache-Control "no-cache";
+    }
+
+    # React SPA
     location ${BASE_PATH}/ {
         alias /var/web/app/;
         index index.html index.htm;
@@ -18,16 +47,24 @@ server {
     # Gzip compression
     gzip on;
     gzip_proxied any;
+    gzip_min_length 1024;
+    gzip_comp_level 5;
+    gzip_vary on;
+
     gzip_types
         text/plain
         text/css
         application/json
         application/javascript
-        text/xml
         application/xml
+        text/xml
         application/xml+rss
-        text/javascript;
-    gzip_vary on;
+        image/svg+xml
+        font/ttf
+        font/otf
+        application/font-woff
+        application/font-woff2;
+
     gzip_disable "MSIE [1-6]\.(?!.*SV1)";
 
     # Security headers
