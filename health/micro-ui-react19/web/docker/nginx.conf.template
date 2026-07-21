@@ -9,16 +9,24 @@ server {
         add_header Content-Type text/plain;
     }
 
-    location /${COUNTRY_PREFIX}/${BUILD_VARIANT}/ {
+    location ${BASE_PATH}/ {
         alias /var/web/app/;
         index index.html index.htm;
-        try_files $uri $uri/ /${COUNTRY_PREFIX}/${BUILD_VARIANT}/index.html;
+        try_files $uri $uri/ ${BASE_PATH}/index.html;
     }
 
     # Gzip compression
     gzip on;
     gzip_proxied any;
-    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+    gzip_types
+        text/plain
+        text/css
+        application/json
+        application/javascript
+        text/xml
+        application/xml
+        application/xml+rss
+        text/javascript;
     gzip_vary on;
     gzip_disable "MSIE [1-6]\.(?!.*SV1)";
 
