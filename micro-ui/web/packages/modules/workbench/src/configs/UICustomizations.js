@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import _ from "lodash";
 import React, { useEffect, useState } from 'react';
 import { Button } from "@egovernments/digit-ui-react-components";
-import { Button as ButtonNew,Toast } from "@egovernments/digit-ui-components";
+import { Button as ButtonNew,Toast,Loader } from "@egovernments/digit-ui-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
@@ -1052,6 +1052,7 @@ export const UICustomizations = {
       };
       // fun();
       const [showToast, setShowToast] = useState(null);
+      const [isGenerating, setIsGenerating] = useState(false);
       switch (key) {
         case "HIERARCHY_NAME":
           return row?.hierarchyType;
@@ -1083,36 +1084,48 @@ export const UICustomizations = {
             setShowToast(null);
           };
           const generateTemplate = async () => {
-            try {
-              const res = await Digit.CustomService.getResponse({
-                url:`/boundary-management/v1/_generate-search`,
-                body: {},
-                params: {
-                  tenantId: tenantId,
-                  hierarchyType: row?.hierarchyType,
-                },
-              });
-              return res;
-            } catch (error) {
-              setShowToast({ label: error?.response?.data?.Errors?.[0]?.code, type: "error" });
-              return error;
+            const res = await Digit.CustomService.getResponse({
+              url:`/boundary-management/v1/_generate-search`,
+              body: {},
+              params: {
+                tenantId: tenantId,
+                hierarchyType: row?.hierarchyType,
+              },
+            });
+            return res;
+          };
+          // The search API triggers generation on the backend when no resource exists yet and
+          // returns an empty GeneratedResource immediately, so poll until it reports a fileStoreid.
+          const pollForGeneratedResource = async (maxAttempts = 10, intervalMs = 3000) => {
+            for (let attempt = 0; attempt < maxAttempts; attempt++) {
+              const resFile = await generateTemplate();
+              const resource = resFile?.GeneratedResource?.[0];
+              if (resource?.fileStoreid) return resource;
+              if (resource?.status === "failed") return null;
+              if (attempt < maxAttempts - 1) {
+                await new Promise((resolve) => setTimeout(resolve, intervalMs));
+              }
             }
+            return null;
           };
           const downloadExcelTemplate = async () => {
-            // const res = await generateFile();
-            // await delay(2000);
-            const resFile = await generateTemplate();
-
-            if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
-              // Splitting filename before .xlsx or .xls
-              setShowToast({ label: "BOUNDARY_DOWNLOADING", type: "info" });
-              const fileNameWithoutExtension = row?.hierarchyType;
-
-              Digit.Utils.workbench.downloadExcelWithCustomName({
-                fileStoreId: resFile?.GeneratedResource?.[0]?.fileStoreid,
-                customName: fileNameWithoutExtension,
-              });
-              setShowToast({ label: "BOUNDARY_DOWNLOADED", type: "success" });
+            if (isGenerating) return;
+            setIsGenerating(true);
+            try {
+              const resource = await pollForGeneratedResource();
+              if (resource?.fileStoreid) {
+                Digit.Utils.workbench.downloadExcelWithCustomName({
+                  fileStoreId: resource?.fileStoreid,
+                  customName: row?.hierarchyType,
+                });
+                setShowToast({ label: "BOUNDARY_DOWNLOADED", type: "success" });
+              } else {
+                setShowToast({ label: "PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME", type: "info" });
+              }
+            } catch (error) {
+              setShowToast({ label: error?.response?.data?.Errors?.[0]?.code || "PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME", type: "error" });
+            } finally {
+              setIsGenerating(false);
             }
           };
           return (
@@ -1120,12 +1133,14 @@ export const UICustomizations = {
               {showToast && (
                 <Toast type={String(showToast?.type)} label={t(showToast?.label)} isDleteBtn={"true"} onClose={() => closeToast()} />
               )}
+              {isGenerating && <Loader variant={"OverlayLoader"} loaderText={"FILE_GENERATION_IN_PROGRESS"} />}
               <ButtonNew
                 type={"button"}
                 size={"medium"}
                 icon={"DownloadIcon"}
                 variation={"secondary"}
                 label={t("DOWNLOAD")}
+                isDisabled={isGenerating}
                 onClick={() => {
                   downloadExcelTemplate();
                 }}
