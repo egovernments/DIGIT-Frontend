@@ -42,7 +42,14 @@ const CreateCampaign = () => {
 
   const prevProjectTypeRef = useRef();
   const hasLoadedDraft = useRef(false);
+  const pendingHierarchySubmitRef = useRef(null);
   const queryClient = useQueryClient();
+
+  // Live boundary loading state for the selected hierarchy — shares React Query cache with SelectHierarchy
+  const { data: boundaryDataForHierarchy, isLoading: isBoundaryLoadingDirect } = Digit.Hooks.campaign.useBoundaryRelationshipSearch({
+    BOUNDARY_HIERARCHY_TYPE: storedHierarchy?.name,
+    tenantId,
+  });
 
   const updateUrlParams = (params) => {
     const url = new URL(window.location.href);
@@ -63,6 +70,25 @@ const CreateCampaign = () => {
   const closeToast = () => {
     setShowToast(null);
   };
+
+  // Auto-proceed when boundary finishes loading after a pending hierarchy submit
+  useEffect(() => {
+    if (!pendingHierarchySubmitRef.current || isBoundaryLoadingDirect) return;
+    const pendingData = pendingHierarchySubmitRef.current;
+    pendingHierarchySubmitRef.current = null;
+    setShowToast(null);
+    // Boundary loaded — check if data exists and proceed
+    const hasBoundaryData = !!(boundaryDataForHierarchy && boundaryDataForHierarchy.length > 0);
+    const isEditMode = !!(editName || campaignNumber || id);
+    const originalHierarchyName = params?.hierarchyType || params?.SelectHierarchy?.hierarchy?.name;
+    const currentHierarchyName = storedHierarchy?.name;
+    const isSameHierarchyAsOriginal = isEditMode && !!originalHierarchyName && !!currentHierarchyName && originalHierarchyName === currentHierarchyName;
+    if (!hasBoundaryData && !isSameHierarchyAsOriginal) {
+      setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY) });
+      return;
+    }
+    handleCampaignMutation(pendingData);
+  }, [isBoundaryLoadingDirect]);
 
   const onSecondayActionClick = () => {
   if (currentKey > 1) {
@@ -521,12 +547,15 @@ const CreateCampaign = () => {
         setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_SELECT_HIERARCHY_REQUIRED) });
         return;
       }
-      const isBoundaryLoading = formData?.SelectHierarchy?.isBoundaryLoading ?? params?.SelectHierarchy?.isBoundaryLoading;
-      if (isBoundaryLoading) {
+      // Use live loading state from the hook instead of stale form data snapshot
+      if (isBoundaryLoadingDirect) {
         setShowToast({ key: "info", label: t(I18N_KEYS.PAGES.HCM_BOUNDARY_DATA_LOADING) });
+        // Store pending submit so we auto-proceed when boundary finishes loading
+        pendingHierarchySubmitRef.current = formData;
         return;
       }
-      const hasBoundaryData = formData?.SelectHierarchy?.hasBoundaryData ?? params?.SelectHierarchy?.hasBoundaryData;
+      pendingHierarchySubmitRef.current = null;
+      const hasBoundaryData = !!(boundaryDataForHierarchy && boundaryDataForHierarchy.length > 0);
       const isEditMode = !!(editName || campaignNumber || id);
       const originalHierarchyName = params?.hierarchyType || params?.SelectHierarchy?.hierarchy?.name;
       const currentHierarchyName = hierarchySelected?.name;
