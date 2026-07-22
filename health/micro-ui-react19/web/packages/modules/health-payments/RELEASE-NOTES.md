@@ -5,14 +5,13 @@
 
 The Health Payments module manages the complete payment cycle for health campaign field workers. It covers everything from recording attendance in the field through to final bank-side payment approval.
 
-The workflow is role-based — each user sees only the screens and actions their role allows. Four roles govern the entire bill lifecycle:
+The workflow is role-based — each user sees only the screens and actions their role allows. Three roles govern the payment lifecycle across attendance, billing, and payment setup stages:
 
 | Role | Who it's for |
 |---|---|
-| `PAYMENT_EDITOR` | Supervisors who record attendance and generate bills |
-| `PAYMENT_REVIEWER` | Reviewers who check bills and send them for approval |
-| `PAYMENT_APPROVER` | Approvers who verify attendance data and approve bills |
-| `PAYMENT_APPROVER_BANK` | Bank-side staff who do the final verification and approval |
+| `PROXIMITY_SUPERVISOR` | Field supervisors who record and edit attendance in their assigned boundary registers |
+| `CAMPAIGN_SUPERVISOR` | Supervisors who access the bill inbox and generate bills from recorded attendance |
+| `CAMPAIGN_MANAGER` | Managers who configure payment setup (billing config, worker rates, delivery targets) |
 
 The module works from a single MDMS configuration block (`HCM.paymentsConfig`) that defines payment rules, bill periods, and which actions are allowed at each stage. **If this config is missing, the module will not load at all.**
 
@@ -41,18 +40,15 @@ Health Payments is no longer served from the old React 17 standalone shell. Depl
 
 ---
 
-### 2. Configure the four payment roles
+### 2. Configure the payment roles
 
-Four new roles must be assigned to the right users in the DIGIT role-action mapping before anyone can access bill management screens.
+The following roles must be assigned to the right users in the DIGIT role-action mapping before they can access the respective screens.
 
 | Role | Assign to |
 |---|---|
-| `PAYMENT_EDITOR` | Field supervisors who record attendance and generate bills |
-| `PAYMENT_REVIEWER` | Staff who review bills before approval |
-| `PAYMENT_APPROVER` | Staff who approve bills and trigger payment generation |
-| `PAYMENT_APPROVER_BANK` | Bank-side staff who do the final approval |
-
-> If a user has more than one payment role, the system automatically applies the highest-priority role.
+| `PROXIMITY_SUPERVISOR` | Field supervisors who record and edit attendance |
+| `CAMPAIGN_SUPERVISOR` | Supervisors who access the bill inbox and generate bills |
+| `CAMPAIGN_MANAGER` | Managers who configure payment setup |
 
 ---
 
@@ -76,54 +72,27 @@ Map view in the attendance view screen is now controlled by MDMS rather than bei
 
 All of the following screens and features are new in HCM v2.1 — they did not exist in the previous version.
 
-### Bill management dashboard
+### Attendance registers inbox (`PROXIMITY_SUPERVISOR`)
 
-A role-specific dashboard that shows bills at each stage with the actions available to the logged-in user. The tabs, columns, and action buttons shown are entirely determined by the user's payment role — the same screen adapts automatically for editors, reviewers, and approvers.
-
----
-
-### Attendance recording and document upload
-
-Supervisors record attendance within their assigned boundary registers. They can also attach supporting documents (photos, sign-off sheets) at the time of recording.
+Proximity supervisors select their project, then view attendance registers filtered by boundary and period. From here they can edit registers, search and assign attendees, record/edit attendance, upload supporting documents, and approve/submit attendance with comments. Approved records show comment logs.
 
 ---
 
-### Bill generation
+### Bill inbox and bill generation (`CAMPAIGN_SUPERVISOR`)
 
-Bills are generated directly from recorded attendance data. There are two paths:
-
-- **Standard:** Generate the bill directly from the attendance record.
-- **Excel upload:** Download the bill as an Excel file, edit it, and re-upload — useful for bulk corrections.
+Campaign supervisors select a project and aggregation level, then view attendance registers grouped by boundary. They can view attendance (read-only), generate bills from approved attendance, and access "My Bills" to view bill payment details and download bills.
 
 ---
 
 ### Bill detail view
 
-A drill-down view showing the full details of a bill — individual attendees, amounts, and the current status of each record.
-
----
-
-### Send for approval
-
-Reviewers can route a bill to an approver via a dedicated popup, with notes if needed.
-
----
-
-### Verify and generate payments
-
-Approvers review and verify the attendance data behind a bill, then trigger payment generation once satisfied.
-
----
-
-### Bank approval
-
-A final approval step for bank-side staff before payment is released.
+A drill-down view showing the full details of a bill — individual attendees, amounts, and the current status of each record. Accessible from My Bills (`CAMPAIGN_SUPERVISOR`).
 
 ---
 
 ### Worker and attendee detail popups
 
-Click through any worker or attendee row to see their individual record. Editors can also make inline corrections or send a record back for correction from the same popup.
+Click through any worker or attendee row to see their individual record.
 
 ---
 
@@ -184,29 +153,41 @@ Boundary hierarchy type is no longer hardcoded from `window.globalConfigs` and `
 ## How the Bill Lifecycle Works
 
 ```
-Attendance inbox
-  → Record / edit attendance  (with optional document upload)
-  → Generate bill
-  → Bill inbox                          [PAYMENT_EDITOR]
-  → Manage bills → Send for approval    [PAYMENT_REVIEWER]
-  → Verify & generate payments          [PAYMENT_APPROVER]
-  → Bank approval                       [PAYMENT_APPROVER_BANK]
+Attendance Registers Inbox                          [PROXIMITY_SUPERVISOR]
+  → Project Selection
+  → View Registers (Pending / Approved tabs)
+  → Edit Register → Search & Assign Attendees
+  → View Attendance → Record/Edit Attendance
+  → Upload Supporting Documents
+  → Approve/Submit Attendance (with comments)
+  → View Comment Logs (on approved records)
+
+Bill Inbox                                          [CAMPAIGN_SUPERVISOR]
+  → Project + Aggregation Level Selection
+  → View Attendance Registers (Approved / Pending tabs)
+  → View Attendance (read-only, from bill context)
+  → Generate Bill (from approved attendance)
+  → My Bills → View Bill Details
+  → Download Bills
+
+Payment Setup                                       [CAMPAIGN_MANAGER]
+  → Select Campaign
+  → Select Billing Cycle (Weekly/Biweekly/Monthly/Custom)
+  → Configure Role-Based Wages
+  → Submit Billing Configuration
 ```
 
-Each step is gated by the user's payment role. To change what a role can see or do at any stage, the role configuration file is updated — not individual screens.
+Each step is gated by the user's role.
 
 ---
 
 ## How Access and Permissions Work
 
-| Role | What they can do |
-|---|---|
-| `PAYMENT_EDITOR` | Record attendance, upload supporting documents, generate bill, view bill inbox |
-| `PAYMENT_REVIEWER` | Review bills, send for approval, view reviewer tabs |
-| `PAYMENT_APPROVER` | Verify attendance data, approve bills, trigger payment generation |
-| `PAYMENT_APPROVER_BANK` | Final bank-side approval of verified bills |
-
-> All roles can view attendance records and download bills. A user with multiple payment roles gets the highest-priority role applied.
+| Role | Root Screen | What they can do |
+|---|---|---|
+| `PROXIMITY_SUPERVISOR` | Attendance Registers Inbox | Select project, view registers (Pending/Approved tabs), edit register, search & assign attendees, view/record/edit attendance, upload supporting documents, approve/submit attendance with comments, view comment logs |
+| `CAMPAIGN_SUPERVISOR` | Bill Inbox | Select project + aggregation level, view attendance registers (Approved/Pending tabs), view attendance (read-only), generate bills from approved attendance, access My Bills, view bill payment details, download bills |
+| `CAMPAIGN_MANAGER` | Payment Setup | Select campaign, select billing cycle (Weekly/Biweekly/Monthly/Custom), configure role-based wages, submit billing configuration |
 
 ---
 
