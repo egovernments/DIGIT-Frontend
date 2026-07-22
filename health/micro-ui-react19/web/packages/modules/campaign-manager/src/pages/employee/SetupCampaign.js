@@ -1,5 +1,5 @@
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { CampaignConfig } from "../../configs/CampaignConfig";
@@ -105,6 +105,7 @@ const SetupCampaign = () => {
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [active, setActive] = useState(0);
+  const pendingUpdateRef = useRef(false);
   const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
@@ -292,11 +293,14 @@ const SetupCampaign = () => {
   useEffect(() => {
     async function handleUpdate() {
       if (shouldUpdate === true) {
-        // Wait for boundary search to finish before validating
+        // Wait for boundary search to finish — show toast and defer update
         if (isBoundaryLoading) {
+          setShowToast({ key: "info", label: t(I18N_KEYS.PAGES.HCM_BOUNDARY_DATA_LOADING) });
+          pendingUpdateRef.current = true;
           setShouldUpdate(false);
           return;
         }
+        pendingUpdateRef.current = false;
         // Block campaign create/update if no boundary data exists for the selected hierarchy type
         if (hierarchyType && (!hierarchyData || hierarchyData.length === 0)) {
           setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY) });
@@ -638,6 +642,14 @@ const SetupCampaign = () => {
     }
     handleUpdate();
   }, [shouldUpdate]);
+
+  // Auto-retry update when boundary finishes loading after a pending submit
+  useEffect(() => {
+    if (!pendingUpdateRef.current || isBoundaryLoading) return;
+    pendingUpdateRef.current = false;
+    setShowToast(null);
+    setShouldUpdate(true);
+  }, [isBoundaryLoading]);
 
   useEffect(() => {
     if (showToast) {
@@ -1100,6 +1112,8 @@ const SetupCampaign = () => {
 
   const onSecondayActionClick = () => {
     if (currentKey > 1) {
+      // Invalidate any pending update so stale data isn't auto-submitted
+      pendingUpdateRef.current = false;
       setShouldUpdate(false);
       setCurrentKey(currentKey - 1);
       setSummaryErrors(null);

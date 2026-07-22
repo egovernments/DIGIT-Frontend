@@ -372,8 +372,11 @@ const DeliveryDetailsSummary = (props) => {
     const isPersisted = serverFingerprint === expectedFingerprint;
     if (!isPersisted) {
       if (retryCountRef.current < MAX_PERSISTENCE_RETRIES) {
+        // Don't start another timer if one is already running
+        if (retryTimerRef.current) return;
         setIsPolling(true);
         retryTimerRef.current = setTimeout(() => {
+          retryTimerRef.current = null;
           retryCountRef.current += 1;
           refetch();
         }, PERSISTENCE_RETRY_DELAY_MS);
@@ -387,12 +390,17 @@ const DeliveryDetailsSummary = (props) => {
       setIsPolling(false);
       Digit.SessionStorage.del("campaignDeliveryFingerprint");
     }
+  }, [isLoading, isFetching, data]);
+
+  // Cleanup polling timer on unmount only
+  useEffect(() => {
     return () => {
       if (retryTimerRef.current) {
         clearTimeout(retryTimerRef.current);
+        retryTimerRef.current = null;
       }
     };
-  }, [isLoading, isFetching, data]);
+  }, []);
 
   const closeToast = () => {
     setShowToast(null);
