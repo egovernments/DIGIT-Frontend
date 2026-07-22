@@ -39,6 +39,31 @@ const initTokens = (stateCode) => {
   }
 };
 
+// Cross-deployment tenant redirect: this build (this contextPath) is the shared/common
+// login instance. Each tenant (chad, congo, ...) is a SEPARATE deployment at its own
+// base path (same origin), configured via globalConfigs.TENANT_DEPLOYMENT_MAP. Since the
+// core login module navigates in-app via history.pushState/replaceState with no basename
+// (see digit-ui-module-core), the only way to bounce the browser to another deployment's
+// path after login is to intercept navigation from outside its router.
+const redirectToTenantDeploymentIfNeeded = () => {
+  const tenantId = window.localStorage.getItem("Employee.tenant-id");
+  if (!tenantId) return;
+
+  const tenantDeploymentMap = window?.globalConfigs?.getConfig("TENANT_DEPLOYMENT_MAP") || {};
+  const targetBase = tenantDeploymentMap[tenantId.toLowerCase()];
+  if (!targetBase) return;
+
+  const normalizedTarget = targetBase.replace(/^\/|\/$/g, "");
+  const pathname = window.location.pathname;
+  // Check the actual URL, not window.contextPath: that's a static value re-read from the
+  // same globalConfigs on every load, so it can't tell us we've already arrived at the
+  // target deployment (this matters in local dev, where one server answers every path).
+  if (pathname === `/${normalizedTarget}` || pathname.startsWith(`/${normalizedTarget}/`)) return;
+
+  const suffix = pathname.replace(`/${window.contextPath}`, "") || "/employee";
+  window.location.replace(`/${normalizedTarget}${suffix}${window.location.search}`);
+};
+
 const initDigitUI = () => {
   // In production, docker-entrypoint.sh injects <base href="/chaduat/hcm-digit-ui/">
   // Use that to derive contextPath (includes country prefix), otherwise fall back to globalConfigs
@@ -49,6 +74,17 @@ const initDigitUI = () => {
     window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "hcm-digit-ui";
   }
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
+
+  ["pushState", "replaceState"].forEach((method) => {
+    const original = window.history[method];
+    window.history[method] = function (...args) {
+      const result = original.apply(this, args);
+      redirectToTenantDeploymentIfNeeded();
+      return result;
+    };
+  });
+  window.addEventListener("popstate", redirectToTenantDeploymentIfNeeded);
+  redirectToTenantDeploymentIfNeeded(); // handles page refresh with a tenant already logged in
 
   const root = ReactDOM.createRoot(document.getElementById("root"));
   root.render(<MainApp stateCode={stateCode} enabledModules={enabledModules} />);
