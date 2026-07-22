@@ -27,6 +27,8 @@ This release delivers two things together:
 1. **The full bill management lifecycle UI** — all screens from attendance recording through to bank approval are new in HCM v2.1. None of these existed in the previous React 17 version.
 2. **Platform migration** — the module has been moved from React 17 to React 19 and is now deployed under the `payments-ui` build variant.
 
+It also removes the module's dependency on global config for boundary hierarchy type, and adds several attendance and bill screen fixes from a final UI/UX audit pass.
+
 ---
 
 ## ⚠️ Action Required Before Upgrading
@@ -58,7 +60,15 @@ Four new roles must be assigned to the right users in the DIGIT role-action mapp
 
 The module reads all payment rules, bill periods, and allowed actions from a single MDMS master: `HCM.paymentsConfig` (schema: `PAYMENTS_MASTER_DATA`).
 
-> **This config must be in place before deployment.** The module will block its own initialization and refuse to load if this config is not found.
+> **This config must be in place before deployment.** The module will block its own initialization and refuse to load if this config is not found. Note: boundary hierarchy type is no longer read from this config or from global config — it is now derived directly from the campaign/project, so no separate hierarchy configuration is needed here.
+
+---
+
+### 4. Configure `HCM.ATTENDANCE_CONFIG` if map view is needed
+
+Map view in the attendance view screen is now controlled by MDMS rather than being always available.
+
+> Set `enableMapView: true` in the `HCM.ATTENDANCE_CONFIG` schema if you want the map view button and popup to appear. It stays hidden by default.
 
 ---
 
@@ -117,6 +127,18 @@ Click through any worker or attendee row to see their individual record. Editors
 
 ---
 
+### Map view toggle for attendance (config-driven)
+
+The attendance view screen can now show a map of attendance locations, gated behind the `HCM.ATTENDANCE_CONFIG` MDMS master. The map button and popup only render when `enableMapView` is explicitly set to `true`.
+
+---
+
+### Illustrated empty state for search results
+
+Search screens with no results now show an illustrated empty state (`UndrawPeopleSearch`) instead of a plain message.
+
+---
+
 ## What Changed in Existing Features
 
 ### React 19 migration
@@ -143,12 +165,19 @@ The attendance view screen has been significantly restructured internally as par
 
 ---
 
+### Hierarchy type no longer read from global config
+
+Boundary hierarchy type is no longer hardcoded from `window.globalConfigs` and `paymentsConfig` MDMS. It is now derived from `project.additionalDetails`, and the lowest boundary level is fetched from the boundary hierarchy definition API instead. Both values are passed down via a React Context (`ProviderContext`).
+
+---
+
 ## Bug Fixes
 
 | Issue fixed | What changed |
 |---|---|
 | Approve button not working | The approve action in the attendance view was not correctly wired after migration — now fixed |
 | Various post-migration rendering issues | Bill inbox, manage bills, fetch bills, bill detail, Excel editing, and attendance screens all had React 19 compatibility issues that have been resolved |
+| UI/UX polish across bill and attendance screens | Table styling, date range picker, empty states, and button sizing fixed across bill inbox, manage bills, verify & generate payments, and attendance screens from a final audit pass |
 
 ---
 
@@ -183,6 +212,8 @@ Each step is gated by the user's payment role. To change what a role can see or 
 
 ## Localisation
 
+Translation keys are now centralised in `src/utils/i18nKeyConstants.js`, replacing string literals that were previously scattered across components and pages.
+
 | Key prefix | Where it is used |
 |---|---|
 | `HCM_AM_*` | All bill management screens |
@@ -205,11 +236,13 @@ Each step is gated by the user's payment role. To change what a role can see or 
 | `/{projectContextPath}/v1/_search` | POST | `ProjectService` | Search projects |
 | `/{projectContextPath}/staff/v1/_search` | POST | `ProjectService` | Search project staff |
 | `/boundary-service/boundary-relationships/_search` | POST | `AttendanceService` | Boundary-scoped register search |
+| `/boundary-service/boundary-hierarchy-definition/_search` | POST | `ProviderContext` | Fetch lowest boundary level for hierarchy (replaces global-config-based lookup) |
 | `/health-expense-calculator/billing-config/v1/_create` | POST | `AttendeeService` | Create billing config (payment setup) |
 | `/health-expense-calculator/billing-config/v1/_update` | POST | `AttendeeService` | Update billing config |
 | `/health-expense-calculator/billing-config/v1/_search` | POST | `PaymentSetupServices` | Search billing config by project |
 | `/{mdmsPath}/v2/_create/HCM.WORKER_RATES` | POST | `AttendeeService` | Create worker rate MDMS entry |
 | `/{mdmsPath}/v2/_update/HCM.WORKER_RATES` | POST | `AttendeeService` | Update worker rate MDMS entry |
+| `/{mdmsPath}/v2/_search/HCM.ATTENDANCE_CONFIG` | POST | `ViewAttendance` | Fetch map view visibility config |
 | `/project-factory/v1/project-type/search` | POST | `useSearchCampaign` | Search campaigns (project selection screen) |
 | `/egov-workflow-v2/egov-wf/businessservice/_search` | POST | `WorkflowService` | Fetch workflow business service config |
 | `/egov-workflow-v2/egov-wf/process/_search` | POST | `WorkflowService` | Search workflow process instances |
