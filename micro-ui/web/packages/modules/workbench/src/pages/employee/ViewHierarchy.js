@@ -95,6 +95,7 @@ const ViewHierarchy = () => {
   useEffect(() => {
     fetchData();
   }, []);
+  const [isTemplateGenerating, setIsTemplateGenerating] = useState(false);
   const generateTemplate = async () => {
     const res = await Digit.CustomService.getResponse({
       url: `/boundary-management/v1/_generate-search`,
@@ -106,32 +107,40 @@ const ViewHierarchy = () => {
     });
     return res;
   };
+  // The search API triggers generation on the backend when no resource exists yet and
+  // returns an empty GeneratedResource immediately, so poll until it reports a fileStoreid.
+  const pollForGeneratedResource = async (maxAttempts = 10, intervalMs = 3000) => {
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      const resFile = await generateTemplate();
+      const resource = resFile?.GeneratedResource?.[0];
+      if (resource?.fileStoreid) return resource;
+      if (resource?.status === "failed") return null;
+      if (attempt < maxAttempts - 1) {
+        await new Promise((resolve) => setTimeout(resolve, intervalMs));
+      }
+    }
+    return null;
+  };
   const downloadExcelTemplate = async () => {
-    // const res = await generateFile()
-    const resFile = await generateTemplate();
-    if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
-      // Splitting filename before .xlsx or .xls
-      const fileNameWithoutExtension = hierarchyType;
-      Digit.Utils.workbench.downloadExcelWithCustomName({
-        fileStoreId: resFile?.GeneratedResource?.[0]?.fileStoreid,
-        customName: fileNameWithoutExtension,
-      });
-      setShowPopUp(false);
-    } else if (
-      resFile &&
-      resFile?.GeneratedResource?.[0]?.status === "inprogress"
-    ) {
-      setShowToast({
-        label: t("PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME"),
-        isError: "info",
-      });
-      setShowPopUp(false);
-    } else {
-      setShowToast({
-        label: t("PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME"),
-        isError: "info",
-      });
-      setShowPopUp(false);
+    if (isTemplateGenerating) return;
+    setIsTemplateGenerating(true);
+    try {
+      const resource = await pollForGeneratedResource();
+      if (resource?.fileStoreid) {
+        Digit.Utils.workbench.downloadExcelWithCustomName({
+          fileStoreId: resource?.fileStoreid,
+          customName: hierarchyType,
+        });
+        setShowPopUp(false);
+      } else {
+        setShowToast({
+          label: t("PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME"),
+          isError: "info",
+        });
+        setShowPopUp(false);
+      }
+    } finally {
+      setIsTemplateGenerating(false);
     }
   };
 
@@ -564,6 +573,7 @@ const ViewHierarchy = () => {
                 icon="DownloadIcon"
                 label={t("DOWNLOAD_EXCEL_TEMPLATE")}
                 onClick={downloadExcelTemplate}
+                isDisabled={isTemplateGenerating}
                 size="medium"
                 variation="secondary"
               />
@@ -642,6 +652,10 @@ const ViewHierarchy = () => {
           {/* Loader during data creation */}
           {dataCreationGoing && (
             <Loader page={true} variant={"OverlayLoader"} />
+          )}
+          {/* Loader while the excel template is being generated */}
+          {isTemplateGenerating && (
+            <Loader page={true} variant={"OverlayLoader"} loaderText={"FILE_GENERATION_IN_PROGRESS"} />
           )}
           {/* Toast notification */}
           {showToast && (
