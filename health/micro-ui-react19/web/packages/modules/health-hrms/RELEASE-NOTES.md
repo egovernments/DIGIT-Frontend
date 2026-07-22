@@ -117,6 +117,8 @@ Campaign assignment inbox
 
 ## Localisation
 
+Translation keys are now centralised in `src/utils/i18nKeyConstants.js`, replacing string literals that were previously scattered across components and pages.
+
 | Key prefix | Where it is used |
 |---|---|
 | `HCM_` | All HRMS screen labels |

@@ -31,7 +31,7 @@ This release adds three major areas to the Campaign Manager:
 2. **Attendance Register Setup** — a step-by-step flow after campaign creation to configure registers, upload attendance, and map users.
 3. **Commodity Management** — a new module for tracking stock across warehouses, creating shipments, and uploading bulk stock data.
 
-It also removes the Excel upload feature toggle (multi-sheet is now always on) and fixes several campaign update reliability issues.
+It also removes the Excel upload feature toggle (multi-sheet is now always on), consolidates campaign wizard state management, and significantly improves boundary selection performance for large (50k+) boundary hierarchies, alongside fixes for several campaign update reliability issues.
 
 ---
 
@@ -45,9 +45,9 @@ When creating a campaign, users will now see a new first step: **Select Hierarch
 
 ### 2. Set up Commodity Management MDMS masters first
 
-The Commodity Management screens read their campaign and stock configuration from MDMS at runtime. If the required MDMS masters are not configured before you enable the commodity screens, those screens will not work correctly.
+The Commodity Management screens read their stock and commodity configuration from MDMS at runtime. If the required MDMS masters are not configured before you enable the commodity screens, those screens will not work correctly.
 
-> Configure the commodity and stock config masters in MDMS before enabling the Commodity Management module.
+> Configure the commodity and stock config masters in MDMS before enabling the Commodity Management module. Hierarchy type is no longer sourced from MDMS for Commodity Management — it is now derived directly from the campaign, so no separate MDMS hierarchy configuration is required for it.
 
 ---
 
@@ -60,6 +60,27 @@ A new **first step** has been added to the campaign creation wizard. Users selec
 - Available hierarchy types are pulled from the Boundary Management API.
 - The selection is saved to session storage and used by all subsequent steps in the wizard.
 - During campaign updates, this step is shown as **read-only** — the hierarchy cannot be changed.
+
+---
+
+### Campaign state consolidation & boundary selection performance
+
+Campaign wizard state management was consolidated, and boundary selection was significantly optimized to handle large hierarchies without freezing the browser.
+
+**State consolidation:**
+- Reduced from 16 IndexedDB keys and 7 Redux slices down to 1 IndexedDB key and 4 slices
+- Duplicate keys (`FORM_DATA`, `ADMIN_SETUP`, `ADMIN_UPLOAD`) merged into a single `campaign.formData`
+- Single debounced write-back to IndexedDB via a new `CAMPAIGN_APP_STATE` key
+
+**Boundary selection performance (50k+ boundaries):**
+- Replaced O(n²) tree walks and child-boundary lookups with `Map`/`Set`-based indexes
+- Memoized filtered option lists that were previously recomputed on every render
+- Added a loader overlay (via `useTransition`) during heavy selection processing (e.g. "Select All")
+
+**Reliability fixes:**
+- Fixed a crash in the delivery setup screen caused by a nested Redux Provider shadowing the campaign store
+- Fixed stale/incorrect campaign data appearing across create, update, and clone flows
+- Fixed the boundary selection page issuing an unnecessary empty localization search call
 
 ---
 
@@ -127,6 +148,24 @@ When cloning an existing campaign, the source campaign's hierarchy type is now c
 
 ---
 
+### Commodity Management — hierarchy type no longer sourced from MDMS
+
+Commodity Management screens (shipment creation, bulk stock upload) now derive hierarchy type directly from the campaign instead of an MDMS-configured hierarchy schema, removing a configuration dependency that previously had to be set up separately.
+
+---
+
+### Stock calculations — duplicate entries removed
+
+`RECEIPT`, `EXCESS`, and `LESS` stock entries were being double-counted alongside `ISSUED`/`ACCEPTED` records for the same movement, inflating totals. These entry types are now excluded from stock balance and summary calculations. Stock Summary also gains a **Total Accepted** figure, and the balance formula now uses accepted stock instead of total received.
+
+---
+
+### Persistent validation status on file upload
+
+`NewUploadData` now shows a persistent `AlertCard` below the upload section summarizing validation results (success / warning / error), which stays visible until a new file is uploaded, the file is removed, or validation restarts. A "View Errors" button opens the uploaded file directly when validation fails.
+
+---
+
 ## Bug Fixes
 
 | Issue fixed | Details |
@@ -142,6 +181,19 @@ When cloning an existing campaign, the source campaign's hierarchy type is now c
 | "Show Category" missing in flow search panel | Filter option was not appearing |
 | Blank upload screen | Caused by a missing `customProps.type` value |
 | Step navigation skipping steps incorrectly | Custom logic in MDMS was incorrectly filtering step navigation |
+| Shipment popup used the wrong project for users with multiple projects | Now uses the selected project ID instead of always defaulting to the first |
+| Commodity facility filtering broke for multi-project users | Selected project is now read from URL/session storage instead of context |
+| `RECEIPT`/`EXCESS`/`LESS` transactions showed "N/A" status | Now shown as "Received" |
+| Validation toast showed blank text when a translation was missing | Falls back to the raw field name |
+| Field matching in App Configuration could update the wrong field | Matching now uses field name + key together instead of field name alone |
+| Checklist search toast, View Boundary pagination, and alert action popup title issues | Fixed |
+| Dates error in campaign setup | Fixed |
+| Custom reports and general campaign setup CSS issues | Fixed |
+| Individual context path issue | Fixed |
+| Attendance, reports, and hierarchy screens — various UI/UX issues from final audit pass | Fixed |
+| Dashboard UI/UX issues | Fixed |
+| Error message display issue | Fixed |
+| Shipment Excel template was unstyled | Added locked headers, green background, and larger font |
 | Various display fixes | Across campaign setup and delivery rule screens |
 
 ---
@@ -177,6 +229,7 @@ When cloning an existing campaign, the source campaign's hierarchy type is now c
 | `useBatchStockCreation` | Handles bulk stock record creation |
 | `useCommodityProjectSearch` | Campaign search scoped to commodity projects |
 | `useWarehouseManagerSync` | Syncs warehouse state with the backend |
+| `useCampaignStore` | Singleton campaign state store (consolidates most Redux slices/IndexedDB keys), synced via `useSyncExternalStore` |
 
 All commodity components are in `src/components/CommodityManagement/`.
 All attendance register setup screens are in `src/pages/employee/NewCampaignCreate/`.
