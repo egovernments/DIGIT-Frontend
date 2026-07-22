@@ -23,11 +23,10 @@ server {
     }
 
     # Cache hashed static assets
-    location ~* ^${BASE_PATH}/.*\.(js|css|png|jpg|jpeg|gif|svg|ico|woff2?|ttf|eot|map)$ {
-        root /var/web;
+    location ~* ^${BASE_PATH}/(.+\.(?:js|css|png|jpg|jpeg|gif|svg|ico|woff2?|ttf|eot|map))$ {
+        alias /var/web/app/$1;
         expires 1y;
         add_header Cache-Control "public, immutable";
-        try_files $uri =404;
     }
 
     # Do not cache index.html
