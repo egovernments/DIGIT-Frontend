@@ -92,6 +92,8 @@ const CreateCampaign = () => {
 
   const onSecondayActionClick = () => {
   if (currentKey > 1) {
+    // Invalidate any pending hierarchy submit so stale data isn't auto-submitted
+    pendingHierarchySubmitRef.current = null;
     // Clear campaign name when going back to step 1 (only for new campaigns, not edit/clone)
     if (currentKey === 2 && !editName && !campaignNumber) {
       setParams((prev) => {

@@ -1112,6 +1112,8 @@ const SetupCampaign = () => {
 
   const onSecondayActionClick = () => {
     if (currentKey > 1) {
+      // Invalidate any pending update so stale data isn't auto-submitted
+      pendingUpdateRef.current = false;
       setShouldUpdate(false);
       setCurrentKey(currentKey - 1);
       setSummaryErrors(null);
