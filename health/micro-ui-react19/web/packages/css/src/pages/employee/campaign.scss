@@ -1280,6 +1280,14 @@
     box-shadow: 0px 2px 7px 0px #00000026;
 
 
+    .select-hierarchy-campaign-selection-card-name-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+
     .select-hierarchy-campaign-selection-card-name {
       font-family: var(--digitv2-fontFamily-sans);
       font-style: var(--digitv2-fontStyle-normal);
