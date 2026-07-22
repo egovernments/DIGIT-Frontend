@@ -49,17 +49,17 @@ The new User Activity Tracking section pulls all its data from Elasticsearch. If
 
 If any of your code calls:
 
-```
+```text
 Digit.Hooks.campaign.useSearchCampaign
 ```
 
 Rename it to:
 
-```
+```text
 Digit.Hooks.DSS.useSearchCampaign
 ```
 
-The hook works exactly the same — only the location (namespace) has changed. No other code changes are needed for this.
+The hook's namespace has changed. Note that the DSS version only sets `gcTime: 0`, whereas the previous campaign version also set `staleTime: 0` and `refetchOnMount: "always"`. If your code relies on those query options, pass them explicitly via the `config` parameter.
 
 ---
 
@@ -77,11 +77,11 @@ A new section has been added to the main L2 dashboard. It shows field worker act
 
 **How the flow works:**
 
-```
+```text
 L2 Dashboard → User Activity Section → Metrics cards + Table → Click a user → Profile popup
 ```
 
-> All three new data hooks (`useSimpleElasticSearch`, `useUserActivityData`, `useUserTrackingData`) query Elasticsearch directly. There is no fallback if Elasticsearch is unavailable.
+> All three new data hooks (`useSimpleElasticsearch`, `useUserActivityData`, `useUserTrackingData`) query Elasticsearch directly. There is no fallback if Elasticsearch is unavailable.
 
 ---
 
@@ -96,7 +96,7 @@ Program managers can now access campaign-scoped reports directly from the dashbo
 
 **How the flow works:**
 
-```
+```text
 Campaign row → "View Reports" link → Reports list page → Select a report → Report detail page
 ```
 
@@ -199,7 +199,7 @@ An Excel library (`xlsx 0.17.5`) has been added to support exporting report data
 | User Profile Popup | `src/components/UserActivityTracking/UserProfilePopup.js` |
 | Reports List Page | `src/components/ReportsListPage.js` |
 | Report Detail Page | `src/components/ReportDetailPage.js` |
-| `useSimpleElasticSearch` | `Digit.Hooks.DSS.useSimpleElasticSearch` |
+| `useSimpleElasticsearch` | `Digit.Hooks.DSS.useSimpleElasticsearch` |
 | `useUserActivityData` | `Digit.Hooks.DSS.useUserActivityData` |
 | `useUserTrackingData` | `Digit.Hooks.DSS.useUserTrackingData` |
 | `useSearchCampaign` | `Digit.Hooks.DSS.useSearchCampaign` |

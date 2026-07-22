@@ -223,7 +223,7 @@ Translation keys are now centralised in `src/utils/i18nKeyConstants.js`, replaci
 | `/health-expense-calculator/billing-config/v1/_search` | POST | `PaymentSetupServices` | Search billing config by project |
 | `/{mdmsPath}/v2/_create/HCM.WORKER_RATES` | POST | `AttendeeService` | Create worker rate MDMS entry |
 | `/{mdmsPath}/v2/_update/HCM.WORKER_RATES` | POST | `AttendeeService` | Update worker rate MDMS entry |
-| `/{mdmsPath}/v2/_search/HCM.ATTENDANCE_CONFIG` | POST | `ViewAttendance` | Fetch map view visibility config |
+| `/{mdmsPath}/v2/_search` | POST | `ViewAttendance` | Fetch map view visibility config (`schemaCode: "HCM.ATTENDANCE_CONFIG"` in request body) |
 | `/project-factory/v1/project-type/search` | POST | `useSearchCampaign` | Search campaigns (project selection screen) |
 | `/egov-workflow-v2/egov-wf/businessservice/_search` | POST | `WorkflowService` | Fetch workflow business service config |
 | `/egov-workflow-v2/egov-wf/process/_search` | POST | `WorkflowService` | Search workflow process instances |
