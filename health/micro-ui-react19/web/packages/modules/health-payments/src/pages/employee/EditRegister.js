@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button, Card, Toast, Loader } from "@egovernments/digit-ui-components";
+import { Button, Card, Toast, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { formatTimestampToDate } from "../../utils";
 
@@ -217,6 +217,10 @@ const EditRegister = ({ editAttendance = false }) => {
   return (
     <Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
+        <HeaderComponent styles={{ marginBottom: "1rem" }} className="payment-screen-headers pop-inbox-header">
+          {t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_VIEW_REGISTER)}
+        </HeaderComponent>
+
         {/* ---- Attendance Summary Card ---- */}
         <Card type="primary" className="bottom-gap-card-payment">
           {renderLabelPair("HCM_AM_ATTENDANCE_ID", t(registerNumber))}
