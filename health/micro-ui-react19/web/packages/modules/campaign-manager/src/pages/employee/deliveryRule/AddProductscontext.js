@@ -189,7 +189,7 @@ const AddProducts = React.memo(({
                   select={(value) => updateProductValue(product.key, value)}
                   optionKey="displayName"
                   isSearchable={true}
-                  optionCardStyles={{maxHeight:"10vh"}}
+                  optionCardStyles={{maxHeight:"20vh"}}
                 />
               </LabelFieldPair>
               

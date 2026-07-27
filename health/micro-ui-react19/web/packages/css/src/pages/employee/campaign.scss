@@ -1280,6 +1280,15 @@
     box-shadow: 0px 2px 7px 0px #00000026;
 
 
+    .select-hierarchy-campaign-selection-card-name-row {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
     .select-hierarchy-campaign-selection-card-name {
       font-family: var(--digitv2-fontFamily-sans);
       font-style: var(--digitv2-fontStyle-normal);
@@ -1316,6 +1325,13 @@
       background-color: #BAD6C9;
       border: 2px solid #00703C;
       box-shadow: 0px 2px 7px 0px #00000026;
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+      box-shadow: none;
     }
   }
 }
