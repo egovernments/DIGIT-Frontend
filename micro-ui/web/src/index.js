@@ -5,6 +5,7 @@ import "@egovernments/digit-ui-health-css";
 // import { BrowserRouter } from "react-router-dom";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
+import { fetchAndApplyThemeOverrides } from "./config/themeOverrides";
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
@@ -71,6 +72,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   useEffect(() => {
     initLibraries().then(async () => {
+      await fetchAndApplyThemeOverrides();
       try {
         // const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager")
         const { initServiceDesignerComponents } = await import("@egovernments/digit-ui-module-service-designer")
