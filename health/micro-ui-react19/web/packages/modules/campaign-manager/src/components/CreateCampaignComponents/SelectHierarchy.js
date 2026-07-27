@@ -67,40 +67,62 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
 
   // Parallel existence check for all hierarchies — shown as tags on each card
   const [boundaryStatusMap, setBoundaryStatusMap] = useState({});
-  // Shape: { [hierarchyType]: "loading" | "active" | "inactive" }
+  // Shape: { [hierarchyType]: "loading" | "active" | "inactive" | "error" }
+  // "error" = network/auth failure (indistinguishable from absence); no tag is shown.
 
   useEffect(() => {
     if (!allHierarchyDefinitions.length) return;
+    let cancelled = false;
+
     const initialMap = {};
     allHierarchyDefinitions.forEach((d) => { initialMap[d.hierarchyType] = "loading"; });
     setBoundaryStatusMap(initialMap);
 
-    Promise.all(
-      allHierarchyDefinitions.map((d) =>
-        Digit.CustomService.getResponse({
-          url: `/boundary-service/boundary-relationships/_search`,
-          useCache: false,
-          method: "POST",
-          params: {
-            tenantId,
-            hierarchyType: d.hierarchyType,
-            includeChildren: false,
-            limit: 1,
-          },
-          body: {},
-        })
-          .then((res) => ({
-            hierarchyType: d.hierarchyType,
-            hasData: !!(res?.TenantBoundary?.[0]?.boundary?.length),
-          }))
-          .catch(() => ({ hierarchyType: d.hierarchyType, hasData: false }))
-      )
-    ).then((results) => {
+    // Batched to avoid firing up to 500 simultaneous POSTs when many hierarchies exist.
+    const BATCH_SIZE = 5;
+    const defs = allHierarchyDefinitions;
+
+    (async () => {
+      const results = [];
+      for (let i = 0; i < defs.length; i += BATCH_SIZE) {
+        if (cancelled) return;
+        const batch = defs.slice(i, i + BATCH_SIZE);
+        const batchResults = await Promise.all(
+          batch.map((d) =>
+            Digit.CustomService.getResponse({
+              url: `/boundary-service/boundary-relationships/_search`,
+              useCache: false,
+              method: "POST",
+              params: {
+                tenantId,
+                hierarchyType: d.hierarchyType,
+                includeChildren: false,
+                limit: 1,
+              },
+              body: {},
+            })
+              .then((res) => ({
+                hierarchyType: d.hierarchyType,
+                hasData: !!(res?.TenantBoundary?.[0]?.boundary?.length),
+              }))
+              // null = request failed; treat as unknown, not as confirmed-inactive
+              .catch(() => ({ hierarchyType: d.hierarchyType, hasData: null }))
+          )
+        );
+        results.push(...batchResults);
+      }
+
+      if (cancelled) return;
       const map = {};
-      results.forEach((r) => { map[r.hierarchyType] = r.hasData ? "active" : "inactive"; });
+      results.forEach((r) => {
+        map[r.hierarchyType] = r.hasData === true ? "active" : r.hasData === false ? "inactive" : "error";
+      });
       setBoundaryStatusMap(map);
-    });
-  }, [allHierarchyDefinitions]);
+    })();
+
+    // Cancels stale in-flight batches if definitions or tenant change mid-flight
+    return () => { cancelled = true; };
+  }, [allHierarchyDefinitions, tenantId]);
 
   const [selected, setSelected] = useState(
     formData?.SelectHierarchy?.hierarchy ||
