@@ -1560,6 +1560,20 @@
 
   &__card {
     border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+
+    &.main-heading{
+      background-color: transparent;
+      box-shadow: none;
+      padding: 0rem;
+    }
+    &.filter{
+      display: flex;
+      justify-content: space-between;
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+    }
   }
 
   &__popup {
@@ -1582,7 +1596,7 @@
 
   &__file-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     padding: 0rem;
   }
@@ -1590,31 +1604,36 @@
   &__file-info {
     display: flex;
     flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__file-info-date-wrap{
+    display: flex;
+    flex-direction: column;
     gap: 0.25rem;
   }
 
-  &__file-info-inline {
-    flex-direction: row;
-    align-items: center;
-    gap: 0.375rem;
-    display: flex;
-
-    .tooltip-wrapper {
-      height: 20px;
-      .tooltip-content {
-        max-width: 20rem;
-      }
-    }
-  }
-
-  &__info-trigger {
-    display: inline-flex;
-    cursor: pointer;
-  }
-
   &__file-date {
-    font-weight: 500;
     color: var(--digitv2-lightTheme-text-color-primary);
+    font-family: var(--digitv2-fontFamily-sans);
+    font-style: var(--digitv2-fontStyle-normal);
+    font-weight: var(--digitv2-fontWeight-bold);
+    line-height: 1.14rem;
+
+    @media (max-aspect-ratio: 9/16) {
+      /* Media query for mobile */
+      font-size: var(--digitv2-fontSize-heading-s-mobile);
+    }
+
+    @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+      /* Media query for tablets */
+      font-size: var(--digitv2-fontSize-heading-s-tablet);
+    }
+
+    @media (min-aspect-ratio: 3/4) {
+      /* Media query for desktop */
+      font-size: var(--digitv2-fontSize-heading-s-desktop);
+    }
   }
 
   &__file-meta {
@@ -1622,31 +1641,110 @@
     color: var(--digitv2-lightTheme-text-color-secondary);
   }
 
+  &__meta-row {
+    display: flex;
+    align-items: center;
+  }
+
+  &__meta-divider {
+    width: 1px;
+    align-self: stretch;
+    background: var(--digitv2-lightTheme-generic-divider);
+    margin-left: 2rem;
+    margin-right: 2rem;
+    min-height: 2.5rem;
+  }
+
+  &__meta-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__meta-label {
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    color: #787878;
+  }
+
+  &__meta-value {
+    font-family: Roboto, sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #4F4F4F;
+  }
+
+  &__progress-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  &__progress-percent {
+    font-family: Roboto, sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.3125rem;
+    color: #00703C;
+    white-space: nowrap;
+    flex-shrink: 0;
+    width: auto;
+  }
+
   &__progress-bar {
     height: 0.375rem;
     border-radius: 0.1875rem;
     background: var(--digitv2-lightTheme-generic-divider);
-    margin-top: 0.375rem;
     overflow: hidden;
-    max-width: 15rem;
+    flex: 1;
+    width: 80%;
+  }
+
+  &__progress-bar-popup {
+    height: 0.5rem;
+    border-radius: 0.1875rem;
+    background: var(--digitv2-lightTheme-generic-divider);
+    overflow: hidden;
+    flex: 1;
   }
 
   &__progress-bar-fill {
     height: 100%;
     border-radius: 0.1875rem;
-    background: var(--digitv2-lightTheme-primary-2);
+    background: var(--digitv2-alert-success);
     transition: width 0.3s ease;
   }
 
-  &__file-actions {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    &__file-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
 
-    .digit-checkbox-container {
-      margin: 0rem;
+      .digit-tag-wrapper {
+        border-radius: 12px;
+
+        .digit-tag-text::before {
+          content: "";
+          display: inline-block;
+          width: 0.5rem;
+          height: 0.5rem;
+          border-radius: 50%;
+          background: currentColor;
+          margin-right: 0.375rem;
+          vertical-align: middle;
+        }
+      }
+
+      .digit-checkbox-container {
+        margin: 0rem;
+      }
     }
-  }
 
   &__custom-popup-field {
     display: flex;
@@ -1656,6 +1754,34 @@
 
     label {
       font-weight: 500;
+    }
+  }
+
+  &__custom-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 100%;
+    max-width: 27.5rem;
+
+    label {
+      font-family: Roboto;
+      font-weight: 400;
+      font-style: Regular;
+      font-size: 16px;
+      line-height: 100%;
+      letter-spacing: 0px;
+    }
+  }
+
+  &__filter-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 28px;
+
+    > * {
+      flex: 0 0 auto;
+      white-space: nowrap;
     }
   }
 }
@@ -1703,7 +1829,7 @@
   &__header-wrap {
     display: flex;
     gap: 1rem;
-    align-items: flex-start;
+    align-items: center;
   }
 
   &__header-svg {
@@ -1770,6 +1896,55 @@
         }
       }
     }
+  }
+}
+
+.digit-no-data-found-text{
+  color: var(--digitv2-lightTheme-primary-2);
+  font-family: var(--digitv2-fontFamily-sans);
+  font-style: var(--digitv2-fontStyle-normal);
+  font-weight: var(--digitv2-fontWeight-bold);
+  line-height: 1.14rem;
+  margin-top: 1rem;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: var(--digitv2-fontSize-heading-m-mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: var(--digitv2-fontSize-heading-m-tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: var(--digitv2-fontSize-heading-m-desktop);
+  }
+}
+
+.digit-no-data-found-description{
+  font-family: var(--digitv2-fontFamily-sans);
+  font-style: var(--digitv2-fontStyle-normal);
+  font-weight: var(--digitv2-fontWeight-regular);
+  color: #787878;
+  line-height: 1.37rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: var(--digitv2-fontSize-body-s-mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: var(--digitv2-fontSize-body-s-tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: var(--digitv2-fontSize-body-s-desktop);
   }
 }
 
