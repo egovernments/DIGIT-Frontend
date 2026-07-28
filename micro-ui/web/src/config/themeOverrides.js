@@ -11,6 +11,7 @@ const DEFAULT_OVERRIDES = {
   fontFamily: "Roboto",
   buttonRadius: "6px",
   cardRadius: "12px",
+  cardBg: "#fffaf7",
 };
 
 // Each user-facing knob drives every --digitv2-* var listed here.
@@ -30,6 +31,13 @@ const CSS_VAR_MAP = {
   fontFamily: ["--digitv2-fontFamily-sans", "--digitv2-fontFamily-rc"],
   buttonRadius: ["--digitv2-borderRadius-radius2", "--digitv2-borderRadius-radius3"],
   cardRadius: ["--digitv2-borderRadius-radius5"],
+  // Reuses the library's OWN existing light-tint token — already consumed
+  // app-wide by dropdowns/tables/tree-select/switch (digit-ui-components-css)
+  // — not a new var. Also now drives .sc-create-card's background and the
+  // various icon/accent-tint backgrounds swept below, previously hardcoded
+  // to assorted near-white orange tints (#fffaf7, #fde9df, #fdf0ea, etc.)
+  // independent of theme.
+  cardBg: ["--digitv2-lightTheme-primary-bg"],
 };
 
 // "important" priority is required to win over the `!important` theme <style>

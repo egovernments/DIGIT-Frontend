@@ -58,6 +58,7 @@ module.exports = {
       process: "process/browser",
       React: "react",
       ReactDOM: "react-dom",
+      PropTypes: "prop-types",
     }),
   ],
   resolve: {
