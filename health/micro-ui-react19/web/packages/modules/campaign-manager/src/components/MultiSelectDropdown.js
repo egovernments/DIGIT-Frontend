@@ -515,6 +515,8 @@ const MultiSelectDropdown = ({
 
   const handleClearAll = () => {
     dispatch({ type: "REPLACE_COMPLETE_STATE", payload: [] });
+    setSelectAllChecked(false);
+    setCategorySelected({});
     onSelect([], getCategorySelectAllState(), props);
     if (onClose) {
       onClose([], getCategorySelectAllState(), props);
