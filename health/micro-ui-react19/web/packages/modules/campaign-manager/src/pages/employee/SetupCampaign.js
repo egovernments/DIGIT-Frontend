@@ -613,14 +613,16 @@ const SetupCampaign = () => {
               setIsUpdating(true);
               await updateCampaign(payloadData, {
                 onError: (error, variables) => {
-                  if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
+                  if (filteredConfig?.[0]?.form?.[0]?.isLast || filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                     setShowToast({ key: "error", label: error?.message ? error?.message : error });
                   }
                 },
                 onSuccess: async (data) => {
                   updateUrlParams({ id: data?.CampaignDetails?.id });
                   draftRefetch();
-                  if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
+                  if (filteredConfig?.[0]?.form?.[0]?.isLast) {
+                    setCurrentKey(currentKey + 1);
+                  } else if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                     setCurrentKey(currentKey + 1);
                   }
                 },
@@ -1224,7 +1226,7 @@ const SetupCampaign = () => {
             body: config?.body.filter((a) => !a.hideInEmployee),
           };
         })}
-        isDisabled={isDataCreating}
+        isDisabled={isDataCreating || isUpdating}
         onSubmit={onSubmit}
         showSecondaryLabel={currentKey > 1 ? true : false}
         secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t(I18N_KEYS.COMMON.HCM_BACK) : noAction === "false" ? null : t(I18N_KEYS.COMMON.HCM_BACK)}

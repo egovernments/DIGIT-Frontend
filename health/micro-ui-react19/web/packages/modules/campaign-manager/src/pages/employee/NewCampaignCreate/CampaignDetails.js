@@ -197,6 +197,7 @@ const CampaignDetails = () => {
   const retryTimerRef = useRef(null);
   const afterUpload = location.state?.afterUpload;
   const [isPolling, setIsPolling] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!afterUpload) return;
@@ -661,12 +662,14 @@ const CampaignDetails = () => {
   };
 
   const onsubmit = async () => {
+    if (isSubmitting) return;
     const valideDates = validateCampaignDates(campaignData?.deliveryRules?.[0]?.cycles, campaignData);
     if (!valideDates) {
       setShowToast({ key: "error", label: "INVALID_DATES" });
       return;
     }
-    await mutationUpdate.mutate(
+    setIsSubmitting(true);
+    mutationUpdate.mutate(
       {
         url: `/project-factory/v1/project-type/update`,
         body: transformUpdateCreateData({ campaignData }),
@@ -695,6 +698,7 @@ const CampaignDetails = () => {
           );
         },
         onError: (error, result) => {
+          setIsSubmitting(false);
           const errorCode = error?.response?.data?.Errors?.[0]?.code;
           setShowToast({ key: "error", label: errorCode ? t(errorCode) : t(I18N_KEYS.CAMPAIGN_CREATE.ERROR_CREATE_CAMPAIGN) });
         },
@@ -738,6 +742,8 @@ const CampaignDetails = () => {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
+  const isMutationLoading = isSubmitting;
+
   const week = `${convertEpochToNewDateFormat(campaignData?.startDate)} - ${convertEpochToNewDateFormat(campaignData?.endDate)}`;
 
   const closeToast = () => {
@@ -746,6 +752,7 @@ const CampaignDetails = () => {
 
   return (
     <>
+      {isMutationLoading && <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_CREATION_PROGRESS)}/>}
       <div className="campaign-details-header">
         <div style={{ display: "flex", alignItems: "baseline", gap: "1rem" }}>
           <HeaderComponent className={"date-header"}>{campaignData?.campaignName}</HeaderComponent>
@@ -828,6 +835,7 @@ const CampaignDetails = () => {
                   title={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CREATE_CAMPAIGN)}
                   onClick={onsubmit}
                   isDisabled={
+                    isMutationLoading ||
                     campaignData?.boundaries?.length === 0 ||
                     campaignData?.deliveryRules?.length === 0 ||
                     campaignData?.deliveryRules?.some((rule) => rule?.cycles?.length === 0) ||

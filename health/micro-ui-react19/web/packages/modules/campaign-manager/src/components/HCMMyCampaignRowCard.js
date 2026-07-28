@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
 import { Tag, Button, Card, SummaryCardFieldPair, Divider, PopUp, CardText, Chip } from "@egovernments/digit-ui-components";
@@ -82,7 +82,7 @@ const getTagElements = (rowData) => {
 };
 
 // function to handle download user creds
-const handleDownloadUserCreds = async (campaignId, hierarchyType) => {
+const handleDownloadUserCreds = async (campaignId, hierarchyType, campaignNumber) => {
   try {
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const responseTemp = await Digit.CustomService.getResponse({
@@ -100,7 +100,7 @@ const handleDownloadUserCreds = async (campaignId, hierarchyType) => {
     if (response?.[0]) {
       downloadExcelWithCustomName({
         fileStoreId: response[0],
-        customName: "userCredential",
+        customName: campaignNumber ? `${campaignNumber}-Users` : "userCredential",
       });
     } else {
       console.error("No file store ID found for user credentials");
@@ -119,6 +119,7 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
   //     : null;
   const campaignId = rowData?.id;
   const hierarchyType = rowData?.hierarchyType;
+  const campaignNumber = rowData?.campaignNumber;
 
   // Always show download if userCreds exist
   if (rowData?.status == "created") {
@@ -134,7 +135,7 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
     actions.downloadUserCreds = {
       label: "DOWNLOAD_USER_CREDENTIALS",
       title: "DOWNLOAD_USER_CREDENTIALS",
-      onClick: () => handleDownloadUserCreds(campaignId, hierarchyType),
+      onClick: () => handleDownloadUserCreds(campaignId, hierarchyType, campaignNumber),
       icon: "FileDownload",
       size: "medium",
       id:`my-campaigns-row-card-download-user-creds-button-${campaignId}`,
@@ -199,32 +200,8 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
   return actions;
 };
 
-const getActionTags = (rowData) => {
-  const actions = {};
 
-  if (rowData?.status == "creating") {
-    actions.generateUserCreds = {
-      label: "GENERATING_USER_CRED",
-      loader: true,
-      showBottom: true,
-      animationStyle: {
-        width: "2rem",
-        height: "2rem",
-      },
-    };
-    actions.generateAPK = {
-      label: "GENERATING_APK",
-      loader: true,
-      showBottom: true,
-      animationStyle: {
-        width: "2rem",
-        height: "2rem",
-      },
-    };
-  }
-
-  return actions;
-};
+const isProcessDone = (p) => p?.status === "completed" || p?.status === "failed";
 
 const reqUpdate = {
   url: `/project-factory/v1/project-type/update`,
@@ -240,6 +217,49 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const navigate = useNavigate();
   const [showRetryPopUp, setShowRetryPopUp] = useState(false);
   const mutationUpdate = Digit.Hooks.useCustomAPIMutationHook(reqUpdate);
+
+  const isCreating = rowData?.status === "creating";
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const statusReqCriteria = useMemo(() => ({
+    url: `/project-factory/v1/project-type/status`,
+    params: {},
+    body: {
+      CampaignDetails: {
+        campaignNumber: rowData?.campaignNumber,
+        tenantId: tenantId,
+      },
+    },
+    config: {
+      enabled: isCreating,
+      refetchInterval: isCreating ? 25000 : false,
+    },
+    changeQueryName: `campaignStatus_${rowData?.campaignNumber}`,
+  }), [rowData?.campaignNumber, tenantId, isCreating]);
+
+  const { data: statusData, isLoading: isStatusLoading, isError: isStatusError } = Digit.Hooks.useCustomAPIHook(statusReqCriteria);
+
+  // Refresh the page when all processes are completed so the table shows updated campaign status
+  // Uses sessionStorage to prevent infinite reload if backend status hasn't transitioned yet
+  useEffect(() => {
+    const refreshKey = `campaignStatusRefresh_${rowData?.campaignNumber}`;
+    if (!isCreating) {
+      // Campaign is no longer "creating" — clean up the sessionStorage entry
+      sessionStorage.removeItem(refreshKey);
+      return;
+    }
+    if (isStatusLoading) return;
+    const processes = statusData?.CampaignStatus?.processes;
+    if (Array.isArray(processes) && processes.length > 0) {
+      const allCompleted = processes.every(isProcessDone);
+      if (allCompleted) {
+        const lastRefresh = sessionStorage.getItem(refreshKey);
+        if (lastRefresh && Date.now() - Number(lastRefresh) < 60000) return;
+        sessionStorage.setItem(refreshKey, String(Date.now()));
+        window.location.href = `/${window?.contextPath}/employee/campaign/my-campaign-new`;
+      }
+    }
+  }, [statusData, isCreating, isStatusLoading, rowData?.campaignNumber]);
+
   const handleRetryLogic = async (rowData) => {
     const updatedRowData = {
       CampaignDetails: {
@@ -286,7 +306,52 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
     setShowQRPopUp,
     handleRetryLogic
   );
-  const actionTags = getActionTags(rowData);
+  const actionTags = useMemo(() => {
+    if (!isCreating) return {};
+    if (isStatusError) {
+      return {
+        currentProcess: {
+          label: "CAMPAIGN_STATUS_CHECK_FAILED",
+          loader: false,
+          showBottom: true,
+          type: "error",
+          animationStyle: {
+            width: "2rem",
+            height: "2rem",
+          },
+        },
+      };
+    }
+    const processes = statusData?.CampaignStatus?.processes;
+    if (!isStatusLoading && Array.isArray(processes) && processes.length > 0) {
+      // Find the first process that is not yet completed — represents current progress
+      const currentProcess = processes.find((p) => !isProcessDone(p));
+      // If all processes are done, show the last one
+      const displayProcess = currentProcess || processes[processes.length - 1];
+      return {
+        currentProcess: {
+          label: displayProcess?.processname || "CAMPAIGN_CREATION_INPROGRESS",
+          loader: !isProcessDone(displayProcess),
+          showBottom: true,
+          animationStyle: {
+            width: "2rem",
+            height: "2rem",
+          },
+        },
+      };
+    }
+    return {
+      currentProcess: {
+        label: "CAMPAIGN_CREATION_INPROGRESS",
+        loader: true,
+        showBottom: true,
+        animationStyle: {
+          width: "2rem",
+          height: "2rem",
+        },
+      },
+    };
+  }, [isCreating, statusData, isStatusLoading, isStatusError]);
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
   const showCancelCampaign = rowData?.status === "creating" || rowData?.status === "drafted";
