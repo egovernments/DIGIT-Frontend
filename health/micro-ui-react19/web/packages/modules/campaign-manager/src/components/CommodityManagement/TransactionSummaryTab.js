@@ -9,6 +9,7 @@ import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import useStockData from "../../hooks/useStockData";
 
 const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   const getFieldValue = (fieldKey) => {
@@ -84,7 +85,7 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   };
 };
 
-const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, projectId, userBoundary, userBoundaries, isTopLevel }) => {
+const TransactionSummaryTab = ({ stockSummary, tenantId, campaignId, campaignNumber, projectId, dateRange, userBoundary, userBoundaries, isTopLevel }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [showToast, setShowToast] = useState(null);
@@ -116,9 +117,57 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   }), [tenantId, userStaffProjectId]);
   const { data: projectFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
 
+  // Single "own" facility for the two-query stock fetch below (same convention as
+  // StockSummaryTab's userOwnFacilityId — a user's staff project maps to one facility)
+  const userOwnFacilityId = useMemo(
+    () => (projectFacilityIds.size ? projectFacilityIds.values().next().value : null),
+    [projectFacilityIds]
+  );
+
+  // Query 1: transactions where the user's facility is the facilityId side
+  // Query 2: transactions where the user's facility is the transactingFacilityId side
+  // Together these cover every transaction touching the user's facility in either direction —
+  // mirrors the 2-query combine pattern used by NewShipmentPopup's commodityFacilityStockByFacility call.
+  const facilityFilters = useMemo(() => ({ facilityId: userOwnFacilityId || "" }), [userOwnFacilityId]);
+  const transactingFilters = useMemo(() => ({ transactingFacilityId: userOwnFacilityId || "" }), [userOwnFacilityId]);
+
+  const { data: facilityStockData, isLoading: facilityStockLoading } = useStockData({
+    tenantId,
+    dateRange,
+    referenceId: projectId,
+    campaignId,
+    campaignNumber,
+    useKibana: true,
+    filters: facilityFilters,
+    enabled: !!userOwnFacilityId,
+  });
+  const { data: transactingStockData, isLoading: transactingStockLoading } = useStockData({
+    tenantId,
+    dateRange,
+    referenceId: projectId,
+    campaignId,
+    campaignNumber,
+    useKibana: true,
+    filters: transactingFilters,
+    enabled: !!userOwnFacilityId,
+  });
+
+  // Merge + dedupe by id
+  const combinedStockData = useMemo(() => {
+    const seen = new Set();
+    const combined = [];
+    [...(facilityStockData || []), ...(transactingStockData || [])].forEach((record) => {
+      if (record.id && !seen.has(record.id)) {
+        seen.add(record.id);
+        combined.push(record);
+      }
+    });
+    return combined;
+  }, [facilityStockData, transactingStockData]);
+
   // Extract unique facility IDs and product variant IDs from stock data
   const { facilityIds, productVariantIds } = useMemo(() => {
-    const stocks = rawStockData || [];
+    const stocks = combinedStockData || [];
     const fIds = new Set();
     const pvIds = new Set();
     stocks.forEach(stock => {
@@ -127,7 +176,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       if (stock.productVariantId) pvIds.add(stock.productVariantId);
     });
     return { facilityIds: [...fIds], productVariantIds: [...pvIds] };
-  }, [rawStockData]);
+  }, [combinedStockData]);
 
   // Fetch facility details by IDs and build name lookup map
   const facilitySearchCriteria = useMemo(() => ({
@@ -202,18 +251,20 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     return map;
   }, [productVariants, products]);
 
-  // Transform stock data with resolved names, sorted by createdTime descending
-  // Filter to only show transactions involving the user's project facility
+  // Transform stock data with resolved names, sorted by createdTime descending.
+  // stockEntryType/status aside, facility scoping now happens server-side via the two
+  // getChartV2 queries above — this check is kept as a defensive no-op on that path, and as
+  // the real filter if useStockData ever falls back to the plain /stock/v1/_search API.
   const tableData = useMemo(() => {
-    if (!rawStockData?.length) return [];
-    return rawStockData
+    if (!combinedStockData?.length) return [];
+    return combinedStockData
       .filter(stock => {
         if (projectFacilityIds.size === 0) return false;
         return projectFacilityIds.has(stock.senderId) || projectFacilityIds.has(stock.receiverId);
       })
       .map(stock => transformStock(stock, facilityNameMap, productNameMap))
       .sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
-  }, [rawStockData, facilityNameMap, productNameMap, projectFacilityIds]);
+  }, [combinedStockData, facilityNameMap, productNameMap, projectFacilityIds]);
 
   // Compute summary stats from the facility-filtered tableData (not the unfiltered stockSummary)
   const filteredSummaryStats = useMemo(() => {
@@ -229,7 +280,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     return stats;
   }, [tableData]);
 
-  const isLoading = stockLoading || facilitiesLoading || variantsLoading || productsLoading || projectFacilitiesLoading;
+  const isLoading = facilityStockLoading || transactingStockLoading || facilitiesLoading || variantsLoading || productsLoading || projectFacilitiesLoading;
 
   const { dataSyncStats: syncStats } = stockSummary || {};
   const dataSyncStats = {

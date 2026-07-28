@@ -7,18 +7,37 @@ import GenericChart from "./GenericChart";
 import UserDetails from "./UserDetails";
 import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import useStockData from "../../hooks/useStockData";
+
+// Pushes RETURNED/IN_TRANSIT filtering to the backend (getChartV2) instead of fetching
+// the full campaign stock dataset and filtering client-side.
+const PENDING_RETURN_FILTERS = { stockEntryType: "RETURNED", status: "IN_TRANSIT" };
 
 const PendingTransactionsTab = ({
-  rawStockData,
-  stockLoading,
   tenantId,
   campaignId,
+  campaignNumber,
   projectId,
+  dateRange,
   userBoundary,
   isTopLevel,
   refetchStockData,
 }) => {
   const { t } = useTranslation();
+
+  const {
+    data: pendingStockData,
+    isLoading: pendingStockLoading,
+    refetch: refetchPendingStock,
+  } = useStockData({
+    tenantId,
+    dateRange,
+    referenceId: projectId,
+    campaignId,
+    campaignNumber,
+    useKibana: true,
+    filters: PENDING_RETURN_FILTERS,
+  });
   const [searchQuery, setSearchQuery] = useState("");
   const [showToast, setShowToast] = useState(null);
   const [updatingIds, setUpdatingIds] = useState(new Set());
@@ -58,9 +77,9 @@ const PendingTransactionsTab = ({
   const { data: projectFacilityIds = new Set(), isLoading: projectFacilitiesLoading } =
     Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
 
-  // Extract unique facility IDs and product variant IDs from stock data
+  // Extract unique facility IDs and product variant IDs from the pre-filtered pending-returns data
   const { facilityIds, productVariantIds } = useMemo(() => {
-    const stocks = rawStockData || [];
+    const stocks = pendingStockData || [];
     const fIds = new Set();
     const pvIds = new Set();
     stocks.forEach((stock) => {
@@ -69,7 +88,7 @@ const PendingTransactionsTab = ({
       if (stock.productVariantId) pvIds.add(stock.productVariantId);
     });
     return { facilityIds: [...fIds], productVariantIds: [...pvIds] };
-  }, [rawStockData]);
+  }, [pendingStockData]);
 
   // Fetch facility details
   const facilitySearchCriteria = useMemo(
@@ -153,10 +172,12 @@ const PendingTransactionsTab = ({
     return map;
   }, [productVariants, products]);
 
-  // Filter: RETURNED + IN_TRANSIT where user's facility is the receiver
+  // stockEntryType/status are now filtered server-side via PENDING_RETURN_FILTERS (getChartV2).
+  // The checks below are kept as a defensive no-op on that path, and as the real filter if
+  // useStockData ever falls back to the plain /stock/v1/_search API (which has no such filter).
   const tableData = useMemo(() => {
-    if (!rawStockData?.length) return [];
-    return rawStockData
+    if (!pendingStockData?.length) return [];
+    return pendingStockData
       .filter((stock) => {
         if (stock.stockEntryType !== "RETURNED") return false;
         if (stock.status !== "IN_TRANSIT") return false;
@@ -204,7 +225,7 @@ const PendingTransactionsTab = ({
         };
       })
       .sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
-  }, [rawStockData, facilityNameMap, productNameMap, projectFacilityIds]);
+  }, [pendingStockData, facilityNameMap, productNameMap, projectFacilityIds]);
 
   const filteredData = useMemo(() => {
     if (!tableData?.length) return [];
@@ -284,7 +305,9 @@ const PendingTransactionsTab = ({
               : t("HCM_RETURN_REJECTED_SUCCESS"),
         });
 
-        // Refetch stock data to update all tabs
+        // Refetch this tab's own pending-returns list, and the shared dataset
+        // so Transaction/Stock Summary tabs reflect the updated stock levels too.
+        refetchPendingStock?.();
         if (refetchStockData) {
           setTimeout(() => refetchStockData(), 2000);
         }
@@ -302,7 +325,7 @@ const PendingTransactionsTab = ({
         });
       }
     },
-    [tenantId, t, updatingIds, refetchStockData]
+    [tenantId, t, updatingIds, refetchStockData, refetchPendingStock]
   );
 
   // Open accept confirmation popup
@@ -421,7 +444,7 @@ const PendingTransactionsTab = ({
   };
 
   const isLoading =
-    stockLoading ||
+    pendingStockLoading ||
     facilitiesLoading ||
     variantsLoading ||
     productsLoading ||

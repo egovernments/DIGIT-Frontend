@@ -11,9 +11,13 @@ import useStockSearch from "./useStockSearch";
  * @param {string} params.referenceId - Project ID used as referenceId filter
  * @param {boolean} params.useKibana - Whether to try Kibana/ES first (default: true)
  * @param {Function} params.transformFn - Optional transform for stock API fallback
+ * @param {Object} params.filters - Additional getChartV2 filter keys (e.g. { stockEntryType, status }),
+ *   forwarded to useKibanaStockSearch only — the stock API fallback has no equivalent filter support.
+ * @param {boolean} params.enabled - Extra gate ANDed into both underlying hooks' enabled state
+ *   (e.g. to hold off firing until a required filter value like facilityId is known).
  * @returns {{ data: Array, isLoading: boolean, error: any, source: string }}
  */
-const useStockData = ({ tenantId, dateRange, referenceId, campaignId, campaignNumber, useKibana = true, transformFn }) => {
+const useStockData = ({ tenantId, dateRange, referenceId, campaignId, campaignNumber, useKibana = true, transformFn, filters, enabled = true }) => {
   const [kibanaFailed, setKibanaFailed] = useState(false);
   const useKibanaActive = useKibana && !kibanaFailed;
 
@@ -24,7 +28,8 @@ const useStockData = ({ tenantId, dateRange, referenceId, campaignId, campaignNu
     referenceId,
     campaignId,
     campaignNumber,
-    enabled: useKibanaActive,
+    enabled: useKibanaActive && enabled,
+    filters,
   });
 
   // Stock API hook — enabled when Kibana is not active
@@ -33,7 +38,7 @@ const useStockData = ({ tenantId, dateRange, referenceId, campaignId, campaignNu
     dateRange,
     referenceId,
     transformFn,
-    enabled: !useKibanaActive,
+    enabled: !useKibanaActive && enabled,
   });
 
   // If Kibana errors out, flip to stock API fallback

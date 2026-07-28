@@ -13,9 +13,13 @@ import { useMemo } from "react";
  * @param {string} params.campaignId - (unused by getChartV2, kept for interface compat)
  * @param {string} params.campaignNumber - Campaign number used as filter for getChartV2
  * @param {boolean} params.enabled
+ * @param {Object} params.filters - Additional getChartV2 filter keys (e.g. { stockEntryType, status }), merged
+ *   alongside campaignNumber. See NewShipmentPopup's commodityFacilityStockByFacility call for precedent.
  * @returns {{ data: Array, isLoading: boolean, error: any, metadata: Object, refetch: Function, source: string }}
  */
-const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, campaignNumber, enabled = true }) => {
+const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, campaignNumber, enabled = true, filters = {} }) => {
+  const filtersKey = JSON.stringify(filters);
+
   const reqCriteria = useMemo(() => {
     const startDate = dateRange?.startDate instanceof Date ? dateRange.startDate.getTime() : dateRange?.startDate;
     const endDate = dateRange?.endDate instanceof Date ? dateRange.endDate.getTime() : dateRange?.endDate;
@@ -33,7 +37,7 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
             interval: "day",
             title: "home",
           },
-          filters: { campaignNumber: campaignNumber || "" },
+          filters: { ...JSON.parse(filtersKey), campaignNumber: campaignNumber || "" },
           aggregationFactors: null,
         },
         headers: { tenantId: tenantId || "" },
@@ -42,9 +46,9 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
         enabled: enabled && !!tenantId && !!campaignNumber,
         select: (data) => data?.responseData?.customData?.rawResponse?.stockBalanceTransformer || [],
       },
-      changeQueryName: `stockSummary_${campaignNumber}_${startDate}_${endDate}`,
+      changeQueryName: `stockSummary_${campaignNumber}_${startDate}_${endDate}_${filtersKey}`,
     };
-  }, [tenantId, dateRange, campaignNumber, enabled]);
+  }, [tenantId, dateRange, campaignNumber, enabled, filtersKey]);
 
   const { data: rawRecords, isLoading, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 

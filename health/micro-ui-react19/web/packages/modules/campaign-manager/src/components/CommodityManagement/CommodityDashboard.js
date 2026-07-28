@@ -589,7 +589,9 @@ const CommodityDashboard = () => {
               }
               onClick={() => {
                 setActiveTab(tab.key);
-                if (refetchStockData) refetchStockData();
+                // Pending tab now fetches its own filtered dataset — the shared
+                // (unfiltered) query is only consumed by Transaction/Stock tabs.
+                if (tab.key !== "pending" && refetchStockData) refetchStockData();
               }}
             >
               {tab.label}
@@ -600,12 +602,12 @@ const CommodityDashboard = () => {
 
       {activeTab === "transaction" && (
         <TransactionSummaryTab
-          rawStockData={rawStockData}
-          stockLoading={stockLoading}
           stockSummary={enrichedStockSummary}
           tenantId={tenantId}
           campaignId={campaignId}
+          campaignNumber={campaignNumber}
           projectId={projectId}
+          dateRange={effectiveDateRange}
           userBoundary={userBoundary}
           userBoundaries={userBoundaries}
           isTopLevel={isTopLevel}
@@ -629,11 +631,11 @@ const CommodityDashboard = () => {
       )}
       {activeTab === "pending" && (
         <PendingTransactionsTab
-          rawStockData={rawStockData}
-          stockLoading={stockLoading}
           tenantId={tenantId}
           campaignId={campaignId}
+          campaignNumber={campaignNumber}
           projectId={projectId}
+          dateRange={effectiveDateRange}
           userBoundary={userBoundary}
           isTopLevel={isTopLevel}
           refetchStockData={refetchStockData}
