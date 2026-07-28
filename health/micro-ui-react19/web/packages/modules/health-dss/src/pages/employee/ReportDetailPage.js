@@ -1,4 +1,10 @@
-import React, { useMemo, useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import {
@@ -6,21 +12,23 @@ import {
   HeaderComponent,
   Button,
   Tag,
-  SVG,
   Accordion,
   AccordionList,
   Loader,
   PopUp,
   FieldV1,
   Toast,
-  NoResultsFound,
-  TooltipWrapper,
 } from "@egovernments/digit-ui-components";
-import { InfoOutline } from "@egovernments/digit-ui-svg-components";
 import axios from "axios";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import { checkExistingCustomReport } from "../../utils/reportsApi";
-import { getStageLabelKey, formatDuration, formatFileSize, formatRowCount } from "../../utils/reportStatus";
+import {
+  getStageLabelKey,
+  formatDuration,
+  formatFileSize,
+  formatRowCount,
+} from "../../utils/reportStatus";
+import { UndrawEmpty } from "../../components/icons/UndrawEmpty";
 
 const downloadFileFromStore = ({ fileStoreId, customName }) => {
   if (!fileStoreId) return;
@@ -50,8 +58,18 @@ const downloadFileFromStore = ({ fileStoreId, customName }) => {
 
 const toOrdinalDate = (date) => {
   const d = date.getUTCDate();
-  const suffix = d % 10 === 1 && d !== 11 ? "st" : d % 10 === 2 && d !== 12 ? "nd" : d % 10 === 3 && d !== 13 ? "rd" : "th";
-  return `${d}${suffix} ${date.toLocaleDateString("en-US", { month: "long", timeZone: "UTC" })} ${date.getUTCFullYear()}`;
+  const suffix =
+    d % 10 === 1 && d !== 11
+      ? "st"
+      : d % 10 === 2 && d !== 12
+      ? "nd"
+      : d % 10 === 3 && d !== 13
+      ? "rd"
+      : "th";
+  return `${d}${suffix} ${date.toLocaleDateString("en-US", {
+    month: "long",
+    timeZone: "UTC",
+  })} ${date.getUTCFullYear()}`;
 };
 
 const formatCreatedTime = (createdtime) => {
@@ -66,15 +84,27 @@ const formatCreatedTime = (createdtime) => {
 // and plain getDate()/getFullYear() (local) instead of the UTC variants.
 const toOrdinalDateLocal = (date) => {
   const d = date.getDate();
-  const suffix = d % 10 === 1 && d !== 11 ? "st" : d % 10 === 2 && d !== 12 ? "nd" : d % 10 === 3 && d !== 13 ? "rd" : "th";
-  return `${d}${suffix} ${date.toLocaleDateString("en-US", { month: "long" })} ${date.getFullYear()}`;
+  const suffix =
+    d % 10 === 1 && d !== 11
+      ? "st"
+      : d % 10 === 2 && d !== 12
+      ? "nd"
+      : d % 10 === 3 && d !== 13
+      ? "rd"
+      : "th";
+  return `${d}${suffix} ${date.toLocaleDateString("en-US", {
+    month: "long",
+  })} ${date.getFullYear()}`;
 };
 
 const formatTriggeredTime = (triggeredTimeMs) => {
   if (!triggeredTimeMs) return "";
   const date = new Date(Number(triggeredTimeMs));
   if (isNaN(date.getTime())) return "";
-  const time = date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+  const time = date.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
   return `${toOrdinalDateLocal(date)}, ${time}`;
 };
 
@@ -87,6 +117,17 @@ const formatDateForPayload = (dateStr) => {
   return `${dd}-${mm}-${yyyy} 00:00:00+0530`;
 };
 
+// Converts any date string/ISO from the date input to dd-MM-yyyy (API triggeredDate format)
+const toFilterDateFormat = (dateStr) => {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return "";
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const yyyy = date.getFullYear();
+  return `${dd}-${mm}-${yyyy}`;
+};
+
 // reportrange: "2026-06-29 00:00:00+0530_2026-07-04 00:00:00+0530" - parse the full
 // datetime with its own offset so it converts to the correct date, then format WITHOUT
 // forcing UTC - toOrdinalDate's getUTCDate() would read a +0530 midnight as 18:30 the
@@ -95,10 +136,17 @@ const formatRangeDate = (dateStr) => {
   const trimmed = dateStr?.trim();
   if (!trimmed) return "";
   // "2026-06-29 00:00:00+0530" → "2026-06-29T00:00:00+05:30" for ISO parse
-  const isoStr = trimmed.replace(" ", "T").replace(/([+-])(\d{2})(\d{2})$/, "$1$2:$3");
+  const isoStr = trimmed
+    .replace(" ", "T")
+    .replace(/([+-])(\d{2})(\d{2})$/, "$1$2:$3");
   const d = new Date(isoStr);
   if (isNaN(d.getTime())) return trimmed;
-  return d.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+  return d.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 };
 
 // Shared by completed reports and in-progress runs alike, so an in-progress card can show
@@ -118,33 +166,40 @@ const getReportDateLabel = (item, freq) => {
 const InProgressCard = ({ run, t }) => (
   <Card type="secondary" className="digit-report-detail__file-card">
     <div className="digit-report-detail__file-row">
-      <div className="digit-report-detail__file-info">
-        {run.dateLabel && <div className="digit-report-detail__file-date">{run.dateLabel}</div>}
-        <div className="digit-report-detail__file-meta">{t(getStageLabelKey(run.status))}</div>
-        <div className="digit-report-detail__progress-bar">
-          <div className="digit-report-detail__progress-bar-fill" style={{ width: `${run.progressPercent || 0}%` }} />
+      <div
+        className="digit-report-detail__file-info"
+        style={{ flex: 1, minWidth: 0 }}
+      >
+        <div className="digit-report-detail__file-info-date-wrap">
+          {run.dateLabel && (
+            <div className="digit-report-detail__file-date">
+              {run.dateLabel}
+            </div>
+          )}
+          <span className="digit-report-detail__file-meta">
+            {t(I18N_KEYS.PAGES.HCM_REPORT_GENERATION_STATUS_IN_PROGRESS)}
+          </span>
         </div>
-        {formatDuration(run.elapsedSeconds) && (
-          <div className="digit-report-detail__file-meta">
-            {t(I18N_KEYS.PAGES.HCM_RUNNING_FOR)}: {formatDuration(run.elapsedSeconds)}
-          </div>
-        )}
-        {(run.expectedRows != null || run.expectedGenerationTimeSeconds != null) && (
-          <div className="digit-report-detail__file-meta">
-            {run.expectedRows != null && (
-              <span>
-                {t(I18N_KEYS.PAGES.HCM_ESTIMATED_ROWS)}: ~{formatRowCount(run.expectedRows)}
-              </span>
-            )}
-            {run.expectedRows != null && run.expectedGenerationTimeSeconds != null && <span> &middot; </span>}
-            {run.expectedGenerationTimeSeconds != null && (
-              <span>
-                {t(I18N_KEYS.PAGES.HCM_ESTIMATED_TIME)}: ~{formatDuration(run.expectedGenerationTimeSeconds)}
-              </span>
-            )}
-          </div>
-        )}
       </div>
+      <div className="digit-report-detail__file-actions">
+        <Tag
+          label={t(I18N_KEYS.PAGES.HCM_IN_PROGRESS)}
+          type="success"
+          stroke={false}
+          showIcon={false}
+        />
+      </div>
+    </div>
+    <div className="digit-report-detail__progress-bar-row">
+      <div className="digit-report-detail__progress-bar">
+        <div
+          className="digit-report-detail__progress-bar-fill"
+          style={{ width: `${run.progressPercent || 0}%` }}
+        />
+      </div>
+      <span className="digit-report-detail__progress-percent">
+        {run.progressPercent || 0}%
+      </span>
     </div>
   </Card>
 );
@@ -163,52 +218,63 @@ const FrequencyContent = ({ reports, inProgressRuns = [], t, reportType }) => {
         <InProgressCard key={run.dagrunid || run.eventid} run={run} t={t} />
       ))}
       {reports.map((report) => (
-        <Card key={report.id} type="secondary" className="digit-report-detail__file-card">
+        <Card
+          key={report.id}
+          type="secondary"
+          className="digit-report-detail__file-card"
+        >
           <div className="digit-report-detail__file-row">
-            <div className="digit-report-detail__file-info digit-report-detail__file-info-inline">
-              <div className="digit-report-detail__file-date">{report.dateLabel}</div>
+            <div className="digit-report-detail__file-info">
+              <div className="digit-report-detail__file-date">
+                {report.dateLabel}
+              </div>
               {report.hasMeta && (
-                <TooltipWrapper
-                  placement="right"
-                  header={t(I18N_KEYS.PAGES.HCM_REPORT_DETAILS)}
-                  content={
-                    <div>
-                      {report.triggeredTimeLabel && (
-                        <div>
-                          {t(I18N_KEYS.PAGES.HCM_REPORT_TRIGGERED_TIME)}: {report.triggeredTimeLabel}
+                <div className="digit-report-detail__meta-row">
+                  {[
+                    {
+                      key: I18N_KEYS.PAGES.HCM_REPORT_TRIGGERED_TIME,
+                      value: report.triggeredTimeLabel,
+                    },
+                    // {
+                    //   key: I18N_KEYS.PAGES.HCM_REPORT_TIME,
+                    //   value: report.reportTimeLabel,
+                    // },
+                    // {
+                    //   key: I18N_KEYS.PAGES.HCM_PROCESSING_TIME,
+                    //   value: report.processingTimeLabel,
+                    // },
+                    {
+                      key: I18N_KEYS.PAGES.HCM_FILE_SIZE,
+                      value: report.fileSizeLabel,
+                    },
+                  ]
+                    .filter((f) => f.value)
+                    .map((f, i) => (
+                      <React.Fragment key={f.key}>
+                        {i > 0 && (
+                          <div className="digit-report-detail__meta-divider" />
+                        )}
+                        <div className="digit-report-detail__meta-field">
+                          <span className="digit-report-detail__meta-label">
+                            {t(f.key)}
+                          </span>
+                          <span className="digit-report-detail__meta-value">
+                            {f.value}
+                          </span>
                         </div>
-                      )}
-                      {report.reportTimeLabel && (
-                        <div>
-                          {t(I18N_KEYS.PAGES.HCM_REPORT_TIME)}: {report.reportTimeLabel}
-                        </div>
-                      )}
-                      {report.processingTimeLabel && (
-                        <div>
-                          {t(I18N_KEYS.PAGES.HCM_PROCESSING_TIME)}: {report.processingTimeLabel}
-                        </div>
-                      )}
-                      {report.fileSizeLabel && (
-                        <div>
-                          {t(I18N_KEYS.PAGES.HCM_FILE_SIZE)}: {report.fileSizeLabel}
-                        </div>
-                      )}
-                      {report.rowCountLabel && (
-                        <div>
-                          {t(I18N_KEYS.PAGES.HCM_ROW_COUNT)}: {report.rowCountLabel}
-                        </div>
-                      )}
-                    </div>
-                  }
-                >
-                  <span className="digit-report-detail__info-trigger" aria-label={t(I18N_KEYS.PAGES.HCM_REPORT_DETAILS)}>
-                    <InfoOutline width="20px" height="20px" fill="#505A5F" />
-                  </span>
-                </TooltipWrapper>
+                      </React.Fragment>
+                    ))}
+                </div>
               )}
             </div>
             <div className="digit-report-detail__file-actions">
-              <Button label={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_REPORT)} onClick={() => handleDownload(report)} variation="link" icon="FileDownload" size="medium" />
+              <Button
+                label={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_REPORT)}
+                onClick={() => handleDownload(report)}
+                variation="secondary"
+                icon="FileDownload"
+                size="medium"
+              />
             </div>
           </div>
         </Card>
@@ -230,9 +296,16 @@ const ReportDetailPage = () => {
   const [showCustomPopup, setShowCustomPopup] = useState(false);
   const [customStartDate, setCustomStartDate] = useState("");
   const [customEndDate, setCustomEndDate] = useState("");
+  const [filterTriggeredDate, setFilterTriggeredDate] = useState("");
+  const [appliedFilterDate, setAppliedFilterDate] = useState("");
   const [isTriggering, setIsTriggering] = useState(false);
   const [isCheckingExisting, setIsCheckingExisting] = useState(false);
   const [showToast, setShowToast] = useState(null);
+  useEffect(() => {
+    if (!showToast) return;
+    const timer = setTimeout(() => setShowToast(null), 5000);
+    return () => clearTimeout(timer);
+  }, [showToast]);
   // Pre-flight result for the CUSTOM range just requested - { variant: "exists" |
   // "in_progress" | "failed", data }. Non-null blocks triggering until the user acts.
   const [existingReportPopup, setExistingReportPopup] = useState(null);
@@ -241,10 +314,14 @@ const ReportDetailPage = () => {
   // the backend check is still the source of truth when the user actually retries.
   const [retryCountdown, setRetryCountdown] = useState(null);
 
-  const { data: inProgressRuns = [], refetch: refetchInProgress } = Digit.Hooks.DSS.useReportsInProgress({
+  const {
+    data: inProgressRuns = [],
+    refetch: refetchInProgress,
+  } = Digit.Hooks.DSS.useReportsInProgress({
     tenantId,
     campaignIdentifier: campaignNumber,
     reportName: reportType,
+    triggeredDate: toFilterDateFormat(appliedFilterDate),
     config: { enabled: !!campaignNumber && !!reportType },
   });
 
@@ -252,9 +329,14 @@ const ReportDetailPage = () => {
   const epochToDateStr = (epoch) => {
     if (!epoch) return "";
     const d = new Date(epoch);
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      "0",
+    )}-${String(d.getDate()).padStart(2, "0")}`;
   };
-  const campaignMinDate = epochToDateStr(campaignSelected?.auditDetails?.createdTime);
+  const campaignMinDate = epochToDateStr(
+    campaignSelected?.auditDetails?.createdTime,
+  );
   const campaignMaxDate = epochToDateStr(campaignSelected?.endDate);
 
   const handleClosePopup = () => {
@@ -272,9 +354,9 @@ const ReportDetailPage = () => {
           tenantId: tenantId,
           dag_id: "hcm_dynamic_campaigns",
           locale:
-              Digit?.SessionStorage?.get("locale") ||
-              Digit?.SessionStorage.get("initData")?.selectedLanguage ||
-              Digit?.Utils?.getDefaultLanguage(),
+            Digit?.SessionStorage?.get("locale") ||
+            Digit?.SessionStorage.get("initData")?.selectedLanguage ||
+            Digit?.Utils?.getDefaultLanguage(),
           logical_date: new Date().toISOString(),
           conf: {
             matched_campaigns: [
@@ -302,11 +384,17 @@ const ReportDetailPage = () => {
       setExistingReportPopup(null);
       setCustomStartDate("");
       setCustomEndDate("");
-      setShowToast({ key: "success", label: t(I18N_KEYS.PAGES.HCM_CUSTOM_REPORT_TRIGGERED) });
+      setShowToast({
+        key: "success",
+        label: t(I18N_KEYS.PAGES.HCM_CUSTOM_REPORT_TRIGGERED),
+      });
       refetchInProgress();
     } catch (error) {
       console.error("Error triggering custom report:", error);
-      setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_CUSTOM_REPORT_TRIGGER_FAILED) });
+      setShowToast({
+        key: "error",
+        label: t(I18N_KEYS.PAGES.HCM_CUSTOM_REPORT_TRIGGER_FAILED),
+      });
     } finally {
       setIsTriggering(false);
     }
@@ -316,7 +404,10 @@ const ReportDetailPage = () => {
   // already exist for this exact campaign+report+date-range?
   const handleGenerateReportClick = async () => {
     if (!customStartDate || !customEndDate) {
-      setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_CUSTOM_DATE_REQUIRED) });
+      setShowToast({
+        key: "error",
+        label: t(I18N_KEYS.PAGES.HCM_CUSTOM_DATE_REQUIRED),
+      });
       return;
     }
     setIsCheckingExisting(true);
@@ -345,7 +436,10 @@ const ReportDetailPage = () => {
       }
     } catch (error) {
       console.error("Error checking for existing custom report:", error);
-      setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_CUSTOM_REPORT_CHECK_FAILED) });
+      setShowToast({
+        key: "error",
+        label: t(I18N_KEYS.PAGES.HCM_CUSTOM_REPORT_CHECK_FAILED),
+      });
     } finally {
       setIsCheckingExisting(false);
     }
@@ -355,7 +449,10 @@ const ReportDetailPage = () => {
   // retryAvailableInSeconds, and tears it down on close/unmount so no stray
   // interval keeps ticking after the popup is gone.
   useEffect(() => {
-    const seconds = existingReportPopup?.variant === "exists" ? existingReportPopup.data?.retryAvailableInSeconds : null;
+    const seconds =
+      existingReportPopup?.variant === "exists"
+        ? existingReportPopup.data?.retryAvailableInSeconds
+        : null;
     if (seconds == null) {
       setRetryCountdown(null);
       return;
@@ -375,17 +472,20 @@ const ReportDetailPage = () => {
       if (!campaignNumber || !reportType) return;
       try {
         if (showLoader) setIsLoading(true);
+        const triggeredDate = toFilterDateFormat(appliedFilterDate);
+        const body = {
+          tenantId: tenantId,
+          reportName: reportType,
+          campaignIdentifier: campaignNumber,
+          locale:
+            Digit?.SessionStorage?.get("locale") ||
+            Digit?.SessionStorage.get("initData")?.selectedLanguage ||
+            Digit?.Utils?.getDefaultLanguage(),
+        };
+        if (triggeredDate) body.triggeredDate = triggeredDate;
         const response = await Digit.CustomService.getResponse({
           url: `/airflow-trigger-api/api/reports-metadata`,
-          body: {
-            tenantId: tenantId,
-            reportName: reportType,
-            campaignIdentifier: campaignNumber,
-            locale:
-              Digit?.SessionStorage?.get("locale") ||
-              Digit?.SessionStorage.get("initData")?.selectedLanguage ||
-              Digit?.Utils?.getDefaultLanguage(),
-          },
+          body,
           // This body never varies for a given report, so CustomService's default
           // useCache:true would otherwise replay the very first response forever -
           // exactly why a newly-completed report would only ever show up after a reload.
@@ -399,11 +499,13 @@ const ReportDetailPage = () => {
         if (showLoader) setIsLoading(false);
       }
     },
-    [campaignNumber, reportType, tenantId]
+    [campaignNumber, reportType, tenantId, appliedFilterDate],
   );
 
+  const initialLoadDoneRef = useRef(false);
   useEffect(() => {
-    fetchReports({ showLoader: true });
+    fetchReports({ showLoader: !initialLoadDoneRef.current });
+    initialLoadDoneRef.current = true;
   }, [fetchReports]);
 
   // /reports-in-progress polls every 20s, but a run dropping out of that list (because it
@@ -411,8 +513,12 @@ const ReportDetailPage = () => {
   // this, a just-finished report would only appear after a manual page reload.
   const prevInProgressIdsRef = useRef(new Set());
   useEffect(() => {
-    const currentIds = new Set((inProgressRuns || []).map((run) => run.dagrunid));
-    const hasNewlyFinished = [...prevInProgressIdsRef.current].some((id) => !currentIds.has(id));
+    const currentIds = new Set(
+      (inProgressRuns || []).map((run) => run.dagrunid),
+    );
+    const hasNewlyFinished = [...prevInProgressIdsRef.current].some(
+      (id) => !currentIds.has(id),
+    );
     prevInProgressIdsRef.current = currentIds;
     if (hasNewlyFinished) {
       fetchReports();
@@ -429,7 +535,9 @@ const ReportDetailPage = () => {
       if (!grouped[freq]) grouped[freq] = [];
 
       const dateLabel = getReportDateLabel(item, freq);
-      const triggeredTimeLabel = formatTriggeredTime(item?.reporttriggeredtimems);
+      const triggeredTimeLabel = formatTriggeredTime(
+        item?.reporttriggeredtimems,
+      );
       const reportTimeLabel = formatDuration(item?.reportTimeSeconds);
       const processingTimeLabel = formatDuration(item?.processingTimeSeconds);
       const fileSizeLabel = formatFileSize(item?.filesizebytes);
@@ -444,7 +552,13 @@ const ReportDetailPage = () => {
         processingTimeLabel,
         fileSizeLabel,
         rowCountLabel,
-        hasMeta: Boolean(triggeredTimeLabel || reportTimeLabel || processingTimeLabel || fileSizeLabel || rowCountLabel),
+        hasMeta: Boolean(
+          triggeredTimeLabel ||
+            reportTimeLabel ||
+            processingTimeLabel ||
+            fileSizeLabel ||
+            rowCountLabel,
+        ),
       });
     });
 
@@ -465,14 +579,23 @@ const ReportDetailPage = () => {
       grouped[freq].push({ ...run, dateLabel: getReportDateLabel(run, freq) });
     });
     Object.keys(grouped).forEach((freq) => {
-      grouped[freq].sort((a, b) => (b.reporttriggeredtimems || 0) - (a.reporttriggeredtimems || 0));
+      grouped[freq].sort(
+        (a, b) =>
+          (b.reporttriggeredtimems || 0) - (a.reporttriggeredtimems || 0),
+      );
     });
     return grouped;
   }, [inProgressRuns]);
 
   const allFrequencies = useMemo(
-    () => Array.from(new Set([...Object.keys(reportsByFrequency), ...Object.keys(inProgressByFrequency)])),
-    [reportsByFrequency, inProgressByFrequency]
+    () =>
+      Array.from(
+        new Set([
+          ...Object.keys(reportsByFrequency),
+          ...Object.keys(inProgressByFrequency),
+        ]),
+      ),
+    [reportsByFrequency, inProgressByFrequency],
   );
 
   const reportLabel = `HCM_${reportType?.toUpperCase()}`;
@@ -488,45 +611,99 @@ const ReportDetailPage = () => {
 
   return (
     <React.Fragment>
-      <Card className="digit-report-detail__card">
+      <Card className="digit-report-detail__card main-heading">
         <div className="digit-report-detail__header-wrap">
           <div className="digit-report-detail__header">
             <div className="digit-report-detail__header-with-tag">
-              <HeaderComponent className="digit-report-detail__header-with-tag-header">{t(reportLabel)}</HeaderComponent>
-              <Tag label={t(I18N_KEYS.PAGES.HCM_CONTAINS_PII)} showIcon={true} type="error" stroke={true} />
+              <HeaderComponent className="digit-report-detail__header-with-tag-header">
+                {t(reportLabel)}
+              </HeaderComponent>
+              <Tag
+                label={t(I18N_KEYS.PAGES.HCM_CONTAINS_PII)}
+                showIcon={true}
+                type="error"
+                stroke={true}
+              />
             </div>
-            {/* <p className="digit-report-detail__subtitle">
-              {t("HCM_REPORTS_GENERATED_BY_FREQUENCY")}
-            </p> */}
           </div>
-          <div className="digit-report-detail__custom-btn">
-            <Button
-              label={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_CUSTOM_RANGE)}
-              onClick={() => setShowCustomPopup(true)}
-              variation="secondary"
-              icon="CalendarMonth"
-              icon="DownloadIcon"
-              size="medium"
-            />
-          </div>
+          {totalReports === 0 && totalInProgress === 0 ? null : (
+            <div className="digit-report-detail__custom-btn">
+              <Button
+                label={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_CUSTOM_RANGE)}
+                onClick={() => setShowCustomPopup(true)}
+                variation="primary"
+                icon="AddIcon"
+                size="medium"
+              />
+            </div>
+          )}
         </div>
+      </Card>
 
-        {totalReports === 0 && totalInProgress === 0 ? (
-          <div
-            className="digit-no-data-found"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
+      <Card className="digit-report-detail__card filter">
+        <div className="digit-report-detail__custom-field">
+          <label>{t(I18N_KEYS.PAGES.HCM_FILTER_BY_TRIGGERED_DATE)}</label>
+          <FieldV1
+            withoutLabel={true}
+            type="date"
+            value={filterTriggeredDate}
+            populators={{
+              newDateFormat: true,
+              min: campaignMinDate,
+              customClass: "custom-date-range",
             }}
-          >
-            <SVG.NoResultsFoundIcon height={280} width={220} />
-            <span style={{marginTop:"0.5rem"}}>
-              {t(I18N_KEYS.PAGES.HCM_NO_REPORTS_GENERATED)}
-            </span>
-          </div>
-        ) : (
+            onChange={(d) => {
+              setFilterTriggeredDate(d);
+            }}
+          />
+        </div>
+        <div className="digit-report-detail__filter-actions">
+          <Button
+            label={t(I18N_KEYS.FILTERS.DSS_FILTER_SEARCH)}
+            onClick={() => setAppliedFilterDate(filterTriggeredDate)}
+            variation="primary"
+            size="medium"
+            type="button"
+          />
+          <Button
+            label={t(I18N_KEYS.FILTERS.DSS_FILTER_CLEAR)}
+            onClick={() => {
+              setFilterTriggeredDate("");
+              setAppliedFilterDate("");
+            }}
+            variation="secondary"
+            size="medium"
+            type="button"
+          />
+        </div>
+      </Card>
+      {totalReports === 0 && totalInProgress === 0 ? (
+        <div
+          className="digit-no-data-found"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <UndrawEmpty />
+          <span className="digit-no-data-found-text">
+            {t(I18N_KEYS.PAGES.HCM_NO_REPORTS_GENERATED)}
+          </span>
+          <p className="digit-no-data-found-description">
+            {t(I18N_KEYS.PAGES.HCM_NO_REPORTS_GENERATED_DESCRIPTION)}
+          </p>
+          <Button
+            label={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_CUSTOM_RANGE)}
+            onClick={() => setShowCustomPopup(true)}
+            variation="primary"
+            icon="AddIcon"
+            size="medium"
+          />
+        </div>
+      ) : (
+        <Card className="digit-report-detail__card">
           <AccordionList allowMultipleOpen={true}>
             {allFrequencies.map((frequency) => {
               const reports = reportsByFrequency[frequency] || [];
@@ -535,13 +712,20 @@ const ReportDetailPage = () => {
                 <Accordion
                   key={frequency}
                   title={
-                  <div className="digit-accordion-titile-dashboard-wrap">
-                    <div className="digit-accordion-titile-dashboard">{t(`HCM_REPORT_FREQUENCY_${frequency}_REPORTS`)}</div>
-                    <Tag label={`${reports.length} ${reports.length === 1 ? t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT_SINGLE) : t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT)}`} stroke={true} type={"monochrome"}/>
-                    {inProgress.length > 0 && (
-                      <Tag label={`${inProgress.length} ${t(I18N_KEYS.PAGES.HCM_IN_PROGRESS)}`} type="warning" />
-                    )}
-                  </div>
+                    <div className="digit-accordion-titile-dashboard-wrap">
+                      <div className="digit-accordion-titile-dashboard">
+                        {t(`HCM_REPORT_FREQUENCY_${frequency}_REPORTS`)}
+                      </div>
+                      <Tag
+                        label={`${reports.length} ${
+                          reports.length === 1
+                            ? t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT_SINGLE)
+                            : t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT)
+                        }`}
+                        stroke={true}
+                        type={"monochrome"}
+                      />
+                    </div>
                   }
                   isOpenInitially={allFrequencies.length === 1}
                   hideCardBorder={false}
@@ -549,13 +733,18 @@ const ReportDetailPage = () => {
                   hideBorderRadius={true}
                   customClassName={"digit-report-details-accordion"}
                 >
-                  <FrequencyContent reports={reports} inProgressRuns={inProgress} t={t} reportType={reportType} />
+                  <FrequencyContent
+                    reports={reports}
+                    inProgressRuns={inProgress}
+                    t={t}
+                    reportType={reportType}
+                  />
                 </Accordion>
               );
             })}
           </AccordionList>
-        )}
-      </Card>
+        </Card>
+      )}
 
       {showCustomPopup && (
         <PopUp
@@ -565,13 +754,23 @@ const ReportDetailPage = () => {
           description={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_CUSTOM_RANGE_DESC)}
           className={"digit-report-detail__popup"}
           footerChildren={[
-            <Button key="cancel" label={t(I18N_KEYS.PAGES.HCM_CANCEL)} onClick={handleClosePopup} variation="secondary" />,
+            <Button
+              key="cancel"
+              label={t(I18N_KEYS.PAGES.HCM_CANCEL)}
+              onClick={handleClosePopup}
+              variation="secondary"
+            />,
             <Button
               key="trigger"
               label={t(I18N_KEYS.PAGES.HCM_GENERATE_REPORT)}
               onClick={handleGenerateReportClick}
               variation="primary"
-              isDisabled={!customStartDate || !customEndDate || isTriggering || isCheckingExisting}
+              isDisabled={
+                !customStartDate ||
+                !customEndDate ||
+                isTriggering ||
+                isCheckingExisting
+              }
             />,
           ]}
           subHeading={t(I18N_KEYS.PAGES.HCM_CUSTOM_RANGE_DESC)}
@@ -582,7 +781,12 @@ const ReportDetailPage = () => {
               withoutLabel={true}
               type="date"
               value={customStartDate}
-              populators={{ newDateFormat: true, min: campaignMinDate, max: campaignMaxDate, customClass: "custom-date-range" }}
+              populators={{
+                newDateFormat: true,
+                min: campaignMinDate,
+                max: campaignMaxDate,
+                customClass: "custom-date-range",
+              }}
               onChange={(d) => {
                 setCustomStartDate(d);
                 if (customEndDate && d > customEndDate) setCustomEndDate("");
@@ -595,7 +799,12 @@ const ReportDetailPage = () => {
               withoutLabel={true}
               type="date"
               value={customEndDate}
-              populators={{ newDateFormat: true, min: customStartDate || campaignMinDate, max: campaignMaxDate, customClass: "custom-date-range" }}
+              populators={{
+                newDateFormat: true,
+                min: customStartDate || campaignMinDate,
+                max: campaignMaxDate,
+                customClass: "custom-date-range",
+              }}
               onChange={(d) => setCustomEndDate(d)}
             />
           </div>
@@ -617,12 +826,20 @@ const ReportDetailPage = () => {
           footerChildren={
             existingReportPopup.variant === "exists"
               ? [
-                  <Button key="close" label={t(I18N_KEYS.PAGES.HCM_CLOSE)} onClick={() => setExistingReportPopup(null)} variation="secondary" />,
+                  <Button
+                    key="close"
+                    label={t(I18N_KEYS.PAGES.HCM_CLOSE)}
+                    onClick={() => setExistingReportPopup(null)}
+                    variation="secondary"
+                  />,
                   <Button
                     key="download"
                     label={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_REPORT)}
                     onClick={() => {
-                      downloadFileFromStore({ fileStoreId: existingReportPopup.data.filestoreid, customName: `${reportType}_custom` });
+                      downloadFileFromStore({
+                        fileStoreId: existingReportPopup.data.filestoreid,
+                        customName: `${reportType}_custom`,
+                      });
                       setExistingReportPopup(null);
                     }}
                     variation={retryCountdown === 0 ? "secondary" : "primary"}
@@ -641,9 +858,21 @@ const ReportDetailPage = () => {
                     : []),
                 ]
               : existingReportPopup.variant === "in_progress"
-              ? [<Button key="close" label={t(I18N_KEYS.PAGES.HCM_CLOSE)} onClick={() => setExistingReportPopup(null)} variation="secondary" />]
+              ? [
+                  <Button
+                    key="close"
+                    label={t(I18N_KEYS.PAGES.HCM_CLOSE)}
+                    onClick={() => setExistingReportPopup(null)}
+                    variation="secondary"
+                  />,
+                ]
               : [
-                  <Button key="cancel" label={t(I18N_KEYS.PAGES.HCM_CANCEL)} onClick={() => setExistingReportPopup(null)} variation="secondary" />,
+                  <Button
+                    key="cancel"
+                    label={t(I18N_KEYS.PAGES.HCM_CANCEL)}
+                    onClick={() => setExistingReportPopup(null)}
+                    variation="secondary"
+                  />,
                   <Button
                     key="retry"
                     label={t(I18N_KEYS.PAGES.HCM_RETRY)}
@@ -661,14 +890,18 @@ const ReportDetailPage = () => {
               : t(I18N_KEYS.PAGES.HCM_REPORT_GENERATION_FAILED_DESC)
           }
         >
-          {existingReportPopup.variant === "exists" && existingReportPopup.data?.retryBlocked && (
-            <div className="digit-report-detail__file-info">{t(I18N_KEYS.PAGES.HCM_REPORT_RETRY_BLOCKED)}</div>
-          )}
+          {existingReportPopup.variant === "exists" &&
+            existingReportPopup.data?.retryBlocked && (
+              <div className="digit-report-detail__file-info">
+                {t(I18N_KEYS.PAGES.HCM_REPORT_RETRY_BLOCKED)}
+              </div>
+            )}
           {existingReportPopup.variant === "exists" && retryCountdown !== null && (
             <div className="digit-report-detail__file-info">
               {retryCountdown > 0 ? (
                 <div>
-                  {t(I18N_KEYS.PAGES.HCM_REPORT_RETRY_AVAILABLE_IN)}: {formatDuration(retryCountdown)}
+                  {t(I18N_KEYS.PAGES.HCM_REPORT_RETRY_AVAILABLE_IN)}:{" "}
+                  {formatDuration(retryCountdown)}
                 </div>
               ) : (
                 <div>{t(I18N_KEYS.PAGES.HCM_REPORT_RETRY_AVAILABLE_NOW)}</div>
@@ -677,18 +910,30 @@ const ReportDetailPage = () => {
           )}
           {existingReportPopup.variant === "in_progress" && (
             <div className="digit-report-detail__file-info">
-              <div className="digit-report-detail__file-date">{t(getStageLabelKey(existingReportPopup.data.status))}</div>
-              <div className="digit-report-detail__progress-bar">
-                <div
-                  className="digit-report-detail__progress-bar-fill"
-                  style={{ width: `${existingReportPopup.data.progressPercent || 0}%` }}
-                />
+              <div className="digit-report-detail__file-meta">
+                {t(I18N_KEYS.PAGES.HCM_REPORT_GENERATION_STATUS_IN_PROGRESS)}
+              </div>
+              <div className="digit-report-detail__progress-bar-row">
+                <div className="digit-report-detail__progress-bar-popup">
+                  <div
+                    className="digit-report-detail__progress-bar-fill"
+                    style={{
+                      width: `${
+                        existingReportPopup.data.progressPercent || 0
+                      }%`,
+                    }}
+                  />
+                </div>
+                <span className="digit-report-detail__progress-percent">
+                  {existingReportPopup.data.progressPercent || 0}%
+                </span>
               </div>
             </div>
           )}
           {existingReportPopup.variant === "failed" && (
             <div className="digit-report-detail__file-info">
-              {existingReportPopup.data.errormessage || t(I18N_KEYS.PAGES.HCM_REPORT_GENERATION_FAILED_DESC)}
+              {existingReportPopup.data.errormessage ||
+                t(I18N_KEYS.PAGES.HCM_REPORT_GENERATION_FAILED_DESC)}
             </div>
           )}
         </PopUp>

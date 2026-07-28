@@ -9,12 +9,17 @@ import { useMemo } from "react";
 // The very first fetch on mount always happens regardless (refetchInterval only governs
 // the recurring poll), and a manual refetch() (e.g. right after triggering a new report)
 // re-arms polling once it resolves non-empty.
-const useReportsInProgress = ({ tenantId, campaignIdentifier, reportName, config = {} }) => {
+const useReportsInProgress = ({ tenantId, campaignIdentifier, reportName, triggeredDate = "", config = {} }) => {
   const reqCriteria = useMemo(
     () => ({
       url: `/airflow-trigger-api/api/reports-in-progress`,
-      changeQueryName: `REPORTS_IN_PROGRESS_${campaignIdentifier}_${reportName || "ALL"}`,
-      body: { tenantId, campaignIdentifier, reportName },
+      changeQueryName: `REPORTS_IN_PROGRESS_${campaignIdentifier}_${reportName || "ALL"}_${triggeredDate || ""}`,
+      body: {
+        tenantId,
+        campaignIdentifier,
+        reportName,
+        ...(triggeredDate ? { triggeredDate } : {}),
+      },
       params: {},
       headers: {
         "auth-token": Digit.UserService.getUser()?.access_token || null,
@@ -32,7 +37,7 @@ const useReportsInProgress = ({ tenantId, campaignIdentifier, reportName, config
         ...config,
       },
     }),
-    [tenantId, campaignIdentifier, reportName, config]
+    [tenantId, campaignIdentifier, reportName, triggeredDate, config]
   );
 
   return Digit.Hooks.DSS.useAPIHook(reqCriteria);
