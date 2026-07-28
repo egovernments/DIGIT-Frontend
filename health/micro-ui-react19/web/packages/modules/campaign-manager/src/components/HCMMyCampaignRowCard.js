@@ -201,6 +201,8 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
 };
 
 
+const isProcessDone = (p) => p?.status === "completed" || p?.status === "failed";
+
 const reqUpdate = {
   url: `/project-factory/v1/project-type/update`,
   params: {},
@@ -234,7 +236,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
     changeQueryName: `campaignStatus_${rowData?.campaignNumber}`,
   }), [rowData?.campaignNumber, tenantId, isCreating]);
 
-  const { data: statusData, isLoading: isStatusLoading } = Digit.Hooks.useCustomAPIHook(statusReqCriteria);
+  const { data: statusData, isLoading: isStatusLoading, isError: isStatusError } = Digit.Hooks.useCustomAPIHook(statusReqCriteria);
 
   // Refresh the page when all processes are completed so the table shows updated campaign status
   // Uses sessionStorage to prevent infinite reload if backend status hasn't transitioned yet
@@ -248,7 +250,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
     if (isStatusLoading) return;
     const processes = statusData?.CampaignStatus?.processes;
     if (Array.isArray(processes) && processes.length > 0) {
-      const allCompleted = processes.every((p) => p?.status === "completed" || p?.status === "failed");
+      const allCompleted = processes.every(isProcessDone);
       if (allCompleted) {
         const lastRefresh = sessionStorage.getItem(refreshKey);
         if (lastRefresh && Date.now() - Number(lastRefresh) < 60000) return;
@@ -306,17 +308,30 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   );
   const actionTags = useMemo(() => {
     if (!isCreating) return {};
+    if (isStatusError) {
+      return {
+        currentProcess: {
+          label: "CAMPAIGN_STATUS_CHECK_FAILED",
+          loader: false,
+          showBottom: true,
+          type: "error",
+          animationStyle: {
+            width: "2rem",
+            height: "2rem",
+          },
+        },
+      };
+    }
     const processes = statusData?.CampaignStatus?.processes;
     if (!isStatusLoading && Array.isArray(processes) && processes.length > 0) {
       // Find the first process that is not yet completed — represents current progress
-      const currentProcess = processes.find((p) => p?.status !== "completed" && p?.status !== "failed");
+      const currentProcess = processes.find((p) => !isProcessDone(p));
       // If all processes are done, show the last one
       const displayProcess = currentProcess || processes[processes.length - 1];
-      const isComplete = displayProcess?.status === "completed" || displayProcess?.status === "failed";
       return {
         currentProcess: {
           label: displayProcess?.processname || "CAMPAIGN_CREATION_INPROGRESS",
-          loader: !isComplete,
+          loader: !isProcessDone(displayProcess),
           showBottom: true,
           animationStyle: {
             width: "2rem",
@@ -336,7 +351,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
         },
       },
     };
-  }, [isCreating, statusData, isStatusLoading]);
+  }, [isCreating, statusData, isStatusLoading, isStatusError]);
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
   const showCancelCampaign = rowData?.status === "creating" || rowData?.status === "drafted";
