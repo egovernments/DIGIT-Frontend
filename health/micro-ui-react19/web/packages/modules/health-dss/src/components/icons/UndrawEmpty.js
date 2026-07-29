@@ -3,8 +3,8 @@ import React from "react";
 export const UndrawEmpty = ({ width, height, style, fill }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={width || "101"}
-    height={height || "90"}
+    width={width || "220"}
+    height={height || "180"}
     viewBox="0 0 101 90"
     fill="none"
   >
