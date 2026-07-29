@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, Fragment, useEffect, useCallback } from "react";
+import React, { useState, useMemo, useRef, Fragment, useEffect, useCallback, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
@@ -64,7 +64,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     () => (hierarchyType ? [`boundary-${hierarchyType}`] : []),
     [hierarchyType]
   );
-  Digit.Services.useStore({
+  const { isLoading: isLocalizationLoading } = Digit.Services.useStore({
     stateCode,
     moduleCode: boundaryModuleCode,
     language,
@@ -94,6 +94,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const [executionCount, setExecutionCount] = useState(0);
   const [currentStep, setCurrentStep] = useState(2);
   const [isLoading, setIsLoading] = useState(true);
+  // useTransition keeps the loader visible while React renders the heavy component tree
+  // (SelectingBoundaryComponent with 16k+ boundary items) in the background.
+  const [isMountPending, startMountTransition] = useTransition();
   const [showPopUp, setShowPopUp] = useState(false);
   const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
@@ -113,7 +116,10 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   //   setCurrentStep(currentKey);
   // }, [currentKey]);
 
-  const reqCriteria = {
+  // Only fetch campaign data when session data is NOT available (first visit to boundary step).
+  // When session data exists (user navigated back), boundaries are already in session — skip the API call.
+  const hasSessionData = !!sessionData;
+  const reqCriteria = useMemo(() => ({
     url: `/project-factory/v1/project-type/search`,
     body: {
       CampaignDetails: {
@@ -122,12 +128,14 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       },
     },
     config: {
-      enabled: !!campaignNumber,
+      enabled: !!campaignNumber && !hasSessionData,
       select: (data) => {
         return data?.CampaignDetails?.[0];
       },
+      cacheTime: 1000000,
+      staleTime: 600000,
     },
-  };
+  }), [tenantId, campaignNumber, hasSessionData]);
 
   const { data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
@@ -161,12 +169,11 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     if (!isDataLoaded) {
       setIsDataLoaded(true);
     }
-    // Yield to browser so the loader can paint before heavy child components mount.
-    // Use double-rAF to guarantee the loader frame is actually rendered.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setIsLoading(false);
-      });
+    // Use startTransition so React keeps the loader visible while it renders
+    // the heavy SelectingBoundaryComponent tree (16k+ items) in the background.
+    // Unlike rAF, this actually prevents the UI from freezing during computation.
+    startMountTransition(() => {
+      setIsLoading(false);
     });
   }, [isFetching, campaignNumber]);
 
@@ -289,8 +296,11 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   };
 
   const isBoundaryDataLoading = !!hierarchyType && props?.props?.hierarchyData === undefined;
+  // Wait for boundary localizations to load so dropdown labels render correctly.
+  // Only check when localization is actually needed (hierarchyType is known).
+  const isLocalizationPending = boundaryModuleCode.length > 0 && isLocalizationLoading;
 
-  if (isLoading || isBoundaryDataLoading) {
+  if (isLoading || isMountPending || isBoundaryDataLoading || isLocalizationPending) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 

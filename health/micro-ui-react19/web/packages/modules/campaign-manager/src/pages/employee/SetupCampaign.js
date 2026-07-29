@@ -167,6 +167,12 @@ const SetupCampaign = () => {
       select: (data) => {
         return data?.[0];
       },
+      // Override hook defaults (cacheTime: 0, staleTime: 0) to prevent background refetches.
+      // Without this, every SetupCampaign re-render finds data stale and triggers a refetch,
+      // causing cascading re-renders and unresponsive dropdowns on the boundary step.
+      // Explicit draftRefetch() calls (after update operations) still bypass staleTime.
+      staleTime: 600000,
+      cacheTime: 1000000,
     },
   });
 
@@ -1154,6 +1160,13 @@ const SetupCampaign = () => {
   const closeToast = () => {
     setShowToast(null);
   };
+
+  // Show loader while campaign data is being fetched for any editing flow.
+  // The existing isDraft/isPreview checks below miss cases like draft=null&isDraft=true
+  // where draftLoading is true but neither condition matches.
+  if (id && draftLoading) {
+    return <Loader page={true} variant={"PageLoader"} />;
+  }
 
   if (isPreview === "true" && !draftData) {
     return <Loader page={true} variant={"PageLoader"} />;
