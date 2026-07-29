@@ -70,8 +70,11 @@ const SelectingBoundaryComponent = ({
   // Track pipeline completion so post-pipeline user interactions can recompute optionsPerType
   const pipelineDoneRef = useRef(false);
   const pipelineBoundaryOptionsRef = useRef(null);
-  // Flag to skip the first post-pipeline sync (pipeline already set optionsPerType directly)
-  const pipelineJustCompletedRef = useRef(false);
+  // Snapshot of frozenData/frozenType/restrictSelection used by the pipeline's Step 3.
+  // After pipeline completion, the post-pipeline effect compares current props against
+  // this snapshot — if they match, it skips (pipeline already computed correctly).
+  // If they differ (props changed during pipeline run), it falls through and recomputes.
+  const pipelineSnapshotRef = useRef(null);
 
   // Refs for parent props that should NOT restart the pipeline when their identity changes.
   // hierarchy and data are stable via react-query caching, but frozenData/frozenType/restrictSelection
@@ -376,7 +379,7 @@ const SelectingBoundaryComponent = ({
 
     pipelineDoneRef.current = false;
     pipelineBoundaryOptionsRef.current = null;
-    pipelineJustCompletedRef.current = false;
+    pipelineSnapshotRef.current = null;
     setComputingAll(true);
     let cancelled = false;
 
@@ -576,7 +579,11 @@ const SelectingBoundaryComponent = ({
 
       // ── Step 4: Set all state at once — no cascading re-renders ──
       pipelineDoneRef.current = true;
-      pipelineJustCompletedRef.current = true;
+      pipelineSnapshotRef.current = {
+        frozenData: pipelineFrozenData,
+        frozenType: pipelineFrozenType,
+        restrictSelection: pipelineRestriction,
+      };
       pipelineBoundaryOptionsRef.current = mergedOptions;
       setBoundaryData(bData);
       setBoundaryOptions(mergedOptions);
@@ -593,13 +600,22 @@ const SelectingBoundaryComponent = ({
   // This covers: (a) user interaction via handleBoundaryChange updating child options,
   // (b) frozenData/frozenType/restrictSelection prop changes that only need Step 3 recomputation
   //     without redoing the expensive tree walk (Steps 1-2).
-  // Skips the first run after pipeline completion (pipeline already set optionsPerType directly).
+  // Skips the first run after pipeline completion only if props haven't changed during pipeline.
   useEffect(() => {
     if (computingAll) return;
-    // Skip the pipeline's own state update — it already set optionsPerType directly.
-    if (pipelineJustCompletedRef.current) {
-      pipelineJustCompletedRef.current = false;
-      return;
+    // After pipeline completion, check if the props it used still match current values.
+    // If they do, skip — pipeline already computed optionsPerType with these values.
+    // If they differ (props changed during pipeline execution), fall through to recompute.
+    if (pipelineSnapshotRef.current) {
+      const snap = pipelineSnapshotRef.current;
+      pipelineSnapshotRef.current = null;
+      if (
+        frozenData === snap.frozenData &&
+        frozenType === snap.frozenType &&
+        restrictSelection === snap.restrictSelection
+      ) {
+        return;
+      }
     }
 
     const frozenSet = frozenData?.length > 0
