@@ -156,7 +156,7 @@ const RegisterDetailsScreen = () => {
 
   const getApproverName = () => {
     const approver = staff.find((s) => s.staffType === "APPROVER");
-    return approver?.additionalDetails?.staffName || NA;
+    return approver?.additionalDetails?.staffName || t(I18N_KEYS.PAGES.HCM_ATTENDANCE_OFC_YET_TO_BE_MAPPED) || NA;
   };
 
   const handleDeleteUser = (user) => {
