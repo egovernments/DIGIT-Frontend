@@ -167,12 +167,12 @@ const SetupCampaign = () => {
       select: (data) => {
         return data?.[0];
       },
-      // Override hook defaults (cacheTime: 0, staleTime: 0) to prevent background refetches.
+      // Override hook defaults (gcTime: 0, staleTime: 0) to prevent background refetches.
       // Without this, every SetupCampaign re-render finds data stale and triggers a refetch,
       // causing cascading re-renders and unresponsive dropdowns on the boundary step.
       // Explicit draftRefetch() calls (after update operations) still bypass staleTime.
       staleTime: 600000,
-      cacheTime: 1000000,
+      gcTime: 1000000,
     },
   });
 

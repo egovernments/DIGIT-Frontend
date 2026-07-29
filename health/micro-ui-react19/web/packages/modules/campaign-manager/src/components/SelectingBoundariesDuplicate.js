@@ -132,7 +132,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       select: (data) => {
         return data?.CampaignDetails?.[0];
       },
-      cacheTime: 1000000,
+      gcTime: 1000000,
       staleTime: 600000,
     },
   }), [tenantId, campaignNumber, hasSessionData]);

@@ -346,12 +346,19 @@ const MultiSelectDropdown = ({
     }
   }
 
-  // Lightweight key: length + bookend codes avoids joining 16k+ codes into a huge string.
-  // Boundary selections change in bulk (clear all, select group, etc.) so
-  // length + first/last codes catch all real changes.
+  // Lightweight rolling checksum over all codes: O(n) without building a huge
+  // joined string, and unlike length + bookends it detects mid-list replacements.
   const selectedSyncKey = useMemo(() => {
     if (!selected || selected.length === 0) return "";
-    return `${selected.length}|${selected[0]?.code}|${selected[selected.length - 1]?.code}`;
+    let hash = 0;
+    for (let i = 0; i < selected.length; i++) {
+      const code = selected[i]?.code || "";
+      for (let j = 0; j < code.length; j++) {
+        hash = (hash * 31 + code.charCodeAt(j)) | 0;
+      }
+      hash = (hash * 31 + i) | 0;
+    }
+    return `${selected.length}|${hash}`;
   }, [selected]);
 
   useEffect(() => {
@@ -774,8 +781,9 @@ const MultiSelectDropdown = ({
           }
         }
       } else {
-        // Create a shallow copy to avoid mutating the original option
-        const copy = option.options ? { ...option, options: [...option.options] } : option;
+        // Always shallow copy to avoid mutating the caller's memoized option objects.
+        // Without this, a later duplicate merge (push onto existing.options) would mutate the original.
+        const copy = { ...option, options: option.options ? [...option.options] : [] };
         seenCodes.set(option?.code, copy);
         flattened.push(copy);
       }

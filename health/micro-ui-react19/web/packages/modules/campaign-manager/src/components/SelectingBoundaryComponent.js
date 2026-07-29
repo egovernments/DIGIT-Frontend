@@ -70,6 +70,18 @@ const SelectingBoundaryComponent = ({
   // Track pipeline completion so post-pipeline user interactions can recompute optionsPerType
   const pipelineDoneRef = useRef(false);
   const pipelineBoundaryOptionsRef = useRef(null);
+  // Flag to skip the first post-pipeline sync (pipeline already set optionsPerType directly)
+  const pipelineJustCompletedRef = useRef(false);
+
+  // Refs for parent props that should NOT restart the pipeline when their identity changes.
+  // hierarchy and data are stable via react-query caching, but frozenData/frozenType/restrictSelection
+  // come from parent props and can be recreated on every render.
+  const frozenDataRef = useRef(frozenData);
+  frozenDataRef.current = frozenData;
+  const frozenTypeRef = useRef(frozenType);
+  frozenTypeRef.current = frozenType;
+  const restrictSelectionRef = useRef(restrictSelection);
+  restrictSelectionRef.current = restrictSelection;
 
   // Defer heavy computation until after the Loader has been painted.
   useEffect(() => {
@@ -80,9 +92,9 @@ const SelectingBoundaryComponent = ({
   }, []);
 
   useEffect(() => {
-    // After the pipeline has set boundaryOptions, skip the parent echo
-    // (parent echoes our output back as props — don't let it override user-interaction changes).
-    if (pipelineDoneRef.current) return;
+    // Skip only the parent's echo of our own pipeline output; still accept genuine
+    // parent-driven updates (e.g. external resets) so they are not dropped.
+    if (pipelineDoneRef.current && boundaryOptionsPage === pipelineBoundaryOptionsRef.current) return;
     setBoundaryOptions(boundaryOptionsPage);
   }, [boundaryOptionsPage]);
 
@@ -98,7 +110,7 @@ const SelectingBoundaryComponent = ({
       },
     },
     config: {
-      cacheTime: 1000000,
+      gcTime: 1000000,
       staleTime: 600000,
     },
   };
@@ -354,13 +366,26 @@ const SelectingBoundaryComponent = ({
   // Merges tree walk (processData), boundary options update, and optionsPerType into ONE
   // async flow with time-based yielding (~4ms per chunk). This avoids cascading effects
   // where each state change triggers re-renders and restarts, causing cumulative main-thread blocking.
+  //
+  // frozenData/frozenType/restrictSelection are read from refs to avoid restarting
+  // the expensive tree walk when only their identity changes on parent re-render.
+  // Changes to those props are handled by the post-pipeline sync effect which
+  // recomputes only optionsPerType (Step 3) without redoing Steps 1-2.
   useEffect(() => {
     if (!isInitialized || !data?.[0] || !hierarchy) return;
 
     pipelineDoneRef.current = false;
     pipelineBoundaryOptionsRef.current = null;
+    pipelineJustCompletedRef.current = false;
     setComputingAll(true);
     let cancelled = false;
+
+    // Snapshot current values — hierarchy/data are stable react-query refs,
+    // frozenData/frozenType/restrictSelection use refs to avoid dep-array churn.
+    const pipelineHierarchy = hierarchy;
+    const pipelineFrozenData = frozenDataRef.current;
+    const pipelineFrozenType = frozenTypeRef.current;
+    const pipelineRestriction = restrictSelectionRef.current;
 
     // Yield to browser every ~4ms to keep loader animation at 60fps
     const YIELD_MS = 4;
@@ -410,13 +435,15 @@ const SelectingBoundaryComponent = ({
       // Validate boundaryData
       const bdKeys = Object.keys(bData);
       if (bdKeys.length === 0 || bdKeys.some((k) => k === "undefined")) {
+        console.warn("[SelectingBoundaryComponent] Invalid boundary data keys:", bdKeys);
+        pipelineDoneRef.current = true;
         setBoundaryData(bData);
         setComputingAll(false);
         return;
       }
 
       // ── Step 2: Merge boundary options (root + child updates) ──
-      const rootType = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find(
+      const rootType = pipelineHierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find(
         (b) => !b.parentBoundaryType
       )?.boundaryType;
 
@@ -435,7 +462,7 @@ const SelectingBoundaryComponent = ({
       // Build child indexes and update boundary options (like updateBoundaryOptions)
       if (currentSelectedData?.length > 0 && mergedOptions[rootType]) {
         const parentToChild = {};
-        hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.forEach((b) => {
+        pipelineHierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.forEach((b) => {
           if (b.parentBoundaryType) parentToChild[b.parentBoundaryType] = b.boundaryType;
         });
 
@@ -483,12 +510,12 @@ const SelectingBoundaryComponent = ({
       lastYield = performance.now();
 
       // ── Step 3: Compute optionsPerType from mergedOptions ──
-      const levels = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
+      const levels = pipelineHierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
       const lowestIndex = levels.findIndex((b) => b.boundaryType === lowest);
       const visLevels = levels.filter((_, index) => index <= lowestIndex);
 
-      const frozenSet = frozenData?.length > 0
-        ? new Set(frozenData.map((f) => `${f.code}::${f.type}`))
+      const frozenSet = pipelineFrozenData?.length > 0
+        ? new Set(pipelineFrozenData.map((f) => `${f.code}::${f.type}`))
         : null;
 
       const optResult = {};
@@ -514,14 +541,14 @@ const SelectingBoundaryComponent = ({
         } else {
           if (value) {
             const entries = Object.entries(value);
-            const skipFilter = restrictSelection === false;
+            const skipFilter = pipelineRestriction === false;
             const grouped = new Map();
 
             for (let i = 0; i < entries.length; i++) {
               const subkey = entries[i][0];
               const item = entries[i][1];
               if (!skipFilter && frozenSet) {
-                if (frozenType === "filter" && frozenSet.has(`${subkey}::${bType}`)) continue;
+                if (pipelineFrozenType === "filter" && frozenSet.has(`${subkey}::${bType}`)) continue;
               }
               const parentCode = item ? item.split(".")[0] : "";
               let group = grouped.get(parentCode);
@@ -549,6 +576,7 @@ const SelectingBoundaryComponent = ({
 
       // ── Step 4: Set all state at once — no cascading re-renders ──
       pipelineDoneRef.current = true;
+      pipelineJustCompletedRef.current = true;
       pipelineBoundaryOptionsRef.current = mergedOptions;
       setBoundaryData(bData);
       setBoundaryOptions(mergedOptions);
@@ -558,15 +586,21 @@ const SelectingBoundaryComponent = ({
 
     runPipeline();
     return () => { cancelled = true; };
-  }, [isInitialized, data, lowest, hierarchy, restrictSelection, frozenData, frozenType]);
+  }, [isInitialized, data, lowest, hierarchy]);
 
-  // Post-pipeline sync: recompute optionsPerType when boundaryOptions changes from user interaction
-  // (e.g., user selects a root boundary → handleBoundaryChange sets child options).
-  // Skips the pipeline's own setBoundaryOptions output via reference comparison.
+  // Post-pipeline sync: recompute optionsPerType when boundaryOptions, frozenData,
+  // frozenType, or restrictSelection change after the pipeline has completed.
+  // This covers: (a) user interaction via handleBoundaryChange updating child options,
+  // (b) frozenData/frozenType/restrictSelection prop changes that only need Step 3 recomputation
+  //     without redoing the expensive tree walk (Steps 1-2).
+  // Skips the first run after pipeline completion (pipeline already set optionsPerType directly).
   useEffect(() => {
     if (computingAll) return;
-    // Skip if this is the pipeline's own output
-    if (boundaryOptions === pipelineBoundaryOptionsRef.current) return;
+    // Skip the pipeline's own state update — it already set optionsPerType directly.
+    if (pipelineJustCompletedRef.current) {
+      pipelineJustCompletedRef.current = false;
+      return;
+    }
 
     const frozenSet = frozenData?.length > 0
       ? new Set(frozenData.map((f) => `${f.code}::${f.type}`))
