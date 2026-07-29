@@ -75,6 +75,10 @@ const SelectingBoundaryComponent = ({
         hierarchyType: hierarchyType,
       },
     },
+    config: {
+      cacheTime: 1000000,
+      staleTime: 600000,
+    },
   };
 
   const { isLoading: hierarchyLoading, data: hierarchy } = Digit.Hooks.useCustomAPIHook(reqCriteria);
@@ -247,29 +251,32 @@ const SelectingBoundaryComponent = ({
       return;
     }
 
-    // Wrap ALL state updates in startTransition so React can show the loader
+    // Clear case: update state immediately (no startTransition) so child dropdowns
+    // reset their Select All / category checkboxes without delay.
+    if (!data || data.length === 0) {
+      const structure = createHierarchyStructure(hierarchy);
+      const check = structure?.[boundary.boundaryType];
+
+      if (check) {
+        const typesToRemoveSet = new Set([boundary?.boundaryType, ...check]);
+        const updatedSelectedData = selectedData?.filter((item) => !typesToRemoveSet.has(item?.type));
+        const updatedBoundaryData = { ...boundaryOptions };
+        typesToRemoveSet.forEach((type) => {
+          if (type !== boundary?.boundaryType && updatedBoundaryData?.hasOwnProperty(type)) {
+            updatedBoundaryData[type] = {};
+          }
+        });
+        if (!_.isEqual(selectedData, updatedSelectedData)) {
+          setSelectedData(updatedSelectedData);
+        }
+        setBoundaryOptions(updatedBoundaryData);
+      }
+      return;
+    }
+
+    // Wrap selection state updates in startTransition so React can show the loader
     // while the heavy re-render (memoized options, downstream effects) is processed.
     startTransition(() => {
-      if (!data || data.length === 0) {
-        const structure = createHierarchyStructure(hierarchy);
-        const check = structure?.[boundary.boundaryType];
-
-        if (check) {
-          const typesToRemoveSet = new Set([boundary?.boundaryType, ...check]);
-          const updatedSelectedData = selectedData?.filter((item) => !typesToRemoveSet.has(item?.type));
-          const updatedBoundaryData = { ...boundaryOptions };
-          typesToRemoveSet.forEach((type) => {
-            if (type !== boundary?.boundaryType && updatedBoundaryData?.hasOwnProperty(type)) {
-              updatedBoundaryData[type] = {};
-            }
-          });
-          if (!_.isEqual(selectedData, updatedSelectedData)) {
-            setSelectedData(updatedSelectedData);
-          }
-          setBoundaryOptions(updatedBoundaryData);
-        }
-        return;
-      }
 
       let res = isMultiSelect ? data?.map((ob) => ob?.[1]) || [] : [data];
       let transformedRes = [];

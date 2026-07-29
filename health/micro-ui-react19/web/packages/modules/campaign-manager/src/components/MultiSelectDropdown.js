@@ -354,6 +354,11 @@ const MultiSelectDropdown = ({
       type: "REPLACE_COMPLETE_STATE",
       payload: fnToSelectOptionThroughProvidedSelection(selected),
     });
+    // Reset Select All and category checkboxes when selection is cleared externally (e.g., parent dropdown cleared)
+    if (!selected || selected.length === 0) {
+      setSelectAllChecked(false);
+      setCategorySelected({});
+    }
   }, [selectedSyncKey]);
 
   // useEffect(() => {
