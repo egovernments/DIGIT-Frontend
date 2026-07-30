@@ -1163,9 +1163,14 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               // Handle both casing: processedFilestoreId (old) and processedFileStoreId (unified-console API)
               const processedFileStore = temp?.processedFilestoreId || temp?.processedFileStoreId;
               if (!processedFileStore) {
-                setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED) });
-                setValidationStatus({ type: "error", label: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD, toastLabel: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED });
-                // setIsValidation(true);
+                const errorCode = temp?.additionalDetails?.errorCode;
+                setShowToast({ key: "error", label: errorCode ? t(errorCode) : t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED) });
+                setValidationStatus({
+                  type: "error",
+                  label: errorCode || I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD,
+                  text: errorCode ? I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD : undefined,
+                  toastLabel: errorCode || I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED,
+                });
                 return;
               } else {
                 const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([processedFileStore], tenantId);
@@ -1204,8 +1209,14 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             // Handle both casing: processedFilestoreId (old) and processedFileStoreId (unified-console API)
             const processedFileStore = temp?.processedFilestoreId || temp?.processedFileStoreId;
             if (!processedFileStore) {
-              setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED), transitionTime: 5000000 });
-              setValidationStatus({ type: "error", label: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD, toastLabel: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED });
+              const errorCode = temp?.additionalDetails?.errorCode;
+              setShowToast({ key: "error", label: errorCode ? t(errorCode) : t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED), transitionTime: 5000000 });
+              setValidationStatus({
+                type: "error",
+                label: errorCode || I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD,
+                text: errorCode ? I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD : undefined,
+                toastLabel: errorCode || I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED,
+              });
               return;
             } else {
               setIsError(true);
