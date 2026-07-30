@@ -640,68 +640,72 @@ const ReportDetailPage = () => {
         </div>
       </Card>
 
-      <Card className="digit-report-detail__card filter">
-        <div className="digit-report-detail__custom-field">
-          <label>{t(I18N_KEYS.PAGES.HCM_FILTER_BY_TRIGGERED_DATE)}</label>
-          <FieldV1
-            withoutLabel={true}
-            type="date"
-            value={filterTriggeredDate}
-            populators={{
-              newDateFormat: true,
-              min: campaignMinDate,
-              customClass: "custom-date-range",
-            }}
-            onChange={(d) => {
-              setFilterTriggeredDate(d);
-            }}
-          />
-        </div>
-        <div className="digit-report-detail__filter-actions">
-          <Button
-            label={t(I18N_KEYS.FILTERS.DSS_FILTER_SEARCH)}
-            onClick={() => setAppliedFilterDate(filterTriggeredDate)}
-            variation="primary"
-            size="medium"
-            type="button"
-          />
-          <Button
-            label={t(I18N_KEYS.FILTERS.DSS_FILTER_CLEAR)}
-            onClick={() => {
-              setFilterTriggeredDate("");
-              setAppliedFilterDate("");
-            }}
-            variation="secondary"
-            size="medium"
-            type="button"
-          />
-        </div>
-      </Card>
+      {(totalReports > 0 || totalInProgress > 0 || appliedFilterDate) && (
+        <Card className="digit-report-detail__card filter">
+          <div className="digit-report-detail__custom-field">
+            <label>{t(I18N_KEYS.PAGES.HCM_FILTER_BY_TRIGGERED_DATE)}</label>
+            <FieldV1
+              withoutLabel={true}
+              type="date"
+              value={filterTriggeredDate}
+              populators={{
+                newDateFormat: true,
+                min: campaignMinDate,
+                customClass: "custom-date-range",
+              }}
+              onChange={(d) => {
+                setFilterTriggeredDate(d);
+              }}
+            />
+          </div>
+          <div className="digit-report-detail__filter-actions">
+            <Button
+              label={t(I18N_KEYS.FILTERS.DSS_FILTER_SEARCH)}
+              onClick={() => setAppliedFilterDate(filterTriggeredDate)}
+              variation="primary"
+              size="medium"
+              type="button"
+            />
+            <Button
+              label={t(I18N_KEYS.FILTERS.DSS_FILTER_CLEAR)}
+              onClick={() => {
+                setFilterTriggeredDate("");
+                setAppliedFilterDate("");
+              }}
+              variation="teritiary"
+              size="medium"
+              type="button"
+            />
+          </div>
+        </Card>
+      )}
       {totalReports === 0 && totalInProgress === 0 ? (
-        <div
-          className="digit-no-data-found"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <UndrawEmpty />
-          <span className="digit-no-data-found-text">
-            {t(I18N_KEYS.PAGES.HCM_NO_REPORTS_GENERATED)}
-          </span>
-          <p className="digit-no-data-found-description">
-            {t(I18N_KEYS.PAGES.HCM_NO_REPORTS_GENERATED_DESCRIPTION)}
-          </p>
-          <Button
-            label={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_CUSTOM_RANGE)}
-            onClick={() => setShowCustomPopup(true)}
-            variation="primary"
-            icon="AddIcon"
-            size="medium"
-          />
-        </div>
+        <Card>
+          <div
+            className="digit-no-data-found"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <UndrawEmpty />
+            <span className="digit-no-data-found-text">
+              {t(I18N_KEYS.PAGES.HCM_NO_REPORTS_GENERATED)}
+            </span>
+            <p className="digit-no-data-found-description">
+              {t(I18N_KEYS.PAGES.HCM_NO_REPORTS_GENERATED_DESCRIPTION)}
+            </p>
+            <Button
+              label={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_CUSTOM_RANGE)}
+              onClick={() => setShowCustomPopup(true)}
+              variation="primary"
+              icon="AddIcon"
+              size="medium"
+            />
+          </div>
+        </Card>
       ) : (
         <Card className="digit-report-detail__card">
           <AccordionList allowMultipleOpen={true}>
