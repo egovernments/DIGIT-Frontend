@@ -55,14 +55,51 @@ const SelectingBoundaryComponent = ({
   // Use restrictSelection from parent - no local state needed
   const restrictSelection = restrictSelectionPage;
   const [isPending, startTransition] = useTransition();
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [optionsPerType, setOptionsPerType] = useState({});
+  const [computingAll, setComputingAll] = useState(true);
+  const [boundaryData, setBoundaryData] = useState({});
+
+  // Refs for values the pipeline reads but should NOT restart when they change
+  // (the parent echoes our output back as props, which would cause an infinite loop).
+  const selectedData1Ref = useRef(selectedData1);
+  selectedData1Ref.current = selectedData1;
+  const boundaryOptionsPageRef = useRef(boundaryOptionsPage);
+  boundaryOptionsPageRef.current = boundaryOptionsPage;
+
+  // Track pipeline completion so post-pipeline user interactions can recompute optionsPerType
+  const pipelineDoneRef = useRef(false);
+  const pipelineBoundaryOptionsRef = useRef(null);
+  // Snapshot of frozenData/frozenType/restrictSelection used by the pipeline's Step 3.
+  // After pipeline completion, the post-pipeline effect compares current props against
+  // this snapshot — if they match, it skips (pipeline already computed correctly).
+  // If they differ (props changed during pipeline run), it falls through and recomputes.
+  const pipelineSnapshotRef = useRef(null);
+
+  // Refs for parent props that should NOT restart the pipeline when their identity changes.
+  // hierarchy and data are stable via react-query caching, but frozenData/frozenType/restrictSelection
+  // come from parent props and can be recreated on every render.
+  const frozenDataRef = useRef(frozenData);
+  frozenDataRef.current = frozenData;
+  const frozenTypeRef = useRef(frozenType);
+  frozenTypeRef.current = frozenType;
+  const restrictSelectionRef = useRef(restrictSelection);
+  restrictSelectionRef.current = restrictSelection;
+
+  // Defer heavy computation until after the Loader has been painted.
+  useEffect(() => {
+    const rafId = requestAnimationFrame(() => {
+      setIsInitialized(true);
+    });
+    return () => cancelAnimationFrame(rafId);
+  }, []);
 
   useEffect(() => {
+    // Skip only the parent's echo of our own pipeline output; still accept genuine
+    // parent-driven updates (e.g. external resets) so they are not dropped.
+    if (pipelineDoneRef.current && boundaryOptionsPage === pipelineBoundaryOptionsRef.current) return;
     setBoundaryOptions(boundaryOptionsPage);
   }, [boundaryOptionsPage]);
-
-  useEffect(() => {
-    setSelectedData(selectedData1);
-  }, [selectedData1]);
 
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -75,77 +112,13 @@ const SelectingBoundaryComponent = ({
         hierarchyType: hierarchyType,
       },
     },
+    config: {
+      gcTime: 1000000,
+      staleTime: 600000,
+    },
   };
 
   const { isLoading: hierarchyLoading, data: hierarchy } = Digit.Hooks.useCustomAPIHook(reqCriteria);
-
-  function processData(rootNode, parentPath = "", lowestBoundaryType) {
-    // Iterative tree walk with explicit stack — avoids deep recursion overhead
-    // and uses direct property assignment instead of object spread for O(n) instead of O(n²)
-    const result = {};
-    const stack = [{ node: rootNode, parentPath }];
-
-    while (stack.length > 0) {
-      const { node, parentPath: pPath } = stack.pop();
-      if (!node) continue;
-
-      const bType = node.boundaryType;
-      const code = node.code;
-      const currentPath = pPath ? `${code}.${pPath}` : code;
-
-      if (!result[bType]) result[bType] = {};
-      result[bType][code] = pPath || "mz";
-
-      if (bType === lowestBoundaryType) continue;
-
-      const children = node.children;
-      if (children && children.length > 0) {
-        for (let i = children.length - 1; i >= 0; i--) {
-          stack.push({ node: children[i], parentPath: currentPath });
-        }
-      }
-    }
-    return result;
-  }
-
-  const boundaryData = useMemo(() => processData(data?.[0], "", lowest), [data, lowest]);
-
-  const updateBoundaryOptions = (selectedData1, boundaryData, hierarchy) => {
-    // Pre-build a lookup from parentBoundaryType → childBoundaryType
-    const parentToChild = {};
-    hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.forEach((boundary) => {
-      if (boundary.parentBoundaryType) {
-        parentToChild[boundary.parentBoundaryType] = boundary.boundaryType;
-      }
-    });
-
-    // Collect all updates, then apply as a single setBoundaryOptions call
-    const updates = {};
-    selectedData1?.forEach((item) => {
-      const { type, code } = item;
-      const childBoundaryType = parentToChild[type];
-      if (childBoundaryType && boundaryData[childBoundaryType]) {
-        if (!updates[childBoundaryType]) updates[childBoundaryType] = {};
-        const childEntries = boundaryData[childBoundaryType];
-        for (const key in childEntries) {
-          if (childEntries[key].split(".").includes(code)) {
-            updates[childBoundaryType][key] = childEntries[key];
-          }
-        }
-      }
-    });
-
-    // Single state update instead of N updates
-    if (Object.keys(updates).length > 0) {
-      setBoundaryOptions((prevOptions) => {
-        const newOptions = { ...prevOptions };
-        for (const childType in updates) {
-          newOptions[childType] = { ...newOptions[childType], ...updates[childType] };
-        }
-        return newOptions;
-      });
-    }
-  };
 
   useEffect(() => {
     setSelectedData(selectedData1);
@@ -154,18 +127,6 @@ const SelectingBoundaryComponent = ({
       setParentRoot(rootItem.type);
     }
   }, [selectedData1]);
-
-  const isBoundaryDataValid = useMemo(() => {
-    return boundaryData && Object.keys(boundaryData).every((key) => key !== "undefined");
-  }, [boundaryData]);
-
-  useEffect(() => {
-    if (isBoundaryDataValid && hierarchy && selectedData1?.length > 0 && boundaryOptions?.[parentRoot]) {
-      startTransition(() => {
-        updateBoundaryOptions(selectedData1, boundaryData, hierarchy);
-      });
-    }
-  }, [hierarchy, isBoundaryDataValid, boundaryOptions?.[parentRoot]]);
 
   function createHierarchyStructure(hierarchy) {
     const hierarchyStructure = {};
@@ -204,27 +165,23 @@ const SelectingBoundaryComponent = ({
     return hierarchyStructure;
   }
 
-  useEffect(() => {
-    if (boundaryData[parentRoot]) {
-      if (!boundaryOptions?.[parentRoot]) {
-        setBoundaryOptions((prevOptions) => ({
-          ...prevOptions,
-          [parentRoot]: boundaryData[parentRoot],
-        }));
-      }
-    }
-  }, [boundaryData, boundaryOptions, parentRoot]);
-
   // Pre-build a reverse index: for each child boundary type, map parent code → { childKey: path }
   // This turns the O(selectedItems * childKeys) hot loop into O(selectedItems) lookups.
-  const childIndexCache = useRef({ key: null, dataRef: null, index: null });
+  // Multi-entry cache: stores indexes for ALL boundary types to avoid thrashing when
+  // updateBoundaryOptions iterates across multiple hierarchy levels.
+  const childIndexCache = useRef({ dataRef: null, indexes: new Map() });
 
   const getChildIndex = useCallback((childBoundaryType) => {
     if (!childBoundaryType || !boundaryData[childBoundaryType]) return null;
     const cache = childIndexCache.current;
-    // Cache hit — same boundary type AND same boundaryData reference
-    if (cache.key === childBoundaryType && cache.dataRef === boundaryData) {
-      return cache.index;
+    // Invalidate entire cache when boundaryData reference changes
+    if (cache.dataRef !== boundaryData) {
+      cache.dataRef = boundaryData;
+      cache.indexes = new Map();
+    }
+    // Cache hit
+    if (cache.indexes.has(childBoundaryType)) {
+      return cache.indexes.get(childBoundaryType);
     }
     // Build: parentCode → { childKey: path, ... }
     const index = {};
@@ -237,7 +194,7 @@ const SelectingBoundaryComponent = ({
         index[part][key] = path;
       }
     }
-    childIndexCache.current = { key: childBoundaryType, dataRef: boundaryData, index };
+    cache.indexes.set(childBoundaryType, index);
     return index;
   }, [boundaryData]);
 
@@ -247,29 +204,32 @@ const SelectingBoundaryComponent = ({
       return;
     }
 
-    // Wrap ALL state updates in startTransition so React can show the loader
+    // Clear case: update state immediately (no startTransition) so child dropdowns
+    // reset their Select All / category checkboxes without delay.
+    if (!data || data.length === 0) {
+      const structure = createHierarchyStructure(hierarchy);
+      const check = structure?.[boundary.boundaryType];
+
+      if (check) {
+        const typesToRemoveSet = new Set([boundary?.boundaryType, ...check]);
+        const updatedSelectedData = selectedData?.filter((item) => !typesToRemoveSet.has(item?.type));
+        const updatedBoundaryData = { ...boundaryOptions };
+        typesToRemoveSet.forEach((type) => {
+          if (type !== boundary?.boundaryType && updatedBoundaryData?.hasOwnProperty(type)) {
+            updatedBoundaryData[type] = {};
+          }
+        });
+        if (!_.isEqual(selectedData, updatedSelectedData)) {
+          setSelectedData(updatedSelectedData);
+        }
+        setBoundaryOptions(updatedBoundaryData);
+      }
+      return;
+    }
+
+    // Wrap selection state updates in startTransition so React can show the loader
     // while the heavy re-render (memoized options, downstream effects) is processed.
     startTransition(() => {
-      if (!data || data.length === 0) {
-        const structure = createHierarchyStructure(hierarchy);
-        const check = structure?.[boundary.boundaryType];
-
-        if (check) {
-          const typesToRemoveSet = new Set([boundary?.boundaryType, ...check]);
-          const updatedSelectedData = selectedData?.filter((item) => !typesToRemoveSet.has(item?.type));
-          const updatedBoundaryData = { ...boundaryOptions };
-          typesToRemoveSet.forEach((type) => {
-            if (type !== boundary?.boundaryType && updatedBoundaryData?.hasOwnProperty(type)) {
-              updatedBoundaryData[type] = {};
-            }
-          });
-          if (!_.isEqual(selectedData, updatedSelectedData)) {
-            setSelectedData(updatedSelectedData);
-          }
-          setBoundaryOptions(updatedBoundaryData);
-        }
-        return;
-      }
 
       let res = isMultiSelect ? data?.map((ob) => ob?.[1]) || [] : [data];
       let transformedRes = [];
@@ -405,16 +365,266 @@ const SelectingBoundaryComponent = ({
     return levels.filter((_, index) => index <= lowestIndex);
   }, [hierarchy, lowest]);
 
-  // Pre-compute options per boundary type once (avoids re-building 50k-item arrays in JSX)
-  const optionsPerType = useMemo(() => {
-    const result = {};
+  // ── Unified async pipeline ──
+  // Merges tree walk (processData), boundary options update, and optionsPerType into ONE
+  // async flow with time-based yielding (~4ms per chunk). This avoids cascading effects
+  // where each state change triggers re-renders and restarts, causing cumulative main-thread blocking.
+  //
+  // frozenData/frozenType/restrictSelection are read from refs to avoid restarting
+  // the expensive tree walk when only their identity changes on parent re-render.
+  // Changes to those props are handled by the post-pipeline sync effect which
+  // recomputes only optionsPerType (Step 3) without redoing Steps 1-2.
+  useEffect(() => {
+    if (!isInitialized || !data?.[0] || !hierarchy) return;
+
+    pipelineDoneRef.current = false;
+    pipelineBoundaryOptionsRef.current = null;
+    pipelineSnapshotRef.current = null;
+    setComputingAll(true);
+    let cancelled = false;
+
+    // Snapshot current values — hierarchy/data are stable react-query refs,
+    // frozenData/frozenType/restrictSelection use refs to avoid dep-array churn.
+    const pipelineHierarchy = hierarchy;
+    const pipelineFrozenData = frozenDataRef.current;
+    const pipelineFrozenType = frozenTypeRef.current;
+    const pipelineRestriction = restrictSelectionRef.current;
+
+    // Yield to browser every ~4ms to keep loader animation at 60fps
+    const YIELD_MS = 4;
+    const yieldControl = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+    const runPipeline = async () => {
+      let lastYield = performance.now();
+      const maybeYield = async () => {
+        if (performance.now() - lastYield >= YIELD_MS) {
+          await yieldControl();
+          if (cancelled) return false;
+          lastYield = performance.now();
+        }
+        return true;
+      };
+
+      // ── Step 1: Tree walk → boundaryData ──
+      const bData = {};
+      const stack = [{ node: data[0], parentPath: "" }];
+
+      while (stack.length > 0) {
+        if (cancelled) return;
+        const { node, parentPath: pPath } = stack.pop();
+        if (!node) continue;
+
+        const bType = node.boundaryType;
+        const code = node.code;
+        const currentPath = pPath ? `${code}.${pPath}` : code;
+
+        if (!bData[bType]) bData[bType] = {};
+        bData[bType][code] = pPath || "mz";
+
+        if (bType !== lowest) {
+          const children = node.children;
+          if (children && children.length > 0) {
+            for (let i = children.length - 1; i >= 0; i--) {
+              stack.push({ node: children[i], parentPath: currentPath });
+            }
+          }
+        }
+
+        if (!(await maybeYield())) return;
+      }
+
+      if (cancelled) return;
+
+      // Validate boundaryData
+      const bdKeys = Object.keys(bData);
+      if (bdKeys.length === 0 || bdKeys.some((k) => k === "undefined")) {
+        console.warn("[SelectingBoundaryComponent] Invalid boundary data keys:", bdKeys);
+        pipelineDoneRef.current = true;
+        setBoundaryData(bData);
+        setComputingAll(false);
+        return;
+      }
+
+      // ── Step 2: Merge boundary options (root + child updates) ──
+      const rootType = pipelineHierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find(
+        (b) => !b.parentBoundaryType
+      )?.boundaryType;
+
+      // Read latest values from refs (not deps) to avoid infinite loop
+      // when parent echoes our output back as props.
+      const currentBoundaryOptionsPage = boundaryOptionsPageRef.current;
+      const currentSelectedData = selectedData1Ref.current;
+
+      let mergedOptions = { ...currentBoundaryOptionsPage };
+
+      // Set root options if missing
+      if (rootType && bData[rootType] && !mergedOptions[rootType]) {
+        mergedOptions = { ...mergedOptions, [rootType]: bData[rootType] };
+      }
+
+      // Build child indexes and update boundary options (like updateBoundaryOptions)
+      if (currentSelectedData?.length > 0 && mergedOptions[rootType]) {
+        const parentToChild = {};
+        pipelineHierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.forEach((b) => {
+          if (b.parentBoundaryType) parentToChild[b.parentBoundaryType] = b.boundaryType;
+        });
+
+        // Build all needed child indexes with yielding
+        const childIndexes = {};
+        for (const childType of Object.values(parentToChild)) {
+          if (cancelled) return;
+          if (!bData[childType]) continue;
+
+          const index = {};
+          const childEntries = bData[childType];
+          for (const key in childEntries) {
+            const path = childEntries[key];
+            const parts = path.split(".");
+            for (const part of parts) {
+              if (!index[part]) index[part] = {};
+              index[part][key] = path;
+            }
+            if (!(await maybeYield())) return;
+          }
+          childIndexes[childType] = index;
+        }
+
+        // Collect updates using indexes
+        const updates = {};
+        currentSelectedData.forEach((item) => {
+          const childType = parentToChild[item.type];
+          if (childType && childIndexes[childType]) {
+            if (!updates[childType]) updates[childType] = {};
+            const matches = childIndexes[childType][item.code];
+            if (matches) Object.assign(updates[childType], matches);
+          }
+        });
+
+        if (Object.keys(updates).length > 0) {
+          for (const childType in updates) {
+            mergedOptions[childType] = { ...mergedOptions[childType], ...updates[childType] };
+          }
+        }
+      }
+
+      if (cancelled) return;
+      await yieldControl();
+      if (cancelled) return;
+      lastYield = performance.now();
+
+      // ── Step 3: Compute optionsPerType from mergedOptions ──
+      const levels = pipelineHierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
+      const lowestIndex = levels.findIndex((b) => b.boundaryType === lowest);
+      const visLevels = levels.filter((_, index) => index <= lowestIndex);
+
+      const frozenSet = pipelineFrozenData?.length > 0
+        ? new Set(pipelineFrozenData.map((f) => `${f.code}::${f.type}`))
+        : null;
+
+      const optResult = {};
+
+      for (let levelIdx = 0; levelIdx < visLevels.length; levelIdx++) {
+        if (cancelled) return;
+
+        const boundary = visLevels[levelIdx];
+        const bType = boundary.boundaryType;
+        const value = mergedOptions[bType];
+
+        if (boundary.parentBoundaryType == null) {
+          if (value) {
+            const keys = Object.keys(value);
+            const arr = new Array(keys.length);
+            for (let i = 0; i < keys.length; i++) {
+              arr[i] = { code: keys[i], name: keys[i], type: bType };
+            }
+            optResult[bType] = arr;
+          } else {
+            optResult[bType] = [];
+          }
+        } else {
+          if (value) {
+            const entries = Object.entries(value);
+            const skipFilter = pipelineRestriction === false;
+            const grouped = new Map();
+
+            for (let i = 0; i < entries.length; i++) {
+              const subkey = entries[i][0];
+              const item = entries[i][1];
+              if (!skipFilter && frozenSet) {
+                if (pipelineFrozenType === "filter" && frozenSet.has(`${subkey}::${bType}`)) continue;
+              }
+              const parentCode = item ? item.split(".")[0] : "";
+              let group = grouped.get(parentCode);
+              if (!group) {
+                group = { code: parentCode, name: parentCode, options: [] };
+                grouped.set(parentCode, group);
+              }
+              group.options.push({ code: subkey, name: subkey, type: bType, parent: parentCode });
+
+              if (!(await maybeYield())) return;
+            }
+
+            optResult[bType] = Array.from(grouped.values());
+          } else {
+            optResult[bType] = [];
+          }
+        }
+
+        await yieldControl();
+        if (cancelled) return;
+        lastYield = performance.now();
+      }
+
+      if (cancelled) return;
+
+      // ── Step 4: Set all state at once — no cascading re-renders ──
+      pipelineDoneRef.current = true;
+      pipelineSnapshotRef.current = {
+        frozenData: pipelineFrozenData,
+        frozenType: pipelineFrozenType,
+        restrictSelection: pipelineRestriction,
+      };
+      pipelineBoundaryOptionsRef.current = mergedOptions;
+      setBoundaryData(bData);
+      setBoundaryOptions(mergedOptions);
+      setOptionsPerType(optResult);
+      setComputingAll(false);
+    };
+
+    runPipeline();
+    return () => { cancelled = true; };
+  }, [isInitialized, data, lowest, hierarchy]);
+
+  // Post-pipeline sync: recompute optionsPerType when boundaryOptions, frozenData,
+  // frozenType, or restrictSelection change after the pipeline has completed.
+  // This covers: (a) user interaction via handleBoundaryChange updating child options,
+  // (b) frozenData/frozenType/restrictSelection prop changes that only need Step 3 recomputation
+  //     without redoing the expensive tree walk (Steps 1-2).
+  // Skips the first run after pipeline completion only if props haven't changed during pipeline.
+  useEffect(() => {
+    if (computingAll) return;
+    // After pipeline completion, check if the props it used still match current values.
+    // If they do, skip — pipeline already computed optionsPerType with these values.
+    // If they differ (props changed during pipeline execution), fall through to recompute.
+    if (pipelineSnapshotRef.current) {
+      const snap = pipelineSnapshotRef.current;
+      pipelineSnapshotRef.current = null;
+      if (
+        frozenData === snap.frozenData &&
+        frozenType === snap.frozenType &&
+        restrictSelection === snap.restrictSelection
+      ) {
+        return;
+      }
+    }
+
     const frozenSet = frozenData?.length > 0
       ? new Set(frozenData.map((f) => `${f.code}::${f.type}`))
       : null;
 
+    const result = {};
     visibleBoundaryLevels.forEach((boundary) => {
       const bType = boundary.boundaryType;
-      // Direct lookup by boundary type instead of iterating all entries with startsWith
       const value = boundaryOptions?.[bType];
 
       if (boundary.parentBoundaryType == null) {
@@ -430,45 +640,49 @@ const SelectingBoundaryComponent = ({
           result[bType] = [];
         }
       } else {
-        // Nested level — grouped options with frozen filtering
+        // Nested level — group by parent code
         if (value) {
           const entries = Object.entries(value);
-          const arr = [];
           const skipFilter = restrictSelection === false;
+          const grouped = new Map();
+
           for (let i = 0; i < entries.length; i++) {
             const subkey = entries[i][0];
             const item = entries[i][1];
             if (!skipFilter && frozenSet) {
-              const isFrozen = frozenSet.has(`${subkey}::${bType}`);
-              if (frozenType === "filter" && isFrozen) continue;
+              if (frozenType === "filter" && frozenSet.has(`${subkey}::${bType}`)) continue;
             }
             const parentCode = item ? item.split(".")[0] : "";
-            arr.push({
-              code: parentCode,
-              name: parentCode,
-              options: [{ code: subkey, name: subkey, type: bType, parent: parentCode }],
-            });
+            let group = grouped.get(parentCode);
+            if (!group) {
+              group = { code: parentCode, name: parentCode, options: [] };
+              grouped.set(parentCode, group);
+            }
+            group.options.push({ code: subkey, name: subkey, type: bType, parent: parentCode });
           }
-          result[bType] = arr;
+
+          result[bType] = Array.from(grouped.values());
         } else {
           result[bType] = [];
         }
       }
     });
-    return result;
-  }, [boundaryOptions, visibleBoundaryLevels, restrictSelection, frozenData, frozenType]);
+
+    setOptionsPerType(result);
+  }, [boundaryOptions, computingAll, visibleBoundaryLevels, restrictSelection, frozenData, frozenType]);
 
   // Pre-compute selected items grouped by type
   const selectedPerType = useMemo(() => {
+    if (computingAll) return {};
     const result = {};
     selectedData?.forEach((item) => {
       if (!result[item?.type]) result[item.type] = [];
       result[item.type].push(item);
     });
     return result;
-  }, [selectedData]);
+  }, [selectedData, computingAll]);
 
-  if (hierarchyLoading) return <Loader page={true} variant={"PageLoader"} />;
+  if (hierarchyLoading || !isInitialized || computingAll) return <Loader page={true} variant={"PageLoader"} />;
 
   return (
     <>
