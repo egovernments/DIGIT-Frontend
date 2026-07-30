@@ -346,14 +346,35 @@ const MultiSelectDropdown = ({
     }
   }
 
-  // Use a content-based key so the sync fires when selected items change, not just count
-  const selectedSyncKey = useMemo(() => selected?.map((s) => s?.code).join(",") ?? "", [selected]);
+  // Lightweight rolling checksum over all codes: O(n) without building a huge
+  // joined string, and unlike length + bookends it detects mid-list replacements.
+  const selectedSyncKey = useMemo(() => {
+    if (!selected || selected.length === 0) return "";
+    let hash = 0;
+    for (let i = 0; i < selected.length; i++) {
+      const code = selected[i]?.code || "";
+      for (let j = 0; j < code.length; j++) {
+        hash = (hash * 31 + code.charCodeAt(j)) | 0;
+      }
+      hash = (hash * 31 + i) | 0;
+    }
+    return `${selected.length}|${hash}`;
+  }, [selected]);
 
   useEffect(() => {
-    dispatch({
-      type: "REPLACE_COMPLETE_STATE",
-      payload: fnToSelectOptionThroughProvidedSelection(selected),
+    // Use React.startTransition so the heavy dispatch (16k+ items in boundary dropdowns)
+    // doesn't block user interactions like Clear All clicks.
+    React.startTransition(() => {
+      dispatch({
+        type: "REPLACE_COMPLETE_STATE",
+        payload: fnToSelectOptionThroughProvidedSelection(selected),
+      });
     });
+    // Reset Select All and category checkboxes when selection is cleared externally (e.g., parent dropdown cleared)
+    if (!selected || selected.length === 0) {
+      setSelectAllChecked(false);
+      setCategorySelected({});
+    }
   }, [selectedSyncKey]);
 
   // useEffect(() => {
@@ -406,32 +427,39 @@ const MultiSelectDropdown = ({
     return false;
   }, [selectedCodesSet]);
 
+  // Inline selection check to avoid stale closure from useCallback checkSelection.
+  // This ensures the effect always reads the current render's selectedCodesSet directly.
+  // Wrapped in React.startTransition so the heavy iteration (16k+ boundary items) doesn't
+  // block user interactions.
   useEffect(() => {
-    const allOptionsSelected =
-      variant === "nestedmultiselect" ? checkSelection(flattenedOptions.filter((option) => !option.options)) : checkSelection(options);
+    React.startTransition(() => {
+      const inlineCheck = (items) => items && items.length > 0 ? items.every((o) => selectedCodesSet.has(o.code)) : false;
+      const leafOptions = variant === "nestedmultiselect" ? flattenedOptions.filter((option) => !option.options) : options;
+      const allOptionsSelected = inlineCheck(leafOptions);
 
-    setSelectAllChecked(allOptionsSelected);
+      setSelectAllChecked(allOptionsSelected);
 
-    const query = deferredSearchQuery?.toLowerCase();
-    const newCategorySelected = {};
-    options
-      .filter((option) => option.options)
-      .forEach((category) => {
-        let filteredCategoryOptions = category.options;
+      const query = deferredSearchQuery?.toLowerCase();
+      const newCategorySelected = {};
+      options
+        .filter((option) => option.options)
+        .forEach((category) => {
+          let filteredCategoryOptions = category.options;
 
-        if (query?.length > 0) {
-          filteredCategoryOptions = category.options.filter((option) =>
-            t(option?.code)?.toLowerCase()?.includes(query)
-          );
-        }
+          if (query?.length > 0) {
+            filteredCategoryOptions = category.options.filter((option) =>
+              t(option?.code)?.toLowerCase()?.includes(query)
+            );
+          }
 
-        if (filteredCategoryOptions?.length > 0) {
-          newCategorySelected[category.code] = checkSelection(filteredCategoryOptions);
-        }
-      });
+          if (filteredCategoryOptions?.length > 0) {
+            newCategorySelected[category.code] = inlineCheck(filteredCategoryOptions);
+          }
+        });
 
-    setCategorySelected(newCategorySelected);
-  }, [options, selectedCodesSet, deferredSearchQuery, checkSelection, flattenedOptions, variant, t]);
+      setCategorySelected(newCategorySelected);
+    });
+  }, [options, selectedCodesSet, deferredSearchQuery, flattenedOptions, variant, t]);
 
   function handleOutsideClickAndSubmitSimultaneously() {
     setActive(false);
@@ -744,13 +772,18 @@ const MultiSelectDropdown = ({
       const existing = seenCodes.get(option?.code);
 
       if (existing) {
-        // If the code already exists, merge the new options into the copy
+        // Merge children via push instead of concat to avoid O(n²) array copying.
+        // concat copies the entire accumulated array on each call; push is O(1) amortized.
         if (option.options) {
-          existing.options = (existing.options || []).concat(option.options);
+          if (!existing.options) existing.options = [];
+          for (let k = 0; k < option.options.length; k++) {
+            existing.options.push(option.options[k]);
+          }
         }
       } else {
-        // Create a shallow copy to avoid mutating the original option
-        const copy = option.options ? { ...option, options: [...option.options] } : option;
+        // Always shallow copy to avoid mutating the caller's memoized option objects.
+        // Without this, a later duplicate merge (push onto existing.options) would mutate the original.
+        const copy = { ...option, options: option.options ? [...option.options] : [] };
         seenCodes.set(option?.code, copy);
         flattened.push(copy);
       }
@@ -886,8 +919,8 @@ const MultiSelectDropdown = ({
       );
     }
 
-    // Add 2px buffer to prevent sub-pixel scrollbar when items exactly fill the container
-    const listHeight = Math.min(optionsToRender.length, MAX_VISIBLE_ITEMS) * ITEM_HEIGHT + 2;
+    // Add 2px buffer when there's only one option to prevent a sub-pixel scrollbar
+    const listHeight = Math.min(optionsToRender.length, MAX_VISIBLE_ITEMS) * ITEM_HEIGHT + (optionsToRender.length === 1 ? 2 : 0);
 
     const VirtualizedRow = ({ index, style }) => {
       const option = optionsToRender[index];
@@ -925,7 +958,7 @@ const MultiSelectDropdown = ({
           itemSize={ITEM_HEIGHT}
           width="100%"
           overscanCount={OVERSCAN_COUNT}
-          style={{ overflowX: "hidden" }}
+          style={optionsToRender.length === 1 ? { overflowX: "hidden" } : undefined}
         >
           {VirtualizedRow}
         </List>
@@ -995,7 +1028,7 @@ const MultiSelectDropdown = ({
           </div>
         </div>
         {active ? (
-          <div className="digit-multiselectdropdown-server" id="jk-dropdown-unique" style={ServerStyle ? ServerStyle : {}}>
+          <div className="digit-multiselectdropdown-server" id="jk-dropdown-unique" style={{ overflow: "visible", maxHeight: "none", ...(ServerStyle || {}) }}>
             {variant === "treemultiselect" ? (
               <TreeSelect
                 options={parentOptionsWithChildren}
