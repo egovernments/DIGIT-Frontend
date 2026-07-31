@@ -26,12 +26,6 @@ const createTabConfig = (label, moduleName) => ({
         defaultValues: {
           campaignName: "",
         },
-        sortConfig: {
-          initialSortOrder: "desc",
-          label: "SORT",
-          variation: "teritiary",
-          icon: "ImportExport",
-        },
         fields: [
           {
             label: "CAMPAIGN_SEARCH_NAME",

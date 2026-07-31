@@ -126,6 +126,7 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
           placeholder={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_NAME_EXAMPLE)}
           value={name}
           onChange={(event) => {
+            if (event.target.value.length > 30) return;
             setStartValidation(true);
             setName(event.target.value);
           }}

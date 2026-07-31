@@ -34,6 +34,7 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
 
   const {
     campaignData,
+    storedCampaignId,
     initializeData,
     initialized,
     loading: storeLoading,
@@ -129,6 +130,17 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     prevCampaignIdRef.current = currentCampaignId;
   }, [selectedProjectType, currentCampaignId, resetData]);
 
+  // If the Redux store holds data for a different campaign, reset it so
+  // the initialization effect below can run fresh for the current campaign.
+  useEffect(() => {
+    if (initialized && currentCampaignId && storedCampaignId && storedCampaignId !== currentCampaignId) {
+      resetData();
+      hasInitialSyncRef.current = false;
+      prevCycleCountRef.current = null;
+      prevDeliveryCountRef.current = null;
+    }
+  }, [initialized, currentCampaignId, storedCampaignId, resetData]);
+
   // Initialize campaign data when dependencies are ready
   useEffect(() => {
     if (!cycleData?.cycleConfgureDate || !effectiveDeliveryConfig) {
@@ -147,12 +159,12 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     }
 
     try {
-      initializeData(cycles, deliveries, effectiveDeliveryConfig, savedDeliveryRules, attributeConfigRef.current, operatorConfigRef.current);
+      initializeData(cycles, deliveries, effectiveDeliveryConfig, savedDeliveryRules, attributeConfigRef.current, operatorConfigRef.current, currentCampaignId);
     } catch (error) {
       console.error('Error initializing campaign data:', error);
       setErrorState(error.message);
     }
-  }, [cycleData, effectiveDeliveryConfig, initialized, initializeData, savedDeliveryRules, setErrorState]);
+  }, [cycleData, effectiveDeliveryConfig, initialized, initializeData, savedDeliveryRules, setErrorState, currentCampaignId]);
 
   // Perform initial sync after initialization to handle saved data with different counts
   useEffect(() => {
@@ -289,12 +301,9 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     }
   }, [dataError, setErrorState]);
 
-  // Clean up on unmount
-  useEffect(() => {
-    return () => {
-      resetData();
-    };
-  }, [resetData]);
+  // No unmount cleanup — the module-level Redux store persists across navigations
+  // (e.g. navigating to add-product and back). Stale data for a different campaign
+  // is handled by the campaign ID comparison effect above.
 
   // Counteract Dropdown components' built-in scrollIntoView({behavior:"smooth"})
   // that fires on mount when the element is below the viewport.

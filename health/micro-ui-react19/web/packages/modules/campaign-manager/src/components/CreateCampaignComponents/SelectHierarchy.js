@@ -17,12 +17,24 @@ import {
 const MAX_VISIBLE_LEVELS = 5;
 
 const hasDependentData = (formData) => {
+  // Check for actual data content, not just key existence — IndexedDB keys
+  // can persist across sessions/campaigns and produce false positives.
+  const hasBoundarySelections =
+    formData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData?.length > 0;
+  const hasUploadedBoundary =
+    formData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0;
+  const hasUploadedFacility =
+    formData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0;
+  const hasUploadedUser =
+    formData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length > 0;
+  const hasUploadedUnified =
+    formData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.length > 0;
   return !!(
-    formData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA ||
-    formData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA ||
-    formData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA ||
-    formData?.HCM_CAMPAIGN_UPLOAD_USER_DATA ||
-    formData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA
+    hasBoundarySelections ||
+    hasUploadedBoundary ||
+    hasUploadedFacility ||
+    hasUploadedUser ||
+    hasUploadedUnified
   );
 };
 
@@ -163,8 +175,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
   const onHierarchySelect = (value) => {
     if (isSameHierarchy(selected, value)) return;
     const isHierarchyChanged = hierarchyValue && !isSameHierarchy(hierarchyValue, value);
-    const hasData = hasDependentData(formStorageData) || !!(formData?.SelectHierarchy?.hasBoundaryData);
-    if (isHierarchyChanged && hasData) {
+    if (isHierarchyChanged && hasDependentData(formStorageData)) {
       setPendingSelection(value);
       setShowConfirmPopup(true);
     } else {

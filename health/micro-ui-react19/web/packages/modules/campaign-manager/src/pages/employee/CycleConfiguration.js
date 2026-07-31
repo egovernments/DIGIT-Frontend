@@ -113,7 +113,6 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   const campaignNumber = searchParams.get("campaignNumber");
   const selectedProjectType =
     formStorageData?.HCM_CAMPAIGN_TYPE?.projectType?.code || searchParams.get("projectType");
-  const campaignName = formStorageData?.HCM_CAMPAIGN_NAME?.campaignName;
   const [filteredDeliveryConfig, setFilterDeliveryConfig] = useState(null);
   const { isLoading: deliveryConfigLoading, data } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -355,18 +354,12 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
         <div className="card-container2">
           <div style={{ marginBottom: "1.5rem" }}>
             <Card>
-              <TagComponent campaignName={campaignName} />
+              {tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate && tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate && (
+                <TagComponent campaignName={`${convertEpochToNewDateFormat(tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)} - ${convertEpochToNewDateFormat(tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)}`} />
+              )}
               <HeaderComponent className="cycle-configuration-heading">
                 {t(`CAMPAIGN_PROJECT_${selectedProjectType.toUpperCase()}`)}
               </HeaderComponent>
-              {tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate && tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate && (
-                <p className="dates-description" style={{margin:"0rem"}}>
-                  {`${convertEpochToNewDateFormat(tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)} - ${convertEpochToNewDateFormat(
-                    tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
-                  )}`}
-                </p>
-              )}
-              <CardText style={{fontSize:"19px",color:"#505a5f"}}>{t(`CAMPAIGN_CYCLE_CONFIGURE_HEADING_${selectedProjectType.toUpperCase()}`)}</CardText>
               <LabelFieldPair>
                 <CardLabel className="cycleBold" style={{ fontWeight: "700",width:"40%" }}>
                   {t(I18N_KEYS.PAGES.CAMPAIGN_NO_OF_CYCLE)}

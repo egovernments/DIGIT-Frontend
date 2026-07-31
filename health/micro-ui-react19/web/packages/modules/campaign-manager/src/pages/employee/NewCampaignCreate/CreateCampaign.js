@@ -9,11 +9,13 @@ import { transformCreateData } from "../../../utils/transformCreateData";
 import { handleCreateValidate } from "../../../utils/handleCreateValidate";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import useCampaignStore from "../../../hooks/useCampaignStore";
-import { resetAllCampaignData, clearSelectedHierarchy, clearSelectedHierarchyCode } from "../../../store/campaignStore";
+import { resetAllCampaignData, resetCreateCampaignData, clearSelectedHierarchy, clearSelectedHierarchyCode } from "../../../store/campaignStore";
 import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 const CreateCampaign = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [showToast, setShowToast] = useState(null);
   const [totalFormData, setTotalFormData] = useState({});
@@ -164,13 +166,16 @@ const CreateCampaign = () => {
     setTotalFormData(params);
   }, [params]);
 
+  // Reset all campaign state when entering for a new campaign (no id).
+  // location.key changes on every navigation, ensuring this runs even if
+  // the component stays mounted across back/forward navigations.
   useEffect(() => {
-    if (!id) {
-      dispatch(clearSelectedHierarchy());
-      dispatch(clearSelectedHierarchyCode());
-      setParams({});  // Clear stale campaign name/date/type from previous flow
+    if (!id && !editName && !fromTemplate) {
+      dispatch(resetCreateCampaignData());
+      setParams({});
+      hasLoadedDraft.current = false;
     }
-  }, []);
+  }, [location.key]);
 
   useEffect(() => {
     updateUrlParams({ key: currentKey });
