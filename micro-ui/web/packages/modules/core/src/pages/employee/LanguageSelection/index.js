@@ -45,12 +45,13 @@ const LanguageSelection = () => {
   return (
     <Background>
       <Card className={"bannerCard removeBottomMargin languageSelection"}>
-        <div className="bannerHeader">
+        <div className="bannerHeader language-selector">
           <ImageComponent className="bannerLogo" src={stateInfo?.logoUrl} alt="Digit Banner Image" />
 
           <p>{t(`TENANT_TENANTS_${stateInfo?.code?.toUpperCase()}`)}</p>
         </div>
-        <div className="language-selector" style={{ justifyContent: "space-around", marginBottom: "24px", padding: "0 5%" }}>
+        <div className="language-selector-header">{t("CS_COMMON_CHOOSE_LANGUAGE_HEADER")}</div>
+        <div className="language-selector" style={{ justifyContent: "space-around", padding: "0 5%" }}>
           {defaultLanguages.map((language, index) => (
             <div className="language-button-container" key={index}>
               <CustomButton

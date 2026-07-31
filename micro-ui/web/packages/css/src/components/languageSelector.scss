@@ -2,6 +2,45 @@
   @apply flex flex-wrap;
 }
 
+.banner {
+  .bannerHeader {
+    &.language-selector {
+      margin-bottom: 0rem;
+    }
+  }
+}
+
+.bannerCard{
+  &.languageSelection{
+    gap: 1.5rem;
+  }
+}
+
+.language-selector-header{
+  color: var(--digitv2-lightTheme-primary-2);
+  font-family: var(--digitv2-fontFamily-sans);
+  font-style: var(--digitv2-fontStyle-normal);
+  font-weight: var(--digitv2-fontWeight-bold);
+  line-height: 1.14rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: var(--digitv2-fontSize-heading-m-mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: var(--digitv2-fontSize-heading-m-tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: var(--digitv2-fontSize-heading-m-desktop);
+  }
+}
 .language-selector div:not(:first-child) {
   margin-left: 10px;
 }
@@ -11,12 +50,14 @@
 }
 .bannerCard .customBtn {
   border-color: var(--digitv2-lightTheme-text-color-secondary);
+  border-radius: 0.5rem;
 }
 .bannerCard .customBtn:focus {
   outline: none;
 }
 .bannerCard .customBtn-selected {
   border-color: transparent;
+  border-radius: 0.5rem;
 }
 .bannerCard .bannerHeader p {
   font-size: 19px;
