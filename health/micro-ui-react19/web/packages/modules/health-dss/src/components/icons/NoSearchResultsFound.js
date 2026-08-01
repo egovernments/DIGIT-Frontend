@@ -1,30 +1,16 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { SVG } from "@egovernments/digit-ui-components";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
-const NoSearchResultsFound = (props) => {
+const NoSearchResultsFound = ({ height = 262, width = 336, className, style, text }) => {
   const { t } = useTranslation();
-  const iconHeight = props?.height || 262;
-  const iconWidth = props?.width || 336;
   return (
-    <div className={`digit-no-data-found ${props?.className ? props?.className : ""}`} style={props?.style}>
-      <SVG.NoResultsFoundIcon height={iconHeight} width={iconWidth} />
-      <span className="digit-error-msg">{props?.text ? t(props?.text) : t(I18N_KEYS.COMPONENTS.COMMON_NO_RESULTS_FOUND)}</span>
+    <div className={`digit-no-data-found ${className ? className : ""}`} style={style}>
+      <SVG.NoResultsFoundIcon height={height} width={width} />
+      <span className="digit-error-msg">{text ? t(text) : t(I18N_KEYS.COMMON.COMMON_NO_RESULTS_FOUND)}</span>
     </div>
   );
 };
-NoSearchResultsFound.propTypes = {
-  style: PropTypes.object,
-  className: PropTypes.string,
-  height: PropTypes.number, // Prop for the height of the NoResultsFoundIcon
-  width: PropTypes.number, // Prop for the width of the NoResultsFoundIcon
-};
 
-// Default props for height and width
-NoSearchResultsFound.defaultProps = {
-  height: 262,
-  width: 336,
-};
 export default NoSearchResultsFound;
