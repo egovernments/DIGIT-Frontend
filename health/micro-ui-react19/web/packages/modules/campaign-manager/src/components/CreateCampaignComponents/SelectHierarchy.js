@@ -18,11 +18,11 @@ const MAX_VISIBLE_LEVELS = 5;
 
 const hasDependentData = (formData) => {
   return !!(
-    formData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA ||
-    formData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA ||
-    formData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA ||
-    formData?.HCM_CAMPAIGN_UPLOAD_USER_DATA ||
-    formData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA
+    formData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData?.length > 0 ||
+    formData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
+    formData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
+    formData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length > 0 ||
+    formData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.length > 0
   );
 };
 
@@ -163,7 +163,8 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
   const onHierarchySelect = (value) => {
     if (isSameHierarchy(selected, value)) return;
     const isHierarchyChanged = hierarchyValue && !isSameHierarchy(hierarchyValue, value);
-    const hasData = hasDependentData(formStorageData) || !!(formData?.SelectHierarchy?.hasBoundaryData);
+    // const hasData = hasDependentData(formStorageData) || !!(formData?.SelectHierarchy?.hasBoundaryData);
+        const hasData = hasDependentData(formStorageData);
     if (isHierarchyChanged && hasData) {
       setPendingSelection(value);
       setShowConfirmPopup(true);
@@ -395,6 +396,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
               onClick={onConfirmChange}
             />,
           ]}
+          showAlertAsSvg={true}
         />
       )}
     </React.Fragment>
