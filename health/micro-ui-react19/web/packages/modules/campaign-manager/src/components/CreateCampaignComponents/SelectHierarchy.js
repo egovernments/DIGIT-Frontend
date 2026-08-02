@@ -406,6 +406,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
               onClick={onConfirmChange}
             />,
           ]}
+          showAlertAsSvg={true}
         />
       )}
     </React.Fragment>

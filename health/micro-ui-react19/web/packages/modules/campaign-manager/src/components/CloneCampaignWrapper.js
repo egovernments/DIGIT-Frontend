@@ -108,6 +108,7 @@ const CloneCampaignWrapper = (props) => {
       additionalDetails: {
         ...props?.row?.additionalDetails,
         cloneFrom: props?.row?.campaignNumber,
+        clonedCampaignId:props?.row?.id
       },
     };
 

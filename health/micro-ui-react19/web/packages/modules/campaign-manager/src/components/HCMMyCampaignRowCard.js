@@ -147,7 +147,9 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
     actions.downloadUserCreds = {
       label: "EDIT_CREATING_CAMPAIGN",
       title: "EDIT_CREATING_CAMPAIGN",
-      onClick: () => setShowCreatingPopUp(true),
+      // onClick: () => setShowCreatingPopUp(true),
+      onClick:()=>{},
+      disabled:true,
       size: "medium",
       variation: "secondary",
       icon: "Edit",
@@ -544,6 +546,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
                   title={t(btn.title) || ""}
                   style={btn.style}
                   id={btn.id || "my-campaigns-row-card-button"}
+                  isDisabled={btn.disabled || false}
                 />
               ))}
             </div>

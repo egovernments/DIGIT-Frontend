@@ -28,7 +28,7 @@ import {
   formatFileSize,
   formatRowCount,
 } from "../../utils/reportStatus";
-import { UndrawEmpty } from "../../components/icons/UndrawEmpty";
+import NoSearchResultsFound from "../../components/icons/NoSearchResultsFound";
 
 const downloadFileFromStore = ({ fileStoreId, customName }) => {
   if (!fileStoreId) return;
@@ -626,8 +626,7 @@ const ReportDetailPage = () => {
               />
             </div>
           </div>
-          {totalReports === 0 && totalInProgress === 0 ? null : (
-            <div className="digit-report-detail__custom-btn">
+          <div className="digit-report-detail__custom-btn">
               <Button
                 label={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_CUSTOM_RANGE)}
                 onClick={() => setShowCustomPopup(true)}
@@ -635,8 +634,7 @@ const ReportDetailPage = () => {
                 icon="AddIcon"
                 size="medium"
               />
-            </div>
-          )}
+          </div>
         </div>
       </Card>
 
@@ -690,20 +688,20 @@ const ReportDetailPage = () => {
               justifyContent: "center",
             }}
           >
-            <UndrawEmpty />
-            <span className="digit-no-data-found-text">
+            <NoSearchResultsFound width={280} height={220} text={t(I18N_KEYS.PAGES.HCM_NO_REPORTS_GENERATED)}/>
+            {/* <span className="digit-no-data-found-text">
               {t(I18N_KEYS.PAGES.HCM_NO_REPORTS_GENERATED)}
-            </span>
-            <p className="digit-no-data-found-description">
+            </span> */}
+            {/* <p className="digit-no-data-found-description">
               {t(I18N_KEYS.PAGES.HCM_NO_REPORTS_GENERATED_DESCRIPTION)}
-            </p>
-            <Button
+            </p> */}
+            {/* <Button
               label={t(I18N_KEYS.PAGES.HCM_DOWNLOAD_CUSTOM_RANGE)}
               onClick={() => setShowCustomPopup(true)}
               variation="primary"
               icon="AddIcon"
               size="medium"
-            />
+            /> */}
           </div>
         </Card>
       ) : (
@@ -720,15 +718,17 @@ const ReportDetailPage = () => {
                       <div className="digit-accordion-titile-dashboard">
                         {t(`HCM_REPORT_FREQUENCY_${frequency}_REPORTS`)}
                       </div>
-                      <Tag
-                        label={`${reports.length} ${
-                          reports.length === 1
-                            ? t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT_SINGLE)
-                            : t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT)
-                        }`}
-                        stroke={true}
-                        type={"monochrome"}
-                      />
+                      {reports.length === 0 ? null : (
+                        <Tag
+                          label={`${reports.length} ${
+                            reports.length === 1
+                              ? t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT_SINGLE)
+                              : t(I18N_KEYS.PAGES.HCM_REPORTS_COUNT)
+                          }`}
+                          stroke={true}
+                          type={"monochrome"}
+                        />
+                      )}
                     </div>
                   }
                   isOpenInitially={allFrequencies.length === 1}

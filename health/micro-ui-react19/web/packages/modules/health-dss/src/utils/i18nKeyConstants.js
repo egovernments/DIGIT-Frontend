@@ -7,6 +7,7 @@ export const I18N_KEYS = {
     DSS_FILTERS_APPLIED: "DSS_FILTERS_APPLIED",
     DSS_SHOW_MORE: "DSS_SHOW_MORE",
     ES_DSS_SHARE_IMAGE: "ES_DSS_SHARE_IMAGE",
+    COMMON_NO_RESULTS_FOUND:"COMMON_NO_RESULTS_FOUND"
   },
 
   // ─── FILTERS (Filters, FiltersNational, FilterByCycle, DateRange) ──────────
