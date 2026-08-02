@@ -561,6 +561,7 @@ const MultiSelectDropdown = ({
       setIsProcessing(true);
       requestAnimationFrame(() => {
         startTransition(() => {
+          let updatedState;
           if (selectAllChecked) {
             // Only remove items that are in the current options, keep others
             const currentOptionCodesSet = new Set(
@@ -568,10 +569,10 @@ const MultiSelectDropdown = ({
                 ? flattenedOptions.filter((option) => !option.options).map((option) => option.code)
                 : options.map((option) => option.code)
             );
-            const remainingSelections = alreadyQueuedSelectedState.filter(
+            updatedState = alreadyQueuedSelectedState.filter(
               (selected) => !currentOptionCodesSet.has(selected.code) || frozenCodesSet.has(selected.code)
             );
-            dispatch({ type: "REPLACE_COMPLETE_STATE", payload: remainingSelections });
+            dispatch({ type: "REPLACE_COMPLETE_STATE", payload: updatedState });
             setSelectAllChecked(false);
           } else {
             // Build the new selections from current options
@@ -594,17 +595,17 @@ const MultiSelectDropdown = ({
               propsData: [null, option],
             }));
 
-            const mergedPayload = [...existingSelections, ...newPayload];
+            updatedState = [...existingSelections, ...newPayload];
 
             dispatch({
               type: "REPLACE_COMPLETE_STATE",
-              payload: mergedPayload,
+              payload: updatedState,
             });
             setSelectAllChecked(true);
           }
           setIsProcessing(false);
           onSelect(
-            alreadyQueuedSelectedState?.map((e) => e.propsData),
+            updatedState?.map((e) => e.propsData),
             getCategorySelectAllState(),
             props
           );

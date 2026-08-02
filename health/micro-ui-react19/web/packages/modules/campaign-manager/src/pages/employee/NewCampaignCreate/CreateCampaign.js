@@ -9,8 +9,7 @@ import { transformCreateData } from "../../../utils/transformCreateData";
 import { handleCreateValidate } from "../../../utils/handleCreateValidate";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import useCampaignStore from "../../../hooks/useCampaignStore";
-import { resetAllCampaignData, resetCreateCampaignData, clearSelectedHierarchy, clearSelectedHierarchyCode } from "../../../store/campaignStore";
-import { useDispatch } from "react-redux";
+import { resetAllCampaignData, resetCreateCampaignData, clearSelectedHierarchy, clearSelectedHierarchyCode, campaignStore } from "../../../store/campaignStore";
 import { useLocation } from "react-router-dom";
 const CreateCampaign = () => {
   const { t } = useTranslation();
@@ -25,7 +24,6 @@ const CreateCampaign = () => {
   const fromTemplate = searchParams.get("fromTemplate");
   const [params, setParams] = useCampaignStore("HCM_ADMIN_CONSOLE_DATA", {});
   const [storedHierarchy] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
-  const dispatch = useDispatch();
   const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData, editName, fromTemplate));
   const [loader, setLoader] = useState(null);
   const skip = searchParams.get("skip");
@@ -170,8 +168,8 @@ const CreateCampaign = () => {
   // location.key changes on every navigation, ensuring this runs even if
   // the component stays mounted across back/forward navigations.
   useEffect(() => {
-    if (!id && !editName && !fromTemplate) {
-      dispatch(resetCreateCampaignData());
+    if (!id && !searchParams.get("campaignNumber") && !editName && !fromTemplate) {
+      campaignStore.dispatch(resetCreateCampaignData());
       setParams({});
       hasLoadedDraft.current = false;
     }
@@ -250,7 +248,7 @@ const CreateCampaign = () => {
   };
 
   const cleanupSessionAndNavigate = (campNumber, campTenantId) => {
-    dispatch(resetAllCampaignData());
+    campaignStore.dispatch(resetAllCampaignData());
     const baseUrl = `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campNumber}&tenantId=${campTenantId}`;
     navigate(isDraft === "true" ? `${baseUrl}&draft=true` : baseUrl);
   };

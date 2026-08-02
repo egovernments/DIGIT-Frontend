@@ -354,9 +354,13 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
         <div className="card-container2">
           <div style={{ marginBottom: "1.5rem" }}>
             <Card>
-              {tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate && tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate && (
-                <TagComponent campaignName={`${convertEpochToNewDateFormat(tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)} - ${convertEpochToNewDateFormat(tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)}`} />
-              )}
+              {dateRange?.startDate && dateRange?.endDate && (() => {
+                const startFormatted = convertEpochToNewDateFormat(dateRange.startDate);
+                const endFormatted = convertEpochToNewDateFormat(dateRange.endDate);
+                return startFormatted && endFormatted ? (
+                  <TagComponent campaignName={`${startFormatted} - ${endFormatted}`} />
+                ) : null;
+              })()}
               <HeaderComponent className="cycle-configuration-heading">
                 {t(`CAMPAIGN_PROJECT_${selectedProjectType.toUpperCase()}`)}
               </HeaderComponent>

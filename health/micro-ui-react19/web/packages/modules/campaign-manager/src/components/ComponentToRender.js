@@ -102,8 +102,9 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
     const panelContent = fieldPanelConfig?.drawerPanelConfig?.content || [];
     const defaultValueConfig = panelContent.find((item) => item.id === "defaultValue");
     const enabledTypes = defaultValueConfig?.visibilityEnabledFor || [];
-    if (enabledTypes.includes(field?.type) && typeof field?.value === "number") {
-      return field.value;
+    if (enabledTypes.includes(field?.type) && field?.value != null && field?.value !== "" && field?.value !== true) {
+      const num = Number(field.value);
+      if (!isNaN(num)) return num;
     }
     return "";
   }, [fieldPanelConfig, field?.type, field?.value]);

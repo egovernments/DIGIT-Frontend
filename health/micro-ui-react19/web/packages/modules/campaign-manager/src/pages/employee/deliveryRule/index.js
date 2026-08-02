@@ -133,7 +133,7 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
   // If the Redux store holds data for a different campaign, reset it so
   // the initialization effect below can run fresh for the current campaign.
   useEffect(() => {
-    if (initialized && currentCampaignId && storedCampaignId && storedCampaignId !== currentCampaignId) {
+    if (initialized && storedCampaignId && storedCampaignId !== currentCampaignId) {
       resetData();
       hasInitialSyncRef.current = false;
       prevCycleCountRef.current = null;

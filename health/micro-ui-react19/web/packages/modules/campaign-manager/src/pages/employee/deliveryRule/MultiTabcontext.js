@@ -89,6 +89,7 @@ const MultiTab = React.memo(({ projectConfig, attributeConfig, operatorConfig, d
 
     const startDate = convertEpochToNewDateFormat(campaignDates.startDate);
     const endDate = convertEpochToNewDateFormat(campaignDates.endDate);
+    if (!startDate || !endDate) return "";
     return `${startDate} - ${endDate}`;
   }, [campaignDates]);
 
