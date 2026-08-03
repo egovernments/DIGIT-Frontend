@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useRef } from "react";
+import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Loader, Button, Toast } from "@egovernments/digit-ui-components";
 import DataSyncCard from "./DataSyncCard";
@@ -85,7 +85,7 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   };
 };
 
-const TransactionSummaryTab = ({ stockSummary, tenantId, campaignId, campaignNumber, projectId, dateRange, userBoundary, userBoundaries, isTopLevel }) => {
+const TransactionSummaryTab = ({ stockSummary, tenantId, campaignId, campaignNumber, projectId, dateRange, dataVersion, userBoundary, userBoundaries, isTopLevel, cycle }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [showToast, setShowToast] = useState(null);
@@ -126,12 +126,17 @@ const TransactionSummaryTab = ({ stockSummary, tenantId, campaignId, campaignNum
 
   // Query 1: transactions where the user's facility is the facilityId side
   // Query 2: transactions where the user's facility is the transactingFacilityId side
-  // Together these cover every transaction touching the user's facility in either direction —
-  // mirrors the 2-query combine pattern used by NewShipmentPopup's commodityFacilityStockByFacility call.
-  const facilityFilters = useMemo(() => ({ facilityId: userOwnFacilityId || "" }), [userOwnFacilityId]);
-  const transactingFilters = useMemo(() => ({ transactingFacilityId: userOwnFacilityId || "" }), [userOwnFacilityId]);
+  // Together these cover every transaction touching the user's facility in either direction.
+  const facilityFilters = useMemo(
+    () => ({ facilityId: userOwnFacilityId || "", ...(cycle ? { cycle } : {}) }),
+    [userOwnFacilityId, cycle]
+  );
+  const transactingFilters = useMemo(
+    () => ({ transactingFacilityId: userOwnFacilityId || "", ...(cycle ? { cycle } : {}) }),
+    [userOwnFacilityId, cycle]
+  );
 
-  const { data: facilityStockData, isLoading: facilityStockLoading } = useStockData({
+  const { data: facilityStockData, isLoading: facilityStockLoading, refetch: refetchFacilityStockData } = useStockData({
     tenantId,
     dateRange,
     referenceId: projectId,
@@ -141,7 +146,7 @@ const TransactionSummaryTab = ({ stockSummary, tenantId, campaignId, campaignNum
     filters: facilityFilters,
     enabled: !!userOwnFacilityId,
   });
-  const { data: transactingStockData, isLoading: transactingStockLoading } = useStockData({
+  const { data: transactingStockData, isLoading: transactingStockLoading, refetch: refetchTransactingStockData } = useStockData({
     tenantId,
     dateRange,
     referenceId: projectId,
@@ -151,6 +156,16 @@ const TransactionSummaryTab = ({ stockSummary, tenantId, campaignId, campaignNum
     filters: transactingFilters,
     enabled: !!userOwnFacilityId,
   });
+
+  // Refresh both scoped fetches after a shipment/batch action completes elsewhere on the dashboard
+  // while this tab stays mounted (remounting alone already refetches via refetchOnMount: "always").
+  useEffect(() => {
+    if (dataVersion > 0) {
+      refetchFacilityStockData?.();
+      refetchTransactingStockData?.();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataVersion]);
 
   // Merge + dedupe by id
   const combinedStockData = useMemo(() => {

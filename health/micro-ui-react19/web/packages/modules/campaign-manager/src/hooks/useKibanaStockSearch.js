@@ -14,7 +14,7 @@ import { useMemo } from "react";
  * @param {string} params.campaignNumber - Campaign number used as filter for getChartV2
  * @param {boolean} params.enabled
  * @param {Object} params.filters - Additional getChartV2 filter keys (e.g. { stockEntryType, status }), merged
- *   alongside campaignNumber. See NewShipmentPopup's commodityFacilityStockByFacility call for precedent.
+ *   alongside campaignNumber.
  * @returns {{ data: Array, isLoading: boolean, error: any, metadata: Object, refetch: Function, source: string }}
  */
 const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, campaignNumber, enabled = true, filters = {} }) => {
@@ -44,6 +44,7 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
       },
       config: {
         enabled: enabled && !!tenantId && !!campaignNumber,
+        refetchOnMount: "always",
         select: (data) => data?.responseData?.customData?.rawResponse?.stockBalanceTransformer || [],
       },
       changeQueryName: `stockSummary_${campaignNumber}_${startDate}_${endDate}_${filtersKey}`,

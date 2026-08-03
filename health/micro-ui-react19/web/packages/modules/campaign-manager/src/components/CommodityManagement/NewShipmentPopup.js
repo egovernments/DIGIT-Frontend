@@ -13,6 +13,7 @@ import {
   MultiSelectDropdown,
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
+import useFacilityStockMetrics from "../../hooks/useFacilityStockMetrics";
 
 const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 
@@ -632,113 +633,25 @@ const NewShipmentPopup = ({
     [toFacilityList, selectedFacilityIds],
   );
 
-  // Fetch stock balance data for validation using 2-query config:
-  // Query 1 filters Data.facilityId = fromFacilityId (covers RECEIPT/ISSUED)
-  // Query 2 filters Data.transactingFacilityId = fromFacilityId (covers REJECTED/RETURNED back)
-  const stockBalanceCriteria = useMemo(() => ({
-    url: `/dashboard-analytics/dashboard/getChartV2`,
-    body: {
-      aggregationRequestDto: {
-        visualizationCode: "commodityFacilityStockByFacility",
-        visualizationType: "metric",
-        queryType: "",
-        requestDate: { startDate: 0, endDate: Date.now(), interval: "day", title: "home" },
-        filters: { campaignNumber: campaignNumber || "", facilityId: fromFacilityId || "" },
-        aggregationFactors: null,
-      },
-      headers: { tenantId: tenantId || "" },
-    },
-    config: {
-      enabled: !isTopLevel && !!tenantId && !!campaignNumber && !!fromFacilityId,
-      select: (data) => {
-        // Combine results from both queries and dedup by record id
-        const r1 = data?.responseData?.customData?.rawResponse?.facilityStockTransformer || [];
-        const r2 = data?.responseData?.customData?.rawResponse?.transactingStockTransformer || [];
-        const seen = new Set();
-        const combined = [];
-        [...r1, ...r2].forEach((r) => {
-          if (r.id && !seen.has(r.id)) {
-            seen.add(r.id);
-            combined.push(r);
-          }
-        });
-        return combined;
-      },
-    },
-    changeQueryName: `stockBalance_shipment_${campaignNumber}_${fromFacilityId}`,
-  }), [tenantId, campaignNumber, isTopLevel, fromFacilityId]);
+  // Stock balance for the "From" facility, via real ES aggregation (see useFacilityStockMetrics.js)
+  // instead of a raw-document fetch + manual per-record classification — no per-query record cap.
+  const fromFacilityIdList = useMemo(() => (fromFacilityId ? [fromFacilityId] : []), [fromFacilityId]);
 
-  const { data: stockRecords } = Digit.Hooks.useCustomAPIHook(stockBalanceCriteria);
+  const { rows: fromFacilityStockRows } = useFacilityStockMetrics({
+    tenantId,
+    campaignNumber,
+    facilityIds: fromFacilityIdList,
+    enabled: !isTopLevel && !!fromFacilityId,
+  });
 
-  // Compute per-facility stock map from raw ES records using stockEntryType + status
-  // Records come from 2-query config: facilityId=fromFacilityId OR transactingFacilityId=fromFacilityId
-  // Direction: RECEIVED → facilityId is receiver; DISPATCHED → facilityId is sender
   const facilityStockMap = useMemo(() => {
-    if (!stockRecords?.length || !fromFacilityId) return {};
     const map = {};
-    const init = (fId, pvId) => {
-      if (!map[fId]) map[fId] = {};
-      if (!map[fId][pvId]) map[fId][pvId] = 0;
-    };
-    stockRecords.forEach((record) => {
-      const pvId = record.productVariantId;
-      const qty = record.quantity || 0;
-      const entryType = record.stockEntryType || "";
-      const eventType = record.eventType || record.transactionType || "";
-      if (!pvId) return;
-
-      // Determine direction: RECEIVED → facilityId is receiver, DISPATCHED → facilityId is sender
-      const isInbound = eventType === "RECEIVED";
-      const senderId = isInbound ? record.transactingFacilityId : record.facilityId;
-      const receiverId = isInbound ? record.facilityId : record.transactingFacilityId;
-
-      if (entryType === "ISSUED") {
-        const status = record.status || "";
-        if (status === "REJECTED") {
-          // Rejected dispatch: stock came back, net zero
-        } else {
-          // ACCEPTED or IN_TRANSIT: stock physically left sender
-          if (senderId === fromFacilityId) {
-            init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
-          }
-          // ACCEPTED: receiver gained stock
-          if (status === "ACCEPTED" && receiverId === fromFacilityId) {
-            init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
-          }
-        }
-      } else if (entryType === "RECEIPT") {
-        if (receiverId === fromFacilityId) {
-          // I confirmed receipt → +qty
-          init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
-        }
-      } else if (entryType === "EXCESS") {
-        // Received more than expected → additional stock for receiver
-        if (receiverId === fromFacilityId) {
-          init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
-        }
-      } else if (entryType === "LESS") {
-        // Received less than expected → reduces receiver stock
-        if (receiverId === fromFacilityId) {
-          init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
-        }
-      } else if (entryType === "RETURNED") {
-        const retStatus = record.status || "";
-        if (retStatus === "REJECTED") {
-          // Return rejected by receiver, stock stays with returner, net zero
-        } else {
-          // ACCEPTED or IN_TRANSIT: stock has physically left the returner
-          if (senderId === fromFacilityId) {
-            init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
-          }
-          // Only ACCEPTED: receiver (original sender) gains stock back
-          if (retStatus === "ACCEPTED" && receiverId === fromFacilityId) {
-            init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
-          }
-        }
-      }
+    (fromFacilityStockRows || []).forEach((stats) => {
+      if (!map[stats.facilityId]) map[stats.facilityId] = {};
+      map[stats.facilityId][stats.productVariantId] = stats.balance;
     });
     return map;
-  }, [stockRecords, fromFacilityId]);
+  }, [fromFacilityStockRows]);
 
   // Determine if the "From" level is top level (skip stock validation)
   const topLevelBoundaryType = sortedHierarchy[0]?.boundaryType;

@@ -21,9 +21,14 @@ const PendingTransactionsTab = ({
   dateRange,
   userBoundary,
   isTopLevel,
-  refetchStockData,
+  cycle,
 }) => {
   const { t } = useTranslation();
+
+  const pendingReturnFilters = useMemo(
+    () => ({ ...PENDING_RETURN_FILTERS, ...(cycle ? { cycle } : {}) }),
+    [cycle]
+  );
 
   const {
     data: pendingStockData,
@@ -36,7 +41,7 @@ const PendingTransactionsTab = ({
     campaignId,
     campaignNumber,
     useKibana: true,
-    filters: PENDING_RETURN_FILTERS,
+    filters: pendingReturnFilters,
   });
   const [searchQuery, setSearchQuery] = useState("");
   const [showToast, setShowToast] = useState(null);
@@ -305,12 +310,10 @@ const PendingTransactionsTab = ({
               : t("HCM_RETURN_REJECTED_SUCCESS"),
         });
 
-        // Refetch this tab's own pending-returns list, and the shared dataset
-        // so Transaction/Stock Summary tabs reflect the updated stock levels too.
+        // Refetch this tab's own pending-returns list. Transaction/Stock Summary tabs are
+        // unmounted while this tab is active and refetch fresh on their own next activation
+        // (refetchOnMount: "always"), so no cross-tab refetch is needed here.
         refetchPendingStock?.();
-        if (refetchStockData) {
-          setTimeout(() => refetchStockData(), 2000);
-        }
       } catch (error) {
         console.error("Stock update error:", error);
         setShowToast({
@@ -325,7 +328,7 @@ const PendingTransactionsTab = ({
         });
       }
     },
-    [tenantId, t, updatingIds, refetchStockData, refetchPendingStock]
+    [tenantId, t, updatingIds, refetchPendingStock]
   );
 
   // Open accept confirmation popup

@@ -6,9 +6,9 @@ import StockSummaryTab from "./StockSummaryTab";
 import PendingTransactionsTab from "./PendingTransactionsTab";
 import DateRangePicker from "./DateRangePicker";
 import { useLocation } from "react-router-dom";
-import useStockData from "../../hooks/useStockData";
 import { computeStockSummary } from "../../utils/stockDataProcessor";
 import useWarehouseManagerSync from "../../hooks/useWarehouseManagerSync";
+import useCommodityStockSummaryAggregate from "../../hooks/useCommodityStockSummaryAggregate";
 import { useCommodityProject } from "./CommodityProjectContext";
 import NewShipmentPopup from "./NewShipmentPopup";
 import useBatchStockCreation from "../../hooks/useBatchStockCreation";
@@ -129,11 +129,34 @@ const CommodityDashboard = () => {
   const [activeTab, setActiveTab] = useState("transaction");
   const [showNewShipmentPopup, setShowNewShipmentPopup] = useState(false);
   const [showToast, setShowToast] = useState(null);
+  // Bumped after a shipment/batch action completes, so whichever Transaction/Stock tab is
+  // currently mounted (and thus wouldn't otherwise remount-refetch) refreshes its own data.
+  const [dataVersion, setDataVersion] = useState(0);
   const [dateRange, setDateRange] = useState({
     startDate: null,
     endDate: new Date(),
     preset: "cumulative",
   });
+
+  // Cycle filter — same convention as L1Main/L2Main's FilterByCycleDropdown: cycles come from the
+  // campaign project's additionalDetails.projectType.cycles (already available on contextProjects,
+  // no extra API call), and the value threaded into getChartV2 filters is the zero-padded cycle
+  // code (e.g. "01"), matching Data.additionalDetails.cycleIndex.keyword as indexed.
+  const [selectedCycle, setSelectedCycle] = useState(null);
+  const campaignProject = useMemo(
+    () => contextProjects?.find((p) => p.id === projectId),
+    [contextProjects, projectId]
+  );
+  const cycleOptions = useMemo(() => {
+    const cycles = campaignProject?.additionalDetails?.projectType?.cycles || [];
+    return cycles.map((item) => ({
+      code: String(item.id).padStart(2, "0"),
+      name: `${t("HCM_CYCLE")} ${String(item.id).padStart(2, "0")}`,
+      id: item.id,
+    }));
+  }, [campaignProject, t]);
+  const handleCycleSelect = useCallback((item) => setSelectedCycle(item.code), []);
+  const clearCycleFilter = useCallback(() => setSelectedCycle(null), []);
 
   // --- Batch stock creation (lives here so it persists after popup closes) ---
   const {
@@ -210,7 +233,7 @@ const CommodityDashboard = () => {
 
     if (batchResult === "success") {
       setShowToast({ key: "success", label: t("HCM_STOCK_UPLOAD_SUCCESS") });
-      refetchStockData?.();
+      setDataVersion((v) => v + 1);
     } else if (batchResult === "partial_failure") {
       setShowToast({
         key: "warning",
@@ -220,7 +243,7 @@ const CommodityDashboard = () => {
           failed: batchStatus.failedRecords,
         }),
       });
-      refetchStockData?.();
+      setDataVersion((v) => v + 1);
     } else if (batchResult === "all_failed") {
       setShowToast({ key: "error", label: t("HCM_BATCH_ALL_FAILED_TOAST") });
     }
@@ -318,18 +341,23 @@ const CommodityDashboard = () => {
     };
   }, [dateRange, campaignCreatedDate, campaignEndDate]);
 
-  const { data: rawStockData, isLoading: stockLoading, metadata, source, refetch: refetchStockData } = useStockData({
+  // Campaign-wide Data Sync / transaction-summary numbers, sourced from real ES aggregation
+  // (commodityStockSummary) rather than a raw-document dump — no longer a parent-level shared
+  // fetch; Transaction/Stock tabs each own their own scoped queries (see their respective files).
+  const { aggregations: stockSummaryAggregations } = useCommodityStockSummaryAggregate({
     tenantId,
-    dateRange: effectiveDateRange,
-    referenceId: projectId,
-    campaignId,
     campaignNumber,
-    useKibana: useKibanaFlag,
+    cycle: selectedCycle,
+    enabled: useKibanaFlag,
   });
 
   const stockSummary = useMemo(
-    () => computeStockSummary({ source, metadata, data: rawStockData }),
-    [source, metadata, rawStockData]
+    () => computeStockSummary({
+      source: "kibana",
+      metadata: stockSummaryAggregations ? { aggregations: stockSummaryAggregations } : null,
+      data: [],
+    }),
+    [stockSummaryAggregations]
   );
 
   const { totalManagers, syncedManagers, syncRate, isLoading: syncLoading } = useWarehouseManagerSync({
@@ -575,6 +603,39 @@ const CommodityDashboard = () => {
           onSelect={handlePresetSelect}
           style={{}}
         />
+        {cycleOptions.length > 1 && (
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            {selectedCycle && (
+              <span
+                onClick={clearCycleFilter}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.375rem",
+                  padding: "0.375rem 0.75rem",
+                  borderRadius: "1rem",
+                  backgroundColor: "#E8E8E8",
+                  fontSize: "0.875rem",
+                  cursor: "pointer",
+                }}
+              >
+                {t("HCM_CYCLE")} {selectedCycle}
+                <span style={{ fontWeight: 700 }}>&times;</span>
+              </span>
+            )}
+            <Button
+              type="actionButton"
+              variation="secondary"
+              label={t("HCM_FILTER_BY_CYCLE")}
+              icon="FilterAlt"
+              size="medium"
+              options={cycleOptions}
+              optionsKey="name"
+              showBottom={true}
+              onOptionSelect={handleCycleSelect}
+            />
+          </div>
+        )}
       </div>
 
       <div className="digit-dss-switch-tabs">
@@ -587,12 +648,7 @@ const CommodityDashboard = () => {
                   ? "digit-dss-switch-tab-selected"
                   : "digit-dss-switch-tab-unselected"
               }
-              onClick={() => {
-                setActiveTab(tab.key);
-                // Pending tab now fetches its own filtered dataset — the shared
-                // (unfiltered) query is only consumed by Transaction/Stock tabs.
-                if (tab.key !== "pending" && refetchStockData) refetchStockData();
-              }}
+              onClick={() => setActiveTab(tab.key)}
             >
               {tab.label}
             </div>
@@ -608,25 +664,27 @@ const CommodityDashboard = () => {
           campaignNumber={campaignNumber}
           projectId={projectId}
           dateRange={effectiveDateRange}
+          dataVersion={dataVersion}
           userBoundary={userBoundary}
           userBoundaries={userBoundaries}
           isTopLevel={isTopLevel}
+          cycle={selectedCycle}
         />
       )}
       {activeTab === "stock" && (
         <StockSummaryTab
-          rawStockData={rawStockData}
-          stockLoading={stockLoading}
           stockSummary={enrichedStockSummary}
           tenantId={tenantId}
           campaignId={campaignId}
           campaignNumber={campaignNumber}
           projectId={projectId}
-          refetchStockData={refetchStockData}
+          dateRange={effectiveDateRange}
+          dataVersion={dataVersion}
           isCompleted={isCompleted}
           userBoundary={userBoundary}
           userBoundaries={userBoundaries}
           isTopLevel={isTopLevel}
+          cycle={selectedCycle}
         />
       )}
       {activeTab === "pending" && (
@@ -636,9 +694,9 @@ const CommodityDashboard = () => {
           campaignNumber={campaignNumber}
           projectId={projectId}
           dateRange={effectiveDateRange}
+          cycle={selectedCycle}
           userBoundary={userBoundary}
           isTopLevel={isTopLevel}
-          refetchStockData={refetchStockData}
         />
       )}
 
@@ -654,7 +712,7 @@ const CommodityDashboard = () => {
           onSuccess={() => {
             setShowNewShipmentPopup(false);
             setShowToast({ key: "success", label: t("HCM_STOCK_UPLOAD_SUCCESS") });
-            refetchStockData?.();
+            setDataVersion((v) => v + 1);
           }}
           onBatchStart={handleBatchStart}
         />
