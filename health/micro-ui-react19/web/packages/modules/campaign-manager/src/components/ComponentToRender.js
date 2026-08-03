@@ -11,6 +11,7 @@ import { getComponentFromMasterData } from "../pages/employee/NewAppConfiguratio
 
 const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => {
   const { byName } = useSelector((state) => state.fieldTypeMaster);
+  const { byName: fieldPanelConfig } = useSelector((state) => state.fieldPanelMaster);
   const { t } = useTranslation();
   const fieldRef = useRef(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -96,6 +97,18 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
     return field?.isMdms && isValidSchema ? "code" : "name";
   }, [field?.isMdms, isValidSchema]);
 
+  // Show defaultValue in preview for field types where it's enabled in MDMS panel config
+  const previewValue = useMemo(() => {
+    const panelContent = fieldPanelConfig?.drawerPanelConfig?.content || [];
+    const defaultValueConfig = panelContent.find((item) => item.id === "defaultValue");
+    const enabledTypes = defaultValueConfig?.visibilityEnabledFor || [];
+    if (enabledTypes.includes(field?.type) && field?.value != null && field?.value !== "" && field?.value !== true) {
+      const num = Number(field.value);
+      if (!isNaN(num)) return num;
+    }
+    return "";
+  }, [fieldPanelConfig, field?.type, field?.value]);
+
   return (
     <div ref={fieldRef}>
       <FieldV1
@@ -141,7 +154,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
         withoutLabel={field?.format === "checkbox" ? true : false}
         required={getFieldTypeFromMasterData2(field) === "custom" ? null : field?.required}
         type={fieldType}
-        value={""}
+        value={previewValue}
         disabled={field?.readOnly || false}
         showToolTip={true}
       />

@@ -271,7 +271,12 @@ const SelectingBoundaryComponent = ({
           if (frozenData?.length > 0) {
             const mergedFrozenData = [...(selectedData || []).filter((item) => item?.type !== newBoundaryType), ...transformedRes];
             const mergedCodes = new Set(mergedFrozenData.map((item) => item.code));
-            mergedData = [...mergedFrozenData, ...frozenData.filter((frozenItem) => !mergedCodes.has(frozenItem.code))];
+            // Only re-add frozen items that are still in the current selectedData.
+            // Items the user explicitly cleared (by clearing a parent) should stay cleared.
+            const currentSelectedCodes = new Set((selectedData || []).map((item) => item.code));
+            mergedData = [...mergedFrozenData, ...frozenData.filter((frozenItem) =>
+              !mergedCodes.has(frozenItem.code) && currentSelectedCodes.has(frozenItem.code)
+            )];
           } else {
             mergedData = [...(selectedData || []).filter((item) => item?.type !== newBoundaryType), ...transformedRes];
           }

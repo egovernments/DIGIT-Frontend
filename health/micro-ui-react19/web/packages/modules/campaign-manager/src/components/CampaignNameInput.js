@@ -70,6 +70,7 @@ const CampaignNameInput = ({ onSelect, formData, customProps, ...props }) => {
 
   const handleChange = (event) => {
     const newValue = event.target.value;
+    if (newValue.length > 30) return;
     setName(newValue);
     setHasInteracted(true);
   };

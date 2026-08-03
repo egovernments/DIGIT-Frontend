@@ -78,7 +78,6 @@ const MultiTab = React.memo(({ projectConfig, attributeConfig, operatorConfig, d
   // Get session data for display
   const tempSession = useMemo(() => formStorageData || {}, [formStorageData, projectConfig]);
 
-  const campaignName = tempSession?.HCM_CAMPAIGN_NAME?.campaignName;
   const projectType = tempSession?.HCM_CAMPAIGN_TYPE?.projectType || projectConfig?.code;
   const campaignDates = tempSession?.HCM_CAMPAIGN_DATE?.campaignDates;
 
@@ -90,6 +89,7 @@ const MultiTab = React.memo(({ projectConfig, attributeConfig, operatorConfig, d
 
     const startDate = convertEpochToNewDateFormat(campaignDates.startDate);
     const endDate = convertEpochToNewDateFormat(campaignDates.endDate);
+    if (!startDate || !endDate) return "";
     return `${startDate} - ${endDate}`;
   }, [campaignDates]);
 
@@ -102,15 +102,13 @@ const MultiTab = React.memo(({ projectConfig, attributeConfig, operatorConfig, d
   return (
     <div className="container-full">
       <div className="card-container-delivery">
-        {campaignName && <TagComponent campaignName={campaignName} />}
+        {formattedDates && <TagComponent campaignName={formattedDates} />}
 
         {projectTitle && (
           <HeaderComponent styles={{ marginTop: "1.5rem" }} className="select-boundary-screen-heading">
             {t(projectTitle)}
           </HeaderComponent>
         )}
-
-        {formattedDates && <Paragraph customClassName="cycle-paragraph" value={formattedDates} />}
 
         <div className="campaign-cycle-container">
           <div className="campaign-tabs-container">

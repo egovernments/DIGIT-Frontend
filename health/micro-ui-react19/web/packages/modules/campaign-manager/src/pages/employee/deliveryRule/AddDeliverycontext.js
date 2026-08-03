@@ -163,11 +163,12 @@ const AddAttributeField = React.memo(({
     let val = e.target.value;
     val = val.replace(/[^\d.]/g, "");
     val = val.match(/^\d*\.?\d{0,2}/)[0] || "";
-    
+
     if (isNaN(val) || [" ", "e", "E"].some(f => val.includes(f))) {
       return;
     }
-    
+    if (val.length > 10) return;
+
     updateAttributeField(rule.ruleKey, attribute.key, 'value', val);
   }, [updateAttributeField, rule.ruleKey, attribute.key]);
 
@@ -179,11 +180,12 @@ const AddAttributeField = React.memo(({
     let val = e.target.value;
     val = val.replace(/[^\d.]/g, "");
     val = val.match(/^\d*\.?\d{0,2}/)[0] || "";
-    
+
     if (isNaN(val) || [" ", "e", "E"].some(f => val.includes(f))) {
       return;
     }
-    
+    if (val.length > 10) return;
+
     const field = range === "to" ? "toValue" : "fromValue";
     updateAttributeField(rule.ruleKey, attribute.key, field, val);
   }, [updateAttributeField, rule.ruleKey, attribute.key]);
