@@ -14,6 +14,7 @@ import {
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import usePaginatedSearch from "../../hooks/usePaginatedSearch";
 
 const NewShipmentPopup = ({
   campaignNumber,
@@ -463,8 +464,9 @@ const NewShipmentPopup = ({
   const fromFacilityReqCriteria = useMemo(
     () => ({
       url: `/${projectServicePath}/facility/v1/_search`,
-      params: { tenantId, limit: 1000, offset: 0 },
+      params: { tenantId },
       body: { ProjectFacility: { projectId: fromFilteredProjectIds } },
+      dataKey: "ProjectFacilities",
       config: {
         enabled: !!fromFilteredProjectIds?.length,
         staleTime: 0,
@@ -489,14 +491,15 @@ const NewShipmentPopup = ({
   const {
     data: fromFacilityList,
     isLoading: fromFacilitiesLoading,
-  } = Digit.Hooks.useCustomAPIHook(fromFacilityReqCriteria);
+  } = usePaginatedSearch(fromFacilityReqCriteria);
 
   // Fetch "To" facilities using filtered project IDs
   const toFacilityReqCriteria = useMemo(
     () => ({
       url: `/${projectServicePath}/facility/v1/_search`,
-      params: { tenantId, limit: 1000, offset: 0 },
+      params: { tenantId },
       body: { ProjectFacility: { projectId: toFilteredProjectIds } },
+      dataKey: "ProjectFacilities",
       config: {
         enabled: !!toFilteredProjectIds?.length,
         select: (data) => {
@@ -519,7 +522,7 @@ const NewShipmentPopup = ({
   const {
     data: rawToFacilityList,
     isLoading: toFacilitiesLoading,
-  } = Digit.Hooks.useCustomAPIHook(toFacilityReqCriteria);
+  } = usePaginatedSearch(toFacilityReqCriteria);
 
   // Collect all unique facility IDs from both lists for name resolution
   const allFacilityIds = useMemo(() => {
@@ -532,8 +535,9 @@ const NewShipmentPopup = ({
   // Fetch facility details to get names
   const facilityNameSearchCriteria = useMemo(() => ({
     url: `/facility/v1/_search`,
-    params: { tenantId, limit: allFacilityIds.length || 10, offset: 0 },
+    params: { tenantId },
     body: { Facility: { id: allFacilityIds } },
+    dataKey: "Facilities",
     config: {
       enabled: !!allFacilityIds.length && !!tenantId,
       select: (data) => {
@@ -546,7 +550,7 @@ const NewShipmentPopup = ({
     },
   }), [tenantId, allFacilityIds]);
 
-  const { data: facilityNameMap = {}, isLoading: facilityNamesLoading } = Digit.Hooks.useCustomAPIHook(facilityNameSearchCriteria);
+  const { data: facilityNameMap = {}, isLoading: facilityNamesLoading } = usePaginatedSearch(facilityNameSearchCriteria);
 
   // Enrich facility lists with resolved names (dedup by id as safety net)
   const enrichedFromFacilityList = useMemo(() => {
