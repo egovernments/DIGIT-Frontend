@@ -9,6 +9,7 @@ import GenericChart from "./GenericChart";
 import CommodityShipmentPopup from "./CommodityShipmentPopup";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import usePaginatedSearch from "../../hooks/usePaginatedSearch";
 
 const toCamelCase = (str) =>
   str.split(" ")
@@ -42,8 +43,9 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   // Fetch facility details by IDs (name + usage/type)
   const facilitySearchCriteria = useMemo(() => ({
     url: `/facility/v1/_search`,
-    params: { tenantId, limit: facilityIds.length || 10, offset: 0 },
+    params: { tenantId },
     body: { Facility: { id: facilityIds } },
+    dataKey: "Facilities",
     config: {
       enabled: !!facilityIds.length && !!tenantId,
       select: (data) => {
@@ -74,7 +76,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       },
     },
   }), [tenantId, facilityIds]);
-  const { data: facilityMaps, isLoading: facilitiesLoading } = Digit.Hooks.useCustomAPIHook(facilitySearchCriteria);
+  const { data: facilityMaps, isLoading: facilitiesLoading } = usePaginatedSearch(facilitySearchCriteria);
   const facilityNameMap = facilityMaps?.nameMap || {};
 
 
@@ -150,8 +152,9 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   // Fetch project facilities using the selected project (not derived from context)
   const projectFacilityCriteria = useMemo(() => ({
     url: `${getProjectServiceUrl()}/facility/v1/_search`,
-    params: { tenantId, limit: 100, offset: 0 },
+    params: { tenantId },
     body: { ProjectFacility: { projectId: [projectId] } },
+    dataKey: "ProjectFacilities",
     config: {
       enabled: !!projectId && !!tenantId,
       select: (data) => {
@@ -163,7 +166,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       },
     },
   }), [tenantId, projectId]);
-  const { data: userFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
+  const { data: userFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = usePaginatedSearch(projectFacilityCriteria);
 
   // User's own facility: first project facility (primary facility for shipment actions)
   const userOwnFacilityId = useMemo(() => {
@@ -579,7 +582,6 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_RECEIVED), key: "totalReceived", grow: 0.7, minWidth: "110px", sortable: true },
     { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_ACCEPTED), key: "totalAccepted", grow: 0.7, minWidth: "110px", sortable: true },
     { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_ISSUED),   key: "totalIssued",   grow: 0.7, minWidth: "110px", sortable: true },
-    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_REJECTED), key: "totalRejected", grow: 0.7, minWidth: "110px", sortable: true },
     { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_RETURNED), key: "totalReturned", grow: 0.7, minWidth: "110px", sortable: true },
     { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BALANCE),        key: "balance",       grow: 0.7, minWidth: "110px", sortable: true },
   ];
@@ -599,7 +601,6 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     totalReceived: (row) => <span className="cm-cell-stock">{row.totalReceived?.toLocaleString()}</span>,
     totalAccepted: (row) => <span className="cm-cell-stock">{row.totalAccepted?.toLocaleString()}</span>,
     totalIssued:   (row) => <span className="cm-cell-stock">{row.totalIssued?.toLocaleString()}</span>,
-    totalRejected: (row) => <span className="cm-cell-stock">{row.totalRejected?.toLocaleString()}</span>,
     totalReturned: (row) => <span className="cm-cell-stock">{row.totalReturned?.toLocaleString()}</span>,
     balance: (row) => (
       <span className={`cm-cell-stock${row.balance < 0 ? " cm-balance-negative" : ""}`}>
@@ -837,7 +838,6 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
             { label: "HCM_TOTAL_RECEIVED", value: commodity.totalReceived },
             { label: "HCM_TOTAL_ACCEPTED", value: commodity.totalAccepted },
             { label: "HCM_TOTAL_ISSUED", value: commodity.totalIssued },
-            { label: "HCM_TOTAL_REJECTED", value: commodity.totalRejected },
             { label: "HCM_TOTAL_RETURNED", value: commodity.totalReturned },
             { label: "HCM_BALANCE", value: commodity.balance },
           ]}

@@ -297,8 +297,8 @@ const Menu = ({
     );
   }
 
-  // Add 2px buffer when there's only one option to prevent a sub-pixel scrollbar
-  const listHeight = Math.min(optionsToRender.length, MAX_VISIBLE_ITEMS) * ITEM_HEIGHT + (optionsToRender.length === 1 ? 2 : 0);
+  // Add 2px buffer to prevent sub-pixel scrollbar when items exactly fill the container
+  const listHeight = Math.min(optionsToRender.length, MAX_VISIBLE_ITEMS) * ITEM_HEIGHT + 2;
 
   const VirtualizedRow = ({ index, style }) => {
     const option = optionsToRender[index];
@@ -319,7 +319,7 @@ const Menu = ({
       );
     } else {
       return (
-        <div style={style}>
+        <div style={{ ...style, height: style.height, boxSizing: "border-box" }}>
           <MenuItem option={option} index={index} />
         </div>
       );
@@ -336,7 +336,7 @@ const Menu = ({
         itemSize={ITEM_HEIGHT}
         width="100%"
         overscanCount={OVERSCAN_COUNT}
-        style={optionsToRender.length === 1 ? { overflowX: "hidden" } : undefined}
+        style={{ overflowX: "hidden" }}
       >
         {VirtualizedRow}
       </List>
@@ -944,6 +944,8 @@ const MultiSelectDropdown = ({
         style={{
           pointerEvents: isFrozen ? "none" : "auto",
           opacity: isFrozen ? 0.6 : 1,
+          height: "100%",
+          boxSizing: "border-box",
         }}
       >
         <input
@@ -1049,7 +1051,7 @@ const MultiSelectDropdown = ({
           </div>
         </div>
         {active ? (
-          <div className="digit-multiselectdropdown-server" id="jk-dropdown-unique" style={{ overflow: "visible", maxHeight: "none", ...(ServerStyle || {}) }}>
+          <div className="digit-multiselectdropdown-server" id="jk-dropdown-unique" style={ServerStyle ? ServerStyle : {}}>
             {variant === "treemultiselect" ? (
               <TreeSelect
                 options={parentOptionsWithChildren}
