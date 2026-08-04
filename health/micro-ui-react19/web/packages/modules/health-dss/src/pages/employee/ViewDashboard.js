@@ -213,7 +213,7 @@ const ViewDashboard = ({ stateCode }) => {
 
   // Always show loader until redirect
   if (!redirected) {
-    return <Loader variant={"PageLoader"} className={"digit-center-loader"} loaderText={loaderText || t(I18N_KEYS.PAGES.LOADING)} />;
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} loaderText={loaderText || t(I18N_KEYS.PAGES.LOADING)} page={true}/>;
   }
   return null;
 };

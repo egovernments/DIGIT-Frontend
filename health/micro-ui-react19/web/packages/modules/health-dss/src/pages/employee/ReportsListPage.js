@@ -70,7 +70,7 @@ const ReportsListPage = () => {
   if (isCampaignLoading || isMdmsLoading)
     return (
       <div style={{ width: "100%", height: "100%" }}>
-        <Loader className="digit-center-loader" />
+        <Loader page={true} variant={"PageLoader"} className={"digit-center-loader"} />
       </div>
     );
 
