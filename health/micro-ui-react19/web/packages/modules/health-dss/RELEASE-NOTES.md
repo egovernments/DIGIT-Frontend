@@ -106,11 +106,11 @@ Campaign row → "View Reports" link → Reports list page → Select a report �
 
 ### Live report status tracking
 
-While a custom report is generating, the Report Detail page now shows its progress through named stages instead of a single generic "in progress" state: **Queued → Scheduled → Triggered → Starting → Generating → Packaging → Uploading**.
+While a custom report is generating, the Report Detail page shows in-progress runs as cards with a **live progress bar and percentage**. When a run completes, it automatically moves from the in-progress list to the completed reports list — no page reload needed.
 
-- A pre-flight check (`checkExistingCustomReport`) runs before triggering a report to detect whether a completed, in-progress, or failed run already exists for the same campaign, report, and date range — preventing duplicate triggers.
-- The Report Details tooltip now also shows the report's triggered time in local time.
-- Progress polling only runs while a report is actually in progress, and correctly stops once nothing is left running.
+- A pre-flight check (`checkExistingCustomReport`) runs before triggering a report to detect whether a completed, in-progress, or failed run already exists for the same campaign, report, and date range — preventing duplicate triggers. The result is shown as a popup with context-specific actions (download existing, retry after cooldown, or just close).
+- Completed report cards show the triggered time in the viewer's **local time**.
+- Progress polling runs only while a report is active and stops automatically when no runs remain.
 
 ---
 
@@ -169,7 +169,7 @@ The following components have been updated for better rendering:
 
 ### Excel export added
 
-An Excel library (`xlsx 0.17.5`) has been added to support exporting report data from the Custom Reports flow.
+An Excel library (`xlsx ^0.18.5`) has been added to support exporting report data from the Custom Reports flow.
 
 ---
 
@@ -197,8 +197,8 @@ An Excel library (`xlsx 0.17.5`) has been added to support exporting report data
 | User Activity Metrics | `src/components/UserActivityTracking/UserActivityMetrics.js` |
 | User Activity Summary Table | `src/components/UserActivityTracking/UserActivitySummaryTable.js` |
 | User Profile Popup | `src/components/UserActivityTracking/UserProfilePopup.js` |
-| Reports List Page | `src/components/ReportsListPage.js` |
-| Report Detail Page | `src/components/ReportDetailPage.js` |
+| Reports List Page | `src/pages/employee/ReportsListPage.js` |
+| Report Detail Page | `src/pages/employee/ReportDetailPage.js` |
 | `useSimpleElasticsearch` | `Digit.Hooks.DSS.useSimpleElasticsearch` |
 | `useUserActivityData` | `Digit.Hooks.DSS.useUserActivityData` |
 | `useUserTrackingData` | `Digit.Hooks.DSS.useUserTrackingData` |
@@ -217,9 +217,7 @@ New translation/label keys have been added for:
 
 - All User Activity Tracking labels
 - Custom Reports screens
-- Report in-progress stage labels (`HCM_REPORT_STATUS_*` — queued, scheduled, triggered, starting, generating, packaging, uploading)
-
-Existing dashboard label prefixes (`HCM_L1_*`, `HCM_L2_*`) remain unchanged.
+- Report pipeline stage labels (`HCM_REPORT_STATUS_*` — defined in `reportStatus.js` for each pipeline stage)
 
 ---
 

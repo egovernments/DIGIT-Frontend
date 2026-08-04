@@ -55,11 +55,12 @@ The Commodity Management screens read their stock and commodity configuration fr
 
 ### Multi-hierarchy selection step
 
-A new **first step** has been added to the campaign creation wizard. Users select the boundary hierarchy type (e.g., administrative vs. health facility hierarchy) before filling in any other campaign details.
+A new **step 4 (the final step)** has been added to the initial campaign creation wizard. Users select the boundary hierarchy type (e.g., administrative vs. health facility hierarchy) as the last step before the campaign draft is saved.
 
-- Available hierarchy types are pulled from the Boundary Management API.
-- The selection is saved to session storage and used by all subsequent steps in the wizard.
-- During campaign updates, this step is shown as **read-only** — the hierarchy cannot be changed.
+- Available hierarchy types are pulled from the Boundary Management API. Each card shows the hierarchy's boundary levels and a tag indicating whether boundary data is already loaded.
+- The selection is saved to the campaign store (`campaign.hierarchy` in Redux, persisted to IndexedDB via the `CAMPAIGN_APP_STATE` key) and used by all subsequent steps in the wizard.
+- While the campaign is in **draft state**, hierarchy can still be changed from the campaign details screen via an Edit button. If boundary selections or uploaded files already exist, a confirmation popup appears before switching (dependent data is cleared).
+- Once the campaign status becomes **"created"**, the hierarchy edit button is hidden and the hierarchy is locked — it cannot be changed.
 
 ---
 
@@ -162,7 +163,7 @@ Commodity Management screens (shipment creation, bulk stock upload) now derive h
 
 ### Persistent validation status on file upload
 
-`NewUploadData` now shows a persistent `AlertCard` below the upload section summarizing validation results (success / warning / error), which stays visible until a new file is uploaded, the file is removed, or validation restarts. A "View Errors" button opens the uploaded file directly when validation fails.
+`NewUploadData` now shows a persistent `AlertCard` below the upload section summarizing validation results (success / warning / error), which stays visible until a new file is uploaded, the file is removed, or validation restarts. When validation fails, the card displays the API error code to help diagnose the issue.
 
 ---
 
@@ -214,7 +215,7 @@ Commodity Management screens (shipment creation, bulk stock upload) now derive h
 
 | Component / Hook | What it is |
 |---|---|
-| `SelectHierarchy.js` | Hierarchy type picker — first step of campaign creation wizard |
+| `SelectHierarchy.js` | Hierarchy type picker — step 4 (last step) of the initial campaign creation wizard |
 | `CommodityCampaigns.js` | Main commodity dashboard page |
 | `StockSummaryTab.js` | Stock summary tab |
 | `PendingTransactionsTab.js` | Pending transactions tab |
