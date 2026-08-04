@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useMemo } from "react";
 
 const PAGE_SIZE = 1000;
@@ -12,7 +12,7 @@ const PAGE_SIZE = 1000;
  * @param {Object} params.params - URL query params (limit/offset will be managed internally)
  * @param {Object} params.body - Request body
  * @param {string} params.dataKey - Key in response containing the array (e.g. "ProjectFacilities", "Facilities")
- * @param {Object} params.config - React Query config (enabled, select, staleTime, cacheTime, etc.)
+ * @param {Object} params.config - React Query config (enabled, select, staleTime, gcTime, etc.)
  * @param {string} params.changeQueryName - Custom query key identifier
  * @returns {{ data: any, isLoading: boolean, isFetching: boolean, refetch: Function }}
  */
@@ -34,7 +34,7 @@ const usePaginatedSearch = ({
     [url, changeQueryName, stableBody, stableParams]
   );
 
-  const fetchAllPages = async () => {
+  const fetchAllPages = async ({ signal }) => {
     const allResults = [];
     let offset = 0;
     let totalCount = null;
@@ -46,6 +46,11 @@ const usePaginatedSearch = ({
     const { limit: _l, offset: _o, ...cleanParams } = parsedParams;
 
     while (true) {
+      // Abort stale pagination loops when criteria change
+      if (signal?.aborted) {
+        break;
+      }
+
       const response = await Digit.CustomService.getResponse({
         url,
         params: { ...cleanParams, limit: PAGE_SIZE, offset },
@@ -72,10 +77,12 @@ const usePaginatedSearch = ({
     return { [dataKey]: allResults, totalCount: totalCount ?? allResults.length };
   };
 
-  const { isLoading, isFetching, data, refetch } = useQuery(queryKey, fetchAllPages, {
-    cacheTime: restConfig.cacheTime ?? 1000,
+  const { isLoading, isFetching, data, refetch } = useQuery({
+    queryKey,
+    queryFn: fetchAllPages,
+    gcTime: restConfig.gcTime ?? restConfig.cacheTime ?? 1000,
     staleTime: restConfig.staleTime ?? 5000,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     retry: 2,
     refetchOnWindowFocus: false,
     enabled,
