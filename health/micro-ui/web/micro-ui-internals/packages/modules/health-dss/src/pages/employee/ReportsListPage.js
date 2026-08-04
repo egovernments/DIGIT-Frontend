@@ -1,11 +1,11 @@
-import React, { useMemo,useEffect } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useLocation } from "react-router-dom";
-import { Card, HeaderComponent, SVG, Loader, Tag } from "@egovernments/digit-ui-components";
+import { useLocation } from "react-router-dom";
+import { Card, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
+import ReportDetailPage from "./ReportDetailPage";
 
 const ReportsListPage = () => {
   const { t } = useTranslation();
-  const history = useHistory();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
@@ -18,6 +18,7 @@ const ReportsListPage = () => {
     tenantId: tenantId,
     filter: {
       campaignNumber: campaignNumber,
+      
     },
     config: {
       enabled: !!campaignNumber,
@@ -53,16 +54,6 @@ const ReportsListPage = () => {
 
   const { isLoading: isMdmsLoading, data: mdmsData } = Digit.Hooks.useCustomAPIHook(mdmsReqCriteria);
 
-  // Campaign-wide (no reportName filter) so every report-type card can show a hint
-  // of activity without the user having to open each one.
-  const { data: inProgressRuns = [] } = Digit.Hooks.DSS.useReportsInProgress({
-    tenantId,
-    campaignIdentifier: campaignNumber,
-    config: { enabled: !!campaignNumber },
-  });
-
-  const inProgressReportNames = useMemo(() => new Set((inProgressRuns || []).map((run) => run?.reportname)), [inProgressRuns]);
-
   // Find the MDMS entry matching the current campaign's projectType
   const reportTypes = useMemo(() => {
     if (!mdmsData || !projectType) return [];
@@ -75,48 +66,48 @@ const ReportsListPage = () => {
     }));
   }, [mdmsData, projectType]);
 
-  const handleReportClick = (reportCode) => {
-    history.push(
-      `/${window?.contextPath}/employee/dss/report-detail?campaignNumber=${campaignNumber}&campaignName=${encodeURIComponent(campaignName || "")}&reportType=${reportCode}`
-    );
-  };
+  // One tab per report type (like L2Main.js's hand-rolled switch-tabs) - defaults to the
+  // ?reportType= query param if present (keeps old report-detail?...&reportType=X links
+  // landing on the right tab), else the first report type once MDMS data arrives.
+  const [activeReportCode, setActiveReportCode] = useState(() => searchParams.get("reportType") || "");
+
+  useEffect(() => {
+    if (!activeReportCode && reportTypes.length > 0) {
+      setActiveReportCode(reportTypes[0].code);
+    }
+  }, [reportTypes, activeReportCode]);
 
   if (isCampaignLoading || isMdmsLoading) return <Loader />;
 
   return (
-    <Card>
-      <HeaderComponent className="digit-reports-list__heading">{t("HCM_REPORTS")}</HeaderComponent>
-      <p className="digit-reports-list__description">{t("HCM_REPORTS_SELECT_TYPE_DESC")}</p>
+    <React.Fragment>
+      <Card>
+        <HeaderComponent className="digit-reports-list__heading">{t("HCM_REPORTS")}</HeaderComponent>
+        <p className="digit-reports-list__description">{t("HCM_REPORTS_SELECT_TYPE_DESC")}</p>
 
-      <div className="digit-reports-list__cards">
-        {reportTypes.map((report) => (
-          <Card
-            key={report.code}
-            className="digit-reports-list__row-card"
-            type="secondary"
-            onClick={() => handleReportClick(report.code)}
-          >
-            <div className="digit-reports-list__row">
-              <div className="digit-reports-list__row-icon">
-                <SVG.Description height="24" width="24" fill={"#0B4B66"} />
-              </div>
-              <div className="digit-reports-list__row-content">
-                <div className="digit-reports-list__row-title">
-                  {t(report.label)}
-                  {inProgressReportNames.has(report.code) && (
-                    <Tag label={t("HCM_IN_PROGRESS")} type="warning" style={{ marginLeft: "8px" }} />
-                  )}
-                </div>
-                <div className="digit-reports-list__row-desc">{t(report.description)}</div>
-              </div>
-              <div className="digit-reports-list__row-chevron">
-                <SVG.ChevronRight height="20" width="20" fill={"#0B4B66"} />
+        {reportTypes.length > 0 && (
+          <div className="digit-dss-switch-tabs-progressbar-wrapper">
+            <div className="digit-dss-switch-tabs" style={{ width: "100%" }}>
+              <div className="digit-dss-switch-tab-wrapper">
+                {reportTypes.map((report) => (
+                  <div
+                    key={report.code}
+                    className={activeReportCode === report.code ? "digit-dss-switch-tab-selected" : "digit-dss-switch-tab-unselected"}
+                    onClick={() => setActiveReportCode(report.code)}
+                  >
+                    {t(report.label)}
+                  </div>
+                ))}
               </div>
             </div>
-          </Card>
-        ))}
-      </div>
-    </Card>
+          </div>
+        )}
+      </Card>
+
+      {activeReportCode && (
+        <ReportDetailPage key={activeReportCode} reportType={activeReportCode} campaignNumber={campaignNumber} campaignName={campaignName} />
+      )}
+    </React.Fragment>
   );
 };
 

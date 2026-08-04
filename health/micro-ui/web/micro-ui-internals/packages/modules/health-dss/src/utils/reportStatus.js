@@ -36,3 +36,35 @@ export const formatRowCount = (rowCount) => {
   if (!Number.isFinite(num) || num < 0) return null;
   return num.toLocaleString();
 };
+
+// reporttriggeredtimems is an epoch-ms column, so a plain date label (formatCreatedTime)
+// would drop the time-of-day - this keeps both, for the "when did this run actually start" tooltip line.
+export const formatDateTime = (epochMs) => {
+  const num = Number(epochMs);
+  if (!Number.isFinite(num) || num <= 0) return null;
+  const date = new Date(num);
+  if (isNaN(date.getTime())) return null;
+  return date.toLocaleString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+// Filename-safe companion to formatDateTime - colons (from a 12-hour clock) are outright
+// illegal in Windows filenames, so this uses a 24-hour dd-mm-yyyy_HHmm form instead, safe to
+// drop straight into a downloaded file's name on any OS.
+export const formatDateTimeForFilename = (epochMs) => {
+  const num = Number(epochMs);
+  if (!Number.isFinite(num) || num <= 0) return null;
+  const date = new Date(num);
+  if (isNaN(date.getTime())) return null;
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const yyyy = date.getFullYear();
+  const hh = String(date.getHours()).padStart(2, "0");
+  const min = String(date.getMinutes()).padStart(2, "0");
+  return `${dd}-${mm}-${yyyy}_${hh}${min}`;
+};

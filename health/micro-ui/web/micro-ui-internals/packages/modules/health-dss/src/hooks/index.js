@@ -7,6 +7,7 @@ import useDSSGeoJson from "./useDSSGeoJson";
 import useUserActivityData from "./useUserActivityData";
 import useSearchCampaign from "./useSearchCampaign";
 import useReportsInProgress from "./useReportsInProgress";
+import useFailedReports from "./useFailedReports";
 
 const DSS = {
   useProjectSearch,
@@ -16,7 +17,8 @@ const DSS = {
   useDSSGeoJson,
   useUserActivityData,
   useSearchCampaign,
-  useReportsInProgress
+  useReportsInProgress,
+  useFailedReports
 };
 
 const Hooks = {
