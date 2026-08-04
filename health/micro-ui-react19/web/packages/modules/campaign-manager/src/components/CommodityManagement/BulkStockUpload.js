@@ -7,6 +7,7 @@ import StockComponent from "./StockComponent";
 import BulkUpload from "../BulkUpload";
 import XLSX from "xlsx";
 import useBatchStockCreation from "../../hooks/useBatchStockCreation";
+import usePaginatedSearch from "../../hooks/usePaginatedSearch";
 
 const BulkStockUpload = () => {
   const { t } = useTranslation();
@@ -394,12 +395,13 @@ const BulkStockUpload = () => {
   // Fetch ALL project facilities to know which projects have facilities
   const allFacilityReqCriteria = useMemo(() => ({
     url: `/${projectServicePath}/facility/v1/_search`,
-    params: { tenantId: tenantId, limit: 1000, offset: 0 },
+    params: { tenantId: tenantId },
     body: {
       ProjectFacility: {
         projectId: allProjectIds,
       },
     },
+    dataKey: "ProjectFacilities",
     config: {
       enabled: !!allProjectIds?.length,
       select: (data) => {
@@ -413,7 +415,7 @@ const BulkStockUpload = () => {
     },
   }), [tenantId, allProjectIds]);
 
-  const { data: projectIdsWithFacilities, isLoading: allFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(allFacilityReqCriteria);
+  const { data: projectIdsWithFacilities, isLoading: allFacilitiesLoading } = usePaginatedSearch(allFacilityReqCriteria);
 
   // Build hierarchy filter options only from projects that have facilities
   const hierarchyFilterOptions = useMemo(() => {
@@ -525,12 +527,13 @@ const BulkStockUpload = () => {
   // Fetch "From" facilities
   const fromFacilityReqCriteria = useMemo(() => ({
     url: `/${projectServicePath}/facility/v1/_search`,
-    params: { tenantId: tenantId, limit: 1000, offset: 0 },
+    params: { tenantId: tenantId },
     body: {
       ProjectFacility: {
         projectId: fromFilteredProjectIds,
       },
     },
+    dataKey: "ProjectFacilities",
     config: {
       enabled: !!fromFilteredProjectIds?.length,
       select: (data) => {
@@ -548,7 +551,7 @@ const BulkStockUpload = () => {
     },
   }), [tenantId, fromFilteredProjectIds]);
 
-  const { data: rawFromFacilityList, isLoading: fromFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(fromFacilityReqCriteria);
+  const { data: rawFromFacilityList, isLoading: fromFacilitiesLoading } = usePaginatedSearch(fromFacilityReqCriteria);
 
   // Enrich From facilities with boundary level info
   const fromFacilityList = useMemo(() => {
@@ -562,12 +565,13 @@ const BulkStockUpload = () => {
   // Fetch "To" facilities
   const toFacilityReqCriteria = useMemo(() => ({
     url: `/${projectServicePath}/facility/v1/_search`,
-    params: { tenantId: tenantId, limit: 1000, offset: 0 },
+    params: { tenantId: tenantId },
     body: {
       ProjectFacility: {
         projectId: toFilteredProjectIds,
       },
     },
+    dataKey: "ProjectFacilities",
     config: {
       enabled: !!toFilteredProjectIds?.length,
       select: (data) => {
@@ -585,7 +589,7 @@ const BulkStockUpload = () => {
     },
   }), [tenantId, toFilteredProjectIds]);
 
-  const { data: rawToFacilityList, isLoading: toFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(toFacilityReqCriteria);
+  const { data: rawToFacilityList, isLoading: toFacilitiesLoading } = usePaginatedSearch(toFacilityReqCriteria);
 
   // Enrich To facilities with boundary level info
   const toFacilityList = useMemo(() => {

@@ -9,6 +9,7 @@ import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import usePaginatedSearch from "../../hooks/usePaginatedSearch";
 
 const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   const getFieldValue = (fieldKey) => {
@@ -95,8 +96,9 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   // Fetch project facilities using the selected project (passed from CommodityDashboard)
   const projectFacilityCriteria = useMemo(() => ({
     url: `${getProjectServiceUrl()}/facility/v1/_search`,
-    params: { tenantId, limit: 100, offset: 0 },
+    params: { tenantId },
     body: { ProjectFacility: { projectId: [projectId] } },
+    dataKey: "ProjectFacilities",
     config: {
       enabled: !!projectId && !!tenantId,
       select: (data) => {
@@ -108,7 +110,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       },
     },
   }), [tenantId, projectId]);
-  const { data: projectFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
+  const { data: projectFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = usePaginatedSearch(projectFacilityCriteria);
 
   // Extract unique facility IDs and product variant IDs from stock data
   const { facilityIds, productVariantIds } = useMemo(() => {
@@ -126,8 +128,9 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   // Fetch facility details by IDs and build name lookup map
   const facilitySearchCriteria = useMemo(() => ({
     url: `/facility/v1/_search`,
-    params: { tenantId, limit: facilityIds.length || 10, offset: 0 },
+    params: { tenantId },
     body: { Facility: { id: facilityIds } },
+    dataKey: "Facilities",
     config: {
       enabled: !!facilityIds.length && !!tenantId,
       select: (data) => {
@@ -154,7 +157,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       },
     },
   }), [tenantId, facilityIds]);
-  const { data: facilityMaps, isLoading: facilitiesLoading } = Digit.Hooks.useCustomAPIHook(facilitySearchCriteria);
+  const { data: facilityMaps, isLoading: facilitiesLoading } = usePaginatedSearch(facilitySearchCriteria);
   const facilityNameMap = facilityMaps?.nameMap || {};
 
   // Fetch product variants
