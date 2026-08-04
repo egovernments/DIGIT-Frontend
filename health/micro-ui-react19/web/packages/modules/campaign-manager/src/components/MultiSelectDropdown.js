@@ -263,6 +263,87 @@ const Wrapper = ({
   );
 };
 
+const ITEM_HEIGHT = 45;
+const MAX_VISIBLE_ITEMS = 8;
+const OVERSCAN_COUNT = 5;
+
+// Defined at module level so its identity is stable across renders.
+// When Menu was inside MultiSelectDropdown, every state update (e.g. checkbox
+// check) created a new component type, causing React to unmount + remount
+// FixedSizeList and reset its scroll position to 0.
+const Menu = ({
+  variant,
+  flattenedOptions,
+  filteredOptions,
+  selectAllOption,
+  listRef,
+  optionsKey,
+  addCategorySelectAllCheck,
+  categorySelectAllLabel,
+  categorySelected,
+  handleCategorySelection,
+  selectAllChecked,
+  addSelectAllCheck,
+  MenuItem,
+  t,
+}) => {
+  const optionsToRender = variant === "nestedmultiselect" ? flattenedOptions : filteredOptions;
+
+  if (!optionsToRender || optionsToRender?.length === 0) {
+    return (
+      <div className={`digit-multiselectdropodwn-menuitem ${variant ? variant : ""} unsuccessfulresults`} key={"-1"} onClick={() => {}}>
+        {<span> {t(I18N_KEYS.COMPONENTS.NO_RESULTS_FOUND)}</span>}
+      </div>
+    );
+  }
+
+  // Add 2px buffer when there's only one option to prevent a sub-pixel scrollbar
+  const listHeight = Math.min(optionsToRender.length, MAX_VISIBLE_ITEMS) * ITEM_HEIGHT + (optionsToRender.length === 1 ? 2 : 0);
+
+  const VirtualizedRow = ({ index, style }) => {
+    const option = optionsToRender[index];
+    if (option.options) {
+      return (
+        <div style={style} key={index} className={`digit-nested-category ${addSelectAllCheck ? "selectAll" : ""}`}>
+          <div className="digit-category-name">{t(option[optionsKey])}</div>
+          {addCategorySelectAllCheck && (
+            <div className="digit-category-selectAll" onClick={() => handleCategorySelection(option)}>
+              <div className="category-selectAll-label">{categorySelectAllLabel ? categorySelectAllLabel : t(I18N_KEYS.COMMON.SELECT_ALL)}</div>
+              <input type="checkbox" checked={selectAllChecked || categorySelected[option.code]} />
+              <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
+                <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    } else {
+      return (
+        <div style={style}>
+          <MenuItem option={option} index={index} />
+        </div>
+      );
+    }
+  };
+
+  return (
+    <div>
+      {selectAllOption}
+      <List
+        ref={listRef}
+        height={listHeight}
+        itemCount={optionsToRender.length}
+        itemSize={ITEM_HEIGHT}
+        width="100%"
+        overscanCount={OVERSCAN_COUNT}
+        style={optionsToRender.length === 1 ? { overflowX: "hidden" } : undefined}
+      >
+        {VirtualizedRow}
+      </List>
+    </div>
+  );
+};
+
 const MultiSelectDropdown = ({
   options,
   optionsKey,
@@ -905,67 +986,6 @@ const MultiSelectDropdown = ({
       <p className={`digit-label ${addSelectAllCheck ? "selectAll" : ""}`}>{selectAllLabel ? selectAllLabel : t(I18N_KEYS.COMMON.SELECT_ALL)}</p>
     </div>
   );
-  const ITEM_HEIGHT = 45;
-  const MAX_VISIBLE_ITEMS = 8;
-  const OVERSCAN_COUNT = 5;
-
-  const Menu = () => {
-    const optionsToRender = variant === "nestedmultiselect" ? flattenedOptions : filteredOptions;
-
-    if (!optionsToRender || optionsToRender?.length === 0) {
-      return (
-        <div className={`digit-multiselectdropodwn-menuitem ${variant ? variant : ""} unsuccessfulresults`} key={"-1"} onClick={() => {}}>
-          {<span> {t(I18N_KEYS.COMPONENTS.NO_RESULTS_FOUND)}</span>}
-        </div>
-      );
-    }
-
-    // Add 2px buffer when there's only one option to prevent a sub-pixel scrollbar
-    const listHeight = Math.min(optionsToRender.length, MAX_VISIBLE_ITEMS) * ITEM_HEIGHT + (optionsToRender.length === 1 ? 2 : 0);
-
-    const VirtualizedRow = ({ index, style }) => {
-      const option = optionsToRender[index];
-      if (option.options) {
-        return (
-          <div style={style} key={index} className={`digit-nested-category ${addSelectAllCheck ? "selectAll" : ""}`}>
-            <div className="digit-category-name">{t(option[optionsKey])}</div>
-            {addCategorySelectAllCheck && (
-              <div className="digit-category-selectAll" onClick={() => handleCategorySelection(option)}>
-                <div className="category-selectAll-label">{categorySelectAllLabel ? categorySelectAllLabel : t(I18N_KEYS.COMMON.SELECT_ALL)}</div>
-                <input type="checkbox" checked={selectAllChecked || categorySelected[option.code]} />
-                <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
-                  <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
-                </div>
-              </div>
-            )}
-          </div>
-        );
-      } else {
-        return (
-          <div style={style}>
-            <MenuItem option={option} index={index} />
-          </div>
-        );
-      }
-    };
-
-    return (
-      <div>
-        {selectAllOption}
-        <List
-          ref={listRef}
-          height={listHeight}
-          itemCount={optionsToRender.length}
-          itemSize={ITEM_HEIGHT}
-          width="100%"
-          overscanCount={OVERSCAN_COUNT}
-          style={optionsToRender.length === 1 ? { overflowX: "hidden" } : undefined}
-        >
-          {VirtualizedRow}
-        </List>
-      </div>
-    );
-  };
   return (
     <div style={{ position: "relative" }}>
       {(isProcessing || isPending) && (
@@ -1039,7 +1059,22 @@ const MultiSelectDropdown = ({
                 optionsKey={optionsKey}
               />
             ) : (
-              <Menu />
+              <Menu
+                variant={variant}
+                flattenedOptions={flattenedOptions}
+                filteredOptions={filteredOptions}
+                selectAllOption={selectAllOption}
+                listRef={listRef}
+                optionsKey={optionsKey}
+                addCategorySelectAllCheck={addCategorySelectAllCheck}
+                categorySelectAllLabel={categorySelectAllLabel}
+                categorySelected={categorySelected}
+                handleCategorySelection={handleCategorySelection}
+                selectAllChecked={selectAllChecked}
+                addSelectAllCheck={addSelectAllCheck}
+                MenuItem={MenuItem}
+                t={t}
+              />
             )}
           </div>
         ) : null}

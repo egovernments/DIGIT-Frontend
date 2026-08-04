@@ -12,6 +12,8 @@ const Tabs = React.memo(() => {
   const { campaignData, activeTabIndex, changeTab } = useDeliveryRules();
   const { t } = useTranslation();
 
+  if (campaignData.length <= 1) return null;
+
   const tabItems = campaignData.map((cycle, index) => ({
     code: String(index),
     name: `${t(I18N_KEYS.PAGES.CAMPAIGN_CYCLE)} ${index + 1}`,
@@ -36,7 +38,7 @@ const SubTabs = React.memo(() => {
   const { activeCycle, activeSubTabIndex, changeSubTab } = useDeliveryRules();
   const { t } = useTranslation();
 
-  if (!activeCycle?.deliveries) {
+  if (!activeCycle?.deliveries || activeCycle.deliveries.length <= 1) {
     return null;
   }
 
@@ -59,7 +61,10 @@ const SubTabs = React.memo(() => {
 });
 
 const TabContent = React.memo(({ project }) => {
+  const { activeCycle } = useDeliveryRules();
   const { t } = useTranslation();
+
+  if (!activeCycle?.deliveries || activeCycle.deliveries.length <= 1) return null;
 
   return (
     <Card className="sub-tab-container">
@@ -105,7 +110,7 @@ const MultiTab = React.memo(({ projectConfig, attributeConfig, operatorConfig, d
         {formattedDates && <TagComponent campaignName={formattedDates} />}
 
         {projectTitle && (
-          <HeaderComponent styles={{ marginTop: "1.5rem" }} className="select-boundary-screen-heading">
+          <HeaderComponent styles={{ marginTop: "1.5rem",marginBottom: "1.5rem" }} className="select-boundary-screen-heading">
             {t(projectTitle)}
           </HeaderComponent>
         )}

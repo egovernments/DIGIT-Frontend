@@ -47,7 +47,7 @@ const Inbox = ({}) => {
   };
 
   if (!isConfigReady || !config) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    return <Loader page={true} variant={"PageLoader"} className={"digit-center-loader"} />;
   }
 
   return (
