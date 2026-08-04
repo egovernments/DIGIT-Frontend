@@ -58,7 +58,7 @@ The Commodity Management screens read their stock and commodity configuration fr
 A new **step 4 (the final step)** has been added to the initial campaign creation wizard. Users select the boundary hierarchy type (e.g., administrative vs. health facility hierarchy) as the last step before the campaign draft is saved.
 
 - Available hierarchy types are pulled from the Boundary Management API. Each card shows the hierarchy's boundary levels and a tag indicating whether boundary data is already loaded.
-- The selection is saved to session storage and used by all subsequent steps in the wizard.
+- The selection is saved to the campaign store (`campaign.hierarchy` in Redux, persisted to IndexedDB via the `CAMPAIGN_APP_STATE` key) and used by all subsequent steps in the wizard.
 - While the campaign is in **draft state**, hierarchy can still be changed from the campaign details screen via an Edit button. If boundary selections or uploaded files already exist, a confirmation popup appears before switching (dependent data is cleared).
 - Once the campaign status becomes **"created"**, the hierarchy edit button is hidden and the hierarchy is locked — it cannot be changed.
 

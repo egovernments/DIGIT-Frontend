@@ -14,7 +14,7 @@ Health HRMS provides the web interface for managing health campaign field worker
 
 All data is scoped by boundary — users only see employees and data within the geographic area they are assigned to at login.
 
-**In HCM v2.1, this is a platform migration release.** The module has been moved from React 17 to React 19 and now ships under the new `payments-ui` deployment variant. Two bug fixes and a localization housekeeping change were also applied during the v2.1 cycle.
+**In HCM v2.1, this is a platform migration release.** The module has been moved from React 17 to React 19 and now ships under the new `payments-ui` deployment variant. Three bug fixes and a localization housekeeping change were also applied during the v2.1 cycle.
 
 ---
 
@@ -136,7 +136,7 @@ The `HierarchySelection` screen is rendered before the main module routes are ac
 
 ### Employee Management Flow
 
-```
+```text
 Hierarchy selection (required every session)
   → Employee inbox (search by name, role, or boundary)
   → Create employee / View employee details
@@ -147,7 +147,7 @@ Hierarchy selection (required every session)
 
 ### Campaign Assignment Flow
 
-```
+```text
 Employee details screen
   → Click "Edit campaigns"
   → Campaign assignment inbox (campaigns scoped to employee jurisdictions)

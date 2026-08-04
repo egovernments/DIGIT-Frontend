@@ -54,11 +54,11 @@ A new section has been added to the L2 dashboard showing field worker activity d
 | User profile popup | Click any row to open a detailed activity view for that worker |
 
 **Flow:**
-```
+```text
 L2 Dashboard → User Activity Section → Metrics cards + Table → Click a user → Profile popup
 ```
 
-> All data hooks query Elasticsearch directly. There is no fallback if Elasticsearch is unavailable — the section silently fails to load.
+> `useSimpleElasticsearch` and `useUserTrackingData` query Elasticsearch directly via Kibana proxy. `useUserActivityData` fetches activity metrics through `Digit.Hooks.DSS.useGetChartV2` (the dashboard analytics endpoint), not ES directly. There is no fallback if Elasticsearch is unavailable — the section silently fails to load.
 
 **New hooks:**
 - `useSimpleElasticsearch` — `Digit.Hooks.DSS.useSimpleElasticsearch`
@@ -86,7 +86,7 @@ Users can now access campaign-scoped reports directly from the dashboard.
 | Report detail page | Select a report to open the full report for that campaign |
 
 **Flow:**
-```
+```text
 Campaign row → "View Reports" link → Reports list page → Select a report → Report detail page
 ```
 

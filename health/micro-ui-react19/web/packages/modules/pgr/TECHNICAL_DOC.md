@@ -140,6 +140,7 @@ Complaints Management is no longer served from the old React 17 standalone shell
 The module reads the boundary hierarchy type from this MDMS v2 master. Without it, the module cannot determine which hierarchy to use for scoping complaints and will block on the loading state.
 
 **Required MDMS record shape:**
+
 ```json
 {
   "hierarchyTypeCode": "<your-hierarchy-type>"
@@ -164,7 +165,7 @@ The module registers a React Router v6 sub-router under the employee path. Route
 
 ### Complaint Lifecycle Flow
 
-```
+```text
 Create complaint
   (Boundary selection → Category → Description → File attachment)
   → Complaint inbox  (filter by status, category, boundary, date)
@@ -173,7 +174,7 @@ Create complaint
   → Timeline updated
 ```
 
-**Note on inbox filters:** Filters applied in the complaint inbox are automatically cleared at the start of every new session (`Digit.SessionStorage.del("filtersForInbox")` is called in `PGRModule` on mount). Users re-apply filters each time they log in — this is intentional.
+**Note on inbox filters:** Filters applied in the complaint inbox are automatically cleared when `PGRModule` mounts (`Digit.SessionStorage.del("filtersForInbox")` is called in a `useEffect` with an empty dependency array). Users re-apply filters each time they navigate to the PGR module — this is intentional.
 
 **Note on boundary scoping:** On startup, the module reads the boundary hierarchy from MDMS (`PGR.HierarchySelectedForPGR`) and stores the matching hierarchy object in `SessionStorage["HIERARCHY_TYPE_SELECTED"]`. All complaint data shown to a user is automatically filtered to their assigned boundary.
 

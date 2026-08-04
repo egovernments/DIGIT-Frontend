@@ -196,7 +196,7 @@ If map view in the attendance screen is needed, set `enableMapView: true` in the
 
 ## Bill Lifecycle Flow
 
-```
+```text
 Attendance Registers Inbox                          [PROXIMITY_SUPERVISOR]
   → Project Selection
   → View Registers (Pending / Approved tabs)
@@ -276,9 +276,9 @@ Payment Setup                                       [CAMPAIGN_MANAGER]
 | `/{EXPENSE_CONTEXT_PATH}/bill/v1/report/_generate` | POST | Generate transaction report |
 | `/{EXPENSE_CONTEXT_PATH}/bill/v1/report/_search` | POST | Poll report generation status |
 | `/{EXPENSE_CONTEXT_PATH}/v1/bill/details/status/_update` | POST | Update status on individual bill detail rows |
-| `/health-expense/v1/bill/_verify` | POST | Verify bill |
-| `/health-expense/v1/payment/_transfer` | POST | Initiate payment transfer to bank |
-| `/health-expense/v1/task/_status` | POST | Poll async task status (verify / payment) |
+| `/{EXPENSE_CONTEXT_PATH}/v1/bill/_verify` | POST | Verify bill |
+| `/{EXPENSE_CONTEXT_PATH}/v1/payment/_transfer` | POST | Initiate payment transfer to bank |
+| `/{EXPENSE_CONTEXT_PATH}/v1/task/_status` | POST | Poll async task status (verify / payment) |
 
 ### Billing Config (Expense Calculator)
 
