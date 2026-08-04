@@ -5,11 +5,6 @@ import { useTranslation } from "react-i18next";
 import XLSX from "xlsx";
 import DataTable from "react-data-table-component";
 import axios from "axios";
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
-
-const PRIMARY_COLOR = "#C84C0E";
-
-const DocViewerWithRenderers = (props) => <DocViewer {...props} pluginRenderers={DocViewerRenderers} />;
 
 // Two callers pass two different shapes of `file`: an upload preview has a filestoreId (fetch
 // through our own backend, avoids depending on the storage host allowing direct cross-origin
@@ -39,7 +34,9 @@ const fetchWorkbookArrayBuffer = async (file) => {
 };
 
 // The row/column table view - parses the sheet client-side and renders it paginated, same
-// approach as ReportDetailPage.js's own report preview.
+// approach as ReportDetailPage.js's own report preview. No DocViewer/"file view" mode here:
+// @cyntler/react-doc-viewer pulls in pdfjs-dist, which requires Node >=18 and breaks the
+// dashboard-ui image's yarn install (pinned to node:14.21.3 in health-dss/Dockerfile).
 const PaginatedPreview = ({ file }) => {
   const { t } = useTranslation();
   const [preview, setPreview] = useState({ isLoading: true, error: null, columns: [], rows: [] });
@@ -88,46 +85,8 @@ const PaginatedPreview = ({ file }) => {
   );
 };
 
-// The original file-rendering view - embeds the xlsx as-is via the doc viewer, preserving
-// its native look (formatting, merged cells) instead of extracting rows into a plain table.
-const FileView = ({ file }) => {
-  const documents = file?.url
-    ? [
-        {
-          fileType: "xlsx",
-          fileName: file?.filename,
-          uri: file?.url,
-        },
-      ]
-    : null;
-
-  return (
-    <React.Fragment>
-      <style>{`#react-doc-viewer #proxy-renderer { display: flex; flex: 1; overflow-y: auto; } #react-doc-viewer #msdoc-renderer { width: 100%; height: 100%; }`}</style>
-      <DocViewerWithRenderers
-        style={{ height: "80vh", overflowY: "hidden" }}
-        theme={{
-          primary: PRIMARY_COLOR,
-          secondary: "#feefe7",
-          tertiary: "#feefe7",
-          textPrimary: "#FFFFFF",
-          textSecondary: "#505A5F",
-          textTertiary: "#00000099",
-          disableThemeScrollbar: true,
-        }}
-        documents={documents}
-      />
-    </React.Fragment>
-  );
-};
-
-// mode: "paginated" -> the original file-rendering (DocViewer) view; "table" -> the new
-// row/column DataTable view. Button labels intentionally follow the caller's naming: the
-// "Paginated Preview" button shows the pre-existing DocViewer logic, "File View" shows the
-// DataTable-based one added afterwards.
-function ReportXlsPreview({ file, mode: initialMode = "paginated", ...props }) {
+function ReportXlsPreview({ file, ...props }) {
   const { t } = useTranslation();
-  const [mode, setMode] = useState(initialMode);
 
   return (
     <PopUp className="campaign-data-preview" style={{ flexDirection: "column" }}>
@@ -140,20 +99,6 @@ function ReportXlsPreview({ file, mode: initialMode = "paginated", ...props }) {
           icon="ArrowBack"
           className={"back-button-xlsxpreview"}
         />
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          <Button
-            label={t("WBH_PAGINATED_PREVIEW")}
-            title={t("WBH_PAGINATED_PREVIEW")}
-            onClick={() => setMode("paginated")}
-            variation={mode === "paginated" ? "primary" : "secondary"}
-          />
-          <Button
-            label={t("WBH_FILE_VIEW")}
-            title={t("WBH_FILE_VIEW")}
-            onClick={() => setMode("table")}
-            variation={mode === "table" ? "primary" : "secondary"}
-          />
-        </div>
         <Button
           label={t("WBH_DOWNLOAD")}
           title={t("WBH_DOWNLOAD")}
@@ -164,7 +109,7 @@ function ReportXlsPreview({ file, mode: initialMode = "paginated", ...props }) {
         />
       </div>
       <div className="campaign-popup-module" style={{ marginTop: "1.5rem", padding: "0 2.5rem 2rem" }}>
-        {mode === "table" ? <PaginatedPreview file={file} /> : <FileView file={file} />}
+        <PaginatedPreview file={file} />
       </div>
     </PopUp>
   );

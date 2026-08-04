@@ -46,8 +46,7 @@
     "jspdf": "2.5.1",
     "axios": "^1.6.8",
     "xlsx": "0.17.5",
-    "jszip": "^3.10.1",
-    "@cyntler/react-doc-viewer": "1.17.1"
+    "jszip": "^3.10.1"
   },
   "author": "Jagankumar <jagan.kumar@egov.org.in>",
   "license": "MIT"
