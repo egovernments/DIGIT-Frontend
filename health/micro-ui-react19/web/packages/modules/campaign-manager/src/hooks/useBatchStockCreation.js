@@ -3,8 +3,6 @@ import { STOCK_BATCH_SIZE, STOCK_SEARCH_MAX_RETRIES, STOCK_SEARCH_RETRY_INTERVAL
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const SESSION_KEY = "HCM_BATCH_STOCK_PROGRESS";
-
 const INITIAL_BATCH_STATUS = {
   total: 0,
   completed: 0,
@@ -18,29 +16,26 @@ const INITIAL_BATCH_STATUS = {
   failedRecords: 0,
 };
 
-/**
- * Persist batch progress to sessionStorage so it survives page refresh.
- */
-const saveToSession = (data) => {
+const saveToSession = (key, data) => {
   try {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...data, updatedAt: Date.now() }));
+    sessionStorage.setItem(key, JSON.stringify({ ...data, updatedAt: Date.now() }));
   } catch (e) {
     // sessionStorage may be full or unavailable; ignore
   }
 };
 
-const loadFromSession = () => {
+const loadFromSession = (key) => {
   try {
-    const raw = sessionStorage.getItem(SESSION_KEY);
+    const raw = sessionStorage.getItem(key);
     return raw ? JSON.parse(raw) : null;
   } catch (e) {
     return null;
   }
 };
 
-const clearSession = () => {
+const clearSession = (key) => {
   try {
-    sessionStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(key);
   } catch (e) {
     // ignore
   }
@@ -61,9 +56,15 @@ const clearSession = () => {
  *   HCM_BATCH_STARTING, HCM_BATCH_CREATING, HCM_BATCH_VERIFYING,
  *   HCM_BATCH_ALL_SUCCESS, HCM_BATCH_PROCESSING_COMPLETE
  */
-const useBatchStockCreation = ({ tenantId }) => {
-  // Check for recovery data on mount
-  const recoveredData = useRef(loadFromSession());
+const useBatchStockCreation = ({ tenantId, campaignNumber }) => {
+  // Scope session key per campaign so switching campaigns never shows another campaign's recovery banner
+  const sessionKey = campaignNumber ? `HCM_BATCH_STOCK_PROGRESS_${campaignNumber}` : "HCM_BATCH_STOCK_PROGRESS";
+  // Ref keeps callbacks pointing at the current key without closure staleness
+  const sessionKeyRef = useRef(sessionKey);
+  sessionKeyRef.current = sessionKey;
+
+  // Check for recovery data on mount (scoped to this campaign)
+  const recoveredData = useRef(loadFromSession(sessionKey));
 
   const [batchStatus, setBatchStatus] = useState(() => {
     const recovered = recoveredData.current;
@@ -91,6 +92,32 @@ const useBatchStockCreation = ({ tenantId }) => {
 
   const abortRef = useRef(false);
 
+  // When campaignNumber changes while the component is mounted (e.g. user picks a different campaign
+  // without the page navigating to a new route), reload React state from the new campaign's session.
+  // This prevents Campaign A's completed-batch banner from showing on Campaign B's dashboard.
+  // Session storage is NOT cleared here — each campaign's recovery data is preserved under its own key.
+  const isFirstCampaignMountRef = useRef(true);
+  useEffect(() => {
+    if (isFirstCampaignMountRef.current) {
+      isFirstCampaignMountRef.current = false;
+      return; // useState lazy initializers already handled initial load
+    }
+    const newData = loadFromSession(sessionKeyRef.current);
+    if (newData?.batchStatus) {
+      setBatchStatus(newData.batchStatus);
+      setFailedRecords(newData.failedRecords || []);
+      setIsComplete(newData.isComplete || false);
+      setResult(newData.result || null);
+      setIsRecovered(!!(newData.batchStatus && (newData.isComplete || newData.batchStatus.completed > 0)));
+    } else {
+      setBatchStatus({ ...INITIAL_BATCH_STATUS });
+      setFailedRecords([]);
+      setIsComplete(false);
+      setResult(null);
+      setIsRecovered(false);
+    }
+  }, [campaignNumber]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const stockMutationReq = {
     url: `/stock/v1/bulk/_create`,
     params: {},
@@ -103,7 +130,7 @@ const useBatchStockCreation = ({ tenantId }) => {
    * Persist current state to sessionStorage.
    */
   const persistProgress = useCallback((statusOverride, failedOverride, resultOverride, completeOverride) => {
-    saveToSession({
+    saveToSession(sessionKeyRef.current, {
       batchStatus: statusOverride,
       failedRecords: failedOverride,
       result: resultOverride,
@@ -350,7 +377,7 @@ const useBatchStockCreation = ({ tenantId }) => {
     setIsComplete(false);
     setResult(null);
     setIsRecovered(false);
-    clearSession();
+    clearSession(sessionKeyRef.current);
   }, []);
 
   const abort = useCallback(() => {

@@ -14,32 +14,26 @@ import { useCommodityProject } from "./CommodityProjectContext";
 import NewShipmentPopup from "./NewShipmentPopup";
 import useBatchStockCreation from "../../hooks/useBatchStockCreation";
 
-const SHEET_SESSION_KEY = "HCM_BATCH_SHEET_DATA";
-
-/**
- * Persist sheet data + clientRefToRowIndex to sessionStorage
- * so the result sheet can be regenerated after page refresh.
- */
-const saveSheetToSession = (sheetData, clientRefToRowIndex) => {
+const saveSheetToSession = (key, sheetData, clientRefToRowIndex) => {
   try {
-    sessionStorage.setItem(SHEET_SESSION_KEY, JSON.stringify({ sheetData, clientRefToRowIndex }));
+    sessionStorage.setItem(key, JSON.stringify({ sheetData, clientRefToRowIndex }));
   } catch (e) {
     // ignore
   }
 };
 
-const loadSheetFromSession = () => {
+const loadSheetFromSession = (key) => {
   try {
-    const raw = sessionStorage.getItem(SHEET_SESSION_KEY);
+    const raw = sessionStorage.getItem(key);
     return raw ? JSON.parse(raw) : null;
   } catch (e) {
     return null;
   }
 };
 
-const clearSheetSession = () => {
+const clearSheetSession = (key) => {
   try {
-    sessionStorage.removeItem(SHEET_SESSION_KEY);
+    sessionStorage.removeItem(key);
   } catch (e) {
     // ignore
   }
@@ -200,6 +194,9 @@ const CommodityDashboard = () => {
     preset: "cumulative",
   });
 
+  // Scope sheet session key per campaign to prevent cross-campaign data bleed
+  const sheetSessionKey = campaignNumber ? `HCM_BATCH_SHEET_DATA_${campaignNumber}` : "HCM_BATCH_SHEET_DATA";
+
   // --- Batch stock creation (lives here so it persists after popup closes) ---
   const {
     processBatches,
@@ -211,22 +208,35 @@ const CommodityDashboard = () => {
     reset: resetBatchState,
     abort: abortBatchProcessing,
     isRecovered,
-  } = useBatchStockCreation({ tenantId });
+  } = useBatchStockCreation({ tenantId, campaignNumber });
 
   // Store original sheet data and clientRef mapping for result sheet generation
   const originalSheetDataRef = useRef(null);
   const clientRefToRowIndexRef = useRef({});
 
-  // On mount, restore sheet data from sessionStorage if we have recovered batch data
+  // On mount or campaign recovery, restore sheet data from sessionStorage
   useEffect(() => {
     if (isRecovered) {
-      const saved = loadSheetFromSession();
+      const saved = loadSheetFromSession(sheetSessionKey);
       if (saved) {
         originalSheetDataRef.current = saved.sheetData;
         clientRefToRowIndexRef.current = saved.clientRefToRowIndex;
       }
     }
-  }, [isRecovered]);
+  }, [isRecovered, sheetSessionKey]);
+
+  // When campaignNumber changes while the component stays mounted, abort any in-flight
+  // batch and clear the sheet refs so the new campaign starts clean
+  const isFirstMountRef = useRef(true);
+  useEffect(() => {
+    if (isFirstMountRef.current) {
+      isFirstMountRef.current = false;
+      return;
+    }
+    abortBatchProcessing();
+    originalSheetDataRef.current = null;
+    clientRefToRowIndexRef.current = {};
+  }, [campaignNumber]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // --- beforeunload warning: prevent accidental refresh/tab close during processing ---
   useEffect(() => {
@@ -297,20 +307,20 @@ const CommodityDashboard = () => {
     clientRefToRowIndexRef.current = clientRefToRowIndex;
 
     // Persist sheet data to sessionStorage for recovery
-    saveSheetToSession(sheetData, clientRefToRowIndex);
+    saveSheetToSession(sheetSessionKey, sheetData, clientRefToRowIndex);
 
     // Close popup, start batch processing in background
     setShowNewShipmentPopup(false);
     processBatches(stockPayload);
-  }, [processBatches]);
+  }, [processBatches, sheetSessionKey]);
 
   // Clear both session stores on reset
   const handleReset = useCallback(() => {
     resetBatchState();
-    clearSheetSession();
+    clearSheetSession(sheetSessionKey);
     originalSheetDataRef.current = null;
     clientRefToRowIndexRef.current = {};
-  }, [resetBatchState]);
+  }, [resetBatchState, sheetSessionKey]);
 
   // Download result sheet with SUCCESS/CREATION_FAILED per row
   const downloadResultSheet = useCallback(async () => {

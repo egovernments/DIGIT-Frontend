@@ -43,7 +43,7 @@ const BulkStockUpload = () => {
     result: batchResult,
     reset: resetBatchState,
     abort: abortBatchProcessing,
-  } = useBatchStockCreation({ tenantId });
+  } = useBatchStockCreation({ tenantId, campaignNumber });
 
   // Ref to store original sheet data for error sheet generation
   const originalSheetDataRef = useRef(null);
