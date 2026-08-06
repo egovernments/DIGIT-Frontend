@@ -99,9 +99,12 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
         </div>
       )}
 
-      <Tabs deliveryData={deliveryData} tabCount={deliveryData?.length} activeTab={activeTab} onTabChange={handleTabChange} />
+      {/* A single delivery needs no toggle - keep the summary as plain as the delivery screen itself */}
+      {deliveryData?.length > 1 && (
+        <Tabs deliveryData={deliveryData} tabCount={deliveryData?.length} activeTab={activeTab} onTabChange={handleTabChange} />
+      )}
 
-      {deliveryData?.find((i) => i?.active === true)
+      {(deliveryData?.find((i) => i?.active === true) || deliveryData?.[0])
         ?.deliveryRules?.map((rules, ruleIndex) => {
           return (
             <Card className="delivery-preview-card delivery-preview-screen" style={{marginBottom:"0rem !important"}}>
