@@ -93,9 +93,12 @@ const ReportsListPage = () => {
   }, [mdmsData, projectType, configuredReportNames]);
 
   const handleReportClick = (reportCode) => {
-    navigate(
-      `/${window?.contextPath}/employee/dss/report-detail?campaignNumber=${campaignNumber}&campaignName=${encodeURIComponent(campaignName || "")}&reportType=${reportCode}`
-    );
+    const params = new URLSearchParams({
+      campaignNumber: campaignNumber || "",
+      campaignName: campaignName || "",
+      reportType: reportCode,
+    });
+    navigate(`/${window?.contextPath}/employee/dss/report-detail?${params.toString()}`);
   };
 
   if (isCampaignLoading || isMdmsLoading || isConfiguredReportsLoading)

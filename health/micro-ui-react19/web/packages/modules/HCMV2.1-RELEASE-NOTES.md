@@ -105,14 +105,14 @@ The DSS version only sets `gcTime: 0`, whereas the previous campaign version als
 
 ### 6. Add `HIERARCHY_TYPE` to `globalConfig.js` in all deployment variants
 
-Required for multi-hierarchy campaigns to function correctly.
+Required for HRMS to function correctly — it is the only module that still reads this value at runtime.
 
 ```js
 // Default value:
 HIERARCHY_TYPE: "ADMIN"
 ```
 
-Affects: Campaign Manager, Payments, HRMS, PGR.
+Affects: Health HRMS only. Campaign Manager, Payments, and PGR now derive hierarchy from the campaign/project, session storage, or MDMS instead (see their respective "What Changed" sections below) and do not read this config.
 
 ---
 
@@ -361,15 +361,16 @@ Users can now access campaign-scoped reports directly from the dashboard.
 
 | Page | What it does |
 |---|---|
-| Reports list page | Click "View Reports" on a campaign row to see all reports available for that campaign, filtered by project type |
+| Reports list page | Click "View Reports" on a campaign row to see the reports configured for that campaign |
 | Report detail page | Select a report to open the full report for that campaign |
 
 **Flow:**
+
 ```text
 Campaign row → "View Reports" link → Reports list page → Select a report → Report detail page
 ```
 
-> The reports list is populated from MDMS based on the campaign's project type.
+> Available report definitions are populated from MDMS based on the campaign's project type. The reports list then shows only the reports that were actively configured for that specific campaign (via the Configure Reports step during campaign creation) — not every report defined for the project type.
 
 ---
 
