@@ -5,6 +5,7 @@ import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egove
 import TagComponent from "./TagComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
 import useCampaignStore from "../hooks/useCampaignStore";
+import { useCampaignSubmitting } from "./CampaignSubmitContext";
 
 function boundaryDataGrp(boundaryData) {
   // Create an empty object to hold grouped data by type
@@ -37,6 +38,7 @@ const PERSISTENCE_RETRY_DELAY_MS = 5000;
 
 const BoundarySummary = (props) => {
   const { t } = useTranslation();
+  const isParentSubmitting = useCampaignSubmitting();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [formStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", null);
   const searchParams = new URLSearchParams(location.search);
@@ -171,15 +173,16 @@ const BoundarySummary = (props) => {
 
   const updatedObject = { ...data };
 
-  if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
+  // Show a single loader while this screen has no data to render yet. When the campaign flow is
+  // already showing its overlay loader (saving the step), stay silent instead of stacking a second
+  // loader on top of it - that overlay covers the screen, so nothing goes blank.
+  if (isLoading || (!data && !error) || isFetching || isPolling) {
+    if (isParentSubmitting) return null;
+    return <Loader page={true} variant={"PageLoader"} loaderText={isLoading ? undefined : t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />;
   }
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching || isPolling) && (
-        <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />
-      )}
       <div className="container-full">
         <div className="card-container-delivery">
           <TagComponent campaignName={campaignName} />

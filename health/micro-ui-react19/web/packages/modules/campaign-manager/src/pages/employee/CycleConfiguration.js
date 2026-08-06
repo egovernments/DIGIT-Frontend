@@ -1,5 +1,6 @@
 import React, { useReducer, Fragment, useEffect, useState, act } from "react";
 import { useTranslation } from "react-i18next";
+import { useCampaignSubmitting } from "../../components/CampaignSubmitContext";
 import { TextInput, Loader, FieldV1,Card,LabelFieldPair,CardText,CardLabel, HeaderComponent, RadioButtons } from "@egovernments/digit-ui-components";
 import { deliveryConfig } from "../../configs/deliveryConfig";
 import getDeliveryConfig from "../../utils/getDeliveryConfig";
@@ -184,6 +185,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   const [state, dispatch] = useReducer(reducer, initialState(saved, filteredDeliveryConfig, refetch));
   const { cycleConfgureDate, cycleData } = state;
   const { t } = useTranslation();
+  const isParentSubmitting = useCampaignSubmitting();
   const [dateRange, setDateRange] = useState({
     startDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate || convertEpochToDate(campaignData?.startDate),
     endDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate || convertEpochToDate(campaignData?.endDate),
@@ -345,7 +347,9 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   };
 
   if (isLoading || campaignDataLoading || deliveryConfigLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The flow already shows its overlay loader while saving - do not stack a second loader
+    if (isParentSubmitting) return null;
+    return <Loader page={true} variant={"PageLoader"} />
   }
 
   return (

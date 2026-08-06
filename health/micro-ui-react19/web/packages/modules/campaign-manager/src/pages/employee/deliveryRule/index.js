@@ -5,6 +5,7 @@ import { Loader } from "@egovernments/digit-ui-components";
 import deliveryRulesReducer from './deliveryRulesSlice';
 import { useDeliveryRules, useDeliveryRuleData } from './useDeliveryRules';
 import MultiTab from "./MultiTabcontext";
+import { useCampaignSubmitting } from "../../../components/CampaignSubmitContext";
 
 // Configure Redux store
 const store = configureStore({
@@ -44,6 +45,8 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     syncDeliveryCount,
     updateObservationStrategyAction,
   } = useDeliveryRules();
+
+  const isParentSubmitting = useCampaignSubmitting();
 
   // Track previous project type and campaign ID to detect changes
   const prevProjectTypeRef = useRef(null);
@@ -87,7 +90,9 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
   // Get saved delivery rules
   const savedDeliveryRules = useMemo(() => {
     const saved = sessionData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
-    return saved;
+    // Ignore a malformed (non-array) value so the rules get rebuilt from the cycle config
+    // instead of carrying the bad shape forward into the submit payload
+    return Array.isArray(saved) ? saved : undefined;
   }, [sessionData]);
 
   // Store attribute and operator config in refs to avoid dependency issues
@@ -344,6 +349,8 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
   }, [initialized]);
 
   if (dataLoading || storeLoading || !initialized) {
+    // The flow already shows its overlay loader while saving - do not stack a second loader
+    if (isParentSubmitting) return null;
     return <Loader page={true} variant="PageLoader" />;
   }
 

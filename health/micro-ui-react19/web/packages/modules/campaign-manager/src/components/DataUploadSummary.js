@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useCampaignSubmitting } from "./CampaignSubmitContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
@@ -78,6 +79,7 @@ const fetchcd = async (tenantId, projectId) => {
 };
 const DataUploadSummary = (props) => {
   const { t } = useTranslation();
+  const isParentSubmitting = useCampaignSubmitting();
   const navigate = useNavigate();
   const location = useLocation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -312,12 +314,14 @@ const DataUploadSummary = (props) => {
   }, []);
 
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The flow already shows its overlay loader while saving - do not stack a second loader
+    if (isParentSubmitting) return null;
+    return <Loader page={true} variant={"PageLoader"} />
   }
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />}
+      {!isParentSubmitting && (isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />}
       <div className="container-full">
         {/* <div className="card-container">
           <Card className="card-header-timeline">
