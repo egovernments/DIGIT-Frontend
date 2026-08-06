@@ -43,6 +43,15 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
 
   const shouldCustomTranslate = !field?.isMdms && (fieldType === "dropdown" || fieldType === "radio" || fieldType === "checkbox");
 
+  // Fields that carry their own label (scanner button, checkbox) render a blank label,
+  // so hide the label row altogether - otherwise a required field shows an orphan asterisk
+  const resolvedLabel =
+    field?.showLabel === false || fieldType === "checkbox" || field?.format?.toLowerCase() === "scanner" || field?.format?.toLowerCase() === "qrscanner"
+      ? ""
+      : shouldCustomTranslate
+      ? field?.label
+      : customT(field?.label) || "";
+
   // Parse schemaCode to get moduleName and masterName
   const { moduleName, masterName, isValidSchema } = useMemo(() => {
     if (!field?.isMdms || !field?.schemaCode || typeof field.schemaCode !== 'string') {
@@ -126,13 +135,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
         description={shouldCustomTranslate ? field?.helpText : customT(field?.helpText) || ""}
         // error={shouldCustomTranslate ? field?.errorMessage : customT(field?.errorMessage) || null}
         infoMessage={shouldCustomTranslate ? field?.tooltip : customT(field?.tooltip) || null}
-        label={
-          field?.showLabel === false || fieldType === "checkbox" || field.format === "scanner"
-            ? ""
-            : shouldCustomTranslate
-            ? field?.label
-            : customT(field?.label) || ""
-        }
+        label={resolvedLabel}
         onChange={function noRefCheck() {}}
         placeholder={shouldCustomTranslate ? field?.innerLabel : customT(field?.innerLabel) || ""}
         populators={{
@@ -151,7 +154,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
             ? { moduleName: "common-masters", masterName: "CountryCodes", defaultCountryCode: "+91" }
             : null
         }}
-        withoutLabel={field?.format === "checkbox" ? true : false}
+        withoutLabel={field?.format === "checkbox" || !resolvedLabel}
         required={getFieldTypeFromMasterData2(field) === "custom" ? null : field?.required}
         type={fieldType}
         value={previewValue}
