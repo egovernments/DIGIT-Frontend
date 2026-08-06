@@ -4,7 +4,6 @@
 ---
 
 **Release:** HCM-v2.1
-**Release Date:** June 2026
 **Previous Release:** [HCM-v2.0](https://github.com/egovernments/DIGIT-Frontend/releases/tag/HCM-v2.0)
 **Repository:** [egovernments/DIGIT-Frontend](https://github.com/egovernments/DIGIT-Frontend)
 
@@ -127,7 +126,7 @@ This dependency has been removed due to a known security vulnerability. Remove a
 
 ### Overview
 
-Campaign Manager provides the full campaign lifecycle — from creating a campaign and configuring the mobile app, to uploading boundary and beneficiary data, managing cycles and delivery rules, and setting up attendance registers.
+Campaign Manager provides the full campaign lifecycle — from creating a campaign and configuring the mobile app, to uploading boundary data, managing cycles and delivery rules, and setting up attendance registers.
 
 In HCM v2.1, it gains three major new capabilities:
 - **Commodity Management** — track warehouse stock, create shipments, upload bulk stock transactions
@@ -140,7 +139,7 @@ In HCM v2.1, it gains three major new capabilities:
 
 #### Multi-hierarchy selection step
 
-A new **step 4 (the final step)** has been added to the initial campaign creation wizard. Users select the boundary hierarchy type (e.g., administrative vs. health facility hierarchy) as the last step before the campaign draft is saved.
+A new **step 4 (the final step)** has been added to the initial campaign creation wizard. Users select the boundary hierarchy type as the last step before the campaign draft is saved.
 
 - Available hierarchy types are pulled from the Boundary Management API. Each card shows the hierarchy's boundary levels and a tag indicating whether boundary data is already loaded.
 - The selection is saved to the campaign store (`campaign.hierarchy` in Redux, persisted to IndexedDB via the `CAMPAIGN_APP_STATE` key) and used by all subsequent steps in the wizard.
@@ -358,7 +357,7 @@ L2 Dashboard → User Activity Section → Metrics cards + Table → Click a use
 
 #### Custom Reports
 
-Program managers can now access campaign-scoped reports directly from the dashboard.
+Users can now access campaign-scoped reports directly from the dashboard.
 
 | Page | What it does |
 |---|---|
@@ -907,11 +906,9 @@ Translation keys are centralised in `src/utils/i18nKeyConstants.js`.
 
 ## Related Documents
 
-- [HCM-TECHNICAL-OVERVIEW.md](./HCM-TECHNICAL-OVERVIEW.md) — architecture and operational reference for HCM-v2.1
-- [HCM-v2.1-RELEASE-NOTES.md](./HCM-v2.1-RELEASE-NOTES.md) — release overview (at-a-glance format)
-- [Campaign Manager RELEASE-NOTES.md](./health/micro-ui-react19/web/packages/modules/campaign-manager/RELEASE-NOTES.md)
-- [Health Payments RELEASE-NOTES.md](./health/micro-ui-react19/web/packages/modules/health-payments/RELEASE-NOTES.md)
-- [Health HRMS RELEASE-NOTES.md](./health/micro-ui-react19/web/packages/modules/health-hrms/RELEASE-NOTES.md)
-- [PGR RELEASE-NOTES.md](./health/micro-ui-react19/web/packages/modules/pgr/RELEASE-NOTES.md)
-- [Health DSS RELEASE-NOTES.md](./health/micro-ui-react19/web/packages/modules/health-dss/RELEASE-NOTES.md)
+- [Campaign Manager RELEASE-NOTES.md](https://github.com/egovernments/DIGIT-Frontend/blob/master/health/micro-ui-react19/web/packages/modules/campaign-manager/RELEASE-NOTES.md)
+- [Health Payments RELEASE-NOTES.md](https://github.com/egovernments/DIGIT-Frontend/blob/master/health/micro-ui-react19/web/packages/modules/health-payments/RELEASE-NOTES.md)
+- [Health HRMS RELEASE-NOTES.md](https://github.com/egovernments/DIGIT-Frontend/blob/master/health/micro-ui-react19/web/packages/modules/health-hrms/RELEASE-NOTES.md)
+- [PGR RELEASE-NOTES.md](https://github.com/egovernments/DIGIT-Frontend/blob/master/health/micro-ui-react19/web/packages/modules/pgr/RELEASE-NOTES.md)
+- [Health DSS RELEASE-NOTES.md](https://github.com/egovernments/DIGIT-Frontend/blob/master/health/micro-ui-react19/web/packages/modules/health-dss/RELEASE-NOTES.md)
 - [HCM-v2.0 Release](https://github.com/egovernments/DIGIT-Frontend/releases/tag/HCM-v2.0) — previous release reference
