@@ -148,8 +148,14 @@ const AddProducts = React.memo(({
 
   const canAddMore = availableOptions.length > 0;
 
-  if(isProductLoading){
-    return (<Loader/>);
+  // Hold the popup's height while the product list loads - a bare Loader collapsed to nothing,
+  // so the spinner was easy to miss entirely while waiting on /product/v1/_search
+  if (isProductLoading) {
+    return (
+      <div className="add-resource-wrapper" style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "8rem" }}>
+        <Loader />
+      </div>
+    );
   }
 
 
