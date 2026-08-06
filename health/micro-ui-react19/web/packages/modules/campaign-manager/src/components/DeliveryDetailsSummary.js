@@ -454,7 +454,7 @@ const DeliveryDetailsSummary = (props) => {
         <div className="card-container-delivery">
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
-            <HeaderComponent className="summary-header">{t(I18N_KEYS.COMPONENTS.HCM_DELIVERY_DETAILS_SUMMARY)}</HeaderComponent>
+            <HeaderComponent className="summary-header select-boundary-screen-heading">{t(I18N_KEYS.COMPONENTS.HCM_DELIVERY_DETAILS_SUMMARY)}</HeaderComponent>
           </div>
           <div className="campaign-summary-container delivery-summary">
             <ViewComposer data={updatedObject} cardErrors={summaryErrors} />

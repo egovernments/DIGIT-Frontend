@@ -336,7 +336,7 @@ const DataUploadSummary = (props) => {
         <div className="card-container-delivery">
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
-            <HeaderComponent className="summary-header">{t(I18N_KEYS.COMPONENTS.HCM_DATA_UPLOAD_SUMMARY)}</HeaderComponent>
+            <HeaderComponent className="summary-header select-boundary-screen-heading">{t(I18N_KEYS.COMPONENTS.HCM_DATA_UPLOAD_SUMMARY)}</HeaderComponent>
             {/* {userCredential && (
           <Button
             label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_DOWNLOAD_USER_CRED)}
