@@ -78,5 +78,15 @@ export const loginConfig = [
         renderAfterSubmit:true
       },
     ],
+
+    // If you just want to show a popup when clicked on forgot password
+    // forgotPasswordScreen: {
+    //   mode: "popup",
+    //   popupFields: {
+    //     heading: "CORE_COMMON_FORGOT_PASSWORD_LABEL",
+    //     description: "CORE_FORGOT_PASSWORD_POPUP_DESCRIPTION",
+    //     buttonLabel: "CORE_FORGOT_PASSWORD_POPUP_OK",
+    //   },
+    // },
   },
 ];
