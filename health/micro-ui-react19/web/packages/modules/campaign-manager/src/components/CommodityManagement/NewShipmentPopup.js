@@ -135,26 +135,36 @@ const NewShipmentPopup = ({
   const campaignName = campaignData?.campaignName || "";
   const projectServicePath = window.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || `health-project`;
 
-  // Extract product variants from MDMS project type resources
+  // Extract product variants — prefer campaign-specific delivery rules resources over MDMS defaults
   const campaignProjectType = campaignData?.projectType;
   const productVariants = useMemo(() => {
+    const seen = new Set();
+    const variants = [];
+
+    const campaignResources = (campaignData?.deliveryRules || []).flatMap((rule) => rule?.resources || []);
+    if (campaignResources.length > 0) {
+      campaignResources.forEach((r) => {
+        if (r?.productVariantId && !seen.has(r.productVariantId)) {
+          seen.add(r.productVariantId);
+          variants.push({ productVariantId: r.productVariantId, name: r.name || r.productVariantId });
+        }
+      });
+      return variants;
+    }
+
+    // Fallback: MDMS defaults when campaign has no delivery rules configured yet
     if (!projectTypeData || !campaignProjectType) return [];
     const projectTypes = projectTypeData?.["HCM-PROJECT-TYPES"]?.projectTypes || [];
     const matchedType = projectTypes.find((pt) => pt?.code === campaignProjectType);
     if (!matchedType?.resources) return [];
-    const variants = [];
-    const seen = new Set();
     matchedType.resources.forEach((r) => {
       if (r?.productVariantId && !seen.has(r.productVariantId)) {
         seen.add(r.productVariantId);
-        variants.push({
-          productVariantId: r.productVariantId,
-          name: r.name || r.productVariantId,
-        });
+        variants.push({ productVariantId: r.productVariantId, name: r.name || r.productVariantId });
       }
     });
     return variants;
-  }, [projectTypeData, campaignProjectType]);
+  }, [campaignData, projectTypeData, campaignProjectType]);
 
   const projectSearchCriteria = useMemo(
     () => ({
