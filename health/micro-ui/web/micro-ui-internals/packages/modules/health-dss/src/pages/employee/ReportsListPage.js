@@ -86,21 +86,70 @@ const ReportsListPage = () => {
         <p className="digit-reports-list__description">{t("HCM_REPORTS_SELECT_TYPE_DESC")}</p>
 
         {reportTypes.length > 0 && (
-          <div className="digit-dss-switch-tabs-progressbar-wrapper">
-            <div className="digit-dss-switch-tabs" style={{ width: "100%" }}>
-              <div className="digit-dss-switch-tab-wrapper">
-                {reportTypes.map((report) => (
+          <React.Fragment>
+            <style>{`
+              .digit-reports-list-type-tab {
+                cursor: pointer;
+                padding: 0.625rem 1.25rem;
+                border-radius: 1.5rem;
+                font-family: Roboto, sans-serif;
+                font-size: 1rem;
+                white-space: nowrap;
+                border: 0.094rem solid transparent;
+                transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+              }
+              .digit-reports-list-type-tab.inactive {
+                font-weight: 500 !important;
+                color: #0B0C0C !important;
+                background: #FFFFFF !important;
+                border-width: 0.125rem !important;
+                border-style: solid !important;
+                border-color: #B1B4B6 !important;
+                box-shadow: 0rem 0.063rem 0.125rem 0rem rgba(0, 0, 0, 0.1) !important;
+              }
+              .digit-reports-list-type-tab.inactive:hover {
+                color: #C84C0E !important;
+                border-color: #C84C0E !important;
+                background: #FEEFE7 !important;
+              }
+              .digit-reports-list-type-tab.active {
+                font-weight: 700;
+                color: #FFFFFF;
+                background: #C84C0E;
+                border-color: #C84C0E;
+                box-shadow: 0rem 0.125rem 0.375rem rgba(200, 76, 14, 0.35);
+              }
+              .digit-reports-list-type-tab.active:hover {
+                background: #B0430C;
+                border-color: #B0430C;
+              }
+            `}</style>
+            <div
+              style={{
+                display: "flex",
+                gap: "0.75rem",
+                flexWrap: "wrap",
+                background: "#FAFAFA",
+                border: "0.063rem solid #D6D5D4",
+                borderRadius: "0.75rem",
+                padding: "0.75rem",
+                marginTop: "1.5rem",
+              }}
+            >
+              {reportTypes.map((report) => {
+                const isActive = activeReportCode === report.code;
+                return (
                   <div
                     key={report.code}
-                    className={activeReportCode === report.code ? "digit-dss-switch-tab-selected" : "digit-dss-switch-tab-unselected"}
+                    className={`digit-reports-list-type-tab ${isActive ? "active" : "inactive"}`}
                     onClick={() => setActiveReportCode(report.code)}
                   >
                     {t(report.label)}
                   </div>
-                ))}
-              </div>
+                );
+              })}
             </div>
-          </div>
+          </React.Fragment>
         )}
       </Card>
 
