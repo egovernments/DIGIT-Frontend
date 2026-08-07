@@ -50,14 +50,19 @@ const getTagElements = (rowData) => {
       stroke: true,
     };
   }
-  if (rowData?.deliveryRules?.[0]?.cycles?.length == 1) {
+  // Prefer the configured cycles, but a draft has no delivery rules yet - fall back to the round
+  // type captured on the campaign selection step so the tag still shows.
+  const cycleCount = rowData?.deliveryRules?.[0]?.cycles?.length;
+  const roundType = cycleCount > 1 ? "MULTI_ROUND" : cycleCount === 1 ? "SINGLE_ROUND" : rowData?.additionalDetails?.roundType;
+
+  if (roundType === "SINGLE_ROUND") {
     tags.type = {
       label: "SINGLEROUND_CAMPAIGN",
       showIcon: false,
       type: "warning",
       stroke: true,
     };
-  } else if (rowData?.deliveryRules?.[0]?.cycles?.length > 1) {
+  } else if (roundType === "MULTI_ROUND") {
     tags.type = {
       label: "MULTIROUND_CAMPAIGN",
       showIcon: false,

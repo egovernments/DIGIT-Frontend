@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useCampaignSubmitting } from "./CampaignSubmitContext";
 import { useNavigate } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
@@ -224,6 +225,7 @@ function reverseDeliveryRemap(data, t) {
 }
 const DeliveryDetailsSummary = (props) => {
   const { t } = useTranslation();
+  const isParentSubmitting = useCampaignSubmitting();
   const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [formStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", null);
@@ -431,12 +433,14 @@ const DeliveryDetailsSummary = (props) => {
     else setKey(8);
   };
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The flow already shows its overlay loader while saving - do not stack a second loader
+    if (isParentSubmitting) return null;
+    return <Loader page={true} variant={"PageLoader"} />
   }
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching || isPolling) && <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />}
+      {!isParentSubmitting && (isLoading || (!data && !error) || isFetching || isPolling) && <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />}
       <div className="container-full">
         {/* <div className="card-container">
           <Card className="card-header-timeline">

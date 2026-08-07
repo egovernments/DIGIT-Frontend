@@ -118,6 +118,9 @@ function NewAppFieldScreenWrapper({viewMode}) {
     [dispatch]
   );
 
+  // Bumped whenever a toggle is refused, so the Switch can be remounted and show the real state
+  const [toggleResetKey, setToggleResetKey] = useState(0);
+
   const handleHideField = useCallback(
     (fieldName, cardIndex, role, key) => {
       dispatch(hideField({ fieldName, cardIndex, role, key }));
@@ -256,6 +259,16 @@ function NewAppFieldScreenWrapper({viewMode}) {
         const fields = [...editableBodyFields, ...editableFooterFields];
         const bodyFieldsCount = editableBodyFields.length;
 
+        // A panel card is the screen itself (e.g. "Stock recorded successfully"), so switching it off
+        // would just blank the preview - it gets no visibility toggle. The actions it carries
+        // (primary/secondary buttons, listed here as separate rows) keep theirs.
+
+        // Every screen needs a CTA. A lone button therefore has no toggle at all, and where there are
+        // several, the last visible one cannot be switched off either.
+        const buttonFields = fields.filter((f) => f?.format === "button");
+        const visibleButtonCount = buttonFields.filter((f) => f?.hidden !== true).length;
+        const isOnlyButton = buttonFields.length === 1;
+
 
 
         return (
@@ -276,7 +289,25 @@ function NewAppFieldScreenWrapper({viewMode}) {
                   required={required}
                   isDelete={deleteFlag === true ? true : false}
                   onDelete={viewMode ? null : () => handleDeleteField(actualFieldIndex, actualCardIndex)}
-                  onHide={viewMode ? null : () => handleHideField(fieldName, actualCardIndex, rest?.role, rest?.key)}                  onSelectField={rest?.hidden ? null : () => handleSelectField(c[i], currentCard, card[index], actualCardIndex, actualFieldIndex)}
+                  onHide={
+                    viewMode
+                      ? null
+                      : () => {
+                          const isTurningOffLastButton =
+                            rest?.format === "button" && rest?.hidden !== true && visibleButtonCount <= 1;
+                          if (isTurningOffLastButton) {
+                            if (typeof window.__appConfig_showToast === "function") {
+                              window.__appConfig_showToast({
+                                key: "error",
+                                label: t(I18N_KEYS.APP_CONFIGURATION.AT_LEAST_ONE_BUTTON_REQUIRED),
+                              });
+                            }
+                            setToggleResetKey((n) => n + 1);
+                            return;
+                          }
+                          handleHideField(fieldName, actualCardIndex, rest?.role, rest?.key);
+                        }
+                  }                  onSelectField={rest?.hidden ? null : () => handleSelectField(c[i], currentCard, card[index], actualCardIndex, actualFieldIndex)}
                   config={c[i]}
                   Mandatory={Mandatory}
                   rest={{...rest, fieldName}}
@@ -285,6 +316,8 @@ function NewAppFieldScreenWrapper({viewMode}) {
                   cardIndex={actualCardIndex}
                   indexOfCard={index}
                   moveField={viewMode ? null : type !== "template" ? moveField : null}
+                  hideToggle={rest?.format === "panelCard" || (rest?.format === "button" && isOnlyButton)}
+                  toggleResetKey={toggleResetKey}
                   fields={c}
                   isTemplate={currentCard?.type === "template"}
                 // isFooterField={isFooterField}

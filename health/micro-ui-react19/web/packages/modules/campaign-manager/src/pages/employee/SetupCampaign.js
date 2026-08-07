@@ -17,6 +17,7 @@ import { handleValidate } from "../../utils/setupCampaignValidators";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import useCampaignStore from "../../hooks/useCampaignStore";
+import CampaignSubmitContext from "../../components/CampaignSubmitContext";
 import { useDispatch } from "react-redux";
 import {
   clearUnifiedUploadData,
@@ -334,7 +335,7 @@ const SetupCampaign = () => {
             } else {
               payloadData.additionalDetails.cycleData = {};
             }
-            if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+            if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
                 totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
@@ -342,7 +343,9 @@ const SetupCampaign = () => {
               );
               payloadData.deliveryRules = [temp?.[0]];
               // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
-            } else {
+            } else if (!totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+              // Genuinely no delivery rules yet - send empty. A malformed (truthy non-array) value
+              // is left out of the payload entirely so it can't wipe the rules saved on the draft.
               payloadData.deliveryRules = [];
             }
             if (!payloadData?.startDate && !payloadData?.endDate) {
@@ -512,7 +515,7 @@ const SetupCampaign = () => {
             } else {
               payloadData.additionalDetails.cycleData = {};
             }
-            if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+            if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
                 totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
@@ -594,7 +597,7 @@ const SetupCampaign = () => {
             } else {
               payloadData.additionalDetails.cycleData = {};
             }
-            if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+            if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
                 totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
@@ -605,7 +608,9 @@ const SetupCampaign = () => {
 
               payloadData.deliveryRules = [temp?.[0]];
               // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
-            } else {
+            } else if (!totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+              // Genuinely no delivery rules yet - send empty. A malformed (truthy non-array) value
+              // is left out of the payload entirely so it can't wipe the rules saved on the draft.
               payloadData.deliveryRules = [];
             }
             if (!payloadData?.startDate && !payloadData?.endDate) {
@@ -1161,6 +1166,11 @@ const SetupCampaign = () => {
     setShowToast(null);
   };
 
+  // The overlay loader below covers the whole screen, so step components must not render their own
+  // page loader underneath it - they read this flag and stay silent while it is up.
+  // Declared before the early returns below so the hook always runs (Rules of Hooks).
+  const submitStatus = useMemo(() => ({ isSubmitting: !!(loader || isUpdating || isDataCreating) }), [loader, isUpdating, isDataCreating]);
+
   // Show loader while campaign data is being fetched for any editing flow.
   // The existing isDraft/isPreview checks below miss cases like draft=null&isDraft=true
   // where draftLoading is true but neither condition matches.
@@ -1221,8 +1231,9 @@ const SetupCampaign = () => {
   };
 
   return (
+    <CampaignSubmitContext.Provider value={submitStatus}>
     <React.Fragment>
-      {loader || (isUpdating && <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />)}
+      {(loader || isUpdating) && <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />}
       {/* {noAction !== "false" && (
         <Stepper
           customSteps={["HCM_CAMPAIGN_SETUP_DETAILS", "HCM_BOUNDARY_DETAILS", "HCM_DELIVERY_DETAILS", "HCM_UPLOAD_DATA", "HCM_REVIEW_DETAILS"]}
@@ -1307,6 +1318,7 @@ const SetupCampaign = () => {
         />
       )}
     </React.Fragment>
+    </CampaignSubmitContext.Provider>
   );
 };
 
