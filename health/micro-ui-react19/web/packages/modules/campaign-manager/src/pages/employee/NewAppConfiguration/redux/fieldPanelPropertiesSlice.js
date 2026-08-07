@@ -392,6 +392,48 @@ const dummyPanelConfig = {
   ],
 };
 
+// Property panels the console needs but that the MDMS master does not carry yet.
+// A noResultCard (e.g. "Beneficiary Not Found" on the search screens) appears in
+// Template Elements with nothing but the disabled field-type dropdown, so its
+// heading and description cannot be edited at all. These are merged in only when
+// the master has no entry with the same id, so the block turns into a no-op once
+// FieldPropertiesPanelConfig is updated server-side.
+const supplementalContentProperties = [
+  {
+    id: "noResultCardTitle",
+    label: "noResultCardTitle",
+    order: 33,
+    bindTo: "label",
+    fieldType: "text",
+    maxLength: 40,
+    defaultValue: "",
+    isLocalisable: true,
+    conditionalField: [],
+    showFieldOnToggle: false,
+    visibilityEnabledFor: ["noResultCard"],
+  },
+  {
+    id: "noResultCardDescription",
+    label: "noResultCardDescription",
+    order: 34,
+    bindTo: "description",
+    fieldType: "text",
+    maxLength: 150,
+    defaultValue: "",
+    isLocalisable: true,
+    conditionalField: [],
+    showFieldOnToggle: false,
+    visibilityEnabledFor: ["noResultCard"],
+  },
+];
+
+// Returns only content and validation: every other key becomes a tab in the drawer.
+const withSupplementalProperties = (config) => {
+  const content = config?.content || [];
+  const missing = supplementalContentProperties.filter((item) => !content.some((existing) => existing?.id === item.id));
+  return { content: [...content, ...missing], validation: config?.validation || [] };
+};
+
 // Async thunk with status/error tracking
 export const getFieldPanelMaster = createAsyncThunk(
   "fieldPanelMaster/fetch",
@@ -432,14 +474,16 @@ export const getFieldPanelMaster = createAsyncThunk(
       // We only want content and validation, not the label (which would show up as a tab)
       if (Array.isArray(data) && data.length > 0 && data[0]?.content && data[0]?.validation) {
         const { content, validation } = data[0];
-        return { content, validation };
+        return withSupplementalProperties({ content, validation });
       }
 
-      return data;
+      // An empty master is as unusable as a failed call - the drawer would render no
+      // tabs and no properties at all - so fall back rather than storing the empty array.
+      return withSupplementalProperties(dummyPanelConfig);
     } catch (err) {
       // Fallback to dummy data on error
       console.error("Failed to fetch from MDMS, using fallback:", err);
-      return dummyPanelConfig;
+      return withSupplementalProperties(dummyPanelConfig);
     }
   }
 );

@@ -845,6 +845,16 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       }
     });
 
+    // Every screen needs a CTA: if it defines buttons at all, at least one must stay visible.
+    // Screens that legitimately carry no button are left alone.
+    const buttons = allFields.filter((field) => field?.format === "button");
+    if (buttons.length > 0 && buttons.every((button) => button?.hidden === true)) {
+      errors.push({
+        fieldLabel: "",
+        message: "AT_LEAST_ONE_BUTTON_REQUIRED",
+      });
+    }
+
     return errors;
   }, [currentData, panelConfig, fieldTypeMaster, localizationData, currentLocale]);
 
