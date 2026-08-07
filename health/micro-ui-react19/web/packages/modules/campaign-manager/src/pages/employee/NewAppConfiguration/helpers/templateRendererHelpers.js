@@ -52,7 +52,9 @@ export const renderTemplateComponent = (
   sectionName = "body",
   index = 0
 ) => {
-  if (!field || field.hidden) return null;
+  // Only a literal boolean hides a field here; `hidden` often carries an unevaluated device-side
+  // expression string, which must not be mistaken for "hidden" in the preview.
+  if (!field || field.hidden === true) return null;
 
   const isSelected = isFieldSelected(field, selectedField);
   const uniqueKey = field.id || (field.role ? `${field.fieldName}-${field.role}` : field.fieldName) || `${sectionName}-${index}`;

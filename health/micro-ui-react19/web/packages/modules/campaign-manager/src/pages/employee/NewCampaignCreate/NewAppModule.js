@@ -45,7 +45,8 @@ const NewAppModule = () => {
   };
 
   if (isLoading) {
-    return <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.CAMPAIGN_CREATE.LOADING)} />;
+    // Page loader (nothing renders behind it) - OverlayLoader also brings the library's 6-dot animation
+    return <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.CAMPAIGN_CREATE.LOADING_MODULE)} />;
   }
 
   return (

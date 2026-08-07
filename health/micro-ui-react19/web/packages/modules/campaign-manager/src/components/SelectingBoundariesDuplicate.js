@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef, Fragment, useEffect, useCallback, useTransition } from "react";
 import { useTranslation } from "react-i18next";
+import { useCampaignSubmitting } from "./CampaignSubmitContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
 // Removed TextBlock and Switch imports - unified campaign toggle card is commented out (controlled by DEFAULT_IS_UNIFIED_CAMPAIGN)
@@ -25,6 +26,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   }, [sessionDataRaw]);
 
   const { t } = useTranslation();
+  const isParentSubmitting = useCampaignSubmitting();
   const location = useLocation();
   const navigate = useNavigate();
   const isDraftCampaign = location.state?.isDraftCampaign;
@@ -301,7 +303,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const isLocalizationPending = boundaryModuleCode.length > 0 && isLocalizationLoading;
 
   if (isLoading || isMountPending || isBoundaryDataLoading || isLocalizationPending) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The flow already shows its overlay loader while saving - do not stack a second loader
+    if (isParentSubmitting) return null;
+    return <Loader page={true} variant={"PageLoader"} />
   }
 
   return (

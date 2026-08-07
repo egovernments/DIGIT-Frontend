@@ -147,10 +147,11 @@ import { I18N_KEYS } from "./i18nKeyConstants";
 };
 
  const  checkAttributeValidity=(data)=> {
-  for (const rule of data?.deliveryRule) {
-    for (const delivery of rule?.deliveries) {
-      for (const rule of delivery?.deliveryRules) {
-        for (const attribute of rule?.attributes) {
+  // Every level is guarded - a missing or non-array value here used to throw "is not iterable"
+  for (const rule of Array.isArray(data?.deliveryRule) ? data.deliveryRule : []) {
+    for (const delivery of rule?.deliveries || []) {
+      for (const rule of delivery?.deliveryRules || []) {
+        for (const attribute of rule?.attributes || []) {
           if (
             attribute?.operator &&
             attribute?.operator?.code === "IN_BETWEEN" &&
@@ -174,7 +175,10 @@ import { I18N_KEYS } from "./i18nKeyConstants";
   return false;
 };
 
-const hasInvalidMaxCountAttribute = (deliveryRules = []) => {
+const hasInvalidMaxCountAttribute = (deliveryRules) => {
+  // The default parameter only covers `undefined` - session/draft data can hand us an object,
+  // which used to crash the whole step with "deliveryRules.some is not a function"
+  if (!Array.isArray(deliveryRules)) return false;
   return deliveryRules.some((cycle) =>
     cycle?.deliveries?.some((delivery) =>
       delivery?.deliveryRules?.some((rule) => {
@@ -381,7 +385,9 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       return true;
 
     case "deliveryRule":
-      const deliveryRules = formData?.deliveryRule;
+      // Tolerate an absent/malformed value here (this data can arrive via totalFormData instead) -
+      // the payload builder is what guards against overwriting saved rules
+      const deliveryRules = Array.isArray(formData?.deliveryRule) ? formData.deliveryRule : [];
       const validateMaxCondition = hasInvalidMaxCountAttribute(deliveryRules);
       if (validateMaxCondition) {
         setShowToast({ key: "error", label: "INVALID_USE_OF_MAX_COUNT" });
