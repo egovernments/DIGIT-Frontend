@@ -15,7 +15,9 @@ const renderSection = (section, sectionName, fieldTypeMasterData, selectedField,
   return (
     <>
       {section
-        .filter((field) => !field.hidden)
+        // `hidden` may hold a device-side expression ("{{fn:...}} == true"), which is a truthy
+        // string here - only an explicit boolean true should hide a field in the preview.
+        .filter((field) => field.hidden !== true)
         .sort((a, b) => (a.order || 0) - (b.order || 0))
         .map((field, index) => {
           // Ensure field has an id for React keys
