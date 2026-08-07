@@ -6,8 +6,16 @@ import Background from "../../../components/Background";
 import Header from "../../../components/Header";
 import Carousel from "./Carousel/Carousel";
 import ImageComponent from "../../../components/ImageComponent";
+import ForgotPasswordDialog from "../../../components/Dialog/ForgotPasswordDialog";
 // import SkipToMainContent from "../SkipToMainContent/SkipToMainContent";
 import withAutoFocusMain from "../../../hoc/withAutoFocusMain";
+
+// Used only if forgotPasswordScreen.mode is "popup" but popupFields isn't fully specified.
+const DEFAULT_FORGOT_PASSWORD_POPUP = {
+  heading: "CORE_COMMON_FORGOT_PASSWORD_LABEL",
+  description: "CORE_FORGOT_PASSWORD_POPUP_DESCRIPTION",
+  buttonLabel: "CORE_FORGOT_PASSWORD_POPUP_OK",
+};
 
 const setEmployeeDetail = (userObject, token) => {
   if (Digit.Utils.getMultiRootTenant() && process.env.NODE_ENV !== "development") {
@@ -49,6 +57,8 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
   const [loginLoader, setLoginLoader] = useState(false);
+  const [showForgotPasswordPopup, setShowForgotPasswordPopup] = useState(false);
+  const forgotScreenConfig = propsConfig?.forgotPasswordScreen;
   const navigate = useNavigate();
   const DynamicLoginComponent = Digit.ComponentRegistryService?.getComponent(
     "DynamicLoginComponent",
@@ -428,6 +438,10 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   };
 
   const onForgotPassword = () => {
+    if (forgotScreenConfig?.mode === "popup") {
+      setShowForgotPasswordPopup(true);
+      return;
+    }
     navigate(`/${window?.contextPath}/employee/user/forgot-password`);
   };
   const defaultTenant = Digit.ULBService.getStateId();
@@ -561,6 +575,14 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
         {renderLoginForm("login-form-container", "", loginOTPBased ? "sandbox-onboarding-wrapper" : "")}
         {DynamicLoginComponent && <DynamicLoginComponent />} 
         {showToast && <Toast type="error" label={t(showToast)} onClose={closeToast} />}
+        {showForgotPasswordPopup && (
+          <ForgotPasswordDialog
+            heading={forgotScreenConfig?.popupFields?.heading || DEFAULT_FORGOT_PASSWORD_POPUP.heading}
+            description={forgotScreenConfig?.popupFields?.description || DEFAULT_FORGOT_PASSWORD_POPUP.description}
+            buttonLabel={forgotScreenConfig?.popupFields?.buttonLabel || DEFAULT_FORGOT_PASSWORD_POPUP.buttonLabel}
+            onDismiss={() => setShowForgotPasswordPopup(false)}
+          />
+        )}
         {renderFooter("EmployeeLoginFooter")}
       </div>
     </div>
@@ -594,6 +616,14 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       )}
         {DynamicLoginComponent && <DynamicLoginComponent />}
        {showToast && <Toast type="error" label={t(showToast)} onClose={closeToast} />}
+      {showForgotPasswordPopup && (
+        <ForgotPasswordDialog
+          heading={forgotScreenConfig?.popupFields?.heading || DEFAULT_FORGOT_PASSWORD_POPUP.heading}
+          description={forgotScreenConfig?.popupFields?.description || DEFAULT_FORGOT_PASSWORD_POPUP.description}
+          buttonLabel={forgotScreenConfig?.popupFields?.buttonLabel || DEFAULT_FORGOT_PASSWORD_POPUP.buttonLabel}
+          onDismiss={() => setShowForgotPasswordPopup(false)}
+        />
+      )}
       {renderFooter("employee-login-home-footer")}
     </Background>
   );
