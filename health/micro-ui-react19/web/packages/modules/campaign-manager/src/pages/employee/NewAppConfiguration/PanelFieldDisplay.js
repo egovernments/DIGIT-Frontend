@@ -9,7 +9,7 @@ import { getFieldTypeFromMasterData2 } from "./helpers/getFieldTypeFromMasterDat
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 // Component to toggle visibility of a field if it is not mandatory and not marked for deletion
-const ToggleVisibilityControl = ({ config, onToggle }) => {
+const ToggleVisibilityControl = ({ config, onToggle, resetKey }) => {
   if (config?.deleteFlag || config?.mandatory) return null;
 
   return (
@@ -23,7 +23,9 @@ const ToggleVisibilityControl = ({ config, onToggle }) => {
       }}
       className="appConfigLabelField-toggleVisibility"
     >
-      <Switch label="" isCheckedInitially={config?.hidden !== true} disable={onToggle == null}/>
+      {/* Switch keeps its own state, so key it on the real value (plus a reset counter bumped when a
+          toggle is refused) - otherwise a blocked click leaves the switch showing the wrong state. */}
+      <Switch key={`${config?.hidden === true ? "off" : "on"}-${resetKey || 0}`} label="" isCheckedInitially={config?.hidden !== true} disable={onToggle == null}/>
     </div>
   );
 };
@@ -39,7 +41,7 @@ const DeleteFieldControl = ({ isDelete, onDelete }) => {
         if(onDelete != null)
         {
           onDelete();}
-          
+
       }}
       style={{
         cursor: "pointer",
@@ -60,7 +62,7 @@ const DeleteFieldControl = ({ isDelete, onDelete }) => {
 
 // Main component to display a panel field with label, tag, visibility toggle, and delete option
 // Used for all non-header field types (no switch needed)
-const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, onDelete, rest, onSelectField }) => {
+const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, onDelete, rest, onSelectField, hideToggle, toggleResetKey }) => {
   const { t } = useTranslation();
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
   const componentRef = useRef(null);
@@ -68,7 +70,9 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
   // Check if field has configurable (non-custom) visibility conditions
   const expressions = config?.visibilityCondition?.expression;
   const isDependent = Array.isArray(expressions) && expressions.filter((e) => e.type !== "custom").length > 0;
-  const hasToggle = !config?.deleteFlag && !config?.mandatory;
+  // A panel card is the whole screen - toggling it off would just blank the preview, so the screen
+  // exposes no visibility toggles at all and only its heading/description stay editable.
+  const hasToggle = !config?.deleteFlag && !config?.mandatory && !hideToggle;
 
   return (
     <div
@@ -109,7 +113,7 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
         </div>
 
         {/* Control to show/hide the field */}
-        <ToggleVisibilityControl config={config} onToggle={onToggle != null ? onToggle : null} />
+        {!hideToggle && <ToggleVisibilityControl config={config} onToggle={onToggle != null ? onToggle : null} resetKey={toggleResetKey} />}
 
         {/* Control to delete the field */}
         <DeleteFieldControl isDelete={isDelete} onDelete={onDelete != null ? onDelete : null} config={config} />

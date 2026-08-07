@@ -34,6 +34,17 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showToast, setShowToast] = useState(null);
+
+
+  // Child panels raise errors through this hook (same contract as AppConfigurationWrapper); without
+  // it, guards like "at least one button" would block silently on this screen.
+  useEffect(() => {
+    window.__appConfig_showToast = (toastData) => setShowToast(toastData);
+    return () => {
+      delete window.__appConfig_showToast;
+    };
+  }, []);
+  
   const [activeSidePanel, setActiveSidePanel] = useState("flows"); // 'roles' or 'flows' or null - defaults to 'flows' to keep flow panel open
   const [isClosing, setIsClosing] = useState(false);
   const [currentPageType, setCurrentPageType] = useState(null);
