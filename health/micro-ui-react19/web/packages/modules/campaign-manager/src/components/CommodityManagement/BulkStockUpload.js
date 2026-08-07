@@ -600,25 +600,35 @@ const BulkStockUpload = () => {
     });
   }, [rawToFacilityList, projectBoundaryMap]);
 
-  // Extract product variants from MDMS project type resources
+  // Extract product variants — prefer campaign-specific delivery rules resources over MDMS defaults
   const productVariants = useMemo(() => {
+    const seen = new Set();
+    const variants = [];
+
+    const campaignResources = (campaignData?.deliveryRules || []).flatMap((rule) => rule?.resources || []);
+    if (campaignResources.length > 0) {
+      campaignResources.forEach((r) => {
+        if (r?.productVariantId && !seen.has(r.productVariantId)) {
+          seen.add(r.productVariantId);
+          variants.push({ productVariantId: r.productVariantId, name: r.name || r.productVariantId });
+        }
+      });
+      return variants;
+    }
+
+    // Fallback: MDMS defaults when campaign has no delivery rules configured yet
     if (!projectTypeData) return [];
     const projectTypes = projectTypeData?.["HCM-PROJECT-TYPES"]?.projectTypes || [];
     const matchedType = projectTypes.find((pt) => pt?.code === projectType);
     if (!matchedType?.resources) return [];
-    const variants = [];
-    const seen = new Set();
     matchedType.resources.forEach((r) => {
       if (r?.productVariantId && !seen.has(r.productVariantId)) {
         seen.add(r.productVariantId);
-        variants.push({
-          productVariantId: r.productVariantId,
-          name: r.name || r.productVariantId,
-        });
+        variants.push({ productVariantId: r.productVariantId, name: r.name || r.productVariantId });
       }
     });
     return variants;
-  }, [projectTypeData, projectType]);
+  }, [campaignData, projectTypeData, projectType]);
 
   // Filter "From" facilities by search
   const filteredFromFacilities = useMemo(() => {
