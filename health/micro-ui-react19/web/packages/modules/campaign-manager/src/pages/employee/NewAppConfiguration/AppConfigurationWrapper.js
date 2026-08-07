@@ -1229,3 +1229,5 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
     </React.Fragment>
   );
 };
+
+export default AppConfigurationWrapper;
