@@ -448,7 +448,7 @@ const LocalisationBulkUpload = () => {
 
   return (
     <React.Fragment>
-      {/* <HeaderComponent className="summary-header" styles={{ marginBottom: "1.5rem" }}>
+      {/* <HeaderComponent className="summary-header select-boundary-screen-heading" styles={{ marginBottom: "1.5rem" }}>
         {t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_BULK_UPLOAD_XLS)}
       </HeaderComponent> */}
 

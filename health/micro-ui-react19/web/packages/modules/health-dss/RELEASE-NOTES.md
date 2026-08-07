@@ -91,7 +91,7 @@ Program managers can now access campaign-scoped reports directly from the dashbo
 
 | Page | What it does |
 |---|---|
-| Reports list page | Click "View Reports" on a campaign row to see all reports available for that campaign, filtered by project type |
+| Reports list page | Click "View Reports" on a campaign row to see the reports configured for that campaign |
 | Report detail page | Select a report from the list to open the full report for that campaign |
 
 **How the flow works:**
@@ -100,7 +100,7 @@ Program managers can now access campaign-scoped reports directly from the dashbo
 Campaign row → "View Reports" link → Reports list page → Select a report → Report detail page
 ```
 
-> The reports list is populated from MDMS (master data) based on the campaign's project type.
+> Available report definitions are populated from MDMS (master data) based on the campaign's project type. The reports list then shows only the reports that were actively configured for that specific campaign (via the Configure Reports step during campaign creation) — not every report defined for the project type.
 
 ---
 

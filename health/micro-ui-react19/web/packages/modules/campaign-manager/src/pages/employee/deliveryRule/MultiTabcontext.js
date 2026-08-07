@@ -61,10 +61,13 @@ const SubTabs = React.memo(() => {
 });
 
 const TabContent = React.memo(({ project }) => {
-  const { activeCycle } = useDeliveryRules();
+  const { activeCycle, campaignData } = useDeliveryRules();
   const { t } = useTranslation();
 
-  if (!activeCycle?.deliveries || activeCycle.deliveries.length <= 1) return null;
+  const hasMultipleCycles = campaignData?.length > 1;
+  const hasMultipleDeliveries = activeCycle?.deliveries?.length > 1;
+
+  if (!hasMultipleCycles && !hasMultipleDeliveries) return null;
 
   return (
     <Card className="sub-tab-container">

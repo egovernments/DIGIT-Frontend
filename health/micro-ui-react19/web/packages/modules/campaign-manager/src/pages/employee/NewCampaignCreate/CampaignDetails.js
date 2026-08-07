@@ -4,7 +4,8 @@ import React, { Fragment, useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
-import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit, Translate, Assessment } from "@egovernments/digit-ui-svg-components";
+import { CustomSVG } from "@egovernments/digit-ui-components";
+import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit, Translate, DocumentIconSolid } from "@egovernments/digit-ui-svg-components";
 import { transformUpdateCreateData } from "../../../utils/transformUpdateCreateData";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
@@ -536,28 +537,29 @@ const CampaignDetails = () => {
               ],
             },
           ]),
-      {
-        noCardStyle: true,
-        sections: [
-          {
-            type: "COMPONENT",
-            component: "ViewDetailComponent",
-            noCardStyle: true,
-            props: {
-              headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_HEADING),
-              desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_DESC),
-              buttonLabel: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_BUTTON),
-              buttonId: "campaign-details-page-button-setup-attendance",
-              navLink: `setup-attendance?campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
-              type: "primary",
-              icon: <Groups fill={campaignData?.boundaries?.length <= 0 || campaignData?.status !== "created" ? "#C5C5C5" : "#C84C0E"} width={"40px"} height={"40px"} />,
-              // disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status !== "created" || campaignData?.parentId, //todo check
-              disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status !== "created",
-
+      ...(campaignData?.boundaries?.length <= 0 || campaignData?.status !== "created"
+        ? []
+        : [
+            {
+              noCardStyle: true,
+              sections: [
+                {
+                  type: "COMPONENT",
+                  component: "ViewDetailComponent",
+                  noCardStyle: true,
+                  props: {
+                    headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_HEADING),
+                    desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_DESC),
+                    buttonLabel: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_BUTTON),
+                    buttonId: "campaign-details-page-button-setup-attendance",
+                    navLink: `setup-attendance?campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
+                    type: "primary",
+                    icon: <Groups fill={"#C84C0E"} width={"40px"} height={"40px"} />,
+                  },
+                },
+              ],
             },
-          },
-        ],
-      },
+          ]),
       {
         noCardStyle: true,
         sections: [
@@ -621,7 +623,7 @@ const CampaignDetails = () => {
                     : `campaign-details-page-button-reports-configuration`,
                 type: isReportsConfigured ? "secondary" : "primary",
                 navLink: `reports-configuration?campaignNumber=${campaignData?.campaignNumber}&projectType=${campaignData?.projectType}&tenantId=${tenantId}${isReportsConfigured ? "&edit=true" : ""}`,
-                icon: <Assessment fill={isOngoingCampaign ? "#c5c5c5" : "#C84C0E"} width={"40px"} height={"40px"} />,
+                icon: <CustomSVG.DocumentIconSolid fill={isOngoingCampaign ? "#c5c5c5" : "#C84C0E"} width={"40px"} height={"40px"} />,
                 disabled: isOngoingCampaign,
               };
             })(),

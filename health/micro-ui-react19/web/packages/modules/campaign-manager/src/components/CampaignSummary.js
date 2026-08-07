@@ -752,7 +752,7 @@ const CampaignSummary = (props) => {
   return (
     <>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-1.5rem" }}>
-        <HeaderComponent className="summary-header">{t(I18N_KEYS.COMPONENTS.ES_TQM_SUMMARY_HEADING)}</HeaderComponent>
+        <HeaderComponent className="summary-header select-boundary-screen-heading">{t(I18N_KEYS.COMPONENTS.ES_TQM_SUMMARY_HEADING)}</HeaderComponent>
         {timeLine && (
           <PopUp type={"default"} heading={t(I18N_KEYS.COMMON.ES_CAMPAIGN_TIMELINE)} onOverlayClick={() => setTimeline(false)} onClose={() => setTimeline(false)}>
             <TimelineComponent campaignId={campaignId} resourceId={resource} />

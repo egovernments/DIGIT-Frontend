@@ -184,7 +184,7 @@ const BoundarySummary = (props) => {
         <div className="card-container-delivery">
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
-            <HeaderComponent className="summary-header">{t(I18N_KEYS.COMPONENTS.ES_BOUNDARY_SUMMARY_HEADING)}</HeaderComponent>
+            <HeaderComponent className="summary-header select-boundary-screen-heading">{t(I18N_KEYS.COMPONENTS.ES_BOUNDARY_SUMMARY_HEADING)}</HeaderComponent>
           </div>
           <div className="campaign-summary-container boundary-summary">
             <ViewComposer data={updatedObject} />
