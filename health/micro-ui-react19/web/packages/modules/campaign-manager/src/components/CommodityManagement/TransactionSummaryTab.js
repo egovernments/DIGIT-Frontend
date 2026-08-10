@@ -500,7 +500,6 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
           { label: "HCM_TOTAL_TRANSACTIONS", value: filteredSummaryStats.total },
           { label: "HCM_TOTAL_COMPLETED", value: filteredSummaryStats.completed },
           { label: "HCM_TOTAL_PENDING", value: filteredSummaryStats.pending },
-          { label: "HCM_TOTAL_REJECTED", value: filteredSummaryStats.rejected },
           { label: "HCM_TOTAL_RETURNED", value: filteredSummaryStats.returned },
         ]}
       />
