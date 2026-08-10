@@ -117,6 +117,15 @@ const formatDateForPayload = (dateStr) => {
   return `${dd}-${mm}-${yyyy} 00:00:00+0530`;
 };
 
+const formatEndDateForPayload = (dateStr) => {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const yyyy = date.getFullYear();
+  return `${dd}-${mm}-${yyyy} 23:59:59+0530`;
+};
+
 // Converts any date string/ISO from the date input to dd-MM-yyyy (API triggeredDate format)
 const toFilterDateFormat = (dateStr) => {
   if (!dateStr) return "";
@@ -163,46 +172,71 @@ const getReportDateLabel = (item, freq) => {
 
 // One in-progress dagRunId's current stage - no download action until it completes, at
 // which point it disappears from here and shows up as a completed report instead.
-const InProgressCard = ({ run, t }) => (
-  <Card type="secondary" className="digit-report-detail__file-card">
-    <div className="digit-report-detail__file-row">
-      <div
-        className="digit-report-detail__file-info"
-        style={{ flex: 1, minWidth: 0 }}
-      >
-        <div className="digit-report-detail__file-info-date-wrap">
-          {run.dateLabel && (
-            <div className="digit-report-detail__file-date">
-              {run.dateLabel}
-            </div>
+const InProgressCard = ({ run, t }) => {
+  const isSkipped = run.status === "SKIPPED";
+  const isFailed = run.status === "FAILED";
+  const isTerminal = isSkipped || isFailed;
+  return (
+    <Card type="secondary" className="digit-report-detail__file-card">
+      <div className="digit-report-detail__file-row">
+        <div
+          className="digit-report-detail__file-info"
+          style={{ flex: 1, minWidth: 0 }}
+        >
+          <div className="digit-report-detail__file-info-date-wrap">
+            {run.dateLabel && (
+              <div className="digit-report-detail__file-date">
+                {run.dateLabel}
+              </div>
+            )}
+            {!isTerminal && (
+              <span className="digit-report-detail__file-meta">
+                {t(I18N_KEYS.PAGES.HCM_REPORT_GENERATION_STATUS_IN_PROGRESS)}
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="digit-report-detail__file-actions">
+          {isSkipped ? (
+            <Tag
+              label={t(I18N_KEYS.PAGES.HCM_STATUS_SKIPPED)}
+              type="warning"
+              stroke={false}
+              showIcon={false}
+            />
+          ) : isFailed ? (
+            <Tag
+              label={t(I18N_KEYS.PAGES.HCM_STATUS_FAILED)}
+              type="error"
+              stroke={false}
+              showIcon={false}
+            />
+          ) : (
+            <Tag
+              label={t(I18N_KEYS.PAGES.HCM_IN_PROGRESS)}
+              type="success"
+              stroke={false}
+              showIcon={false}
+            />
           )}
-          <span className="digit-report-detail__file-meta">
-            {t(I18N_KEYS.PAGES.HCM_REPORT_GENERATION_STATUS_IN_PROGRESS)}
-          </span>
         </div>
       </div>
-      <div className="digit-report-detail__file-actions">
-        <Tag
-          label={t(I18N_KEYS.PAGES.HCM_IN_PROGRESS)}
-          type="success"
-          stroke={false}
-          showIcon={false}
-        />
-      </div>
-    </div>
-    <div className="digit-report-detail__progress-bar-row">
-      <div className="digit-report-detail__progress-bar">
-        <div
-          className="digit-report-detail__progress-bar-fill"
-          style={{ width: `${run.progressPercent || 0}%` }}
-        />
-      </div>
-      <span className="digit-report-detail__progress-percent">
-        {run.progressPercent || 0}%
-      </span>
-    </div>
-  </Card>
-);
+      {!isTerminal && (
+        <div className="digit-report-detail__progress-bar-row">
+          <div className="digit-report-detail__progress-bar">
+            <div
+              className="digit-report-detail__progress-bar-fill"
+              style={{ width: `${run.progressPercent || 0}%` }}
+            />
+          </div>
+          <span className="digit-report-detail__progress-percent">
+            {run.progressPercent || 0}%
+          </span>
+        </div>
+      )}
+    </Card>
+  );
+};
 
 const FrequencyContent = ({ reports, inProgressRuns = [], t, reportType }) => {
   const handleDownload = (report) => {
@@ -369,7 +403,7 @@ const ReportDetailPage = () => {
                 startDate: formatDateForPayload(customStartDate),
                 endDate: formatDateForPayload(customEndDate),
                 customReportStartTime: formatDateForPayload(customStartDate),
-                customReportEndTime: formatDateForPayload(customEndDate),
+                customReportEndTime: formatEndDateForPayload(customEndDate),
                 reportStartDate: formatDateForPayload(customStartDate),
                 reportEndDate: formatDateForPayload(customEndDate),
                 reportStartTime: "00:00:00+0530",
@@ -547,6 +581,7 @@ const ReportDetailPage = () => {
         id: item?.id,
         dateLabel: dateLabel,
         filestoreid: item?.filestoreid,
+        status: item?.status,
         triggeredTimeLabel,
         reportTimeLabel,
         processingTimeLabel,
