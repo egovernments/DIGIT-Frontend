@@ -111,7 +111,7 @@ export const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 const EmployeeApp = lazyWithFallback(
   () => import(/* webpackChunkName: "employee-app" */ "./pages/employee"),
   () => require("./pages/employee").default,
-  { loaderText: "Loading Employee App..." }
+  { loaderText: "Loading Employee App" }
 );
 
 // QUICK FIXES JUST TO WORK AROUND Z-INDEX ISSUES WITH POPUPS AND MODALS - SHOULD BE REMOVED LATER ONCE POPUP SWICTH TO REACT PORTAL
