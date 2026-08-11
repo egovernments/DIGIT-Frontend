@@ -502,7 +502,11 @@ const CampaignDetails = () => {
                       : "primary",
                     icon: (
                       <UploadCloud
-                        fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"}
+                        fill={
+                          campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId
+                            ? "#c5c5c5"
+                            : "#C84C0E"
+                        }
                       />
                     ),
                     disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
@@ -528,7 +532,11 @@ const CampaignDetails = () => {
                     type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
                     icon: (
                       <UploadCloud
-                        fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"}
+                        fill={
+                          campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId
+                            ? "#c5c5c5"
+                            : "#C84C0E"
+                        }
                       />
                     ),
                     disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
@@ -537,7 +545,7 @@ const CampaignDetails = () => {
               ],
             },
           ]),
-      ...(campaignData?.boundaries?.length <= 0 || campaignData?.status !== "created"
+      ...(campaignData?.boundaries?.length <= 0 || (campaignData?.status !== "created" && !campaignData?.parentId)
         ? []
         : [
             {

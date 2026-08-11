@@ -168,7 +168,7 @@ const CreateCampaign = () => {
   // location.key changes on every navigation, ensuring this runs even if
   // the component stays mounted across back/forward navigations.
   useEffect(() => {
-    if (!id && !searchParams.get("campaignNumber") && !editName && !fromTemplate) {
+    if (!id && !searchParams.get("campaignNumber") && !editName && !fromTemplate && !searchParams.get("key")) {
       campaignStore.dispatch(resetCreateCampaignData());
       setParams({});
       hasLoadedDraft.current = false;

@@ -241,7 +241,6 @@ const DeliveryDetailsSummary = (props) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-  const campaignName = formStorageData?.HCM_CAMPAIGN_NAME?.campaignName;
   const handleRedirect = (step, activeCycle) => {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
@@ -357,6 +356,8 @@ const DeliveryDetailsSummary = (props) => {
       cacheTime: 0,
     },
   });
+
+  const campaignName = formStorageData?.HCM_CAMPAIGN_NAME?.campaignName || data?.data?.campaignName;
 
   // Retry search if delivery rules (cycles) are not yet persisted by the backend
   const retryCountRef = useRef(0);
