@@ -401,7 +401,7 @@ const CampaignDetails = () => {
                   : t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SELECT_BOUNDARY_BUTTON),
               navLink:
                 campaignData?.status === "created" || campaignData?.parentId
-                  ? `update-campaign?key=1&parentId=${campaignData?.id}&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}&isUnifiedCampaign=${campaignData?.additionalDetails?.isUnifiedCampaign} `
+                  ? `update-campaign?key=1&parentId=${campaignData?.id}&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}&isUnifiedCampaign=${campaignData?.additionalDetails?.isUnifiedCampaign}`
                   : `setup-campaign?key=5&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
               type: campaignData?.boundaries?.length > 0 || campaignData?.parentId ? "secondary" : "primary",
               icon: <GlobeLocationPin fill={"#c84c0e"} />,

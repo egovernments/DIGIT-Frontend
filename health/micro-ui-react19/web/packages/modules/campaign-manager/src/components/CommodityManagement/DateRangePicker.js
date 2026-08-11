@@ -67,6 +67,7 @@ const DateRangePicker = ({ t, config, onSelect, userType, formData, props, minDa
             ranges={[range]}
             onChange={handleSelect}
             moveRangeOnFirstSelection={false}
+            retainEndDateOnFirstSelection={true}
             editableDateInputs={true}
             months={2}
             direction="horizontal"
