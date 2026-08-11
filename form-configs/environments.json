@@ -1,0 +1,20 @@
+{
+  "unified-dev": {
+    "url": "https://unified-dev.digit.org",
+    "tenant": "mz",
+    "locale": "en_MZ",
+    "schema": "HCM-ADMIN-CONSOLE.FormConfigTemplate"
+  },
+  "unified-qa": {
+    "url": "https://unified-qa.digit.org",
+    "tenant": "mz",
+    "locale": "en_MZ",
+    "schema": "HCM-ADMIN-CONSOLE.FormConfigTemplate"
+  },
+  "unified-uat": {
+    "url": "https://unified-uat.digit.org",
+    "tenant": "mz",
+    "locale": "en_MZ",
+    "schema": "HCM-ADMIN-CONSOLE.FormConfigTemplate"
+  }
+}
