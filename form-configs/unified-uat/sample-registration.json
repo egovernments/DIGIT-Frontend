@@ -9,15 +9,23 @@
         {
           "format": "textInput",
           "label": "REGISTRATION_HEAD_NAME",
-          "validations": [{ "type": "required", "errorMessage": "" }]
+          "validations": [
+            {
+              "type": "required",
+              "errorMessage": ""
+            }
+          ],
+          "type": "template",
+          "fieldName": "registrationHeadName"
         },
         {
           "format": "textInput",
-          "type": "text",
+          "type": "template",
           "fieldName": "headAge",
           "label": "REGISTRATION_HEAD_AGE"
         }
-      ]
+      ],
+      "category": "individualDetails"
     }
   ]
 }
