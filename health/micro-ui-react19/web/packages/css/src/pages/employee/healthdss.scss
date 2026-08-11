@@ -194,6 +194,12 @@
   }
 }
 
+.digit-stacked-row button {
+  white-space: nowrap;
+  min-width: fit-content;
+  flex-shrink: 0;
+}
+
 .digit-stacked-row-index {
   width: 20%;
   word-break: break-word;
