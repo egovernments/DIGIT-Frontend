@@ -22,170 +22,170 @@ import { Loader as ComponentLoader } from "@egovernments/digit-ui-components";
 const SetupCampaign = lazyWithFallback(
   () => import(/* webpackChunkName: "setup-campaign" */ "./SetupCampaign"),
   () => require("./SetupCampaign").default,
-  { loaderText: "Loading Setup Campaign" }
+  { loaderText: "LOADING_SETUP_CAMPAIGN" }
 );
 
 const ConfigureApp = lazyWithFallback(
   () => import(/* webpackChunkName: "configure-app" */ "./ConfigureApp"),
   () => require("./ConfigureApp").default,
-  { loaderText: "Loading Configure App" }
+  { loaderText: "LOADING_CONFIGURE_APP" }
 );
 
 const CreateChecklist = lazyWithFallback(
   () => import(/* webpackChunkName: "create-checklist" */ "./CreateChecklist"),
   () => require("./CreateChecklist").default,
-  { loaderText: "Loading Create Checklist" }
+  { loaderText: "LOADING_CREATE_CHECKLIST" }
 );
 
 const SearchChecklist = lazyWithFallback(
   () => import(/* webpackChunkName: "search-checklist" */ "./SearchChecklist"),
   () => require("./SearchChecklist").default,
-  { loaderText: "Loading Search Checklist" }
+  { loaderText: "LOADING_SEARCH_CHECKLIST" }
 );
 
 const UpdateCampaign = lazyWithFallback(
   () => import(/* webpackChunkName: "update-campaign" */ "./UpdateCampaign"),
   () => require("./UpdateCampaign").default,
-  { loaderText: "Loading Update Campaign" }
+  { loaderText: "LOADING_UPDATE_CAMPAIGN" }
 );
 
 const ViewChecklist = lazyWithFallback(
   () => import(/* webpackChunkName: "view-checklist" */ "./ViewChecklist"),
   () => require("./ViewChecklist").default,
-  { loaderText: "Loading View Checklist" }
+  { loaderText: "LOADING_VIEW_CHECKLIST" }
 );
 
 const UpdateChecklist = lazyWithFallback(
   () => import(/* webpackChunkName: "update-checklist" */ "./UpdateChecklist"),
   () => require("./UpdateChecklist").default,
-  { loaderText: "Loading Update Checklist" }
+  { loaderText: "LOADING_UPDATE_CHECKLIST" }
 );
 
 const ApprovedMicroplans = lazyWithFallback(
   () => import(/* webpackChunkName: "approved-microplans" */ "./ApprovedMicroplans"),
   () => require("./ApprovedMicroplans").default,
-  { loaderText: "Loading Approved Microplans" }
+  { loaderText: "LOADING_APPROVED_MICROPLANS" }
 );
 
 const FetchFromMicroplan = lazyWithFallback(
   () => import(/* webpackChunkName: "fetch-from-microplan" */ "../../components/fetchFromMicroplan"),
   () => require("../../components/fetchFromMicroplan").default,
-  { loaderText: "Loading Fetch From Microplan" }
+  { loaderText: "LOADING_FETCH_FROM_MICROPLAN" }
 );
 
 const CampaignHome = lazyWithFallback(
   () => import(/* webpackChunkName: "campaign-home" */ "./NewCampaignCreate/CampaignHome"),
   () => require("./NewCampaignCreate/CampaignHome").default,
-  { loaderText: "Loading Campaign Home" }
+  { loaderText: "LOADING_CAMPAIGN_HOME" }
 );
 
 const CreateCampaign = lazyWithFallback(
   () => import(/* webpackChunkName: "create-campaign" */ "./NewCampaignCreate/CreateCampaign"),
   () => require("./NewCampaignCreate/CreateCampaign").default,
-  { loaderText: "Loading Create Campaign" }
+  { loaderText: "LOADING_CREATE_CAMPAIGN" }
 );
 
 const CampaignDetails = lazyWithFallback(
   () => import(/* webpackChunkName: "campaign-details" */ "./NewCampaignCreate/CampaignDetails"),
   () => require("./NewCampaignCreate/CampaignDetails").default,
-  { loaderText: "Loading Campaign Details" }
+  { loaderText: "LOADING_CAMPAIGN_DETAILS" }
 );
 
 const AppModule = lazyWithFallback(
   () => import(/* webpackChunkName: "app-module" */ "./NewCampaignCreate/AppModule"),
   () => require("./NewCampaignCreate/AppModule").default,
-  { loaderText: "Loading App Module" }
+  { loaderText: "LOADING_APP_MODULE" }
 );
 
 const AppFeatures = lazyWithFallback(
   () => import(/* webpackChunkName: "app-features" */ "./NewCampaignCreate/AppFeatures"),
   () => require("./NewCampaignCreate/AppFeatures").default,
-  { loaderText: "Loading App Features" }
+  { loaderText: "LOADING_APP_FEATURES" }
 );
 
 const MyCampaignNew = lazyWithFallback(
   () => import(/* webpackChunkName: "my-campaign-new" */ "./MyCampaignNew"),
   () => require("./MyCampaignNew").default,
-  { loaderText: "Loading My Campaign New" }
+  { loaderText: "LOADING_MY_CAMPAIGN" }
 );
 
 const NewUploadScreen = lazyWithFallback(
   () => import(/* webpackChunkName: "new-upload-screen" */ "./NewCampaignCreate/NewUploadScreen"),
   () => require("./NewCampaignCreate/NewUploadScreen").default,
-  { loaderText: "Loading New Upload Screen" }
+  { loaderText: "LOADING_NEW_UPLOAD_SCREEN" }
 );
 
 const UnifiedUploadScreen = lazyWithFallback(
   () => import(/* webpackChunkName: "unified-upload-screen" */ "./NewCampaignCreate/UnifiedUploadScreen"),
   () => require("./NewCampaignCreate/UnifiedUploadScreen").default,
-  { loaderText: "Loading Unified Upload Screen" }
+  { loaderText: "LOADING_UNIFIED_UPLOAD_SCREEN" }
 );
 
 const SetupAttendanceScreen = lazyWithFallback(
   () => import(/* webpackChunkName: "setup-attendance" */ "./NewCampaignCreate/SetupAttendanceScreen"),
   () => require("./NewCampaignCreate/SetupAttendanceScreen").default,
-  { loaderText: "Loading Setup Attendance" }
+  { loaderText: "LOADING_SETUP_ATTENDANCE" }
 );
 
 const CreateRegistersScreen = lazyWithFallback(
   () => import(/* webpackChunkName: "create-registers-screen" */ "./NewCampaignCreate/CreateRegistersScreen"),
   () => require("./NewCampaignCreate/CreateRegistersScreen").default,
-  { loaderText: "Loading Create Registers" }
+  { loaderText: "LOADING_CREATE_REGISTERS" }
 );
 
 const MapUsersToRegistersScreen = lazyWithFallback(
   () => import(/* webpackChunkName: "map-users-to-registers" */ "./NewCampaignCreate/MapUsersToRegistersScreen"),
   () => require("./NewCampaignCreate/MapUsersToRegistersScreen").default,
-  { loaderText: "Loading Map Users to Registers" }
+  { loaderText: "LOADING_MAP_USERS_TO_REGISTERS" }
 );
 
 const RegisterDetailsScreen = lazyWithFallback(
   () => import(/* webpackChunkName: "register-details" */ "./NewCampaignCreate/RegisterDetailsScreen"),
   () => require("./NewCampaignCreate/RegisterDetailsScreen").default,
-  { loaderText: "Loading Register Details" }
+  { loaderText: "LOADING_REGISTER_DETAILS" }
 );
 
 const MapAttendeesScreen = lazyWithFallback(
   () => import(/* webpackChunkName: "map-attendees-screen" */ "./NewCampaignCreate/MapAttendeesScreen"),
   () => require("./NewCampaignCreate/MapAttendeesScreen").default,
-  { loaderText: "Loading Map Attendees" }
+  { loaderText: "LOADING_MAP_ATTENDEES" }
 );
 
 
 const CampaignTemplates = lazyWithFallback(
   () => import(/* webpackChunkName: "campaign-templates" */ "./campaignTemplateScreens/CampaignTemplates"),
   () => require("./campaignTemplateScreens/CampaignTemplates").default,
-  { loaderText: "Loading Campaign Templates" }
+  { loaderText: "LOADING_CAMPAIGN_TEMPLATES" }
 );
 
 const ReportsConfiguration = lazyWithFallback(
   () => import(/* webpackChunkName: "reports-configuration" */ "./NewCampaignCreate/ReportsConfiguration"),
   () => require("./NewCampaignCreate/ReportsConfiguration").default,
-  { loaderText: "Loading Reports Configuration" }
+  { loaderText: "LOADING_REPORTS_CONFIGURATION" }
 );
 
 const CommodityCampaigns = lazyWithFallback(
   () => import(/* webpackChunkName: "commodity-campaigns" */ "./CommodityCampaigns"),
   () => require("./CommodityCampaigns").default,
-  { loaderText: "Loading Commodity Campaigns" }
+  { loaderText: "LOADING_COMMODITY_CAMPAIGNS" }
 );
 
 const CommodityDashboard = lazyWithFallback(
   () => import(/* webpackChunkName: "commodity-dashboard" */ "../../components/CommodityManagement/CommodityDashboard"),
   () => require("../../components/CommodityManagement/CommodityDashboard").default,
-  { loaderText: "Loading Commodity Dashboard" }
+  { loaderText: "LOADING_COMMODITY_DASHBOARD" }
 );
 
 const ProjectStaffGuard = lazyWithFallback(
   () => import(/* webpackChunkName: "project-staff-guard" */ "../../components/CommodityManagement/ProjectStaffGuard"),
   () => require("../../components/CommodityManagement/ProjectStaffGuard").default,
-  { loaderText: "Loading" }
+  { loaderText: "LOADING" }
 );
 
 const BulkStockUpload = lazyWithFallback(
   () => import(/* webpackChunkName: "bulk-stock-upload" */ "../../components/CommodityManagement/BulkStockUpload"),
   () => require("../../components/CommodityManagement/BulkStockUpload").default,
-  { loaderText: "Loading Bulk Stock Upload" }
+  { loaderText: "LOADING_BULK_STOCK_UPLOAD" }
 );
 
 /**
