@@ -1,11 +1,12 @@
 name: FormConfig Deploy
 
+# Manual-only: this org does not store DIGIT credentials in GitHub, so merges
+# do NOT auto-deploy. Deploys are done locally via `ci.js push`, which prompts
+# for credentials each run. This workflow remains for teams that DO configure
+# environment secrets — trigger it from the Actions tab. To enable auto-deploy
+# on merge, add a `push: branches: [master]` trigger back and set the
+# DIGIT_USERNAME/DIGIT_PASSWORD secrets on each GitHub environment.
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - "form-configs/**/*.json"
   workflow_dispatch:
     inputs:
       environment:

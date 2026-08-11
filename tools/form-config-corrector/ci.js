@@ -68,6 +68,25 @@ function fail(msg, code = 2) {
   process.exit(code);
 }
 
+// Interactive prompt for credentials (TTY only). Passwords are masked and
+// never echoed, logged, or written anywhere.
+function ask(question, { hidden = false } = {}) {
+  const readline = require('readline');
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout, terminal: true });
+  if (hidden) {
+    rl._writeToOutput = (str) => {
+      if (str.startsWith(question)) rl.output.write(question);
+      else if (str.includes('\n')) rl.output.write('\n');
+      else rl.output.write('*');
+    };
+  }
+  return new Promise((resolve) => rl.question(question, (answer) => {
+    rl.close();
+    if (hidden) process.stdout.write('\n');
+    resolve(answer.trim());
+  }));
+}
+
 // ──────────────────────────────────────────────────────────────
 // Config file loading (same formats as cli.js)
 // ──────────────────────────────────────────────────────────────
@@ -326,6 +345,7 @@ function locModuleFor(env, configData, opts) {
 }
 
 async function runPush(opts) {
+  if (typeof fetch !== 'function') fail(`push requires Node.js 18+ (built-in fetch). You are running ${process.version}`);
   if (!opts.file) fail('push requires --file <path>');
   const env = resolveEnv(opts);
   const configs = loadConfigs(opts.file);
@@ -337,7 +357,13 @@ async function runPush(opts) {
 
   let token = opts.token;
   if (!token) {
-    if (!opts.user || !opts.pass) fail('push requires --token or --user/--pass');
+    // Ask for credentials each run when interactive; in CI (no TTY) they must
+    // be passed explicitly, so a misconfigured pipeline fails fast.
+    if ((!opts.user || !opts.pass) && process.stdin.isTTY) {
+      if (!opts.user) opts.user = await ask(`DIGIT username for ${env.url}: `);
+      if (!opts.pass) opts.pass = await ask('DIGIT password: ', { hidden: true });
+    }
+    if (!opts.user || !opts.pass) fail('push requires --token or --user/--pass (or run in an interactive terminal to be prompted)');
     token = await auth(env, opts.user, opts.pass);
     console.log('Authenticated');
   }
