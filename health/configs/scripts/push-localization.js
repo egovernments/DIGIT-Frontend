@@ -135,9 +135,8 @@ async function upsert(auth, module, locale, messages) {
   }
 }
 
-// Read back what the service stored and confirm every pushed message landed.
-// A 200 from _upsert alone is not proof of persistence.
-async function verify(auth, module, locale, messages) {
+// Fetch what the service currently stores for a module/locale as code -> message.
+async function fetchStored(auth, module, locale) {
   const query = `?tenantId=${encodeURIComponent(tenantId)}&locale=${encodeURIComponent(locale)}&module=${encodeURIComponent(module)}`;
   const res = await fetch(baseUrl + SEARCH_PATH + query, {
     method: "POST",
@@ -147,7 +146,7 @@ async function verify(auth, module, locale, messages) {
         apiId: "Rainmaker",
         ver: ".01",
         action: "_search",
-        msgId: `localization-verify|${locale}`,
+        msgId: `localization-push|${locale}`,
         authToken: auth.authToken,
         userInfo: auth.userInfo,
       },
@@ -155,11 +154,17 @@ async function verify(auth, module, locale, messages) {
   });
   if (!res.ok) {
     throw new Error(
-      `Verification search failed for ${module}/${locale}: HTTP ${res.status} ${await res.text()}`
+      `Search failed for ${module}/${locale}: HTTP ${res.status} ${await res.text()}`
     );
   }
   const stored = new Map();
   for (const m of (await res.json()).messages || []) stored.set(m.code, m.message);
+  return stored;
+}
+
+// Compare desired messages against what the service stores.
+// A 200 from _upsert alone is not proof of persistence.
+function diffAgainstStored(stored, messages) {
   const missing = [];
   const mismatched = [];
   for (const m of messages) {
@@ -204,31 +209,44 @@ async function main() {
   }
 
   const auth = await authenticate();
+  const failures = [];
+  let pushedTotal = 0;
   for (const [key, messages] of groups) {
     const [module, locale] = key.split("|");
-    for (let i = 0; i < messages.length; i += CHUNK_SIZE) {
-      const chunk = messages.slice(i, i + CHUNK_SIZE);
+
+    // Delta: only upsert codes that are new or whose message changed
+    const before = await fetchStored(auth, module, locale);
+    const delta = messages.filter(
+      (m) => !before.has(m.code) || before.get(m.code) !== m.message
+    );
+    if (!delta.length) {
+      console.log(`  SKIP ${module} [${locale}]: all ${messages.length} message(s) already up to date`);
+      continue;
+    }
+    console.log(
+      `  ${module} [${locale}]: ${delta.length} of ${messages.length} message(s) new or changed`
+    );
+
+    for (let i = 0; i < delta.length; i += CHUNK_SIZE) {
+      const chunk = delta.slice(i, i + CHUNK_SIZE);
       await upsert(auth, module, locale, chunk);
       console.log(
-        `Pushed ${module} [${locale}] ${Math.min(i + CHUNK_SIZE, messages.length)}/${messages.length}`
+        `    pushed ${Math.min(i + CHUNK_SIZE, delta.length)}/${delta.length}`
       );
     }
-  }
+    pushedTotal += delta.length;
 
-  console.log("Verifying stored messages against the pushed files...");
-  const failures = [];
-  for (const [key, messages] of groups) {
-    const [module, locale] = key.split("|");
-    const { missing, mismatched, verified } = await verify(auth, module, locale, messages);
-    if (missing.length || mismatched.length) {
-      failures.push({ module, locale, missing, mismatched });
+    // Read back and confirm the whole file is now persisted, not just accepted
+    const after = diffAgainstStored(await fetchStored(auth, module, locale), messages);
+    if (after.missing.length || after.mismatched.length) {
+      failures.push({ module, locale });
       console.error(
-        `  FAIL ${module} [${locale}]: ${verified} ok, ${missing.length} missing, ${mismatched.length} mismatched`
+        `  FAIL ${module} [${locale}]: ${after.verified} ok, ${after.missing.length} missing, ${after.mismatched.length} mismatched after push`
       );
-      for (const code of missing.slice(0, 10)) console.error(`    missing: ${code}`);
-      for (const code of mismatched.slice(0, 10)) console.error(`    mismatched: ${code}`);
+      for (const code of after.missing.slice(0, 10)) console.error(`    missing: ${code}`);
+      for (const code of after.mismatched.slice(0, 10)) console.error(`    mismatched: ${code}`);
     } else {
-      console.log(`  OK ${module} [${locale}]: all ${verified} message(s) verified`);
+      console.log(`  OK ${module} [${locale}]: all ${messages.length} message(s) verified in the service`);
     }
   }
   if (failures.length) {
@@ -236,7 +254,7 @@ async function main() {
       `Verification failed for ${failures.length} module(s) - the service did not persist everything it accepted.`
     );
   }
-  console.log("Localization push complete and verified.");
+  console.log(`Localization push complete and verified (${pushedTotal} message(s) upserted).`);
 }
 
 main().catch((err) => {
