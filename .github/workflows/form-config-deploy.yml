@@ -1,0 +1,160 @@
+name: FormConfig Deploy
+
+# Manual-only: this org does not store DIGIT credentials in GitHub, so merges
+# do NOT auto-deploy. Deploys are done locally via `ci.js push`, which prompts
+# for credentials each run. This workflow remains for teams that DO configure
+# environment secrets — trigger it from the Actions tab. To enable auto-deploy
+# on merge, add a `push: branches: [master]` trigger back and set the
+# DIGIT_USERNAME/DIGIT_PASSWORD secrets on each GitHub environment.
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment (folder under form-configs/, e.g. unified-uat)"
+        required: true
+        type: string
+      files:
+        description: "Space-separated config paths to deploy (empty = all configs in that environment folder)"
+        required: false
+        type: string
+      ai_enhance:
+        description: "Use AI (Claude) to improve generated localization messages (needs ANTHROPIC_API_KEY secret)"
+        required: false
+        type: boolean
+        default: false
+      dry_run:
+        description: "Dry run (validate and show what would be pushed, no writes)"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    name: Plan deployment
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            form-configs
+          sparse-checkout-cone-mode: true
+
+      - name: Compute environments and files
+        id: plan
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          INPUT_ENV: ${{ inputs.environment }}
+          INPUT_FILES: ${{ inputs.files }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            if [ -n "$INPUT_FILES" ]; then
+              FILES=$(tr ' ' '\n' <<< "$INPUT_FILES")
+            else
+              FILES=$(find "form-configs/$INPUT_ENV" -name '*.json' | grep -v environments.json || true)
+            fi
+          else
+            if [ -n "$BEFORE_SHA" ] && git cat-file -e "$BEFORE_SHA" 2>/dev/null; then
+              RANGE_BASE="$BEFORE_SHA"
+            else
+              git fetch origin "${GITHUB_SHA}" --depth=2
+              RANGE_BASE="${GITHUB_SHA}^"
+            fi
+            FILES=$(git diff --name-only --diff-filter=d "$RANGE_BASE" "$GITHUB_SHA" -- 'form-configs/**/*.json' \
+              | grep -v environments.json || true)
+          fi
+
+          echo "Config files to deploy:"
+          echo "$FILES"
+
+          # Group files by their environment folder: form-configs/<env>/...
+          MATRIX=$(echo "$FILES" | awk -F/ '/^form-configs\// {print $2 "\t" $0}' \
+            | node -e '
+              const lines = require("fs").readFileSync(0, "utf-8").split("\n").filter(Boolean);
+              const envs = JSON.parse(require("fs").readFileSync("form-configs/environments.json", "utf-8"));
+              const byEnv = {};
+              for (const line of lines) {
+                const [env, file] = line.split("\t");
+                if (!envs[env]) { console.error(`Skipping ${file}: no environment "${env}" in environments.json`); continue; }
+                (byEnv[env] = byEnv[env] || []).push(file);
+              }
+              const include = Object.entries(byEnv).map(([environment, files]) => ({ environment, files: files.join(" ") }));
+              console.log(JSON.stringify({ include }));
+            ')
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
+          echo "Matrix: $MATRIX"
+
+  deploy:
+    name: Deploy to ${{ matrix.environment }}
+    needs: plan
+    if: fromJSON(needs.plan.outputs.matrix).include[0] != null
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    environment: ${{ matrix.environment }}
+    concurrency:
+      group: formconfig-deploy-${{ matrix.environment }}
+      cancel-in-progress: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            form-configs
+            tools/form-config-corrector
+          sparse-checkout-cone-mode: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Push configs and localizations to MDMS
+        env:
+          FILES: ${{ matrix.files }}
+          TARGET_ENV: ${{ matrix.environment }}
+          DIGIT_USERNAME: ${{ secrets.DIGIT_USERNAME }}
+          DIGIT_PASSWORD: ${{ secrets.DIGIT_PASSWORD }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Manual runs: controlled by the ai_enhance input. Merge deploys: controlled
+          # by the AI_ENHANCE repo/environment variable (Settings -> Variables).
+          AI_ENHANCE: ${{ (github.event_name == 'workflow_dispatch' && inputs.ai_enhance == true) || (github.event_name == 'push' && vars.AI_ENHANCE == 'true') }}
+          DRY_RUN: ${{ inputs.dry_run == true && '--dry-run' || '' }}
+        run: |
+          if [ -z "$DIGIT_USERNAME" ] || [ -z "$DIGIT_PASSWORD" ]; then
+            echo "::error::DIGIT_USERNAME/DIGIT_PASSWORD secrets are not set on the '$TARGET_ENV' GitHub environment"
+            exit 1
+          fi
+          AI_ARGS=""
+          if [ "$AI_ENHANCE" = "true" ]; then
+            if [ -n "$ANTHROPIC_API_KEY" ]; then
+              AI_ARGS="--ai-key $ANTHROPIC_API_KEY"
+              echo "AI enhancement: enabled"
+            else
+              echo "::warning::AI enhancement requested but ANTHROPIC_API_KEY secret is not set - using rule-based messages"
+            fi
+          else
+            echo "AI enhancement: disabled (rule-based messages)"
+          fi
+          STATUS=0
+          for f in $FILES; do
+            echo "::group::Deploying $f -> $TARGET_ENV"
+            if ! node tools/form-config-corrector/ci.js push \
+                --file "$f" \
+                --env "$TARGET_ENV" \
+                --env-file form-configs/environments.json \
+                --user "$DIGIT_USERNAME" \
+                --pass "$DIGIT_PASSWORD" \
+                $AI_ARGS $DRY_RUN; then
+              STATUS=1
+            fi
+            echo "::endgroup::"
+          done
+          exit $STATUS

@@ -1,0 +1,72 @@
+name: FormConfig Validate
+
+on:
+  pull_request:
+    paths:
+      - "form-configs/**/*.json"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate changed form configs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            form-configs
+            tools/form-config-corrector
+          sparse-checkout-cone-mode: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Detect changed config files
+        id: changed
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          git fetch origin "$BASE_SHA" --depth=1
+          FILES=$(git diff --name-only --diff-filter=d "$BASE_SHA" HEAD -- 'form-configs/**/*.json' \
+            | grep -v 'environments.json' || true)
+          echo "Changed config files:"
+          echo "$FILES"
+          {
+            echo "files<<EOF"
+            echo "$FILES"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Validate
+        if: steps.changed.outputs.files != ''
+        env:
+          FILES: ${{ steps.changed.outputs.files }}
+        run: |
+          mkdir -p artifacts
+          STATUS=0
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            echo "::group::Validating $f"
+            if ! node tools/form-config-corrector/ci.js validate --file "$f" --out-dir "artifacts/$(dirname "$f")"; then
+              STATUS=1
+            fi
+            echo "::endgroup::"
+          done <<< "$FILES"
+          exit $STATUS
+
+      - name: Upload corrected configs and reports
+        if: always() && steps.changed.outputs.files != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: formconfig-corrected
+          path: artifacts/
+          if-no-files-found: ignore
+
+      - name: No config changes
+        if: steps.changed.outputs.files == ''
+        run: echo "No form-config JSON files changed in this PR."

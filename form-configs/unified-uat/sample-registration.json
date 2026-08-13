@@ -1,0 +1,31 @@
+{
+  "name": "REGISTRATION",
+  "project": "MR-DN",
+  "flows": [
+    {
+      "name": "individualDetails",
+      "screenType": "TEMPLATE",
+      "body": [
+        {
+          "format": "textInput",
+          "label": "REGISTRATION_HEAD_NAME",
+          "validations": [
+            {
+              "type": "required",
+              "errorMessage": ""
+            }
+          ],
+          "type": "template",
+          "fieldName": "registrationHeadName"
+        },
+        {
+          "format": "textInput",
+          "type": "template",
+          "fieldName": "headAge",
+          "label": "REGISTRATION_HEAD_AGE"
+        }
+      ],
+      "category": "individualDetails"
+    }
+  ]
+}
