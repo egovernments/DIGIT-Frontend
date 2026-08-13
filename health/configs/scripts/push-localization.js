@@ -27,6 +27,7 @@ const path = require("path");
 
 const LOCALISATIONS_DIR = path.resolve(__dirname, "..", "Localisations");
 const UPSERT_PATH = "/localization/messages/v1/_upsert";
+const SEARCH_PATH = "/localization/messages/v1/_search";
 const OAUTH_PATH = "/user/oauth/token";
 // Standard DIGIT client id "egov-user-client" with empty secret, base64 encoded
 const OAUTH_BASIC_AUTH = "Basic ZWdvdi11c2VyLWNsaWVudDo=";
@@ -134,6 +135,40 @@ async function upsert(auth, module, locale, messages) {
   }
 }
 
+// Read back what the service stored and confirm every pushed message landed.
+// A 200 from _upsert alone is not proof of persistence.
+async function verify(auth, module, locale, messages) {
+  const query = `?tenantId=${encodeURIComponent(tenantId)}&locale=${encodeURIComponent(locale)}&module=${encodeURIComponent(module)}`;
+  const res = await fetch(baseUrl + SEARCH_PATH + query, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      RequestInfo: {
+        apiId: "Rainmaker",
+        ver: ".01",
+        action: "_search",
+        msgId: `localization-verify|${locale}`,
+        authToken: auth.authToken,
+        userInfo: auth.userInfo,
+      },
+    }),
+  });
+  if (!res.ok) {
+    throw new Error(
+      `Verification search failed for ${module}/${locale}: HTTP ${res.status} ${await res.text()}`
+    );
+  }
+  const stored = new Map();
+  for (const m of (await res.json()).messages || []) stored.set(m.code, m.message);
+  const missing = [];
+  const mismatched = [];
+  for (const m of messages) {
+    if (!stored.has(m.code)) missing.push(m.code);
+    else if (stored.get(m.code) !== m.message) mismatched.push(m.code);
+  }
+  return { missing, mismatched, verified: messages.length - missing.length - mismatched.length };
+}
+
 async function main() {
   const files = fileArgs.length ? fileArgs.map((f) => path.resolve(f)) : listJsonFiles(LOCALISATIONS_DIR);
   if (!files.length) {
@@ -179,7 +214,29 @@ async function main() {
       );
     }
   }
-  console.log("Localization push complete.");
+
+  console.log("Verifying stored messages against the pushed files...");
+  const failures = [];
+  for (const [key, messages] of groups) {
+    const [module, locale] = key.split("|");
+    const { missing, mismatched, verified } = await verify(auth, module, locale, messages);
+    if (missing.length || mismatched.length) {
+      failures.push({ module, locale, missing, mismatched });
+      console.error(
+        `  FAIL ${module} [${locale}]: ${verified} ok, ${missing.length} missing, ${mismatched.length} mismatched`
+      );
+      for (const code of missing.slice(0, 10)) console.error(`    missing: ${code}`);
+      for (const code of mismatched.slice(0, 10)) console.error(`    mismatched: ${code}`);
+    } else {
+      console.log(`  OK ${module} [${locale}]: all ${verified} message(s) verified`);
+    }
+  }
+  if (failures.length) {
+    throw new Error(
+      `Verification failed for ${failures.length} module(s) - the service did not persist everything it accepted.`
+    );
+  }
+  console.log("Localization push complete and verified.");
 }
 
 main().catch((err) => {
