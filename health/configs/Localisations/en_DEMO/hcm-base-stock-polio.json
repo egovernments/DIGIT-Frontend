@@ -3199,7 +3199,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Unique Beneficiary ID",
+    "message": "Beneficiary ID",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },

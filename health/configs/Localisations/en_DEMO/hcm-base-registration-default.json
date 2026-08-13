@@ -253,7 +253,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_ADD_MEMBER_label_isPregnant_addmember",
-    "message": "Is pregnant?",
+    "message": "Is the beneficiary pregnant?",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -571,13 +571,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isPregnant",
-    "message": "Is pregnant?",
+    "message": "Is the beneficiary pregnant?",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isPregnant_addmember",
-    "message": "Is pregnant",
+    "message": "Is the beneficiary pregnant?",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1231,7 +1231,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "Beneficiary",
+    "message": "Beneficiary Name",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -2605,7 +2605,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Unique Beneficiary ID",
+    "message": "Beneficiary ID",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },

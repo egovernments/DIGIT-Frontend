@@ -1225,7 +1225,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Unique Beneficiary Id",
+    "message": "Beneficiary ID",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },

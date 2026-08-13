@@ -73,7 +73,7 @@
   },
   {
     "code": "ACTION_UNIFIED_UPLOAD_SCREEN",
-    "message": "Upload unified file",
+    "message": "Upload Microplan Data",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -1729,7 +1729,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_ADD_MEMBER_label_isPregnant_addmember",
-    "message": "Is pregnant?",
+    "message": "Is the beneficiary pregnant?",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -2059,13 +2059,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isPregnant",
-    "message": "Is Pregnant",
+    "message": "Is the beneficiary pregnant?",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isPregnant_addmember",
-    "message": "Is Pregnant",
+    "message": "Is the beneficiary pregnant?",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -2887,7 +2887,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "Beneficiary",
+    "message": "Beneficiary Name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -5467,7 +5467,7 @@
   },
   {
     "code": "HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA",
-    "message": "Upload Unified Data",
+    "message": "Upload Microplan Data",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -5917,7 +5917,7 @@
   },
   {
     "code": "HCM_UPLOAD_DATA_HEADING",
-    "message": "Upload microplan data",
+    "message": "Upload Microplan Data",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -5947,7 +5947,7 @@
   },
   {
     "code": "HCM_UPLOAD_UNIFIED_DATA_HEADING",
-    "message": "Upload unified data",
+    "message": "Upload Microplan Data",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },

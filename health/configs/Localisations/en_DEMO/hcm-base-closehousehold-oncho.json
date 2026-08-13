@@ -61,7 +61,7 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
-    "message": "Make sure the village name matches the one where you are today. If not, click on the village dropdown on the top right corner to change it.",
+    "message": "Capture the details of the household you are marking as closed.",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "en_DEMO"
   },

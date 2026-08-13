@@ -295,7 +295,7 @@
   },
   {
     "code": "ACTION_UNIFIED_UPLOAD_SCREEN",
-    "message": "Upload Microplan file",
+    "message": "Upload Microplan Data",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -2947,7 +2947,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "Beneficiary",
+    "message": "Beneficiary Name",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -12409,7 +12409,7 @@
   },
   {
     "code": "HCM_UPLOAD_DATA_HEADING",
-    "message": "Upload microplan data",
+    "message": "Upload Microplan Data",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -17023,7 +17023,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Unique Beneficiary ID",
+    "message": "Beneficiary ID",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },

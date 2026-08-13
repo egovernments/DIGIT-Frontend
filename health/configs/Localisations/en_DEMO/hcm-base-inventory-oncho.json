@@ -61,7 +61,7 @@
   },
   {
     "code": "ACTION_UNIFIED_UPLOAD_SCREEN",
-    "message": "Upload unified file",
+    "message": "Upload Microplan Data",
     "module": "hcm-base-inventory-oncho",
     "locale": "en_DEMO"
   },
@@ -3625,7 +3625,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "Beneficiary",
+    "message": "Beneficiary Name",
     "module": "hcm-base-inventory-oncho",
     "locale": "en_DEMO"
   },
@@ -20065,7 +20065,7 @@
   },
   {
     "code": "HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA",
-    "message": "Upload Unified Data",
+    "message": "Upload Microplan Data",
     "module": "hcm-base-inventory-oncho",
     "locale": "en_DEMO"
   },
@@ -20509,7 +20509,7 @@
   },
   {
     "code": "HCM_UPLOAD_DATA_HEADING",
-    "message": "Upload microplan data",
+    "message": "Upload Microplan Data",
     "module": "hcm-base-inventory-oncho",
     "locale": "en_DEMO"
   },
@@ -20539,7 +20539,7 @@
   },
   {
     "code": "HCM_UPLOAD_UNIFIED_DATA_HEADING",
-    "message": "Upload unified data",
+    "message": "Upload Microplan Data",
     "module": "hcm-base-inventory-oncho",
     "locale": "en_DEMO"
   },
@@ -26695,7 +26695,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Unique Beneficiary Id",
+    "message": "Beneficiary ID",
     "module": "hcm-base-inventory-oncho",
     "locale": "en_DEMO"
   },

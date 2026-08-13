@@ -2197,7 +2197,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Unique Beneficiary Id",
+    "message": "Beneficiary ID",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },

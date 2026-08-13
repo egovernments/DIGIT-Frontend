@@ -2359,7 +2359,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Unique Beneficiary ID",
+    "message": "Beneficiary ID",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
