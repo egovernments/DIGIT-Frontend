@@ -1,0 +1,20 @@
+[
+  {
+    "code": "dateOfEvaluation",
+    "message": "Date of evaluation",
+    "module": "hcm-base-hfreferral-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ1_LABEL",
+    "message": "Child evaluated for adverse reaction for the doses?",
+    "module": "hcm-base-hfreferral-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ5_LABEL",
+    "message": "Child with negative malaria test received dose in this cycle?",
+    "module": "hcm-base-hfreferral-polio",
+    "locale": "en_DEMO"
+  }
+]
