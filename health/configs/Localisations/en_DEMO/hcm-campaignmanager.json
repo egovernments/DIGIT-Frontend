@@ -295,7 +295,7 @@
   },
   {
     "code": "ACTION_UNIFIED_UPLOAD_SCREEN",
-    "message": "Upload unified file",
+    "message": "Upload Microplan file",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
