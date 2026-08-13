@@ -1,5 +1,8 @@
 name: Push Localization
 
+permissions:
+  contents: read
+
 on:
   # Validate localization JSON on PRs that touch it (no push, no secrets needed)
   pull_request:
