@@ -1,16 +1,61 @@
 import * as XLSX from "xlsx";
 
+// Magic byte signatures for valid Excel file types
+const XLSX_MAGIC = [0x50, 0x4b, 0x03, 0x04]; // PK\x03\x04 — ZIP format used by .xlsx
+const XLS_MAGIC = [0xd0, 0xcf, 0x11, 0xe0];  // Compound Document Binary Format used by .xls
+
+// Patterns that indicate embedded malicious content within raw file bytes
+const MALICIOUS_PATTERNS = [
+  /<script[\s>]/i,
+  /on(?:click|load|mouseover|mouseout|error|submit|focus|blur|change|keydown|keyup|keypress|dblclick|contextmenu|drag|drop|paste|copy|cut)\s*=/i,
+  /javascript\s*:/i,
+  /<%[\s\S]{0,500}%>/,  // JSP / ASP server-side tags
+  /<\?php/i,
+  /vbscript\s*:/i,
+];
+
+const checkMagicBytes = (data, extension) => {
+  const magic = extension === "xlsx" ? XLSX_MAGIC : XLS_MAGIC;
+  return magic.every((byte, i) => data[i] === byte);
+};
+
+const containsMaliciousContent = (data) => {
+  const rawText = new TextDecoder("utf-8", { fatal: false }).decode(data);
+  return MALICIOUS_PATTERNS.some((pattern) => pattern.test(rawText));
+};
+
 const validateBoundaryExcelContent = async (file, t, hierarchyColumnsCount) => {
   return new Promise((resolve) => {
+    const extension = file.name.split(".").pop().toLowerCase();
     const reader = new FileReader();
     reader.onload = (event) => {
       const data = new Uint8Array(event.target.result);
-      const workbook = XLSX.read(data, { type: 'array' });
-      // Assuming the first sheet contains the data
+
+      // 1. Magic bytes check — ensure the file signature matches the declared extension
+      if (!checkMagicBytes(data, extension)) {
+        resolve({ success: false, error: t("INVALID_FILE_CONTENT") });
+        return;
+      }
+
+      // 2. Raw content scan — reject files containing embedded malicious code patterns
+      if (containsMaliciousContent(data)) {
+        resolve({ success: false, error: t("MALICIOUS_CONTENT_DETECTED") });
+        return;
+      }
+
+      // 3. Parse and validate data structure
+      let workbook;
+      try {
+        workbook = XLSX.read(data, { type: "array" });
+      } catch {
+        resolve({ success: false, error: t("INVALID_FILE_CONTENT") });
+        return;
+      }
+
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       // Extract data including dynamic headers
-      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" }); // First row as headers
+      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
       const headers = jsonData[0]; // First row contains the headers
       let rows = jsonData.slice(1); // Remaining rows are data
       if (headers.length === 0) {
@@ -18,7 +63,7 @@ const validateBoundaryExcelContent = async (file, t, hierarchyColumnsCount) => {
         return;
       }
       // Remove empty rows immediately following the headers
-      while (rows.length > 0 && rows[0].every(cell => !cell?.trim())) {
+      while (rows.length > 0 && rows[0].every((cell) => !cell?.trim())) {
         rows = rows.slice(1); // Remove the first row if it's empty
       }
       if (rows.length === 0) {

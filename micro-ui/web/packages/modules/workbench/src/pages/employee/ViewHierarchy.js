@@ -157,13 +157,23 @@ const ViewHierarchy = () => {
       setFileName(file.name);
       // Check file extension
       const validExtensions = ["xls", "xlsx"];
-      const fileExtension = file.name.split(".").pop().toLowerCase(); // Get the file extension
+      const nameParts = file.name.split(".");
+      const fileExtension = nameParts.pop().toLowerCase(); // Get the file extension
 
       if (!validExtensions.includes(fileExtension)) {
         setShowToast({ label: t("INVALID_FILE_FORMAT"), isError: "error" });
         setDisableFile(true);
         event.target.value = "";
         return; // Exit the function if the file is not valid
+      }
+
+      // Block double-extension attacks (e.g. malicious.jsp.xlsx)
+      const dangerousExtensions = ["php", "asp", "aspx", "jsp", "jspx", "jspf", "phtml", "shtml", "exe", "sh", "bat", "cmd", "py", "rb", "pl", "cgi"];
+      if (nameParts.slice(1).some((part) => dangerousExtensions.includes(part.toLowerCase()))) {
+        setShowToast({ label: t("INVALID_FILE_FORMAT"), isError: "error" });
+        setDisableFile(true);
+        event.target.value = "";
+        return;
       }
       try {
         // Parse the file and validate its content
@@ -400,9 +410,17 @@ const ViewHierarchy = () => {
 
     // Check file extension
     const validExtensions = ["xls", "xlsx"];
-    const fileExtension = file.name.split(".").pop().toLowerCase();
+    const nameParts = file.name.split(".");
+    const fileExtension = nameParts.pop().toLowerCase();
 
     if (!validExtensions.includes(fileExtension)) {
+      setShowToast({ label: t("INVALID_FILE_FORMAT"), isError: "error" });
+      return;
+    }
+
+    // Block double-extension attacks (e.g. malicious.jsp.xlsx)
+    const dangerousExtensions = ["php", "asp", "aspx", "jsp", "jspx", "jspf", "phtml", "shtml", "exe", "sh", "bat", "cmd", "py", "rb", "pl", "cgi"];
+    if (nameParts.slice(1).some((part) => dangerousExtensions.includes(part.toLowerCase()))) {
       setShowToast({ label: t("INVALID_FILE_FORMAT"), isError: "error" });
       return;
     }
