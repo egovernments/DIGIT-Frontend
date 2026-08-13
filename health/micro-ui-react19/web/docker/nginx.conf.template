@@ -1,6 +1,7 @@
 server {
     listen 80;
     underscores_in_headers on;
+    server_tokens off;
 
     # Health check endpoint for Kubernetes probes
     location = / {
