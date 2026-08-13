@@ -1,7 +1,7 @@
 [
         {
             "code": "USER_CREDENTIAL_BODY_DETAILS",
-            "message": "<strong>Campaign Details:</strong><br/><strong>Campaign:</strong> {campaignName}<br/><strong>User Credential Access Link:</strong> <a href="{accessLink}">Access Link</a><br/><strong>App Download:</strong> <a href="{appLink}">App Link</a>",
+            "message": "<strong>Campaign Details:</strong><br/><strong>Campaign:</strong> {campaignName}<br/><strong>User Credential Access Link:</strong> <a href=\"{accessLink}\">Access Link</a><br/><strong>App Download:</strong> <a href=\"{appLink}\">App Link</a>",
             "module": "hcm-admin-schemas",
         "locale": "en_MZ"
     },

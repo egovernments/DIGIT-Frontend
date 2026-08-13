@@ -1,0 +1,71 @@
+name: Push Localization
+
+on:
+  # Validate localization JSON on PRs that touch it (no push, no secrets needed)
+  pull_request:
+    paths:
+      - 'health/configs/Localisations/**'
+  # Push changed files automatically when they land on these branches
+  push:
+    branches: [ "master", "console" ]
+    paths:
+      - 'health/configs/Localisations/**'
+  # Manual run: push everything (or a locale subset) to any environment
+  workflow_dispatch:
+    inputs:
+      baseUrl:
+        description: 'DIGIT base URL (defaults to the DIGIT_BASE_URL repository variable)'
+        required: false
+      tenantId:
+        description: 'State tenant id'
+        required: false
+        default: 'mz'
+      localeFilter:
+        description: 'Comma-separated locales to push (empty = all), e.g. en_MZ,pt_MZ'
+        required: false
+
+jobs:
+  push-localization:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Collect localization files to process
+        id: files
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            FILES=$(git diff --name-only --diff-filter=ACMR "${{ github.event.before }}" "${{ github.sha }}" -- 'health/configs/Localisations/**/*.json' | xargs)
+            SKIP=$([ -z "$FILES" ] && echo "true" || echo "false")
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
+            FILES=$(git diff --name-only --diff-filter=ACMR "${{ github.event.pull_request.base.sha }}" "${{ github.sha }}" -- 'health/configs/Localisations/**/*.json' | xargs)
+            SKIP=$([ -z "$FILES" ] && echo "true" || echo "false")
+          else
+            FILES=""  # workflow_dispatch: empty means the script pushes every file
+            SKIP="false"
+          fi
+          echo "Files: $FILES"
+          echo "list=$FILES" >> "$GITHUB_OUTPUT"
+          echo "skip=$SKIP" >> "$GITHUB_OUTPUT"
+
+      - name: Validate localization JSON (dry run)
+        if: steps.files.outputs.skip != 'true'
+        run: |
+          node health/configs/scripts/push-localization.js --dry-run ${{ steps.files.outputs.list }}
+
+      - name: Push localization to DIGIT
+        if: github.event_name != 'pull_request' && steps.files.outputs.skip != 'true'
+        env:
+          DIGIT_BASE_URL: ${{ github.event.inputs.baseUrl || vars.DIGIT_BASE_URL }}
+          DIGIT_TENANT_ID: ${{ github.event.inputs.tenantId || vars.DIGIT_TENANT_ID || 'mz' }}
+          DIGIT_USERNAME: ${{ secrets.DIGIT_LOCALIZATION_USERNAME }}
+          DIGIT_PASSWORD: ${{ secrets.DIGIT_LOCALIZATION_PASSWORD }}
+          LOCALE_FILTER: ${{ github.event.inputs.localeFilter }}
+        run: |
+          node health/configs/scripts/push-localization.js ${{ steps.files.outputs.list }}
