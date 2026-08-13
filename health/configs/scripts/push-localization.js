@@ -14,8 +14,9 @@
  *   DIGIT_USERNAME   employee user with localization upsert access
  *   DIGIT_PASSWORD
  * Optional:
- *   DIGIT_TENANT_ID  state tenant (default: mz)
- *   DIGIT_USER_TYPE  default: EMPLOYEE
+ *   DIGIT_TENANT_ID       state tenant the messages are upserted under (default: mz)
+ *   DIGIT_AUTH_TENANT_ID  tenant the login user belongs to (default: DIGIT_TENANT_ID)
+ *   DIGIT_USER_TYPE       default: EMPLOYEE
  *   LOCALE_FILTER    comma-separated locales to push (e.g. en_MZ,pt_MZ); others skipped
  *
  * Requires Node 18+ (uses global fetch).
@@ -37,6 +38,7 @@ const fileArgs = args.filter((a) => a !== "--dry-run");
 
 const baseUrl = (process.env.DIGIT_BASE_URL || "").replace(/\/+$/, "");
 const tenantId = process.env.DIGIT_TENANT_ID || "mz";
+const authTenantId = process.env.DIGIT_AUTH_TENANT_ID || tenantId;
 const localeFilter = (process.env.LOCALE_FILTER || "")
   .split(",")
   .map((l) => l.trim())
@@ -85,7 +87,7 @@ async function authenticate() {
     scope: "read",
     username,
     password,
-    tenantId,
+    tenantId: authTenantId,
     userType: process.env.DIGIT_USER_TYPE || "EMPLOYEE",
   });
   const res = await fetch(baseUrl + OAUTH_PATH, {
