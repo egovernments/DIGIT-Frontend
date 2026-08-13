@@ -51,7 +51,8 @@
     "**/glob": "7.2.3",
     "glob": "7.2.3",
     "**/polished": "4.2.2",
-    "fast-uri": "2.1.0"
+    "fast-uri": "2.1.0",
+    "**/pdfjs-dist": "4.4.168"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "7.21.0",
