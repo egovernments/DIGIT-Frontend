@@ -541,11 +541,13 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       onSecondayActionClick={onForgotPassword}
       onFormValueChange={onFormValueChange}
       heading={propsConfig?.texts?.header}
+      description={propsConfig?.texts?.description}
       className={`${wrapperClass}`}
       cardSubHeaderClassName="loginCardSubHeaderClassName"
       cardClassName={cardClassName}
       buttonClassName="buttonClassName"
       defaultValues={defaultValues}
+      className="digit-login-screen-form"
     >
       {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
     </FormComposerV2>
