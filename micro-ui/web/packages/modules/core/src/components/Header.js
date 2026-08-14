@@ -33,7 +33,7 @@ const Header = ({ showTenant = true }) => {
 
   // Default logic
   return (
-    <div className="bannerHeader">
+    <div className="loginScreen bannerHeader">
       <ImageComponent
         className="bannerLogo"
         src={stateInfo?.logoUrl}

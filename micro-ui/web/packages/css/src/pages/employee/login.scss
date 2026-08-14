@@ -421,3 +421,58 @@ margin-top: 0.5rem !important;
 
   }
 }
+
+.digit-login-screen-form{
+  width: 100%;
+}
+
+.digit-login-screen-form {
+  .digit-form-card-description {
+    font-family: var(--digitv2-fontFamily-sans);
+    font-style: var(--digitv2-fontStyle-normal);
+    font-weight: var(--digitv2-fontWeight-regular);
+
+    @media (max-width: 30rem) {
+      /* Media query for mobile */
+      font-size: var(--digitv2-fontSize-body-xs-mobile);
+    }
+
+    @media (min-width: 30.063rem) and (max-width: 47.938rem) {
+      /* Media query for tablets */
+      font-size: var(--digitv2-fontSize-body-xs-tablet);
+    }
+
+    @media (min-width: 48rem) {
+      /* Media query for desktop */
+      font-size: var(--digitv2-fontSize-body-xs-desktop);
+    }
+  }
+
+  .loginCardSubHeaderClassName {
+    font-family: var(--digitv2-fontFamily-sans);
+    font-style: var(--digitv2-fontStyle-normal);
+    font-weight: var(--digitv2-fontWeight-bold);
+    line-height: var(--digitv2-lineHeight-lineheight1);
+
+    @media (max-aspect-ratio: 9/16) {
+      /* Media query for mobile */
+      font-size: var(--digitv2-fontSize-heading-l-mobile);
+    }
+
+    @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+      /* Media query for tablets */
+      font-size: var(--digitv2-fontSize-heading-l-tablet);
+    }
+
+    @media (min-aspect-ratio: 3/4) {
+      /* Media query for desktop */
+      font-size: var(--digitv2-fontSize-heading-l-desktop);
+    }
+  }
+
+  .loginScreen{
+    &.bannerHeader{
+      padding-bottom: 46px;
+    }
+  }
+}
