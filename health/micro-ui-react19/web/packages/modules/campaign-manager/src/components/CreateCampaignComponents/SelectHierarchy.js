@@ -214,7 +214,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
   }, [selected, boundaryData, isBoundaryLoading]);
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader className="digit-center-loader"/>;
   }
 
   const filteredHierarchies = allHierarchyDefinitions.filter((definition) =>
