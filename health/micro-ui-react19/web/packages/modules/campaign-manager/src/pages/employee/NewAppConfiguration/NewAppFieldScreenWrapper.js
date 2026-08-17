@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup, updateHeaderProperty, setPreviewStateId } from "./redux/remoteConfigSlice";
 import { useCustomT } from "./hooks/useCustomT";
 import NewDraggableField from "./NewDraggableField";
-import { derivePreviewScenarios } from "./helpers/visibilityEvaluator";
+import { derivePreviewScenarios, describeScenarioConditions } from "./helpers/visibilityEvaluator";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import HeaderFieldWrapper from "./HeaderFieldWrapper";
@@ -387,6 +387,23 @@ function NewAppFieldScreenWrapper({viewMode}) {
                           </select>
                         </div>
                       )}
+                      {(() => {
+                        const activeTagState = tagStates.find((scenario) => scenario.id === previewStateId);
+                        if (!activeTagState) return null;
+                        return (
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.25rem", alignItems: "center", marginBottom: "0.75rem", fontSize: "0.75rem" }}>
+                            <span style={{ color: "#505A5F" }}>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SHOWN_WHEN)}</span>
+                            {describeScenarioConditions(activeTagState).map((cond, condIndex) => (
+                              <Fragment key={condIndex}>
+                                {condIndex > 0 && <span style={{ color: "#C84C0E", fontWeight: 600 }}>AND</span>}
+                                <span style={{ border: "1px solid #D6D5D4", borderRadius: "1rem", padding: "0 0.375rem", backgroundColor: "#FAFAFA", color: "#363636" }}>
+                                  {`${cond.label} ${cond.op} ${cond.value}`}
+                                </span>
+                              </Fragment>
+                            ))}
+                          </div>
+                        );
+                      })()}
                       {tagIndexes.map((i) => renderFieldRow(fields[i], i, fields))}
                     </>
                   )}
