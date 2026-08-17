@@ -47,6 +47,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
         initActions: flow.initActions,
         wrapperConfig: flow.wrapperConfig,
         scrollListener: flow.scrollListener,
+        isSuccessorErrorScreen: flow.isSuccessorErrorScreen || false,
       };
 
       appConfig.push(transformedFlow);

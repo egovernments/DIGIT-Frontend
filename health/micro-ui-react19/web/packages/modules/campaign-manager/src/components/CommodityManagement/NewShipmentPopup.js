@@ -74,6 +74,23 @@ const NewShipmentPopup = ({
   // Derive BOUNDARY_HIERARCHY_TYPE from the campaign's actual hierarchyType
   const BOUNDARY_HIERARCHY_TYPE = campaignData?.hierarchyType;
 
+  // Boundary localizations (boundary type labels + boundary code -> name) are not part of the
+  // module-level static load in Module.js (hierarchyType isn't known until campaignData loads),
+  // so this popup has to load them itself, same as SelectingBoundariesDuplicate.js does.
+  const stateCode = Digit.ULBService.getStateId();
+  const language = Digit.StoreData.getCurrentLanguage();
+  const boundaryModuleCode = useMemo(
+    () => (BOUNDARY_HIERARCHY_TYPE ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] : []),
+    [BOUNDARY_HIERARCHY_TYPE]
+  );
+  Digit.Services.useStore({
+    stateCode,
+    moduleCode: boundaryModuleCode,
+    language,
+    modulePrefix: "hcm",
+    enabled: boundaryModuleCode.length > 0,
+  });
+
   const hierarchyDefinitionReqCriteria = useMemo(
     () => ({
       url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -813,12 +830,17 @@ const NewShipmentPopup = ({
   }, [filteredFacilities]);
 
   const getTemplateHeaders = useCallback(() => {
+    // boundaryHeaders stays raw (used as keys into fromHierarchyFilters/facilityAncestors below) —
+    // boundaryHeaderLabels is the translated display text for the actual Excel column titles.
     const boundaryHeaders = effectiveHierarchy.map((item) => item.boundaryType);
+    const boundaryHeaderLabels = effectiveHierarchy.map((item) =>
+      BOUNDARY_HIERARCHY_TYPE ? t(`${BOUNDARY_HIERARCHY_TYPE}_${item.boundaryType}`.toUpperCase()) : item.boundaryType
+    );
     const productHeaders = productVariants.map((pv) => pv.name || pv.productVariantId);
     return {
       boundaryHeaders,
       stockHeaders: [
-        ...boundaryHeaders,
+        ...boundaryHeaderLabels,
         "Campaign Number",
         "Project Name",
         "From (Facility Code)",
@@ -828,7 +850,7 @@ const NewShipmentPopup = ({
         ...productHeaders,
       ],
     };
-  }, [effectiveHierarchy, productVariants]);
+  }, [effectiveHierarchy, productVariants, BOUNDARY_HIERARCHY_TYPE, t]);
 
   const handleDownloadTemplate = useCallback(async () => {
     setIsDownloading(true);
@@ -866,7 +888,7 @@ const NewShipmentPopup = ({
       // Style header row: bold, larger font, green background, locked
       const headerRow = ws.getRow(1);
       headerRow.font = { bold: true, size: 14, color: { argb: 'FF000000' } };
-      headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4CAF50' } };
+      headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF93C47D' } };
       headerRow.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
       headerRow.height = 30;
       headerRow.eachCell((cell) => {
@@ -1109,10 +1131,13 @@ const NewShipmentPopup = ({
       // falling back to hidden row 2 for variant IDs
       const productColumns = [];
       const fixedHeaders = new Set(["Campaign Number", "Project Name", "From (Facility Code)", "From (Facility Name)", "To (Facility Code)", "To (Facility Name)"]);
-      const boundaryHeaders = effectiveHierarchy.map((item) => item.boundaryType);
-      const skipHeaders = new Set([...fixedHeaders, ...boundaryHeaders]);
+      // Boundary columns are always the first N columns (N = hierarchy depth), by construction in
+      // getTemplateHeaders — skip by position, not by name. Their header text is a translated label
+      // (varies by hierarchy type/locale), so matching by name here would be fragile; position isn't.
+      const boundaryColumnCount = effectiveHierarchy.length;
       headers.forEach((header, idx) => {
-        if (skipHeaders.has(header)) return;
+        if (idx < boundaryColumnCount) return;
+        if (fixedHeaders.has(header)) return;
         const variantId = variantByName[header] || (variantIdRow && variantIdRow[idx]) || "";
         if (variantId) {
           productColumns.push({ idx, productVariantId: variantId, name: header });
