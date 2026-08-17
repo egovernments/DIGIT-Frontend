@@ -1,11 +1,11 @@
-import React, { Fragment, useEffect, useMemo, useState } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Card, CardHeader, CardText, Button, PopUp } from "@egovernments/digit-ui-components";
 import MobileBezelFrame from "../../../components/MobileBezelFrame";
 import { isFieldSelected, renderTemplateComponent } from "./helpers/templateRendererHelpers";
 import { derivePreviewScenarios, describeScenarioConditions } from "./helpers/visibilityEvaluator";
 import { PreviewStateContext } from "./helpers/previewStateContext";
-import { setShowPopupPreview } from "./redux/remoteConfigSlice";
+import { setShowPopupPreview, setPreviewStateId } from "./redux/remoteConfigSlice";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 
@@ -43,7 +43,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
   // Get field type master data from Redux
   const dispatch = useDispatch();
   const { byName } = useSelector((state) => state.fieldTypeMaster);
-  const { showPopupPreview } = useSelector((state) => state.remoteConfig);
+  const { showPopupPreview, previewStateId } = useSelector((state) => state.remoteConfig);
   const fieldTypeMasterData = byName?.fieldTypeMappingConfig || [];
 
   // Get popup config from selected field if it's an actionPopup
@@ -57,12 +57,10 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
     () => (scenarios.length > 0 ? [{ id: "__default__", displayLabel: "Default", assignments: {}, terms: [] }, ...scenarios] : []),
     [scenarios]
   );
-  const [stateIndex, setStateIndex] = useState(0);
-  useEffect(() => setStateIndex(0), [data]);
-  const safeIndex = states.length > 0 ? Math.min(stateIndex, states.length - 1) : 0;
+  const safeIndex = Math.max(0, states.findIndex((s) => s.id === previewStateId));
   const activeScenario = states.length > 0 ? states[safeIndex] : null;
 
-  const stepState = (delta) => setStateIndex((states.length + safeIndex + delta) % states.length);
+  const stepState = (delta) => dispatch(setPreviewStateId(states[(states.length + safeIndex + delta) % states.length]?.id));
   const navButtonStyle = {
     width: "1.75rem",
     height: "1.75rem",

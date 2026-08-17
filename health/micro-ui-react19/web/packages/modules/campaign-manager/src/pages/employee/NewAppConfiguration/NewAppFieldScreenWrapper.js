@@ -1,10 +1,11 @@
-import React, { Fragment, useCallback, useState, useRef, useEffect } from "react";
+import React, { Fragment, useCallback, useMemo, useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Divider, LabelFieldPair, TextInput, Switch } from "@egovernments/digit-ui-components";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup, updateHeaderProperty } from "./redux/remoteConfigSlice";
+import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup, updateHeaderProperty, setPreviewStateId } from "./redux/remoteConfigSlice";
 import { useCustomT } from "./hooks/useCustomT";
 import NewDraggableField from "./NewDraggableField";
+import { derivePreviewScenarios } from "./helpers/visibilityEvaluator";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import HeaderFieldWrapper from "./HeaderFieldWrapper";
@@ -98,12 +99,19 @@ const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale,
 function NewAppFieldScreenWrapper({viewMode}) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { currentData } = useSelector((state) => state.remoteConfig);
+  const { currentData, previewStateId } = useSelector((state) => state.remoteConfig);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
 
   const currentCard = currentData;
   const isTemplatePage = currentCard?.type === "template";
+
+  // Status-tag states for the "View tag state" selector; changing it drives the
+  // same simulated preview state as the stepper above the phone frame.
+  const tagStates = useMemo(
+    () => derivePreviewScenarios(currentCard, t).filter((scenario) => scenario.format === "tag"),
+    [currentCard, t]
+  );
 
   const moveField = useCallback(
     (fromIndex, toIndex, cardIndex) => {
@@ -352,6 +360,33 @@ function NewAppFieldScreenWrapper({viewMode}) {
                       <div style={{ fontSize: "0.75rem", color: "#505A5F", marginBottom: "0.5rem" }}>
                         {t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_STATUS_TAGS_NOTE)}
                       </div>
+                      {tagStates.length > 0 && (
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
+                          <span style={{ fontWeight: 600, fontSize: "0.875rem", color: "#0B4B66", whiteSpace: "nowrap" }}>
+                            {t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_VIEW_TAG_STATE)}
+                          </span>
+                          <select
+                            value={previewStateId || "__default__"}
+                            onChange={(e) => dispatch(setPreviewStateId(e.target.value))}
+                            style={{
+                              flex: 1,
+                              padding: "0.25rem 0.5rem",
+                              border: "1px solid #505A5F",
+                              borderRadius: "4px",
+                              backgroundColor: "#fff",
+                              color: "#363636",
+                              fontSize: "0.875rem",
+                            }}
+                          >
+                            <option value="__default__">Default</option>
+                            {tagStates.map((scenario) => (
+                              <option key={scenario.id} value={scenario.id}>
+                                {scenario.displayLabel}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
                       {tagIndexes.map((i) => renderFieldRow(fields[i], i, fields))}
                     </>
                   )}

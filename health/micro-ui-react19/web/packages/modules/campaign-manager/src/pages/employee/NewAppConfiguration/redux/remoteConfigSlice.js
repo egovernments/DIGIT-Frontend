@@ -87,6 +87,8 @@ const remoteConfigSlice = createSlice({
     showAddFieldPopup: false,
     // Popup preview state for actionPopup fields
     showPopupPreview: false,
+    // Simulated preview state id ("__default__" / scenario id); null falls back to default
+    previewStateId: null,
   },
   reducers: {
     initializeConfig(state, action) {
@@ -108,12 +110,14 @@ const remoteConfigSlice = createSlice({
       state.currentScreen = null;
       state.currentCard = null;
       state.isFieldSelected = false;
+      state.previewStateId = null;
     },
     setRemoteData(state, action) {
       state.remoteData = action.payload;
     },
     setCurrentData(state, action) {
       state.currentData = action.payload || [];
+      state.previewStateId = null;
     },
     // Field selection actions
     selectField(state, action) {
@@ -898,6 +902,9 @@ const remoteConfigSlice = createSlice({
     setShowPopupPreview(state, action) {
       state.showPopupPreview = action.payload;
     },
+    setPreviewStateId(state, action) {
+      state.previewStateId = action.payload ?? null;
+    },
   },
 });
 
@@ -905,6 +912,7 @@ export const {
   initializeConfig,
   setRemoteData,
   setCurrentData,
+  setPreviewStateId,
   selectField,
   deselectField,
   updateSelectedField,
