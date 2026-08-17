@@ -87,3 +87,19 @@ export const isFieldVisibleInScenario = (field, scenario) => {
     return assigned === undefined || assigned !== term.rhs;
   });
 };
+
+const humanizeKey = (key) => {
+  // "fn:isDelivered(item.task.last.status)" -> "Is delivered"; "{{path.to.field}}" -> "field"
+  const fnMatch = key.match(/^fn:([A-Za-z0-9_]+)/);
+  const raw = fnMatch ? fnMatch[1] : key.split("(")[0].split(".").pop();
+  const words = raw.replace(/([a-z0-9])([A-Z])/g, "$1 $2").toLowerCase();
+  return words.charAt(0).toUpperCase() + words.slice(1);
+};
+
+/** Human-readable rendition of a scenario's condition terms, for the preview readout */
+export const describeScenarioConditions = (scenario) =>
+  (scenario?.terms || []).map((term) => ({
+    label: humanizeKey(term.key),
+    op: term.op === "==" ? "=" : "≠",
+    value: term.rhs === "" ? "empty" : term.rhs,
+  }));

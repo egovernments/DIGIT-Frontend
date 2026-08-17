@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup, updateHeaderProperty } from "./redux/remoteConfigSlice";
 import { useCustomT } from "./hooks/useCustomT";
 import NewDraggableField from "./NewDraggableField";
-import { Tabs } from "./NewDrawerFieldComposer";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import HeaderFieldWrapper from "./HeaderFieldWrapper";
@@ -105,11 +104,6 @@ function NewAppFieldScreenWrapper({viewMode}) {
 
   const currentCard = currentData;
   const isTemplatePage = currentCard?.type === "template";
-
-  // Template pages split page properties into Elements / Actions tabs; the Actions tab
-  // groups runtime-conditional items (status tags, buttons) so authors can tell that
-  // only one status shows at a time on the device.
-  const [activePageTab, setActivePageTab] = useState("content");
 
   const moveField = useCallback(
     (fromIndex, toIndex, cardIndex) => {
@@ -218,13 +212,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
         <ConsoleTooltip className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_HEAD_FIELDS)} />
       </div>
       <Divider /> */}
-      {isTemplatePage && (
-        <div style={{ width: "100%" }}>
-          <Tabs tabs={["content", "actions"]} activeTab={activePageTab} onTabChange={setActivePageTab} />
-        </div>
-      )}
-      {(!isTemplatePage || activePageTab === "content") && (
-        <>
+      <>
           {/* Heading Field */}
           <HeaderFieldWrapper
             key="header-heading"
@@ -254,8 +242,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
             <div> {currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS)}</div>
             <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS)} />
           </div>
-        </>
-      )}
+      </>
       {currentCard?.body?.map((section, index, card) => {
 
         const bodyFields =
@@ -339,7 +326,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
               );
         };
 
-        // Template pages group runtime-conditional items under the Actions tab:
+        // Template pages group runtime-conditional items after the regular elements:
         // status tags (only one shows at a time on device) and action buttons/popups.
         if (isTemplatePage) {
           const isStatusTag = (f) => f?.format === "tag";
@@ -351,9 +338,11 @@ function NewAppFieldScreenWrapper({viewMode}) {
 
           return (
             <Fragment key={`card-${index}`}>
-              {activePageTab === "content" && elementIndexes.map((i) => renderFieldRow(fields[i], i, fields))}
-              {activePageTab === "actions" && (
-                <>
+              {elementIndexes.map((i) => renderFieldRow(fields[i], i, fields))}
+              {elementIndexes.length > 0 && (tagIndexes.length > 0 || actionIndexes.length > 0) && (
+                <Divider className="app-config-drawer-action-divider" />
+              )}
+              <>
                   {tagIndexes.length > 0 && (
                     <>
                       <div className="app-config-drawer-subheader">
@@ -376,8 +365,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
                       {actionIndexes.map((i) => renderFieldRow(fields[i], i, fields))}
                     </>
                   )}
-                </>
-              )}
+              </>
             </Fragment>
           );
         }
@@ -420,8 +408,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
           onClick={handleAddSection}
         />
       )}
-      {(!isTemplatePage || activePageTab === "actions") && (
-        <>
+      <>
           {currentCard?.footer?.length > 0 && (<Divider className="app-config-drawer-action-divider" />)}
           {currentCard?.footer?.length > 0 && (
             <div className="app-config-drawer-subheader">
@@ -433,10 +420,8 @@ function NewAppFieldScreenWrapper({viewMode}) {
             currentCard?.footer?.map((footerButtonConfig, index) => (
               <FooterLabelField key={`footer-${index}`} footerButtonConfig={footerButtonConfig} index={index} currentLocale={currentLocale} dispatch={dispatch} t={t} viewMode={viewMode} />
           ))}
-        </>
-      )}
-      {(!isTemplatePage || activePageTab === "content") && (
-        <>
+      </>
+      <>
           <Divider />
           <div className="app-config-drawer-subheader">
             <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_PRIVACY_CONTROLS)}</div>
@@ -452,8 +437,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
               disable={viewMode}
             />
           </div>
-        </>
-      )}
+      </>
     </React.Fragment>
   );
 }

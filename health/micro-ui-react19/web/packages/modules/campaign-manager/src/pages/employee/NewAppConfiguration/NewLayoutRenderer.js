@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Card, CardHeader, CardText, Button, PopUp } from "@egovernments/digit-ui-components";
 import MobileBezelFrame from "../../../components/MobileBezelFrame";
 import { isFieldSelected, renderTemplateComponent } from "./helpers/templateRendererHelpers";
-import { derivePreviewScenarios } from "./helpers/visibilityEvaluator";
+import { derivePreviewScenarios, describeScenarioConditions } from "./helpers/visibilityEvaluator";
 import { PreviewStateContext } from "./helpers/previewStateContext";
 import { setShowPopupPreview } from "./redux/remoteConfigSlice";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
@@ -89,6 +89,19 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
           <button type="button" style={navButtonStyle} title="Next state" onClick={() => stepState(1)}>
             {"\u203A"}
           </button>
+        </div>
+      )}
+      {activeScenario && activeScenario.id !== "__default__" && (
+        <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "0.25rem", maxWidth: "26rem", justifyContent: "center", fontSize: "0.75rem", zIndex: 20 }}>
+          <span style={{ color: "#505A5F" }}>Shown when</span>
+          {describeScenarioConditions(activeScenario).map((cond, condIndex) => (
+            <Fragment key={condIndex}>
+              {condIndex > 0 && <span style={{ color: "#C84C0E", fontWeight: 600 }}>AND</span>}
+              <span style={{ border: "1px solid #D6D5D4", borderRadius: "1rem", padding: "0 0.5rem", backgroundColor: "#FAFAFA", color: "#363636", whiteSpace: "nowrap" }}>
+                {`${cond.label} ${cond.op} ${cond.value}`}
+              </span>
+            </Fragment>
+          ))}
         </div>
       )}
     <MobileBezelFrame>
