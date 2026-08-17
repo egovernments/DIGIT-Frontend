@@ -991,7 +991,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_SEARCHCLF",
-    "message": "Search CLF",
+    "message": "Search Clf",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
