@@ -169,7 +169,7 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
   }, []);
   // Boundary localizations (boundary-${hierarchyType}) are loaded in the boundary selection screens
   // (SelectingBoundariesDuplicate / UpdateBoundaryWrapper) where the hierarchy type is already known.
-  const moduleCode = ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration", "dummy-module"];
+  const moduleCode = ["campaignmanager", "admin-schemas", "checklist", "appconfiguration"];
 
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
