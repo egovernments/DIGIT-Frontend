@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup, updateHeaderProperty } from "./redux/remoteConfigSlice";
 import { useCustomT } from "./hooks/useCustomT";
 import NewDraggableField from "./NewDraggableField";
+import { Tabs } from "./NewDrawerFieldComposer";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import HeaderFieldWrapper from "./HeaderFieldWrapper";
@@ -103,6 +104,12 @@ function NewAppFieldScreenWrapper({viewMode}) {
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
 
   const currentCard = currentData;
+  const isTemplatePage = currentCard?.type === "template";
+
+  // Template pages split page properties into Elements / Actions tabs; the Actions tab
+  // groups runtime-conditional items (status tags, buttons) so authors can tell that
+  // only one status shows at a time on the device.
+  const [activePageTab, setActivePageTab] = useState("content");
 
   const moveField = useCallback(
     (fromIndex, toIndex, cardIndex) => {
@@ -211,35 +218,44 @@ function NewAppFieldScreenWrapper({viewMode}) {
         <ConsoleTooltip className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_HEAD_FIELDS)} />
       </div>
       <Divider /> */}
-      {/* Heading Field */}
-      <HeaderFieldWrapper
-        key="header-heading"
-        label={"PAGE_HEADING"}
-        type="text"
-        value={currentCard?.heading}
-        currentCard={currentCard}
-        index={0}
-        cardIndex={0}
-        fieldKey="heading"
-        viewMode={viewMode}
-      />
-      {/* Description Field */}
-      <HeaderFieldWrapper
-        key="header-description"
-        label={"PAGE_DESCRIPTION"}
-        type="textarea"
-        value={currentCard?.description}
-        currentCard={currentCard}
-        index={1}
-        cardIndex={0}
-        fieldKey="description"
-        viewMode={viewMode}
-      />
-      <Divider />
-      <div className="app-config-drawer-subheader">
-        <div> {currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS)}</div>
-        <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS)} />
-      </div>
+      {isTemplatePage && (
+        <div style={{ width: "100%" }}>
+          <Tabs tabs={["content", "actions"]} activeTab={activePageTab} onTabChange={setActivePageTab} />
+        </div>
+      )}
+      {(!isTemplatePage || activePageTab === "content") && (
+        <>
+          {/* Heading Field */}
+          <HeaderFieldWrapper
+            key="header-heading"
+            label={"PAGE_HEADING"}
+            type="text"
+            value={currentCard?.heading}
+            currentCard={currentCard}
+            index={0}
+            cardIndex={0}
+            fieldKey="heading"
+            viewMode={viewMode}
+          />
+          {/* Description Field */}
+          <HeaderFieldWrapper
+            key="header-description"
+            label={"PAGE_DESCRIPTION"}
+            type="textarea"
+            value={currentCard?.description}
+            currentCard={currentCard}
+            index={1}
+            cardIndex={0}
+            fieldKey="description"
+            viewMode={viewMode}
+          />
+          <Divider />
+          <div className="app-config-drawer-subheader">
+            <div> {currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS)}</div>
+            <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS)} />
+          </div>
+        </>
+      )}
       {currentCard?.body?.map((section, index, card) => {
 
         const bodyFields =
@@ -271,9 +287,8 @@ function NewAppFieldScreenWrapper({viewMode}) {
 
 
 
-        return (
-          <Fragment key={`card-${index}`}>
-            {fields?.map(({ type, label, active, required, Mandatory, deleteFlag, fieldName, id, ...rest }, i, c) => {
+        const renderFieldRow = (fieldEntry, i, c) => {
+              const { type, label, active, required, Mandatory, deleteFlag, fieldName, id, ...rest } = fieldEntry;
               const isFooterField = i >= bodyFieldsCount;
               const actualCardIndex = isFooterField ? -1 : index; // Use -1 for footer fields
               const actualFieldIndex = isFooterField ? i - bodyFieldsCount : i;
@@ -322,8 +337,55 @@ function NewAppFieldScreenWrapper({viewMode}) {
                 // isFooterField={isFooterField}
                 />
               );
-            })}
-            {currentCard?.type !== "template" && !viewMode && (<Button
+        };
+
+        // Template pages group runtime-conditional items under the Actions tab:
+        // status tags (only one shows at a time on device) and action buttons/popups.
+        if (isTemplatePage) {
+          const isStatusTag = (f) => f?.format === "tag";
+          const isActionField = (f) => f?.format === "button" || f?.format === "actionPopup";
+          const tagIndexes = [];
+          const actionIndexes = [];
+          const elementIndexes = [];
+          fields.forEach((f, i) => (isStatusTag(f) ? tagIndexes : isActionField(f) ? actionIndexes : elementIndexes).push(i));
+
+          return (
+            <Fragment key={`card-${index}`}>
+              {activePageTab === "content" && elementIndexes.map((i) => renderFieldRow(fields[i], i, fields))}
+              {activePageTab === "actions" && (
+                <>
+                  {tagIndexes.length > 0 && (
+                    <>
+                      <div className="app-config-drawer-subheader">
+                        <div>{`${t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_STATUS_TAGS)} (${tagIndexes.length})`}</div>
+                        <ConsoleTooltip iconFill={"#0B4B66"} style={{ marginLeft: "0rem", top: "0rem" }} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_STATUS_TAGS)} />
+                      </div>
+                      <div style={{ fontSize: "0.75rem", color: "#505A5F", marginBottom: "0.5rem" }}>
+                        {t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_STATUS_TAGS_NOTE)}
+                      </div>
+                      {tagIndexes.map((i) => renderFieldRow(fields[i], i, fields))}
+                    </>
+                  )}
+                  {tagIndexes.length > 0 && actionIndexes.length > 0 && <Divider className="app-config-drawer-action-divider" />}
+                  {actionIndexes.length > 0 && (
+                    <>
+                      <div className="app-config-drawer-subheader">
+                        <div>{`${t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_ACTION_BUTTONS)} (${actionIndexes.length})`}</div>
+                        <ConsoleTooltip iconFill={"#0B4B66"} style={{ marginLeft: "0rem", top: "0rem" }} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_ACTION_BUTTONS)} />
+                      </div>
+                      {actionIndexes.map((i) => renderFieldRow(fields[i], i, fields))}
+                    </>
+                  )}
+                </>
+              )}
+            </Fragment>
+          );
+        }
+
+        return (
+          <Fragment key={`card-${index}`}>
+            {fields?.map((fieldEntry, i, c) => renderFieldRow(fieldEntry, i, c))}
+            {!viewMode && (<Button
               className={"app-config-drawer-button add-field"}
               type={"button"}
               size={"medium"}
@@ -358,32 +420,40 @@ function NewAppFieldScreenWrapper({viewMode}) {
           onClick={handleAddSection}
         />
       )}
-      {currentCard?.footer?.length > 0 && (<Divider className="app-config-drawer-action-divider" />)}
-      {currentCard?.footer?.length > 0 && (
-        <div className="app-config-drawer-subheader">
-          <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_BUTTONS)}</div>
-          <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_BUTTONS)} />
-        </div>)}
-      {currentCard?.footer &&
-        currentCard?.footer.length > 0 &&
-        currentCard?.footer?.map((footerButtonConfig, index) => (
-          <FooterLabelField key={`footer-${index}`} footerButtonConfig={footerButtonConfig} index={index} currentLocale={currentLocale} dispatch={dispatch} t={t} viewMode={viewMode} />
-      ))}
-      <Divider />
-      <div className="app-config-drawer-subheader">
-        <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_PRIVACY_CONTROLS)}</div>
-        <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_PREVENT_SCREEN_CAPTURE)} />
-      </div>
-      <div className="app-config-privacy-controls-container">
-        <div className="app-config-privacy-controls-container-text">{t(I18N_KEYS.APP_CONFIGURATION.PREVENT_SCREEN_CAPTURE)}</div>
-        <Switch
-          className={"app-config-drawer-subheader"}
-          isLabelFirst={true}
-          isCheckedInitially={currentCard?.preventScreenCapture || false}
-          onToggle={handleTogglePreventScreenCapture}
-          disable={viewMode}
-        />
-      </div>
+      {(!isTemplatePage || activePageTab === "actions") && (
+        <>
+          {currentCard?.footer?.length > 0 && (<Divider className="app-config-drawer-action-divider" />)}
+          {currentCard?.footer?.length > 0 && (
+            <div className="app-config-drawer-subheader">
+              <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_BUTTONS)}</div>
+              <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_BUTTONS)} />
+            </div>)}
+          {currentCard?.footer &&
+            currentCard?.footer.length > 0 &&
+            currentCard?.footer?.map((footerButtonConfig, index) => (
+              <FooterLabelField key={`footer-${index}`} footerButtonConfig={footerButtonConfig} index={index} currentLocale={currentLocale} dispatch={dispatch} t={t} viewMode={viewMode} />
+          ))}
+        </>
+      )}
+      {(!isTemplatePage || activePageTab === "content") && (
+        <>
+          <Divider />
+          <div className="app-config-drawer-subheader">
+            <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_PRIVACY_CONTROLS)}</div>
+            <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_PREVENT_SCREEN_CAPTURE)} />
+          </div>
+          <div className="app-config-privacy-controls-container">
+            <div className="app-config-privacy-controls-container-text">{t(I18N_KEYS.APP_CONFIGURATION.PREVENT_SCREEN_CAPTURE)}</div>
+            <Switch
+              className={"app-config-drawer-subheader"}
+              isLabelFirst={true}
+              isCheckedInitially={currentCard?.preventScreenCapture || false}
+              onToggle={handleTogglePreventScreenCapture}
+              disable={viewMode}
+            />
+          </div>
+        </>
+      )}
     </React.Fragment>
   );
 }
