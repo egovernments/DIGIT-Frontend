@@ -211,31 +211,35 @@ function NewAppFieldScreenWrapper({viewMode}) {
         <ConsoleTooltip className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_HEAD_FIELDS)} />
       </div>
       <Divider /> */}
-      {/* Heading Field */}
-      <HeaderFieldWrapper
-        key="header-heading"
-        label={"PAGE_HEADING"}
-        type="text"
-        value={currentCard?.heading}
-        currentCard={currentCard}
-        index={0}
-        cardIndex={0}
-        fieldKey="heading"
-        viewMode={viewMode}
-      />
-      {/* Description Field */}
-      <HeaderFieldWrapper
-        key="header-description"
-        label={"PAGE_DESCRIPTION"}
-        type="textarea"
-        value={currentCard?.description}
-        currentCard={currentCard}
-        index={1}
-        cardIndex={0}
-        fieldKey="description"
-        viewMode={viewMode}
-      />
-      <Divider />
+      {!(currentCard?.isSuccessorErrorScreen) && (
+        <>
+          {/* Heading Field */}
+          <HeaderFieldWrapper
+            key="header-heading"
+            label={"PAGE_HEADING"}
+            type="text"
+            value={currentCard?.heading}
+            currentCard={currentCard}
+            index={0}
+            cardIndex={0}
+            fieldKey="heading"
+            viewMode={viewMode}
+          />
+          {/* Description Field */}
+          <HeaderFieldWrapper
+            key="header-description"
+            label={"PAGE_DESCRIPTION"}
+            type="textarea"
+            value={currentCard?.description}
+            currentCard={currentCard}
+            index={1}
+            cardIndex={0}
+            fieldKey="description"
+            viewMode={viewMode}
+          />
+         <Divider />
+        </>
+      )}
       <div className="app-config-drawer-subheader">
         <div> {currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS)}</div>
         <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS)} />
