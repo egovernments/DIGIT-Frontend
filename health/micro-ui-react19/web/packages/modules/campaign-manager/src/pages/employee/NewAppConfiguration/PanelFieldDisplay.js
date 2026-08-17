@@ -6,6 +6,7 @@ import { PRIMARY_COLOR } from "../../../utils";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import { getFieldTypeFromMasterData } from "./helpers";
 import { getFieldTypeFromMasterData2 } from "./helpers/getFieldTypeFromMasterData";
+import { isConditionalExpression, parseVisibleExpression, describeScenarioConditions } from "./helpers/visibilityEvaluator";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 // Component to toggle visibility of a field if it is not mandatory and not marked for deletion
@@ -70,6 +71,10 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
   // Check if field has configurable (non-custom) visibility conditions
   const expressions = config?.visibilityCondition?.expression;
   const isDependent = Array.isArray(expressions) && expressions.filter((e) => e.type !== "custom").length > 0;
+  // Runtime `visible` expression rendered as readable condition chips on the row
+  const conditionChips = isConditionalExpression(config?.visible)
+    ? describeScenarioConditions({ terms: parseVisibleExpression(config.visible) || [] })
+    : [];
   // A panel card is the whole screen - toggling it off would just blank the preview, so the screen
   // exposes no visibility toggles at all and only its heading/description stay editable.
   const hasToggle = !config?.deleteFlag && !config?.mandatory && !hideToggle;
@@ -110,6 +115,19 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
               style={{}}
             />
           </div>
+          {conditionChips.length > 0 && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.25rem", alignItems: "center", marginTop: "0.25rem", fontSize: "0.75rem" }}>
+              <span style={{ color: "#505A5F" }}>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SHOWN_WHEN)}</span>
+              {conditionChips.map((cond, condIndex) => (
+                <Fragment key={condIndex}>
+                  {condIndex > 0 && <span style={{ color: "#C84C0E", fontWeight: 600 }}>AND</span>}
+                  <span style={{ border: "1px solid #D6D5D4", borderRadius: "1rem", padding: "0 0.375rem", backgroundColor: "#FAFAFA", color: "#363636", whiteSpace: "nowrap" }}>
+                    {`${cond.label} ${cond.op} ${cond.value}`}
+                  </span>
+                </Fragment>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Control to show/hide the field */}
