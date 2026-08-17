@@ -148,11 +148,26 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   // Memoized options for fieldTypeDropdown to prevent recomputation every render
   const fieldTypeDropdownOptions = useMemo(() => {
     const fieldTypeOptions = fieldTypeMaster?.fieldTypeMappingConfig || [];
+    // Conversions are restricted based on the currently selected field's master entry:
+    // its compatibleTypes list when configured, otherwise its data type (metadata.type),
+    // so a field can never switch to a type the field worker app's data model can't store
+    // (e.g. a Date of Birth field (string) cannot become a Checkbox (boolean))
+    const currentFieldTypeOption = getFieldTypeOptionFromMasterData(selectedField, fieldTypeOptions);
+    const currentDataType = currentFieldTypeOption?.metadata?.type;
+    const compatibleTypes =
+      Array.isArray(currentFieldTypeOption?.compatibleTypes) && currentFieldTypeOption.compatibleTypes.length > 0
+        ? currentFieldTypeOption.compatibleTypes
+        : null;
+    const restrictByDataType = currentDataType && currentDataType !== "template" && currentDataType !== "dynamic";
     const filteredOptions = fieldTypeOptions.filter((item) => {
       // Always filter out dynamic types
       if (item?.metadata?.type === "dynamic") return false;
       // Filter out template types only for forms (pageType === "object")
       if (pageType === "object" && item?.metadata?.type === "template") return false;
+      // Only offer the current type and its configured compatible types
+      if (compatibleTypes) return item?.type === currentFieldTypeOption?.type || compatibleTypes.includes(item?.type);
+      // Without a compatibleTypes config, fall back to matching the field's data type
+      if (restrictByDataType && item?.metadata?.type !== currentDataType) return false;
       return true;
     });
 
@@ -171,7 +186,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         options: advancedOptions.map((item) => ({ ...item, name: item.type, code: t(`${item.category}.${item.type}`) })),
       },
     ].filter((group) => group.options.length > 0);
-  }, [fieldTypeMaster?.fieldTypeMappingConfig, pageType, t]);
+  }, [fieldTypeMaster?.fieldTypeMappingConfig, pageType, selectedField, t]);
 
   // Initialize local value when field changes
   useEffect(() => {
