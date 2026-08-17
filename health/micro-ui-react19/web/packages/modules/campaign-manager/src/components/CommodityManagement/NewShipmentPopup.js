@@ -866,7 +866,7 @@ const NewShipmentPopup = ({
       // Style header row: bold, larger font, green background, locked
       const headerRow = ws.getRow(1);
       headerRow.font = { bold: true, size: 14, color: { argb: 'FF000000' } };
-      headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4CAF50' } };
+      headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF93C47D' } };
       headerRow.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
       headerRow.height = 30;
       headerRow.eachCell((cell) => {
