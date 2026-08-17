@@ -361,30 +361,37 @@ function NewAppFieldScreenWrapper({viewMode}) {
                         {t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_STATUS_TAGS_NOTE)}
                       </div>
                       {tagStates.length > 0 && (
-                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
-                          <span style={{ fontWeight: 600, fontSize: "0.875rem", color: "#0B4B66", whiteSpace: "nowrap" }}>
+                        <div style={{ marginBottom: "0.75rem" }}>
+                          <div style={{ fontWeight: 600, fontSize: "0.875rem", color: "#0B4B66", marginBottom: "0.375rem" }}>
                             {t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_VIEW_TAG_STATE)}
-                          </span>
-                          <select
-                            value={previewStateId || "__default__"}
-                            onChange={(e) => dispatch(setPreviewStateId(e.target.value))}
-                            style={{
-                              flex: 1,
-                              padding: "0.25rem 0.5rem",
-                              border: "1px solid #505A5F",
-                              borderRadius: "4px",
-                              backgroundColor: "#fff",
-                              color: "#363636",
-                              fontSize: "0.875rem",
-                            }}
-                          >
-                            <option value="__default__">Default</option>
-                            {tagStates.map((scenario) => (
-                              <option key={scenario.id} value={scenario.id}>
-                                {scenario.displayLabel}
-                              </option>
-                            ))}
-                          </select>
+                          </div>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.375rem" }}>
+                            {[{ id: "__default__", displayLabel: "Default" }, ...tagStates].map((scenario) => {
+                              const isActive = (previewStateId || "__default__") === scenario.id;
+                              return (
+                                <button
+                                  key={scenario.id}
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    dispatch(setPreviewStateId(scenario.id));
+                                  }}
+                                  style={{
+                                    border: `1px solid ${isActive ? "#C84C0E" : "#D6D5D4"}`,
+                                    borderRadius: "1rem",
+                                    padding: "0.125rem 0.625rem",
+                                    fontSize: "0.75rem",
+                                    cursor: "pointer",
+                                    backgroundColor: isActive ? "#C84C0E" : "#fff",
+                                    color: isActive ? "#fff" : "#363636",
+                                    fontWeight: isActive ? 600 : 400,
+                                  }}
+                                >
+                                  {scenario.displayLabel}
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
                       )}
                       {(() => {
