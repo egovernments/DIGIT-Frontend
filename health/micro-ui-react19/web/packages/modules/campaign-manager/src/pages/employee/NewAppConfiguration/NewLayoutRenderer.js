@@ -1,10 +1,14 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Card, CardHeader, CardText, Button, PopUp } from "@egovernments/digit-ui-components";
 import MobileBezelFrame from "../../../components/MobileBezelFrame";
 import { isFieldSelected, renderTemplateComponent } from "./helpers/templateRendererHelpers";
+import { derivePreviewScenarios } from "./helpers/visibilityEvaluator";
+import { PreviewStateContext } from "./helpers/previewStateContext";
 import { setShowPopupPreview } from "./redux/remoteConfigSlice";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+
+const ALL_STATES_OPTION = { code: "__all__", name: "All states" };
 
 /**
  * Render a section (body or footer)
@@ -45,7 +49,47 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
 
   // Get popup config from selected field if it's an actionPopup
   const popupConfig = selectedField?.properties?.popupConfig || {};
+
+  // Simulated preview state: scenarios derived from the page's `visible` expressions.
+  // Keyed by page so switching pages resets to "All states".
+  const scenarios = useMemo(() => derivePreviewScenarios(data, t), [data, t]);
+  const [scenarioId, setScenarioId] = useState(ALL_STATES_OPTION.code);
+  const activeScenario = useMemo(
+    () => scenarios.find((s) => s.id === scenarioId) || null,
+    [scenarios, scenarioId]
+  );
+  const scenarioOptions = useMemo(
+    () => [ALL_STATES_OPTION, ...scenarios.map((s) => ({ code: s.id, name: s.displayLabel }))],
+    [scenarios]
+  );
+
   return (
+    <PreviewStateContext.Provider value={{ scenario: activeScenario }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem" }}>
+      {scenarios.length > 0 && (
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", zIndex: 20 }}>
+          <span style={{ fontWeight: 600, color: "#0B4B66", whiteSpace: "nowrap" }}>Preview state</span>
+          <select
+            value={scenarioId}
+            onChange={(e) => setScenarioId(e.target.value)}
+            style={{
+              padding: "0.25rem 0.5rem",
+              border: "1px solid #505A5F",
+              borderRadius: "4px",
+              backgroundColor: "#fff",
+              color: "#363636",
+              fontSize: "0.875rem",
+              maxWidth: "16rem",
+            }}
+          >
+            {scenarioOptions.map((option) => (
+              <option key={option.code} value={option.code}>
+                {option.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
     <MobileBezelFrame>
       <div
         className="mobile-bezel-child-container"
@@ -160,6 +204,8 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
         </PopUp>
       )}
     </MobileBezelFrame>
+    </div>
+    </PreviewStateContext.Provider>
   );
 };
 
