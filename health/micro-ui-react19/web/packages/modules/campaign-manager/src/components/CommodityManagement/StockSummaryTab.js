@@ -558,13 +558,6 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       minWidth: "120px",
       sortable: true,
     },
-    // ...(!isCompleted ? [{
-    //   label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_ACTION),
-    //   key: "action",
-    //   grow: 1.5,
-    //   minWidth: "240px",
-    //   sortable: false,
-    // }] : []),
   ];
 
   // Stock Summary List tab — filtered data + columns + cell renderer
@@ -789,17 +782,6 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         {row.displayStatus}
       </span>
     ),
-    // action: (row) => (
-    //   <Button
-    //     onClick={() =>
-    //       setShipmentFacility({ id: row.facilityId, name: row.warehouseName, productVariantId: row.productVariantId })
-    //     }
-    //     title={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SHIP_COMMODITY)}
-    //     icon={"Add"}
-    //     label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SHIP_COMMODITY)}
-    //     variation={"secondary"}
-    //   />
-    // ),
   };
 
   const handleSearch = (e) => {
