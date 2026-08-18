@@ -88,5 +88,7 @@ export const loginConfig = [
     //     buttonLabel: "CORE_FORGOT_PASSWORD_POPUP_OK",
     //   },
     // },
+    // If you dont want to show tenant infromation before the logo icon in login page
+    // showTenant : false
   },
 ];
