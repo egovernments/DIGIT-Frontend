@@ -549,7 +549,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       defaultValues={defaultValues}
       className="digit-login-screen-form"
     >
-      {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
+      {stateInfo?.code && propsConfig?.showTenant !== false ? <Header /> : <Header showTenant={false} />}
     </FormComposerV2>
   );
   
