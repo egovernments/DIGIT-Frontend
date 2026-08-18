@@ -1,28 +1,32 @@
 import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import MyBillsSearch from "../../components/MyBillsSearch";
 import ManageBillsTable from "../../components/ManageBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
 import { findAllOverlappingPeriods } from "../../utils/time_conversion";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { formatDate } from "../../utils/time_conversion";
-import { AlertCard as InfoCard, Card, NoResultsFound, Loader, Toast, Tab, Tag, Button, Footer,HeaderComponent } from "@egovernments/digit-ui-components";
+import { AlertCard as InfoCard, Card, NoResultsFound, Loader, Toast, Tab, Tag } from "@egovernments/digit-ui-components";
+import { Header, ActionBar } from "@egovernments/digit-ui-react-components";
+import { Button } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { getManageBillsRole, getManageBillsConfig, MANAGE_BILLS_ROLE_STORAGE_KEY, normalizeManageBillsRoleParam } from "../../utils/roleUtils";
 import { MANAGE_BILLS_ROLES } from "../../config/manageBillsRoleConfig";
 import AlertPopUp from "../../components/alertPopUp";
-import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import SignaturePopUp from "../../components/SignaturePopUp";
 
 const ManageBills = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const history = useHistory();
   const { role } = useParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [showToast, setShowToast] = useState(null);
   const [selectedBills, setSelectedBills] = useState([]);
   const [clearSelectedRows, setClearSelectedRows] = useState(false);
   const [activePopUpAction, setActivePopUpAction] = useState(null);
+  // Bulk workflow action awaiting the mandatory sign-off (printed name + signature)
+  const [signatureFlow, setSignatureFlow] = useState(null);
 
   // Role-based config
   const normalizedRoleFromParam = normalizeManageBillsRoleParam(role);
@@ -31,14 +35,14 @@ const ManageBills = () => {
 
   useEffect(() => {
     if (!resolvedRole) {
-      navigate(`/${window.contextPath}/employee`, { replace: true });
+      history.replace(`/${window.contextPath}/employee`);
       return;
     }
     Digit.SessionStorage.set(MANAGE_BILLS_ROLE_STORAGE_KEY, resolvedRole);
     if (!normalizedRoleFromParam) {
-      navigate(`/${window.contextPath}/employee/payments/manage-bills/${resolvedRole}`, { replace: true });
+      history.replace(`/${window.contextPath}/employee/payments/manage-bills/${resolvedRole}`);
     }
-  }, [navigate, normalizedRoleFromParam, resolvedRole]);
+  }, [history, normalizedRoleFromParam, resolvedRole]);
 
   const activeRole = getManageBillsRole(resolvedRole?.toUpperCase());
   const roleConfig = getManageBillsConfig(resolvedRole?.toUpperCase());
@@ -75,7 +79,7 @@ const ManageBills = () => {
 
   useEffect(() => {
     if (selectedProject?.id) return;
-    setShowToast((prev) => prev || { key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_PROJECT_SELECTION_IS_MANDATORY), transitionTime: 3000 });
+    setShowToast((prev) => prev || { key: "error", label: t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY"), transitionTime: 3000 });
   }, [selectedProject?.id, t]);
 
   const baseBillCriteria = {
@@ -244,7 +248,7 @@ const ManageBills = () => {
     url: `/${expenseContextPath}/bill/v1/report/_search`,
   });
 
-  const triggerBulkUpdateBills = async (bills, action) => {
+  const triggerBulkUpdateBills = async (bills, action, signature = null) => {
     try {
       await bulkUpdateMutation.mutateAsync(
         {
@@ -258,6 +262,7 @@ const ManageBills = () => {
               comments: `Bulk ${action} triggered`,
               assignes: [],
             },
+            ...(signature ? { signature } : {}),
           },
         },
         {
@@ -280,7 +285,7 @@ const ManageBills = () => {
             console.error("Bulk update failed:", error);
             setShowToast({
               key: "error",
-              label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
+              label: t("HCM_AM_SOMETHING_WENT_WRONG"),
               transitionTime: 3000,
             });
           },
@@ -376,6 +381,7 @@ const ManageBills = () => {
       }
 
       setIsBillReportLoading(true);
+      console.log("Fetching advisory reports for bills:", billIds);
       try {
         const res = await billReportSearchMutation.mutateAsync({
           body: {
@@ -423,7 +429,7 @@ const ManageBills = () => {
         setTotalCount(0);
         setShowToast({
           key: "error",
-          label: error?.response?.data?.Errors?.[0]?.message || t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
+          label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
           transitionTime: 5000,
         });
       } finally {
@@ -483,12 +489,12 @@ const ManageBills = () => {
         break;
       case "DOWNLOAD_TXN_HISTORY":
         // Mock — placeholder for future implementation
-        setShowToast({ key: "info", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_DOWNLOAD_TXN_HISTORY_PLACEHOLDER), transitionTime: 3000 });
+        setShowToast({ key: "info", label: t("HCM_AM_DOWNLOAD_TXN_HISTORY_PLACEHOLDER"), transitionTime: 3000 });
         break;
       case "GENERATE_ADVISORY":
         try {
           await triggerGenerateAdvisory(selectedBills);
-          setShowToast({ key: "info", label: t(I18N_KEYS.COMMON.HCM_AM_REPORT_GENERATION_IN_PROGRESS), transitionTime: 5000 });
+          setShowToast({ key: "info", label: t("HCM_AM_REPORT_GENERATION_IN_PROGRESS"), transitionTime: 5000 });
           refetchBill();
           refetchBillCount();
           setSelectedBills([]);
@@ -496,14 +502,14 @@ const ManageBills = () => {
         } catch (error) {
           setShowToast({
             key: "error",
-            label: error?.response?.data?.Errors?.[0]?.message || t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
+            label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
             transitionTime: 5000,
           });
         }
         break;
       case "DOWNLOAD_ADVISORY":
         // Mock — placeholder for future implementation
-        setShowToast({ key: "info", label: t(I18N_KEYS.PAGES_BILLS.HCM_AM_DOWNLOAD_ADVISORY_PLACEHOLDER), transitionTime: 3000 });
+        setShowToast({ key: "info", label: t("HCM_AM_DOWNLOAD_ADVISORY_PLACEHOLDER"), transitionTime: 3000 });
         break;
       default:
         break;
@@ -513,9 +519,11 @@ const ManageBills = () => {
   if (!roleConfig) {
     return (
       <React.Fragment>
-        <HeaderComponent className="payment-screen-headers">{t(I18N_KEYS.PAGES_BILLS.HCM_AM_MANAGE_BILLS)}</HeaderComponent>
+        <Header styles={{ fontSize: "32px" }}>
+          <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MANAGE_BILLS")}</span>
+        </Header>
         <Card>
-          <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_ACCESS)} width={280} height={220} />
+          <NoResultsFound text={t("HCM_AM_NO_ACCESS")} />
         </Card>
       </React.Fragment>
     );
@@ -528,9 +536,11 @@ const ManageBills = () => {
   if (!selectedProject?.id) {
     return (
       <React.Fragment>
-        <HeaderComponent className="payment-screen-headers">{t(I18N_KEYS.PAGES_BILLS.HCM_AM_MANAGE_BILLS)}</HeaderComponent>
+        <Header styles={{ fontSize: "32px" }}>
+          <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MANAGE_BILLS")}</span>
+        </Header>
         <Card>
-          <NoResultsFound text={t(I18N_KEYS.COMMON.HCM_AM_PROJECT_SELECTION_IS_MANDATORY)} width={280} height={220} />
+          <NoResultsFound text={t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY")} />
         </Card>
         {showToast && (
           <Toast
@@ -557,13 +567,13 @@ const ManageBills = () => {
         headerContent={
           <>
             {projectName && (
-              <Tag label={t(projectName)} type="monochrome" showIcon={false} className="campaign-tag" style={{ marginBottom: "1rem" }} />
+              <Tag label={t(projectName)} type="monochrome" showIcon={false} className="campaign-tag" style={{ marginBottom: "0.5rem" }} />
             )}
-            <HeaderComponent styles={{ marginBottom: "1rem" }} className="payment-screen-headers">
-              {t(I18N_KEYS.PAGES_BILLS.HCM_AM_MANAGE_BILLS)}
-            </HeaderComponent>
-            <p style={{ color: "#505A5F", fontSize: "16px", lineHeight: "1.5"}}>
-              {t(I18N_KEYS.PAGES_BILLS.HCM_AM_MANAGE_BILLS_DESCRIPTION)}
+            <Header styles={{ fontSize: "32px", marginBottom: "0.5rem" }}>
+              <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MANAGE_BILLS")}</span>
+            </Header>
+            <p style={{ color: "#505A5F", fontSize: "16px", lineHeight: "1.5", marginBottom: "0.5rem" }}>
+              {t("HCM_AM_MANAGE_BILLS_DESCRIPTION")}
             </p>
           </>
         }
@@ -607,7 +617,7 @@ const ManageBills = () => {
         {isFetching || isBillReportLoading || isBillCountFetching ? (
           <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
         ) : tableData.length === 0 ? (
-          <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_DATA_FOUND_FOR_BILLS)} width={280} height={220} />
+          <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
         ) : (
           <ManageBillsTable
             data={tableData.sort((a, b) => (a?.auditDetails?.createdTime || 0) - (b?.auditDetails?.createdTime || 0))}
@@ -641,8 +651,8 @@ const ManageBills = () => {
             populators={{ name: "infocard" }}
             variant="default"
             style={{ margin: "0.75rem 0 0", width: "100%", maxWidth: "unset" }}
-            label={t(I18N_KEYS.PAGES_BILLS.HCM_AM_INFO)}
-            text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_BILLS_PROCESSING_INFO)}
+            label={t("HCM_AM_INFO")}
+            text={t("HCM_AM_BILLS_PROCESSING_INFO")}
           />
         ) : null;
       })()}
@@ -657,28 +667,36 @@ const ManageBills = () => {
         />
       )}
 
-      <Footer
-        actionFields={[
+      <ActionBar style={{ display: "flex", justifyContent: "space-between", gap: "1rem" }}>
+        <Button
+          variation="secondary"
+          label={t("HCM_AM_BACK")}
+          icon="ArrowBack"
+          onClick={() => history.push(`/${window.contextPath}/employee/payments/manage-bills-project-selection/${resolvedRole}`)}
+          style={{
+            flexShrink: 0,
+            minWidth: "10rem",
+            whiteSpace: "normal",
+            marginLeft: "2rem", 
+          }}
+        />
+        {currentCTA && (
           <Button
-            variation="secondary"
-            label={t(I18N_KEYS.COMMON.HCM_AM_BACK)}
-            icon="ArrowBack"
-            onClick={() => navigate(`/${window.contextPath}/employee/payments/manage-bills-project-selection/${resolvedRole}`)}
-            style={{ flexShrink: 0, minWidth: "10rem", whiteSpace: "normal", marginLeft: "2rem" }}
-          />,
-          ...(currentCTA
-            ? [
-                <Button
-                  variation="primary"
-                  label={t(currentCTA.label)}
-                  isDisabled={selectedBills.length === 0}
-                  onClick={() => handleCTAAction(currentCTA.action)}
-                  style={{ flexShrink: 0, minWidth: "18rem", maxWidth: "28rem", whiteSpace: "normal", marginRight: "2rem" }}
-                />,
-              ]
-            : []),
-        ]}
-      />
+            variation="primary"
+            label={t(currentCTA.label)}
+            isDisabled={selectedBills.length === 0}
+            onClick={() => handleCTAAction(currentCTA.action)}
+            style={{
+              flexShrink: 0,
+              // width: "max-content",
+              minWidth: "18rem",
+              maxWidth: "28rem",
+              whiteSpace: "normal",
+              marginRight: "2rem", 
+            }}
+          />
+        )}
+      </ActionBar>
 
       {activePopUpAction && (() => {
         const popUpConfig = {
@@ -705,17 +723,35 @@ const ManageBills = () => {
             onClose={() => setActivePopUpAction(null)}
             alertHeading={t(config.heading)}
             alertMessage={t(config.message, { count: selectedBills.length })}
-            submitLabel={t(I18N_KEYS.COMMON.HCM_AM_CONFIRM)}
-            cancelLabel={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
+            submitLabel={t("HCM_AM_CONFIRM")}
+            cancelLabel={t("HCM_AM_CANCEL")}
             onPrimaryAction={async () => {
               if (!selectedBills?.length) return;
               const action = activePopUpAction;
               setActivePopUpAction(null);
+              if (["SEND_FOR_REVIEW", "SEND_FOR_APPROVAL"].includes(action)) {
+                setSignatureFlow({ action, count: selectedBills.length });
+                return;
+              }
               await triggerBulkUpdateBills(selectedBills, action);
             }}
           />
         );
       })()}
+
+      {signatureFlow && (
+        <SignaturePopUp
+          heading={t(`HCM_AM_SIGNATURE_POPUP_HEADING_${signatureFlow.action}`)}
+          description={t("HCM_AM_SIGNATURE_POPUP_BULK_DESCRIPTION", { count: signatureFlow.count })}
+          submitLabel={t(`HCM_AM_${signatureFlow.action}`)}
+          onClose={() => setSignatureFlow(null)}
+          onSubmit={async (signature) => {
+            const { action } = signatureFlow;
+            setSignatureFlow(null);
+            await triggerBulkUpdateBills(selectedBills, action, signature);
+          }}
+        />
+      )}
     </React.Fragment>
   );
 };
