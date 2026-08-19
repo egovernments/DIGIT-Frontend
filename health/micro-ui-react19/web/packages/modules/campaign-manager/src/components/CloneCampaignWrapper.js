@@ -197,6 +197,7 @@ const CloneCampaignWrapper = (props) => {
                     value={startDate}
                     placeholder={t(I18N_KEYS.COMPONENTS.CAMPAIGN_START_DATE)}
                     populators={{
+                      newDateFormat: true,
                       fieldPairClassName: "clonecampaign-popup-field",
                       validation: {
                         min: new Date(Date.now() + 86400000).toISOString().split("T")[0],
@@ -216,6 +217,7 @@ const CloneCampaignWrapper = (props) => {
                     value={endDate}
                     placeholder={t(I18N_KEYS.COMPONENTS.CAMPAIGN_END_DATE)}
                     populators={{
+                      newDateFormat: true,
                       fieldPairClassName: "clonecampaign-popup-field",
                       validation: {
                         min: endMin,
