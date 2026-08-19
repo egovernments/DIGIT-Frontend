@@ -106,17 +106,19 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
     return field?.isMdms && isValidSchema ? "code" : "name";
   }, [field?.isMdms, isValidSchema]);
 
-  // Show defaultValue in preview for field types where it's enabled in MDMS panel config
+  // Show defaultValue in preview for field types where it's enabled in MDMS panel config.
+  // Uses `fieldType` (UI-level type e.g. "numeric") not `field?.type` (raw JSON schema type e.g. "integer")
+  // because visibilityEnabledFor in MDMS is configured with UI type names, not raw schema types.
   const previewValue = useMemo(() => {
     const panelContent = fieldPanelConfig?.drawerPanelConfig?.content || [];
     const defaultValueConfig = panelContent.find((item) => item.id === "defaultValue");
     const enabledTypes = defaultValueConfig?.visibilityEnabledFor || [];
-    if (enabledTypes.includes(field?.type) && field?.value != null && field?.value !== "" && field?.value !== true) {
+    if (enabledTypes.includes(fieldType) && field?.value != null && field?.value !== "" && field?.value !== true) {
       const num = Number(field.value);
       if (!isNaN(num)) return num;
     }
     return "";
-  }, [fieldPanelConfig, field?.type, field?.value]);
+  }, [fieldPanelConfig, fieldType, field?.value]);
 
   return (
     <div ref={fieldRef}>
