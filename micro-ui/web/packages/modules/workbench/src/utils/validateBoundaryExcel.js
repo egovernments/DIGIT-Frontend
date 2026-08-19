@@ -4,7 +4,7 @@ import * as XLSX from "xlsx";
 const XLSX_MAGIC = [0x50, 0x4b, 0x03, 0x04]; // PK\x03\x04 — ZIP format used by .xlsx
 const XLS_MAGIC = [0xd0, 0xcf, 0x11, 0xe0];  // Compound Document Binary Format used by .xls
 
-// Patterns that indicate embedded malicious content within raw file bytes
+// Patterns that indicate embedded malicious content within parsed cell text
 const MALICIOUS_PATTERNS = [
   /<script[\s>]/i,
   /on(?:click|load|mouseover|mouseout|error|submit|focus|blur|change|keydown|keyup|keypress|dblclick|contextmenu|drag|drop|paste|copy|cut)\s*=/i,
@@ -19,9 +19,16 @@ const checkMagicBytes = (data, extension) => {
   return magic.every((byte, i) => data[i] === byte);
 };
 
-const containsMaliciousContent = (data) => {
-  const rawText = new TextDecoder("utf-8", { fatal: false }).decode(data);
-  return MALICIOUS_PATTERNS.some((pattern) => pattern.test(rawText));
+// Scans the *parsed* text content of every sheet (not raw file bytes) for embedded malicious
+// code patterns. Raw .xlsx/.xls bytes are a compressed binary archive — regex-scanning them
+// directly produces false positives on coincidental byte sequences unrelated to any real
+// content, so this only ever runs against genuine decoded cell text.
+const containsMaliciousContent = (workbook) => {
+  return workbook.SheetNames.some((sheetName) => {
+    const jsonArray = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    const contentStr = JSON.stringify(jsonArray);
+    return MALICIOUS_PATTERNS.some((pattern) => pattern.test(contentStr));
+  });
 };
 
 const validateBoundaryExcelContent = async (file, t, hierarchyColumnsCount) => {
@@ -37,18 +44,19 @@ const validateBoundaryExcelContent = async (file, t, hierarchyColumnsCount) => {
         return;
       }
 
-      // 2. Raw content scan — reject files containing embedded malicious code patterns
-      if (containsMaliciousContent(data)) {
-        resolve({ success: false, error: t("MALICIOUS_CONTENT_DETECTED") });
-        return;
-      }
-
-      // 3. Parse and validate data structure
+      // 2. Parse the workbook
       let workbook;
       try {
         workbook = XLSX.read(data, { type: "array" });
       } catch {
         resolve({ success: false, error: t("INVALID_FILE_CONTENT") });
+        return;
+      }
+
+      // 3. Content scan — reject files whose parsed cell content contains embedded
+      // malicious code patterns
+      if (containsMaliciousContent(workbook)) {
+        resolve({ success: false, error: t("MALICIOUS_CONTENT_DETECTED") });
         return;
       }
 
