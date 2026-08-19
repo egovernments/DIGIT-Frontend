@@ -164,7 +164,8 @@ module.exports = merge(common, {
     "/health-hrms",
     "/mdms-v2/v1/_search",
     "/studio-pdf",
-    "/health-individual"
+    "/health-individual",
+    "/studio-individual"
         ],
         target: process.env.REACT_APP_PROXY_URL || "https://unified-uat.digit.org",
         changeOrigin: true,
