@@ -1,0 +1,1898 @@
+[
+  {
+    "code": "ABDOMINAL_PAIN",
+    "message": "Douleur abdominale",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "\u00c9chec de l'administration",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_SUCCESS",
+    "message": "Administration r\u00e9ussie",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_COMPLAINTTYPE_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_CATEGORY_COMPLAINTS",
+    "message": "Plaintes",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_COMPLAINTACKNOWLEDGEMENT",
+    "message": "Succ\u00e8s de la plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_COMPLAINTINBOX",
+    "message": "Bo\u00eete de r\u00e9ception des plaintes",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_COMPLAINTVIEW",
+    "message": "Vue des plaintes",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_COMPLAINT_CREATE",
+    "message": "Cr\u00e9er une plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_COMPLAINTDETAILS",
+    "message": "D\u00e9tails de la plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_COMPLAINTTYPE",
+    "message": "Type de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_LOCATIONDETAILS",
+    "message": "D\u00e9tails de l'emplacement",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ASSIGN_TO_ALL",
+    "message": "Attribuer \u00e0 tous",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ASSIGN_TO_ME",
+    "message": "Attribuez-moi",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "B\u00e9n\u00e9ficiaire absent",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFERRED",
+    "message": "B\u00e9n\u00e9ficiaire r\u00e9f\u00e9r\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "B\u00e9n\u00e9ficiaire refus\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Back",
+    "message": "Dos",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Ciment",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Argile",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSED_HOUSEHOLD",
+    "message": "M\u00e9nage ferm\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTFLOW_RAISED_FOR_ANOTHER_USER",
+    "message": "Un autre utilisateur",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTFLOW_RAISED_FOR_MYSELF",
+    "message": "Moi-m\u00eame",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINTACKNOWLEDGEMENT_MESSAGE",
+    "message": "Impossible d'ouvrir la page. Veuillez r\u00e9essayer",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINT_CREATE_MESSAGE",
+    "message": "Impossible de charger le formulaire de r\u00e9clamation. Veuillez r\u00e9essayer",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINT_CREATE_administrativeArea_ERROR",
+    "message": "Une zone administrative est requise",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINT_CREATE_complaintDescription_ERROR",
+    "message": "Une description de la plainte est requise",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINT_CREATE_complaintRaisedFor_ERROR",
+    "message": "Veuillez s\u00e9lectionner pour qui la plainte est d\u00e9pos\u00e9e",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINT_CREATE_complaintType_ERROR",
+    "message": "Veuillez s\u00e9lectionner un type de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINT_CREATE_contactNumber_ERROR",
+    "message": "Veuillez entrer un num\u00e9ro de contact valide",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINT_CREATE_name_ERROR",
+    "message": "Le nom du plaignant est requis",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINT_CREATE_otherReason_ERROR",
+    "message": "Veuillez pr\u00e9ciser le motif de votre r\u00e9clamation",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINT_CREATE_supervisorContactNumber_ERROR",
+    "message": "Veuillez entrer un num\u00e9ro de contact de superviseur valide",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINT_CREATE_supervisorName_ERROR",
+    "message": "Le nom du superviseur est requis",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_RAISED_FOR_ANOTHER_USER",
+    "message": "Un autre utilisateur",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_RAISED_FOR_MYSELF",
+    "message": "Moi-m\u00eame",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_ACTION_LABEL",
+    "message": "Retour aux plaintes",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_DESCRIPTION",
+    "message": "Synchronisez l'enregistrement pour g\u00e9n\u00e9rer le num\u00e9ro de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_LABEL",
+    "message": "Plainte cr\u00e9\u00e9e avec succ\u00e8s\u00a0!",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_CREATE",
+    "message": "Cr\u00e9er une plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_ACTION_LABEL",
+    "message": "Soumettre",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_HEADING",
+    "message": "D\u00e9tails de la plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_VIEW_ACTION_LABEL",
+    "message": "Ouvrir",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_administrativeArea_LABEL",
+    "message": "Zone administrative",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_administrativeArea_REQUIRED_ERROR",
+    "message": "Une zone administrative est requise",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_complaintDescription_LABEL",
+    "message": "Description de la plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_complaintDescription_REQUIRED_ERROR",
+    "message": "Une description de la plainte est requise",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_complaintRaisedFor_LABEL",
+    "message": "Vous d\u00e9posez une plainte pour vous-m\u00eame ou pour un autre utilisateur\u00a0?",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_complaintRaisedFor_REQUIRED_ERROR",
+    "message": "Veuillez s\u00e9lectionner pour qui la plainte est d\u00e9pos\u00e9e",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_contactNumber_LABEL",
+    "message": "Num\u00e9ro de contact du plaignant",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_contactNumber_REQUIRED_ERROR",
+    "message": "Le num\u00e9ro de contact est requis",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_name_LABEL",
+    "message": "Nom du plaignant",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_name_LABEL_MAX_VALIDATION",
+    "message": "La longueur doit \u00eatre comprise entre 2 et 64\u00a0caract\u00e8res",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_name_LABEL_MIN_VALIDATION",
+    "message": "La longueur doit \u00eatre comprise entre 2 et 64\u00a0caract\u00e8res",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_name_REQUIRED_ERROR",
+    "message": "Le nom du plaignant est requis",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_supervisorContactNumber_LABEL",
+    "message": "Num\u00e9ro de contact du superviseur",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_supervisorName_LABEL",
+    "message": "Nom du superviseur",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_BACK",
+    "message": "Dos",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_COMPLAINANT_CONTACT",
+    "message": "Contact",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_COMPLAINT_AREA",
+    "message": "Zone",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_COMPLAINT_DATE",
+    "message": "Date de la plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_COMPLAINT_NUMBER",
+    "message": "Num\u00e9ro de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_COMPLAINT_STATUS",
+    "message": "Statut",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_COMPLAINT_TYPE",
+    "message": "Type de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_FILTER_COMPLAINT_TYPE_LABEL",
+    "message": "Type de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_FILTER_LABEL",
+    "message": "Filtre",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_FILTER_LOCALITY_TYPE_LABEL",
+    "message": "Localit\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_FILTER_PRIMARY_ACTION_LABEL",
+    "message": "Filtre",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_FILTER_SECONDARY_ACTION_LABEL",
+    "message": "Clair",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_HEADING",
+    "message": "Bo\u00eete de r\u00e9ception des plaintes",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_PRIMARY_ACTION",
+    "message": "D\u00e9poser une plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SEARCH_COMPLAINT_NUMBER_LABEL",
+    "message": "Num\u00e9ro de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SEARCH_LABEL",
+    "message": "Recherche",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SEARCH_MOBILE_NUMBER_LABEL",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SEARCH_PRIMARY_ACTION_LABEL",
+    "message": "Recherche",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SEARCH_SECONDARY_ACTION_LABEL",
+    "message": "Clair",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SORT_LABEL",
+    "message": "Trier",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SORT_LATEST_FIRST",
+    "message": "Dernier premier",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SORT_LATEST_LAST",
+    "message": "Dernier dernier",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SORT_POPUP_LABEL",
+    "message": "Trier par:",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SORT_PRIMARY_ACTION_LABEL",
+    "message": "Trier",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SORT_SECONDARY_ACTION_LABEL",
+    "message": "Clair",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_TYPE_ACTION_LABEL",
+    "message": "Suivant",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_TYPE_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_TYPE_HEADING",
+    "message": "Type de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_TYPE_complaintType_LABEL",
+    "message": "S\u00e9lectionnez votre type de r\u00e9clamation",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_TYPE_complaintType_REQUIRED_ERROR",
+    "message": "Veuillez s\u00e9lectionner un type de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_TYPE_otherReason_LABEL",
+    "message": "Motif de la plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_TYPE_otherReason_REQUIRED_ERROR",
+    "message": "Veuillez pr\u00e9ciser le motif de votre r\u00e9clamation",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_VIEW_ACTION_LABEL",
+    "message": "Retour aux plaintes",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+    "message": "Contact",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_VIEW_COMPLAINTS_AREA",
+    "message": "Zone",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_VIEW_COMPLAINTS_DATE",
+    "message": "Date",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_VIEW_COMPLAINTS_NUMBER",
+    "message": "Num\u00e9ro de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
+    "message": "Taper",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+    "message": "Description",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_VIEW_COMPLAINT_STATUS",
+    "message": "Statut",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_VIEW_HEADING",
+    "message": "D\u00e9tails de la plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORRESPONDENCE",
+    "message": "Correspondance",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DATAISSUES",
+    "message": "Probl\u00e8me de donn\u00e9es",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DEFAULT",
+    "message": "D\u00e9faut",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DIARRHOEA",
+    "message": "Diarrh\u00e9e",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Effet secondaire du m\u00e9dicament du cycle en cours",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Effet secondaire du m\u00e9dicament du cycle pr\u00e9c\u00e9dent",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Data Issues",
+    "message": "Probl\u00e8mes de donn\u00e9es",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DataIssues",
+    "message": "Probl\u00e8mes de donn\u00e9es",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FEMALE",
+    "message": "Femelle",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Fi\u00e8vre",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FILTER_BUTTON_ACTIONPOPUP",
+    "message": "Filtre",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_close_LABEL",
+    "message": "Fermer",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_fileComplaint_LABEL",
+    "message": "D\u00e9poser une plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FUNERAL",
+    "message": "Fun\u00e9railles",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Verre",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INCOMPATIBLE",
+    "message": "Incompatible",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INELIGIBLE",
+    "message": "In\u00e9ligible",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Ressources insuffisantes",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_AGE",
+    "message": "\u00c2ge",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_BATCH_NUMBER",
+    "message": "Num\u00e9ro de lot",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
+    "message": "Plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
+    "message": "R\u00e9f\u00e9rence HF",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
+    "message": "M\u00e9nage",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
+    "message": "Individuel",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
+    "message": "Mod\u00e8le de surveillance",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_ITEMMODEL",
+    "message": "Article",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
+    "message": "Mod\u00e8le LQA",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_NAVIGATIONMODEL",
+    "message": "Navigation",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
+    "message": "B\u00e9n\u00e9ficiaire du projet",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
+    "message": "Action",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMMENTS",
+    "message": "Commentaires",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
+    "message": "Personne-ressource du plaignant",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
+    "message": "Zone",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
+    "message": "Date de la plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
+    "message": "Num\u00e9ro de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
+    "message": "Statut",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
+    "message": "Type de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+    "message": "Num\u00e9ro de contact",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
+    "message": "Zone",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
+    "message": "Date de la plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
+    "message": "Num\u00e9ro de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
+    "message": "Type de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+    "message": "Description",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
+    "message": "Statut",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
+    "message": "Date d'inscription",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_GENDER",
+    "message": "Genre",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
+    "message": "\u00c2ge",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
+    "message": "Genre",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
+    "message": "Nom du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
+    "message": "Date d'inscription",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
+    "message": "Chef de famille",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
+    "message": "R\u00e8glement",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
+    "message": "Nombre total de membres",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
+    "message": "Chef de famille",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
+    "message": "Localit\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_ID_NUMBER",
+    "message": "Num\u00e9ro d'identification",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_ID_TYPE",
+    "message": "Type d'identification",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
+    "message": "Enfants pr\u00e9sents",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
+    "message": "Enfants vaccin\u00e9s",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
+    "message": "Commentaires finaux",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
+    "message": "Manqu\u00e9 - Absent",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
+    "message": "Manqu\u00e9 - Endormi",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
+    "message": "Manqu\u00e9 - Pas revisit\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
+    "message": "Manqu\u00e9 - Non visit\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
+    "message": "Manqu\u00e9 - Autre",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
+    "message": "Manqu\u00e9 - Refus",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
+    "message": "Manqu\u00e9 - Routine",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
+    "message": "Date de surveillance",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
+    "message": "D\u00e9signation du moniteur",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
+    "message": "Nom du moniteur",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
+    "message": "Mal couvert",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
+    "message": "Zone de r\u00e8glement",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
+    "message": "Type de r\u00e8glement",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_BATCH_LABEL",
+    "message": "Lot",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
+    "message": "Num\u00e9ro de lot",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_COMMENTS_LABEL",
+    "message": "Commentaires",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
+    "message": "Date d'expiration",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
+    "message": "Num\u00e9ro MRN",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_QUANTITY_LABEL",
+    "message": "Quantit\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_RESOURCE_LABEL",
+    "message": "Ressource",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_SENDER_LABEL",
+    "message": "Exp\u00e9diteur",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_SKU_LABEL",
+    "message": "UGS",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
+    "message": "Raison de la transaction",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
+    "message": "Type de transaction",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
+    "message": "Lettre de transport",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
+    "message": "Num\u00e9ro de lettre de transport",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
+    "message": "Motif d'absence",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
+    "message": "Sensibilisation \u00e0 l'AFP",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
+    "message": "Nombre de cas de PFA",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
+    "message": "Autre sensibilisation",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
+    "message": "Sensibilisation \u00e0 la campagne",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
+    "message": "Le soignant inform\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
+    "message": "Enfants de moins de 5 ans",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
+    "message": "\u00c2ge de l'enfant (mois)",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
+    "message": "Sexe des enfants",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
+    "message": "Num\u00e9ro de cluster",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
+    "message": "Doigt marqu\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
+    "message": "Num\u00e9ro de lot",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
+    "message": "Doses de VPO",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
+    "message": "Autre motif d'absence",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
+    "message": "Autre raison (pr\u00e9ciser)",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
+    "message": "Autre motif de refus",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
+    "message": "Raison non marqu\u00e9e",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
+    "message": "Motif du refus",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
+    "message": "Zone de r\u00e8glement",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
+    "message": "Nom de l'arpenteur",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
+    "message": "Date de l'enqu\u00eate",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MEMBER_COUNT",
+    "message": "Nombre de membres",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MOBILE_NUMBER",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MRN_NUMBER",
+    "message": "Num\u00e9ro MRN",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
+    "message": "Nom",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_QUANTITY_RECEIVED",
+    "message": "Quantit\u00e9 re\u00e7ue",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_NAME",
+    "message": "Nom",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
+    "message": "Statut de r\u00e9f\u00e9rence",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
+    "message": "Sympt\u00f4me de r\u00e9f\u00e9rence",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_RESOURCE",
+    "message": "Ressource",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_STOCK_EXPIRY",
+    "message": "Date d'expiration",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_WAYBILL_NUMBER",
+    "message": "Num\u00e9ro de lettre de transport",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "message": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LATEST_FIRST",
+    "message": "Dernier premier",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LATEST_LAST",
+    "message": "Dernier dernier",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOCATION_DETAILS_ACTION_LABEL",
+    "message": "Suivant",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOCATION_DETAILS_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOCATION_DETAILS_HEADING",
+    "message": "D\u00e9tails de l'emplacement",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOCATION_DETAILS_addressLine1_LABEL",
+    "message": "Adresse Ligne 1",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOCATION_DETAILS_addressLine2_LABEL",
+    "message": "Ligne d'adresse 2",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOCATION_DETAILS_landmark_LABEL",
+    "message": "Point de rep\u00e8re",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOCATION_DETAILS_pincode_LABEL",
+    "message": "Code PIN",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOCATION_DETAILS_typeOfAddress_LABEL",
+    "message": "Type d'adresse",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MALE",
+    "message": "M\u00e2le",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "M\u00e9tal",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MOBILE_LENGTH_10_DIGIT",
+    "message": "Le num\u00e9ro de contact doit comporter 10\u00a0chiffres",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MOBILE_LENGTH_10_DIGITS",
+    "message": "Le num\u00e9ro de contact doit comporter 10\u00a0chiffres",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOT_ADMINISTERED",
+    "message": "Non administr\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOT_REGISTERED",
+    "message": "Non enregistr\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO_OPTIONS_AVAILABLE",
+    "message": "Aucune option disponible",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Autre",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Autre",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Autre",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERFORMANCEISSUE",
+    "message": "Probl\u00e8mes de performances",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERMANENT",
+    "message": "Permanent",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "Probl\u00e8mes de performances",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Roseaux",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SEARCH_BUTTON_ACTIONPOPUP",
+    "message": "Recherche",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SECURITYISSUES",
+    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Malade",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SKIN_REACTION",
+    "message": "R\u00e9action cutan\u00e9e",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SORT_BUTTON_ACTIONPOPUP",
+    "message": "Trier",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Livraison r\u00e9ussie",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SUPERVISOR_DETAILS_name_LABEL_MAX_VALIDATION",
+    "message": "La longueur doit \u00eatre comprise entre 2 et 64\u00a0caract\u00e8res",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SUPERVISOR_name_LABEL_MIN_VALIDATION",
+    "message": "La longueur doit \u00eatre comprise entre 2 et 64\u00a0caract\u00e8res",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Security Issues",
+    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TECHNICALISSUES",
+    "message": "Probl\u00e8mes techniques",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_1",
+    "message": "Type de transport 1",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_2",
+    "message": "Type de transport 2",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Technical Issues",
+    "message": "Probl\u00e8mes techniques",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Probl\u00e8mes techniques",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UNIQUE_BENEFICIARY_ID",
+    "message": "Identifiant unique du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USERACCOUNTISSUES",
+    "message": "Probl\u00e8mes de compte utilisateur",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "User Account Issues",
+    "message": "Probl\u00e8mes de compte utilisateur",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "Probl\u00e8mes de compte utilisateur",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "VOMITTING",
+    "message": "Vomissement",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WEAKNESS",
+    "message": "Faiblesse",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "addressLine1",
+    "message": "Adresse Ligne 1",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "addressLine2",
+    "message": "Ligne d'adresse 2",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "administrativeArea",
+    "message": "Zone administrative",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "assignTo",
+    "message": "Attribuer \u00e0",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "backToComplaints",
+    "message": "Retour aux plaintes",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "cancel",
+    "message": "Clair",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "cancel2",
+    "message": "Clair",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "cancel3",
+    "message": "Clair",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "clientReferenceId",
+    "message": "ID de r\u00e9f\u00e9rence client",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "close",
+    "message": "Retour aux plaintes",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "complaintAcknowledgement",
+    "message": "Accus\u00e9 de r\u00e9ception de la plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "complaintCard",
+    "message": " ",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "complaintClientReferenceId",
+    "message": "ID de r\u00e9f\u00e9rence de la plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "complaintDescription",
+    "message": "Description de la plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "complaintInbox",
+    "message": "Bo\u00eete de r\u00e9ception des plaintes",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "complaintInbox_row",
+    "message": " ",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "complaintNumber",
+    "message": "Num\u00e9ro de plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "complaintRaisedFor",
+    "message": "Vous d\u00e9posez une plainte pour vous-m\u00eame ou pour un autre utilisateur\u00a0?",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "complaintSuccess",
+    "message": "Plainte cr\u00e9\u00e9e avec succ\u00e8s\u00a0!",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "complaintType",
+    "message": "S\u00e9lectionnez votre type de r\u00e9clamation",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "complaintView",
+    "message": "Vue des plaintes",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "complaintsFilter",
+    "message": "Filtre",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "complaintsLabelPair",
+    "message": " ",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "contactNumber",
+    "message": "Num\u00e9ro de contact du plaignant",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "fileComplaint",
+    "message": "D\u00e9poser une plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "filter",
+    "message": "Filtre",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "labelPairComplaint",
+    "message": "Plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "landmark",
+    "message": "Point de rep\u00e8re",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "listOfComplaints",
+    "message": "Plaintes",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "listView",
+    "message": "Plaintes",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "locality",
+    "message": "Localit\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "localityBoundaryCode",
+    "message": "Code de localit\u00e9",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "mobileNumber",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "name",
+    "message": "Nom du plaignant",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "otherReason",
+    "message": "Motif de la plainte",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "pincode",
+    "message": "Code PIN",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "search",
+    "message": "Recherche",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "searchComplaints",
+    "message": "Recherche",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "serviceCode",
+    "message": "Code de service",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "serviceRequestId",
+    "message": "ID de demande de service",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "sort",
+    "message": "Trier",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "sortBy",
+    "message": "Trier par",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "sortComplaints",
+    "message": "Trier",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "supervisorContactNumber",
+    "message": "Num\u00e9ro de t\u00e9l\u00e9phone du superviseur",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "supervisorName",
+    "message": "Nom du superviseur",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "tenantId",
+    "message": "Locataire",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "typeOfAddress",
+    "message": "Type d'adresse",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "viewDetails",
+    "message": "Ouvrir",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  }
+]

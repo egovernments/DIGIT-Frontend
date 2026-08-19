@@ -1,0 +1,3236 @@
+[
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_AIRPORT_AUTHORITY_APPROVER",
+    "message": "Approbateur de l\u2019autorit\u00e9 a\u00e9roportuaire",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_CFC",
+    "message": "CFC",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_CITY_ADMIN",
+    "message": "Administrateur de la ville",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_CSR",
+    "message": "RSE",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_DISTRIBUTOR",
+    "message": "Distributeur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_DISTRICT_SUPERVISOR",
+    "message": "Superviseur de district",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_EMPLOYEE",
+    "message": "Employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_FIELD_SUPERVISOR",
+    "message": "Superviseur de terrain",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_FIRE_NOC_APPROVER",
+    "message": "Approbateur FireNoc",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_HELPDESK_USER",
+    "message": "Utilisateur du service d'assistance",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_HRMS_ADMIN",
+    "message": "Administrateur du SIRH",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_INTERNAL_MICROSERVICE_ROLE",
+    "message": "R\u00f4le du microservice interne",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_L2_SUPPORT",
+    "message": "Prise en charge L2",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_NATIONAL_SUPERVISOR",
+    "message": "Superviseur national",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_PAYMENT_APPROVER",
+    "message": "Approbateur de paiement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_PAYMENT_EDITOR",
+    "message": "\u00c9diteur de paiement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_PAYMENT_REVIEWER",
+    "message": "R\u00e9viseur de paiement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_PGR-ADMIN",
+    "message": "Administrateur PGR",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_PROVINCIAL_SUPERVISOR",
+    "message": "Superviseur provincial",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_PROXIMITY_SUPERVISOR",
+    "message": "Superviseur de proximit\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_PT_CEMP",
+    "message": "Employ\u00e9 au comptoir des imp\u00f4ts fonciers",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_REGISTRAR",
+    "message": "Greffier",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_SUPERUSER",
+    "message": "Super utilisateur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_SUPERVISOR",
+    "message": "Superviseur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_SW_APPROVER",
+    "message": "Approbateur logiciel",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_SW_CEMP",
+    "message": "Employ\u00e9 du comptoir SW",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_SW_CLERK",
+    "message": "Commis logiciel",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_SW_DOC_VERIFIER",
+    "message": "V\u00e9rificateur de documents SW",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_SW_FIELD_INSPECTOR",
+    "message": "Inspecteur de terrain SW",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_SYSTEM",
+    "message": "Syst\u00e8me",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_SYSTEM_ADMINISTRATOR",
+    "message": "Administrateur du syst\u00e8me",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_WAREHOUSE_MANAGER",
+    "message": "Responsable d'entrep\u00f4t",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_WS_APPROVER",
+    "message": "Approbateur WS",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_WS_CEMP",
+    "message": "Employ\u00e9 du comptoir WS",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_WS_CLERK",
+    "message": "Commis WS",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_WS_DOC_VERIFIER",
+    "message": "V\u00e9rificateur de documents WS",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_WS_FIELD_INSPECTOR",
+    "message": "Inspecteur de terrain WS",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACTION",
+    "message": "Action",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACTION_CREATE_CHECKLIST",
+    "message": "Cr\u00e9er une liste de contr\u00f4le",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_EMPLOYEE_REPORT",
+    "message": "Rapport des employ\u00e9s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_HRMS",
+    "message": "Gestion des utilisateurs",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_NATIONAL_CALCULATIONS",
+    "message": "Calculs",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_SEARCH_EMPLOYEE",
+    "message": "Rechercher un utilisateur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACTIVE",
+    "message": "Actif",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACTIVE_EMPLOYEES",
+    "message": "Employ\u00e9s actifs",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_BOUNDARY_HIERARCHY_LEVEL",
+    "message": "Ajouter un niveau de hi\u00e9rarchie de limites",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_HIERARCHY_LEVEL",
+    "message": "Ajouter un niveau hi\u00e9rarchique",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_JURISDICTION",
+    "message": "Ajouter une juridiction",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_UNIT",
+    "message": "Attribuer une autre campagne",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADM",
+    "message": "SMA",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADMIN",
+    "message": "Administrateur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ASSIGN",
+    "message": "Attribuer",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ASSIGNED_SUCCESSFULLY",
+    "message": "Campagne attribu\u00e9e avec succ\u00e8s\u00a0!",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ASSIGNMENT",
+    "message": "Affectation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ASSIGN_CAMPAIGN_MODAL_TITLE",
+    "message": "Affectation de campagne",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BACK",
+    "message": "Dos",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DATA_MANAGEMENT",
+    "message": "Gestion des donn\u00e9es limites",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BOUNDARY_MANAGEMENT",
+    "message": "Gestion des limites",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Bednet_HIERARCHYTEST_MO",
+    "message": "Campagne Moustiquaire - Mozambique",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CAMPAIGN_RESPONSE_CREATE_ACTION",
+    "message": "Campagne attribu\u00e9e avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CAMPAIGN_RESPONSE_UPDATE_ACTION",
+    "message": "Campagnes attribu\u00e9es mises \u00e0 jour avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CANCEL",
+    "message": "Annuler",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CHOOSE_MEANS_TO_CREATE_BOUNDARY",
+    "message": "Choisir les moyens de cr\u00e9er une limite",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLEAR_ALL",
+    "message": "Tout effacer",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_GENDER_FEMALE",
+    "message": "Femelle",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_GENDER_FEMALE ",
+    "message": "Femelle",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_GENDER_MALE",
+    "message": "M\u00e2le",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_GENDER_MALE ",
+    "message": "M\u00e2le",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_GENDER_TRANSGENDER",
+    "message": "Transgenre",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_GENDER_TRANSGENDER ",
+    "message": "Transgenre",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_MASTERS_DEPARTMENT_EGOV",
+    "message": "eGouvernement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_MASTERS_DEPARTMENT_NMCP",
+    "message": "PNLP",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_MASTERS_DEPARTMENT_undefined",
+    "message": "Non attribu\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_MASTERS_DESIGNATION_AO",
+    "message": "Agent comptable",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_MASTERS_DESIGNATION_COMM",
+    "message": "Commissaire",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_MASTERS_DESIGNATION_undefined",
+    "message": "Non attribu\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_RELATION_FATHER",
+    "message": "P\u00e8re",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_RELATION_HUSHBAND",
+    "message": "MARI",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_TABLE_NO_RECORD_FOUND",
+    "message": "Aucun enregistrement trouv\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CONFIRM_BOUNDARY_DATA",
+    "message": "Confirmer les donn\u00e9es des limites",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CONFIRM_BOUNDARY_HIERARCHY_LEVEL",
+    "message": "Confirmer le niveau de hi\u00e9rarchie des limites",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CONTRACT",
+    "message": "Contracter",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_APPLICANT_ADDRESS_INVALID",
+    "message": "Adresse de correspondance invalide",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_APPLICANT_CONFIRM_PASSWORD_INVALID",
+    "message": "Les mots de passe ne correspondent pas",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_APPLICANT_NAME_INVALID",
+    "message": "Nom invalide",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_APPLICANT_PASSWORD_INVALID",
+    "message": "Les mots de passe doivent contenir 8 \u00e0 15 caract\u00e8res alphanum\u00e9riques. Caract\u00e8res sp\u00e9ciaux autoris\u00e9s\u00a0: @,#,$,%",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_CONTINUE_CAMPAIGN_ASSIGNMENTS",
+    "message": "Proc\u00e9der \u00e0 l'attribution de la campagne",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_GO_TO_HOME",
+    "message": "Retourner \u00e0 la maison",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_GO_TO_HOME_CREATE_ERROR",
+    "message": "Rentrer \u00e0 la maison",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_GO_TO_HOME_CREATE_SUCCESS",
+    "message": "Aller \u00e0 la maison",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_GO_TO_HOME_UPDATE_SUCCESS",
+    "message": "Aller \u00e0 la maison",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_GO_TO_USER_CREATION",
+    "message": "Cr\u00e9er un nouvel utilisateur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_MOBILE_ERROR",
+    "message": "Num\u00e9ro de portable invalide",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NA",
+    "message": "QUE",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PROFILE_UPDATE_SUCCESS",
+    "message": "Le mot de passe est r\u00e9initialis\u00e9 avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PROFILE_UPDATE_SUCCESS ",
+    "message": "Le mot de passe est r\u00e9initialis\u00e9 avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CREATE",
+    "message": "Cr\u00e9er",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CREATE_BOUNDARY_HIERARCHY",
+    "message": "Cr\u00e9er une hi\u00e9rarchie de limites",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CREATE_MY_OWN_BOUNDARY_DATA",
+    "message": "Cr\u00e9er mes propres donn\u00e9es de limites",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CREATE_NEW_BOUNDARY_DATA",
+    "message": "Cr\u00e9er de nouvelles donn\u00e9es de limite",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CREATION_DATE",
+    "message": "Date de cr\u00e9ation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_LOGIN_OTP_TEXT",
+    "message": "OTP a \u00e9t\u00e9 envoy\u00e9 \u00e0",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_LOGIN_OTP_TEXT ",
+    "message": "Entrez l'OTP envoy\u00e9 \u00e0",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_PASSWORD_NOT_EQUAL",
+    "message": "Mot de passe diff\u00e9rent",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_PROFILE_EMAIL_ERRORMSG",
+    "message": "Adresse e-mail invalide",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_RESEND_OTP",
+    "message": "Renvoyer OTP",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_RESEND_OTP ",
+    "message": "Renvoyer OTP",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CURRENT_HIERARCHIES",
+    "message": "Hi\u00e9rarchies actuelles",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DAILYWAGES",
+    "message": "Salaires journaliers",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DATA_CREATION_IN_PROGRESS",
+    "message": "Cr\u00e9ation de donn\u00e9es en cours",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DECEASED",
+    "message": "D\u00e9c\u00e9d\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DEPUTATION",
+    "message": "D\u00e9putation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DOWNLOAD_EXCEL_TEMPLATE",
+    "message": "T\u00e9l\u00e9charger le mod\u00e8le Excel",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EDIT_BOUNDARY_DATA",
+    "message": "Modifier les donn\u00e9es de limite",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_DEACTIVATIONREASON_ORDERBYCOMMISSIONER",
+    "message": "Ordonnance du commissaire",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_DEACTIVATIONREASON_OTHERS",
+    "message": "Autres",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_DEGREE_10+2_EQUIVALENTDIPLOMA",
+    "message": "10+2/\u00c9QUIVALENTDIPL\u00d4ME",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_DEGREE_B_A_B_SC__B_COM_BBA",
+    "message": "BA/B.SC./B.COM/BBA",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_DEGREE_B_E_B_TECH_",
+    "message": "B.E/B.TECH.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_DEGREE_DOCTORATE",
+    "message": "DOCTORAT",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_DEGREE_LLB_LLM",
+    "message": "LLB/LLM",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_DEGREE_MATRICULATION",
+    "message": "IMMATRICULATION",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_DEGREE_MBA_PGDM",
+    "message": "MBA/PGDM",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_DEGREE_M_A_M_COM__M_SC_",
+    "message": "M.A/M.COM./M.SC.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_DEGREE_M_E_M_TECH_",
+    "message": "M.E/M.TECH.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_DEGREE_OTHER",
+    "message": "AUTRE",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYEESTATUS_DECEASED",
+    "message": "D\u00e9c\u00e9d\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYEESTATUS_EMPLOYED",
+    "message": "Employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYEESTATUS_RESIGNED",
+    "message": "R\u00e9sign\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYEESTATUS_RETIRED",
+    "message": "\u00c0 la retraite",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYEESTATUS_SUSPENDED",
+    "message": "Suspendu",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYEESTATUS_TERMINATED",
+    "message": "Termin\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYEESTATUS_TRANSFERRED",
+    "message": "Transf\u00e9r\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYEETYPE_CONTRACT",
+    "message": "Contracter",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYEETYPE_DAILYWAGES",
+    "message": "Salaires journaliers",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYEETYPE_DEPUTATION",
+    "message": "D\u00e9putation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYEETYPE_PERMANENT",
+    "message": "Permanent",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYEETYPE_TEMPORARY",
+    "message": "Temporaire",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYMENTTEST_APTITUDETEST",
+    "message": "TEST D'APTITUDE",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYMENTTEST_MAINS",
+    "message": "SECTEUR",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_EMPLOYMENTTEST_PRELIMS",
+    "message": "PR\u00c9LIMINAIRES",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_SPECALIZATION_ARTS",
+    "message": "Arts",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_HRMS_SPECALIZATION_SCIENCE",
+    "message": "Science",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_LOCATION_BOUNDARYTYPE_COUNTRY",
+    "message": "National",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_LOCATION_TENANTBOUNDARY_ADMIN",
+    "message": "Administrateur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EGOV_LOCATION_TENANTBOUNDARY_REVENUE",
+    "message": "Revenu",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EMPLOYED",
+    "message": "Employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EMPLOYEEREPORT",
+    "message": "Rapport des employ\u00e9s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EMPLOYEE_RESPONSE_ACTIVATION_ACTION",
+    "message": "Employ\u00e9 r\u00e9activ\u00e9 avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EMPLOYEE_RESPONSE_CREATE",
+    "message": "Employ\u00e9 cr\u00e9\u00e9 avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EMPLOYEE_RESPONSE_CREATE_ACTION",
+    "message": "Employ\u00e9 cr\u00e9\u00e9 avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EMPLOYEE_RESPONSE_CREATE_ACTION_ERROR",
+    "message": "\u00c9chec de la cr\u00e9ation d'un employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EMPLOYEE_RESPONSE_CREATE_LABEL",
+    "message": "Nom d'utilisateur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EMPLOYEE_RESPONSE_DEACTIVATION_ACTION",
+    "message": "Employ\u00e9 d\u00e9sactiv\u00e9 avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EMPLOYEE_RESPONSE_DEACTIVATION_ACTION_ERROR",
+    "message": "\u00c9chec de la d\u00e9sactivation des employ\u00e9s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EMPLOYEE_RESPONSE_UPDATE_ACTION",
+    "message": "Les d\u00e9tails de l'employ\u00e9 ont \u00e9t\u00e9 mis \u00e0 jour avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EMPLOYEE_RESPONSE_UPDATE_ACTION_ERROR",
+    "message": "\u00c9chec de la mise \u00e0 jour des d\u00e9tails de l'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "END_DATE",
+    "message": "Date de fin",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_BASE_TENANT_MANDATORY",
+    "message": "Au moins une juridiction doit \u00eatre s\u00e9lectionn\u00e9e dans la ville m\u00e8re",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_BULK_CREATE_DUPLICATE_EMPCODE",
+    "message": "La demande group\u00e9e comporte un code d'employ\u00e9 en double",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_BULK_CREATE_DUPLICATE_MOBILE",
+    "message": "La demande group\u00e9e comporte un num\u00e9ro de mobile en double",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_GENERATE_ID_ERROR",
+    "message": "Impossible de cr\u00e9er des identifiants",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE",
+    "message": "Le champ Date de fin doit \u00eatre vide pour l'affectation actuelle de l'employ\u00e9.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_ASSIGNMENT_DATES",
+    "message": "La p\u00e9riode d'affectation de l'employ\u00e9 (date du ou jusqu'\u00e0) ne peut pas \u00eatre ant\u00e9rieure \u00e0 la date de naissance.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_ASSIGNMENT_DATES_APPOINTMENT",
+    "message": "La p\u00e9riode d'affectation de l'employ\u00e9 (date du ou jusqu'\u00e0) ne peut pas \u00eatre ant\u00e9rieure \u00e0 la date de nomination.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_ASSIGNMENT_NOT_CURRENT_TO_DATE",
+    "message": "Le champ Jusqu'\u00e0 la date ne doit pas \u00eatre vide pour les affectations non actuelles de l'employ\u00e9.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_ASSIGNMENT_PERIOD",
+    "message": "P\u00e9riode d'affectation invalide (Du jour au jour).",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_BOUNDARY_TYPE_HEIRARCHY",
+    "message": "La valeur du type de limite de juridiction n\u2019est pas valide.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_CURRENT_ASSGN",
+    "message": "Il ne doit y avoir qu'une seule affectation en cours pour l'employ\u00e9.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_DATE_OF_APPOINTMENT",
+    "message": "Date de rendez-vous de l'employ\u00e9 non valide saisie par l'utilisateur.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_DATE_OF_APPOINTMENT_DOB",
+    "message": "La date de nomination de l'employ\u00e9 ne peut pas \u00eatre ant\u00e9rieure \u00e0 sa date de naissance.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_DEACT_REASON",
+    "message": "Le motif de d\u00e9sactivation de l'employ\u00e9 n'est pas valide.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_DEACT_REQUEST",
+    "message": "L\u2019indicateur d\u2019employ\u00e9 actif doit \u00eatre d\u00e9fini sur faux lors de la d\u00e9sactivation.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_DEPARTMENTAL_TEST",
+    "message": "Le test d'\u00e9valuation minist\u00e9riel de l'employ\u00e9 n'est pas valide.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_DEPARTMENTAL_TEST_PASSING_YEAR",
+    "message": "L'ann\u00e9e de r\u00e9ussite au test d'\u00e9valuation d\u00e9partemental du salari\u00e9 ne peut pas \u00eatre ant\u00e9rieure \u00e0 sa date de naissance.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_DEPT",
+    "message": "D\u00e9partement invalide de l'employ\u00e9 saisi.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_DESG",
+    "message": "D\u00e9signation d'employ\u00e9 invalide.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_DOB",
+    "message": "Date de naissance saisie invalide.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_EDUCATIONAL_PASSING_YEAR",
+    "message": "L\u2019ann\u00e9e scolaire de d\u00e9c\u00e8s du salari\u00e9 ne peut pas \u00eatre ant\u00e9rieure \u00e0 la date de naissance.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_EDUCATIONAL_STREAM",
+    "message": "Le parcours \u00e9ducatif de l'employ\u00e9 n'est pas valide.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_EMP_STATUS_ROLE",
+    "message": "Statut d'emploi invalide saisi.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_EMP_TYPE",
+    "message": "Type d'employ\u00e9 saisi non valide.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_JURISDICTION_ACTIIEV_NULL",
+    "message": "La juridiction doit avoir au moins une donn\u00e9e active",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_JURISDICTION_BOUNDARY",
+    "message": "La valeur des limites de juridiction n\u2019est pas valide.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_JURISDICTION_HEIRARCHY",
+    "message": "La valeur de la hi\u00e9rarchie de juridiction n'est pas valide.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_MOB_NO",
+    "message": "Num\u00e9ro de mobile saisi invalide.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_QUALIFICATION",
+    "message": "La qualification du salari\u00e9 n'est pas valide.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_ROLE",
+    "message": "R\u00f4le invalide attribu\u00e9 \u00e0 l'employ\u00e9.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_SEARCH_AOD",
+    "message": "En plus de la date, au moins un d\u00e9partement et une d\u00e9signation doivent \u00eatre indiqu\u00e9s comme crit\u00e8res de recherche.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_SEARCH_REQ",
+    "message": "La recherche ouverte est d\u00e9sactiv\u00e9e pour cet utilisateur.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_SEARCH_ROLES",
+    "message": "Pour la recherche bas\u00e9e sur les r\u00f4les, la transmission de l'identifiant du locataire est obligatoire.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_SEARCH_USER",
+    "message": "Pour une recherche bas\u00e9e sur le num\u00e9ro de t\u00e9l\u00e9phone et le nom, la transmission de l'identifiant du locataire est obligatoire.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_SERVICE_ASSGN",
+    "message": "Il devrait y avoir au maximum un service actuellement en activit\u00e9 pour l'employ\u00e9.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_SERVICE_CURRENT_TO_DATE",
+    "message": "La date de fin de la p\u00e9riode de service doit \u00eatre vide pour les employ\u00e9s qui travaillent actuellement.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_SERVICE_DATES",
+    "message": "La p\u00e9riode de service de l'employ\u00e9 (du jour au jour) ne peut pas \u00eatre ant\u00e9rieure \u00e0 la date de naissance.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_SERVICE_NOT_CURRENT_TO_DATE",
+    "message": "La date de la p\u00e9riode de service ne doit pas \u00eatre vide pour les employ\u00e9s actuellement inactifs.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_SERVICE_PERIOD",
+    "message": "La p\u00e9riode de service (du jour au jour) de l'employ\u00e9 n'est pas valide.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_INVALID_SERVICE_STATUS",
+    "message": "Le statut de service de l'employ\u00e9 n'est pas valide.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_MISSING_ROLES",
+    "message": "Num\u00e9ro de mobile saisi invalide.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_OVERLAPPING_ASSGN",
+    "message": "Il ne doit pas y avoir de p\u00e9riodes de chevauchement d'affectations pour l'employ\u00e9.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_OVERLAPPING_ASSGN_CURRENT",
+    "message": "La p\u00e9riode d'affectation de l'employ\u00e9 ne doit pas \u00eatre post\u00e9rieure \u00e0 l'affectation en cours.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_OVERLAPPING_SERVICEHISTORY_CURRENT",
+    "message": "Les d\u00e9tails de la p\u00e9riode de service de l\u2019employ\u00e9 ne doivent pas \u00eatre post\u00e9rieurs \u00e0 l\u2019affectation actuelle\u00a0!",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_UPDATE_ASSIGNEMENT_INCOSISTENT",
+    "message": "Les donn\u00e9es d'affectation dans une demande de mise \u00e0 jour doivent contenir toutes les donn\u00e9es saisies pr\u00e9c\u00e9demment.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM",
+    "message": "La date d\u2019effet de la d\u00e9sactivation de l\u2019employ\u00e9 ne doit pas \u00eatre une date ult\u00e9rieure.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_UPDATE_DEACT_DETAILS_INCOSISTENT",
+    "message": "Les donn\u00e9es de d\u00e9sactivation des employ\u00e9s dans une demande de mise \u00e0 jour doivent contenir toutes les donn\u00e9es saisies pr\u00e9c\u00e9demment.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_UPDATE_DOCUMENT_INCOSISTENT",
+    "message": "Les donn\u00e9es des documents des employ\u00e9s dans une demande de mise \u00e0 jour doivent contenir toutes les donn\u00e9es saisies pr\u00e9c\u00e9demment.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_UPDATE_EDUCATION_INCOSISTENT",
+    "message": "Les donn\u00e9es \u00e9ducatives dans une demande de mise \u00e0 jour doivent contenir toutes les donn\u00e9es saisies pr\u00e9c\u00e9demment.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_UPDATE_EMPLOYEE_CODE_CHANGE",
+    "message": "Le code d'employ\u00e9 ne peut pas \u00eatre modifi\u00e9 dans une demande de mise \u00e0 jour.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE",
+    "message": "Aucun employ\u00e9 trouv\u00e9 pour l'UUID donn\u00e9.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_UPDATE_EXISTING_MOBNO",
+    "message": "L'utilisateur existe pour un num\u00e9ro de mobile donn\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_UPDATE_JURISDICTION_INCOSISTENT",
+    "message": "Les donn\u00e9es de juridiction dans une demande de mise \u00e0 jour doivent contenir toutes les donn\u00e9es saisies pr\u00e9c\u00e9demment.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_UPDATE_NULL",
+    "message": "Le code d'employ\u00e9 dans une demande de mise \u00e0 jour ne doit pas \u00eatre nul.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_UPDATE_NULL_ID",
+    "message": "Le nom d'utilisateur dans une demande de mise \u00e0 jour ne doit pas \u00eatre nul",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_UPDATE_NULL_UUID",
+    "message": "L'UUID de l'employ\u00e9 dans une demande de mise \u00e0 jour ne doit pas \u00eatre nul.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_UPDATE_SERVICE_HISTORY_INCOSISTENT",
+    "message": "Les donn\u00e9es d'historique de service dans une demande de mise \u00e0 jour doivent contenir toutes les donn\u00e9es saisies pr\u00e9c\u00e9demment.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_UPDATE_TESTS_INCOSISTENT",
+    "message": "Les donn\u00e9es des tests d'\u00e9valuation des employ\u00e9s dans une demande de mise \u00e0 jour doivent contenir toutes les donn\u00e9es saisies pr\u00e9c\u00e9demment.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_USER_CREATION_FAILED",
+    "message": "La cr\u00e9ation d'utilisateur a \u00e9chou\u00e9 au niveau du service utilisateur.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_USER_EXIST_ID",
+    "message": "Le nom d'utilisateur existe",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_USER_EXIST_MOB",
+    "message": "L'utilisateur existe d\u00e9j\u00e0 pour le num\u00e9ro de mobile saisi. Utilisez un autre num\u00e9ro de mobile pour continuer.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_USER_EXIST_MOBILE_NUMBER",
+    "message": "Un num\u00e9ro de portable existe d\u00e9j\u00e0 !",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_USER_EXIST_USERNAME",
+    "message": "L'utilisateur existe d\u00e9j\u00e0 pour le nom d'utilisateur saisi.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_HRMS_USER_UPDATION_FAILED",
+    "message": "La mise \u00e0 jour de l'utilisateur a \u00e9chou\u00e9 au niveau du service utilisateur.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_INVALID_JURISDICTION",
+    "message": "Juridiction invalide",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ERR_MOBILE_NUMBER_EXISTS_FIELDS",
+    "message": "Num\u00e9ro de portable d\u00e9j\u00e0 utilis\u00e9. Entrez un autre num\u00e9ro de mobile",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
+    "message": "Liste de contr\u00f4le cr\u00e9\u00e9e avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
+    "message": "La liste de contr\u00f4le cr\u00e9\u00e9e peut \u00eatre consult\u00e9e sur l'\u00e9cran d'accueil de Checklsit",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_CHECKLIST_RESPONSE_ACTION",
+    "message": "Ma campagne",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_COMMON_CLEAR_SEARCH",
+    "message": "Clair",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_SEARCH_APPLICATION_MOBILE_INVALID",
+    "message": "Num\u00e9ro de portable invalide",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FAILED_TO_ASSIGN_CAMPAIGN",
+    "message": "L'attribution de la campagne a \u00e9chou\u00e9\u00a0!",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FIELD_SUPPORT",
+    "message": "Assistance sur le terrain",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FILE_UPLOADED_SUCCESSFULLY",
+    "message": "Fichier t\u00e9l\u00e9charg\u00e9 avec succ\u00e8s\u00a0!",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FILE_UPLOAD_FAILED",
+    "message": "Le t\u00e9l\u00e9chargement du fichier a \u00e9chou\u00e9. Essayer \u00e0 nouveau",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GET_BOUNDARY_DATA_FROM_GEOPODE",
+    "message": "Obtenez des donn\u00e9es de limites \u00e0 partir de GeoPoDe",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE",
+    "message": "Type de hi\u00e9rarchie",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_DESCRIPTION",
+    "message": "Veuillez s\u00e9lectionner votre hi\u00e9rarchie",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_HEADER",
+    "message": "S\u00e9lectionnez le type de hi\u00e9rarchie",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HE_NEW_EMPLOYEE_CITY_LABEL",
+    "message": "Nouvel employ\u00e9 ULB",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HE_NEW_EMPLOYEE_CITY_LABEL\u2009",
+    "message": "Nouvel employ\u00e9 ULB",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HIERARCHY_FIELD_MANDATORY",
+    "message": "Veuillez remplir le champ obligatoire",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HIERARCHY_NAME",
+    "message": "Nom de la hi\u00e9rarchie",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HRMS_APPLY_FILTERS",
+    "message": "Appliquer des filtres",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HRMS_BOUNDARY_LABEL",
+    "message": "Zone",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HRMS_CAMPAIGN_ASSIGNED_INFO",
+    "message": "Les campagnes ont \u00e9t\u00e9 attribu\u00e9es avec succ\u00e8s. Cliquez sur le bouton \u00ab\u00a0Cr\u00e9er un nouvel utilisateur\u00a0\u00bb si vous souhaitez cr\u00e9er un utilisateur. Cliquez sur le bouton \u00ab Retour \u00e0 l'accueil \u00bb pour revenir \u00e0 l'\u00e9cran d'accueil.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HRMS_CLEAR_FILTER",
+    "message": "Effacer le filtre",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HRMS_CREATE_EMPLOYEE_INFO",
+    "message": "L'employ\u00e9 a \u00e9t\u00e9 cr\u00e9\u00e9 avec succ\u00e8s. Cliquez sur le bouton \u00ab\u00a0Proc\u00e9der \u00e0 l'attribution de la campagne\u00a0\u00bb si vous souhaitez attribuer une campagne \u00e0 l'utilisateur. Cliquez sur le bouton \u00ab Retour \u00e0 l'accueil \u00bb pour revenir \u00e0 l'\u00e9cran d'accueil.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HRMS_EMPLOYEE_NAME_VALIDATION_ERROR_MSG",
+    "message": "Veuillez saisir un nom valide sans chiffres ni caract\u00e8res sp\u00e9ciaux.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HRMS_ROLES",
+    "message": "R\u00f4les",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HRMS_SEARCH_RESET_BUTTON",
+    "message": "R\u00e9initialiser",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ACTION_NO_FILEUPLOADED",
+    "message": "Aucun fichier s\u00e9lectionn\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ACTIVATE_EMPLOYEE_HEAD",
+    "message": "Activer l'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ACTIVATE_EMPLOYEE_LABEL",
+    "message": "ACTIVER L'EMPLOY\u00c9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ACTIVATE_HEAD",
+    "message": "Actif",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ACTIVATION_REASON",
+    "message": "Raison de la r\u00e9activation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ACTIVATION_REASON_SELECT",
+    "message": "S\u00e9lectionnez le motif de la r\u00e9activation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ADD_ASSIGNMENT",
+    "message": "AJOUTER UNE AFFECTATION",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ADD_CAMPAIGN_ASSIGNMENT",
+    "message": "Ajouter une autre mission",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ADD_JURISDICTION",
+    "message": "AJOUTER UNE JURIDICTION",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ADD_NEW_EMPLOYEE_BUTTON",
+    "message": "Ajouter un employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ADD_QUALIFICATIONS",
+    "message": "AJOUTER DES QUALIFICATIONS",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ADD_SERVICE_ENTRY",
+    "message": "AJOUTER UNE ENTR\u00c9E DE SERVICE",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ADD_TEST",
+    "message": "AJOUTER UN TEST",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_APPOINTMENT_DATE_LABEL",
+    "message": "Date de nomination",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_APPROVAL_UPLOAD_HEAD",
+    "message": "Documents justificatifs",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_APPT_DATE_LABEL",
+    "message": "Date de nomination",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_APPT_DATE_PLACEHOLDER",
+    "message": "Entrez la date de nomination",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_AP_CAMPAIGN_NAME_LABEL",
+    "message": "Campagne de poste administratif",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ASMT_FROM_DATE_LABEL",
+    "message": "Date d'attribution \u00e0 partir de",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ASMT_FROM_DATE_PLACEHOLDER",
+    "message": "Date d'attribution \u00e0 partir de",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ASMT_TO_DATE_LABEL",
+    "message": "Attribu\u00e9 \u00e0 ce jour",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ASMT_TO_DATE_LABEL_PLACEHOLDER",
+    "message": "Attribu\u00e9 \u00e0 ce jour",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ASMT_TO_DATE_PLACEHOLDER",
+    "message": "Attribu\u00e9 \u00e0 ce jour",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ASSIGNMENT",
+    "message": "Affectation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ASSIGN_DET_HEADER",
+    "message": "D\u00e9tails de l'affectation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ASSIGN_DET_SUB_HEADER",
+    "message": "V\u00e9rifiez les d\u00e9tails saisis avant de les soumettre. Les d\u00e9tails du devoir ne peuvent pas \u00eatre modifi\u00e9s une fois soumis.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_BIRTH_DATE_LABEL",
+    "message": "Date de naissance",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_BIRTH_DATE_PLACEHOLDER",
+    "message": "Date de naissance",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_BOUNDARY_LABEL",
+    "message": "Limite",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_BOUNDARY_PLACEHOLDER",
+    "message": "S\u00e9lectionner une limite",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_BOUNDARY_TYPE_LABEL",
+    "message": "Type de limite",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_BOUNDARY_TYPE_PLACEHOLDER",
+    "message": "S\u00e9lectionnez le type de limite",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CAMPAIGN_ASSIGNMENT",
+    "message": "Campagne",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CAMPAIGN_ASSIGNMENT_HEADER",
+    "message": "D\u00e9tails de la campagne",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CAMPAIGN_ASSIGNMENT_HEADER ",
+    "message": "D\u00e9tails de la campagne",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CAMPAIGN_FROM_DATE_LABEL",
+    "message": "Attribu\u00e9 \u00e0 partir de la date",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CAMPAIGN_LABEL",
+    "message": "Campagnes",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CAMPAIGN_NAME_LABEL",
+    "message": "Campagne",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CAMPAIGN_TO_DATE_LABEL",
+    "message": "Attribu\u00e9 jusqu'\u00e0 ce jour",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CITY_SELECT_LABEL",
+    "message": "S\u00e9lectionner",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CITY_SELECT_LABEL\u2009",
+    "message": "S\u00e9lectionner",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_APPLY",
+    "message": "Appliquer",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_APPL_NEW_HEADER",
+    "message": "Cr\u00e9er un nouvel employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_ASSIGN_CAMPAIGN_HEADER",
+    "message": "Attribuer une campagne",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_BUTTON_HOME",
+    "message": "Maison",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_BUTTON_NXT_STEP",
+    "message": "\u00c9tape suivante",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_BUTTON_PREV_STEP",
+    "message": "\u00c9tape pr\u00e9c\u00e9dente",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_BUTTON_SAVE",
+    "message": "Sauvegarder",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_BUTTON_SUBMIT",
+    "message": "Soumettre",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_CLEAR_SEARCH",
+    "message": "Effacer la recherche",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_CREATE_EMPLOYEE_HEADER",
+    "message": "Cr\u00e9er un utilisateur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_DEACTIVATED_EMPLOYEE_HEADER",
+    "message": "D\u00e9sactiver un employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_EDIT_CAMPAIGNS_HEADER",
+    "message": "Modifier l'attribution de campagne",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_EDIT_CAMPAIGNS_HEADER ",
+    "message": "Modifier l'attribution de campagne",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_EDIT_EMPLOYEE_HEADER",
+    "message": "Modifier un employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_FILTER",
+    "message": "Filtrer par",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_HEADER",
+    "message": "Gestion des employ\u00e9s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_REACTIVATED_EMPLOYEE_HEADER",
+    "message": "R\u00e9activer l'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_SEARCH",
+    "message": "Appliquer",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_TABLE_COL_DEPT",
+    "message": "D\u00e9partement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_TABLE_COL_DESG",
+    "message": "D\u00e9signation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_TABLE_COL_EMP_ID",
+    "message": "Nom d'utilisateur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_TABLE_COL_NAME",
+    "message": "Nom",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_TABLE_COL_ROLE",
+    "message": "Par r\u00f4le",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_TABLE_COL_STATUS",
+    "message": "Statut",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_TABLE_COL_TENANT_ID",
+    "message": "Locataire",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_TAKE_ACTION",
+    "message": "Passez \u00e0 l'action",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_UPDATE_EMPLOYEE_HEADER",
+    "message": "Mise \u00e0 jour des employ\u00e9s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CONFIRM_PASSWORD",
+    "message": "Confirmez le mot de passe",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CORRESPONDENCE_ADDRESS_LABEL",
+    "message": "Adresse de correspondance",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CORRESPONDENCE_ADDRESS_PLACEHOLDER",
+    "message": "Entrez l'adresse de correspondance",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CREATE_SUCCESS_MESSAGE",
+    "message": "Employ\u00e9 cr\u00e9\u00e9 avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CREATE_SUCCESS_SUBHEADER",
+    "message": "Une notification a \u00e9t\u00e9 envoy\u00e9e \u00e0 l'employ\u00e9 cr\u00e9\u00e9 au num\u00e9ro de portable enregistr\u00e9.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CURRENTLY_ASSIGNED_HERE_SWITCH_LABEL",
+    "message": "Actuellement attribu\u00e9 ici",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CURRENTLY_WORKING_HERE_SWITCH_LABEL",
+    "message": "Je travaille actuellement ici",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CURR_ASSIGN_LABEL",
+    "message": "Actuellement attribu\u00e9 ici",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_CURR_WORKING_LABEL",
+    "message": "Je travaille actuellement ici",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEACTIVATE",
+    "message": "D\u00c9SACTIVER",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEACTIVATE_EMPLOYEE_BUTTON_TEXT",
+    "message": "D\u00e9sactiver un employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEACTIVATE_EMPLOYEE_HEAD",
+    "message": "D\u00e9sactiver un employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEACTIVATE_EMPLOYEE_LABEL",
+    "message": "D\u00c9SACTIVER UN EMPLOY\u00c9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEACTIVATE_HEAD",
+    "message": "Inactif",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEACTIVATE_SUCCESS_MESSAGE",
+    "message": "Employ\u00e9 d\u00e9sactiv\u00e9 avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEACTIVATE_SUCCESS_SUBHEADER",
+    "message": " ",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEACTIVATION_REASON",
+    "message": "Raison de la d\u00e9sactivation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEACTIVATION_REASON_SELECT",
+    "message": "S\u00e9lectionnez le motif de la d\u00e9sactivation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEGREE_LABEL",
+    "message": "Degr\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEGREE_PLACEHOLDER",
+    "message": "S\u00e9lectionnez le dipl\u00f4me",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEPARTMENT_PLACEHOLDER",
+    "message": "S\u00e9lectionnez un d\u00e9partement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEPT_LABEL",
+    "message": "D\u00e9partement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEPT_PLACEHOLDER",
+    "message": "S\u00e9lectionnez un d\u00e9partement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DEPT_TEST_HEADER",
+    "message": "D\u00e9tails des tests du d\u00e9partement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DESG_LABEL",
+    "message": "D\u00e9signation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DESIGNATION_PLACEHOLDER",
+    "message": "S\u00e9lectionnez la d\u00e9signation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DESIG_PLACEHOLDER",
+    "message": "S\u00e9lectionnez la d\u00e9signation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DETAILS_HEADER",
+    "message": "D\u00e9tails administratifs",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DISTRICT_CAMPAIGN_NAME_LABEL",
+    "message": "Campagne de district",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_DOB_LABEL",
+    "message": "Date de naissance",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EDIT_CAMPAIGN_ASSIGNMENT",
+    "message": "Modifier l'attribution de campagne",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EDIT_DETAILS_LABEL",
+    "message": "MODIFIER LES D\u00c9TAILS",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ED_QUAL_HEADER",
+    "message": "Dipl\u00f4me d'\u00e9tudes",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EFFECTIVE_DATE",
+    "message": "Date d'entr\u00e9e en vigueur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMAIL_LABEL",
+    "message": "E-mail",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMAIL_PLACEHOLDER",
+    "message": "Entrez l'e-mail",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMPLOYEE_DEPARTMENT_LABEL",
+    "message": "D\u00e9partement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMPLOYEE_ID_LABEL",
+    "message": "Nom d'utilisateur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMPLOYEE_ID_PLACEHOLDER",
+    "message": "Entrez le num\u00e9ro d'identification de l'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMPLOYMENT_DEPARTMENT_LABEL",
+    "message": "D\u00e9partement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMPLOYMENT_DESIGNATION_LABEL",
+    "message": "D\u00e9signation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMPLOYMENT_TYPE_LABEL",
+    "message": "Type d'emploi",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMPLOYMENT_TYPE_PLACEHOLDER",
+    "message": "S\u00e9lectionnez le type d'emploi",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_CONFIRM_PASSWORD_LABEL",
+    "message": "Confirmez le mot de passe",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_ID_ERR_MSG",
+    "message": "Nom d'utilisateur invalide",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_ID_LABEL",
+    "message": "Nom d'utilisateur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_ID_MESSAGE",
+    "message": "Pi\u00e8ce d'identit\u00e9 attribu\u00e9e \u00e0 l'employ\u00e9 par la municipalit\u00e9. Si aucun ID n'est attribu\u00e9, laissez la colonne vide pour que le syst\u00e8me g\u00e9n\u00e8re l'ID de l'employ\u00e9.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_ID_PLACEHOLDER",
+    "message": "Entrez le nom d'utilisateur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_MOBILE_ERR_MSG",
+    "message": "Num\u00e9ro de portable invalide",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_MOBILE_LABEL",
+    "message": "Num\u00e9ro de portable de l'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_MOBILE_PLACEHOLDER",
+    "message": "Entrez le num\u00e9ro de portable de l'employ\u00e9.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_NAME_ERR_MSG",
+    "message": "Nom invalide",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_NAME_LABEL",
+    "message": "Nom",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_NAME_PLACEHOLDER",
+    "message": "Entrez le nom de l'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_PASSWORD_LABEL",
+    "message": "Mot de passe",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_STATUS_LABEL",
+    "message": "Statut d'emploi",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_TYPE_LABEL",
+    "message": "Type d'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_EMP_TYPE_PLACEHOLDER",
+    "message": "S\u00e9lectionnez le type d'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ENTER_ORDER_NO",
+    "message": "Entrez le num\u00e9ro de commande.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ENTER_REMARKS",
+    "message": "Entrez les remarques",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_FATHER_HUSBANDS_NAME_LABEL",
+    "message": "Nom du p\u00e8re/mari",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_FATHER_HUSBAND_NAME_LABEL",
+    "message": "Nom du p\u00e8re/mari",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_FATHER_HUSBAND_NAME_PLACEHOLDER",
+    "message": "Entrez le nom de l'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_GENDER_LABEL",
+    "message": "Genre",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_GENDER_PLACEHOLDER",
+    "message": "S\u00e9lectionnez le sexe",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_GUARDIAN_NAME_LABEL",
+    "message": "Nom du gardien",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_GUARDIAN_NAME_PLACEHOLDER",
+    "message": "Entrez le nom du tuteur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_HIERARCHY_LABEL",
+    "message": "Hi\u00e9rarchie",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_HIERARCHY_PLACEHOLDER",
+    "message": "S\u00e9lectionner la hi\u00e9rarchie",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_HOD_LABEL",
+    "message": "Chef de d\u00e9partement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_HOD_SWITCH_LABEL",
+    "message": "Chef de d\u00e9partement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_HOME_SEARCH_CAMPAIGNS_HEADING",
+    "message": "Campagne de recherche",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_HOME_SEARCH_RESULTS_DESC",
+    "message": "Fournir au moins un param\u00e8tre pour rechercher un employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_HOME_SEARCH_RESULTS_HEADING",
+    "message": "Rechercher un utilisateur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_HOME_SEARCH_RESULTS_TABLE_HEADING",
+    "message": "R\u00e9sultats de la recherche pour Employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_JURIDICTIONS_LABEL",
+    "message": "Juridiction",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_JURISDICTION",
+    "message": "Juridiction",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_JURISDICTION_BOUNDARY",
+    "message": "Juridiction",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_JURISDICTION_DETAILS_HEADER",
+    "message": "D\u00e9tails de la juridiction",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_JURIS_DET_HEADER",
+    "message": "D\u00e9tails de la juridiction",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_LOCALITY_CAMPAIGN_NAME_LABEL",
+    "message": "Campagne de localit\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_LOCATION_LABEL",
+    "message": "Emplacement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_LOCATION_PLACEHOLDER",
+    "message": "S\u00e9lectionnez un emplacement",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_LOGIN_DETAILS_HEADER",
+    "message": "D\u00e9tails de connexion",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_LOGIN_FORM_HEADER",
+    "message": "D\u00e9tails de connexion",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_MOBILE_NO_CHECK",
+    "message": "Le num\u00e9ro de mobile saisi doit \u00eatre unique",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_MOB_NO_LABEL",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_MOB_NO_PLACEHOLDER",
+    "message": "Entrez le num\u00e9ro de portable.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_NAME_LABEL",
+    "message": "Nom de l'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_NAME_PLACEHOLDER",
+    "message": "Entrez le nom de l'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_NEW_EMPLOYEE_FORM_HEADER",
+    "message": "D\u00e9tails de l'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_NEW_EMP_NAME_PLACEHOLDER",
+    "message": "Entrez le nom de l'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_NEW_PASSWORD",
+    "message": "Nouveau mot de passe",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ORDER_NO",
+    "message": "Num\u00e9ro de commande",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ORDER_NO_LABEL",
+    "message": "Num\u00e9ro de commande",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ORDER_NO_PLACEHOLDER",
+    "message": "Entrez le num\u00e9ro de commande",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_OTHER_DET_HEADER",
+    "message": "Autres d\u00e9tails",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_PASSWORD_LABEL",
+    "message": "Mot de passe",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_PASSWORD_RESET_HEAD",
+    "message": "R\u00e9initialiser le mot de passe",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_PERSONAL_DETAILS_FORM_HEADER",
+    "message": "D\u00e9tails personnels",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_PERSONAL_DETAILS_HEADER",
+    "message": "D\u00e9tails personnels",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_PICK_YOUR_CITY_LABEL",
+    "message": "Choisissez votre ville",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_PROFESSIONAL_DETAILS_FORM_HEADER",
+    "message": "D\u00e9tails de l'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_PROVINCE_CAMPAIGN_NAME_LABEL",
+    "message": "Campagne provinciale",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_RACTIVATE_SUCCESS_MESSAGE",
+    "message": "Employ\u00e9 r\u00e9activ\u00e9 avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_REACTIVATE_SUCCESS_SUBHEADER",
+    "message": " ",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_READY_TO_SUBMIT_TEXT",
+    "message": "Assurez-vous de v\u00e9rifier tous les d\u00e9tails avant de cliquer sur le bouton Soumettre. Cliquez sur le bouton Annuler pour revenir \u00e0 la page pr\u00e9c\u00e9dente",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_RELATIONSHIP_LABEL",
+    "message": "Relation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_RELATIONSHIP_PLACEHOLDER",
+    "message": "S\u00e9lectionnez une relation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_REMARKS",
+    "message": "Remarques",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_REMARKS_LABEL",
+    "message": "Remarques",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_REMARKS_PLACEHOLDER",
+    "message": "Entrez les remarques",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_REP_TO_LABEL",
+    "message": "Rendre compte \u00e0",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ROLE_LABEL",
+    "message": "R\u00f4le",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ROLE_NO_LABEL",
+    "message": "Nombre de r\u00f4les",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ROLE_PLACEHOLDER",
+    "message": "S\u00e9lectionnez un r\u00f4le",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SELECT_CITY_PLACEHOLDER",
+    "message": "S\u00e9lectionnez l'ULB",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SELECT_CITY_PLACEHOLDER\u2009",
+    "message": "S\u00e9lectionnez l'ULB",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SELECT_ULB_PLACEHOLDER",
+    "message": "S\u00e9lectionnez l'ULB",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SER_DET_HEADER",
+    "message": "D\u00e9tails des services",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SER_DET_SUB_HEADER",
+    "message": "V\u00e9rifiez les d\u00e9tails saisis avant de les soumettre. Les d\u00e9tails du service ne peuvent pas \u00eatre modifi\u00e9s une fois soumis.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SER_FROM_DATE_LABEL",
+    "message": "Date de d\u00e9but du service",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SER_TO_DATE_LABEL",
+    "message": "Service \u00e0 ce jour",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_STATUS_LABEL",
+    "message": "Statut d'emploi",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_STATUS_PLACEHOLDER",
+    "message": "S\u00e9lectionnez le statut",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_STREAM_LABEL",
+    "message": "Flux",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_STREAM_PLACEHOLDER",
+    "message": "S\u00e9lectionnez le flux",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SUBMIT_LABEL",
+    "message": "SOUMETTRE",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SUMMARY_DEPT_TEST_DEATILS_SUBHEADER",
+    "message": "D\u00e9tails des tests",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SUMMARY_DETAILS",
+    "message": "R\u00e9sum\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SUMMARY_EDIT",
+    "message": "Modifier",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SUMMARY_EDUCATION_DEATILS_SUBHEADER",
+    "message": "D\u00e9tails de l'\u00e9ducation",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SUMMARY_HEADER",
+    "message": "Cr\u00e9er un nouvel employ\u00e9 - R\u00e9sum\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SUMMARY_PERSONAL_DEATILS_SUBHEADER",
+    "message": "D\u00e9tails personnels",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_SUMMARY_PROFESSIONAL_DEATILS_SUBHEADER",
+    "message": "D\u00e9tails professionnels",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_TEST_NAME_LABEL",
+    "message": "Nom du test",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_TEST_NAME_PLACEHOLDER",
+    "message": "S\u00e9lectionnez le nom du test",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_ULB_LABEL",
+    "message": "ULB",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_UNIVERSITY_LABEL",
+    "message": "Universit\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_UNIVERSITY_PLACEHOLDER",
+    "message": "S\u00e9lectionnez l'universit\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_UPDATE_PASSWORD_SUCCESS_MESSAGE",
+    "message": "Mot de passe de l'employ\u00e9 mis \u00e0 jour avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_UPDATE_SUCCESS_MESSAGE",
+    "message": "Employ\u00e9 mis \u00e0 jour avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_UPDATE_SUCCESS_SUBHEADER",
+    "message": " ",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_UPLOAD_FILES_BUTTON_LABEL",
+    "message": "T\u00e9l\u00e9charger des fichiers",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_UPLOAD_FILES_LABEL",
+    "message": "T\u00c9L\u00c9CHARGER DES FICHIERS",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_USERNAME_LABEL",
+    "message": "Nom d'utilisateur",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_VIEW_HEADER",
+    "message": "Afficher les informations sur les employ\u00e9s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_VILLAGE_CAMPAIGN_NAME_LABEL",
+    "message": "Campagne villageoise",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_YEAR_LABEL",
+    "message": "Ann\u00e9e",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_YEAR_PLACEHOLDER",
+    "message": "S\u00e9lectionnez l'ann\u00e9e",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INACTIVE",
+    "message": "Inactif",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LEVEL",
+    "message": "Niveau",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LEVELS",
+    "message": "Niveaux",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LLIN-MZ_HIERARCHYTEST_MO",
+    "message": "Campagne Moustiquaire - Mozambique",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MICROPLAN_ADMINISTRATIVEPOST",
+    "message": "Poste administratif",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MICROPLAN_COUNTRY",
+    "message": "Pays",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MICROPLAN_DISTRICT",
+    "message": "District",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MICROPLAN_LOCALITY",
+    "message": "Localit\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MICROPLAN_PROVINCE",
+    "message": "Province",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MICROPLAN_VILLAGE",
+    "message": "Village",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MR-DN_HIERARCHYTEST_MO",
+    "message": "Campagne SMC - Mozambique",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MSG",
+    "message": "Ajoutez vos niveaux de hi\u00e9rarchie de limites en cliquant sur le bouton \u00ab Ajouter un nouveau niveau de hi\u00e9rarchie de limites \u00bb. Si vous souhaitez supprimer un niveau, cliquez sur l'ic\u00f4ne de suppression \u00e0 c\u00f4t\u00e9 du niveau que vous souhaitez supprimer.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NEWLY_ADDED_BOUNDARY_DATA",
+    "message": "Donn\u00e9es de limite nouvellement ajout\u00e9es",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NEXT",
+    "message": "Suivant",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NMCP",
+    "message": "PNLP",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY",
+    "message": "Ce n'est pas le type de hi\u00e9rarchie correct.",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ORDERBYCOMMISSIONER",
+    "message": "Ordonnance du commissaire",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Autres",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTP_REQUEST_SENT",
+    "message": "Demande OTP envoy\u00e9e",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PASSWORD_RESET_SUCCESS",
+    "message": "R\u00e9initialisation du mot de passe r\u00e9ussie\u00a0!",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PAYMENTS_LINK_PAYMENTS_MANAGE_BILLS",
+    "message": "G\u00e9rer les factures",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERMANENT",
+    "message": "Permanent",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PGR_SEARCH_COMPLAINT",
+    "message": "Rechercher une plainte",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PREVIEW_ON_MAP",
+    "message": "Aper\u00e7u sur la carte",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PROJECT_BOUNDARY",
+    "message": "Limite du projet",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PROJECT_BOUNDARY_TYPE",
+    "message": "Type de limite du projet",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PROJECT_NAME",
+    "message": "Nom du projet",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PROJECT_NUMBER",
+    "message": "Num\u00e9ro de projet",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PROJECT_TYPE",
+    "message": "Type de projet",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "READY_TO_SUBMIT",
+    "message": "Pr\u00eat \u00e0 soumettre ?",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "READY_TO_SUBMIT ",
+    "message": "Pr\u00eat \u00e0 soumettre ?",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RESET_PASSWORD",
+    "message": "R\u00e9initialiser le mot de passe",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RESIGNED",
+    "message": "R\u00e9sign\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RETIRED",
+    "message": "\u00c0 la retraite",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REVENUE",
+    "message": "Revenu",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ROWS_PER_PAGE",
+    "message": "Lignes par page",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RT_ALL",
+    "message": "Tous",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RT_DOWNLOAD_AS",
+    "message": "T\u00e9l\u00e9charger en tant que",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RT_DOWNLOAD_PDF",
+    "message": "T\u00e9l\u00e9charger le PDF",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RT_DOWNLOAD_XLS",
+    "message": "T\u00e9l\u00e9charger XLS",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RT_SNO",
+    "message": "SNNon",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RT_TOTAL",
+    "message": "Total",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "START_DATE",
+    "message": "Date de d\u00e9but",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SUSPENDED",
+    "message": "Suspendu",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TECH",
+    "message": "Technologie",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TEMPORARY",
+    "message": "Temporaire",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TERMINATED",
+    "message": "Termin\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TL_ADD_ASSIGNMENT",
+    "message": "AJOUTER UNE AFFECTATION",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TL_ADD_JURISDICTION",
+    "message": "AJOUTER UNE JURIDICTION",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TL_ADD_QUALIFICATIONS",
+    "message": "AJOUTER DES QUALIFICATIONS",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TL_ADD_SERVICE_ENTRY",
+    "message": "AJOUTER UNE ENTR\u00c9E DE SERVICE",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TL_ADD_TEST",
+    "message": "AJOUTER UN TEST",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TL_APPROVAL_UPLOAD_SUBHEAD",
+    "message": "Documents justificatifs",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TL_COMMON_BUTTON_HOME",
+    "message": "ALLER \u00c0 LA MAISON",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TL_HOME_SEARCH_RESULTS_BUTTON_SEARCH",
+    "message": "Recherche",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TOTAL_EMPLOYEES",
+    "message": "Nombre total d'employ\u00e9s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSFERRED",
+    "message": "Transf\u00e9r\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ULB",
+    "message": "ULB",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UNASSIGN",
+    "message": "Annuler l'attribution",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UPLOAD_EXCEL",
+    "message": "T\u00e9l\u00e9charger Excel",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UPLOAD_EXCEL_FOR_ALL_BOUNDARIES",
+    "message": "T\u00e9l\u00e9chargez Excel pour toutes les limites",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "VIEW_EXISTING_BOUNDARY_DATA",
+    "message": "Afficher les donn\u00e9es de limites existantes",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WAREHOUSE",
+    "message": "Entrep\u00f4t",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_BOUNDARY_CREATION_FAIL",
+    "message": "La cr\u00e9ation de la hi\u00e9rarchie a \u00e9chou\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_HIERARCHY_CREATED",
+    "message": "Hi\u00e9rarchie et limite cr\u00e9\u00e9es avec succ\u00e8s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "YOU_WON'T_BE_ABLE_TO_UNDO_THIS_STEP_OF_CREATING_HIERARCHY",
+    "message": "Vous ne pourrez pas annuler cette \u00e9tape de cr\u00e9ation de hi\u00e9rarchie",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reports.hrms.department",
+    "message": "D\u00e9partement des employ\u00e9s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reports.hrms.designation",
+    "message": "D\u00e9signation d'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reports.hrms.id",
+    "message": "ID d'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reports.hrms.name",
+    "message": "Nom de l'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reports.hrms.role",
+    "message": "R\u00f4les des employ\u00e9s",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reports.hrms.status",
+    "message": "Statut d'employ\u00e9",
+    "module": "hcm-hr",
+    "locale": "fr_DEMO"
+  }
+]

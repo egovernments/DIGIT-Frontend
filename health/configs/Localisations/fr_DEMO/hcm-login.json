@@ -1,0 +1,188 @@
+[
+  {
+    "code": "CORE_COMMON_ACCESS_PERMISSION_DIALOG_DESC",
+    "message": "L'application HCM n\u00e9cessite l'acc\u00e8s \u00e0 certaines fonctionnalit\u00e9s du t\u00e9l\u00e9phone pour fonctionner correctement. Veuillez autoriser l'acc\u00e8s \u00e0 continuer.",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ACCESS_REQUIRED",
+    "message": "Acc\u00e8s requis !",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ALLOW_ACCESS",
+    "message": "Autoriser l'acc\u00e8s",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FORGOT_PASSWORD_ACTION_LABEL",
+    "message": "Mot de passe oubli\u00e9 ?",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FORGOT_PASSWORD_CONTENT_TEXT",
+    "message": "Veuillez contacter votre administrateur si vous avez oubli\u00e9 votre mot de passe",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FORGOT_PASSWORD_LABEL_TEXT",
+    "message": "Mot de passe oubli\u00e9",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_TABLE_COL_ROLE_MAIN",
+    "message": "R\u00f4le principal",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOGIN_ACTION_LABEL",
+    "message": "Se connecter",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOGIN_FAILURE_MESSAGE",
+    "message": "La connexion a \u00e9chou\u00e9. Veuillez r\u00e9essayer plus tard.",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOGIN_FORGOT_PASSWORD",
+    "message": "Vous avez oubli\u00e9 votre mot de passe ?",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOGIN_HEADER",
+    "message": "Se connecter",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOGIN_PASSWORD_LABEL",
+    "message": "Mot de passe",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOGIN_SUCCESS_MESSAGE",
+    "message": "La session a d\u00e9marr\u00e9 avec succ\u00e8s.",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOGIN_USERNAME_LABEL",
+    "message": "Nom d'utilisateur",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOGIN_VALIDATION_ERROR",
+    "message": "Veuillez saisir un nom d'utilisateur et un mot de passe valides.",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PASSWORD_PLACEHOLDER",
+    "message": "Mot de passe",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PASSWORD_PLACEHOLDER_IS_REQUIRED",
+    "message": "Le mot de passe est requis",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERMISSION_DENIED_OPEN_SETTINGS",
+    "message": "Activez l'autorisation dans Param\u00e8tres.",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PRIMARY_ACTION_LABEL",
+    "message": "D'ACCORD",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_COUNT_EXPECTS_NUMBER",
+    "message": "Nombre",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SWITCH_MOBILE_DIALOG_BACK",
+    "message": "Retour \u00e0 la connexion",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SWITCH_MOBILE_DIALOG_CONTENT",
+    "message": "Vous d\u00e9m\u00e9nagez vers un nouveau t\u00e9l\u00e9phone. Assurez-vous que toutes vos donn\u00e9es de l'ancien t\u00e9l\u00e9phone sont synchronis\u00e9es avant de continuer.",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SWITCH_MOBILE_DIALOG_CONTINUE",
+    "message": "Continuer",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SWITCH_MOBILE_DIALOG_TITLE",
+    "message": "Passer \u00e0 ce mobile\u00a0?",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SWITCH_REASON_CONTINUE",
+    "message": "Continuer",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SWITCH_REASON_HEADER_LABEL",
+    "message": "Pourquoi tu changes de t\u00e9l\u00e9phone ?",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SWITCH_REASON_LABEL",
+    "message": "Cela nous aide \u00e0 comprendre votre situation.",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SWITCH_REASON_REQUIRED_ERROR",
+    "message": "Veuillez s\u00e9lectionner une raison",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UNABLE_TO_LOGIN",
+    "message": "Impossible de se connecter",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USER_ID_PLACEHOLDER",
+    "message": "ID de l'utilisateur",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USER_ID_PLACEHOLDER_IS_REQUIRED",
+    "message": "L'ID utilisateur est requis",
+    "module": "hcm-login",
+    "locale": "fr_DEMO"
+  }
+]

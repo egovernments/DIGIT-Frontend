@@ -1,0 +1,404 @@
+[
+  {
+    "code": "ADMINISTRATION_COVERAGE_TODAY",
+    "message": "Cobertura administrativa hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADMINISTRATIVEPOST",
+    "message": "Posto Administrativo",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BEDNETS_DISTRIBUTED_TODAY",
+    "message": "Redes mosquiteiras distribu\u00eddas hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOTTLES_USED_TODAY",
+    "message": "Garrafas",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DISTRIBUTION_COVERAGE_TODAY",
+    "message": "Cobertura de distribui\u00e7\u00e3o hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_HEALTH_NATIONAL_BED_NETS_DISTRIBUTED_TODAY",
+    "message": "Total de mosquiteiros distribu\u00eddos hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_HEALTH_NATIONAL_BED_NET_DISTRIBUTED_TODAY",
+    "message": "Total de mosquiteiros distribu\u00eddos hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_HEALTH_NATIONAL_POPULATION_COVERED_TODAY",
+    "message": "Popula\u00e7\u00e3o coberta hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_HEALTH_NATIONAL_TODAL_POPULATION_COVERED",
+    "message": "Popula\u00e7\u00e3o total coberta",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_HEALTH_NATIONAL_TOTAL_POPULATION_COVERED",
+    "message": "Popula\u00e7\u00e3o total coberta",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_LAST_SYNC_TIME",
+    "message": "Hora da \u00faltima sincroniza\u00e7\u00e3o",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_NETWORK_FAILURE_ERROR",
+    "message": "Erro de rede!!! Conecte-se \u00e0 Internet para atualizar o painel",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_DESCRIPTION",
+    "message": "Role a barra para a direita para ver todos os detalhes de um trabalhador\n\n\u00cdndice de cobertura das casas = Total de casas pulverizadas / Total de casas visitadas\n\nTaxa de cobertura de quartos = Total de quartos pulverizados / Total de quartos dispon\u00edveis",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_DESCRIPTION_IRS-mz",
+    "message": "Role a barra para a direita para ver todos os detalhes de um trabalhador \n\u00cdndice de cobertura das casas = Total de casas pulverizadas / Total de casas visitadas \nTaxa de cobertura de quartos = Total de quartos pulverizados / Total de quartos dispon\u00edveis",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_DESCRIPTION_LLIN-mz",
+    "message": "Role a barra para a direita para ver todos os detalhes de um trabalhador",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_DESCRIPTION_MR-DN",
+    "message": "Role a barra para a direita para ver todos os detalhes de um trabalhador",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_TITLE",
+    "message": "Observa\u00e7\u00e3o:",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_TITLE_IRS-mz",
+    "message": "Observa\u00e7\u00e3o:",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_TITLE_LLIN-mz",
+    "message": "Observa\u00e7\u00e3o:",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_TITLE_MR-DN",
+    "message": "Observa\u00e7\u00e3o:",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_NO_OF_BOTTLES_USED_TODAY",
+    "message": "N\u00ba de garrafas usadas hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_NO_OF_HOUSES_NOT_SPRAYED_TODAY",
+    "message": "N\u00ba de casas n\u00e3o pulverizadas hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_NO_OF_HOUSES_SPRAYED_TODAY",
+    "message": "N\u00ba de casas pulverizadas hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_NO_OF_HOUSES_VISITED_TODAY",
+    "message": "N\u00ba de casas visitadas hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_PERCENT_TARGET_ACHIEVEMENT_TODAY",
+    "message": "% da meta alcan\u00e7ada hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_REMAINING_BOTTLES",
+    "message": "Garrafas restantes",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_SOME_ERROR_OCCURED",
+    "message": "Ocorreu algum erro",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_TOTAL_BEDNETS_DISTRIBUTED",
+    "message": "Total de mosquiteiros distribu\u00eddos",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_TOTAL_BOTTLES_USED",
+    "message": "Total de garrafas usadas hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_TOTAL_CHILDREN_ADMINISTERED",
+    "message": "Total de crian\u00e7as administradas",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_TOTAL_HOUSEHOLD_DISTRIBUTED",
+    "message": "Total de domic\u00edlios distribu\u00eddos",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_TOTAL_HOUSEHOLD_SPRAYED",
+    "message": "Total de fam\u00edlias pulverizadas hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_TOTAL_SPAQ_USED",
+    "message": "Total de SPAQ usado",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DSS_USER_ID_NAME",
+    "message": "ID/Nome do usu\u00e1rio",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ES_COMMON_DSS_NATIONAL_HEALTH_DASHBOARD_SMC",
+    "message": "Painel Nacional",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ES_COMMON_DSS_PROVINCIAL_HEALTH_DASHBOARD_SMC",
+    "message": "Painel Provincial",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FILTER_BY_CYCLE",
+    "message": "Filtrar por ciclo",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HOME_DASHBOARD_LABEL",
+    "message": "Painel",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HOUSEHOLDS_SPRAYED",
+    "message": "Fam\u00edlias pulverizadas",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HOUSEHOLDS_VISITED",
+    "message": "Domic\u00edlios visitados",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD_COVERAGE",
+    "message": "Cobertura dom\u00e9stica",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HOUSE_COVERAGE_RATIO",
+    "message": "Taxa de cobertura da casa",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LAST_SYNCED_TIME",
+    "message": "Hora da \u00faltima sincroniza\u00e7\u00e3o",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "MEDICINES_DISTRIBUTED_TODAY",
+    "message": "Medicamentos distribu\u00eddos hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NEGATIVEHOUSEHOLDSDISTRIBUTED",
+    "message": "Domic\u00edlios Negativos Distribu\u00eddos",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO._OF_BENEFICIARIES_DISTRIBUTED_TODAY",
+    "message": "N\u00ba de benefici\u00e1rios distribu\u00eddos hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO._OF_BENEFICIARIES_NOT_DISTRIBUTED_TODAY",
+    "message": "N\u00ba de benefici\u00e1rios n\u00e3o distribu\u00eddos hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO._OF_HOUSES_DISTRIBUTED_TODAY",
+    "message": "N\u00ba de casas distribu\u00eddas hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO._OF_HOUSES_NOT_DISTRIBUTED_TODAY",
+    "message": "N\u00ba de casas n\u00e3o distribu\u00eddas hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO._OF_HOUSES_NOT_SPRAYE",
+    "message": "N\u00ba de casas n\u00e3o pulverizadas",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO._OF_HOUSES_NOT_SPRAYED_TODAY",
+    "message": "N\u00ba de casas n\u00e3o pulverizadas hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO._OF_HOUSES_SPRAYED_TODAY",
+    "message": "N\u00ba de casas pulverizadas hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO._OF_HOUSES_VISITED_TODAY",
+    "message": "N\u00ba de casas visitadas hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO._OF_REMAINING_BEDNETS",
+    "message": "N\u00ba de mosquiteiros restantes",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO._OF_REMAINING_BOTTLES",
+    "message": "N\u00ba de garrafas restantes",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO._OF_REMAINING_MEDICINES",
+    "message": "N\u00ba de medicamentos restantes",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PERCENTAGE_VALUE",
+    "message": "Porcentagem %",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "POPULATION_COVERAGE",
+    "message": "Cobertura populacional",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PROVINCE",
+    "message": "Prov\u00edncia",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PROVINCES",
+    "message": "Prov\u00edncias",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY",
+    "message": "Quantidade",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_COUNT_PER_USER",
+    "message": "Contagem de estoque por usu\u00e1rio",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TOTAL_COUNT",
+    "message": "Contagem total",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TOTAL_HOUSEHOLDS_VISITED_CUMULATIVE",
+    "message": "N\u00ba do total de casas",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TOTAL_HOUSEHOLDS_VISITED_TODAY",
+    "message": "N\u00ba de casas visitadas hoje",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "USERNAME",
+    "message": "Nome de usu\u00e1rio",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "USER_NAME",
+    "message": "Nome de usu\u00e1rio",
+    "module": "hcm-dashboard",
+    "locale": "pt_DEMO"
+  }
+]

@@ -6,12 +6,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "additionalFields",
-    "message": "Additional Fields",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "ADMINISTRATION_FAILED",
     "message": "Administration Failed",
     "module": "hcm-base-stockreports-co-delivery",
@@ -78,12 +72,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "clientCreatedBy",
-    "message": "Client Created By",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "CLOSED_HOUSEHOLD",
     "message": "Close D Household",
     "module": "hcm-base-stockreports-co-delivery",
@@ -92,18 +80,6 @@
   {
     "code": "CORE_COMMON_VALIDATION_ERROR",
     "message": "This is a required field",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Data Issues",
-    "message": "Data issues",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DataIssues",
-    "message": "Data Issues",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -132,14 +108,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "facilities",
-    "message": "Facilities",
+    "code": "Data Issues",
+    "message": "Data issues",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
   {
-    "code": "facilityId",
-    "message": "Facility ID",
+    "code": "DataIssues",
+    "message": "Data Issues",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -186,12 +162,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "infoCardLabel",
-    "message": "Info",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "INSUFFICIENT_RESOURCES",
     "message": "Insufficient Resources",
     "module": "hcm-base-stockreports-co-delivery",
@@ -216,32 +186,20 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
-    "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
-    "message": "Label Pair {{fn:getsecondpagepartylabel(item.additionalfields.fields)}}",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_AGE",
     "message": "Label Pair Age",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_BATCH_NUMBER",
-    "message": "Label Pair Batch Number",
+    "code": "LABEL_PAIR_BATCHNUMBER",
+    "message": "Batch Number",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_BATCHNUMBER",
-    "message": "Batch Number",
+    "code": "LABEL_PAIR_BATCH_NUMBER",
+    "message": "Label Pair Batch Number",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -324,6 +282,30 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "LABEL_PAIR_COMPLAINTAREA",
+    "message": "Complaint Area",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTDATE",
+    "message": "Complaint Date",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTNUMBER",
+    "message": "Complaint Number",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTSTATUS",
+    "message": "Complaint Status",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
     "message": "Label Pair Complaint Inbox Complainant Contact",
     "module": "hcm-base-stockreports-co-delivery",
@@ -366,18 +348,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Label Pair Complaint View Complaint",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "Label Pair Complaint View Complaint Status",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
     "message": "Label Pair Complaint View Complaints Area",
     "module": "hcm-base-stockreports-co-delivery",
@@ -402,32 +372,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Complaint Area",
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+    "message": "Label Pair Complaint View Complaint",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_COMPLAINTDATE",
-    "message": "Complaint Date",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINTNUMBER",
-    "message": "Complaint Number",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINTSTATUS",
-    "message": "Complaint Status",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Label Pair Date Of Registration",
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
+    "message": "Label Pair Complaint View Complaint Status",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -444,6 +396,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
+    "message": "Label Pair Date Of Registration",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "LABEL_PAIR_GENDER",
     "message": "Label Pair Gender",
     "module": "hcm-base-stockreports-co-delivery",
@@ -452,6 +410,12 @@
   {
     "code": "LABEL_PAIR_GIVENNAME",
     "message": "Individual Name",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCMTOTALMEMBERS",
+    "message": "Total Members",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -498,12 +462,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_HCMTOTALMEMBERS",
-    "message": "Total Members",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_HEADNAME",
     "message": "Head of Household",
     "module": "hcm-base-stockreports-co-delivery",
@@ -522,18 +480,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "Label Pair Id Number",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_ID_TYPE",
-    "message": "Label Pair Id Type",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_IDNUMBER",
     "message": "Identifier ID",
     "module": "hcm-base-stockreports-co-delivery",
@@ -546,104 +492,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
-    "message": "Campaign Info Source",
+    "code": "LABEL_PAIR_ID_NUMBER",
+    "message": "Label Pair Id Number",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Label Pair Ihm Summary Children Present",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Label Pair Ihm Summary Children Vaccinated",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Label Pair Ihm Summary Final Comments",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
-    "message": "Label Pair Ihm Summary Missed Absent",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
-    "message": "Label Pair Ihm Summary Missed Asleep",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Label Pair Ihm Summary Missed Not Revisited",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Label Pair Ihm Summary Missed Not Visited",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Label Pair Ihm Summary Missed Other",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Label Pair Ihm Summary Missed Refusal",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
-    "message": "Label Pair Ihm Summary Missed Routine",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Label Pair Ihm Summary Monitor Designation",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Label Pair Ihm Summary Monitor Name",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Label Pair Ihm Summary Monitoring Date",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Label Pair Ihm Summary Poorly Covered",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Label Pair Ihm Summary Settlement Area",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Label Pair Ihm Summary Settlement Type",
+    "code": "LABEL_PAIR_ID_TYPE",
+    "message": "Label Pair Id Type",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -740,6 +596,108 @@
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTTYPE",
     "message": "Settlement Type",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+    "message": "Campaign Info Source",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
+    "message": "Label Pair Ihm Summary Children Present",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
+    "message": "Label Pair Ihm Summary Children Vaccinated",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
+    "message": "Label Pair Ihm Summary Final Comments",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
+    "message": "Label Pair Ihm Summary Missed Absent",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
+    "message": "Label Pair Ihm Summary Missed Asleep",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
+    "message": "Label Pair Ihm Summary Missed Not Revisited",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
+    "message": "Label Pair Ihm Summary Missed Not Visited",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
+    "message": "Label Pair Ihm Summary Missed Other",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
+    "message": "Label Pair Ihm Summary Missed Refusal",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
+    "message": "Label Pair Ihm Summary Missed Routine",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
+    "message": "Label Pair Ihm Summary Monitoring Date",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
+    "message": "Label Pair Ihm Summary Monitor Designation",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
+    "message": "Label Pair Ihm Summary Monitor Name",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
+    "message": "Label Pair Ihm Summary Poorly Covered",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
+    "message": "Label Pair Ihm Summary Settlement Area",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
+    "message": "Label Pair Ihm Summary Settlement Type",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -842,132 +800,6 @@
   {
     "code": "LABEL_PAIR_LOCALITY",
     "message": "Locality",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Label Pair Lqa Absence Reason",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "Label Pair Lqa Afp Awareness",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "Label Pair Lqa Afp Case Count",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Label Pair Lqa Awareness Other",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Label Pair Lqa Campaign Awareness",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Label Pair Lqa Caregiver Informed",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Label Pair Lqa Child Age Months",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Label Pair Lqa Child Sex",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Label Pair Lqa Children Under 5",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Label Pair Lqa Cluster Number",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Label Pair Lqa Finger Marked",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Label Pair Lqa Lot Number",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "Label Pair Lqa Opv Doses",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Label Pair Lqa Other Absence Reason",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Label Pair Lqa Other Reason Specify",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Label Pair Lqa Other Refusal Reason",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Label Pair Lqa Reason Not Marked",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Label Pair Lqa Refusal Reason",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Label Pair Lqa Settlement Area",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Label Pair Lqa Survey Date",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Label Pair Lqa Surveyor Name",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1098,8 +930,128 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_MEMBER_COUNT",
-    "message": "Label Pair Member Count",
+    "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
+    "message": "Label Pair Lqa Absence Reason",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
+    "message": "Label Pair Lqa Afp Awareness",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
+    "message": "Label Pair Lqa Afp Case Count",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
+    "message": "Label Pair Lqa Awareness Other",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
+    "message": "Label Pair Lqa Campaign Awareness",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
+    "message": "Label Pair Lqa Caregiver Informed",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
+    "message": "Label Pair Lqa Children Under 5",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
+    "message": "Label Pair Lqa Child Age Months",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
+    "message": "Label Pair Lqa Child Sex",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
+    "message": "Label Pair Lqa Cluster Number",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
+    "message": "Label Pair Lqa Finger Marked",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
+    "message": "Label Pair Lqa Lot Number",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
+    "message": "Label Pair Lqa Opv Doses",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
+    "message": "Label Pair Lqa Other Absence Reason",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
+    "message": "Label Pair Lqa Other Reason Specify",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
+    "message": "Label Pair Lqa Other Refusal Reason",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
+    "message": "Label Pair Lqa Reason Not Marked",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
+    "message": "Label Pair Lqa Refusal Reason",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
+    "message": "Label Pair Lqa Settlement Area",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
+    "message": "Label Pair Lqa Surveyor Name",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
+    "message": "Label Pair Lqa Survey Date",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1110,8 +1062,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_MOBILE_NUMBER",
-    "message": "Label Pair Mobile Number",
+    "code": "LABEL_PAIR_MEMBER_COUNT",
+    "message": "Label Pair Member Count",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1122,8 +1074,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "Label Pair Mrn Number",
+    "code": "LABEL_PAIR_MOBILE_NUMBER",
+    "message": "Label Pair Mobile Number",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1134,14 +1086,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
-    "message": "Label Pair Name Of Individual",
+    "code": "LABEL_PAIR_MRN_NUMBER",
+    "message": "Label Pair Mrn Number",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_QUANTITY_RECEIVED",
-    "message": "Label Pair Quantity Received",
+    "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
+    "message": "Label Pair Name Of Individual",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1152,8 +1104,26 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "LABEL_PAIR_QUANTITY_RECEIVED",
+    "message": "Label Pair Quantity Received",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "LABEL_PAIR_RECEIVER",
     "message": "Receiver",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRALNAME",
+    "message": "Referral Name",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRALSTATUS",
+    "message": "Referral Status",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1176,18 +1146,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_REFERRALNAME",
-    "message": "Referral Name",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFERRALSTATUS",
-    "message": "Referral Status",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_REFRRALSYMPTOM",
     "message": "Referral Symptom",
     "module": "hcm-base-stockreports-co-delivery",
@@ -1206,14 +1164,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Label Pair Stock Expiry",
+    "code": "LABEL_PAIR_STOCKEXPIRY",
+    "message": "Stock Expiry",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_STOCKEXPIRY",
-    "message": "Stock Expiry",
+    "code": "LABEL_PAIR_STOCK_EXPIRY",
+    "message": "Label Pair Stock Expiry",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1254,14 +1212,26 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "LABEL_PAIR_WAYBILLNUMBER",
+    "message": "Waybill Number",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "LABEL_PAIR_WAYBILL_NUMBER",
     "message": "Label Pair Waybill Number",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_WAYBILLNUMBER",
-    "message": "Waybill Number",
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "message": "Label Pair {{fn:getsecondpagepartylabel(item.additionalfields.fields)}}",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1278,14 +1248,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "NO_FACILITIES_FOUND",
-    "message": "No Facilities found",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NO_PRODUCTS_FOUND",
-    "message": "No Products found",
+    "code": "NOTENOUGHSTOCK",
+    "message": "Not Enough Stock",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1302,20 +1266,20 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "NO_FACILITIES_FOUND",
+    "message": "No Facilities found",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_PRODUCTS_FOUND",
+    "message": "No Products found",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "NotEnoughStock",
     "message": "Not Enough Stock",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NOTENOUGHSTOCK",
-    "message": "Not Enough Stock",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Other",
-    "message": "Other",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1332,110 +1296,20 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "Other",
+    "message": "Other",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "PerformanceIssue",
     "message": "PERFORMANCEISSUE",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
   {
-    "code": "productVariantId",
-    "message": "Product Variant ID",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "productVariants",
-    "message": "Product Variants",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "projectId",
-    "message": "Project ID",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "reckonReportDetails_table",
-    "message": "Reckon Report Details_table",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "reckonReportDetailsButton",
-    "message": "Back to home",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "reckonReportDetailsCard",
-    "message": "Reckon Report Details Card",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "reckonReportDetailsInfoCard",
-    "message": "Info",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "recordFoundInfo",
-    "message": "No results found",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "REEDS",
     "message": "Reeds",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "reportDetails_table",
-    "message": "Report Details_table",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "reportDetailsButton",
-    "message": "Back to Home",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "reportDetailsCard",
-    "message": "Report Details Card",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "reportDetailsInfoCard",
-    "message": "Report Details Info Card",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "reportType",
-    "message": "Report Type",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "secondaryActionLabel",
-    "message": "Back to Home",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Security Issues",
-    "message": "Security issues",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SecurityIssues",
-    "message": "SECURITYISSUES",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1452,42 +1326,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "selectedFacility",
-    "message": "Selected Facility",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "selectedProduct",
-    "message": "Selected Product",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "selectedReckonProduct",
-    "message": "Selected Product",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "selectedReconFacility",
-    "message": "Selected Facility",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "selectProductLabel",
-    "message": "Product",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "selectWarehouseLabel",
-    "message": "Select Warehouse",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "SICK",
     "message": "Sick",
     "module": "hcm-base-stockreports-co-delivery",
@@ -1500,140 +1338,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "STOCK_QUANTITY",
-    "message": "Stock Quantity",
+    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
+    "message": "Select Product",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
   {
-    "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
-    "message": "Please select warehouse and product variant to view the report",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_DATE",
-    "message": "Date",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
-    "message": "Stock on hand = (Stock received + stock returned) − (stock issued + stock lost + stock damaged)",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_INFO_CARD_TITLE",
-    "message": "Info",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
-    "message": "Stock Damaged",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
-    "message": "Stock Issued",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_STOCK_LOST",
-    "message": "Stock Lost",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_STOCK_ON_HAND",
-    "message": "Stock in hand",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
-    "message": "Stock Received",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
-    "message": "Stock Returned",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
-    "message": "Please select a warehouse and product to view the report",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_REPORT_DETAILS_INFO_CARD_LABEL",
-    "message": "Info",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
-    "message": "No records found for the selected filters",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
-    "message": "No results found",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_REPORT_INFO_NO_RESULTS_TITLE",
-    "message": "No results",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_REPORT_INFO_REPORTS_TITLE",
-    "message": "Reports Info",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "stockDamagedHeading",
-    "message": "Stock Damaged",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "stockExcessHeading",
-    "message": "View Stock Excess Reports",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "stockIssuedHeading",
-    "message": "Stock Issued",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "stockLessHeading",
-    "message": "View Stock Shortage Reports",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "stockLossHeading",
-    "message": "Stock Loss",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "stockRecieveHeading",
-    "message": "Stock Received",
+    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
+    "message": "Select Facility",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1788,32 +1500,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "stockReconHeading",
-    "message": "Stock Reconciliation",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
-    "message": "Select Product",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
-    "message": "Select Facility",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "stockReconTable",
-    "message": "Stock Reconciliation Table",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "STOCKREPORTS_REPORT_DETAILS_BACK_BUTTON_LABEL",
     "message": "Back",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_DESCRIPTION",
+    "message": " ",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1986,6 +1680,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "STOCKREPORTS_VIEW_REPORTS_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "STOCKREPORTS_VIEW_REPORTS_HEADING",
     "message": "View Reports",
     "module": "hcm-base-stockreports-co-delivery",
@@ -2088,6 +1788,408 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "STOCK_QUANTITY",
+    "message": "Stock Quantity",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_DATE",
+    "message": "Date",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
+    "message": "Stock on hand = (Stock received + stock returned) \u2212 (stock issued + stock lost + stock damaged)",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_TITLE",
+    "message": "Info",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
+    "message": "Stock Damaged",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
+    "message": "Stock Issued",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_LOST",
+    "message": "Stock Lost",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ON_HAND",
+    "message": "Stock in hand",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
+    "message": "Stock Received",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
+    "message": "Stock Returned",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Please select warehouse and product variant to view the report",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Please select a warehouse and product to view the report",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "Info",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
+    "message": "No records found for the selected filters",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+    "message": "No results found",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_INFO_NO_RESULTS_TITLE",
+    "message": "No results",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_INFO_REPORTS_TITLE",
+    "message": "Reports Info",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Delivery Successful",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "Sync not working",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Security Issues",
+    "message": "Security issues",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "SECURITYISSUES",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "Sync Not Working",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_1",
+    "message": "Transport Type 1",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_2",
+    "message": "Transport Type 2",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Technical Issues",
+    "message": "Technical issues",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "TECHNICALISSUES",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UNIQUE_BENEFICIARY_ID",
+    "message": "Beneficiary ID",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "User Account Issues",
+    "message": "User account issues",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "USERACCOUNTISSUES",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "VOMITTING",
+    "message": "Vomitting",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WEAKNESS",
+    "message": "Weakness",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "additionalFields",
+    "message": "Additional Fields",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "card",
+    "message": " ",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "clientCreatedBy",
+    "message": "Client Created By",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "facilities",
+    "message": "Facilities",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "facilityId",
+    "message": "Facility ID",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "infoCardLabel",
+    "message": "Info",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "productVariantId",
+    "message": "Product Variant ID",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "productVariants",
+    "message": "Product Variants",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "projectId",
+    "message": "Project ID",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "reckonReportDetailsButton",
+    "message": "Back to home",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "reckonReportDetailsCard",
+    "message": "Reckon Report Details Card",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "reckonReportDetailsInfoCard",
+    "message": "Info",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "reckonReportDetails_table",
+    "message": "Reckon Report Details_table",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "recordFoundInfo",
+    "message": "No results found",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "reportDetailsButton",
+    "message": "Back to Home",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "reportDetailsCard",
+    "message": "Report Details Card",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "reportDetailsInfoCard",
+    "message": "Report Details Info Card",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "reportDetails_table",
+    "message": "Report Details_table",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "reportType",
+    "message": "Report Type",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "secondaryActionLabel",
+    "message": "Back to Home",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "selectProductLabel",
+    "message": "Product",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "selectWarehouseLabel",
+    "message": "Select Warehouse",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "selectedFacility",
+    "message": "Selected Facility",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "selectedProduct",
+    "message": "Selected Product",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "selectedReckonProduct",
+    "message": "Selected Product",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "selectedReconFacility",
+    "message": "Selected Facility",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockDamagedHeading",
+    "message": "Stock Damaged",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockExcessHeading",
+    "message": "View Stock Excess Reports",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockIssuedHeading",
+    "message": "Stock Issued",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockLessHeading",
+    "message": "View Stock Shortage Reports",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockLossHeading",
+    "message": "Stock Loss",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockRecieveHeading",
+    "message": "Stock Received",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockReconHeading",
+    "message": "Stock Reconciliation",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockReconTable",
+    "message": "Stock Reconciliation Table",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockReturnedHeading",
+    "message": "Stock Returned",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockTable",
+    "message": "Stock Table",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "stockreportsViewReportsStockDamaged",
     "message": "Stock Damaged",
     "module": "hcm-base-stockreports-co-delivery",
@@ -2136,92 +2238,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "stockReturnedHeading",
-    "message": "Stock Returned",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "stockTable",
-    "message": "Stock Table",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SUCCESSFUL_DELIVERY",
-    "message": "Delivery Successful",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SyncNotWorking",
-    "message": "Sync Not Working",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SYNCNOTWORKING",
-    "message": "Sync not working",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Technical Issues",
-    "message": "Technical issues",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "TechnicalIssues",
-    "message": "TECHNICALISSUES",
+    "code": "table",
+    "message": " ",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "tenantId",
     "message": "Tenant ID",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "TRANSPORT_TYPE_1",
-    "message": "Transport Type 1",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "TRANSPORT_TYPE_2",
-    "message": "Transport Type 2",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Beneficiary ID",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "User Account Issues",
-    "message": "User account issues",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UserAccountIssues",
-    "message": "USERACCOUNTISSUES",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "VOMITTING",
-    "message": "Vomitting",
-    "module": "hcm-base-stockreports-co-delivery",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "WEAKNESS",
-    "message": "Weakness",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "en_DEMO"
   }

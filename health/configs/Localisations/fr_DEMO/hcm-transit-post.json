@@ -1,0 +1,230 @@
+[
+  {
+    "code": "BARCODE_BATCH_NO_REQUIRED",
+    "message": "Le num\u00e9ro de lot est requis",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BARCODE_BATCH_NUMBER",
+    "message": "Num\u00e9ro de lot",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BARCODE_EXPIRY_DATE",
+    "message": "Date d'expiration",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BARCODE_SERIAL_NO_REQUIRED",
+    "message": "Le num\u00e9ro de s\u00e9rie est requis",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BARCODE_SERIAL_NUMBER",
+    "message": "Num\u00e9ro de s\u00e9rie",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BUS_STOP",
+    "message": "Arr\u00eat de bus",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GS1_00",
+    "message": "Code du conteneur d'exp\u00e9dition en s\u00e9rie",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GS1_01",
+    "message": "Num\u00e9ro d'article du commerce mondial",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GS1_10",
+    "message": "Num\u00e9ro de lot ou de lot",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GS1_11",
+    "message": "Date de production",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GS1_17",
+    "message": "Date d'expiration",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GS1_21",
+    "message": "Num\u00e9ro de s\u00e9rie",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RAILWAY_STATION",
+    "message": "Gare",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCHOOL",
+    "message": "\u00c9cole",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_ALERT_POPUP_DESCRIPTION",
+    "message": "Vous num\u00e9risez un nouveau flacon. Veuillez vous assurer d'avoir termin\u00e9 le flacon pr\u00e9c\u00e9dent avant de scanner l'autre.",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_ALERT_POPUP_TITLE",
+    "message": "Attention!",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_BATCH_NUMBER_LABEL",
+    "message": "Num\u00e9ro de lot",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_BENEFICIARY_AGE_DESCRIPTION",
+    "message": "L'\u00e2ge doit \u00eatre dans la fourchette",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_BENEFICIARY_AGE_LABEL",
+    "message": "\u00c2ge du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_CLOSE_DELIVERY_LABEL",
+    "message": "Fermer la livraison",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_COUNT_ALERT_POPUP_PREFIX_DESCRIPTION",
+    "message": "Vous approchez",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_COUNT_ALERT_POPUP_SUFFIX_DESCRIPTION",
+    "message": "egovio/produit:v1.1.0-00a7accbda-31",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_DATE_LABEL",
+    "message": "Date",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_DELIVERY_SUCCESSFUL_DESCRIPTION",
+    "message": "La livraison a \u00e9t\u00e9 enregistr\u00e9e avec succ\u00e8s.",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_DELIVERY_SUCCESSFUL_LABEL",
+    "message": "Livraison r\u00e9ussie !",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_NAME_LABEL",
+    "message": "Nom du poste de transit",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_RECORD_DELIVERY_LABEL",
+    "message": "Livraison d'enregistrement",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_RESOURCE_CODE_LABEL",
+    "message": "Code ressource",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_RESOURCE_DELIVERED_LABEL",
+    "message": "Ressource \u00e0 livrer",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_RESOURCE_SCANNED_LABEL",
+    "message": "Ressource en main",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_SCAN_RESOURCE_LABEL",
+    "message": "Ressource d'analyse",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TABLE_HEADER_DOSE_LABEL",
+    "message": "Dose",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TABLE_HEADER_RESOURCE_LABEL",
+    "message": "Ressource",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TODAY_DELIVERIES_DESCRIPTION",
+    "message": "Livraisons effectu\u00e9es aujourd'hui par l'utilisateur",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TOTAL_DELIVERIES_DESCRIPTION",
+    "message": "Total des livraisons effectu\u00e9es par l'utilisateur",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TYPE_LABEL",
+    "message": "Type de poste de transit",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TYPE_SELECTION_LABEL",
+    "message": "S\u00e9lectionnez le type de poste de transit",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_VACCINATION_DETAILS_LABEL",
+    "message": "D\u00e9tails de la vaccination",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  }
+]

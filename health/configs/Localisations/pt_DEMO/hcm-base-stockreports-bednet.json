@@ -1,0 +1,842 @@
+[
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "Falha na administra\u00e7\u00e3o",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_CATEGORY_STOCKREPORTS",
+    "message": "Relat\u00f3rios de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_RECKONREPORTDETAILS",
+    "message": "Detalhes do relat\u00f3rio de reconcilia\u00e7\u00e3o",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_REPORTDETAILS",
+    "message": "Detalhes do relat\u00f3rio",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_VIEWREPORTS",
+    "message": "Ver relat\u00f3rios",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "Benefici\u00e1rio Ausente",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Benefici\u00e1rio recusado",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Cimento",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Argila",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_VALIDATION_ERROR",
+    "message": "Este \u00e9 um campo obrigat\u00f3rio",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Efeito colateral da droga do ciclo atual",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Efeito colateral da droga do ciclo anterior",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Febre",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_secondaryActionLabel_LABEL",
+    "message": "De volta para casa",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Vidro",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Recursos insuficientes",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECEIVER_LABEL",
+    "message": "Receptor",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SENDER_LABEL",
+    "message": "Remetente",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
+    "message": "Tipo de transa\u00e7\u00e3o",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "Metal",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Estoque insuficiente",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO_FACILITIES_FOUND",
+    "message": "Nenhuma instala\u00e7\u00e3o encontrada",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO_PRODUCTS_FOUND",
+    "message": "Nenhum produto encontrado",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Estoque insuficiente",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Outro",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Outro",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Outro",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "Problema de desempenho",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Juncos",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SELECT_PRODUCT",
+    "message": "Selecione a variante do produto",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SELECT_WAREHOUSE",
+    "message": "Selecione o armaz\u00e9m",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Doente",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
+    "message": "Selecione o produto",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
+    "message": "Selecione a instala\u00e7\u00e3o",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_BACK_BUTTON_LABEL",
+    "message": "Voltar",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_DESCRIPTION",
+    "message": "Relat\u00f3rios de reconcilia\u00e7\u00e3o",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_HEADING",
+    "message": "Reconcilia\u00e7\u00e3o de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Selecione um armaz\u00e9m e produto para visualizar o relat\u00f3rio",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "Selecione uma instala\u00e7\u00e3o e um produto para visualizar o relat\u00f3rio de reconcilia\u00e7\u00e3o",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
+    "message": "Nenhum registro de reconcilia\u00e7\u00e3o corresponde aos filtros selecionados",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+    "message": "Nenhum registro encontrado para os filtros selecionados",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
+    "message": "De volta para casa",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
+    "message": "Selecione a instala\u00e7\u00e3o",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_1_LABEL",
+    "message": "Data da reconcilia\u00e7\u00e3o",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_2_LABEL",
+    "message": "Contar",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_INFO_NO_RESULTS_TITLE",
+    "message": "Nenhum resultado encontrado",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_INFO_REPORTS_TITLE",
+    "message": "Informa\u00e7\u00f5es do relat\u00f3rio",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_BACK_BUTTON_LABEL",
+    "message": "Voltar",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_HEADING",
+    "message": "Relat\u00f3rios",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "Selecione o armaz\u00e9m e o produto para visualizar o relat\u00f3rio",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+    "message": "Nenhum registro encontrado para os filtros selecionados",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
+    "message": "De volta para casa",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
+    "message": "Produto",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
+    "message": "Selecione Armaz\u00e9m",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_1_LABEL",
+    "message": "Data",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_2_LABEL",
+    "message": "MRN",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
+    "message": "N\u00famero da carta de porte",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_PRODUCT_LABEL",
+    "message": "Produto",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_ADDITIONAL_FIELDS",
+    "message": "Detalhes Adicionais",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_CALCULATED_COUNT",
+    "message": "Contagem calculada",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_DATE_OF_ENTRY",
+    "message": "Data de entrada",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_DATE_OF_RECONCILIATION",
+    "message": "Data da Reconcilia\u00e7\u00e3o",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_PHYSICAL_COUNT",
+    "message": "Contagem F\u00edsica",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_QUANTITY",
+    "message": "Quantidade",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_DAMAGED",
+    "message": "Danificado",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_ISSUED",
+    "message": "Publicado",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_LOST",
+    "message": "Perdido",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_RECEIVED",
+    "message": "Recebido",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_RETURNED",
+    "message": "Devolvido",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_WAYBILL_NUMBER",
+    "message": "N\u00famero da carta de porte",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_BACK_BUTTON_LABEL",
+    "message": "Voltar",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_HEADING",
+    "message": "Ver relat\u00f3rios",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_DAMAGED_DESCRIPTION",
+    "message": "Ver relat\u00f3rios de estoque danificado",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_DAMAGED_HEADING",
+    "message": "Estoque danificado",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_ISSUED_DESCRIPTION",
+    "message": "Ver relat\u00f3rios de a\u00e7\u00f5es emitidas",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_ISSUED_HEADING",
+    "message": "A\u00e7\u00f5es emitidas",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LESS_DESCRIPTION",
+    "message": "Escassez de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LESS_HEADING",
+    "message": "Escassez de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_DESCRIPTION",
+    "message": "Ver relat\u00f3rios de perda de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_HEADING",
+    "message": "Perda de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECIEVE_DESCRIPTION",
+    "message": "Ver relat\u00f3rios de estoque recebido",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECIEVE_HEADING",
+    "message": "Estoque recebido",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECON_DESCRIPTION",
+    "message": "Ver relat\u00f3rios de reconcilia\u00e7\u00e3o de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECON_HEADING",
+    "message": "Reconcilia\u00e7\u00e3o de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RETURNED_DESCRIPTION",
+    "message": "Ver relat\u00f3rios de devolu\u00e7\u00e3o de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RETURNED_HEADING",
+    "message": "Estoque devolvido",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_QUANTITY",
+    "message": "Quantidade de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_DATE",
+    "message": "Data",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
+    "message": "Estoque dispon\u00edvel = (estoque recebido + estoque devolvido) - (estoque emitido + estoque perdido + estoque danificado)",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_TITLE",
+    "message": "Informa\u00e7\u00f5es",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
+    "message": "Estoque danificado",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
+    "message": "A\u00e7\u00f5es emitidas",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_LOST",
+    "message": "Estoque perdido",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ON_HAND",
+    "message": "Estoque dispon\u00edvel",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
+    "message": "Estoque recebido",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
+    "message": "Estoque devolvido",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Selecione o armaz\u00e9m e a variante do produto para visualizar o relat\u00f3rio",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Selecione o armaz\u00e9m e o produto para visualizar o relat\u00f3rio",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "Informa\u00e7\u00f5es",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
+    "message": "Nenhum registro corresponde ao armaz\u00e9m e aos filtros de produtos selecionados",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+    "message": "Nenhum registro encontrado para os filtros selecionados",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_INFO_NO_RESULTS_TITLE",
+    "message": "Nenhum resultado",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_INFO_REPORTS_TITLE",
+    "message": "Informa\u00e7\u00f5es de relat\u00f3rios",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Entrega bem-sucedida",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "A sincroniza\u00e7\u00e3o n\u00e3o funciona",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "Problemas de seguran\u00e7a",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "A sincroniza\u00e7\u00e3o n\u00e3o funciona",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Problemas t\u00e9cnicos",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "Problemas de conta de usu\u00e1rio",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "additionalFields",
+    "message": "Campos Adicionais",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "card",
+    "message": " ",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "clientCreatedBy",
+    "message": "Cliente criado por",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "facilities",
+    "message": "Instala\u00e7\u00f5es",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "facilityId",
+    "message": "ID da instala\u00e7\u00e3o",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "infoCardLabel",
+    "message": "Informa\u00e7\u00f5es",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "productVariantId",
+    "message": "ID da variante do produto",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "productVariants",
+    "message": "Variantes de produto",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "projectId",
+    "message": "ID do projeto",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "recordFoundInfo",
+    "message": "Nenhum registro encontrado para os filtros selecionados",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "reportType",
+    "message": "Tipo de relat\u00f3rio",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "secondaryActionLabel",
+    "message": "De volta para casa",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "selectProductLabel",
+    "message": "Produto",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "selectWarehouseLabel",
+    "message": "Selecione Armaz\u00e9m",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "selectedFacility",
+    "message": "Instala\u00e7\u00e3o selecionada",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "selectedProduct",
+    "message": "Produto selecionado",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "selectedReckonProduct",
+    "message": "Produto selecionado",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "selectedReconFacility",
+    "message": "Instala\u00e7\u00e3o selecionada",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockDamagedHeading",
+    "message": "Estoque danificado",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockIssuedHeading",
+    "message": "A\u00e7\u00f5es emitidas",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockLessHeading",
+    "message": "Escassez de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockLossHeading",
+    "message": "Perda de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockRecieveHeading",
+    "message": "Estoque recebido",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockReconHeading",
+    "message": "Reconcilia\u00e7\u00e3o de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockReconTable",
+    "message": "Tabela de reconcilia\u00e7\u00e3o de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockReturnedHeading",
+    "message": "Estoque devolvido",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockTable",
+    "message": "Tabela de estoque",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "table",
+    "message": " ",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "tenantId",
+    "message": "ID do locat\u00e1rio",
+    "module": "hcm-base-stockreports-bednet",
+    "locale": "pt_DEMO"
+  }
+]

@@ -1,0 +1,1220 @@
+[
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "\u00c9chec de l'administration",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_RECKONREPORTDETAILS",
+    "message": "D\u00e9tails du rapport de rapprochement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "B\u00e9n\u00e9ficiaire absent",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "B\u00e9n\u00e9ficiaire refus\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Ciment",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Argile",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ALLOW_BACKGROUND_ACTIVITY",
+    "message": "Veuillez v\u00e9rifier si l'activit\u00e9 en arri\u00e8re-plan est activ\u00e9e dans les param\u00e8tres",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ALLOW_PERMISSIONS",
+    "message": "Autoriser les autorisations",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ALLOW_PERMISSIONS_DESCRIPTION",
+    "message": "Autoriser les autorisations",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSIONS_ALERT",
+    "message": "Autoriser les autorisations requises",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_BLUETOOTHSCAN",
+    "message": "Partager \u00e0 proximit\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_CAMERA",
+    "message": "Cam\u00e9ra",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_GRANTED",
+    "message": "Autorisation accord\u00e9e",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_IGNOREBATTERYOPTIMIZATIONS",
+    "message": "Ignorer l'optimisation de la batterie",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_IGNOREBATTERYOPTIMIZATIONS_WARNING",
+    "message": "Autoriser l'activit\u00e9 en arri\u00e8re-plan dans la batterie -> param\u00e8tres",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_LOCATION",
+    "message": "Emplacement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES",
+    "message": "Partager \u00e0 proximit\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_NOTIFICATION",
+    "message": "Notifications",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_NOT_GRANTED",
+    "message": "Autorisation non accord\u00e9e",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_VALIDATION_ERROR",
+    "message": "Ceci est un champ obligatoire",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Effet secondaire du m\u00e9dicament du cycle en cours",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Effet secondaire du m\u00e9dicament du cycle pr\u00e9c\u00e9dent",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ENABLE_PERMISSION_CHECKBOX",
+    "message": "Veuillez activer la case \u00e0 cocher",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Fi\u00e8vre",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_secondaryActionLabel_LABEL",
+    "message": "Retour \u00e0 la maison",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Verre",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION",
+    "message": "Accorder",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_BATTERY",
+    "message": "Accorder",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_BLUETOOTH",
+    "message": "Accorder",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_CAMERA",
+    "message": "Accorder",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_LOCATION",
+    "message": "Accorder",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_NEARBY",
+    "message": "Accorder",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_NOTIFICATION",
+    "message": "Accorder",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Ressources insuffisantes",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECEIVER_LABEL",
+    "message": "R\u00e9cepteur",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVENTORY_SENDER_LABEL",
+    "message": "Exp\u00e9diteur",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
+    "message": "Type de transaction",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "M\u00e9tal",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NEAR_BY_WIFI_DEVICES",
+    "message": "Statut d'autorisation de partage \u00e0 proximit\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOTIFICATION_PERMISSION_TAG",
+    "message": "Statut d'autorisation des notifications",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO_FACILITIES_FOUND",
+    "message": "Aucune installation trouv\u00e9e",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO_PRODUCTS_FOUND",
+    "message": "Aucun produit trouv\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OPEN_SETTINGS",
+    "message": "Param\u00e8tres",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Autre",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Autre",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Autre",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERMISSIONS_ALERT",
+    "message": "Autoriser les autorisations requises",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERMISSION_CONTINUE",
+    "message": "Continuer",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERMISSION_DENIED_OPEN_SETTINGS",
+    "message": "L'autorisation est refus\u00e9e d\u00e9finitivement. Veuillez l'activer depuis les param\u00e8tres",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY",
+    "message": "Veuillez v\u00e9rifier si l'activit\u00e9 en arri\u00e8re-plan est activ\u00e9e dans les param\u00e8tres.",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "Probl\u00e8me de performances",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Roseaux",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SELECT_PRODUCT",
+    "message": "S\u00e9lectionnez une variante de produit",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SELECT_WAREHOUSE",
+    "message": "S\u00e9lectionnez un entrep\u00f4t",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Malade",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
+    "message": "S\u00e9lectionnez un produit",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
+    "message": "S\u00e9lectionnez l'\u00e9tablissement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_BACK_BUTTON_LABEL",
+    "message": "Dos",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_DESCRIPTION",
+    "message": "Rapports de r\u00e9conciliation",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_HEADING",
+    "message": "Rapprochement des stocks",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Veuillez s\u00e9lectionner un entrep\u00f4t et un produit pour afficher le rapport",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "S\u00e9lectionnez un entrep\u00f4t et un produit pour afficher le rapport de rapprochement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
+    "message": "Aucun enregistrement trouv\u00e9 pour les filtres s\u00e9lectionn\u00e9s",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+    "message": "Aucun enregistrement trouv\u00e9 pour les filtres s\u00e9lectionn\u00e9s",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
+    "message": "Retour \u00e0 la maison",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
+    "message": "S\u00e9lectionnez l'\u00e9tablissement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_1_LABEL",
+    "message": "Date de rapprochement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_2_LABEL",
+    "message": "Compter",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_EXCESS_LABEL",
+    "message": "Exc\u00e9dent de stock",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_LESS_LABEL",
+    "message": "Stocker moins",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_INFO_NO_RESULTS_TITLE",
+    "message": "Aucun r\u00e9sultat trouv\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_INFO_REPORTS_TITLE",
+    "message": "Informations sur le rapport de rapprochement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_CALCULATED_COUNT",
+    "message": "Nombre calcul\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_DATE_OF_RECONCILIATION",
+    "message": "Date de rapprochement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_PHYSICAL_COUNT",
+    "message": "Nombre physique",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_DAMAGED",
+    "message": "Crosse endommag\u00e9e",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_EXCESS",
+    "message": "Exc\u00e9dent de stock",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_ISSUED",
+    "message": "Actions \u00e9mises",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_LESS",
+    "message": "Stocker moins",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_LOST",
+    "message": "Stock perdu",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_RECEIVED",
+    "message": "Stock re\u00e7u",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_RETURNED",
+    "message": "Stock retourn\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_BACK_BUTTON_LABEL",
+    "message": "Dos",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_HEADING",
+    "message": "Rapports",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "S\u00e9lectionnez un entrep\u00f4t et un produit pour afficher le rapport",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+    "message": "Aucun enregistrement trouv\u00e9 pour les filtres s\u00e9lectionn\u00e9s",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
+    "message": "Retour \u00e0 la maison",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
+    "message": "S\u00e9lectionnez un produit",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
+    "message": "S\u00e9lectionnez un entrep\u00f4t",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_1_LABEL",
+    "message": "Date",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_2_LABEL",
+    "message": "MRN",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
+    "message": "Num\u00e9ro de lettre de transport",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_PRODUCT_LABEL",
+    "message": "Produit",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_TABLE_HEADER_DATE_OF_ENTRY",
+    "message": "Date d'entr\u00e9e",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_TABLE_HEADER_MRN_NUMBER",
+    "message": "Num\u00e9ro MRN",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_TABLE_HEADER_PRODUCT",
+    "message": "Produit",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_TABLE_HEADER_QUANTITY",
+    "message": "Quantit\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_TABLE_HEADER_WAYBILL_NUMBER",
+    "message": "Num\u00e9ro de lettre de transport",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_ADDITIONAL_FIELDS",
+    "message": "D\u00e9tails suppl\u00e9mentaires",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_CALCULATED_COUNT",
+    "message": "Nombre calcul\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_DATE_OF_ENTRY",
+    "message": "Date d'entr\u00e9e",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_DATE_OF_RECONCILIATION",
+    "message": "Date de rapprochement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_PHYSICAL_COUNT",
+    "message": "Nombre physique",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_QUANTITY",
+    "message": "Quantit\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_DAMAGED",
+    "message": "Crosse endommag\u00e9e",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_ISSUED",
+    "message": "Actions \u00e9mises",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_LOST",
+    "message": "Stock perdu",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_RECEIVED",
+    "message": "Stock re\u00e7u",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_RETURNED",
+    "message": "Stock retourn\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_WAYBILL_NUMBER",
+    "message": "Num\u00e9ro de lettre de transport",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_BACK_BUTTON_LABEL",
+    "message": "Dos",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_HEADING",
+    "message": "Afficher les rapports",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_DAMAGED_DESCRIPTION",
+    "message": "Afficher les rapports sur les stocks endommag\u00e9s",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_DAMAGED_HEADING",
+    "message": "Crosse endommag\u00e9e",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_EXCESS_DESCRIPTION",
+    "message": "Afficher les rapports sur les stocks enregistr\u00e9s comme exc\u00e9dentaires",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_EXCESS_HEADING",
+    "message": "Exc\u00e9dent de stock",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_ISSUED_DESCRIPTION",
+    "message": "Afficher les rapports sur les actions \u00e9mises",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_ISSUED_HEADING",
+    "message": "Actions \u00e9mises",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LESS_DESCRIPTION",
+    "message": "Afficher les rapports sur les stocks enregistr\u00e9s comme inf\u00e9rieurs",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LESS_HEADING",
+    "message": "Stocker moins",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_DESCRIPTION",
+    "message": "Afficher les rapports de perte de stock",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_HEADING",
+    "message": "Perte de stock",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECIEVE_DESCRIPTION",
+    "message": "Afficher les rapports sur les stocks re\u00e7us",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECIEVE_HEADING",
+    "message": "Stock re\u00e7u",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECON_DESCRIPTION",
+    "message": "Afficher les rapports de rapprochement des stocks",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECON_HEADING",
+    "message": "Rapprochement des stocks",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RETURNED_DESCRIPTION",
+    "message": "Afficher les rapports sur les retours de stock",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RETURNED_HEADING",
+    "message": "Stock retourn\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_QUANTITY",
+    "message": "Quantit\u00e9 en stock",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_DATE",
+    "message": "Date",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
+    "message": "Stock disponible = (Stock re\u00e7u + stock retourn\u00e9) \u2212 (stock sorti + stock perdu + stock endommag\u00e9)",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_TITLE",
+    "message": "Informations de rapprochement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
+    "message": "Crosse endommag\u00e9e",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
+    "message": "Actions \u00e9mises",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_LOST",
+    "message": "Stock perdu",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ON_HAND",
+    "message": "Stock disponible",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
+    "message": "Stock re\u00e7u",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
+    "message": "Stock retourn\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Veuillez s\u00e9lectionner l'entrep\u00f4t et la variante de produit pour afficher le rapport",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Veuillez s\u00e9lectionner \u00e0 la fois l'entrep\u00f4t et le produit pour afficher le rapport",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "Informations sur le rapport sur les stocks",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
+    "message": "Aucun enregistrement trouv\u00e9 pour les filtres s\u00e9lectionn\u00e9s",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+    "message": "Aucun enregistrement trouv\u00e9 pour les filtres s\u00e9lectionn\u00e9s",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_INFO_NO_RESULTS_TITLE",
+    "message": "Aucun r\u00e9sultat",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_INFO_REPORTS_TITLE",
+    "message": "Informations sur les rapports",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Livraison r\u00e9ussie",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Probl\u00e8mes techniques",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "Probl\u00e8mes de compte utilisateur",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "additionalFields",
+    "message": "Champs suppl\u00e9mentaires",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "batteryOptimizationTag",
+    "message": "\u00c9tat d'autorisation de la batterie",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "blueToothScan",
+    "message": "\u00c9tat d'autorisation de num\u00e9risation Bluetooth",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "cameraPermissionStatus",
+    "message": "\u00c9tat d'autorisation de la cam\u00e9ra",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "clientCreatedBy",
+    "message": "Cr\u00e9\u00e9 par",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "facilities",
+    "message": "Installations",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "facilityId",
+    "message": "ID de l'\u00e9tablissement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "infoCardLabel",
+    "message": "Informations sur le rapport sur les stocks",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "locationPermission",
+    "message": "Statut d'autorisation de localisation",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "productVariantId",
+    "message": "ID de variante de produit",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "productVariants",
+    "message": "Variantes de produits",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "projectId",
+    "message": "ID du projet",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reckonReportDetailsButton",
+    "message": "Retour \u00e0 la maison",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reckonReportDetailsCard",
+    "message": "D\u00e9tails du rapprochement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reckonReportDetailsInfoCard",
+    "message": "Informations de rapprochement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reckonReportDetails_table",
+    "message": "D\u00e9tails du rapprochement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "recordFoundInfo",
+    "message": "Aucun enregistrement trouv\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reportDetailsButton",
+    "message": "Retour \u00e0 la maison",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reportDetailsCard",
+    "message": "D\u00e9tails du rapport",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reportDetailsInfoCard",
+    "message": "Informations sur le rapport",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reportDetails_table",
+    "message": "D\u00e9tails du rapport",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reportType",
+    "message": "Type de rapport",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "secondaryActionLabel",
+    "message": "Retour \u00e0 la maison",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "selectProductLabel",
+    "message": "S\u00e9lectionnez un produit",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "selectWarehouseLabel",
+    "message": "S\u00e9lectionnez un entrep\u00f4t",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "selectedFacility",
+    "message": "S\u00e9lectionnez l'\u00e9tablissement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "selectedProduct",
+    "message": "S\u00e9lectionnez un produit",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "selectedReckonProduct",
+    "message": "S\u00e9lectionnez un produit",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "selectedReconFacility",
+    "message": "S\u00e9lectionnez l'\u00e9tablissement",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockDamagedHeading",
+    "message": "Crosse endommag\u00e9e",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockExcessHeading",
+    "message": "Exc\u00e9dent de stock",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockIssuedHeading",
+    "message": "Actions \u00e9mises",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockLessHeading",
+    "message": "Stocker moins",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockLossHeading",
+    "message": "Perte de stock",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockRecieveHeading",
+    "message": "Stock re\u00e7u",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockReconHeading",
+    "message": "Rapprochement des stocks",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockReconTable",
+    "message": "Rapport de rapprochement des stocks",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockReturnedHeading",
+    "message": "Stock retourn\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockTable",
+    "message": "Rapport de stock",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockDamaged",
+    "message": "Crosse endommag\u00e9e",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockExcess",
+    "message": "Exc\u00e9dent de stock",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockIssued",
+    "message": "Actions \u00e9mises",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockLess",
+    "message": "Stocker moins",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockLoss",
+    "message": "Perte de stock",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockRecieve",
+    "message": "Stock re\u00e7u",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockRecon",
+    "message": "Rapprochement des stocks",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockReturned",
+    "message": "Stock retourn\u00e9",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "tenantId",
+    "message": "ID du locataire",
+    "module": "hcm-base-stockreports-oncho",
+    "locale": "fr_DEMO"
+  }
+]

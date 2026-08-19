@@ -1,0 +1,2264 @@
+[
+  {
+    "code": "ABDOMINAL_PAIN",
+    "message": "Dor Abdominal",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ABSENT",
+    "message": "Ausente",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "Falha na vacina\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_SUCCESS",
+    "message": "Sucesso na vacina\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "AFRICA_IS_POLIO_FREE",
+    "message": "\u00c1frica est\u00e1 livre da poliomielite",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
+    "message": "O nome deve ter entre 2 e 200 caracteres",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_DETAILS_SCREEN_DESCRIPTION",
+    "message": "Vis\u00e3o geral dos detalhes da fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
+    "message": "Insira o endere\u00e7o principal ou o n\u00famero da casa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
+    "message": "Detalhes adicionais do endere\u00e7o, como nome do quarteir\u00e3o ou do apartamento",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_helpText",
+    "message": "\u00c1rea de assentamento onde est\u00e1 localizada a casa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_ACTION_BUTTON_LABEL",
+    "message": "Enviar",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_CATEGORY_CLOSE_HOUSEHOLD",
+    "message": "Crian\u00e7as desaparecidas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_CLOSEHOUSEHOLDREGISTRATION",
+    "message": "Registro de crian\u00e7as perdidas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_CLOSEHOUSEHOLDSUCCESS",
+    "message": "Crian\u00e7as desaparecidas registradas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_CLOSEHOUSEHOLDDETAILS",
+    "message": "Detalhes de crian\u00e7as perdidas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
+    "message": "Manipulador de permiss\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER_PERMISSIONHANDLER",
+    "message": "Manipulador de permiss\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ASLEEP",
+    "message": "Dormindo",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Administrtion Failed",
+    "message": "Falha na vacina\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "Benefici\u00e1rio Ausente",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFERRED",
+    "message": "Benefici\u00e1rio Indicado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Benefici\u00e1rio recusado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_complaintNumber_LABEL",
+    "message": "N\u00famero da campanha",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_complaintType_LABEL",
+    "message": "Tipo de reclama\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_locality_LABEL",
+    "message": "Aldeia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_mobileNumber_LABEL",
+    "message": "N\u00famero de telem\u00f3vel",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Cimento",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CHILD_VACCINATED_IN_ROUTINE",
+    "message": "Crian\u00e7a vacinada em rotina",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CHILD_WAS_SICK",
+    "message": "A crian\u00e7a estava doente",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Argila",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSED_HOUSEHOLD",
+    "message": "Domic\u00edlio Fechado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_ACTION_LABEL",
+    "message": "Pr\u00f3ximo",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
+    "message": "Anote os detalhes da resid\u00eancia que voc\u00ea est\u00e1 marcando como fechada.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
+    "message": "Detalhes de crian\u00e7as perdidas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+    "message": " ",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
+    "message": "Nome da aldeia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
+    "message": "O nome da aldeia \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
+    "message": "Nome do chefe da fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_MIN_LENGTH_ERROR",
+    "message": "O nome deve ter pelo menos 3 caracteres",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_LABEL",
+    "message": "Coordenadas GPS",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_REQUIRED_ERROR",
+    "message": "A localiza\u00e7\u00e3o GPS \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_name_REQUIRED_ERROR",
+    "message": "O nome \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_scanner_LABEL",
+    "message": "Digitalizar comprovante",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_administrativeArea_ERROR",
+    "message": "O nome da aldeia \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_headName_ERROR",
+    "message": "O nome do chefe da fam\u00edlia \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_latLng_ERROR",
+    "message": "A localiza\u00e7\u00e3o GPS \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_reasonForRefusal_ERROR",
+    "message": "Selecione um motivo para recusa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_reasonNotVaccinated_ERROR",
+    "message": "Selecione um motivo pelo qual a crian\u00e7a n\u00e3o foi vacinada",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_whereWasChild_ERROR",
+    "message": "Selecione onde a crian\u00e7a estava",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
+    "message": "Os dados foram registrados com sucesso",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION1",
+    "message": "Os dados foram registrados com sucesso",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
+    "message": "Dados registrados com sucesso",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING1",
+    "message": "Dados registrados com sucesso",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL",
+    "message": "Volte",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL1",
+    "message": "Volte",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_RAISED_FOR_MYSELF",
+    "message": "Eu mesmo",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SORT_LATEST_FIRST",
+    "message": "\u00daltimo primeiro",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SORT_LATEST_LAST",
+    "message": "\u00daltimo \u00daltimo",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CONCERNS_ABOUT_COVID19",
+    "message": "Preocupa\u00e7\u00f5es sobre COVID-19",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CONCERNS_ABOUT_NOPV",
+    "message": "Preocupa\u00e7\u00f5es sobre a nVOP",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DEFAULT",
+    "message": "Padr\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DIARRHOEA",
+    "message": "Diarr\u00e9ia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DIGIT_HCM_CLOSEHOUSEHOLD_MODULE",
+    "message": "Crian\u00e7as desaparecidas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DIGIT_HCM_STOCKREPORTS_MODULE",
+    "message": "M\u00f3dulo de relat\u00f3rios de estoque",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Efeito colateral da droga do ciclo atual",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Efeito colateral da droga do ciclo anterior",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DUPLICATE_ERROR",
+    "message": "Algo deu errado com este formul\u00e1rio. Volte e tente novamente.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Data Issues",
+    "message": "Problemas de dados",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FARM",
+    "message": "Fazenda",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEMALE",
+    "message": "F\u00eamea",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Febre",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FUNERAL",
+    "message": "Funeral",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Vidro",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "GoHome",
+    "message": "Volte",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM.ID_TYPE_OPTIONS_POPULATOR",
+    "message": "Tipo de identifica\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADD_MEMBER_DESCRIPTION",
+    "message": "Insira os detalhes de cada indiv\u00edduo da fam\u00edlia.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADD_MEMBER_HEADING",
+    "message": "Adicionar membro",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADD_MEMBER_SAVE_BUTTON",
+    "message": "Salvar Benefici\u00e1rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_DETAILS_DESCRIPTION",
+    "message": "Certifique-se de que o nome da aldeia corresponde \u00e0 localiza\u00e7\u00e3o do agregado familiar.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_GPS_LABEL",
+    "message": "Localiza\u00e7\u00e3o detectada",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_HEAD_NAME_LABEL",
+    "message": "Nome do chefe da fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_INFO_CARD_TEXT",
+    "message": "Confirme que voc\u00ea est\u00e1 na resid\u00eancia correta na vila selecionada. Sua localiza\u00e7\u00e3o GPS ser\u00e1 registrada como parte do fechamento da resid\u00eancia.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_MISSED_CHILDREN_LABEL",
+    "message": "Detalhes de crian\u00e7as perdidas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_ABSENT",
+    "message": "Ausente",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_ASLEEP",
+    "message": "Dormindo",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_CHILD_VACCINATED_ROUTINE",
+    "message": "Crian\u00e7a vacinada em rotina",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_HOUSE_NOT_REVISITED",
+    "message": "Casa n\u00e3o revisitada",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_NOT_VACCINATED_LABEL",
+    "message": "Raz\u00e3o pela qual a crian\u00e7a n\u00e3o foi vacinada",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_NOT_VISITED",
+    "message": "N\u00e3o visitado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_REFUSAL",
+    "message": "Recusa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_REFUSAL_LABEL",
+    "message": "Motivo da recusa?",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_AFRICA_POLIO_FREE",
+    "message": "\u00c1frica est\u00e1 livre da poliomielite",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CHILD_SICK",
+    "message": "A crian\u00e7a estava doente",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CONCERNS_COVID",
+    "message": "Preocupa\u00e7\u00f5es sobre COVID-19",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CONCERNS_NOPV",
+    "message": "Preocupa\u00e7\u00f5es sobre a nVOP2",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_NOT_DECISION_MAKER",
+    "message": "N\u00e3o \u00e9 o tomador de decis\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_RELIGIOUS",
+    "message": "Cren\u00e7as Religiosas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_SIDE_EFFECTS",
+    "message": "Efeitos colaterais da vacina",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_TOO_MANY",
+    "message": "Muitas doses",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_SCAN_VOUCHER_LABEL",
+    "message": "Digitalizar comprovante",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_SETTLEMENT_NAME_LABEL",
+    "message": "Nome do assentamento",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_SUCCESS_DESCRIPTION",
+    "message": "Os dados foram registrados com sucesso",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_SUCCESS_GO_BACK_BUTTON",
+    "message": "Volte",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_SUCCESS_HEADING",
+    "message": "Crian\u00e7as desaparecidas registradas com sucesso",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_VILLAGE_NAME_LABEL",
+    "message": "Nome do assentamento",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_FARM",
+    "message": "Fazenda",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_MARKET",
+    "message": "Mercado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_PARENT_NOT_HOME",
+    "message": "Pai n\u00e3o est\u00e1 em casa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_PLAY_AREAS",
+    "message": "\u00c1reas de lazer",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_SCHOOL",
+    "message": "Escola",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_SOCIAL_EVENT",
+    "message": "Evento Social",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_TRAVELLING",
+    "message": "Viajando",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_WAS_CHILD_LABEL",
+    "message": "Onde estava a crian\u00e7a?",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_COMMON_NEXT_BUTTON",
+    "message": "Pr\u00f3ximo",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_COMMON_OTHER",
+    "message": "Outro",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_COMMENTS_LABEL",
+    "message": "Coment\u00e1rios de entrega",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_COMMENT_ABSENT",
+    "message": "Benefici\u00e1rio Ausente",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_COMMENT_INSUFFICIENT",
+    "message": "Recursos insuficientes",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_COMMENT_REFUSED",
+    "message": "Benefici\u00e1rio recusado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_COMMENT_SUCCESSFUL",
+    "message": "Entrega bem-sucedida",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_DATE_LABEL",
+    "message": "Data de entrega",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_DETAILS_DESCRIPTION",
+    "message": "Capture detalhes dos recursos a serem entregues",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_DETAILS_HEADING",
+    "message": "Detalhes da entrega",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_RECORD_DELIVERY_BUTTON",
+    "message": "Entrega de registro",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_RESOURCE_LABEL",
+    "message": "Recurso",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_RESOURCE_REQUIRED_MESSAGE",
+    "message": "A sele\u00e7\u00e3o do cart\u00e3o de recurso \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_SAVE_BUTTON",
+    "message": "Salvar entrega",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_SCAN_LABEL",
+    "message": "Entrega de digitaliza\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_STATUS_ADMINISTERED",
+    "message": "Vacinado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_STATUS_PENDING",
+    "message": "Pendente",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_STATUS_TO_BE_ADMINISTERED",
+    "message": "Para ser vacinado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ERROR_CREATE_STOCK",
+    "message": "Falha ao criar estoque.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ERROR_FETCH_CONFIG",
+    "message": "Falha ao buscar configura\u00e7\u00e3o.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ERROR_NAVIGATION",
+    "message": "A navega\u00e7\u00e3o falhou.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_ADD_MEMBERS_BUTTON",
+    "message": "Adicionar membros",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTERED_SUCCESS_TAG",
+    "message": "Vacinado com sucesso",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_BENEFICIARY_REFERRED_TAG",
+    "message": "Benefici\u00e1rio Indicado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_CHILDREN_COUNT_LABEL",
+    "message": "N\u00ba de crian\u00e7as menores de 5 anos",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_DELIVER_INTERVENTION_BUTTON",
+    "message": "Entregar interven\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_DESCRIPTION",
+    "message": "Vis\u00e3o geral da fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_EDIT_HOUSEHOLD_BUTTON",
+    "message": "Editar fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_EDIT_INDIVIDUAL_BUTTON",
+    "message": "Editar indiv\u00edduo",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_HEADING",
+    "message": "Vis\u00e3o geral da fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
+    "message": "Chefe da fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_HEAD_TAG",
+    "message": "Chefe de fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_NOT_ELIGIBLE_TAG",
+    "message": "N\u00e3o eleg\u00edvel",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_NOT_VISITED_TAG",
+    "message": "N\u00e3o visitado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
+    "message": "\u00c1rea de Liquida\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_VIEW_DETAILS_BUTTON",
+    "message": "Ver detalhes",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_PLEASE_WAIT_TRY_IN_SOME_TIME",
+    "message": "Por favor, aguarde. A gera\u00e7\u00e3o do modelo est\u00e1 em andamento.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REFERRAL_SUCCESS_GO_BACK_BUTTON",
+    "message": "Volte",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REFERRAL_SUCCESS_HEADING",
+    "message": "Refer\u00eancia registrada com sucesso",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REFERRAL_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
+    "message": "Ver detalhes da fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REFER_ADMINISTRATIVE_UNIT_LABEL",
+    "message": "Unidade Administrativa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REFER_BENEFICIARY_HEADING",
+    "message": "Indicar Benefici\u00e1rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REFER_BENEFICIARY_SUBMIT_BUTTON",
+    "message": "Enviar",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REFER_HEALTH_FACILITY_LABEL",
+    "message": "Unidade de Sa\u00fade",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REFER_REASON_FEVER",
+    "message": "Febre",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REFER_REASON_LABEL",
+    "message": "Qual \u00e9 o motivo do encaminhamento?",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REFER_REFERRED_BY_LABEL",
+    "message": "Indicado por",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADDRESS_CORRESPONDENCE",
+    "message": "Correspond\u00eancia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADDRESS_LINE1_HELPTEXT",
+    "message": "Forne\u00e7a o endere\u00e7o principal ou o n\u00famero da casa.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADDRESS_LINE1_LABEL",
+    "message": "Endere\u00e7o Linha 1",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADDRESS_LINE2_HELPTEXT",
+    "message": "Informa\u00e7\u00f5es adicionais de endere\u00e7o, como nome do quarteir\u00e3o ou apartamento.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADDRESS_LINE2_LABEL",
+    "message": "Linha de endere\u00e7o 2",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADDRESS_PERMANENT",
+    "message": "Permanente",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADDRESS_TYPE_LABEL",
+    "message": "Tipo de endere\u00e7o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADMIN_AREA_LABEL",
+    "message": "\u00c1rea administrativa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_BENEFICIARY_DETAILS_DESCRIPTION",
+    "message": "Insira os detalhes de cada indiv\u00edduo da fam\u00edlia.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_BENEFICIARY_DETAILS_HEADING",
+    "message": "Detalhes do benefici\u00e1rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_BENEFICIARY_LOCATION_HEADING",
+    "message": "Localiza\u00e7\u00e3o do Benefici\u00e1rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_CHILDREN_COUNT_LABEL",
+    "message": "N\u00famero de crian\u00e7as menores de 5 anos",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_DATE_LABEL",
+    "message": "Data de registro",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_DOB_HELPTEXT",
+    "message": "Selecione a data de nascimento no calend\u00e1rio.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_DOB_LABEL",
+    "message": "Data de nascimento",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_DOB_TOOLTIP",
+    "message": "Usado para elegibilidade do programa com base na idade.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_FAMILY_NAME_LABEL",
+    "message": "Nome de fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_FIRST_NAME_LABEL",
+    "message": "Primeiro nome",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_GENDER_LABEL",
+    "message": "G\u00eanero",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_DESCRIPTION",
+    "message": "Insira o tamanho da fam\u00edlia, data de registro e dados demogr\u00e1ficos.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_HEADING",
+    "message": "Detalhes da fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ID_POPULATOR_LABEL",
+    "message": "Preenchimento de ID",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_IS_HEAD_LABEL",
+    "message": "\u00c9 chefe de fam\u00edlia?",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_LANDMARK_HELPTEXT",
+    "message": "Mencione um ponto de refer\u00eancia pr\u00f3ximo para ajudar a localizar o endere\u00e7o.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_LANDMARK_LABEL",
+    "message": "Marco",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_LAT_LONG_LABEL",
+    "message": "Lat/Longa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_LOCATION_DESCRIPTION",
+    "message": "Capture detalhes da localiza\u00e7\u00e3o da casa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_MOBILE_HELPTEXT",
+    "message": "Insira um n\u00famero de celular v\u00e1lido.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_MOBILE_LABEL",
+    "message": "N\u00famero de telem\u00f3vel",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_MOBILE_TOOLTIP",
+    "message": "Ser\u00e1 usado para comunica\u00e7\u00e3o e verifica\u00e7\u00e3o baseada em OTP.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_PINCODE_HELPTEXT",
+    "message": "Digite o c\u00f3digo postal da \u00e1rea (c\u00f3digo PIN)",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_PINCODE_LABEL",
+    "message": "C\u00f3digo PIN",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_PREGNANT_WOMEN_LABEL",
+    "message": "N\u00famero de mulheres gr\u00e1vidas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_QR_SCAN_LABEL",
+    "message": "Varredura QR",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_SAVE_BENEFICIARY_BUTTON",
+    "message": "Salvar Benefici\u00e1rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",
+    "message": "Salvar detalhes da fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_SAVE_LOCATION_BUTTON",
+    "message": "Salvar localiza\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_TOTAL_MEMBERS_LABEL",
+    "message": "Total de membros da fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_BENEFICIARY_DESCRIPTION",
+    "message": "Pesquisar benefici\u00e1rios cadastrados na campanha atual",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_BENEFICIARY_HEADING",
+    "message": "Pesquisar Benefici\u00e1rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_ADMINISTRATION_SUCCESS",
+    "message": "Sucesso na vacina\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_APPLY_BUTTON",
+    "message": "Aplicar",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_CLEAR_ALL_BUTTON",
+    "message": "Limpar tudo",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_LABEL",
+    "message": "Filtro",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_MISSED_CHILDREN",
+    "message": "Crian\u00e7as desaparecidas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_NOT_ADMINISTERED",
+    "message": "N\u00e3o vacinado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_NAME_LABEL",
+    "message": "Nome do indiv\u00edduo",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_NEARBY_HOUSEHOLDS_LABEL",
+    "message": "Fam\u00edlias pr\u00f3ximas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_OPEN_BUTTON",
+    "message": "Abrir",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
+    "message": "Cadastrar Benefici\u00e1rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_SCAN_BENEFICIARY_BUTTON",
+    "message": "Digitalizar benefici\u00e1rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_TABLE_AGE_HEADER",
+    "message": "Idade",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_TABLE_BENEFICIARY_HEADER",
+    "message": "Benefici\u00e1rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_TABLE_GENDER_HEADER",
+    "message": "G\u00eanero",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_STOCKRECONCILIATION_MODULE",
+    "message": "M\u00f3dulo de reconcilia\u00e7\u00e3o de estoque",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_VALIDATION_LENGTH_2_TO_200",
+    "message": "O comprimento deve estar entre 2 e 200 caracteres",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS",
+    "message": "Caracteres especiais n\u00e3o s\u00e3o permitidos",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_VALIDATION_REQUIRED_FIELD_DOT",
+    "message": "Este campo \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_VALIDATION_REQUIRED_NOT_EMPTY",
+    "message": "Este campo \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HOUSE_NOT_REVISITED",
+    "message": "Casa n\u00e3o revisitada",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INCOMPATIBLE",
+    "message": "Incompat\u00edvel",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INELIGIBLE",
+    "message": "Ineleg\u00edvel",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Recursos insuficientes",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVALID_REQUEST",
+    "message": "O formul\u00e1rio foi configurado incorretamente. Atualize, verifique e corrija.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVALID_REQUEST1",
+    "message": "O formul\u00e1rio foi configurado incorretamente. Atualize, verifique e corrija.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVALID_REQUEST2",
+    "message": "O formul\u00e1rio foi configurado incorretamente. Atualize, verifique e corrija.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "IndividualDeliveryPrimaryButton",
+    "message": "Enviar",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "IndividualDeliverySecondaryButton",
+    "message": "Volte",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "IndividualModel",
+    "message": "Detalhes individuais",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "InfoCard",
+    "message": "Cart\u00e3o de informa\u00e7\u00f5es",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL",
+    "message": "Etiqueta do campo",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_AGE",
+    "message": "Idade",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_BATCH_NUMBER",
+    "message": "N\u00famero do lote",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
+    "message": "Reclama\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
+    "message": "Modelo de refer\u00eancia de HF",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
+    "message": "Dom\u00e9stico",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
+    "message": "Individual",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
+    "message": "Monitoramento Interno",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
+    "message": "Modelo LQA",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
+    "message": "Estoque",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMMENTS",
+    "message": "Coment\u00e1rios",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
+    "message": "Contato do reclamante",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
+    "message": "\u00c1rea",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
+    "message": "Data da reclama\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
+    "message": "N\u00famero da reclama\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
+    "message": "Status",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
+    "message": "Tipo de reclama\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+    "message": "Contato do reclamante",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
+    "message": "\u00c1rea",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
+    "message": "Data da reclama\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
+    "message": "N\u00famero da reclama\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
+    "message": "Tipo de reclama\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+    "message": "Descri\u00e7\u00e3o da reclama\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
+    "message": "Estado da reclama\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
+    "message": "Data de Registro",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_GENDER",
+    "message": "G\u00eanero",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
+    "message": "Total de membros",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
+    "message": "Chefe de fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
+    "message": "Localidade",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_ID_NUMBER",
+    "message": "N\u00famero de identifica\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_ID_TYPE",
+    "message": "Tipo de identifica\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
+    "message": "Crian\u00e7as presentes",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
+    "message": "Crian\u00e7as vacinadas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
+    "message": "Coment\u00e1rios Finais",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
+    "message": "Perdido - Ausente",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
+    "message": "Perdido - Adormecido",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
+    "message": "Perdido - N\u00e3o revisitado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
+    "message": "Perdido - N\u00e3o visitado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
+    "message": "Perdido - Outro",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
+    "message": "Perdido - Recusa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
+    "message": "Perdido - Rotina",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
+    "message": "Data de monitoramento",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
+    "message": "Designa\u00e7\u00e3o do monitor",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
+    "message": "Nome do monitor",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
+    "message": "Mal coberto",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
+    "message": "\u00c1rea de Liquida\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
+    "message": "Tipo de liquida\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
+    "message": "Tipo de transa\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
+    "message": "Motivo de Aus\u00eancia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
+    "message": "Conscientiza\u00e7\u00e3o AFP",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
+    "message": "Contagem de casos AFP",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
+    "message": "Outra fonte de conscientiza\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
+    "message": "Conscientiza\u00e7\u00e3o da campanha",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
+    "message": "Cuidador informado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
+    "message": "Crian\u00e7as menores de 5 anos",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
+    "message": "Idade da crian\u00e7a (meses)",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
+    "message": "Sexo Infantil",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
+    "message": "N\u00famero do cluster",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
+    "message": "Dedo marcado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
+    "message": "N\u00famero do lote",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
+    "message": "Doses de OPV",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
+    "message": "Outro motivo de aus\u00eancia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
+    "message": "Outro motivo (especifique)",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
+    "message": "Outro motivo de recusa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
+    "message": "Motivo n\u00e3o marcado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
+    "message": "Motivo da recusa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
+    "message": "\u00c1rea de Liquida\u00e7\u00e3o",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
+    "message": "Nome do pesquisador",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
+    "message": "Data da pesquisa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MEMBER_COUNT",
+    "message": "Contagem de membros",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MOBILE_NUMBER",
+    "message": "N\u00famero de telem\u00f3vel",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MRN_NUMBER",
+    "message": "N\u00famero MRN",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
+    "message": "Nome",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_QUANTITY_RECEIVED",
+    "message": "Quantidade recebida",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_NAME",
+    "message": "Nome",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
+    "message": "Status de refer\u00eancia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
+    "message": "Sintoma de refer\u00eancia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_RESOURCE",
+    "message": "Recurso",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_STOCK_EXPIRY",
+    "message": "Expira\u00e7\u00e3o de estoque",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_WAYBILL_NUMBER",
+    "message": "N\u00famero da carta de porte",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "message": "Parte Secund\u00e1ria",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LOCALISATION_ERROR",
+    "message": "Ocorreu um erro de localiza\u00e7\u00e3o. Verifique suas configura\u00e7\u00f5es de idioma.",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "MALE",
+    "message": "Macho",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "MARKET",
+    "message": "Mercado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "Metal",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Estoque insuficiente",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NOT_ADMINISTERED",
+    "message": "N\u00e3o vacinado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NOT_DECISION_MAKER",
+    "message": "N\u00e3o \u00e9 tomador de decis\u00f5es",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NOT_REGISTERED",
+    "message": "N\u00e3o registrado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NOT_VISITED",
+    "message": "N\u00e3o visitado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Estoque insuficiente",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Outro",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Outro",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Outro",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PARENT_NOT_AT_HOME",
+    "message": "Pai n\u00e3o est\u00e1 em casa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PLAY_AREAS",
+    "message": "\u00c1reas de lazer",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PROXIMITY_SEARCH",
+    "message": "Fam\u00edlias pr\u00f3ximas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PROXIMITY_SEARCH_REGISTRATION",
+    "message": "Fam\u00edlias pr\u00f3ximas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "Problema de desempenho",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_RECEIVED",
+    "message": "Quantidade recebida",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Juncos",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
+    "message": "Unidade Administrativa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFUSAL",
+    "message": "Recusa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REGISTRATIONFLOW_beneficiaryLocation_71b53895",
+    "message": "A \u00e1rea administrativa \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REGISTRATION_NOT_REGISTERD",
+    "message": "N\u00e3o registrado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "RELIGIOUS_BELIEFS",
+    "message": "Cren\u00e7as religiosas",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCHOOL",
+    "message": "Escola",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Doente",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SKIN_REACTION",
+    "message": "Rea\u00e7\u00e3o cut\u00e2nea",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SOCIAL_EVENT",
+    "message": "Evento social",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Entrega bem-sucedida",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "A sincroniza\u00e7\u00e3o n\u00e3o funciona",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Security Issues",
+    "message": "Problemas de seguran\u00e7a",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "Problemas de seguran\u00e7a",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "StockModel.QUANTITY_RECEIVED",
+    "message": "Quantidade recebida",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "StockModel.RECEIVED_FROM",
+    "message": "Recebido de",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "A sincroniza\u00e7\u00e3o n\u00e3o funciona",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TOO_MANY_DOSES",
+    "message": "Muitas doses",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_1",
+    "message": "Tipo de Transporte 1",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_2",
+    "message": "Tipo de Transporte 2",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TRAVELLING",
+    "message": "Viajando",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Technical Issues",
+    "message": "Problemas t\u00e9cnicos",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Problemas t\u00e9cnicos",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "UNIQUE_BENEFICIARY_ID",
+    "message": "ID exclusivo do benefici\u00e1rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "User Account Issues",
+    "message": "Problemas de conta de usu\u00e1rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "Problemas de conta de usu\u00e1rio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "VACCINE_SIDE_EFFECTS",
+    "message": "Efeitos colaterais da vacina",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "VOMITTING",
+    "message": "V\u00f4mito",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WEAKNESS",
+    "message": "Fraqueza",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "administrativeArea",
+    "message": "Nome da Aldeia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "closeHouseholdSuccess",
+    "message": "Crian\u00e7as desaparecidas registradas com sucesso",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "dropDown",
+    "message": "Suspenso",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "dropdown",
+    "message": "Suspenso",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "dropdownTemplate",
+    "message": "Modelo suspenso",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "headName",
+    "message": "Nome do chefe da fam\u00edlia",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "infocard",
+    "message": "Cart\u00e3o de informa\u00e7\u00f5es",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "latLng",
+    "message": "Coordenadas GPS",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "meberDetails",
+    "message": "Detalhes do membro",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "menu_card",
+    "message": "Card\u00e1pio",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "oroductdetail",
+    "message": "Detalhes do produto",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "panelCard",
+    "message": "Cart\u00e3o do painel",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "proximitySeach",
+    "message": "Pesquisa por proximidade",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "qr_view",
+    "message": "Visualiza\u00e7\u00e3o QR",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "reasonForRefusal",
+    "message": "Motivo da recusa",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "reasonNotVaccinated",
+    "message": "Motivo n\u00e3o vacinado",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "scanner",
+    "message": "Digitalizar comprovante",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "whereWasChild",
+    "message": "Onde estava a crian\u00e7a",
+    "module": "hcm-base-closehousehold-polio",
+    "locale": "pt_DEMO"
+  }
+]

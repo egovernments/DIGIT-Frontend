@@ -18,18 +18,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "absenceReason",
-    "message": "Absence Reason",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "absenceReasonOther",
-    "message": "Other Absence Reason",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "ABSENT",
     "message": "Absent",
     "module": "hcm-base-registration-polio",
@@ -48,50 +36,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "actionButton",
-    "message": "Actions",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "actionPopup",
-    "message": "Actions",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "ADD_MEMBER",
     "message": "Add Member",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "addMember",
-    "message": "Add Member",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "addMemberButton",
-    "message": "Add Member",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "addMemberSaveButton",
-    "message": "Submit",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "addressLine1",
-    "message": "Address Line 1",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "addressLine2",
-    "message": "Address Line 2",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -110,24 +56,6 @@
   {
     "code": "ADMINISTRATION_SUCCESS",
     "message": "Vaccination Success",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "administrationFailed",
-    "message": "Vaccination Failed",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "administrationSuccess",
-    "message": "Vaccinated Successfully",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "administrativeArea",
-    "message": "Administrative Area",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -168,200 +96,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "APP_CONFIG_ACTION_BUTTON_LABEL",
-    "message": "Actions",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_CATEGORY_DELIVERY",
-    "message": "Delivery",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_CATEGORY_REDOSE",
-    "message": "Revisit",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_CATEGORY_REGISTRATION",
-    "message": "Registration",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_ADD_MEMBER",
-    "message": "Add Member",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_BENEFICIARYDETAILS",
-    "message": "Beneficiary Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_COMPLAINT_CREATE",
-    "message": "Create Complaint",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_DELIVERY",
-    "message": "Delivery Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_DELIVERYSUCCESS",
-    "message": "Delivery Successful",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_HOUSEHOLD",
-    "message": "Head of Household Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_HOUSEHOLDOVERVIEW",
-    "message": "Household Overview",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
-    "message": "Permission Handler",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_REDOSE",
-    "message": "Revisit Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_REFERRAL_CREATE",
-    "message": "Create Referral",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_SEARCHBENEFICIARY",
-    "message": "Search Beneficiary",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_STOCKRECONCILIATIONDETAILS",
-    "message": "Stock Reconciliation Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_UNABLETODELIVER",
-    "message": "Unable to Deliver",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_VACCINATED_ELSEWHERE",
-    "message": "Vaccinated Elsewhere",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_BENEFICIARYDETAILS",
-    "message": "Add Member",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_BENEFICIARYLOCATION",
-    "message": "Beneficiary Location",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_CLOSEHOUSEHOLDDETAILS",
-    "message": "Missed Children Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_DELIVERYDETAILS",
-    "message": "Delivery Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_HOUSEHOLDDETAILS",
-    "message": "Household Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
-    "message": "Permission Handler",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER_PERMISSIONHANDLER",
-    "message": "Permission Handler",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_RECORDSTOCK_STOCKPRODUCTDETAILS",
-    "message": "Stock Product Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_REDOSEDETAILS",
-    "message": "Revisit Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_UNABLETODELIVER",
-    "message": "Unable to Deliver",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_VACCINATEDELSEWHERE",
-    "message": "Vaccinated Elsewhere",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "APPCONFIG_ERROR",
     "message": "Application Configuration Error",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_GIVE_TABLET",
-    "message": "Give Tablet",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_SPAQ",
-    "message": "Give SPAQ",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_WRITE_CODE",
-    "message": "Write Code",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -384,14 +120,20 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_DESCRIPTION",
-    "message": "Complete the eligibility checklist",
+    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_GIVE_TABLET",
+    "message": "Give Tablet",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_HEADING",
-    "message": "Eligibility Checklist",
+    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_SPAQ",
+    "message": "Give SPAQ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_WRITE_CODE",
+    "message": "Write Code",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -456,56 +198,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_DETAILS_SCREEN_DESCRIPTION",
-    "message": "View and manage the registered beneficiary's information.",
+    "code": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_DESCRIPTION",
+    "message": "Complete the eligibility checklist",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1",
-    "message": "Next",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
-    "message": "Enter the street name, house number, or building name.",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
-    "message": "Enter additional address details such as locality or area name.",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_helpText",
-    "message": "Select the administrative area where the beneficiary's house is located.",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_onlynumber",
-    "message": "Pincode must contain only numbers.",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_typeOfAddress",
-    "message": "Type of Address",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_DESCRIPTION",
-    "message": "Enter the house location details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",
-    "message": "Household Location",
+    "code": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_HEADING",
+    "message": "Eligibility Checklist",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -518,6 +218,30 @@
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_addmember",
     "message": "Submit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION",
+    "message": "Enter the member details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember",
+    "message": "Enter the new member details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
+    "message": "Beneficiary Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING_addmember",
+    "message": "Add Member Details",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -762,30 +486,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION",
-    "message": "Enter the member details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember",
-    "message": "Enter the new member details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
-    "message": "Beneficiary Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING_addmember",
-    "message": "Add Member Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1",
     "message": "Address Line 1",
     "module": "hcm-base-registration-polio",
@@ -888,8 +588,74 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_DETAILS_SCREEN_DESCRIPTION",
+    "message": "View and manage the registered beneficiary's information.",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1",
+    "message": "Next",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_DESCRIPTION",
+    "message": "Enter the house location details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",
+    "message": "Household Location",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
+    "message": "Enter the street name, house number, or building name.",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
+    "message": "Enter additional address details such as locality or area name.",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_helpText",
+    "message": "Select the administrative area where the beneficiary's house is located.",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_onlynumber",
+    "message": "Pincode must contain only numbers.",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_typeOfAddress",
+    "message": "Type of Address",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
     "message": "Next",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION",
+    "message": "Enter the vaccination details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
+    "message": "Vaccination Details",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -912,18 +678,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION",
-    "message": "Enter the vaccination details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
-    "message": "Vaccination Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_height_IS_MANDATORY",
     "message": "Please enter the height.",
     "module": "hcm-base-registration-polio",
@@ -938,6 +692,18 @@
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_ACTION_BUTTON_LABEL_1",
     "message": "Next",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION",
+    "message": "Enter household details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
+    "message": "Household Details",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -984,20 +750,182 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION",
-    "message": "Enter household details",
+    "code": "APPONE_UNABLETODELIVER_LATLNG_LABEL",
+    "message": "GPS Coordinates",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
+    "code": "APP_CONFIG_ACTION_BUTTON_LABEL",
+    "message": "Actions",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_CATEGORY_DELIVERY",
+    "message": "Delivery",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_CATEGORY_REDOSE",
+    "message": "Revisit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_CATEGORY_REGISTRATION",
+    "message": "Registration",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_ADD_MEMBER",
+    "message": "Add Member",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_BENEFICIARYDETAILS",
+    "message": "Beneficiary Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_COMPLAINT_CREATE",
+    "message": "Create Complaint",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_DELIVERY",
+    "message": "Delivery Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_DELIVERYSUCCESS",
+    "message": "Delivery Successful",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_HOUSEHOLD",
+    "message": "Head of Household Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_HOUSEHOLDOVERVIEW",
+    "message": "Household Overview",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
+    "message": "Permission Handler",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_REDOSE",
+    "message": "Revisit Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_REFERRAL_CREATE",
+    "message": "Create Referral",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_SEARCHBENEFICIARY",
+    "message": "Search Beneficiary",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_STOCKRECONCILIATIONDETAILS",
+    "message": "Stock Reconciliation Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_UNABLETODELIVER",
+    "message": "Unable to Deliver",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_VACCINATED_ELSEWHERE",
+    "message": "Vaccinated Elsewhere",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_BENEFICIARYDETAILS",
+    "message": "Add Member",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_BENEFICIARYLOCATION",
+    "message": "Beneficiary Location",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_CLOSEHOUSEHOLDDETAILS",
+    "message": "Missed Children Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_DELIVERYDETAILS",
+    "message": "Delivery Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_HOUSEHOLDDETAILS",
     "message": "Household Details",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_UNABLETODELIVER_LATLNG_LABEL",
-    "message": "GPS Coordinates",
+    "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
+    "message": "Permission Handler",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER_PERMISSIONHANDLER",
+    "message": "Permission Handler",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_RECORDSTOCK_STOCKPRODUCTDETAILS",
+    "message": "Stock Product Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_REDOSEDETAILS",
+    "message": "Revisit Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_UNABLETODELIVER",
+    "message": "Unable to Deliver",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_VACCINATEDELSEWHERE",
+    "message": "Vaccinated Elsewhere",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1028,6 +956,24 @@
   {
     "code": "AT_SCHOOL",
     "message": "At School",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARYLOCATION_CORRESPONDENCE",
+    "message": "Correspondence",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARYLOCATION_OTHER",
+    "message": "Other",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARYLOCATION_PERMANENT",
+    "message": "Permanent",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1122,48 +1068,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "beneficiaryIdMinCheck",
-    "message": "Download Beneficiary IDs",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "BENEFICIARYLOCATION_CORRESPONDENCE",
-    "message": "Correspondence",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "BENEFICIARYLOCATION_OTHER",
-    "message": "Other",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "BENEFICIARYLOCATION_PERMANENT",
-    "message": "Permanent",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "beneficiaryNotFound",
-    "message": "Beneficiary Not Found",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "beneficiaryReferred",
-    "message": "Child Referred",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "beneficiaryTag",
-    "message": "Beneficiary",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "BODY_ITEM_complaintNumber_LABEL",
     "message": "Complaint Number",
     "module": "hcm-base-registration-polio",
@@ -1236,32 +1140,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "childrenCount",
-    "message": "Children Count",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "CLAY",
     "message": "Clay",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "clearFilter",
-    "message": "Clear",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "clearFilter2",
-    "message": "Skip & Continue",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "clientReferenceId",
-    "message": "Client Reference ID",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1278,18 +1158,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
-    "message": "Village name",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
-    "message": "Village name is required",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
     "message": "Make sure the village name matches the one where you are today. If not, click on the village dropdown on the top right corner to change it.",
     "module": "hcm-base-registration-polio",
@@ -1298,6 +1166,24 @@
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
     "message": "Missed Children Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
+    "message": "Village name",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
+    "message": "Village name is required",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1416,6 +1302,18 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "COMPLAINTS_RAISED_FOR_ANOTHER_USER",
+    "message": "Another User",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_RAISED_FOR_MYSELF",
+    "message": "Myself",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "COMPLAINT_CREATE",
     "message": "Create Complaint",
     "module": "hcm-base-registration-polio",
@@ -1430,18 +1328,6 @@
   {
     "code": "COMPLAINT_INBOX_SORT_LATEST_LAST",
     "message": "Latest Last",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_RAISED_FOR_ANOTHER_USER",
-    "message": "Another User",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_RAISED_FOR_MYSELF",
-    "message": "Myself",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1471,7 +1357,7 @@
   },
   {
     "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-    "message": "We couldn’t find this beneficiary in the records. You can add them as a new beneficiary.",
+    "message": "We couldn\u2019t find this beneficiary in the records. You can add them as a new beneficiary.",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1490,48 +1376,6 @@
   {
     "code": "COVID_RELATED",
     "message": "COVID Related",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cycleIndex",
-    "message": "Cycle Index",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cycleNumber",
-    "message": "Cycle Number",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Data Issues",
-    "message": "Data issues",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DataIssues",
-    "message": "Data Issues",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "dateOfRegistration",
-    "message": "Date of Registration",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "datePicker",
-    "message": "Select Date",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Default",
-    "message": "Default",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1572,48 +1416,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "deliveryBack",
-    "message": "Back",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "deliveryComment",
-    "message": "Delivery Comment",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "deliveryNo",
-    "message": "Delivery Number",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "deliverySaveButton",
-    "message": "Submit",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "deliveryStrategy",
-    "message": "Delivery Strategy",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "deliverySuccess",
-    "message": "Delivery Success",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "deliveryTable",
-    "message": "Delivery Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "DIARRHOEA",
     "message": "Diarrhoea",
     "module": "hcm-base-registration-polio",
@@ -1632,38 +1434,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "dobPicker",
-    "message": "Date of Birth",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "doseIndex",
-    "message": "Dose Index",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "DOWNLOAD_BENEFICIARY_IDS",
     "message": "Download Beneficiary IDs",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "dropdown",
-    "message": "Select Option",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "dropDown",
-    "message": "Select Option",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "dropdownTemplate",
-    "message": "Select Option",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1686,44 +1458,20 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "editHousehold",
-    "message": "Edit Household",
+    "code": "Data Issues",
+    "message": "Data issues",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "editIndividualButton",
-    "message": "Edit",
+    "code": "DataIssues",
+    "message": "Data Issues",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "eligibleProductVariants",
-    "message": "Eligible Product Variants",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "entities",
-    "message": "Members",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "evaluationFacilityKey",
-    "message": "Assigned Facility",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "expandable",
-    "message": "Past Cycles",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "familyname",
-    "message": "Family Name",
+    "code": "Default",
+    "message": "Default",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1754,12 +1502,6 @@
   {
     "code": "FEVER_INELIGIBLE",
     "message": "Fever (ineligible)",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "filterPopUp",
-    "message": "Filter",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1800,14 +1542,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "FOOTER_ACTION_clearFilter_LABEL",
-    "message": "Clear Filters",
+    "code": "FOOTER_ACTION_clearFilter2_LABEL",
+    "message": "Skip & Continue",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "FOOTER_ACTION_clearFilter2_LABEL",
-    "message": "Skip & Continue",
+    "code": "FOOTER_ACTION_clearFilter_LABEL",
+    "message": "Clear Filters",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1854,14 +1596,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "FOOTER_ACTION_saveFilter_LABEL",
-    "message": "Apply Filters",
+    "code": "FOOTER_ACTION_saveFilter2_LABEL",
+    "message": "Download IDs",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "FOOTER_ACTION_saveFilter2_LABEL",
-    "message": "Download IDs",
+    "code": "FOOTER_ACTION_saveFilter_LABEL",
+    "message": "Apply Filters",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1878,14 +1620,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "FOOTER_ACTION_search_LABEL",
-    "message": "Search",
+    "code": "FOOTER_ACTION_searchScanBeneficiaryButton_LABEL",
+    "message": "Scan Beneficiary",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "FOOTER_ACTION_searchScanBeneficiaryButton_LABEL",
-    "message": "Scan Beneficiary",
+    "code": "FOOTER_ACTION_search_LABEL",
+    "message": "Search",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1914,18 +1656,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "futureDoses",
-    "message": "Future Doses",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "gender",
-    "message": "Gender",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "GENDER_MANDATORY_MESSAGE",
     "message": "Gender is required",
     "module": "hcm-base-registration-polio",
@@ -1934,12 +1664,6 @@
   {
     "code": "GENDER_MANDATORY_MESSAGE_ADDMEMBER",
     "message": "Gender is required",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "givenName",
-    "message": "Given Name",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1956,26 +1680,32 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "goBack",
-    "message": "Back to Home",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "goForVaccinateButton",
-    "message": "Deliver",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "GoHome",
     "message": "Go Home",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "guestTag",
-    "message": "Guest",
+    "code": "HCM.HOUSE_STRUCTURE_TYPES",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM.ID_TYPE_OPTIONS_POPULATOR",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM.SEARCH_HOUSEHOLD_FILTERS",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_ADDMEMBER_VALIDATION_INVALID_AGE",
+    "message": "Please enter a valid age",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -1994,12 +1724,6 @@
   {
     "code": "HCM_ADD_MEMBER_SAVE_BUTTON",
     "message": "Submit",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM_ADDMEMBER_VALIDATION_INVALID_AGE",
-    "message": "Please enter a valid age",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -2316,6 +2040,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "HCM_DELIVERY_COMMENTS_LABEL",
+    "message": "Delivery Comment",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "HCM_DELIVERY_COMMENT_ABSENT",
     "message": "Child Absent",
     "module": "hcm-base-registration-polio",
@@ -2336,12 +2066,6 @@
   {
     "code": "HCM_DELIVERY_COMMENT_SUCCESSFUL",
     "message": "Delivered Successfully",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM_DELIVERY_COMMENTS_LABEL",
-    "message": "Delivery Comment",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -2598,6 +2322,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_HEADING",
+    "message": "Household Overview",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
     "message": "Head of Household",
     "module": "hcm-base-registration-polio",
@@ -2606,12 +2336,6 @@
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_HEAD_TAG",
     "message": "Head of Household",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM_HOUSEHOLD_OVERVIEW_HEADING",
-    "message": "Household Overview",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -2634,14 +2358,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "HCM_HOUSEHOLD_OVERVIEW_RE_VACCINATED_TAG",
-    "message": "Re-Vaccinated",
+    "code": "HCM_HOUSEHOLD_OVERVIEW_REDOSE_TAG",
+    "message": "Revisit",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "HCM_HOUSEHOLD_OVERVIEW_REDOSE_TAG",
-    "message": "Revisit",
+    "code": "HCM_HOUSEHOLD_OVERVIEW_RE_VACCINATED_TAG",
+    "message": "Re-Vaccinated",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -2778,6 +2502,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "HCM_REDOSE_COMMENTS_LABEL",
+    "message": "Revisit Comment",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "HCM_REDOSE_COMMENT_ABSENT",
     "message": "Beneficiary Absent for Vaccine",
     "module": "hcm-base-registration-polio",
@@ -2798,12 +2528,6 @@
   {
     "code": "HCM_REDOSE_COMMENT_SUCCESSFUL",
     "message": "Vaccination Successful",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM_REDOSE_COMMENTS_LABEL",
-    "message": "Revisit Comment",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -2862,6 +2586,24 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "HCM_REFERRAL_SUCCESS_GO_BACK_BUTTON",
+    "message": "Go Back",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_REFERRAL_SUCCESS_HEADING",
+    "message": "Referral recorded successfully",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_REFERRAL_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
+    "message": "View Household Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "HCM_REFER_ADMINISTRATIVE_UNIT_LABEL",
     "message": "Administrative Unit",
     "module": "hcm-base-registration-polio",
@@ -2900,24 +2642,6 @@
   {
     "code": "HCM_REFER_REFERRED_BY_LABEL",
     "message": "Referred by",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM_REFERRAL_SUCCESS_GO_BACK_BUTTON",
-    "message": "Go Back",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM_REFERRAL_SUCCESS_HEADING",
-    "message": "Referral recorded successfully",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM_REFERRAL_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
-    "message": "View Household Details",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -3420,36 +3144,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "heading",
-    "message": "Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "headMobileNumber",
-    "message": "Mobile Number",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "headName",
-    "message": "Household Head Name",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "headOfHousehold",
-    "message": "Head of Household",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "headOfHouseholdTag",
-    "message": "Head of Household",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "HEALTH_WORKER",
     "message": "Health Worker",
     "module": "hcm-base-registration-polio",
@@ -3468,12 +3162,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "HOUSE_NOT_REVISITED",
-    "message": "House Not Revisited",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "HOUSEHOLD_BACK",
     "message": "Back",
     "module": "hcm-base-registration-polio",
@@ -3486,32 +3174,26 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "HOUSE_NOT_REVISITED",
+    "message": "House Not Revisited",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "HouseholdClientReferenceId",
     "message": "Household Client Reference ID",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "householdDetails",
-    "message": "Household Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "householdEditButton",
-    "message": "Edit",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "householdId",
-    "message": "Household ID",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "ID is required",
     "message": "ID is required",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ID-{{navigation.selectedIndividualIdentifierId}}",
+    "message": " ",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -3528,44 +3210,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "identifiers",
-    "message": "Identifiers",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "idPopulator",
-    "message": "ID Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "idSearch",
-    "message": "ID Search",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "idSearchBar",
-    "message": "Search by ID",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "IEC_MATERIALS",
     "message": "IEC Materials",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "IN_MARKET",
-    "message": "In Market",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "IN_PLAYGROUND",
-    "message": "In Playground",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -3578,6 +3224,48 @@
   {
     "code": "INDIVIDUAL_DETAIL",
     "message": "Individual Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INELIGIBLE",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Insufficient Resources",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVALID_REQUEST",
+    "message": "Form has been configured incorrectly. Please refresh, check, and fix it.",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVALID_REQUEST1",
+    "message": "Form has been configured incorrectly. Please refresh, check, and fix it.",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVALID_REQUEST2",
+    "message": "Form has been configured incorrectly. Please refresh, check, and fix it.",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "IN_MARKET",
+    "message": "In Market",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "IN_PLAYGROUND",
+    "message": "In Playground",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -3636,74 +3324,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "individualName",
-    "message": "Individual Name",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "infocard",
-    "message": "Information",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "infoCard",
-    "message": "Information",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "InfoCard",
     "message": "Information",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INSUFFICIENT_RESOURCES",
-    "message": "Insufficient Resources",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INVALID_REQUEST",
-    "message": "Form has been configured incorrectly. Please refresh, check, and fix it.",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INVALID_REQUEST1",
-    "message": "Form has been configured incorrectly. Please refresh, check, and fix it.",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INVALID_REQUEST2",
-    "message": "Form has been configured incorrectly. Please refresh, check, and fix it.",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "isClosedHousehold",
-    "message": "Closed Household",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "isEdit",
-    "message": "Edit Mode",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "isGuestMember",
-    "message": "Guest Member",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "isHeadOfFamily",
-    "message": "Head of Family",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -3714,31 +3336,19 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
-    "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
-    "message": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_AGE",
     "message": "Age",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_BATCH_NUMBER",
+    "code": "LABEL_PAIR_BATCHNUMBER",
     "message": "Batch Number",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_BATCHNUMBER",
+    "code": "LABEL_PAIR_BATCH_NUMBER",
     "message": "Batch Number",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
@@ -3822,6 +3432,30 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "LABEL_PAIR_COMPLAINTAREA",
+    "message": "Complaint Area",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTDATE",
+    "message": "Complaint Date",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTNUMBER",
+    "message": "Complaint Number",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTSTATUS",
+    "message": "Complaint Status",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
     "message": "Contact Number",
     "module": "hcm-base-registration-polio",
@@ -3864,18 +3498,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Description",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "Complaint Status",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
     "message": "Complaint Area",
     "module": "hcm-base-registration-polio",
@@ -3900,32 +3522,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Complaint Area",
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+    "message": "Description",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_COMPLAINTDATE",
-    "message": "Complaint Date",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINTNUMBER",
-    "message": "Complaint Number",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINTSTATUS",
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
     "message": "Complaint Status",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Date of Registration",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -3937,6 +3541,12 @@
   },
   {
     "code": "LABEL_PAIR_DATEOFREGISTRATION",
+    "message": "Date of Registration",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
     "message": "Date of Registration",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
@@ -3956,6 +3566,12 @@
   {
     "code": "LABEL_PAIR_GIVENNAME",
     "message": "Name",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCMTOTALMEMBERS",
+    "message": "Total Members",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -4002,12 +3618,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_HCMTOTALMEMBERS",
-    "message": "Total Members",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_HEADNAME",
     "message": "Head of Household",
     "module": "hcm-base-registration-polio",
@@ -4026,18 +3636,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "ID Number",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_ID_TYPE",
-    "message": "ID Type",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_IDNUMBER",
     "message": "ID Number",
     "module": "hcm-base-registration-polio",
@@ -4050,104 +3648,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
-    "message": "Source",
+    "code": "LABEL_PAIR_ID_NUMBER",
+    "message": "ID Number",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Children Present",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Children Vaccinated",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Final Comments",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
-    "message": "Missed - Absent",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
-    "message": "Missed - Asleep",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Missed - Not Revisited",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Missed - Not Visited",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Missed - Other",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Missed - Refusal",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
-    "message": "Missed - Routine",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Monitor Designation",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Monitor Name",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Monitoring Date",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Poorly Covered",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Settlement Area",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Settlement Type",
+    "code": "LABEL_PAIR_ID_TYPE",
+    "message": "ID Type",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -4243,6 +3751,108 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTTYPE",
+    "message": "Settlement Type",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+    "message": "Source",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
+    "message": "Children Present",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
+    "message": "Children Vaccinated",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
+    "message": "Final Comments",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
+    "message": "Missed - Absent",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
+    "message": "Missed - Asleep",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
+    "message": "Missed - Not Revisited",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
+    "message": "Missed - Not Visited",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
+    "message": "Missed - Other",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
+    "message": "Missed - Refusal",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
+    "message": "Missed - Routine",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
+    "message": "Monitoring Date",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
+    "message": "Monitor Designation",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
+    "message": "Monitor Name",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
+    "message": "Poorly Covered",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
+    "message": "Settlement Area",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
     "message": "Settlement Type",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
@@ -4346,132 +3956,6 @@
   {
     "code": "LABEL_PAIR_LOCALITY",
     "message": "Locality",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Absence Reason",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "AFP Awareness",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "AFP Case Count",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Other Awareness Source",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Campaign Awareness",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Caregiver Informed",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Child Age (Months)",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Child Sex",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Children Under 5",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Cluster Number",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Finger Marked",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Lot Number",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "OPV Doses",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Other Absence Reason",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Other Reason (Specify)",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Other Refusal Reason",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Reason Not Marked",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Refusal Reason",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Settlement Area",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Survey Date",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Surveyor Name",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -4602,8 +4086,128 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_MEMBER_COUNT",
-    "message": "Member Count",
+    "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
+    "message": "Absence Reason",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
+    "message": "AFP Awareness",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
+    "message": "AFP Case Count",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
+    "message": "Other Awareness Source",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
+    "message": "Campaign Awareness",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
+    "message": "Caregiver Informed",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
+    "message": "Children Under 5",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
+    "message": "Child Age (Months)",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
+    "message": "Child Sex",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
+    "message": "Cluster Number",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
+    "message": "Finger Marked",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
+    "message": "Lot Number",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
+    "message": "OPV Doses",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
+    "message": "Other Absence Reason",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
+    "message": "Other Reason (Specify)",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
+    "message": "Other Refusal Reason",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
+    "message": "Reason Not Marked",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
+    "message": "Refusal Reason",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
+    "message": "Settlement Area",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
+    "message": "Surveyor Name",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
+    "message": "Survey Date",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -4614,8 +4218,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_MOBILE_NUMBER",
-    "message": "Mobile Number",
+    "code": "LABEL_PAIR_MEMBER_COUNT",
+    "message": "Member Count",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -4626,13 +4230,19 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "MRN Number",
+    "code": "LABEL_PAIR_MOBILE_NUMBER",
+    "message": "Mobile Number",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRNNUMBER",
+    "message": "MRN Number",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MRN_NUMBER",
     "message": "MRN Number",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
@@ -4650,13 +4260,13 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_QUANTITY_RECEIVED",
+    "code": "LABEL_PAIR_QUANTITYRECEIVED",
     "message": "Quantity Received",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_QUANTITYRECEIVED",
+    "code": "LABEL_PAIR_QUANTITY_RECEIVED",
     "message": "Quantity Received",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
@@ -4664,6 +4274,18 @@
   {
     "code": "LABEL_PAIR_RECEIVER",
     "message": "{{fn:getsecondpagepartylabel(item.additionalfields.fields)}}",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRALNAME",
+    "message": "Name",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRALSTATUS",
+    "message": "Referral Status",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -4682,18 +4304,6 @@
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
     "message": "Symptom",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFERRALNAME",
-    "message": "Name",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFERRALSTATUS",
-    "message": "Referral Status",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -4722,14 +4332,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Stock Expiry Date",
+    "code": "LABEL_PAIR_STOCKEXPIRY",
+    "message": "Stock Expiry",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_STOCKEXPIRY",
-    "message": "Stock Expiry",
+    "code": "LABEL_PAIR_STOCK_EXPIRY",
+    "message": "Stock Expiry Date",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -4776,50 +4386,32 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_WAYBILL_NUMBER",
-    "message": "Waybill Number",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_WAYBILLNUMBER",
     "message": "Waybill Number",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "labelPairList",
-    "message": "Details",
+    "code": "LABEL_PAIR_WAYBILL_NUMBER",
+    "message": "Waybill Number",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "landmark",
-    "message": "Landmark",
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "latLng",
-    "message": "GPS Coordinates",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "listViewMembers",
-    "message": "Members",
+    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "message": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LOCALISATION_ERROR",
     "message": "Unable to load localization data. Please try again.",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "localityBoundaryCode",
-    "message": "Boundary Code",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -4932,32 +4524,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "meberDetails",
-    "message": "Member Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "memberCount",
-    "message": "Member Count",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "memberTable",
-    "message": "Member Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "METAL",
     "message": "Metal",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "MOB_VAN",
-    "message": "Van",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -4974,14 +4542,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "NAME_OF_INDIVIDUAL",
-    "message": "Name of Individual",
+    "code": "MOB_VAN",
+    "message": "Van",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "nameOfIndividual",
-    "message": "First Name",
+    "code": "NAME_OF_INDIVIDUAL",
+    "message": "Name of Individual",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5004,20 +4572,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "NO_CAREGIVER_CONSENT",
-    "message": "No Caregiver Consent",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NO_FELT_NEED",
-    "message": "No Felt Need",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "NOPV_CONCERNS",
     "message": "nOPV Concerns",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Not Enough Stock",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5040,44 +4602,32 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "NOT_REGISTERED",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "NOT_VISITED",
     "message": "Not Visited",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "notEligible",
-    "message": "Not Eligible",
+    "code": "NO_CAREGIVER_CONSENT",
+    "message": "No Caregiver Consent",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_FELT_NEED",
+    "message": "No Felt Need",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "NotEnoughStock",
     "message": "Not Enough Stock",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NOTENOUGHSTOCK",
-    "message": "Not Enough Stock",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "notVisited",
-    "message": "Not Visited",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "openMemberCard",
-    "message": "Open",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Other",
-    "message": "Other",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5094,8 +4644,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "panelCard",
-    "message": "Vaccination Successful",
+    "code": "Other",
+    "message": "Other",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5106,38 +4656,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "pastCyclesList",
-    "message": "Past Cycles",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "pastCycleTable",
-    "message": "Past Cycle Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PerformanceIssue",
-    "message": "Performance Issue",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "PERMANENT",
     "message": "Permanent",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "phone",
-    "message": "Phone Number",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "pincode",
-    "message": "Pincode",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5150,18 +4670,6 @@
   {
     "code": "PLAY_AREAS",
     "message": "Play areas",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "ProjectBeneficiaryClientReferenceId",
-    "message": "Beneficiary Reference ID",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "projectId",
-    "message": "Project ID",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5184,20 +4692,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "proximityRadius",
-    "message": "Search Radius",
+    "code": "PerformanceIssue",
+    "message": "Performance Issue",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "proximitySearch",
-    "message": "Search Nearby Households",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "qrScanner",
-    "message": "Scan Child",
+    "code": "ProjectBeneficiaryClientReferenceId",
+    "message": "Beneficiary Reference ID",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5262,56 +4764,32 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "reason",
-    "message": "Reason",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "reasonForRefusal",
-    "message": "Reason for Refusal",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "reasonNotVaccinated",
-    "message": "Reason Not Vaccinated",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "receivedOPVBefore",
-    "message": "Received OPV Before",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "RECORD_CYCLE_DOSE",
     "message": "Record Vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "recordCycle",
-    "message": "Record Cycle",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "redoseButton",
-    "message": "Revisit",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "redoseSaveButton",
-    "message": "Submit",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "REEDS",
     "message": "Reeds",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REFERRAL_BACK",
+    "message": "Referral Back",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REFERRAL_SUCCESSFUL_PANEL_CARD_HEADING",
+    "message": "Referral Recorded Successfully",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REFERRAL_VIEW_HOUSEHOLD_DETAILS",
+    "message": "View Household Details",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5370,38 +4848,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "REFERRAL_BACK",
-    "message": "Referral Back",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REFERRAL_SUCCESSFUL_PANEL_CARD_HEADING",
-    "message": "Referral Recorded Successfully",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REFERRAL_VIEW_HOUSEHOLD_DETAILS",
-    "message": "View Household Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "REFUSAL",
     "message": "Refusal",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "refusalReason",
-    "message": "Refusal Reason",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "refusalReasonOther",
-    "message": "Other Refusal Reason",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5412,20 +4860,20 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "region",
-    "message": "Region",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "REGISTER_BENEFICIARY",
     "message": "Enumerate New Child",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "registerBeneficiary",
-    "message": "Register Beneficiary",
+    "code": "REGISTRATIONFLOW_beneficiaryLocation_71b53895",
+    "message": "Please complete all required location fields",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_ADD_MEMBER_MESSAGE",
+    "message": "Failed to update beneficiary ID status.",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5454,12 +4902,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "REGISTRATION_ADD_MEMBER_MESSAGE",
-    "message": "Failed to update beneficiary ID status.",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "REGISTRATION_ADD_MEMBER_nameOfIndividual_ERROR",
     "message": "Name of individual is required",
     "module": "hcm-base-registration-polio",
@@ -5472,12 +4914,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "REGISTRATION_BENEFICIARY_REFERRED",
-    "message": "Children Referred",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "REGISTRATION_BENEFICIARYDETAILS_MESSAGE",
     "message": "Failed to save member details.",
     "module": "hcm-base-registration-polio",
@@ -5486,6 +4922,12 @@
   {
     "code": "REGISTRATION_BENEFICIARYLOCATION_MESSAGE",
     "message": "Failed to save beneficiary location.",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_BENEFICIARY_REFERRED",
+    "message": "Children Referred",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5546,6 +4988,42 @@
   {
     "code": "REGISTRATION_HIDE_PAST_CYCLES",
     "message": "Show Less",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLDDETAILS_MESSAGE",
+    "message": "Failed to save household details.",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLDOVERVIEW_MESSAGE",
+    "message": "Household Overview",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLDOVERVIEW_POPUP_TITLE",
+    "message": "Actions",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_MESSAGE",
+    "message": "Failed to save household head details.",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_OVERVIEW_DESC",
+    "message": "View household and member details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_OVERVIEW_HEADING",
+    "message": "Household Overview",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5622,26 +5100,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "REGISTRATION_HOUSEHOLD_MESSAGE",
-    "message": "Failed to save household head details.",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "REGISTRATION_HOUSEHOLD_nameOfIndividual_ERROR",
     "message": "Name of individual is required",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REGISTRATION_HOUSEHOLD_OVERVIEW_DESC",
-    "message": "View household and member details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REGISTRATION_HOUSEHOLD_OVERVIEW_HEADING",
-    "message": "Household Overview",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5654,24 +5114,6 @@
   {
     "code": "REGISTRATION_HOUSEHOLD_pincode_ERROR",
     "message": "Pincode is required",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REGISTRATION_HOUSEHOLDDETAILS_MESSAGE",
-    "message": "Failed to save household details.",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REGISTRATION_HOUSEHOLDOVERVIEW_MESSAGE",
-    "message": "Household Overview",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REGISTRATION_HOUSEHOLDOVERVIEW_POPUP_TITLE",
-    "message": "Actions",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5778,8 +5220,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "REGISTRATION_UNABLETODELIVER_absenceReason_ERROR",
-    "message": "Absence reason is required",
+    "code": "REGISTRATION_UNABLETODELIVER_MESSAGE",
+    "message": "Unable to Deliver",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5790,8 +5232,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "REGISTRATION_UNABLETODELIVER_MESSAGE",
-    "message": "Unable to Deliver",
+    "code": "REGISTRATION_UNABLETODELIVER_absenceReason_ERROR",
+    "message": "Absence reason is required",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5802,14 +5244,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "REGISTRATION_UNABLETODELIVER_refusalReason_ERROR",
-    "message": "Refusal reason is required",
+    "code": "REGISTRATION_UNABLETODELIVER_refusalReasonOther_ERROR",
+    "message": "Other refusal reason is required",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "REGISTRATION_UNABLETODELIVER_refusalReasonOther_ERROR",
-    "message": "Other refusal reason is required",
+    "code": "REGISTRATION_UNABLETODELIVER_refusalReason_ERROR",
+    "message": "Refusal reason is required",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5850,12 +5292,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "REGISTRATIONFLOW_beneficiaryLocation_71b53895",
-    "message": "Please complete all required location fields",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "RELIGIOUS_BELIEFS",
     "message": "Religious beliefs",
     "module": "hcm-base-registration-polio",
@@ -5874,62 +5310,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "resourceCard",
-    "message": "Resource",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "reVaccinatedTag",
-    "message": "Re-Vaccinated",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "row2",
-    "message": "Household Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "rowtemplate",
-    "message": "Member Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "saveBeneficiaryButton",
-    "message": "Submit",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "saveFilter",
-    "message": "Apply",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "saveFilter2",
-    "message": "Download IDs",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "saveHouseholdButton",
-    "message": "Submit",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "saveLocationButton",
-    "message": "Submit",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Scan limit shouldn't be greater than 1",
-    "message": "QR code scan limit exceeded",
+    "code": "SCANLIMIT_ERROR_MESSAGE",
+    "message": "Scan limit exceeded",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5942,18 +5324,6 @@
   {
     "code": "SCAN_LIMIT_ERROR_LABEL",
     "message": "Scan limit reached",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SCANLIMIT_ERROR_MESSAGE",
-    "message": "Scan limit exceeded",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "scanner",
-    "message": "Scan Code",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -5972,72 +5342,6 @@
   {
     "code": "SEARCH_BY_NAME",
     "message": "Search by Name",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "searchBar",
-    "message": "Search",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "searchByID",
-    "message": "Search by ID",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "searchByName",
-    "message": "Search by Name",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "searchName",
-    "message": "Search Name",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "searchNearbyHouseholdS",
-    "message": "Search Nearby Households",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "searchScanBeneficiaryButton",
-    "message": "Scan Beneficiary",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Security Issues",
-    "message": "Security Issues",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SecurityIssues",
-    "message": "Security Issues",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "selectedIndividualAgeInMonths",
-    "message": "Age (Months)",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "selectedIndividualGender",
-    "message": "Gender",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "selectedStatus",
-    "message": "Select Status",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -6108,12 +5412,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "siteName",
-    "message": "Site Name",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "SKIN_REACTION",
     "message": "Skin Reaction",
     "module": "hcm-base-registration-polio",
@@ -6150,26 +5448,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "status",
-    "message": "Status",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "successCard",
-    "message": "Delivery Successful",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "SUCCESSFUL_DELIVERY",
     "message": "Vaccination Successful",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SyncNotWorking",
-    "message": "Sync Not Working",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -6180,20 +5460,26 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "tag",
-    "message": "Label",
+    "code": "Scan limit shouldn't be greater than 1",
+    "message": "QR code scan limit exceeded",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "Technical Issues",
-    "message": "Technical Issues",
+    "code": "Security Issues",
+    "message": "Security Issues",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "TechnicalIssues",
-    "message": "Technical Issues",
+    "code": "SecurityIssues",
+    "message": "Security Issues",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "Sync Not Working",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -6206,12 +5492,6 @@
   {
     "code": "TOO_MANY_ROUNDS",
     "message": "Too Many Rounds",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "totalDosesInCycle",
-    "message": "Total Doses in Cycle",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -6246,8 +5526,62 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "typeOfAddress",
-    "message": "Type of Address",
+    "code": "Technical Issues",
+    "message": "Technical Issues",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Technical Issues",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UNABLETODELIVERY_FLOW_ACTION_LABEL",
+    "message": "Submit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UNABLETODELIVERY_FLOW_DESCRIPTION",
+    "message": "Record the reason for being unable to deliver.",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UNABLETODELIVERY_FLOW_HEADING",
+    "message": "Submit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UNABLETODELIVERY_FLOW_LABEL",
+    "message": "Unable to Deliver",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UNABLETODELIVERY_FLOW_SCREEN_HEADING",
+    "message": "Unable to Deliver",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UNABLETODELIVERY_FLOW_comment_LABEL",
+    "message": "Comment",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UNABLETODELIVERY_FLOW_reason_LABEL",
+    "message": "Reason",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UNABLETODELIVERY_FLOW_reason_REQUIRED_ERROR_MESSAGE",
+    "message": "Reason is required",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -6306,6 +5640,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "UNABLETODELIVER_ENUM_NOPV_CONCERNS",
+    "message": "nOPV Concerns",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "UNABLETODELIVER_ENUM_NO_CAREGIVER_CONSENT",
     "message": "No Caregiver Consent",
     "module": "hcm-base-registration-polio",
@@ -6314,12 +5654,6 @@
   {
     "code": "UNABLETODELIVER_ENUM_NO_FELT_NEED",
     "message": "No Felt Need",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UNABLETODELIVER_ENUM_NOPV_CONCERNS",
-    "message": "nOPV Concerns",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -6360,6 +5694,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "UNABLETODELIVER_FLOWT_ALERT_DESCRIPTION",
+    "message": "Are you sure you want to record this beneficiary as unable to deliver?",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "UNABLETODELIVER_FLOW_ACTION_CANCEL",
     "message": "Back",
     "module": "hcm-base-registration-polio",
@@ -6374,12 +5714,6 @@
   {
     "code": "UNABLETODELIVER_FLOW_ALERT_TITLE",
     "message": "Confirm Unable to Deliver",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UNABLETODELIVER_FLOWT_ALERT_DESCRIPTION",
-    "message": "Are you sure you want to record this beneficiary as unable to deliver?",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -6432,66 +5766,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "unableToDeliverButton",
-    "message": "Unable to Deliver",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "unableToDeliverSubmitButton",
-    "message": "Submit",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UNABLETODELIVERY_FLOW_ACTION_LABEL",
-    "message": "Submit",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UNABLETODELIVERY_FLOW_comment_LABEL",
-    "message": "Comment",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UNABLETODELIVERY_FLOW_DESCRIPTION",
-    "message": "Record the reason for being unable to deliver.",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UNABLETODELIVERY_FLOW_HEADING",
-    "message": "Submit",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UNABLETODELIVERY_FLOW_LABEL",
-    "message": "Unable to Deliver",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UNABLETODELIVERY_FLOW_reason_LABEL",
-    "message": "Reason",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UNABLETODELIVERY_FLOW_reason_REQUIRED_ERROR_MESSAGE",
-    "message": "Reason is required",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UNABLETODELIVERY_FLOW_SCREEN_HEADING",
-    "message": "Unable to Deliver",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "UNIQUE_BENEFICIARY_ID",
     "message": "Beneficiary ID",
     "module": "hcm-base-registration-polio",
@@ -6500,18 +5774,6 @@
   {
     "code": "UNIQUE_KEY_UPDATE_ERR",
     "message": "Form has been configured incorrectly. Please refresh, check, and fix it.",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "uniqueBeneficiaryIdModel",
-    "message": "Unique Beneficiary ID",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "uniqueBeneficiaryIdTag",
-    "message": "Beneficiary ID",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -6582,18 +5844,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "vaccinatedElsewhereButton",
-    "message": "Vaccinated Elsewhere",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "vaccinatedElsewhereSubmitButton",
-    "message": "Submit",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "VACCINE_NOT_SAFE",
     "message": "Vaccine Not Safe",
     "module": "hcm-base-registration-polio",
@@ -6606,6 +5856,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "VALIDATION_DROPDOWN_OPTIONS_REQUIRED_isMdms",
+    "message": "Dropdown options are required for enum-type fields",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY_isMdms",
     "message": "Dropdown option labels are required for enum-type fields",
     "module": "hcm-base-registration-polio",
@@ -6614,12 +5870,6 @@
   {
     "code": "VALIDATION_DROPDOWN_OPTION_NAME_REQUIREDisMdms",
     "message": "Dropdown option names are required for enum-type fields",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "VALIDATION_DROPDOWN_OPTIONS_REQUIRED_isMdms",
-    "message": "Dropdown options are required for enum-type fields",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
@@ -6648,18 +5898,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "viewDetails",
-    "message": "View Details",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "viewHouseholdButton",
-    "message": "View Household",
-    "module": "hcm-base-registration-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "VISITED",
     "message": "Visited",
     "module": "hcm-base-registration-polio",
@@ -6684,14 +5922,920 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "whereWasChild",
-    "message": "Where Was Child",
+    "code": "YES",
+    "message": "Yes",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "YES",
-    "message": "Yes",
+    "code": "absenceReason",
+    "message": "Absence Reason",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "absenceReasonOther",
+    "message": "Other Absence Reason",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "actionButton",
+    "message": "Actions",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "actionPopup",
+    "message": "Actions",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "addMember",
+    "message": "Add Member",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "addMemberButton",
+    "message": "Add Member",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "addMemberSaveButton",
+    "message": "Submit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "addressLine1",
+    "message": "Address Line 1",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "addressLine2",
+    "message": "Address Line 2",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "administrationFailed",
+    "message": "Vaccination Failed",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "administrationSuccess",
+    "message": "Vaccinated Successfully",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "administrativeArea",
+    "message": "Administrative Area",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "beneficiaryIdMinCheck",
+    "message": "Download Beneficiary IDs",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "beneficiaryNotFound",
+    "message": "Beneficiary Not Found",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "beneficiaryReferred",
+    "message": "Child Referred",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "beneficiaryTag",
+    "message": "Beneficiary",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "card",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "card2",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "childrenCount",
+    "message": "Children Count",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "clearFilter",
+    "message": "Clear",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "clearFilter2",
+    "message": "Skip & Continue",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "clientReferenceId",
+    "message": "Client Reference ID",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "common-masters.GenderType",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cycleIndex",
+    "message": "Cycle Index",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cycleNumber",
+    "message": "Cycle Number",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "dateOfRegistration",
+    "message": "Date of Registration",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "datePicker",
+    "message": "Select Date",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "deliveryBack",
+    "message": "Back",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "deliveryComment",
+    "message": "Delivery Comment",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "deliveryNo",
+    "message": "Delivery Number",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "deliverySaveButton",
+    "message": "Submit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "deliveryStrategy",
+    "message": "Delivery Strategy",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "deliverySuccess",
+    "message": "Delivery Success",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "deliverySuccess_deliverySuccess_PAGE_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "deliverySuccess_deliverySuccess_PAGE_HEADING",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "deliveryTable",
+    "message": "Delivery Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "detailsCard",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "detailsRow",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "dobPicker",
+    "message": "Date of Birth",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "doseIndex",
+    "message": "Dose Index",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "dropDown",
+    "message": "Select Option",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "dropdown",
+    "message": "Select Option",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "dropdownTemplate",
+    "message": "Select Option",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "editHousehold",
+    "message": "Edit Household",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "editIndividualButton",
+    "message": "Edit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "eligibleProductVariants",
+    "message": "Eligible Product Variants",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "entities",
+    "message": "Members",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "evaluationFacilityKey",
+    "message": "Assigned Facility",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "expandable",
+    "message": "Past Cycles",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "familyname",
+    "message": "Family Name",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "filterPopUp",
+    "message": "Filter",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "futureDoses",
+    "message": "Future Doses",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "gender",
+    "message": "Gender",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "genderAge",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "givenName",
+    "message": "Given Name",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "goBack",
+    "message": "Back to Home",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "goForVaccinateButton",
+    "message": "Deliver",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "guestTag",
+    "message": "Guest",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "headMobileNumber",
+    "message": "Mobile Number",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "headName",
+    "message": "Household Head Name",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "headOfHousehold",
+    "message": "Head of Household",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "headOfHouseholdTag",
+    "message": "Head of Household",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "heading",
+    "message": "Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "householdDetails",
+    "message": "Household Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "householdEditButton",
+    "message": "Edit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "householdId",
+    "message": "Household ID",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "idPopulator",
+    "message": "ID Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "idSearch",
+    "message": "ID Search",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "idSearchBar",
+    "message": "Search by ID",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "identifiers",
+    "message": "Identifiers",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "individualName",
+    "message": "Individual Name",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "individualRow",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "infoCard",
+    "message": "Information",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "infocard",
+    "message": "Information",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "isClosedHousehold",
+    "message": "Closed Household",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "isEdit",
+    "message": "Edit Mode",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "isGuestMember",
+    "message": "Guest Member",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "isHeadOfFamily",
+    "message": "Head of Family",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "labelPairList",
+    "message": "Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "landmark",
+    "message": "Landmark",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "latLng",
+    "message": "GPS Coordinates",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "listView",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "listViewMembers",
+    "message": "Members",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "localityBoundaryCode",
+    "message": "Boundary Code",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "meberDetails",
+    "message": "Member Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "memberCard",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "memberCount",
+    "message": "Member Count",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "memberTable",
+    "message": "Member Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "nameOfIndividual",
+    "message": "First Name",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "notEligible",
+    "message": "Not Eligible",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "notVisited",
+    "message": "Not Visited",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "openMemberCard",
+    "message": "Open",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "panelCard",
+    "message": "Vaccination Successful",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "pastCycleTable",
+    "message": "Past Cycle Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "pastCyclesList",
+    "message": "Past Cycles",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "phone",
+    "message": "Phone Number",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "pincode",
+    "message": "Pincode",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "projectId",
+    "message": "Project ID",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "proximityRadius",
+    "message": "Search Radius",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "proximitySearch",
+    "message": "Search Nearby Households",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "qrScanner",
+    "message": "Scan Child",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "reVaccinatedTag",
+    "message": "Re-Vaccinated",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "reason",
+    "message": "Reason",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "reasonForRefusal",
+    "message": "Reason for Refusal",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "reasonNotVaccinated",
+    "message": "Reason Not Vaccinated",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "receivedOPVBefore",
+    "message": "Received OPV Before",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "recordCycle",
+    "message": "Record Cycle",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "redoseButton",
+    "message": "Revisit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "redoseSaveButton",
+    "message": "Submit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "referralSuccess_referralSuccess_PAGE_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "referralSuccess_referralSuccess_PAGE_HEADING",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "refusalReason",
+    "message": "Refusal Reason",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "refusalReasonOther",
+    "message": "Other Refusal Reason",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "region",
+    "message": "Region",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "registerBeneficiary",
+    "message": "Register Beneficiary",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "resourceCard",
+    "message": "Resource",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "row",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "row2",
+    "message": "Household Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "rowtemplate",
+    "message": "Member Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "saveBeneficiaryButton",
+    "message": "Submit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "saveFilter",
+    "message": "Apply",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "saveFilter2",
+    "message": "Download IDs",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "saveHouseholdButton",
+    "message": "Submit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "saveLocationButton",
+    "message": "Submit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "scanner",
+    "message": "Scan Code",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "searchBar",
+    "message": "Search",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "searchByID",
+    "message": "Search by ID",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "searchByName",
+    "message": "Search by Name",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "searchName",
+    "message": "Search Name",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "searchNearbyHouseholdS",
+    "message": "Search Nearby Households",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "searchScanBeneficiaryButton",
+    "message": "Scan Beneficiary",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "selectedIndividualAgeInMonths",
+    "message": "Age (Months)",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "selectedIndividualClientReferenceId",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "selectedIndividualGender",
+    "message": "Gender",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "selectedIndividualIdentifierId",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "selectedIndividualName",
+    "message": " ",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "selectedStatus",
+    "message": "Select Status",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "siteName",
+    "message": "Site Name",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "status",
+    "message": "Status",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "successCard",
+    "message": "Delivery Successful",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "tag",
+    "message": "Label",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "totalDosesInCycle",
+    "message": "Total Doses in Cycle",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "typeOfAddress",
+    "message": "Type of Address",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "unableToDeliverButton",
+    "message": "Unable to Deliver",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "unableToDeliverSubmitButton",
+    "message": "Submit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "uniqueBeneficiaryIdModel",
+    "message": "Unique Beneficiary ID",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "uniqueBeneficiaryIdTag",
+    "message": "Beneficiary ID",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "vaccinatedElsewhereButton",
+    "message": "Vaccinated Elsewhere",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "vaccinatedElsewhereSubmitButton",
+    "message": "Submit",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "viewDetails",
+    "message": "View Details",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "viewHouseholdButton",
+    "message": "View Household",
+    "module": "hcm-base-registration-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "whereWasChild",
+    "message": "Where Was Child",
     "module": "hcm-base-registration-polio",
     "locale": "en_DEMO"
   }
