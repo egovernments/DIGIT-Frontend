@@ -280,6 +280,7 @@ module.exports = {
           "/facility/v1/_create",
           "/product",
           "/health-service-request",
+          "/studio-service-request",
           "/excel-ingestion",
           "/boundary-management"
         ],
