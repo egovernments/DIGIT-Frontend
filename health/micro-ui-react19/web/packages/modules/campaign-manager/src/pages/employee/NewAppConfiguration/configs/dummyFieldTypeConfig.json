@@ -615,6 +615,17 @@
     "fieldType": "component"
   },
   {
+    "type": "stockReconciliationCard",
+    "order": 27,
+    "category": "advanced",
+    "metadata": {
+      "type": "dynamic",
+      "format": "custom"
+    },
+    "component": "DropdownTemplate",
+    "fieldType": "component"
+  },
+  {
     "type": "facilityToWhich",
     "order": 27,
     "category": "advanced",
