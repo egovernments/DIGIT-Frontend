@@ -6,12 +6,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "administrativeArea",
-    "message": "Village name",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
     "message": "Close Household Head Name must be between 2 and 200 characters",
     "module": "hcm-base-closehousehold-oncho",
@@ -48,18 +42,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
-    "message": "Village name",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
-    "message": "Close Household Administrativearea is required",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
     "message": "Capture the details of the household you are marking as closed.",
     "module": "hcm-base-closehousehold-oncho",
@@ -68,6 +50,24 @@
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
     "message": "Closed Household Details",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+    "message": " ",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
+    "message": "Village name",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
+    "message": "Close Household Administrativearea is required",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "en_DEMO"
   },
@@ -108,6 +108,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_MESSAGE",
+    "message": "Close Household Registration",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_administrativeArea_ERROR",
     "message": "Village name is required",
     "module": "hcm-base-closehousehold-oncho",
@@ -122,12 +128,6 @@
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_latLng_ERROR",
     "message": "GPS location is required",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_MESSAGE",
-    "message": "Close Household Registration",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "en_DEMO"
   },
@@ -174,12 +174,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "closeHouseholdSuccess",
-    "message": "Data recorded successfully",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "DRUG_SE_CC",
     "message": "Drug Side Effect from the current cycle",
     "module": "hcm-base-closehousehold-oncho",
@@ -210,20 +204,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "headName",
-    "message": "Household head name",
+    "code": "HCM_CLOSE_HOUSEHOLD_INFO_CARD_TEXT",
+    "message": "Confirm that you're at the correct household in the selected village. Your GPS location will be recorded as part of the household closure.",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "INSUFFICIENT_RESOURCES",
     "message": "Insufficient Resources",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "latLng",
-    "message": "GPS coordinate accuracy",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "en_DEMO"
   },
@@ -240,20 +228,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "NotEnoughStock",
-    "message": "Not Enough Stock",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "NOTENOUGHSTOCK",
     "message": "Not Enough Stock",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "en_DEMO"
   },
   {
-    "code": "Other",
-    "message": "Other",
+    "code": "NotEnoughStock",
+    "message": "Not Enough Stock",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "en_DEMO"
   },
@@ -270,8 +252,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "PerformanceIssue",
-    "message": "Performance Issue",
+    "code": "Other",
+    "message": "Other",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "en_DEMO"
   },
@@ -282,20 +264,14 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "PerformanceIssue",
+    "message": "Performance Issue",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "REEDS",
     "message": "Reeds",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "scanner",
-    "message": "Scan Voucher",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SecurityIssues",
-    "message": "Security Issues",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "en_DEMO"
   },
@@ -318,20 +294,20 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "SyncNotWorking",
-    "message": "Sync Not Working",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "SYNCNOTWORKING",
     "message": "Sync not working",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "en_DEMO"
   },
   {
-    "code": "TechnicalIssues",
-    "message": "Technical Issues",
+    "code": "SecurityIssues",
+    "message": "Security Issues",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "Sync Not Working",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "en_DEMO"
   },
@@ -342,14 +318,50 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "UserAccountIssues",
-    "message": "User Account Issues",
+    "code": "TechnicalIssues",
+    "message": "Technical Issues",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "USERACCOUNTISSUES",
     "message": "User Account Issues",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "User Account Issues",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "administrativeArea",
+    "message": "Village name",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "closeHouseholdSuccess",
+    "message": "Data recorded successfully",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "headName",
+    "message": "Household head name",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "latLng",
+    "message": "GPS coordinate accuracy",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "scanner",
+    "message": "Scan Voucher",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "en_DEMO"
   }

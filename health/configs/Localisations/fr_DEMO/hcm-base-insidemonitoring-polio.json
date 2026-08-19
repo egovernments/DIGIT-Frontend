@@ -1,0 +1,4532 @@
+[
+  {
+    "code": "ABDOMINAL_PAIN",
+    "message": "Douleur abdominale",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ABSENT",
+    "message": "Absent",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "\u00c9chec de la vaccination",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_SUCCESS",
+    "message": "Succ\u00e8s de la vaccination",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "AFRICA_IS_POLIO_FREE",
+    "message": "L\u2019Afrique est exempte de polio",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
+    "message": "Le nom doit comporter entre 2 et 200\u00a0caract\u00e8res",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
+    "message": "Num\u00e9ro d'identification",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers_addmember",
+    "message": "Num\u00e9ro d'identification",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_DETAILS_SCREEN_DESCRIPTION",
+    "message": "Aper\u00e7u des d\u00e9tails du m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
+    "message": "Entrez l'adresse postale principale ou le num\u00e9ro de la maison",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
+    "message": "D\u00e9tails d'adresse suppl\u00e9mentaires tels que le nom du bloc ou de l'appartement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_helpText",
+    "message": "Zone d'habitation o\u00f9 se situe la maison",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_ISPREGNANT_IS_MANDATORY",
+    "message": "Veuillez indiquer votre \u00e9tat de grossesse",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_dobpicker_IS_MANDATORY",
+    "message": "Veuillez s\u00e9lectionner la date de naissance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_gender_IS_MANDATORY",
+    "message": "Veuillez s\u00e9lectionner le sexe",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_height_IS_MANDATORY",
+    "message": "Veuillez entrer la hauteur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_weight_IS_MANDATORY",
+    "message": "Veuillez entrer le poids",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_SCREEN_DESCRIPTION",
+    "message": "Aper\u00e7u du m\u00e9nage et des membres",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_ACTION_BUTTON_LABEL",
+    "message": "Soumettre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_CATEGORY_CLOSE_HOUSEHOLD",
+    "message": "Enfants manqu\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_CATEGORY_MONITORING",
+    "message": "Surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_CLOSEHOUSEHOLDREGISTRATION",
+    "message": "Inscription des enfants manqu\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_CLOSEHOUSEHOLDSUCCESS",
+    "message": "Enfants manqu\u00e9s enregistr\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_INSIDEHOUSEHOLDENTRY",
+    "message": "\u00c0 l\u2019int\u00e9rieur de l\u2019entr\u00e9e du m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_INSIDEMONITORINGSUMMARY",
+    "message": "R\u00e9sum\u00e9 de la surveillance interne",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_CLOSEHOUSEHOLDDETAILS",
+    "message": "D\u00e9tails des enfants manqu\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_CLOSEOUT",
+    "message": "Liquider",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_FIRSTHOUSEHOLDLOCATION",
+    "message": "Emplacement du premier m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_MONITORINGDETAILS",
+    "message": "D\u00e9tails de surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
+    "message": "Gestionnaire d'autorisations",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER_PERMISSIONHANDLER",
+    "message": "Gestionnaire d'autorisations",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_RECORDSTOCK_STOCKPRODUCTDETAILS",
+    "message": "D\u00e9tails du produit en stock",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_REFERRAL_CREATE_SIDEEFFECTFROMCURRENTCYCLE",
+    "message": "Effets secondaires - Cycle actuel",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_REFERRAL_CREATE_SIDEEFFECTFROMPREVIOUSCYCLE",
+    "message": "Effets secondaires \u2013 Cycle pr\u00e9c\u00e9dent",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ASLEEP",
+    "message": "Endormi",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Administrtion Failed",
+    "message": "\u00c9chec de la vaccination",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "B\u00e9n\u00e9ficiaire absent",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFERRED",
+    "message": "B\u00e9n\u00e9ficiaire r\u00e9f\u00e9r\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "B\u00e9n\u00e9ficiaire refus\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BMGF",
+    "message": "BMGF",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_complaintNumber_LABEL",
+    "message": "Num\u00e9ro de campagne",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_complaintType_LABEL",
+    "message": "Type de plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_locality_LABEL",
+    "message": "Village",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_mobileNumber_LABEL",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CDC_COUNTRY",
+    "message": "Pays du CDC",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CDC_HQ",
+    "message": "QG du CDC",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Ciment",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CHILD_VACCINATED_IN_ROUTINE",
+    "message": "Enfant vaccin\u00e9 en routine",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CHILD_WAS_SICK",
+    "message": "L'enfant \u00e9tait malade",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Argile",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSED_HOUSEHOLD",
+    "message": "M\u00e9nage ferm\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_ACTION_LABEL",
+    "message": "Suivant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
+    "message": "Assurez-vous que le nom du village correspond \u00e0 celui o\u00f9 vous vous trouvez aujourd'hui. Sinon, cliquez sur la liste d\u00e9roulante du village dans le coin sup\u00e9rieur droit pour le modifier.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
+    "message": "D\u00e9tails des enfants manqu\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+    "message": " ",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
+    "message": "Nom du village",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
+    "message": "Le nom du village est obligatoire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
+    "message": "Nom du chef de m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_MIN_LENGTH_ERROR",
+    "message": "Le nom doit comporter au moins 3\u00a0caract\u00e8res",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_LABEL",
+    "message": "Coordonn\u00e9es GPS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_REQUIRED_ERROR",
+    "message": "La localisation GPS est requise",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_name_REQUIRED_ERROR",
+    "message": "Le nom est requis",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_scanner_LABEL",
+    "message": "Scanner le bon",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_administrativeArea_ERROR",
+    "message": "Le nom du village est obligatoire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_headName_ERROR",
+    "message": "Le nom du chef de m\u00e9nage est requis",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_latLng_ERROR",
+    "message": "La localisation GPS est requise",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_reasonForRefusal_ERROR",
+    "message": "Veuillez s\u00e9lectionner un motif de refus",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_reasonNotVaccinated_ERROR",
+    "message": "Veuillez s\u00e9lectionner une raison pour laquelle l'enfant n'a pas \u00e9t\u00e9 vaccin\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_whereWasChild_ERROR",
+    "message": "Veuillez s\u00e9lectionner o\u00f9 se trouvait l'enfant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
+    "message": "Les donn\u00e9es ont \u00e9t\u00e9 enregistr\u00e9es avec succ\u00e8s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION1",
+    "message": "Les donn\u00e9es ont \u00e9t\u00e9 enregistr\u00e9es avec succ\u00e8s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
+    "message": "Donn\u00e9es enregistr\u00e9es avec succ\u00e8s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING1",
+    "message": "Donn\u00e9es enregistr\u00e9es avec succ\u00e8s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL",
+    "message": "Retourner",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL1",
+    "message": "Retourner",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMUNITY_CENTER",
+    "message": "Centre communautaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMUNITY_LEADER",
+    "message": "Leader communautaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_RAISED_FOR_ANOTHER_USER",
+    "message": "Un autre utilisateur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_RAISED_FOR_MYSELF",
+    "message": "Moi-m\u00eame",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SORT_LATEST_FIRST",
+    "message": "Dernier premier",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SORT_LATEST_LAST",
+    "message": "Dernier Dernier",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CONCERNS_ABOUT_COVID19",
+    "message": "Pr\u00e9occupations concernant le COVID-19",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CONCERNS_ABOUT_NOPV",
+    "message": "Pr\u00e9occupations concernant le nVPO",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DEFAULT",
+    "message": "D\u00e9faut",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DIARRHOEA",
+    "message": "Diarrh\u00e9e",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DIGIT_HCM_CLOSEHOUSEHOLD_MODULE",
+    "message": "Enfants manqu\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DIGIT_HCM_STOCKREPORTS_MODULE",
+    "message": "Module de rapports sur les stocks",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Effet secondaire du m\u00e9dicament du cycle en cours",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Effet secondaire du m\u00e9dicament du cycle pr\u00e9c\u00e9dent",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DUPLICATE_ERROR",
+    "message": "Une erreur s'est produite avec ce formulaire. Veuillez revenir en arri\u00e8re et r\u00e9essayer.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Data Issues",
+    "message": "Probl\u00e8mes de donn\u00e9es",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DataIssues",
+    "message": "Probl\u00e8mes de donn\u00e9es",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "END_PROCESS",
+    "message": "Complet",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FARM",
+    "message": "Ferme",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FEMALE",
+    "message": "Femelle",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Fi\u00e8vre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_addAnotherSession_LABEL",
+    "message": "Ajouter une autre session",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_backToHome_LABEL",
+    "message": "Retour \u00e0 la maison",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FUNERAL",
+    "message": "Fun\u00e9railles",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Verre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GoHome",
+    "message": "Retourner",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM.ID_TYPE_OPTIONS_POPULATOR",
+    "message": "Type d'identification",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_ADD_MEMBER_DESCRIPTION",
+    "message": "Entrez les d\u00e9tails de chaque individu du m\u00e9nage.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_ADD_MEMBER_HEADING",
+    "message": "Ajouter un membre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_ADD_MEMBER_SAVE_BUTTON",
+    "message": "Enregistrer le b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_DETAILS_DESCRIPTION",
+    "message": "Assurez-vous que le nom du village correspond \u00e0 l'emplacement du m\u00e9nage.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_GPS_LABEL",
+    "message": "Emplacement d\u00e9tect\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_HEAD_NAME_LABEL",
+    "message": "Nom du chef de m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_MISSED_CHILDREN_LABEL",
+    "message": "D\u00e9tails des enfants manqu\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_ABSENT",
+    "message": "Absent",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_ASLEEP",
+    "message": "Endormi",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_CHILD_VACCINATED_ROUTINE",
+    "message": "Enfant vaccin\u00e9 en routine",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_HOUSE_NOT_REVISITED",
+    "message": "Maison non revisit\u00e9e",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_NOT_VACCINATED_LABEL",
+    "message": "Raison pour laquelle l'enfant n'a pas \u00e9t\u00e9 vaccin\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_NOT_VISITED",
+    "message": "Non visit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_REFUSAL",
+    "message": "Refus",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REASON_REFUSAL_LABEL",
+    "message": "Motif du refus ?",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_AFRICA_POLIO_FREE",
+    "message": "L\u2019Afrique est exempte de polio",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CHILD_SICK",
+    "message": "L'enfant \u00e9tait malade",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CONCERNS_COVID",
+    "message": "Pr\u00e9occupations concernant le COVID-19",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CONCERNS_NOPV",
+    "message": "Pr\u00e9occupations concernant le nVPO2",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_NOT_DECISION_MAKER",
+    "message": "Pas le d\u00e9cideur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_RELIGIOUS",
+    "message": "Croyances religieuses",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_SIDE_EFFECTS",
+    "message": "Effets secondaires du vaccin",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_TOO_MANY",
+    "message": "Trop de doses",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_SCAN_VOUCHER_LABEL",
+    "message": "Scanner le bon",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_SETTLEMENT_NAME_LABEL",
+    "message": "Nom du r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_SUCCESS_DESCRIPTION",
+    "message": "Les donn\u00e9es ont \u00e9t\u00e9 enregistr\u00e9es avec succ\u00e8s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_SUCCESS_GO_BACK_BUTTON",
+    "message": "Retourner",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_SUCCESS_HEADING",
+    "message": "Enfants manqu\u00e9s enregistr\u00e9s avec succ\u00e8s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_VILLAGE_NAME_LABEL",
+    "message": "Nom du r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_FARM",
+    "message": "Ferme",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_MARKET",
+    "message": "March\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_PARENT_NOT_HOME",
+    "message": "Parent absent \u00e0 la maison",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_PLAY_AREAS",
+    "message": "Aires de jeux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_SCHOOL",
+    "message": "\u00c9cole",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_SOCIAL_EVENT",
+    "message": "\u00c9v\u00e9nement social",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_TRAVELLING",
+    "message": "Voyages",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_WHERE_WAS_CHILD_LABEL",
+    "message": "O\u00f9 \u00e9tait l'enfant ?",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_COMMON_NEXT_BUTTON",
+    "message": "Suivant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_COMMON_OTHER",
+    "message": "Autre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_COMMENTS_LABEL",
+    "message": "Commentaires de livraison",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_COMMENT_ABSENT",
+    "message": "B\u00e9n\u00e9ficiaire absent",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_COMMENT_INSUFFICIENT",
+    "message": "Ressources insuffisantes",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_COMMENT_REFUSED",
+    "message": "B\u00e9n\u00e9ficiaire refus\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_COMMENT_SUCCESSFUL",
+    "message": "Livraison r\u00e9ussie",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_DATE_LABEL",
+    "message": "Date de livraison",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_DETAILS_DESCRIPTION",
+    "message": "Capturez les d\u00e9tails des ressources \u00e0 livrer",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_DETAILS_HEADING",
+    "message": "D\u00e9tails de livraison",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_RECORD_DELIVERY_BUTTON",
+    "message": "Livraison d'enregistrement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_RESOURCE_LABEL",
+    "message": "Ressource",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_RESOURCE_REQUIRED_MESSAGE",
+    "message": "La s\u00e9lection de la carte de ressource est requise",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_SAVE_BUTTON",
+    "message": "Enregistrer la livraison",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_SCAN_LABEL",
+    "message": "Livraison de num\u00e9risation",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_STATUS_ADMINISTERED",
+    "message": "Vaccin\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_STATUS_PENDING",
+    "message": "En attente",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_DELIVERY_STATUS_TO_BE_ADMINISTERED",
+    "message": "Se faire vacciner",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_ERROR_CREATE_STOCK",
+    "message": "\u00c9chec de la cr\u00e9ation du stock.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_ERROR_FETCH_CONFIG",
+    "message": "\u00c9chec de la r\u00e9cup\u00e9ration de la configuration.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_ERROR_NAVIGATION",
+    "message": "La navigation a \u00e9chou\u00e9.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_ADD_MEMBERS_BUTTON",
+    "message": "Ajouter des membres",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTERED_SUCCESS_TAG",
+    "message": "Vaccin\u00e9 avec succ\u00e8s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_BENEFICIARY_REFERRED_TAG",
+    "message": "B\u00e9n\u00e9ficiaire r\u00e9f\u00e9r\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_CHILDREN_COUNT_LABEL",
+    "message": "Nombre d'enfants de moins de 5 ans",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_DELIVER_INTERVENTION_BUTTON",
+    "message": "R\u00e9aliser une intervention",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_DESCRIPTION",
+    "message": "Aper\u00e7u du m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_EDIT_HOUSEHOLD_BUTTON",
+    "message": "Modifier le foyer",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_EDIT_INDIVIDUAL_BUTTON",
+    "message": "Modifier une personne",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_HEADING",
+    "message": "Aper\u00e7u du m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
+    "message": "Chef de famille",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_HEAD_TAG",
+    "message": "Chef de famille",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_NOT_ELIGIBLE_TAG",
+    "message": "Non \u00e9ligible",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_NOT_VISITED_TAG",
+    "message": "Non visit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
+    "message": "Zone de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HOUSEHOLD_OVERVIEW_VIEW_DETAILS_BUTTON",
+    "message": "Afficher les d\u00e9tails",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_PLEASE_WAIT_TRY_IN_SOME_TIME",
+    "message": "S'il vous pla\u00eet, attendez. La g\u00e9n\u00e9ration du mod\u00e8le est en cours.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REFERRAL_SUCCESS_GO_BACK_BUTTON",
+    "message": "Retourner",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REFERRAL_SUCCESS_HEADING",
+    "message": "Parrainage enregistr\u00e9 avec succ\u00e8s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REFERRAL_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
+    "message": "Afficher les d\u00e9tails du m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REFER_ADMINISTRATIVE_UNIT_LABEL",
+    "message": "Unit\u00e9 administrative",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REFER_BENEFICIARY_HEADING",
+    "message": "R\u00e9f\u00e9rer le b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REFER_BENEFICIARY_SUBMIT_BUTTON",
+    "message": "Soumettre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REFER_HEALTH_FACILITY_LABEL",
+    "message": "\u00c9tablissement de sant\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REFER_REASON_FEVER",
+    "message": "Fi\u00e8vre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REFER_REASON_LABEL",
+    "message": "Quelle est la raison de la r\u00e9f\u00e9rence ?",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REFER_REFERRED_BY_LABEL",
+    "message": "R\u00e9f\u00e9r\u00e9 par",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADDRESS_CORRESPONDENCE",
+    "message": "Correspondance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADDRESS_LINE1_HELPTEXT",
+    "message": "Indiquez l'adresse postale principale ou le num\u00e9ro de la maison.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADDRESS_LINE1_LABEL",
+    "message": "Adresse Ligne 1",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADDRESS_LINE2_HELPTEXT",
+    "message": "Informations d'adresse suppl\u00e9mentaires, comme le nom du bloc ou de l'appartement.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADDRESS_LINE2_LABEL",
+    "message": "Ligne d'adresse 2",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADDRESS_PERMANENT",
+    "message": "Permanent",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADDRESS_TYPE_LABEL",
+    "message": "Type d'adresse",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ADMIN_AREA_LABEL",
+    "message": "Zone administrative",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_BENEFICIARY_DETAILS_DESCRIPTION",
+    "message": "Entrez les d\u00e9tails de chaque individu du m\u00e9nage.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_BENEFICIARY_DETAILS_HEADING",
+    "message": "D\u00e9tails du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_BENEFICIARY_LOCATION_HEADING",
+    "message": "Localisation du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_CHILDREN_COUNT_LABEL",
+    "message": "Nombre d'enfants de moins de 5 ans",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_DATE_LABEL",
+    "message": "Date d'inscription",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_DOB_HELPTEXT",
+    "message": "S\u00e9lectionnez la date de naissance dans le calendrier.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_DOB_LABEL",
+    "message": "Date de naissance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_DOB_TOOLTIP",
+    "message": "Utilis\u00e9 pour l\u2019\u00e9ligibilit\u00e9 au programme en fonction de l\u2019\u00e2ge.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_FAMILY_NAME_LABEL",
+    "message": "Nom de famille",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_FIRST_NAME_LABEL",
+    "message": "Pr\u00e9nom",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_GENDER_LABEL",
+    "message": "Genre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_DESCRIPTION",
+    "message": "Entrez la taille de la famille, la date d'inscription et les donn\u00e9es d\u00e9mographiques.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_HEADING",
+    "message": "D\u00e9tails du m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_ID_POPULATOR_LABEL",
+    "message": "remplisseur d'identifiants",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_IS_HEAD_LABEL",
+    "message": "Est-ce chef de famille ?",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_LANDMARK_HELPTEXT",
+    "message": "Mentionnez un point de rep\u00e8re \u00e0 proximit\u00e9 pour vous aider \u00e0 localiser l'adresse.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_LANDMARK_LABEL",
+    "message": "Point de rep\u00e8re",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_LAT_LONG_LABEL",
+    "message": "Latitude/Longueur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_LOCATION_DESCRIPTION",
+    "message": "Capturez les d\u00e9tails de l'emplacement de la maison",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_MOBILE_HELPTEXT",
+    "message": "Entrez un num\u00e9ro de mobile valide.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_MOBILE_LABEL",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_MOBILE_TOOLTIP",
+    "message": "Sera utilis\u00e9 pour la communication et la v\u00e9rification bas\u00e9e sur OTP.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_PINCODE_HELPTEXT",
+    "message": "Entrez le code postal de la r\u00e9gion (Code PIN)",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_PINCODE_LABEL",
+    "message": "Code PIN",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_PREGNANT_WOMEN_LABEL",
+    "message": "Nombre de femmes enceintes",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_QR_SCAN_LABEL",
+    "message": "Analyse QR",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_SAVE_BENEFICIARY_BUTTON",
+    "message": "Enregistrer le b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",
+    "message": "Enregistrer les d\u00e9tails du m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_SAVE_LOCATION_BUTTON",
+    "message": "Enregistrer l'emplacement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_REGISTRATION_TOTAL_MEMBERS_LABEL",
+    "message": "Nombre total de membres du m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_BENEFICIARY_DESCRIPTION",
+    "message": "Rechercher des b\u00e9n\u00e9ficiaires inscrits \u00e0 la campagne en cours",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_BENEFICIARY_HEADING",
+    "message": "Rechercher un b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_ADMINISTRATION_SUCCESS",
+    "message": "Succ\u00e8s de la vaccination",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_APPLY_BUTTON",
+    "message": "Appliquer",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_CLEAR_ALL_BUTTON",
+    "message": "Tout effacer",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_LABEL",
+    "message": "Filtre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_MISSED_CHILDREN",
+    "message": "Enfants manqu\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_NOT_ADMINISTERED",
+    "message": "Non vaccin\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_NAME_LABEL",
+    "message": "Nom de la personne",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_NEARBY_HOUSEHOLDS_LABEL",
+    "message": "M\u00e9nages \u00e0 proximit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_OPEN_BUTTON",
+    "message": "Ouvrir",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
+    "message": "Inscrire le b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_SCAN_BENEFICIARY_BUTTON",
+    "message": "B\u00e9n\u00e9ficiaire du scan",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_TABLE_AGE_HEADER",
+    "message": "\u00c2ge",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_TABLE_BENEFICIARY_HEADER",
+    "message": "B\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_TABLE_GENDER_HEADER",
+    "message": "Genre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_STOCKRECONCILIATION_MODULE",
+    "message": "Module de rapprochement des stocks",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_VALIDATION_LENGTH_2_TO_200",
+    "message": "La longueur doit \u00eatre comprise entre 2 et 200\u00a0caract\u00e8res",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS",
+    "message": "Les caract\u00e8res sp\u00e9ciaux ne sont pas autoris\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_VALIDATION_REQUIRED_FIELD_DOT",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_VALIDATION_REQUIRED_NOT_EMPTY",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HEALTH_FACILITY",
+    "message": "\u00c9tablissement de sant\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HEALTH_WORKER",
+    "message": "Agent de sant\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HOUSE",
+    "message": "Maison",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HOUSE_NOT_REVISITED",
+    "message": "Maison non revisit\u00e9e",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IEC_MATERIALS",
+    "message": "Mat\u00e9riel CEI",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ADD_ANOTHER_SESSION",
+    "message": "Ajouter une autre session",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_AFP_CASE_COUNT_LABEL",
+    "message": "Nombre de cas de PFA",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_AFP_LIMB_WEAKNESS_LABEL",
+    "message": "Faiblesse des membres AFP",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_BACK_TO_HOME",
+    "message": "Retour \u00e0 la maison",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+    "message": "Source d'informations sur la campagne",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_CAREGIVER_INFORMED_LABEL",
+    "message": "Le soignant inform\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_CAREGIVER_NAME_LABEL",
+    "message": "Nom du soignant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_CAREGIVER_PHONE_LABEL",
+    "message": "T\u00e9l\u00e9phone du soignant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_CHILDREN_PRESENT_LABEL",
+    "message": "Enfants pr\u00e9sents",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_CHILDREN_VACCINATED_LABEL",
+    "message": "Enfants vaccin\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_CLOSEOUT_DESC",
+    "message": "Compl\u00e9tez les d\u00e9tails de cl\u00f4ture de cette session de surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_CLOSEOUT_LABEL",
+    "message": "Liquider",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_DESIGNATION_OTHER_LABEL",
+    "message": "Autre d\u00e9signation",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_BMGF",
+    "message": "BMGF",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_CDC_COUNTRY",
+    "message": "Pays du CDC",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_CDC_HQ",
+    "message": "QG du CDC",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_COMMUNITY_CENTER",
+    "message": "Centre communautaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_COMMUNITY_LEADER",
+    "message": "Leader communautaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_CROSS_BORDER",
+    "message": "Transfrontalier",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_END_PROCESS",
+    "message": "Complet",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_FARM",
+    "message": "Ferme",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_HARD_TO_REACH",
+    "message": "Difficile \u00e0 atteindre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_HEALTH_FACILITY",
+    "message": "\u00c9tablissement de sant\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_HEALTH_WORKER",
+    "message": "Agent de sant\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_HOUSE",
+    "message": "Maison",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_IEC_MATERIALS",
+    "message": "Mat\u00e9riel CEI",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_IMMIGRANTS",
+    "message": "Immigr\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_IN_PROCESS",
+    "message": "En cours",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_LPHCDA",
+    "message": "En LPHC",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_MARKET",
+    "message": "March\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_MOB_VAN",
+    "message": "Fourgon mobile",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_MOH_LGA",
+    "message": "Minist\u00e8re de la Sant\u00e9 LGA",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_MOH_NATIONAL",
+    "message": "Minist\u00e8re de la Sant\u00e9 National",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_MOH_STATE",
+    "message": "\u00c9tat du minist\u00e8re de la Sant\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_NEIGHBOUR",
+    "message": "Voisin",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_NEWSPAPER",
+    "message": "Journal",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_NO",
+    "message": "Non",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_NOMADS",
+    "message": "Nomades",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_NPHCDA",
+    "message": "Dans le NPHC",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_OTHER",
+    "message": "Autre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_OTHERS",
+    "message": "Autres",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_OTHERS_SOURCE",
+    "message": "Autres",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_PARTNER",
+    "message": "Partenaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_PLAYGROUND",
+    "message": "Aire de jeux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_RADIO",
+    "message": "Radio",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_REFUGEES_IDPS",
+    "message": "R\u00e9fugi\u00e9s / personnes d\u00e9plac\u00e9es",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_RELIGIOUS_CENTER",
+    "message": "Centre religieux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_RELIGIOUS_LEADER",
+    "message": "Chef religieux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_ROTARY",
+    "message": "Rotatif",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_RURAL",
+    "message": "Rural",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_SCHOOL",
+    "message": "\u00c9cole",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_SCHOOL_SOURCE",
+    "message": "\u00c9cole",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_SECURITY_COMPROMISED",
+    "message": "S\u00e9curit\u00e9 compromise",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_SLUMS",
+    "message": "Bidonvilles",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_SOCIAL_MEDIA",
+    "message": "R\u00e9seaux sociaux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_SOCIAL_MOBILIZER",
+    "message": "Mobilisateur social",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_SPHCDA",
+    "message": "au SPHC",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_STUDENT",
+    "message": "\u00c9tudiant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_TRANSIT_POINT",
+    "message": "Point de transit",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_TV",
+    "message": "TV",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_UNICEF_COUNTRY",
+    "message": "Pays de l'UNICEF",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_UNICEF_HQ",
+    "message": "Si\u00e8ge de l'UNICEF",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_UNICEF_REGION",
+    "message": "R\u00e9gion de l'UNICEF",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_UNICEF_SUB_NATIONAL",
+    "message": "UNICEF sous-national",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_URBAN",
+    "message": "Urbain",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_VOLUNTEER",
+    "message": "B\u00e9n\u00e9vole",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_VOLUNTEER_CHW",
+    "message": "B\u00e9n\u00e9vole/ASC",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_WHO_COUNTRY",
+    "message": "Pays de l'OMS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_WHO_HQ",
+    "message": "Si\u00e8ge de l'OMS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_WHO_HUB",
+    "message": "Centre de l'OMS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_WHO_REGION",
+    "message": "R\u00e9gion de l'OMS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_WHO_SUB_NATIONAL",
+    "message": "Sous-national de l'OMS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_WHO_ZONAL",
+    "message": "Zone OMS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ENUM_YES",
+    "message": "Oui",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ERROR_CREATE_RECORD",
+    "message": "\u00c9chec de la cr\u00e9ation de l'enregistrement. Veuillez r\u00e9essayer.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ERROR_FETCH_CONFIG",
+    "message": "\u00c9chec de la r\u00e9cup\u00e9ration de la configuration. Veuillez r\u00e9essayer.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_ERROR_NAVIGATION",
+    "message": "Une erreur de navigation s'est produite. Veuillez r\u00e9essayer.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_FINAL_COMMENTS_LABEL",
+    "message": "Commentaires finaux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_FIRST_HOUSEHOLD_LOCATION_DESC",
+    "message": "Capturez la position GPS du premier foyer visit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_FIRST_HOUSEHOLD_LOCATION_LABEL",
+    "message": "Emplacement du premier m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_GPS_FIRST_HOUSEHOLD_LABEL",
+    "message": "GPS premier foyer",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_GPS_LAST_HOUSEHOLD_LABEL",
+    "message": "GPS Dernier m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_HOUSE_MARKED_LABEL",
+    "message": "Maison marqu\u00e9e",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_INFO_SOURCE_OTHER_LABEL",
+    "message": "Autre source d'informations",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_MISSED_ABSENT_LABEL",
+    "message": "Manqu\u00e9 - Absent",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_MISSED_ASLEEP_LABEL",
+    "message": "Manqu\u00e9 - Endormi",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_MISSED_NOT_REVISITED_LABEL",
+    "message": "Manqu\u00e9 - Pas revisit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_MISSED_NOT_VISITED_LABEL",
+    "message": "Manqu\u00e9 - Non visit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_MISSED_OTHER_LABEL",
+    "message": "Manqu\u00e9 - Autre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_MISSED_REFUSAL_LABEL",
+    "message": "Manqu\u00e9 - Refus",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_MISSED_ROUTINE_LABEL",
+    "message": "Manqu\u00e9 - Routine",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_MONITORING_DATE_LABEL",
+    "message": "Date de surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_MONITORING_DETAILS_DESC",
+    "message": "Entrez les d\u00e9tails de la session de surveillance int\u00e9rieure du m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_MONITORING_DETAILS_LABEL",
+    "message": "D\u00e9tails de surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_MONITORING_TYPE_LABEL",
+    "message": "Type de surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_MONITOR_DESIGNATION_LABEL",
+    "message": "D\u00e9signation du moniteur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_MONITOR_NAME_LABEL",
+    "message": "Nom du moniteur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_MONITOR_PHONE_LABEL",
+    "message": "Surveiller le t\u00e9l\u00e9phone",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_NEXT",
+    "message": "Suivant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_PHONE_LENGTH_ERROR",
+    "message": "Le num\u00e9ro de t\u00e9l\u00e9phone doit contenir exactement 8 chiffres",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_PHONE_NO_LEADING_ZERO",
+    "message": "Le num\u00e9ro de t\u00e9l\u00e9phone ne doit pas commencer par z\u00e9ro",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_POORLY_COVERED_AREAS_LABEL",
+    "message": "Zones mal couvertes",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SETTLEMENT_AREA_LABEL",
+    "message": "Zone de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SETTLEMENT_NAME_LABEL",
+    "message": "Nom du r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SETTLEMENT_TYPE_LABEL",
+    "message": "Type de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUBMIT",
+    "message": "Soumettre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_CHILDREN_PRESENT",
+    "message": "Enfants pr\u00e9sents",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_CHILDREN_VACCINATED",
+    "message": "Enfants vaccin\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_DESCRIPTION",
+    "message": "Passez en revue les d\u00e9tails de votre session de surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_FINAL_COMMENTS",
+    "message": "Commentaires finaux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_HEADING",
+    "message": "R\u00e9sum\u00e9 de la surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_MISSED_ABSENT",
+    "message": "Manqu\u00e9 - Absent",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_MISSED_ASLEEP",
+    "message": "Manqu\u00e9 - Endormi",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_MISSED_NOT_REVISITED",
+    "message": "Manqu\u00e9 - Pas revisit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_MISSED_NOT_VISITED",
+    "message": "Manqu\u00e9 - Non visit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_MISSED_OTHER",
+    "message": "Manqu\u00e9 - Autre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_MISSED_REFUSAL",
+    "message": "Manqu\u00e9 - Refus",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_MISSED_ROUTINE",
+    "message": "Manqu\u00e9 - Routine",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_MONITORING_DATE",
+    "message": "Date de surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_MONITOR_DESIGNATION",
+    "message": "D\u00e9signation du moniteur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_MONITOR_NAME",
+    "message": "Nom du moniteur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_POORLY_COVERED",
+    "message": "Zones mal couvertes",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_SETTLEMENT_AREA",
+    "message": "Zone de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_SUMMARY_SETTLEMENT_TYPE",
+    "message": "Type de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_TEAM_VISITED_LABEL",
+    "message": "\u00c9quipe visit\u00e9e",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_VACCINATION_LOCATION_LABEL",
+    "message": "Lieu de vaccination",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_VALIDATION_MAX_500",
+    "message": "Ne doit pas d\u00e9passer 500 caract\u00e8res",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_VALIDATION_MIN_ZERO",
+    "message": "La valeur doit \u00eatre au moins 0",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IHM_VALIDATION_REQUIRED",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INCOMPATIBLE",
+    "message": "Incompatible",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INELIGIBLE",
+    "message": "In\u00e9ligible",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_afpLimbWeakness_ERROR",
+    "message": "Veuillez s\u00e9lectionner une r\u00e9ponse de faiblesse des membres AFP",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_afpSuddenWeakness_ERROR",
+    "message": "Veuillez s\u00e9lectionner une r\u00e9ponse de faiblesse soudaine de l'AFP",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_caregiverInformed_ERROR",
+    "message": "Veuillez indiquer si l'aidant a \u00e9t\u00e9 inform\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_caregiverName_ERROR",
+    "message": "Le nom du soignant est requis",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_caregiverPhone_ERROR",
+    "message": "Veuillez entrer un num\u00e9ro de t\u00e9l\u00e9phone valide",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_childrenPresent_ERROR",
+    "message": "Veuillez entrer un nombre valide d'enfants pr\u00e9sents",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_childrenVaccinated_ERROR",
+    "message": "Veuillez entrer un nombre valide d'enfants vaccin\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_finalComments_ERROR",
+    "message": "Veuillez entrer des commentaires valides",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_gpsFirstHousehold_ERROR",
+    "message": "La localisation GPS est requise",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_missedAbsent_ERROR",
+    "message": "Veuillez entrer un num\u00e9ro valide pour les manqu\u00e9s (absents)",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_missedAsleep_ERROR",
+    "message": "Veuillez entrer un num\u00e9ro valide pour manqu\u00e9 (endormi)",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_missedNotRevisited_ERROR",
+    "message": "Veuillez entrer un num\u00e9ro valide pour les manqu\u00e9s (non revisit\u00e9s)",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_missedNotVisited_ERROR",
+    "message": "Veuillez entrer un num\u00e9ro valide pour les manqu\u00e9s (non visit\u00e9s)",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_missedOther_ERROR",
+    "message": "Veuillez entrer un num\u00e9ro valide pour les manqu\u00e9s (autres)",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_missedRefusal_ERROR",
+    "message": "Veuillez saisir un num\u00e9ro valide pour les manqu\u00e9s (refus)",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_missedRoutine_ERROR",
+    "message": "Veuillez entrer un num\u00e9ro valide pour les manqu\u00e9s (routine)",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_monitorDesignation_ERROR",
+    "message": "Veuillez s\u00e9lectionner une d\u00e9signation",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_monitorName_ERROR",
+    "message": "Le nom du moniteur est requis",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_monitoringDate_ERROR",
+    "message": "Veuillez saisir une date de surveillance valide",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_monitoringType_ERROR",
+    "message": "Veuillez s\u00e9lectionner un type de surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_poorlyCoveredAreas_ERROR",
+    "message": "Veuillez s\u00e9lectionner les zones mal couvertes",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_settlementType_ERROR",
+    "message": "Veuillez s\u00e9lectionner un type de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSIDEMONITORING_INSIDEHOUSEHOLDENTRY_teamVisited_ERROR",
+    "message": "Veuillez s\u00e9lectionner une \u00e9quipe",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Ressources insuffisantes",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVALID_REQUEST",
+    "message": "Le formulaire n'a pas \u00e9t\u00e9 configur\u00e9 correctement. Veuillez actualiser, v\u00e9rifier et corriger.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVALID_REQUEST1",
+    "message": "Le formulaire n'a pas \u00e9t\u00e9 configur\u00e9 correctement. Veuillez actualiser, v\u00e9rifier et corriger.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVALID_REQUEST2",
+    "message": "Le formulaire n'a pas \u00e9t\u00e9 configur\u00e9 correctement. Veuillez actualiser, v\u00e9rifier et corriger.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IN_PROCESS",
+    "message": "En cours",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Individual",
+    "message": "Individuel",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IndividualDeliveryPrimaryButton",
+    "message": "Soumettre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IndividualDeliverySecondaryButton",
+    "message": "Retourner",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IndividualModel",
+    "message": "D\u00e9tails individuels",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "InfoCard",
+    "message": "Carte d'information",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL",
+    "message": "Libell\u00e9 du champ",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_AGE",
+    "message": "\u00c2ge",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_BATCHNUMBER",
+    "message": "Num\u00e9ro de lot",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_BATCH_NUMBER",
+    "message": "Num\u00e9ro de lot",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
+    "message": "Plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
+    "message": "Mod\u00e8le de r\u00e9f\u00e9rence HF",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
+    "message": "M\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
+    "message": "Individuel",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
+    "message": "Surveillance interne",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_ITEMMODEL",
+    "message": "Article",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
+    "message": "Mod\u00e8le LQA",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_NAVIGATIONMODEL",
+    "message": "Navigation",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
+    "message": "B\u00e9n\u00e9ficiaire du projet",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
+    "message": "Action",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CODE",
+    "message": "Code de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMMENTS",
+    "message": "Commentaires",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTAREA",
+    "message": "Zone",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTDATE",
+    "message": "Date de la plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTNUMBER",
+    "message": "Num\u00e9ro de plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTSTATUS",
+    "message": "Statut",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
+    "message": "Personne-ressource du plaignant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
+    "message": "Zone",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
+    "message": "Date de la plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
+    "message": "Num\u00e9ro de plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
+    "message": "Statut",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
+    "message": "Type de plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+    "message": "Personne-ressource du plaignant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
+    "message": "Zone",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
+    "message": "Date de la plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
+    "message": "Num\u00e9ro de plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
+    "message": "Type de plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+    "message": "Description de la plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
+    "message": "Statut de la plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_DATEOFBIRTH",
+    "message": "Date de naissance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_DATEOFREGISTRATION",
+    "message": "Date d'inscription",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
+    "message": "Date d'inscription",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_GENDER",
+    "message": "Genre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_GIVENNAME",
+    "message": "Nom de la personne",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCMTOTALMEMBERS",
+    "message": "Nombre total de membres",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
+    "message": "\u00c2ge",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
+    "message": "Genre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
+    "message": "Nom du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
+    "message": "Date d'inscription",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
+    "message": "Chef de famille",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
+    "message": "R\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
+    "message": "Nombre total de membres",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HEADNAME",
+    "message": "Chef de famille",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
+    "message": "Chef de famille",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
+    "message": "Localit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IDNUMBER",
+    "message": "Num\u00e9ro d'identification",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IDTYPE",
+    "message": "Type d'identification",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_ID_NUMBER",
+    "message": "Num\u00e9ro d'identification",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_ID_TYPE",
+    "message": "Type d'identification",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYCHILDRENPRESENT",
+    "message": "Enfants pr\u00e9sents",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYCHILDRENVACCINATED",
+    "message": "Enfants vaccin\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYFINALCOMMENTS",
+    "message": "Commentaires finaux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMISSEDABSENT",
+    "message": "Manqu\u00e9 - Absent",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMISSEDASLEEP",
+    "message": "Manqu\u00e9 - Endormi",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTREVISITED",
+    "message": "Manqu\u00e9 - Pas revisit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTVISITED",
+    "message": "Manqu\u00e9 - Non visit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMISSEDOTHER",
+    "message": "Manqu\u00e9 - Autre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMISSEDREFUSAL",
+    "message": "Manqu\u00e9 - Refus",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMISSEDROUTINE",
+    "message": "Manqu\u00e9 - Routine",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMONITORDESIGNATION",
+    "message": "D\u00e9signation du moniteur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMONITORINGDATE",
+    "message": "Date de surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMONITORNAME",
+    "message": "Nom du moniteur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYPOORLYCOVERED",
+    "message": "Zones mal couvertes",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
+    "message": "Zone de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTTYPE",
+    "message": "Type de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+    "message": "Source d'informations sur la campagne",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
+    "message": "Enfants pr\u00e9sents",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
+    "message": "Enfants vaccin\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
+    "message": "Commentaires finaux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
+    "message": "Manqu\u00e9 - Absent",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
+    "message": "Manqu\u00e9 - Endormi",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
+    "message": "Manqu\u00e9 - Pas revisit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
+    "message": "Manqu\u00e9 - Non visit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
+    "message": "Manqu\u00e9 - Autre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
+    "message": "Manqu\u00e9 - Refus",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
+    "message": "Manqu\u00e9 - Routine",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
+    "message": "Date de surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
+    "message": "D\u00e9signation du moniteur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
+    "message": "Nom du moniteur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
+    "message": "Zones mal couvertes",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
+    "message": "Zone de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
+    "message": "Type de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INBOXCOMPLAINANTCONTACT",
+    "message": "Num\u00e9ro de contact",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INBOXCOMPLAINTNUMBER",
+    "message": "Num\u00e9ro de plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INBOXCOMPLAINTTYPE",
+    "message": "Type de plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_BATCH_LABEL",
+    "message": "Lot",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
+    "message": "Num\u00e9ro de lot",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_COMMENTS_LABEL",
+    "message": "Commentaires",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
+    "message": "Date d'expiration",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
+    "message": "Num\u00e9ro MRN",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_QUANTITY_LABEL",
+    "message": "Quantit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_RESOURCE_LABEL",
+    "message": "Ressource",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_SENDER_LABEL",
+    "message": "Exp\u00e9diteur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_SKU_LABEL",
+    "message": "UGS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
+    "message": "Raison de la transaction",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
+    "message": "Type de transaction",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
+    "message": "Lettre de transport",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
+    "message": "Num\u00e9ro de lettre de transport",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LOCALITY",
+    "message": "Localit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAABSENCEREASONLABEL",
+    "message": "Raison de l'absence",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAAFPAWARENESSLABEL",
+    "message": "Sensibilisation \u00e0 l'AFP ?",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAAFPCASECOUNTLABEL",
+    "message": "Cas de PFA connus",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAAWARENESSOTHERLABEL",
+    "message": "Autre source (pr\u00e9ciser)",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQACAMPAIGNAWARENESSLABEL",
+    "message": "Source de notori\u00e9t\u00e9 de la campagne",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQACAREGIVERINFORMEDLABEL",
+    "message": "Le soignant inform\u00e9 ?",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQACHILDAGEMONTHSLABEL",
+    "message": "\u00c2ge de l'enfant (mois)",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQACHILDRENUNDER5LABEL",
+    "message": "Enfants de moins de 5 ans",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQACHILDSEXLABEL",
+    "message": "Sexe de l'enfant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQACLUSTERNUMBERLABEL",
+    "message": "Num\u00e9ro de cluster",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAFINGERMARKEDLABEL",
+    "message": "Doigt marqu\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQALOTNUMBERLABEL",
+    "message": "Num\u00e9ro de lot",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAOPVDOSESLABEL",
+    "message": "Doses de VPO d\u00e8s la naissance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAOTHERABSENCEREASONLABEL",
+    "message": "Autre motif d'absence",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAOTHERREASONSPECIFYLABEL",
+    "message": "Autre raison (pr\u00e9ciser)",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAOTHERREFUSALREASONLABEL",
+    "message": "Autre motif de refus",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAREASONNOTMARKEDLABEL",
+    "message": "Raison non marqu\u00e9e",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAREFUSALREASONLABEL",
+    "message": "Motif du refus",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
+    "message": "Zone de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQASURVEYDATELABEL",
+    "message": "Date de l'enqu\u00eate",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQASURVEYORNAMELABEL",
+    "message": "Nom de l'arpenteur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
+    "message": "Motif d'absence",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
+    "message": "Sensibilisation \u00e0 l'AFP",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
+    "message": "Nombre de cas de PFA",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
+    "message": "Autre source de sensibilisation",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
+    "message": "Sensibilisation \u00e0 la campagne",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
+    "message": "Le soignant inform\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
+    "message": "Enfants de moins de 5 ans",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
+    "message": "\u00c2ge de l'enfant (mois)",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
+    "message": "Sexe des enfants",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
+    "message": "Num\u00e9ro de cluster",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
+    "message": "Doigt marqu\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
+    "message": "Num\u00e9ro de lot",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
+    "message": "Doses de VPO",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
+    "message": "Autre motif d'absence",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
+    "message": "Autre raison (pr\u00e9ciser)",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
+    "message": "Autre motif de refus",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
+    "message": "Raison non marqu\u00e9e",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
+    "message": "Motif du refus",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
+    "message": "Zone de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
+    "message": "Nom de l'arpenteur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
+    "message": "Date de l'enqu\u00eate",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MEMBERCOUNT",
+    "message": "Nombre de membres",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MEMBER_COUNT",
+    "message": "Nombre de membres",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MOBILENUMBER",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MOBILE_NUMBER",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MRNNUMBER",
+    "message": "Num\u00e9ro MRN",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MRN_NUMBER",
+    "message": "Num\u00e9ro MRN",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
+    "message": "Nom",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_QUANTITYRECEIVED",
+    "message": "Quantit\u00e9 re\u00e7ue",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_QUANTITY_RECEIVED",
+    "message": "Quantit\u00e9 re\u00e7ue",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_RECEIVER",
+    "message": "{{fn:getsecondpagepartylabel(item.additionalfields.fields)}}",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRALNAME",
+    "message": "Nom",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRALSTATUS",
+    "message": "Statut de r\u00e9f\u00e9rence",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_NAME",
+    "message": "Nom",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
+    "message": "Statut de r\u00e9f\u00e9rence",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
+    "message": "Sympt\u00f4me de r\u00e9f\u00e9rence",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFRRALSYMPTOM",
+    "message": "Sympt\u00f4me",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_RESOURCE",
+    "message": "Ressource",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_SKU",
+    "message": "Ressource",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_STOCKEXPIRY",
+    "message": "Expiration des stocks",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_STOCK_EXPIRY",
+    "message": "Expiration des stocks",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_TRANSACTIONTYPE",
+    "message": "Type de transaction",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_VIEWCOMPLAINANTCONTACT",
+    "message": "Num\u00e9ro de contact",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
+    "message": "Zone",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_VIEWCOMPLAINTESCRIPTION",
+    "message": "Description",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_VIEWCOMPLAINTSTATUS",
+    "message": "Statut",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_VIEWCOMPLAINTTYPE",
+    "message": "Type de plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_WAYBILLNUMBER",
+    "message": "Num\u00e9ro de lettre de transport",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_WAYBILL_NUMBER",
+    "message": "Num\u00e9ro de lettre de transport",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "message": "Parti secondaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOCALISATION_ERROR",
+    "message": "Une erreur de localisation s'est produite. Veuillez v\u00e9rifier vos param\u00e8tres de langue.",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LPHCDA",
+    "message": "En LPHC",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LQA_ENUM_COMMUNITY_LEADER",
+    "message": "Leader communautaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LQA_ENUM_HEALTH_WORKER",
+    "message": "Agent de sant\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LQA_ENUM_IEC_MATERIALS",
+    "message": "Mat\u00e9riel CEI",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LQA_ENUM_MOB_VAN",
+    "message": "Van",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LQA_ENUM_NEIGHBOUR",
+    "message": "Voisin",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LQA_ENUM_NEWSPAPER",
+    "message": "Journal",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LQA_ENUM_OTHERS",
+    "message": "Autres",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LQA_ENUM_RADIO",
+    "message": "Radio",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LQA_ENUM_RELIGIOUS_LEADER",
+    "message": "Chef religieux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LQA_ENUM_SCHOOL",
+    "message": "\u00c9cole",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LQA_ENUM_SOCIAL_MEDIA",
+    "message": "R\u00e9seaux sociaux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LQA_ENUM_SOCIAL_MOBILIZER",
+    "message": "Mobilisateur social",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LQA_ENUM_TV",
+    "message": "TV",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LQA_ENUM_VOLUNTEER_CHW",
+    "message": "ASC b\u00e9n\u00e9vole",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MALE",
+    "message": "M\u00e2le",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MARKET",
+    "message": "March\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "M\u00e9tal",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MOB_VAN",
+    "message": "Fourgon mobile",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MOH_LGA",
+    "message": "Minist\u00e8re de la Sant\u00e9 LGA",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MOH_NATIONAL",
+    "message": "Minist\u00e8re de la Sant\u00e9 National",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MOH_STATE",
+    "message": "\u00c9tat du minist\u00e8re de la Sant\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NEIGHBOUR",
+    "message": "Voisin",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NEWSPAPER",
+    "message": "Journal",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO",
+    "message": "Non",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOT_ADMINISTERED",
+    "message": "Non vaccin\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOT_DECISION_MAKER",
+    "message": "Pas d\u00e9cideur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOT_REGISTERED",
+    "message": "Non enregistr\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOT_VISITED",
+    "message": "Non visit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NPHCDA",
+    "message": "Dans le NPHC",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Autre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Autres",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Autre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PARENT_NOT_AT_HOME",
+    "message": "Parent absent",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PARTNER",
+    "message": "Partenaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PLAYGROUND",
+    "message": "Aire de jeux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PLAY_AREAS",
+    "message": "Aires de jeux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "POLIO_HOME_INSIDE_MONITORING_LABEL",
+    "message": "Surveillance interne",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PROXIMITY_SEARCH",
+    "message": "M\u00e9nages \u00e0 proximit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PROXIMITY_SEARCH_REGISTRATION",
+    "message": "M\u00e9nages \u00e0 proximit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "Probl\u00e8me de performances",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "QUANTITY_RECEIVED",
+    "message": "Quantit\u00e9 re\u00e7ue",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RADIO",
+    "message": "Radio",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Roseaux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
+    "message": "Unit\u00e9 administrative",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFUSAL",
+    "message": "Refus",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATIONFLOW_beneficiaryLocation_71b53895",
+    "message": "Une zone administrative est requise",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_NOT_REGISTERD",
+    "message": "Non enregistr\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RELIGIOUS_BELIEFS",
+    "message": "Croyances religieuses",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RELIGIOUS_CENTER",
+    "message": "Centre religieux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RELIGIOUS_LEADER",
+    "message": "Chef religieux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ROTARY",
+    "message": "Rotatif",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCHOOL",
+    "message": "\u00c9cole",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SETTLEMENT_TYPE_CROSS_BORDER",
+    "message": "Transfrontalier",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SETTLEMENT_TYPE_HARD_TO_REACH",
+    "message": "Difficile d'atteindre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SETTLEMENT_TYPE_IMMIGRANTS",
+    "message": "Immigr\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SETTLEMENT_TYPE_LABEL",
+    "message": "Femelle",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SETTLEMENT_TYPE_NOMADS_PASTORALISTS",
+    "message": "Nomades / Pasteurs",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SETTLEMENT_TYPE_REFUGEES_IDPS",
+    "message": "R\u00e9fugi\u00e9s d\u00e9plac\u00e9s internes",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SETTLEMENT_TYPE_RURAL",
+    "message": "Rural",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SETTLEMENT_TYPE_SECURITY_COMPROMISED",
+    "message": "Compromis",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SETTLEMENT_TYPE_SLUMS",
+    "message": "Bidonvilles",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SETTLEMENT_TYPE_URBAN",
+    "message": "Urbain",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Malade",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SKIN_REACTION",
+    "message": "R\u00e9action cutan\u00e9e",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SOCIAL_EVENT",
+    "message": "\u00c9v\u00e9nement social",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SOCIAL_MEDIA",
+    "message": "R\u00e9seaux sociaux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SOCIAL_MOBILIZER",
+    "message": "Mobilisateur social",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SPHCDA",
+    "message": "au SPHC",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STUDENT",
+    "message": "\u00c9tudiant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Livraison r\u00e9ussie",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Security Issues",
+    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SessionClientReferenceId",
+    "message": "ID de r\u00e9f\u00e9rence de session",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "StockModel.QUANTITY_RECEIVED",
+    "message": "Quantit\u00e9 re\u00e7ue",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "StockModel.RECEIVED_FROM",
+    "message": "Re\u00e7u de",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TOO_MANY_DOSES",
+    "message": "Trop de doses",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POINT",
+    "message": "Point de transit",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_1",
+    "message": "Type de transport 1",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_2",
+    "message": "Type de transport 2",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRAVELLING",
+    "message": "Voyages",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TV",
+    "message": "TV",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Technical Issues",
+    "message": "Probl\u00e8mes techniques",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Probl\u00e8mes techniques",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UNICEF_COUNTRY",
+    "message": "Pays de l'UNICEF",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UNICEF_HQ",
+    "message": "Si\u00e8ge de l'UNICEF",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UNICEF_REGION",
+    "message": "R\u00e9gion de l'UNICEF",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UNICEF_SUB_NATIONAL",
+    "message": "UNICEF sous-national",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UNIQUE_BENEFICIARY_ID",
+    "message": "Identifiant unique du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "User Account Issues",
+    "message": "Probl\u00e8mes de compte utilisateur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "Probl\u00e8mes de compte utilisateur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "VACCINE_SIDE_EFFECTS",
+    "message": "Effets secondaires du vaccin",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "VOLUNTEER",
+    "message": "B\u00e9n\u00e9vole",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "VOLUNTEER_CHW",
+    "message": "ASC b\u00e9n\u00e9vole",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "VOMITTING",
+    "message": "Vomissement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WEAKNESS",
+    "message": "Faiblesse",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WHO_COUNTRY",
+    "message": "Pays de l'OMS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WHO_HQ",
+    "message": "Si\u00e8ge de l'OMS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WHO_HUB",
+    "message": "Centre de l'OMS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WHO_REGION",
+    "message": "R\u00e9gion de l'OMS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WHO_SUB_NATIONAL",
+    "message": "Sous-national de l'OMS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WHO_ZONAL",
+    "message": "Zone OMS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "YES",
+    "message": "Oui",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "addAnotherSession",
+    "message": "Ajouter une autre session",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "administrativeArea",
+    "message": "Nom du village",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "afpLimbWeakness",
+    "message": "Faiblesse des membres AFP",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "afpSuddenWeakness",
+    "message": "Faiblesse soudaine de l\u2019AFP",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "backToHome",
+    "message": "Retour \u00e0 la maison",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "campaignInfoSource",
+    "message": "Source d'informations sur la campagne",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "caregiverInformed",
+    "message": "Le soignant inform\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "caregiverName",
+    "message": "Nom du soignant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "caregiverPhone",
+    "message": "T\u00e9l\u00e9phone du soignant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "childrenPresent",
+    "message": "Enfants pr\u00e9sents",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "childrenVaccinated",
+    "message": "Enfants vaccin\u00e9s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "clientReferenceId",
+    "message": "Num\u00e9ro de r\u00e9f\u00e9rence",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "closeHouseholdSuccess",
+    "message": "Enfants manqu\u00e9s enregistr\u00e9s avec succ\u00e8s",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "complaintType",
+    "message": "Type de plainte",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "designationOther",
+    "message": "Autre d\u00e9signation",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "dropDown",
+    "message": "D\u00e9rouler",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "dropdown",
+    "message": "D\u00e9rouler",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "dropdownTemplate",
+    "message": "Mod\u00e8le d\u00e9roulant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "evaluationFacilityKey",
+    "message": "Installation d'\u00e9valuation",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "finalComments",
+    "message": "Commentaires finaux",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "gpsFirstHousehold",
+    "message": "GPS premier foyer",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "gpsLastHousehold",
+    "message": "GPS Dernier m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "headName",
+    "message": "Nom du chef de m\u00e9nage",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "houseMarked",
+    "message": "Maison marqu\u00e9e",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "infoSourceOther",
+    "message": "Autre source d'informations",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "infocard",
+    "message": "Carte d'information",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "latLng",
+    "message": "Coordonn\u00e9es GPS",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "meberDetails",
+    "message": "D\u00e9tails du membre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "menu_card",
+    "message": "Carte de menu",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "missedAbsent",
+    "message": "Manqu\u00e9 - Absent",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "missedAsleep",
+    "message": "Manqu\u00e9 - Endormi",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "missedNotRevisited",
+    "message": "Manqu\u00e9 - Pas revisit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "missedNotVisited",
+    "message": "Manqu\u00e9 - Non visit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "missedOther",
+    "message": "Manqu\u00e9 - Autre",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "missedRefusal",
+    "message": "Manqu\u00e9 - Refus",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "missedRoutine",
+    "message": "Manqu\u00e9 - Routine",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "monitorDesignation",
+    "message": "D\u00e9signation du moniteur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "monitorName",
+    "message": "Nom du moniteur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "monitorPhone",
+    "message": "Surveiller le t\u00e9l\u00e9phone",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "monitoringDate",
+    "message": "Date de surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "monitoringType",
+    "message": "Type de surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "oroductdetail",
+    "message": "D\u00e9tails du produit",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "panelCard",
+    "message": "Carte de panneau",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "poorlyCoveredAreas",
+    "message": "Zones mal couvertes",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "proximitySeach",
+    "message": "Recherche de proximit\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "qr_view",
+    "message": "Vue QR",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reasonForRefusal",
+    "message": "Motif du refus",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reasonNotVaccinated",
+    "message": "Raison non vaccin\u00e9e",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "row2",
+    "message": "D\u00e9tails de surveillance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "scanner",
+    "message": "Scanner le bon",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "searchByID",
+    "message": "Rechercher par identifiant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "sessionSummary",
+    "message": "R\u00e9sum\u00e9 de la s\u00e9ance",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "settlementArea",
+    "message": "Zone de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "settlementName",
+    "message": "Nom du r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "settlementType",
+    "message": "Type de r\u00e8glement",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "summaryCard",
+    "message": "R\u00e9sum\u00e9",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "teamVisited",
+    "message": "\u00c9quipe visit\u00e9e",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "vaccinationLocation",
+    "message": "Lieu de vaccination",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "whereWasChild",
+    "message": "O\u00f9 \u00e9tait l'enfant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  }
+]

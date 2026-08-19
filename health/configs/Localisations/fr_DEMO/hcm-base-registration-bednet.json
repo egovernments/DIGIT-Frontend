@@ -1,0 +1,2924 @@
+[
+  {
+    "code": " DRUG_SE_CC",
+    "message": "Effet secondaire du m\u00e9dicament du cycle en cours",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": " DRUG_SE_PC",
+    "message": "Effet secondaire du m\u00e9dicament du cycle pr\u00e9c\u00e9dent",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": " FEVER",
+    "message": "Fi\u00e8vre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": " SICK",
+    "message": "Malade",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACTION_CANCEL",
+    "message": "Annuler",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACTION_SUBMIT",
+    "message": "Soumettre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_MEMBER",
+    "message": "D\u00e9tails du membre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADMINISTERED_SUCCESS",
+    "message": "Livr\u00e9 avec succ\u00e8s",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_SUCCESS",
+    "message": "Succ\u00e8s de la livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "AGE",
+    "message": "\u00c2ge",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "AGE_OF_BENEFICIARY",
+    "message": "\u00c2ge",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "AGE_VALIDATION",
+    "message": "Veuillez saisir un \u00e2ge compris entre 3 mois et 150 ans",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "AGE_VALIDATION_ADDMEMBER",
+    "message": "L'\u00e2ge doit \u00eatre compris entre 3 mois et 150 ans",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SCREEN_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SCREEN_HEADING",
+    "message": "Veuillez v\u00e9rifier que vous avez effectu\u00e9 les op\u00e9rations suivantes",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SUBMIT_LABEL",
+    "message": "Suivant",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_GIVE_TABLET",
+    "message": "Donner 2 comprim\u00e9s AQ au soignant",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_SPAQ",
+    "message": "Compte tenu d'une discussion de sant\u00e9 sur l'utilisation du SPAQ aux jours 2 et 3",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_WRITE_CODE",
+    "message": "Avez-vous inscrit cette pi\u00e8ce d'identit\u00e9 sur la carte enfant (A utiliser au cycle suivant)",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_ACTION_LABEL",
+    "message": "Soumettre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_ALERT_DESCRIPTION",
+    "message": "En fonction des r\u00e9ponses, vous allez \u00e0 \u00ab\u00a0{value}\u00a0\u00bb. \u00cates-vous s\u00fbr de vouloir continuer\u00a0?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_ALERT_PRIMARY_ACTION_LABEL",
+    "message": "Soumettre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_ALERT_SECONDARY_ACTION_LABEL",
+    "message": "Annuler",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_ALERT_TITLE",
+    "message": "Pr\u00eat \u00e0 soumettre ?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_INELIGIBLE_ALERT_DESCRIPTION",
+    "message": "L'utilisateur sera redirig\u00e9 vers le parcours des personnes non \u00e9ligibles",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_INELIGIBLE_ALERT_TITLE",
+    "message": "Pr\u00eat \u00e0 soumettre ?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_DESCRIPTION",
+    "message": "Demandez \u00e0 la personne qui s'occupe de vous si l'enfant souffre d'une maladie ou d'un inconfort g\u00e9n\u00e9ral, comme une faiblesse, de la diarrh\u00e9e, des vomissements, des difficult\u00e9s respiratoires ou d'autres probl\u00e8mes de sant\u00e9.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_LABEL",
+    "message": "L'enfant est-il malade ?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_LABEL_REQUIRED_MESSAGE",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_DESCRIPTION",
+    "message": "V\u00e9rifiez si l'enfant se sent actuellement inhabituellement chaud au toucher ou si la personne qui s'occupe de lui a mesur\u00e9 une temp\u00e9rature \u00e9lev\u00e9e au cours des derni\u00e8res 24 heures. Si possible, mesurez la temp\u00e9rature de l\u2019enfant avec un thermom\u00e8tre.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_LABEL",
+    "message": "L'enfant a-t-il de la fi\u00e8vre ?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_LABEL_REQUIRED_MESSAGE",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_DESCRIPTION",
+    "message": "Demandez au soignant si l'enfant a pr\u00e9sent\u00e9 des sympt\u00f4mes inhabituels apr\u00e8s avoir pris SPAQ au cours du cycle pr\u00e9c\u00e9dent, tels qu'une \u00e9ruption cutan\u00e9e, des vomissements, de la diarrh\u00e9e ou tout signe de r\u00e9action allergique.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL",
+    "message": "Y a-t-il des effets secondaires avec le SPAQ administr\u00e9 lors du dernier cycle\u00a0?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL_REQUIRED_MESSAGE",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_DESCRIPTION",
+    "message": "Confirmez si l'enfant a re\u00e7u un m\u00e9dicament contenant de la sulfadoxine-pyrim\u00e9thamine (SP) ou du cotrimoxazole (CTX) au cours des 28 derniers jours, que ce soit pour la pr\u00e9vention ou le traitement de maladies.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL",
+    "message": "L'enfant a pris des m\u00e9dicaments contenant du SP ou du CTX au cours des 28 derniers jours\u00a0?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL_REQUIRED_MESSAGE",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_REFERRAL_ALERT_DESCRIPTION",
+    "message": "L'utilisateur sera redirig\u00e9 vers le parcours d'orientation",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_REFERRAL_ALERT_TITLE",
+    "message": "Pr\u00eat \u00e0 soumettre ?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_DESCRIPTION",
+    "message": "L'utilisateur sera redirig\u00e9 vers le parcours d'administration",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_TITLE",
+    "message": "Pr\u00eat \u00e0 soumettre ?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_HEADING",
+    "message": "\u00c9valuation de l'\u00e9ligibilit\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_HOUSEDETAILS_SCREEN_HEADING",
+    "message": "D\u00e9tails du m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYACKNOWLEDGEMENT_SCREEN_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYACKNOWLEDGEMENT_SCREEN_HEADING",
+    "message": " ",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_1",
+    "message": "Continuer",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_addmember",
+    "message": "Continuer",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION",
+    "message": "Entrez les d\u00e9tails de chaque individu du m\u00e9nage.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember",
+    "message": "Entrez les d\u00e9tails de chaque individu du m\u00e9nage.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
+    "message": "D\u00e9tails du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING_addmember",
+    "message": "D\u00e9tails du membre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_deliveryComments",
+    "message": "Commentaires de livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker",
+    "message": "Date de naissance",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_addmember",
+    "message": "Date de naissance",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText",
+    "message": "S\u00e9lectionnez la date de naissance dans le calendrier.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText_addmember",
+    "message": "S\u00e9lectionnez la date de naissance dans le calendrier.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_mandatory",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_mandatory_message",
+    "message": "La date de naissance est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_mandatory_message_addmember",
+    "message": "La date de naissance est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip",
+    "message": "Utilis\u00e9 pour l\u2019\u00e9ligibilit\u00e9 au programme en fonction de l\u2019\u00e2ge.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip_addmember",
+    "message": "Utilis\u00e9 pour l\u2019\u00e9ligibilit\u00e9 au programme en fonction de l\u2019\u00e2ge.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname",
+    "message": "Nom de famille",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_addmember",
+    "message": "Nom de famille",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message",
+    "message": "Le nom de famille est requis",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message_addmember",
+    "message": "Le nom de famille est requis",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message",
+    "message": "La longueur doit \u00eatre comprise entre 2 et 200\u00a0caract\u00e8res",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message_addmember",
+    "message": "Le nom de famille doit comporter au moins 2\u00a0caract\u00e8res",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender",
+    "message": "Genre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender_addmember",
+    "message": "Genre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender_mandatory",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
+    "message": "La longueur doit \u00eatre comprise entre 2 et 200\u00a0caract\u00e8res",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_height",
+    "message": "Hauteur",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_height_addmember",
+    "message": "Hauteur",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
+    "message": "D\u00e9tails d'identification",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers_addmember",
+    "message": "D\u00e9tails d'identification",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_idpopulator_mandatory_message_addmember",
+    "message": "L'identifiant est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily",
+    "message": "Est-ce chef de famille ?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily_mandatory_message",
+    "message": "La s\u00e9lection du chef de m\u00e9nage est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual",
+    "message": "Pr\u00e9nom",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_addmember",
+    "message": "Pr\u00e9nom",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText",
+    "message": "Entrez le nom l\u00e9gal complet de la personne.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText_addmember",
+    "message": "Entrez le nom l\u00e9gal complet de la personne.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message",
+    "message": "Le pr\u00e9nom est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message_addmember",
+    "message": "Le pr\u00e9nom est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message",
+    "message": "Le pr\u00e9nom doit \u00eatre compris entre 2 et 200 caract\u00e8res",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message_addmember",
+    "message": "Le pr\u00e9nom doit \u00eatre compris entre 2 et 200 caract\u00e8res",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_min_message",
+    "message": "La taille doit \u00eatre comprise entre 2 et 200\u00a0caract\u00e8res",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_min_message_addmember",
+    "message": "Le pr\u00e9nom doit \u00eatre compris entre 2 et 200 caract\u00e8res",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_tooltip",
+    "message": "Le nom doit correspondre aux documents d\u2019identit\u00e9 officiels.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_addmember",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText",
+    "message": "Entrez un num\u00e9ro de mobile valide.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText_addmember",
+    "message": "Entrez un num\u00e9ro de mobile valide.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_regex",
+    "message": "Seuls les chiffres sont autoris\u00e9s.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip",
+    "message": "Sera utilis\u00e9 pour la communication et la v\u00e9rification bas\u00e9e sur OTP.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip_addmember",
+    "message": "Sera utilis\u00e9 pour la communication et la v\u00e9rification bas\u00e9e sur OTP.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner",
+    "message": "Analyse QR",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner_addmember",
+    "message": "Analyse QR",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual",
+    "message": "Nom de famille de la personne",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual_helptext",
+    "message": " ",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual_mandatory",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual_tooltip",
+    "message": " ",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_weight",
+    "message": "Poids",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_weight_addmember",
+    "message": "Poids",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_ACTION_BUTTON_LABEL_1",
+    "message": "Soumettre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_SCREEN_DESCRIPTION",
+    "message": "Veuillez fournir l'adresse actuelle et les d\u00e9tails de localisation du b\u00e9n\u00e9ficiaire.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_SCREEN_HEADING",
+    "message": "Localisation du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1",
+    "message": "Adresse Ligne 1",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_helpText",
+    "message": "Indiquez l'adresse postale principale ou le num\u00e9ro de la maison.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message",
+    "message": "La ligne d'adresse 1 doit contenir au moins 2\u00a0caract\u00e8res",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2",
+    "message": "Ligne d'adresse 2",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_helpText",
+    "message": "Informations d'adresse suppl\u00e9mentaires, comme le nom du bloc ou de l'appartement.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message",
+    "message": "La ligne d'adresse 2 doit contenir au moins 2\u00a0caract\u00e8res",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea",
+    "message": "Zone administrative",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_helpText",
+    "message": "Entrez la r\u00e9gion ou le nom du quartier o\u00f9 r\u00e9side le b\u00e9n\u00e9ficiaire.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_mandatory_message",
+    "message": "Une zone administrative est requise",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark",
+    "message": "Point de rep\u00e8re",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_helpText",
+    "message": "Mentionnez un point de rep\u00e8re \u00e0 proximit\u00e9 pour vous aider \u00e0 localiser l'adresse.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message",
+    "message": "Le point de rep\u00e8re doit comporter au moins 2\u00a0caract\u00e8res",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong",
+    "message": "Coordonn\u00e9es g\u00e9ographiques",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_helpText",
+    "message": "Indiquez la latitude et la longitude de l'adresse, si disponible.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_mandatory_message",
+    "message": "La localisation GPS est requise",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode",
+    "message": "Code PIN",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode_helpText",
+    "message": "Entrez le code postal de la r\u00e9gion (Code PIN)",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_typeOfAddress",
+    "message": "Type d'adresse",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_DESCRIPTION",
+    "message": "Les donn\u00e9es ont \u00e9t\u00e9 enregistr\u00e9es avec succ\u00e8s. La synchronisation en arri\u00e8re-plan va bient\u00f4t commencer",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_PRIMARY_LABEL",
+    "message": "Afficher les d\u00e9tails du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_SECONDARY_LABEL",
+    "message": "Retourner",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_TITLE",
+    "message": "Donn\u00e9es enregistr\u00e9es avec succ\u00e8s\u00a0!",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1",
+    "message": "Continuer",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_DESCRIPTION",
+    "message": "Capturez les d\u00e9tails de l'emplacement de la maison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",
+    "message": "Localisation du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1",
+    "message": "Adresse Ligne 1",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
+    "message": "Entrez l'adresse principale",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2",
+    "message": "Ligne d'adresse 2",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
+    "message": "Entrez des d\u00e9tails d'adresse suppl\u00e9mentaires",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea",
+    "message": "Zone d'habitation o\u00f9 se situe la maison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_helpText",
+    "message": "S\u00e9lectionnez la zone administrative o\u00f9 se situe le m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark",
+    "message": "Point de rep\u00e8re",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark_helpText",
+    "message": "Point de rep\u00e8re \u00e0 proximit\u00e9 de la maison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_latlong",
+    "message": "Coordonn\u00e9es g\u00e9ographiques",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_latlong_helpText",
+    "message": "Capture la latitude et la longitude de la maison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode",
+    "message": "Code PIN",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_helpText",
+    "message": "Pincode de la zone",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_onlynumber",
+    "message": "Seuls les chiffres sont autoris\u00e9s.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_typeOfAddress",
+    "message": "Type d'adresse",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
+    "message": "Enregistrer la livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION",
+    "message": "Capturez les d\u00e9tails des ressources \u00e0 livrer",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
+    "message": "D\u00e9tails de livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_DELIVERYDETAILS_label_dateOfDelivery",
+    "message": "Date de livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_DELIVERYDETAILS_label_resource",
+    "message": "Ressource",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_DELIVERYDETAILS_label_scanner",
+    "message": "Livraison de num\u00e9risation",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_ISPREGNANT_IS_MANDATORY",
+    "message": "Le statut de grossesse est requis",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_dobpicker_IS_MANDATORY",
+    "message": "La date de naissance est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_gender_IS_MANDATORY",
+    "message": "Le sexe est requis",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_height",
+    "message": "Hauteur (en cm)",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_height_IS_MANDATORY",
+    "message": "La hauteur est requise",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_height_Max_message",
+    "message": "La hauteur ne peut pas d\u00e9passer 999 cm.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_height_Min_message",
+    "message": "La hauteur ne peut pas \u00eatre inf\u00e9rieure ou \u00e9gale \u00e0 0.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_weight",
+    "message": "Poids (en Kgs)",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_weight_IS_MANDATORY",
+    "message": "Le poids est requis",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_ACTION_BUTTON_LABEL_1",
+    "message": "Continuer",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION",
+    "message": "Entrez la taille de la famille, la date d'inscription et les donn\u00e9es d\u00e9mographiques.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
+    "message": "D\u00e9tails du m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_childrenCount",
+    "message": "Nombre d'enfants",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration",
+    "message": "Date d'inscription",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration_mandatory_message",
+    "message": "La date d'inscription est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount",
+    "message": "Nombre total de membres du m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_mandatory_message",
+    "message": "Le nombre de membres est requis",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_max_message",
+    "message": "Le nombre de membres doit \u00eatre compris entre 1 et 10",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_min_message",
+    "message": "Le nombre total de membres du m\u00e9nage ne peut pas \u00eatre inf\u00e9rieur \u00e0 1",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_pregnantWomenCount",
+    "message": "Nombre de femmes enceintes",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_ADD_MEMBER",
+    "message": "Ajouter un membre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_DELIVERY_DETAILS_LABEL",
+    "message": "D\u00e9tails de livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_DELIVERY_DETAILS_LABEL_mandatory_message",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_EDIT_HOUSEHOLD",
+    "message": "Modifier le foyer",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_EDIT_INDIVIDUAL",
+    "message": "Modifier une personne",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_SCREEN_DESCRIPTION",
+    "message": "Aper\u00e7u des membres du m\u00e9nage et de l'\u00e9tat de livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_SCREEN_HEADING",
+    "message": "Aper\u00e7u du m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_NO_OF_ROOMS",
+    "message": "Nombre de pi\u00e8ces dans la maison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BAR",
+    "message": "Recherche par chef de m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BAR_mandatory_message",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BY_ID_SEARCH",
+    "message": "Rechercher par identifiant",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BY_PROXIMITY",
+    "message": "Rechercher des m\u00e9nages \u00e0 proximit\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_FILTER_LABEL",
+    "message": "Filtre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_QR_LABEL",
+    "message": "Scanner le code QR",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_REGISTRATION_LABEL",
+    "message": "Enregistrer un nouveau m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_REGISTRATION_LABEL_mandatory_message",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_HEADING",
+    "message": "Rechercher un b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_STRUCTURETYPE",
+    "message": "Type de structure",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_onlynumber_validation",
+    "message": "Veuillez entrer un num\u00e9ro de mobile valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_STRUCTURETYPE_SCREEN_HEADING_ACTION_BUTTON_LABEL_1",
+    "message": "Suivant",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_STRUCTURETYPE_SCREEN_HEADING_SCREEN_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_rEGISTRATION_minAge_message_dobPicker",
+    "message": "Le chef de famille doit \u00eatre \u00e2g\u00e9 d'au moins 18 ans",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_REGISTRATION",
+    "message": "Module d'inscription",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_SEARCHBENEFICIARY",
+    "message": "Rechercher un b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_SEARCHBENEFICIARY",
+    "message": "Rechercher un b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "AVAILABLE",
+    "message": "disponible",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Add Member",
+    "message": "D\u00e9tails du membre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BACK",
+    "message": "Dos",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY",
+    "message": "B\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARYLOCATION_CORRESPONDENCE",
+    "message": "Correspondance",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARYLOCATION_OTHER",
+    "message": "Autre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARYLOCATION_PERMANENT",
+    "message": "Permanent",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "B\u00e9n\u00e9ficiaire absent",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_BACK",
+    "message": "Dos",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_DETAILS_DESC",
+    "message": "Aper\u00e7u de la livraison du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_DETAILS_HEADING",
+    "message": "D\u00e9tails du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ID_POOL_EMPTY_ERROR",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_NOT_ELIGIBLE",
+    "message": "Le b\u00e9n\u00e9ficiaire ne r\u00e9pond pas aux crit\u00e8res d'\u00e9ligibilit\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFERRED",
+    "message": "B\u00e9n\u00e9ficiaire r\u00e9f\u00e9r\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "B\u00e9n\u00e9ficiaire refus\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Beneficiary Referred",
+    "message": "B\u00e9n\u00e9ficiaire r\u00e9f\u00e9r\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Beneficiary details",
+    "message": "D\u00e9tails du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Ciment",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Argile",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSED_HOUSEHOLD",
+    "message": "M\u00e9nage ferm\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_RAISED_FOR_ANOTHER_USER",
+    "message": "Autre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_RAISED_FOR_MYSELF",
+    "message": "Autre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLETED_ON",
+    "message": "Termin\u00e9 le",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
+    "message": "Nous n\u2019avons pas pu retrouver ce b\u00e9n\u00e9ficiaire dans les dossiers. Vous pouvez l'ajouter en tant que nouveau b\u00e9n\u00e9ficiaire.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_BLUETOOTHSCAN",
+    "message": "Analyse Bluetooth",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORRESPONDENCE",
+    "message": "Correspondance",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Cycle",
+    "message": "Faire du v\u00e9lo",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DATE_OF_REGISTRATION",
+    "message": "Date d'inscription",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DEFAULT",
+    "message": "D\u00e9faut",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DELIVERY",
+    "message": "R\u00e9aliser une intervention",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DELIVERY_BACK",
+    "message": "Dos",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DELIVERY_STATUS",
+    "message": "Statut",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DELIVERY_SUCCESSFUL_PANEL_CARD_DESC",
+    "message": "Les ressources ont \u00e9t\u00e9 fournies avec succ\u00e8s.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DELIVERY_SUCCESSFUL_PANEL_CARD_HEADING",
+    "message": "Livraison r\u00e9ussie",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DOSE",
+    "message": "Dose",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Effet secondaire du m\u00e9dicament du cycle en cours",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Effet secondaire du m\u00e9dicament du cycle pr\u00e9c\u00e9dent",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DataIssues",
+    "message": "Probl\u00e8mes de donn\u00e9es",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Deliver Intervention",
+    "message": "R\u00e9aliser une intervention",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ELIGIBILITY_CHECKLIST",
+    "message": "Liste de contr\u00f4le d'\u00e9ligibilit\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FEMALE",
+    "message": "Femelle",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Fi\u00e8vre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_deliveryButton_LABEL",
+    "message": "Livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GENDER",
+    "message": "Genre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GENDER_MANDATORY_MESSAGE",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GENDER_MANDATORY_MESSAGE_ADDMEMBER",
+    "message": "Le sexe est requis",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Verre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GO_BACK",
+    "message": "Retourner",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_BATTERY",
+    "message": "Accorder",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_BATTERY ",
+    "message": "Accorder",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_BLUETOOTH",
+    "message": "Accorder",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_CAMERA",
+    "message": "Accorder",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_LOCATION",
+    "message": "Accorder",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_LOCATION ",
+    "message": "Accorder",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_NEARBY",
+    "message": "Accorder",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_NOTIFICATION",
+    "message": "Accorder",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_NOTIFICATION ",
+    "message": "Accorder",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
+    "message": "Enregistrer le b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
+    "message": "Quelle est la raison de la r\u00e9f\u00e9rence ?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD",
+    "message": "D\u00e9tails du m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD_BACK",
+    "message": "Dos",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD_HEAD_NAME",
+    "message": "Chef de famille",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD_LOCALITY",
+    "message": "Zone de r\u00e8glement",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Household",
+    "message": "D\u00e9tails du m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Household.childrenCount",
+    "message": "Nombre d'enfants",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Household.locality",
+    "message": "Localit\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Household.memberCount",
+    "message": "Nombre de membres",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Household.noOfMembers",
+    "message": "Nombre de membres",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Household.pregnantWomenCount",
+    "message": "Nombre de femmes enceintes",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HouseholdClientReferenceId",
+    "message": "ID de r\u00e9f\u00e9rence du m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ID_NUMBER",
+    "message": "Num\u00e9ro d'identification",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ID_TYPE",
+    "message": "Type d'identifiant",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INELIGIBLE",
+    "message": "In\u00e9ligible",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Ressources insuffisantes",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_STOCK",
+    "message": "Stocks insuffisants",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IS_CHILD_SICK",
+    "message": "L'enfant est-il malade ?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "IS_CHILD_WITH_FEVER",
+    "message": "L'enfant a-t-il de la fi\u00e8vre\u00a0?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Individual",
+    "message": "Individuel",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Individual.dateOfBirth",
+    "message": "Date de naissance",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Individual.gender",
+    "message": "Genre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Individual.identifierId",
+    "message": "Num\u00e9ro d'identification",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Individual.identifierType",
+    "message": "Type d'identification",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Individual.locality",
+    "message": "Localit\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Individual.mobileNumber",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Individual.name",
+    "message": "Nom",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Ineligible",
+    "message": "In\u00e9ligible",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MALE",
+    "message": "M\u00e2le",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MB_ONLY_NUMBER",
+    "message": "Le num\u00e9ro de mobile ne doit contenir que des chiffres",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MB_ONLY_NUMBERS",
+    "message": "Le num\u00e9ro de mobile ne doit contenir que des chiffres",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MEMBER_COUNT",
+    "message": "Nombre de membres",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "M\u00e9tal",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MOBILE_LENGTH_10_DIGIT_ERROR",
+    "message": "Le num\u00e9ro de portable doit contenir exactement 10 chiffres",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MOBILE_LENGTH_10_DIGIT_ERROR_ADDMEMBER",
+    "message": "Le num\u00e9ro de portable doit contenir exactement 10 chiffres",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MOBILE_NUMBER",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NAME_OF_INDIVIDUAL",
+    "message": "Nom de la personne",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NEAR_BY_WIFI_DEVICES",
+    "message": "Statut d'autorisation de partage \u00e0 proximit\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO",
+    "message": "Non",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOTIFICATION_PERMISSION_TAG",
+    "message": "Statut d'autorisation des notifications",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOT_ADMINISTERED",
+    "message": "Non livr\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOT_ELIGIBLE",
+    "message": "Non \u00e9ligible",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOT_REGISTERED",
+    "message": "Non enregistr\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOT_VISITED",
+    "message": "Non livr\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OPEN",
+    "message": "Ouvrir",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Autre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Autre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Autre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERFORMANCEISSUE",
+    "message": "Probl\u00e8mes de performances",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERMANENT",
+    "message": "Permanent",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PINCODE_ONLY_NUMBERS",
+    "message": "Le code PIN ne doit contenir que des chiffres",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PREGNANT_NO",
+    "message": "Non",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PREGNANT_YES",
+    "message": "Oui",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PROXIMITY_RADIUS_ERROR_MESSAGE",
+    "message": "Veuillez saisir un rayon de proximit\u00e9 valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PROXIMITY_SEARCH",
+    "message": "M\u00e9nages \u00e0 proximit\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PROXIMITY_SEARCH_REGISTRATION",
+    "message": "M\u00e9nages \u00e0 proximit\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "Probl\u00e8mes de performances",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ProjectBeneficiaryClientReferenceId",
+    "message": "Identifiant de r\u00e9f\u00e9rence du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "QUESTION1",
+    "message": "Question 1",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "QUESTION2",
+    "message": "Question 2",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "QUESTION_1_NO",
+    "message": "Non",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "QUESTION_1_YES",
+    "message": "Oui",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "QUESTION_2_NO",
+    "message": "Non",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "QUESTION_2_YES",
+    "message": "Oui",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "QUESTION_3_NO",
+    "message": "Non",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "QUESTION_3_YES",
+    "message": "Oui",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "QUESTION_4_NO",
+    "message": "Non",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "QUESTION_4_YES",
+    "message": "Oui",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RECORD_CYCLE_DOSE",
+    "message": "Livraison d'enregistrement",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RECORD_DELIVERY_PRIMARY_LABEL",
+    "message": "Enregistrer les donn\u00e9es",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Roseaux",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFERRAL_BACK",
+    "message": "Dos",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFERRAL_SUCCESSFUL_PANEL_CARD_DESC",
+    "message": "Les donn\u00e9es de r\u00e9f\u00e9rence ont \u00e9t\u00e9 enregistr\u00e9es avec succ\u00e8s.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFERRAL_SUCCESSFUL_PANEL_CARD_HEADING",
+    "message": "Parrainage enregistr\u00e9 avec succ\u00e8s",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFERRAL_VIEW_HOUSEHOLD_DETAILS",
+    "message": "Afficher les d\u00e9tails du m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
+    "message": "Unit\u00e9 administrative",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFER_BENEFICIARY_LABEL_DATE_OF_REFERRAL",
+    "message": "Date de r\u00e9f\u00e9rence",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFER_BENEFICIARY_LABEL_REASON_FOR_REFERRAL",
+    "message": "Quelle est la raison de la r\u00e9f\u00e9rence ?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFER_BENEFICIARY_LABEL_REFERRED_BY",
+    "message": "R\u00e9f\u00e9r\u00e9 par",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFER_BENEFICIARY_LABEL_REFERRED_TO",
+    "message": "\u00c9tablissement de sant\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFER_BENEFICIARY_REFERRED_BY_REQUIRED",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFER_BENEFICIARY_SCREEN_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFER_BENEFICIARY_SCREEN_HEADING",
+    "message": "R\u00e9f\u00e9rer le b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REFER_BENEFICIARY_SUBMIT_BUTTON",
+    "message": "Soumettre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTER_BENEFICIARY",
+    "message": "Inscrire le b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATIONFLOW_ISPREGNANT",
+    "message": "\u00cates-vous enceinte?",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATIONFLOW_NO_OF_PREGNANTWOMEN",
+    "message": "Nombre de femmes enceintes",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATIONFLOW_beneficiaryDetail_lengthmessage_phone",
+    "message": "Veuillez saisir un num\u00e9ro de t\u00e9l\u00e9phone \u00e0 9 chiffres",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATIONFLOW_beneficiaryLocation_71b53895",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_ADD_MEMBER_MESSAGE",
+    "message": "Impossible de charger le formulaire d'inscription des membres. Veuillez r\u00e9essayer.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_ADD_MEMBER_dobPicker_ERROR",
+    "message": "Veuillez saisir une date de naissance valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_ADD_MEMBER_familyname_ERROR",
+    "message": "Veuillez entrer le nom de famille",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_ADD_MEMBER_gender_ERROR",
+    "message": "Veuillez s\u00e9lectionner un sexe",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_ADD_MEMBER_identifiers_ERROR",
+    "message": "Veuillez saisir un identifiant valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_ADD_MEMBER_nameOfIndividual_ERROR",
+    "message": "Veuillez entrer le nom de la personne",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_ADD_MEMBER_phone_ERROR",
+    "message": "Veuillez entrer un num\u00e9ro de t\u00e9l\u00e9phone valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_ADMINISTRATION_FAILED",
+    "message": "\u00c9chec de la livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_ADMINISTRATION_SUCCESS",
+    "message": "Succ\u00e8s de la livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_BENEFICIARYDETAILS_MESSAGE",
+    "message": "Impossible de charger les d\u00e9tails du b\u00e9n\u00e9ficiaire. Veuillez r\u00e9essayer.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_BENEFICIARYLOCATION_MESSAGE",
+    "message": "Impossible de charger le formulaire de localisation du b\u00e9n\u00e9ficiaire. Veuillez r\u00e9essayer.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_BENEFICIARY_REFERRED",
+    "message": "B\u00e9n\u00e9ficiaire r\u00e9f\u00e9r\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_CLOSED_HOUSEHOLD",
+    "message": "M\u00e9nage ferm\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_CURRENT_DOSE",
+    "message": "Livraison actuelle",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_CURRENT_DOSE_STATUS_ADMINISTERED",
+    "message": "Livr\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_CURRENT_DOSE_STATUS_PENDING",
+    "message": "En attente",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_CURRENT_DOSE_STATUS_TOBE_ADMINISTERED",
+    "message": "A livrer",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_DELIVERYDETAILS_MESSAGE",
+    "message": "Impossible de charger les d\u00e9tails de la livraison. Veuillez r\u00e9essayer.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_DELIVERYSUCCESS_MESSAGE",
+    "message": "Impossible de naviguer vers le succ\u00e8s de la livraison. Veuillez r\u00e9essayer.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_DELIVERY_MESSAGE",
+    "message": "Impossible de charger le formulaire de livraison. Veuillez r\u00e9essayer.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_EDIT_HOUSEHOLD_BUTTON_LABEL",
+    "message": "Modifier le foyer",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_EDIT_INDIVIDUAL_BUTTON_LABEL",
+    "message": "Modifier une personne",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HIDE_PAST_CYCLES",
+    "message": "Masquer les cycles pass\u00e9s",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLDDETAILS_MESSAGE",
+    "message": "Impossible de charger le formulaire de d\u00e9tails du m\u00e9nage. Veuillez r\u00e9essayer.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLDOVERVIEW_MESSAGE",
+    "message": "Impossible d'acc\u00e9der \u00e0 l'aper\u00e7u du foyer. Veuillez r\u00e9essayer.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_MESSAGE",
+    "message": "Impossible de charger le formulaire d'enregistrement du m\u00e9nage. Veuillez r\u00e9essayer.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_OVERVIEW_DESC",
+    "message": "Aper\u00e7u du m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_OVERVIEW_HEADING",
+    "message": "Aper\u00e7u du m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_addressLine1_ERROR",
+    "message": "Veuillez entrer une adresse valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_addressLine2_ERROR",
+    "message": "Veuillez entrer une adresse valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_administrativeArea_ERROR",
+    "message": "La zone administrative n'est pas valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_dateOfRegistration_ERROR",
+    "message": "La date d'inscription n'est pas valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_dobPicker_ERROR",
+    "message": "La date de naissance n'est pas valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_familyname_ERROR",
+    "message": "Le nom de famille n'est pas valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_isHeadOfFamily_ERROR",
+    "message": "La s\u00e9lection du chef de famille n'est pas valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_landmark_ERROR",
+    "message": "Le point de rep\u00e8re n'est pas valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_latLng_ERROR",
+    "message": "La localisation GPS n'est pas valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_memberCount_ERROR",
+    "message": "Le nombre de membres n'est pas valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_nameOfIndividual_ERROR",
+    "message": "Le nom de la personne n'est pas valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_phone_ERROR",
+    "message": "Le num\u00e9ro de t\u00e9l\u00e9phone n'est pas valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_pincode_ERROR",
+    "message": "Le code PIN n'est pas valide",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_pincode_MAX_ERROR",
+    "message": "Le code PIN d\u00e9passe la valeur maximale autoris\u00e9e",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_HOUSEHOLD_pincode_MIN_ERROR",
+    "message": "Le code PIN ne r\u00e9pond pas \u00e0 la valeur minimale requise",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_INELIGIBLE",
+    "message": "In\u00e9ligible",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_NOT_ADMINISTERED",
+    "message": "Non livr\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_NOT_REGISTERD",
+    "message": "Non enregistr\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_PAST_CYCLE",
+    "message": "Cycle pass\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_PAST_DOSE",
+    "message": "Dose pass\u00e9e",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_PAST_DOSE_STATUS_ADMINISTERED",
+    "message": "Livr\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_PAST_DOSE_STATUS_PENDING",
+    "message": "En attente",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_PAST_DOSE_STATUS_TOBE_ADMINISTERED",
+    "message": "A livrer",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_RESOURCE_CARD_SELECTION_REQUIRED",
+    "message": "Veuillez s\u00e9lectionner le produit",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_SEARCH_BENEFICIARY_DESC",
+    "message": "Rechercher des b\u00e9n\u00e9ficiaires inscrits \u00e0 la campagne en cours",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_CLEAR_LABEL",
+    "message": "Clair",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_CLEAR_LABEL ",
+    "message": "Clair",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_FILTER_LABEL",
+    "message": "Appliquer",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_FILTER_LABEL ",
+    "message": "Appliquer",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_LABEL",
+    "message": "Filtre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_TITLE_LABEL",
+    "message": "Filtre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_TITLE_LABEL ",
+    "message": "Filtre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_SEARCH_BENEFICIARY_HEADING",
+    "message": "Rechercher un b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_VIEW_DETAILS",
+    "message": "Afficher les d\u00e9tails",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_VIEW_PAST_CYCLES",
+    "message": "Afficher les cycles pass\u00e9s",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REQUIRED",
+    "message": "requis",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCANLIMIT_ERROR_MESSAGE",
+    "message": "Limite d'analyse atteinte. Veuillez r\u00e9essayer plus tard",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCANLIMIT_VALIDATION_MESSAGE",
+    "message": "Une seule analyse est autoris\u00e9e.",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_PRIMARY_ACTION",
+    "message": "Dos",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_SECONDARY_ACTION",
+    "message": "Confirmer",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_TITLE",
+    "message": "Scanner",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCAN_BENEFICIARY",
+    "message": "B\u00e9n\u00e9ficiaire du scan",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SECURITYISSUES",
+    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Malade",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Livraison r\u00e9ussie",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TECHNICALISSUES",
+    "message": "Probl\u00e8mes techniques",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Task",
+    "message": "T\u00e2che",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Task.createdTime",
+    "message": "Termin\u00e9 le",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Task.cycleIndex",
+    "message": "Cycle de livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Task.deliveryComment",
+    "message": "Commentaire de livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Task.doseIndex",
+    "message": "Livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Task.status",
+    "message": "Statut",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Probl\u00e8mes techniques",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UNIQUE_BENEFICIARY_ID",
+    "message": "Identifiant unique du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USERACCOUNTISSUES",
+    "message": "Probl\u00e8mes de compte utilisateur",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "Probl\u00e8mes de compte utilisateur",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "VIEW_HOUSEHOLD_DETAILS",
+    "message": "Afficher les d\u00e9tails du m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "YES",
+    "message": "Oui",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "administrationSuccess",
+    "message": "Livr\u00e9 avec succ\u00e8s",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "batteryOptimizationTag",
+    "message": "\u00c9tat d'autorisation de la batterie",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "beneficiaryDetails",
+    "message": "D\u00e9tails du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "blueToothScan",
+    "message": "\u00c9tat d'autorisation de num\u00e9risation Bluetooth",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "cameraPermissionStatus",
+    "message": "\u00c9tat d'autorisation de la cam\u00e9ra",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "childrenCount",
+    "message": "Nombre d'enfants",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "clientReferenceId",
+    "message": "Num\u00e9ro de r\u00e9f\u00e9rence",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "createdTime",
+    "message": "Termin\u00e9 le",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "cycleIndex",
+    "message": "Cycle de livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "cycleNumber",
+    "message": "Num\u00e9ro de cycle",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "dateOfBirth",
+    "message": "Date de naissance",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "deliveryComment",
+    "message": "Commentaires de livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "deliveryDetails",
+    "message": "D\u00e9tails de livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "deliverySuccess",
+    "message": "Succ\u00e8s de la livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "deliveryTable",
+    "message": "Tableau de livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "doseIndex",
+    "message": "Livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "entities",
+    "message": "Entit\u00e9s",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "gender",
+    "message": "Genre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "genderAge",
+    "message": "Genre | \u00c2ge",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "headOfHousehold",
+    "message": "Chef de famille",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "householdDetails",
+    "message": "D\u00e9tails du m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "householdId",
+    "message": "ID du foyer",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "householdOverview",
+    "message": "Aper\u00e7u du m\u00e9nage",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "identifierId",
+    "message": "Num\u00e9ro d'identification",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "identifierType",
+    "message": "Type d'identification",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "individualName",
+    "message": "Nom du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "isClosedHousehold",
+    "message": "M\u00e9nage ferm\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "isEdit",
+    "message": "Mode \u00e9dition",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "locality",
+    "message": "Localit\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "locationPermission",
+    "message": "Statut d'autorisation de localisation",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "meberDetails",
+    "message": "D\u00e9tails du membre",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "memberCount",
+    "message": "Nombre de membres",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "memberTable",
+    "message": "Tableau des membres",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "mobileNumber",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "name",
+    "message": "Nom",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "notEligible",
+    "message": "Non \u00e9ligible",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "notVisited",
+    "message": "Non livr\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "pastCycleTable",
+    "message": "Tableau des cycles pass\u00e9s",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "pregnantWomenCount",
+    "message": "Nombre de femmes enceintes",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "projectId",
+    "message": "ID du projet",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "proximityRadius",
+    "message": "Rayon de proximit\u00e9",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "resourceCard",
+    "message": "Ressource",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "searchBeneficiary",
+    "message": "Rechercher un b\u00e9n\u00e9ficiaire",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "status",
+    "message": "Statut de livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "statusTag",
+    "message": "Statut de livraison",
+    "module": "hcm-base-registration-bednet",
+    "locale": "fr_DEMO"
+  }
+]

@@ -1,0 +1,3428 @@
+[
+  {
+    "code": "AGGREGATE",
+    "message": "Facture globale",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPROVAL_PENDING",
+    "message": "En attente d'approbation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPROVED",
+    "message": "Approuv\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE",
+    "message": "Limite",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_ADMINISTRATIVEPOST",
+    "message": "Poste administratif",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_CENTRE",
+    "message": "Centre Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_CHIEFDOM",
+    "message": "Chiefdom Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_COMMUNITY",
+    "message": "Community Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_COUNCIL",
+    "message": "Council Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_COUNTRY",
+    "message": "Country Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_DISTRICT",
+    "message": "District Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_HEALTHFACILITY",
+    "message": "Health facility Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_INBOX_CARD",
+    "message": "Registres de pr\u00e9sence",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_LGA",
+    "message": "LGA",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_LOCALITY",
+    "message": "Localit\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_PAYS",
+    "message": "Pays Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_PHU",
+    "message": "PHU Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_PROJECT_NAME",
+    "message": "Nom de la campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_PROVINCE",
+    "message": "Province Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REGION",
+    "message": "Region Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_SECTION",
+    "message": "Section Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_SETUP_PAYMENT_ATTRIBUTES",
+    "message": "Configurer les attributs de paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_SPP/SFD",
+    "message": "SPP/SFD Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_SPP/SPD",
+    "message": "Limite SPP/SPD",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_STATE",
+    "message": "State Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_TOWN",
+    "message": "Town Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_VILLAGE",
+    "message": "Village Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_WARD",
+    "message": "Ward Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BIWEEKLY",
+    "message": "Bihebdomadaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BI_WEEKLY",
+    "message": "Bihebdomadaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMMON_NO_RESULTS_FOUND",
+    "message": "Aucun r\u00e9sultat trouv\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_GO_TO_HOME_CREATE_SUCCES",
+    "message": "Rentrer \u00e0 la maison",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_GO_TO_HOME_CREATE_SUCCESS",
+    "message": "Aller \u00e0 la maison",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_COMMON_INBOX",
+    "message": "Bo\u00eete de r\u00e9ception",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_TITLE_EDIT_BILLS",
+    "message": "Modifier les factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_TITLE_MANAGE_BILLS",
+    "message": "G\u00e9rer les factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_TITLE_MANAGE_BILLS_APPROVER",
+    "message": "G\u00e9rer les factures (approuver)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_TITLE_MANAGE_BILLS_EDITOR",
+    "message": "G\u00e9rer les factures (Modifier)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_TITLE_MANAGE_BILLS_REVIEWER",
+    "message": "G\u00e9rer les factures (r\u00e9vision)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_TITLE_MY_BILLS",
+    "message": "Mes factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_TITLE_VERIFY_AND_GENERATE_PAYMENTS",
+    "message": "V\u00e9rifier et g\u00e9n\u00e9rer des paiements",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CUSTOM",
+    "message": "Coutume",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DISTRIBUTOR",
+    "message": "Distributeur",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DISTRICT_SUPERVISOR",
+    "message": "Superviseur de district",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_AGGREGATE_BILL",
+    "message": "Facture globale",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_COMMON_APPLY",
+    "message": "Appliquer",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_INDIVIDUAL_BILL",
+    "message": "Facture interm\u00e9diaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FIELD_SUPPORT",
+    "message": "Assistance sur le terrain",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FINAL_AGGREGATE",
+    "message": "Agr\u00e9gat",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FOR_CONSTANT",
+    "message": "pour limite",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FULLY_PAID",
+    "message": "Enti\u00e8rement pay\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FULLY_VERIFIED",
+    "message": "Enti\u00e8rement v\u00e9rifi\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GO_BACK_TO_HOME",
+    "message": "Aller \u00e0 la maison",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ACTION",
+    "message": "Action",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ACTIONS",
+    "message": "Action",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ACTIONS_APPROVE",
+    "message": "Approuver",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ACTIONS_EDIT_ATTENDANCE",
+    "message": "Modifier la participation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ACTION_IN_PROGRESS",
+    "message": "L'action est en cours",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ACTION_NEEDED_TEAM_CODE",
+    "message": "Attribuer des utilisateurs",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ACTUAL_INTERVENTIONS",
+    "message": "Inscriptions/Interventions termin\u00e9es",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ADD_JUSTIFICATION_AND_COMMENTS",
+    "message": "Ajouter une justification et des commentaires",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ADVISORY_GENERATED",
+    "message": "Avis g\u00e9n\u00e9r\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ALERT_APPROVE_DESCRIPTION",
+    "message": "Une fois approuv\u00e9, vous ne pouvez apporter aucune modification \u00e0 la participation. \u00cates-vous s\u00fbr de vouloir approuver\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ALERT_APPROVE_HEADING",
+    "message": "Approuver la participation\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ALERT_BILL_EDIT_DESCRIPTION",
+    "message": "Etes-vous s\u00fbr de vouloir mettre \u00e0 jour les enregistrements s\u00e9lectionn\u00e9s\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ALERT_BILL_EDIT_HEADING",
+    "message": "Avertissement!",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ALERT_EDIT_DESCRIPTION",
+    "message": "La modification du nombre de jours aura un impact sur les paiements et gelera la participation pour cette p\u00e9riode.\n\u00cates-vous s\u00fbr de vouloir continuer\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ALERT_HEADING",
+    "message": "Avertissement!",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ALERT_PAYMENT_DESCRIPTION",
+    "message": "Cet enregistrement sera envoy\u00e9 pour la g\u00e9n\u00e9ration de paiements. \u00cates-vous s\u00fbr de vouloir continuer\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ALERT_PAYMENT_HEADING",
+    "message": "Avertissement!",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ALERT_VERIFY_DESCRIPTION",
+    "message": "Ce dossier sera envoy\u00e9 pour v\u00e9rification. \u00cates-vous s\u00fbr de vouloir continuer\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ALERT_VERIFY_HEADING",
+    "message": "Avertissement!",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ALL_THE_REGISTERS_SHOULD_BE_APPROVED_INFO",
+    "message": "Pour g\u00e9n\u00e9rer la facture, tous les registres doivent \u00eatre approuv\u00e9s",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_APPLY_PAYMENT_FILTER",
+    "message": "Appliquer le filtre",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_APPROVE",
+    "message": "Approuver",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_APPROVED",
+    "message": "Approuv\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_APPROVED_REGISTER",
+    "message": "Registres approuv\u00e9s",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_APPROVED_REGISTERS",
+    "message": "Registres approuv\u00e9s",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_APPROVE_COMMENT_LABEL",
+    "message": "Commentaires",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_APPROVE_LABEL",
+    "message": "Approuver",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ASSIGN_BT",
+    "message": "Attribuer",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE",
+    "message": "Pr\u00e9sence",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_APPROVED_BY",
+    "message": "Approuv\u00e9 par",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_APPROVE_FAILED",
+    "message": "L'approbation a \u00e9chou\u00e9\u00a0!",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_APPROVE_SUCCESS",
+    "message": "Pr\u00e9sence approuv\u00e9e",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_ASSIGN_USER",
+    "message": "Attribuer un utilisateur",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_ATTENDEES",
+    "message": "Nombre de participants",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_BOUNDARY",
+    "message": "Limite",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_BOUNDARY_SELECT",
+    "message": "Veuillez s\u00e9lectionner la limite",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_CAN_NOT_BE_LESS_THAN_ZERO",
+    "message": "La pr\u00e9sence ne peut \u00eatre inf\u00e9rieure \u00e0 0 jour",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_CAN_NOT_EXCEED_EVENT_DURATION_ERROR",
+    "message": "Le nombre de jours travaill\u00e9s ne peut pas \u00eatre sup\u00e9rieur \u00e0 la dur\u00e9e de la p\u00e9riode",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_DURATION",
+    "message": "Dur\u00e9e de pr\u00e9sence",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_EDIT_REGISTER",
+    "message": "Modifier le registre de pr\u00e9sence",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_EXCEEDS_BILLING_PERIOD",
+    "message": "Le nombre de jours de pr\u00e9sence ne doit pas d\u00e9passer la dur\u00e9e du cycle de facturation.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_ID",
+    "message": "ID de pr\u00e9sence",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_INBOX",
+    "message": "Bo\u00eete de r\u00e9ception",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_MARKED_BY",
+    "message": "Note de pr\u00e9sence par",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_NAME",
+    "message": "Nom du projet",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_NOT_FIND_USER_LABEL",
+    "message": "Vous ne trouvez pas l'utilisateur\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_OFFICER",
+    "message": "Agent de pr\u00e9sence",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_OFFICER_CONTACT_NUMBER",
+    "message": "Coordonn\u00e9es",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_PAYMENT_PERIOD_FAILED",
+    "message": "La configuration du paiement n'est pas termin\u00e9e pour la limite s\u00e9lectionn\u00e9e. Veuillez contacter l'administrateur syst\u00e8me.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_PERIOD_SELECT",
+    "message": "Veuillez s\u00e9lectionner la p\u00e9riode",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_PLZ_SELECT_BOUNDARY",
+    "message": "Veuillez s\u00e9lectionner les limites obligatoires",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_PROJECT_SELECT",
+    "message": "Veuillez s\u00e9lectionner le projet",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED",
+    "message": "\u00c9chec de la r\u00e9cup\u00e9ration des registres",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION",
+    "message": "La liste de pr\u00e9sence est approuv\u00e9e et le rapport de paiement peut \u00eatre g\u00e9n\u00e9r\u00e9 par le responsable de campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_TABLE_HEADER",
+    "message": "Registre de pr\u00e9sence et de performance des travailleurs",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_UPDATED_SUCCESSFULLY",
+    "message": "Participation mise \u00e0 jour avec succ\u00e8s\u00a0!",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDANCE_USER_ASSIGN_REGISTER",
+    "message": "Rechercher un utilisateur et l'attribuer pour s'inscrire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ATTENDEE_DE_ENROLL_SUCCESS_MESSAGE",
+    "message": "Participant supprim\u00e9 du registre avec succ\u00e8s",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BACK",
+    "message": "Dos",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BACK_LABEL",
+    "message": "Dos",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BANK_ACCOUNT",
+    "message": "Compte bancaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BANK_CODE",
+    "message": "Code banque",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BENEFICIARY_CODE",
+    "message": "Code du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILLING_CYCLE_DURATION_BETWEEN",
+    "message": "La dur\u00e9e minimale de facturation doit \u00eatre",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILLS_INBOX",
+    "message": "Bo\u00eete de r\u00e9ception",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILLS_PROCESSING_INFO",
+    "message": "Les factures surlign\u00e9es en gris sont actuellement en cours de traitement et ne peuvent pas \u00eatre trait\u00e9es. Veuillez actualiser la page apr\u00e8s un certain temps pour voir le dernier statut.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILLS_SELECTED",
+    "message": "Factures s\u00e9lectionn\u00e9es",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_ACTIONS",
+    "message": "Actes",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_AGGREGATION_FOR_EMPLOYEE_MAPPED_AT",
+    "message": "Agr\u00e9gation des factures pour les employ\u00e9s mapp\u00e9s \u00e0",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_AMOUNT",
+    "message": "Montant de la facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_DATE",
+    "message": "Date de facturation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_DETAILS",
+    "message": "D\u00e9tails de la facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_DETAIL_UPDATE_ERROR",
+    "message": "Erreur! La mise \u00e0 jour de la facture a \u00e9chou\u00e9.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_DETAIL_UPDATE_SUCCESS",
+    "message": "Champs s\u00e9lectionn\u00e9s mis \u00e0 jour avec succ\u00e8s\u00a0!",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_DETAIL_UPDATE_SUCCESS_DESCRIPTION",
+    "message": "Champs s\u00e9lectionn\u00e9s mis \u00e0 jour avec succ\u00e8s\u00a0!",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_ERROR_CARD_HEADING",
+    "message": "Erreur!",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_ERROR_INFO_TEXT",
+    "message": "Peu de d\u00e9tails sont manquants ou incorrects, veuillez consulter le tableau ci-dessous et apporter les corrections n\u00e9cessaires.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_GENERATED_SUCCESSFULLY",
+    "message": "Facture g\u00e9n\u00e9r\u00e9e avec succ\u00e8s",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_GENERATE_ERROR",
+    "message": "Impossible de g\u00e9n\u00e9rer des factures avant d'avoir termin\u00e9 le cycle de facturation pr\u00e9c\u00e9dent.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_GENERATE_INITIATED",
+    "message": "La g\u00e9n\u00e9ration de facture est lanc\u00e9e, veuillez patienter un moment. Vous pourrez retrouver votre facture sous \u00ab\u00a0Mes factures\u00a0\u00bb",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_GENERATE_INPROGRESS",
+    "message": "La g\u00e9n\u00e9ration de facture est en cours",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_GENERATION_ALERT_DESCRIPTION",
+    "message": "Une fois g\u00e9n\u00e9r\u00e9e, vous ne pourrez plus g\u00e9n\u00e9rer une autre facture pour cette p\u00e9riode dans cette limite. \u00cates-vous s\u00fbr de vouloir g\u00e9n\u00e9rer la facture\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_GENERATION_ALERT_HEADING",
+    "message": "G\u00e9n\u00e9rer une facture\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_GENERATION_FAILED_MESSAGE",
+    "message": "\u00c9chec de la g\u00e9n\u00e9ration",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_GENERATION_INITIATED",
+    "message": "G\u00e9n\u00e9ration de facture lanc\u00e9e",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_GENERATION_IN_PROGRESS_MESSAGE",
+    "message": "La g\u00e9n\u00e9ration de facture est en cours",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_ID",
+    "message": "Num\u00e9ro de facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_INBOX",
+    "message": "Bo\u00eete de r\u00e9ception de facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT",
+    "message": "Filtrez et choisissez votre limite pour afficher les r\u00e9sultats",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_IS_ALREADY_GENERATED",
+    "message": "La facture est d\u00e9j\u00e0 g\u00e9n\u00e9r\u00e9e pour la limite s\u00e9lectionn\u00e9e",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_IS_ALREADY_GENERATED_INFO_MESSAGE",
+    "message": "Error 500 (Server Error)!!1500.That\u2019s an error.There was an error. Please try again later.That\u2019s all we know.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_NOT_FOUND",
+    "message": "Facture introuvable.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_NUMBER",
+    "message": "Num\u00e9ro de facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_PERIOD_DATE",
+    "message": "P\u00e9riode de facturation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_TYPE",
+    "message": "S\u00e9lectionnez le type de facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_TYPE_COLOUMN",
+    "message": "Type de facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_UPDATED_SUCCESSFULLY",
+    "message": "Facture mise \u00e0 jour avec succ\u00e8s",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_UPDATE_SUCCESS",
+    "message": "Error 500 (Server Error)!!1500.That\u2019s an error.There was an error. Please try again later.That\u2019s all we know.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_VERIFICATION_DONE",
+    "message": "V\u00e9rification r\u00e9ussie\u00a0!",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_VERIFICATION_IN_PROGRESS",
+    "message": "La v\u00e9rification des enregistrements s\u00e9lectionn\u00e9s est en cours.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_VERIFY_ERROR",
+    "message": "La v\u00e9rification a \u00e9chou\u00e9.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BILL_VERIFY_EXCEPTION",
+    "message": "La v\u00e9rification a \u00e9chou\u00e9.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BOUNDARY_CODE",
+    "message": "Limite",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BOUNDARY_NAME",
+    "message": "Limite",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_APPROVER",
+    "message": "G\u00e9rer les factures (approuver)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_ATTENDANCE-APPROVE-FAILED",
+    "message": "\u00c9chec de l'approbation de la pr\u00e9sence",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_ATTENDANCE-APPROVE-SUCCESS",
+    "message": "Succ\u00e8s approuv\u00e9 par la participation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_ATTENDANCE_APPROVE_FAILED",
+    "message": "\u00c9chec de l'approbation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_ATTENDANCE_APPROVE_SUCCESS",
+    "message": "Succ\u00e8s de l'approbation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_ATTENDEE_INBOX",
+    "message": "Bo\u00eete de r\u00e9ception des participants",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_EDIT-ATTENDANCE",
+    "message": "Modifier la participation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_EDITOR",
+    "message": "G\u00e9rer les factures (Modifier)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_EDIT_ATTENDANCE",
+    "message": "Modifier la participation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_EDIT_BILLS",
+    "message": "Modifier les factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_EDIT_BILL_ON_EXCEL",
+    "message": "Modifier la facture sur Excel",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_EDIT_BILL_PAYMENT_DETAILS",
+    "message": "Modifier la facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_EDIT_REGISTER",
+    "message": "Voir le registre",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_GENERATE-BILL",
+    "message": "G\u00e9n\u00e9rer une facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_GENERATE_BILL",
+    "message": "G\u00e9n\u00e9rer une facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_GENERATE_BILLS",
+    "message": "G\u00e9n\u00e9rer une facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_MANAGE_BILLS",
+    "message": "G\u00e9rer les factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_MANAGE_BILLS_PROJECT_SELECTION",
+    "message": "S\u00e9lection de projets",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_MY-BILLS",
+    "message": "Mes factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_MY_BILLS",
+    "message": "Mes factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_PAYMENT_SETUP",
+    "message": "Configuration du paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_PAYMENT_SETUP_FAILED",
+    "message": "\u00c9chec de la configuration du paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_PAYMENT_SETUP_SUCCESS",
+    "message": "Configuration du paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_PROJECT_AND_AGGREGATION_SELECTION",
+    "message": "Registres de pr\u00e9sence",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_PROJECT_SELECTION",
+    "message": "S\u00e9lection de campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_REGISTERS-INBOX",
+    "message": "Bo\u00eete de r\u00e9ception des registres",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_REGISTERS_INBOX",
+    "message": "Bo\u00eete de r\u00e9ception des registres",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_REVIEWER",
+    "message": "G\u00e9rer les factures (r\u00e9vision)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_SEND_FOR_APPROVAL_SUCCESS",
+    "message": "Facture envoy\u00e9e pour approbation avec succ\u00e8s",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_SEND_FOR_REVIEW_SUCCESS",
+    "message": "Facture envoy\u00e9e pour examen avec succ\u00e8s",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_VERIFY_AND_GENERATE_PAYMENTS",
+    "message": "V\u00e9rifier et g\u00e9n\u00e9rer des paiements",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_VERIFY_BILLS",
+    "message": "V\u00e9rifier les factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_VERIFY_SUCCESS",
+    "message": "Facture envoy\u00e9e pour v\u00e9rification avec succ\u00e8s",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_VIEW-ATTENDANCE",
+    "message": "Afficher la participation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_VIEW_ATTENDANCE",
+    "message": "Afficher la participation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BREADCRUMBS_VIEW_BILL_PAYMENT_DETAILS",
+    "message": "Afficher les d\u00e9tails du paiement des factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BTN_EDIT",
+    "message": "Modifier",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BTN_SUBMIT",
+    "message": "Soumettre",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BTN_UPDATE",
+    "message": "Mise \u00e0 jour",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_BUTTON_CONFIRM",
+    "message": "Confirmer et enregistrer",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CAMPAIGN_END_DATE",
+    "message": "Date de fin de campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CAMPAIGN_NAME",
+    "message": "Nom de la campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CAMPAIGN_START_DATE",
+    "message": "Date de d\u00e9but de la campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CANCEL",
+    "message": "Annuler",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CANCEL_EDIT",
+    "message": "Annuler Modifier",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CAN_NOT_EXCEED",
+    "message": "ne peut exc\u00e9der",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CENTRE_LEVEL",
+    "message": "Centre Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CHIEFDOM_LEVEL",
+    "message": "Chiefdom Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CHOOSE_BOUNDARY_DESCRIPTION",
+    "message": "S\u00e9lectionnez une limite et une p\u00e9riode de facturation pour afficher les r\u00e9sultats.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CHOOSE_PROJECT_TO_VIEW_REGISTERS",
+    "message": "Choisissez le projet pour consulter les registres",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CLEAR",
+    "message": "Effacer la recherche",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CLOSE",
+    "message": "Annuler",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CLOSE_BT",
+    "message": "Fermer",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_COMMENTS",
+    "message": "Commentaires",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_COMMENT_LOGS",
+    "message": "Commentaires",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_COMMENT_LOG_HEADING",
+    "message": "Journaux de commentaires",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL",
+    "message": "Afficher les journaux",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_COMMENT_REQUIRED_ERROR_TOAST_MESSAGE",
+    "message": "Veuillez ajouter les commentaires",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_COMMON_APPLY",
+    "message": "Appliquer",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_COMMON_TABLE_COL_FILTER",
+    "message": "Filtre",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_COMMUNITY_LEVEL",
+    "message": "Community Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CONFIRM",
+    "message": "Confirmer",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CONFIRM_BILL_VERIFICATION",
+    "message": "Confirmer la v\u00e9rification de la facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CONFIRM_SAVE_CHANGES",
+    "message": "\u00cates-vous s\u00fbr de vouloir continuer\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CONFIRM_SAVE_CHANGES_MESSAGE",
+    "message": "L\u2019enregistrement des donn\u00e9es mises \u00e0 jour/modifi\u00e9es modifiera la facture. Cette action ne peut pas \u00eatre annul\u00e9e.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CONFIRM_SAVE_HEADING",
+    "message": "\u00cates-vous s\u00fbr de vouloir confirmer les coordonn\u00e9es bancaires du travailleur\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CONFIRM_SAVE_MESSAGE",
+    "message": "Une fois les d\u00e9tails enregistr\u00e9s, ils ne peuvent plus \u00eatre modifi\u00e9s",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CONFIRM_SEND_FOR_REVIEW",
+    "message": "Envoyer pour r\u00e9vision\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CONFIRM_SEND_FOR_REVIEW_BILL_MESSAGE",
+    "message": "\u00cates-vous s\u00fbr de vouloir envoyer la ou les factures s\u00e9lectionn\u00e9es pour examen\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CONFIRM_SEND_FOR_REVIEW_MESSAGE",
+    "message": "\u00cates-vous s\u00fbr de vouloir envoyer la ou les factures s\u00e9lectionn\u00e9es pour examen\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CONFIRM_VERIFY_MESSAGE",
+    "message": "Vous allez v\u00e9rifier la ou les factures s\u00e9lectionn\u00e9es. \u00cates-vous s\u00fbr de vouloir continuer\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_CONTINUE_TO_EDIT",
+    "message": "Continuer \u00e0 modifier",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_COUNCIL_LEVEL",
+    "message": "Council Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_COUNTRY_LEVEL",
+    "message": "Country Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DATA_ERROR",
+    "message": "Erreur de donn\u00e9es",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DAYS",
+    "message": "jours",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DAYS_TO",
+    "message": "jours pour",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DEFUALT_BILL_INBOX_INFO_MESSAGE",
+    "message": "La g\u00e9n\u00e9ration des factures prendra du temps et les factures g\u00e9n\u00e9r\u00e9es se trouvent dans Mes factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DENROLLMENT_DATE",
+    "message": "De-enrollment Date",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DISTRICT_LEVEL",
+    "message": "District Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DOB",
+    "message": "Date de naissance",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DOWNLOAD",
+    "message": "T\u00e9l\u00e9charger",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DOWNLOAD_ADVISORY",
+    "message": "T\u00e9l\u00e9charger l'avis de paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DOWNLOAD_BILL",
+    "message": "T\u00e9l\u00e9charger la facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DOWNLOAD_BILLS",
+    "message": "T\u00e9l\u00e9charger",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DOWNLOAD_BILL_BEFORE_MAKING_CHANGES",
+    "message": "T\u00e9l\u00e9chargez la facture avant d'apporter des modifications",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DOWNLOAD_BILL_BEFORE_MAKING_CHANGES_DESCRIPTION",
+    "message": "Les taux modifi\u00e9s ne peuvent pas \u00eatre annul\u00e9s et les valeurs originales ne seront pas r\u00e9cup\u00e9rables. T\u00e9l\u00e9chargez le projet de loi maintenant, vous en aurez peut-\u00eatre besoin pour justifier votre examen.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DOWNLOAD_EXCEL_TO_EDIT",
+    "message": "T\u00e9l\u00e9chargez Excel pour modifier",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DOWNLOAD_JUSTIFICATION",
+    "message": "T\u00e9l\u00e9charger la justification",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DOWNLOAD_NOT_AVAILABLE",
+    "message": "Fichier non disponible au t\u00e9l\u00e9chargement.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DOWNLOAD_REPORT",
+    "message": "T\u00e9l\u00e9charger le rapport",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE",
+    "message": "Rapport pas encore disponible. Il ne sera disponible qu\u2019une fois l\u2019inscription approuv\u00e9e.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_DURATION",
+    "message": "Dur\u00e9e (en jours)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_EDIT",
+    "message": "Modifier",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_EDITED",
+    "message": "\u00c9dit\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_EDIT_ATTENDANCE",
+    "message": "Modifier la participation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_EDIT_BILL",
+    "message": "Modifier la facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_EDIT_NOT_ALLOWED_FOR_STATUS",
+    "message": "Les coordonn\u00e9es bancaires/du b\u00e9n\u00e9ficiaire d'un travailleur ne peuvent \u00eatre mises \u00e0 jour que si la v\u00e9rification est en attente ou a \u00e9chou\u00e9.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_EDIT_ON_EXCEL",
+    "message": "Modifier sur Excel",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_EDIT_REGISTER",
+    "message": "Modifier le registre",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_EDIT_WORKER_DETAILS_LABEL",
+    "message": "Modifier les d\u00e9tails du travailleur",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ENROLLED",
+    "message": "Inscrit",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ENROLLMENT_DATE",
+    "message": "Date d'inscription",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ENTER_TAG",
+    "message": "Entrez la balise",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ENTER_TEAM_CODE",
+    "message": "Entrez le code de l'\u00e9tiquette",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ERROR_MESSAGE",
+    "message": "La date d'inscription du participant ne peut pas \u00eatre ant\u00e9rieure \u00e0 sa date d'inscription",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_EVENT_DURATION",
+    "message": "Dur\u00e9e de l'\u00e9v\u00e9nement (en jours)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_EXCEL",
+    "message": "Fichier Excel",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_EXCEL_GENERATION_FAILED",
+    "message": "\u00c9chec de la g\u00e9n\u00e9ration du rapport Excel",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_FAILED_BILL",
+    "message": "\u00c9chec de la g\u00e9n\u00e9ration de la facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_FAILED_REPORT_GENERATION",
+    "message": "\u00c9chec de la g\u00e9n\u00e9ration du rapport",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_FEES_AND_CHARGES",
+    "message": "Frais et autres frais",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_FETCH_BILLS",
+    "message": "R\u00e9cup\u00e9rer les factures HCM",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_FILE_UPLOAD_FAILED",
+    "message": "\u00c9chec du t\u00e9l\u00e9chargement du fichier. Veuillez r\u00e9essayer plus tard.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_FILTER",
+    "message": "Filtres",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_FILTER_AND_CHOOSE_BOUNDARY_PLACEHOLDER_TEXT",
+    "message": "S\u00e9lectionnez une limite et une p\u00e9riode de facturation pour afficher les factures pour cette p\u00e9riode.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_FINAL_AGGREGATE",
+    "message": "Agr\u00e9gat",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_FOOD",
+    "message": "Salaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_FOOD_ALLOWANCE",
+    "message": "Indemnit\u00e9 alimentaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_FORWARD",
+    "message": "Avant",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_FRONTLINE_WORKER",
+    "message": "Travailleur de campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_FULL_STOP",
+    "message": ".",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_GENDER",
+    "message": "Genre",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_GENERATED_BILL",
+    "message": "G\u00e9n\u00e9rer une facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_GENERATED_PAYMENT_ADVISORY",
+    "message": "Avis de paiement g\u00e9n\u00e9r\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_GENERATE_ADVISORY",
+    "message": "G\u00e9n\u00e9rer un avis",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_GENERATE_BILL",
+    "message": "G\u00e9n\u00e9rer une facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_GENERATE_BILLS_CANNOT_BE_CALLED_INFO_MESSAGE",
+    "message": "Veuillez s\u00e9lectionner tous les filtres obligatoires",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_GENERATE_BILL_LABEL",
+    "message": "G\u00e9n\u00e9rer une facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_GENERATE_PAYMENT",
+    "message": "G\u00e9n\u00e9rer un paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_GENERATE_PAYMENT_ADVISORY",
+    "message": "G\u00e9n\u00e9rer un avis de paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_GO_BACK",
+    "message": "Retourner",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_HEALTHFACILITY_LEVEL",
+    "message": "Health facility Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_HR_NAME_LABEL",
+    "message": "Nom",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_HR_USER_NAME_LABEL",
+    "message": "Nom d'utilisateur",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_HR_USER_PHONE_LABEL",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_INFO",
+    "message": "Informations",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_INFO_TAG_CODE_MSG",
+    "message": "Voulez-vous remplir le code du tag\u00a0? Si oui, appuyez sur Enter Tag. Sinon, attribuez-le.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_INITIATED_INFO_MESSAGE",
+    "message": "Error 500 (Server Error)!!1500.That\u2019s an error.There was an error. Please try again later.That\u2019s all we know.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_INPROGRESS_INFO_MESSAGE",
+    "message": "La g\u00e9n\u00e9ration de facture est en cours",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_INTERMEDIATE",
+    "message": "Interm\u00e9diaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_INVALID_BANK_ACCOUNT_ERROR",
+    "message": "Le compte bancaire doit comporter exactement 10 chiffres.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_INVALID_BANK_CODE_ERROR",
+    "message": "Le code bancaire doit comporter 3 ou 9 chiffres.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_INVALID_BENEFICIARY_CODE_ERROR",
+    "message": "Le code du b\u00e9n\u00e9ficiaire doit \u00eatre alphanum\u00e9rique et comporter jusqu'\u00e0 35 caract\u00e8res.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_INVALID_MOBILE_NUMBER_ERROR",
+    "message": "Le num\u00e9ro de t\u00e9l\u00e9phone doit comporter exactement 10 chiffres.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_INVALID_NAME_ERROR",
+    "message": "Le nom doit \u00eatre alphanum\u00e9rique et contenir jusqu'\u00e0 100\u00a0caract\u00e8res.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_IS",
+    "message": "est",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_LGA_LEVEL",
+    "message": "Niveau LGA",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_LOCALITY_NOT_SELECTED",
+    "message": "La localit\u00e9 n'est pas s\u00e9lectionn\u00e9e",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_MANAGE_BILLS",
+    "message": "G\u00e9rer les factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_MANAGE_BILLS_DESCRIPTION",
+    "message": "V\u00e9rifiez les factures nouvellement soumises, examinez celles d\u00e9j\u00e0 v\u00e9rifi\u00e9es, modifiez les d\u00e9tails si n\u00e9cessaire, t\u00e9l\u00e9chargez des copies pour vos dossiers et envoyez les factures pour approbation.  Restez organis\u00e9 et assurez-vous que chaque facture avance sans probl\u00e8me tout au long du processus d'examen.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_MAX_ALLOW",
+    "message": "Max autoris\u00e9 pour",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_MINIMUM_BILLING_CYCLE_DURATION",
+    "message": "La dur\u00e9e minimale de facturation doit \u00eatre",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_MISC",
+    "message": "Divers",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_MNO",
+    "message": "ORM",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_MNO_NAME",
+    "message": "Nom de l'ORM",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_MOBILE_NUMBER",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_MUSTER_ROLL_ID",
+    "message": "ID du r\u00f4le de rassemblement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_MUSTOROLE_GENERATION_INPROGRESS_INFO_MESSAGE",
+    "message": "La g\u00e9n\u00e9ration du Muster Roll est en cours",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_MY_BILLS",
+    "message": "Mes factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NEW_EMPLOYEE",
+    "message": "Nouvel employ\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NEXT_LABEL",
+    "message": "Suivant",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NOT_RE_ENABLED_DESCRIPTION",
+    "message": "Une fois d\u00e9sactiv\u00e9, l'utilisateur ne peut pas \u00eatre r\u00e9activ\u00e9 dans ce registre",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NOT_VERIFIED",
+    "message": "Non v\u00e9rifi\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NO_DATA_FOUND_FOR_BILLS",
+    "message": "Aucune donn\u00e9e trouv\u00e9e pour les factures.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NO_JUSTIFICATION_FOUND",
+    "message": "Fichier de justification introuvable.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NO_OF_ATTENDEE",
+    "message": "Nombre de participants",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NO_OF_DAYS_WORKED",
+    "message": "Nombre de jours travaill\u00e9s",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NO_OF_REGISTERS",
+    "message": "Nombre de registres",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NO_ROLES_FOUND",
+    "message": "Aucun r\u00f4le disponible pour la campagne s\u00e9lectionn\u00e9e",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NO_SCHEMA_RATE_FOUND",
+    "message": "Aucun sch\u00e9ma de r\u00e9partition des tarifs disponible",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NO_UPCOMING_CAMPAIGN_FOUND",
+    "message": "Aucune campagne \u00e0 venir trouv\u00e9e",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NUMBER_OF_DAYS",
+    "message": "Nombre de jours",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NUMBER_OF_FAILURE",
+    "message": "Nombre d'\u00e9checs",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NUMBER_OF_FAILURES",
+    "message": "Nombre d'\u00e9checs",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NUMBER_OF_PAYEES",
+    "message": "Nombre de b\u00e9n\u00e9ficiaires",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NUMBER_OF_REGISTERS",
+    "message": "Nombre de registres",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_NUMBER_OF_WORKERS",
+    "message": "Nombre de travailleurs",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_OF",
+    "message": "de",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAID",
+    "message": "Pay\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PARTIALLY_VERIFIED",
+    "message": "Partiellement v\u00e9rifi\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEE_NAME",
+    "message": "Nom du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEE_NUMBER",
+    "message": "Num\u00e9ro du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEE_PHONE_NUMBER",
+    "message": "Num\u00e9ro de t\u00e9l\u00e9phone du b\u00e9n\u00e9ficiaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEMENT_BILL_AGGREGATION_HEAD",
+    "message": "Fournir les d\u00e9tails du projet et de l'agr\u00e9gation des factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEMENT_PROJECT_HEAD",
+    "message": "S\u00e9lectionnez une campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEMENT_SELECT_BILLING_CYCLE_CUSTOM_LABEL",
+    "message": "Entrez les jours pour g\u00e9n\u00e9rer les factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEMENT_SELECT_BILLING_CYCLE_CUSTOM_NO_DAYS",
+    "message": "Entrez le nombre de jours",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEMENT_SELECT_BILLING_CYCLE_LABEL",
+    "message": "Cycle de facturation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEMENT_SELECT_CAMPAIGN_LABEL",
+    "message": "S\u00e9lectionnez une campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEMENT_SETUP_HEAD",
+    "message": "Configurer le paiement pour la campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEMENT_SETUP_SUB_HEAD",
+    "message": "Configurer les cycles de facturation pour une campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEMENT_SETUP_VIEW_AUDIT",
+    "message": "Afficher les journaux d'audit",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_ERR_NO_SKILL",
+    "message": "Aucune donn\u00e9e sur les comp\u00e9tences disponible pour ce type de campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_HEAD",
+    "message": "Configurer les salaires des r\u00f4les",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_INFO_SELECT_CAMPAIGN",
+    "message": "Veuillez s\u00e9lectionner une campagne pour afficher les r\u00f4les et les salaires",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_SUB_HEAD",
+    "message": "Configurez les salaires de paiement pour chaque r\u00f4le d'une campagne. Les travailleurs seront pay\u00e9s en fonction du nombre de jours travaill\u00e9s.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENTS",
+    "message": "PAIEMENTS",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_FAILED",
+    "message": "\u00c9chec du paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_GENERATED",
+    "message": "Paiement g\u00e9n\u00e9r\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_GENERATION_DONE",
+    "message": "G\u00e9n\u00e9ration de paiement r\u00e9ussie\u00a0!",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_GENERATION_ERROR",
+    "message": "La g\u00e9n\u00e9ration du paiement a \u00e9chou\u00e9\u00a0!",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_GENERATION_EXCEPTION",
+    "message": "La g\u00e9n\u00e9ration du paiement a \u00e9chou\u00e9\u00a0!",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_GENERATION_IN_PROGRESS",
+    "message": "La g\u00e9n\u00e9ration du paiement pour les enregistrements s\u00e9lectionn\u00e9s est en cours. Veuillez v\u00e9rifier apr\u00e8s un certain temps.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_PROVIDER",
+    "message": "Fournisseur de paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_REVIEWER_COMMENTS",
+    "message": "Commentaires de l'examinateur des paiements",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_SETUP_CONFIRM_ALERT_CREATE_DES",
+    "message": "Vous \u00eates sur le point d'apporter des modifications \u00e0 la configuration du paiement. Veuillez examiner attentivement les d\u00e9tails avant de continuer, car cela d\u00e9terminera la mani\u00e8re dont les paiements seront trait\u00e9s pour la campagne. \u00cates-vous s\u00fbr de vouloir continuer\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_SETUP_CONFIRM_ALERT_HEADER",
+    "message": "Confirmer la configuration du paiement\u00a0?",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS",
+    "message": "La configuration du paiement est termin\u00e9e pour la campagne Campagne ABC. Vous pouvez toujours proc\u00e9der et apporter des modifications avant le d\u00e9but de la campagne.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1",
+    "message": "La configuration du paiement est termin\u00e9e pour la campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2",
+    "message": "Vous pouvez toujours proc\u00e9der et apporter des modifications avant le d\u00e9but de la campagne.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_SETUP_HEADER_ERROR",
+    "message": "\u00c9chec de la configuration du paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS",
+    "message": "Configuration du paiement termin\u00e9e",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS",
+    "message": "Configuration du paiement termin\u00e9e",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PAYS_LEVEL",
+    "message": "Pays Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PDF",
+    "message": "Fichier PDF",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PDF_GENERATION_FAILED",
+    "message": "\u00c9chec de la g\u00e9n\u00e9ration du rapport PDF",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PENDING",
+    "message": "En attente",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PENDING_BILLS",
+    "message": "Factures en attente",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PENDING_FOR_APPROVAL",
+    "message": "En attente d'approbation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PENDING_FOR_EDIT",
+    "message": "En attente de modification",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PENDING_REGISTER",
+    "message": "Registres en attente",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PENDING_REGISTERS",
+    "message": "Registres en attente",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PENDING_REGISTER_AND_APPROVAL_REGISTER_VALIDATION_FAILED_INFO_MESSAGE",
+    "message": "Vous ne pouvez pas g\u00e9n\u00e9rer de facture car il y a des registres en attente d'approbation.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PENDING_REVIEW",
+    "message": "En attente d'examen",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PENDING_VERIFICATION",
+    "message": "V\u00e9rification en attente",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PERDIEM",
+    "message": "Nourriture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PERFORMANCE_METRIC",
+    "message": "Performance (Inscriptions/Interventions)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PER_DAY",
+    "message": "par jour",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PHU_LEVEL",
+    "message": "PHU Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PLEASE_FILL_REQUIRED_FIELDS",
+    "message": "Veuillez remplir tous les champs obligatoires.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS",
+    "message": "Veuillez s\u00e9lectionner tous les champs obligatoires",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PLEASE_SELECT_ONE_VERIFY",
+    "message": "Veuillez s\u00e9lectionner l'une des options suivantes pour faire v\u00e9rifier vos factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PROCEED",
+    "message": "Proc\u00e9der",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PROGRESS_BILL",
+    "message": "La g\u00e9n\u00e9ration de facture est en cours",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PROGRESS_REPORT_GENERATION",
+    "message": "La g\u00e9n\u00e9ration du rapport est en cours",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PROJECT_AND_BILL_AGGREGATION_DESCRIPTION",
+    "message": "Veuillez choisir votre projet et l'agr\u00e9gation de factures pour les employ\u00e9s mapp\u00e9s \u00e0 une limite pour afficher les registres mapp\u00e9s au projet.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PROJECT_AND_BILL_AGGREGATION_HEADING",
+    "message": "Fournir les d\u00e9tails du projet et de l'agr\u00e9gation des factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PROJECT_CHOOSE_DESCRIPTION",
+    "message": "Choisissez une campagne pour afficher ses registres cartographi\u00e9s.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PROJECT_CHOOSE_DESCRIPTION_MANAGE_BILLS",
+    "message": "Choisissez la campagne pour laquelle vous souhaitez consulter les factures.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PROJECT_NAME",
+    "message": "Nom du projet",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PROJECT_SELECTION_IS_MANDATORY",
+    "message": "Veuillez s\u00e9lectionner le projet pour continuer",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PROJECT_TYPE",
+    "message": "Type de projet",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_PROVINCE_LEVEL",
+    "message": "Province Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_REASON_FOR_FAILURE",
+    "message": "Raison de l'\u00e9chec",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_REGION_LEVEL",
+    "message": "Region Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_REGISTER_DETAILS",
+    "message": "D\u00e9tails de l'inscription",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_REPORTING_TO",
+    "message": "Rendre compte \u00e0",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_REPORT_DOWNLOAD_FAILED",
+    "message": "Le t\u00e9l\u00e9chargement du rapport a \u00e9chou\u00e9.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_REPORT_GENERATION_FAILED",
+    "message": "La g\u00e9n\u00e9ration du rapport a \u00e9chou\u00e9.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_REPORT_GENERATION_IN_PROGRESS",
+    "message": "Veuillez patienter un moment. La g\u00e9n\u00e9ration du rapport est en cours.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_REVIEWED",
+    "message": "R\u00e9vis\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_REVIEW_IN_PROGRESS",
+    "message": "Examen en cours",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ROLE",
+    "message": "R\u00f4le",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ROLE_FIELD_SUPPORT",
+    "message": "Assistance sur le terrain",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ROLE_LABEL",
+    "message": "R\u00f4le",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_ROWS_PER_PAGE",
+    "message": "Lignes par page",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SAVE",
+    "message": "Sauvegarder",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SAVE_AND_CLOSE",
+    "message": "Enregistrer et fermer",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SAVE_CHANGES",
+    "message": "Enregistrer les modifications",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SAVE_CHANGES_AND_FORWARD",
+    "message": "Enregistrer les modifications et transf\u00e9rer",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SAVE_CHANGES_SUCCESS",
+    "message": "Modifications enregistr\u00e9es avec succ\u00e8s.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SEARCH",
+    "message": "Recherche",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SEARCH_USER",
+    "message": "Rechercher un utilisateur",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SECTION_LEVEL",
+    "message": "Section Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SELECTED_BILL_DETAILS_SEND_FOR_EDIT_SUCCESS",
+    "message": "Les enregistrements s\u00e9lectionn\u00e9s ont \u00e9t\u00e9 envoy\u00e9s pour modification avec succ\u00e8s.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SELECTE_DATA_RANGE",
+    "message": "Plage de dates",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SELECT_BOUNDARY_TILL_LAST_LEVEL",
+    "message": "Veuillez s\u00e9lectionner les limites obligatoires",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SELECT_EDITOR",
+    "message": "Choisissez un \u00e9diteur",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SELECT_PERIODS_EMPTY",
+    "message": "Aucune p\u00e9riode de facturation trouv\u00e9e pour la plage de dates s\u00e9lectionn\u00e9e",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SELECT_USER_REQUIRED",
+    "message": "Veuillez s\u00e9lectionner un utilisateur.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SEND",
+    "message": "Envoyer",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SEND_FOR_APPROVAL",
+    "message": "Envoyer pour approbation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SEND_FOR_APPROVAL_SUCCESS",
+    "message": "Facture envoy\u00e9e pour approbation avec succ\u00e8s",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SEND_FOR_APPROVAL_SUCCESS_DESCRIPTION",
+    "message": "Veuillez v\u00e9rifier l'\u00e9tat de la facture dans quelques temps",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SEND_FOR_EDIT",
+    "message": "Envoyer pour modification",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SEND_FOR_REVIEW",
+    "message": "Envoyer pour r\u00e9vision",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SEND_FOR_REVIEW_SUCCESS",
+    "message": "Facture envoy\u00e9e pour examen avec succ\u00e8s",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SEND_FOR_REVIEW_SUCCESS_DESCRIPTION",
+    "message": "Veuillez v\u00e9rifier l'\u00e9tat de la facture dans quelques temps",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SENT_FOR_APPROVAL",
+    "message": "Envoy\u00e9 pour approbation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SENT_FOR_REVIEW",
+    "message": "Envoy\u00e9 pour examen",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SOMETHING_WENT_WRONG",
+    "message": "Quelque chose s'est mal pass\u00e9\u00a0!",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SOURCE",
+    "message": "Source",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SPP/SFD_LEVEL",
+    "message": "SPP/SFD Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_STATE_LEVEL",
+    "message": "State Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_STATUS",
+    "message": "Statut",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_STATUS_LABEL",
+    "message": "Statut",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_STATUS_LOG_FOR_LABEL",
+    "message": "Journaux de commentaires",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SUBMIT",
+    "message": "Soumettre",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SUBMIT_LABEL",
+    "message": "Soumettre",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_SUPPORTING_DOCUMENT_LABEL",
+    "message": "Fichiers joints :",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_TAG_LABEL",
+    "message": "Code d'\u00e9tiquette",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_TARGET_ACHIEVED",
+    "message": "Objectif atteint",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_TASK_ID_NOT_FOUND",
+    "message": "T\u00e2che introuvable.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_TASK_POLL_TIMEOUT",
+    "message": "Temps mort! Veuillez v\u00e9rifier apr\u00e8s un certain temps",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_TASK_POLL_TIMEOUT_PLEASE_CHECK_IN_SOME_TIME",
+    "message": "Temps mort! Veuillez v\u00e9rifier apr\u00e8s un certain temps",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_TASK_STATUS_ERROR",
+    "message": "Erreur rencontr\u00e9e lors de l'interrogation de la t\u00e2che",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_TO",
+    "message": "et",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_TOTAL_AMOUNT",
+    "message": "Montant total",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_TOTAL_WAGE",
+    "message": "Salaire total ($)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_TOWN_LEVEL",
+    "message": "Town Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_TRANSPORTATION",
+    "message": "Transport",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_TRAVEL",
+    "message": "Transport",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_UNEXPECTED_STATUS",
+    "message": "Statut inattendu",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_UNIQUE_ID",
+    "message": "Identifiant unique",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_UPLOAD_BILLS",
+    "message": "T\u00e9l\u00e9charger les factures locales",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_UPLOAD_BILL_OR_DOC",
+    "message": "T\u00e9l\u00e9chargez la facture existante pour cette limite ou tout autre document de justification.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_UPLOAD_JUSTIFICATION",
+    "message": "T\u00e9l\u00e9charger la justification",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_UPLOAD_OR_FETCH_BILLS",
+    "message": "T\u00e9l\u00e9chargez ou r\u00e9cup\u00e9rez les factures pour v\u00e9rifier",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_USERTYPE",
+    "message": "Type d'utilisateur",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_USER_DETAILS",
+    "message": "D\u00e9tails de l'utilisateur",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_USER_STATUS_ACTIVE",
+    "message": "Actif",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_USER_STATUS_INACTIVE",
+    "message": "Inactif",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VERIFICATION_FAILED",
+    "message": "\u00c9chec de la v\u00e9rification",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VERIFICATION_IN_PROGRESS",
+    "message": "V\u00e9rification en cours",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VERIFIED",
+    "message": "V\u00e9rifi\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VERIFY",
+    "message": "V\u00e9rifier",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VERIFY_AND_GENERATE_PAYMENTS",
+    "message": "V\u00e9rifier et g\u00e9n\u00e9rer des paiements",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VERIFY_BILLS",
+    "message": "V\u00e9rifier les factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VERIFY_BILL_AND_GENERATE_PAYMENT",
+    "message": "V\u00e9rifier la facture et g\u00e9n\u00e9rer le paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VERIFY_SUCCESS",
+    "message": "Facture envoy\u00e9e pour v\u00e9rification avec succ\u00e8s",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VERIFY_SUCCESS_DESCRIPTION",
+    "message": "Veuillez v\u00e9rifier l'\u00e9tat de la facture dans quelques temps",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_ANOTHER_REGISTER",
+    "message": "Voir un autre registre",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_ATTENDANCE",
+    "message": "Afficher la participation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_BILL",
+    "message": "Voir la facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_COMMENT_LOGS",
+    "message": "Afficher les journaux",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_LESS",
+    "message": "Voir moins",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_MAPS",
+    "message": "Voir la carte",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_MORE",
+    "message": "Voir plus",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_REGISTER",
+    "message": "Voir le registre",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_REGISTERS",
+    "message": "Afficher les registres",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_REGISTER_ACTIVE",
+    "message": "Actif",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_REGISTER_DISABLED_TAG",
+    "message": "D\u00e9sactiv\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_REGISTER_DISABLE_USER",
+    "message": "D\u00e9sactiver l'utilisateur",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_REGISTER_PLACE_HOLDER",
+    "message": "Recherche par nom/num\u00e9ro d'identification",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_VILLAGE_LEVEL",
+    "message": "Village Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_WAGE",
+    "message": "Salaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_WAGE_ALLOWANCE",
+    "message": "Taux de salaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_WAGE_RATE",
+    "message": "Taux de salaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_WARD_LEVEL",
+    "message": "Ward Level",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_WARNING",
+    "message": "Avertissement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_WARNING_CHARACTER_SIZE_TO_SEARCH",
+    "message": "Veuillez saisir au moins 3\u00a0caract\u00e8res pour effectuer la recherche",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_WORKER_ID",
+    "message": "ID du travailleur",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_WORKER_NAME",
+    "message": "Nom du travailleur",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_AM_YES_DISABLE_USER",
+    "message": "Oui, d\u00e9sactiver l'utilisateur",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_ASSIGNMENT",
+    "message": "Attribuer",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_FILE_UPLOAD_FAILED",
+    "message": "\u00c9chec du t\u00e9l\u00e9chargement du fichier.",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_BREADCRUMB",
+    "message": "S\u00e9lectionner la hi\u00e9rarchie",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HR_EMP_MOBILE_LABEL",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HR_EMP_NAME_LABEL",
+    "message": "Nom",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HR_JURIDICTIONS_LABEL",
+    "message": "Limite",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HR_ROLE_NO_LABEL",
+    "message": "R\u00f4les",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HEALTH_FACILITY_WORKER",
+    "message": "Travailleur d'\u00e9tablissement de sant\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HOME",
+    "message": "Maison",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HR_COMMON_TABLE_COL_ROLE",
+    "message": "Filtre",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INTERMEDIATE",
+    "message": "Interm\u00e9diaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MISSING_PAYEE_NAME",
+    "message": "Le nom du b\u00e9n\u00e9ficiaire est manquant",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MONTHLY",
+    "message": "Mensuel",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MR-DN",
+    "message": "Chimiopr\u00e9vention du paludisme saisonnier (SMC)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO_RESULTS_FOUND",
+    "message": "Aucun r\u00e9sultat trouv\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PARTIALLY_PAID",
+    "message": "Partiellement pay\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PARTIALLY_VERIFIED",
+    "message": "Partiellement v\u00e9rifi\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PAYMENTS_LINK_PAYMENTS_MANAGE_BILLSAPPROVER",
+    "message": "G\u00e9rer les factures (approuver)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PAYMENTS_LINK_PAYMENTS_MANAGE_BILLSREVIEWER",
+    "message": "G\u00e9rer les factures (r\u00e9vision)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PAYMENT_FAILED",
+    "message": "\u00c9chec du paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PAYMENT_TITLE",
+    "message": "Titre du paiement\u00a0:",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_BILLING_PERIOD",
+    "message": "P\u00e9riode",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_BILLING_PERIOD_RANGE",
+    "message": "Plage de dates",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_CAMPAIGN_NAME",
+    "message": "Nom de la campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_EVENT_NAME",
+    "message": "Nom de l'\u00e9v\u00e9nement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_BOUNDARY_NAME",
+    "message": "Nom de la limite",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_FEES",
+    "message": "Frais (%)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_FOOD",
+    "message": "Allocation alimentaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_ID_NUMBER",
+    "message": "Num\u00e9ro d'identification",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_INDIVIDUAL_NAME",
+    "message": "Nom",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_MOBILE_NUMBER",
+    "message": "Num\u00e9ro de portable",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_NUMBER_OF_DAYS",
+    "message": "Nombre de jours de pr\u00e9sence",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_PER_DAY",
+    "message": "Par jour ($)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_ROLE",
+    "message": "R\u00f4le",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_SERIAL_NUMBER",
+    "message": "SL Non",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_TOTAL_AMOUNT",
+    "message": "Montant total ($)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_TOTAL_AMOUNT_TO_PAY",
+    "message": "Montant total \u00e0 payer ($)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_TOTAL_WAGE",
+    "message": "Salaire total/jour ($)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_TRANSPORTATION",
+    "message": "Transport",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_WAGE",
+    "message": "Taux de salaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TOTAL_AMOUNT_TO_PROCESS",
+    "message": "Montant total \u00e0 traiter ($)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TOTAL_NUMBER_OF_WORKERS",
+    "message": "Nombre total de travailleurs",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_PYMT_ADV_APPROVED_BY",
+    "message": "Avis de paiement approuv\u00e9 par",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_PYMT_ADV_PREPARED_BY",
+    "message": "Avis de paiement pr\u00e9par\u00e9 par",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_PYMT_ADV_VERIFIED_BY",
+    "message": "Avis de paiement v\u00e9rifi\u00e9 par",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_REPORT_RUN_BY",
+    "message": "Rapport ex\u00e9cut\u00e9 par",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_REPORT_RUN_DT_TIME",
+    "message": "Date et heure d'ex\u00e9cution du rapport",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_TOTAL_BILL_TABLE_FEES",
+    "message": "Frais totaux ($)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_TOTAL_BILL_TABLE_TOTAL_WAGE",
+    "message": "Salaire total ($)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_TOTAL_BILL_TABLE_TRANSPORTATION",
+    "message": "Transport total ($)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_TOTAL_LABEL_BILL_TABLE_FOOD",
+    "message": "Nourriture totale ($)",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PENDING_VERIFICATION",
+    "message": "V\u00e9rification en attente",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PGR_SEARCH_COMPLAINT",
+    "message": "Rechercher des plaintes",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PROXIMITY_SUPERVISOR",
+    "message": "Superviseur de proximit\u00e9",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTERS_INBOX",
+    "message": "Bo\u00eete de r\u00e9ception des registres",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRAR",
+    "message": "Greffier",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_MANAGER",
+    "message": "Responsable d'entrep\u00f4t",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_BULK_BROWSE_FILES",
+    "message": "Parcourir le fichier",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_DELETE",
+    "message": "Supprimer",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_DOWNLOAD",
+    "message": "T\u00e9l\u00e9charger",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_DRAG_DROP",
+    "message": "Glisser-d\u00e9poser le fichier ou",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WEEKLY",
+    "message": "Hebdomadaire",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "attendance-approve-failed",
+    "message": "\u00c9chec de l'approbation de la pr\u00e9sence",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "attendance-approve-success",
+    "message": "Succ\u00e8s de l\u2019approbation des pr\u00e9sences",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "edit-attendance",
+    "message": "Modifier la participation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "generate-bill",
+    "message": "G\u00e9n\u00e9rer une facture",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "my-bills",
+    "message": "Mes factures",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "registers-inbox",
+    "message": "Bo\u00eete de r\u00e9ception des registres",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "view-attendance",
+    "message": "Afficher la participation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  }
+]

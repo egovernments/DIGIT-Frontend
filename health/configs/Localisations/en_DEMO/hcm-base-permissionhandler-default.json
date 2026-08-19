@@ -1,23 +1,5 @@
 [
   {
-    "code": "batteryOptimizationTag",
-    "message": "Battery permission status",
-    "module": "hcm-base-permissionhandler-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "blueToothScan",
-    "message": "Bluetooth scan permission status",
-    "module": "hcm-base-permissionhandler-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cameraPermissionStatus",
-    "message": "Camera permission status",
-    "module": "hcm-base-permissionhandler-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "CORE_COMMON_ALLOW_BACKGROUND_ACTIVITY",
     "message": "Please check if background activiry is enabled from settings",
     "module": "hcm-base-permissionhandler-default",
@@ -32,6 +14,12 @@
   {
     "code": "CORE_COMMON_ALLOW_PERMISSIONS_DESCRIPTION",
     "message": "Allow Permissions",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSIONS_ALERT",
+    "message": "Allow required permissions",
     "module": "hcm-base-permissionhandler-default",
     "locale": "en_DEMO"
   },
@@ -78,20 +66,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "CORE_COMMON_PERMISSION_NOT_GRANTED",
-    "message": "Permission not granted",
-    "module": "hcm-base-permissionhandler-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "CORE_COMMON_PERMISSION_NOTIFICATION",
     "message": "Notifications",
     "module": "hcm-base-permissionhandler-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "CORE_COMMON_PERMISSIONS_ALERT",
-    "message": "Allow required permissions",
+    "code": "CORE_COMMON_PERMISSION_NOT_GRANTED",
+    "message": "Permission not granted",
     "module": "hcm-base-permissionhandler-default",
     "locale": "en_DEMO"
   },
@@ -144,12 +126,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "locationPermission",
-    "message": "Location permission status",
-    "module": "hcm-base-permissionhandler-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "NEAR_BY_WIFI_DEVICES",
     "message": "Near by devices",
     "module": "hcm-base-permissionhandler-default",
@@ -164,6 +140,12 @@
   {
     "code": "OPEN_SETTINGS",
     "message": "Settings",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PERMISSIONS_ALERT",
+    "message": "Allow required permissions",
     "module": "hcm-base-permissionhandler-default",
     "locale": "en_DEMO"
   },
@@ -186,8 +168,26 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "PERMISSIONS_ALERT",
-    "message": "Allow required permissions",
+    "code": "batteryOptimizationTag",
+    "message": "Battery permission status",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "blueToothScan",
+    "message": "Bluetooth scan permission status",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cameraPermissionStatus",
+    "message": "Camera permission status",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "locationPermission",
+    "message": "Location permission status",
     "module": "hcm-base-permissionhandler-default",
     "locale": "en_DEMO"
   }

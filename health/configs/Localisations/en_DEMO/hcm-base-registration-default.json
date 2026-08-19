@@ -1,5 +1,29 @@
 [
   {
+    "code": " DRUG_SE_CC",
+    "message": "Drug Side Effect from the current cycle",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": " DRUG_SE_PC",
+    "message": "Drug Side Effect from the previous cycle",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": " FEVER",
+    "message": "Fever",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": " SICK",
+    "message": "Sick",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "ACTION_CANCEL",
     "message": "Cancel",
     "module": "hcm-base-registration-default",
@@ -8,12 +32,6 @@
   {
     "code": "ACTION_SUBMIT",
     "message": "Submit",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Add Member",
-    "message": "Add Members",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -42,12 +60,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "administrationSuccess",
-    "message": "Administered Successfully",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "AGE",
     "message": "Age",
     "module": "hcm-base-registration-default",
@@ -72,20 +84,20 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "APP_CONFIG_FLOW_REGISTRATION",
-    "message": "Registration Module",
+    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SCREEN_DESCRIPTION",
+    "message": " ",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "APP_CONFIG_FLOW_SEARCHBENEFICIARY",
-    "message": "Search Beneficiary",
+    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SCREEN_HEADING",
+    "message": "Please check you have done the following",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "APP_CONFIG_PAGE_SEARCHBENEFICIARY",
-    "message": "Search Beneficiary",
+    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SUBMIT_LABEL",
+    "message": "Next",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -104,24 +116,6 @@
   {
     "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_WRITE_CODE",
     "message": "Have you written this ID in the child card (To be used in the next cycle)",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SCREEN_HEADING",
-    "message": "Please check you have done the following",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SUBMIT_LABEL",
-    "message": "Next",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_HEADING",
-    "message": "Eligibility Assessment",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -175,7 +169,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_DESCRIPTION",
-    "message": "Check if the child currently feels unusually hot to the touch or if the caregiver has measured a high temperature in the last 24 hours. If possible, measure the child’s temperature with a thermometer.",
+    "message": "Check if the child currently feels unusually hot to the touch or if the caregiver has measured a high temperature in the last 24 hours. If possible, measure the child\u2019s temperature with a thermometer.",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -240,6 +234,18 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_HEADING",
+    "message": "Eligibility Assessment",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "APPONE_HOUSEDETAILS_SCREEN_HEADING",
     "message": "House Details",
     "module": "hcm-base-registration-default",
@@ -264,128 +270,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_DESCRIPTION",
-    "message": "Data has been recorded successfully. Background sync will start soon",
+    "code": "APPONE_REGISTRATION_BENEFICIARYACKNOWLEDGEMENT_SCREEN_DESCRIPTION",
+    "message": " ",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_PRIMARY_LABEL",
-    "message": "View Beneficiary Details",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_SECONDARY_LABEL",
-    "message": "Go Back",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_TITLE",
-    "message": "Data recorded successfully!",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1",
-    "message": "Save Location",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1",
-    "message": "Address Line 1",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
-    "message": "Address Line 1",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2",
-    "message": "Address Line 2",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
-    "message": "Address Line 2",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea",
-    "message": "Area of settlement where the house is located",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_helpText",
-    "message": "Question 2",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark",
-    "message": "Landmark",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark_helpText",
-    "message": "Near by landmark of the house",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_latlong",
-    "message": "Geo coordinates",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_latlong_helpText",
-    "message": "Captures latitude and longitude of the house",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode",
-    "message": "Pincode",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_helpText",
-    "message": "Pincode of the area",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_onlynumber",
-    "message": "Only numbers allowed",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_typeOfAddress",
-    "message": "Type of address",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_DESCRIPTION",
-    "message": "Capture house location details",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",
-    "message": "Beneficiary Location",
+    "code": "APPONE_REGISTRATION_BENEFICIARYACKNOWLEDGEMENT_SCREEN_HEADING",
+    "message": " ",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -398,6 +290,30 @@
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_addmember",
     "message": "Save Beneficiary",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION",
+    "message": "Enter the beneficiary's basic information.",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember",
+    "message": "Enter the beneficiary's basic information.",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
+    "message": "Beneficiary Details",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING_addmember",
+    "message": "Beneficiary Details",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -726,8 +642,20 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual_helptext",
+    "message": " ",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual_mandatory",
     "message": "This field is required",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual_tooltip",
+    "message": " ",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -744,32 +672,20 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION",
-    "message": "Enter the beneficiary's basic information.",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember",
-    "message": "Enter the beneficiary's basic information.",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
-    "message": "Beneficiary Details",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING_addmember",
-    "message": "Beneficiary Details",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_ACTION_BUTTON_LABEL_1",
     "message": "Submit",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_SCREEN_DESCRIPTION",
+    "message": "Please provide the beneficiary's current address and location details.",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_SCREEN_HEADING",
+    "message": "Beneficiary Location",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -906,20 +822,146 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_SCREEN_DESCRIPTION",
-    "message": "Please provide the beneficiary's current address and location details.",
+    "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_DESCRIPTION",
+    "message": "Data has been recorded successfully. Background sync will start soon",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_SCREEN_HEADING",
+    "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_PRIMARY_LABEL",
+    "message": "View Beneficiary Details",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_SECONDARY_LABEL",
+    "message": "Go Back",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_TITLE",
+    "message": "Data recorded successfully!",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1",
+    "message": "Save Location",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_DESCRIPTION",
+    "message": "Capture house location details",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",
     "message": "Beneficiary Location",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1",
+    "message": "Address Line 1",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
+    "message": "Address Line 1",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2",
+    "message": "Address Line 2",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
+    "message": "Address Line 2",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea",
+    "message": "Area of settlement where the house is located",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_helpText",
+    "message": "Question 2",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark",
+    "message": "Landmark",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark_helpText",
+    "message": "Near by landmark of the house",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_latlong",
+    "message": "Geo coordinates",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_latlong_helpText",
+    "message": "Captures latitude and longitude of the house",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode",
+    "message": "Pincode",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_helpText",
+    "message": "Pincode of the area",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_onlynumber",
+    "message": "Only numbers allowed",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_typeOfAddress",
+    "message": "Type of address",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
     "message": "Save Delivery",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION",
+    "message": "Capture details of the resources to be delivered",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
+    "message": "Delivery Details",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -942,14 +984,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION",
-    "message": "Capture details of the resources to be delivered",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
-    "message": "Delivery Details",
+    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_ISPREGNANT_IS_MANDATORY",
+    "message": "This field is required.",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1002,12 +1038,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_ISPREGNANT_IS_MANDATORY",
-    "message": "This field is required.",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_weight",
     "message": "Weight (in Kgs)",
     "module": "hcm-base-registration-default",
@@ -1022,6 +1052,18 @@
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_ACTION_BUTTON_LABEL_1",
     "message": "Save Household Details",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION",
+    "message": "Enter the household members' information as applicable.",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
+    "message": "Household Details",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1074,18 +1116,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION",
-    "message": "Enter the household members' information as applicable.",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
-    "message": "Household Details",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_ADD_MEMBER",
     "message": "Add Member",
     "module": "hcm-base-registration-default",
@@ -1128,20 +1158,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_rEGISTRATION_minAge_message_dobPicker",
-    "message": "Head of the household minimum age should be 18 years",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "APPONE_REGISTRATION_NO_OF_ROOMS",
     "message": "No. of rooms in the house",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_onlynumber_validation",
-    "message": "Please enter valid mobile number",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1194,6 +1212,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_HEADING",
     "message": "Search Beneficiary",
     "module": "hcm-base-registration-default",
@@ -1206,8 +1230,44 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "APPONE_REGISTRATION_onlynumber_validation",
+    "message": "Please enter valid mobile number",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "APPONE_STRUCTURETYPE_SCREEN_HEADING_ACTION_BUTTON_LABEL_1",
     "message": "Next",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_STRUCTURETYPE_SCREEN_HEADING_SCREEN_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_rEGISTRATION_minAge_message_dobPicker",
+    "message": "Head of the household minimum age should be 18 years",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_REGISTRATION",
+    "message": "Registration Module",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_SEARCHBENEFICIARY",
+    "message": "Search Beneficiary",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_SEARCHBENEFICIARY",
+    "message": "Search Beneficiary",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1218,14 +1278,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "BACK",
-    "message": "Back",
+    "code": "Add Member",
+    "message": "Add Members",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "batteryOptimizationTag",
-    "message": "Battery permission status",
+    "code": "BACK",
+    "message": "Back",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1236,14 +1296,20 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "Beneficiary details",
-    "message": "Beneficiary Details",
+    "code": "BENEFICIARYLOCATION_CORRESPONDENCE",
+    "message": "Correspondence",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "Beneficiary Referred",
-    "message": "Beneficiary Referred",
+    "code": "BENEFICIARYLOCATION_OTHER",
+    "message": "Other",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARYLOCATION_PERMANENT",
+    "message": "Permanent",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1284,56 +1350,20 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "beneficiaryDetails",
-    "message": "Beneficiary Details",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "BENEFICIARYLOCATION_CORRESPONDENCE",
-    "message": "Correspondence",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "BENEFICIARYLOCATION_OTHER",
-    "message": "Other",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "BENEFICIARYLOCATION_PERMANENT",
-    "message": "Permanent",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "beneficiaryReferred",
+    "code": "Beneficiary Referred",
     "message": "Beneficiary Referred",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "blueToothScan",
-    "message": "Bluetooth scan permission status",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cameraPermissionStatus",
-    "message": "Camera permission status",
+    "code": "Beneficiary details",
+    "message": "Beneficiary Details",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
   {
     "code": "CEMENT",
     "message": "Cement",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "childrenCount",
-    "message": "Number of children",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1380,32 +1410,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "createdTime",
-    "message": "Completed on",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "Cycle",
     "message": "Cycle",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cycleIndex",
-    "message": "Delivery Cycle",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cycleNumber",
-    "message": "Cycle number",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DataIssues",
-    "message": "Data Issues",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1416,20 +1422,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "dateOfBirth",
-    "message": "Date of Birth",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "DEFAULT",
     "message": "Default",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Deliver Intervention",
-    "message": "Deliver Details",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1464,38 +1458,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "deliveryComment",
-    "message": "Delivery comments",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "deliveryDetails",
-    "message": "Member Details",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "deliverySuccess",
-    "message": "Deliver Success",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "deliveryTable",
-    "message": "Delivery Table",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "DOSE",
     "message": "Delivery No.",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "doseIndex",
-    "message": "Delivery",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1508,6 +1472,18 @@
   {
     "code": "DRUG_SE_PC",
     "message": "Drug Side Effect from the previous cycle",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DataIssues",
+    "message": "Data Issues",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Deliver Intervention",
+    "message": "Deliver Details",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1526,12 +1502,6 @@
   {
     "code": "FEVER",
     "message": "Fever",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "gender",
-    "message": "Gender",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1578,12 +1548,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "genderAge",
-    "message": "Gender | Age",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "GLASS",
     "message": "Glass",
     "module": "hcm-base-registration-default",
@@ -1597,6 +1561,12 @@
   },
   {
     "code": "GRANT_PERMISSION_BATTERY",
+    "message": "Grant",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_BATTERY ",
     "message": "Grant",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
@@ -1620,6 +1590,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "GRANT_PERMISSION_LOCATION ",
+    "message": "Grant",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "GRANT_PERMISSION_NEARBY",
     "message": "Grant",
     "module": "hcm-base-registration-default",
@@ -1632,8 +1608,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "headOfHousehold",
-    "message": "Head of the household",
+    "code": "GRANT_PERMISSION_NOTIFICATION ",
+    "message": "Grant",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1646,12 +1622,6 @@
   {
     "code": "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR",
     "message": "This field is required",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Household",
-    "message": "Household Details",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1676,6 +1646,12 @@
   {
     "code": "HOUSEHOLD_LOCALITY",
     "message": "Settlement Area",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Household",
+    "message": "Household Details",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1710,18 +1686,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "householdDetails",
-    "message": "Household Details",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "householdOverview",
-    "message": "Household Overview",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "ID_NUMBER",
     "message": "Identifier ID",
     "module": "hcm-base-registration-default",
@@ -1734,14 +1698,38 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "identifierId",
-    "message": "ID number",
+    "code": "INELIGIBLE",
+    "message": "Not Eligible",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "identifierType",
-    "message": "ID Type",
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Insufficient Resources",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_STOCK_DESC",
+    "message": "The resource **{RESOURCE}** you are trying to deliver is not available in stock.",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_STOCK_TITLE",
+    "message": "Insufficient Stock",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "IS_CHILD_SICK",
+    "message": "Is the child sick?",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "IS_CHILD_WITH_FEVER",
+    "message": "Is child with fever?",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1794,62 +1782,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "individualName",
-    "message": "Name of the beneficiary",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "Ineligible",
     "message": "Ineligible",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INELIGIBLE",
-    "message": "Not Eligible",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INSUFFICIENT_RESOURCES",
-    "message": "Insufficient Resources",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INSUFFICIENT_STOCK_DESC",
-    "message": "The resource **{RESOURCE}** you are trying to deliver is not available in stock.",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INSUFFICIENT_STOCK_TITLE",
-    "message": "Insufficient Stock",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "IS_CHILD_SICK",
-    "message": "Is the child sick?",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "IS_CHILD_WITH_FEVER",
-    "message": "Is child with fever?",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "locality",
-    "message": "Locality",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "locationPermission",
-    "message": "Location permission status",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1872,26 +1806,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "meberDetails",
-    "message": "Member Details",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "MEMBER_COUNT",
     "message": "Member Count",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "memberCount",
-    "message": "Number of members",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "memberTable",
-    "message": "Member Table",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1920,18 +1836,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "mobileNumber",
-    "message": "Mobile Number",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "name",
-    "message": "Name",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "NAME_OF_INDIVIDUAL",
     "message": "Name of the individual",
     "module": "hcm-base-registration-default",
@@ -1946,6 +1850,18 @@
   {
     "code": "NO",
     "message": "No",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Not Enough Stock",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOTIFICATION_PERMISSION_TAG",
+    "message": "Notifications permission status",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -1974,44 +1890,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "notEligible",
-    "message": "Not Eligible",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "NotEnoughStock",
     "message": "Not Enough Stock",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "NOTENOUGHSTOCK",
-    "message": "Not Enough Stock",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NOTIFICATION_PERMISSION_TAG",
-    "message": "Notifications permission status",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "notVisited",
-    "message": "Not Administered",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "OPEN",
     "message": "Open",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Other",
-    "message": "Other",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -2028,14 +1914,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "pastCycleTable",
-    "message": "Past cycle table",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PerformanceIssue",
-    "message": "PERFORMANCEISSUE",
+    "code": "Other",
+    "message": "Other",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -2076,12 +1956,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "pregnantWomenCount",
-    "message": "Number of pregnant women",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "PROXIMITY_SEARCH",
     "message": "Near by households",
     "module": "hcm-base-registration-default",
@@ -2090,6 +1964,24 @@
   {
     "code": "PROXIMITY_SEARCH_REGISTRATION",
     "message": "Near by households",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "PERFORMANCEISSUE",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUESTION1",
+    "message": "Question 1",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUESTION2",
+    "message": "Question 2",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -2142,18 +2034,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "QUESTION1",
-    "message": "Question 1",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "QUESTION2",
-    "message": "Question 2",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "RECORD_CYCLE_DOSE",
     "message": "Record Cycle Dose",
     "module": "hcm-base-registration-default",
@@ -2168,6 +2048,30 @@
   {
     "code": "REEDS",
     "message": "Reeds",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REFERRAL_BACK",
+    "message": "Back",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REFERRAL_SUCCESSFUL_PANEL_CARD_DESC",
+    "message": "The data of referral has been recorded successfully.",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REFERRAL_SUCCESSFUL_PANEL_CARD_HEADING",
+    "message": "Referral Recorded Successfully",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REFERRAL_VIEW_HOUSEHOLD_DETAILS",
+    "message": "View Household Details",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -2214,6 +2118,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "REFER_BENEFICIARY_SCREEN_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "REFER_BENEFICIARY_SCREEN_HEADING",
     "message": "Refer Beneficiary",
     "module": "hcm-base-registration-default",
@@ -2226,32 +2136,32 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "REFERRAL_BACK",
-    "message": "Back",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REFERRAL_SUCCESSFUL_PANEL_CARD_DESC",
-    "message": "The data of referral has been recorded successfully.",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REFERRAL_SUCCESSFUL_PANEL_CARD_HEADING",
-    "message": "Referral Recorded Successfully",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REFERRAL_VIEW_HOUSEHOLD_DETAILS",
-    "message": "View Household Details",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "REGISTER_BENEFICIARY",
     "message": "Register New Beneficiary",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATIONFLOW_ISPREGNANT",
+    "message": "Are you pregnant?",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATIONFLOW_NO_OF_PREGNANTWOMEN",
+    "message": "Number of pregnant women",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATIONFLOW_beneficiaryDetail_lengthmessage_phone",
+    "message": "Please enter 9 digit phone number",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATIONFLOW_beneficiaryLocation_71b53895",
+    "message": "This field is required",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -2400,7 +2310,19 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_CLEAR_LABEL ",
+    "message": "Clear",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_FILTER_LABEL",
+    "message": "Apply",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_FILTER_LABEL ",
     "message": "Apply",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
@@ -2413,6 +2335,12 @@
   },
   {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_TITLE_LABEL",
+    "message": "Filter",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_TITLE_LABEL ",
     "message": "Filter",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
@@ -2442,44 +2370,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "REGISTRATIONFLOW_beneficiaryDetail_lengthmessage_phone",
-    "message": "Please enter 9 digit phone number",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REGISTRATIONFLOW_beneficiaryLocation_71b53895",
-    "message": "This field is required",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REGISTRATIONFLOW_ISPREGNANT",
-    "message": "Are you pregnant?",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REGISTRATIONFLOW_NO_OF_PREGNANTWOMEN",
-    "message": "Number of pregnant women",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "REQUIRED",
     "message": "Required",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "resourceCard",
-    "message": "Card",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SCAN_BENEFICIARY",
-    "message": "Scan Beneficiary Voucher",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -2514,14 +2406,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "searchBeneficiary",
-    "message": "Search Beneficiary",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SecurityIssues",
-    "message": "SECURITYISSUES",
+    "code": "SCAN_BENEFICIARY",
+    "message": "Scan Beneficiary Voucher",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -2532,32 +2418,26 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "status",
-    "message": "Administration status",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "statusTag",
-    "message": "Delivery Status",
-    "module": "hcm-base-registration-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "SUCCESSFUL_DELIVERY",
     "message": "Delivery Successful",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "SyncNotWorking",
-    "message": "Sync Not Working",
+    "code": "SYNCNOTWORKING",
+    "message": "Sync not working",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "SYNCNOTWORKING",
-    "message": "Sync not working",
+    "code": "SecurityIssues",
+    "message": "SECURITYISSUES",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "Sync Not Working",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   },
@@ -2624,6 +2504,240 @@
   {
     "code": "YES",
     "message": "Yes",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "administrationSuccess",
+    "message": "Administered Successfully",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "batteryOptimizationTag",
+    "message": "Battery permission status",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "beneficiaryDetails",
+    "message": "Beneficiary Details",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "beneficiaryReferred",
+    "message": "Beneficiary Referred",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "blueToothScan",
+    "message": "Bluetooth scan permission status",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cameraPermissionStatus",
+    "message": "Camera permission status",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "childrenCount",
+    "message": "Number of children",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "createdTime",
+    "message": "Completed on",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cycleIndex",
+    "message": "Delivery Cycle",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cycleNumber",
+    "message": "Cycle number",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "dateOfBirth",
+    "message": "Date of Birth",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "deliveryComment",
+    "message": "Delivery comments",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "deliveryDetails",
+    "message": "Member Details",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "deliverySuccess",
+    "message": "Deliver Success",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "deliveryTable",
+    "message": "Delivery Table",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "doseIndex",
+    "message": "Delivery",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "gender",
+    "message": "Gender",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "genderAge",
+    "message": "Gender | Age",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "headOfHousehold",
+    "message": "Head of the household",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "householdDetails",
+    "message": "Household Details",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "householdOverview",
+    "message": "Household Overview",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "identifierId",
+    "message": "ID number",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "identifierType",
+    "message": "ID Type",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "individualName",
+    "message": "Name of the beneficiary",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "locality",
+    "message": "Locality",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "locationPermission",
+    "message": "Location permission status",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "meberDetails",
+    "message": "Member Details",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "memberCount",
+    "message": "Number of members",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "memberTable",
+    "message": "Member Table",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "mobileNumber",
+    "message": "Mobile Number",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "name",
+    "message": "Name",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "notEligible",
+    "message": "Not Eligible",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "notVisited",
+    "message": "Not Administered",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "pastCycleTable",
+    "message": "Past cycle table",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "pregnantWomenCount",
+    "message": "Number of pregnant women",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "resourceCard",
+    "message": "Card",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "searchBeneficiary",
+    "message": "Search Beneficiary",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "status",
+    "message": "Administration status",
+    "module": "hcm-base-registration-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "statusTag",
+    "message": "Delivery Status",
     "module": "hcm-base-registration-default",
     "locale": "en_DEMO"
   }

@@ -12,8 +12,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "administrativeArea",
-    "message": "Village Name",
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
+    "message": "Close Household Head Name must be between 2 and 200 characters",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
@@ -38,12 +38,6 @@
   {
     "code": "APP_CONFIG_PAGE_CLOSEHOUSEHOLDDETAILS",
     "message": "Closed Household Details",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
-    "message": "Close Household Head Name must be between 2 and 200 characters",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
@@ -90,18 +84,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
-    "message": "Village name",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
-    "message": "Village name is required",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
     "message": "Capture the details of the household you are marking as closed.",
     "module": "hcm-base-closehousehold-bednet",
@@ -110,6 +92,24 @@
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
     "message": "Closed Household Details",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+    "message": " ",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
+    "message": "Village name",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
+    "message": "Village name is required",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
@@ -150,6 +150,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_MESSAGE",
+    "message": "Failed to fetch config.",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_administrativeArea_ERROR",
     "message": "Please select a village name",
     "module": "hcm-base-closehousehold-bednet",
@@ -164,12 +170,6 @@
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_latLng_ERROR",
     "message": "GPS location is required",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_MESSAGE",
-    "message": "Failed to fetch config.",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
@@ -216,18 +216,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "closeHouseholdSuccess",
-    "message": "Data Recorded Successfully",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DataIssues",
-    "message": "Data Issues",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "DEFAULT",
     "message": "Default",
     "module": "hcm-base-closehousehold-bednet",
@@ -242,6 +230,12 @@
   {
     "code": "DRUG_SE_PC",
     "message": "Drug Side Effect from the previous cycle",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DataIssues",
+    "message": "Data Issues",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
@@ -270,8 +264,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "headName",
-    "message": "Household Head Name",
+    "code": "HCM_CLOSE_HOUSEHOLD_INFO_CARD_TEXT",
+    "message": "Confirm that you're at the correct household in the selected village. Your GPS location will be recorded as part of the household closure.",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
@@ -284,18 +278,6 @@
   {
     "code": "INSUFFICIENT_RESOURCES",
     "message": "Insufficient Resources",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
-    "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
-    "message": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
@@ -420,18 +402,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Description",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "Status",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
     "message": "Area",
     "module": "hcm-base-closehousehold-bednet",
@@ -452,6 +422,18 @@
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
     "message": "Complaint Type",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+    "message": "Description",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
+    "message": "Status",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
@@ -594,6 +576,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
+    "message": "Monitoring Date",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
     "message": "Monitor Designation",
     "module": "hcm-base-closehousehold-bednet",
@@ -602,12 +590,6 @@
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
     "message": "Monitor Name",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Monitoring Date",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
@@ -744,6 +726,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
+    "message": "Children Under 5",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
     "message": "Child Age (Months)",
     "module": "hcm-base-closehousehold-bednet",
@@ -752,12 +740,6 @@
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
     "message": "Child Sex",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Children Under 5",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
@@ -822,14 +804,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Survey Date",
+    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
+    "message": "Surveyor Name",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Surveyor Name",
+    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
+    "message": "Survey Date",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
@@ -900,8 +882,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "latLng",
-    "message": "GPS Coordinate Accuracy",
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "message": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
@@ -914,6 +902,12 @@
   {
     "code": "METAL",
     "message": "Metal",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Not Enough Stock",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
@@ -936,18 +930,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "NOTENOUGHSTOCK",
-    "message": "Not Enough Stock",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Other",
-    "message": "Other",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "OTHER",
     "message": "Other",
     "module": "hcm-base-closehousehold-bednet",
@@ -955,6 +937,12 @@
   },
   {
     "code": "OTHERS",
+    "message": "Other",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Other",
     "message": "Other",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
@@ -972,18 +960,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "scanner",
-    "message": "Scan Voucher",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SecurityIssues",
-    "message": "Security Issues",
-    "module": "hcm-base-closehousehold-bednet",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "SICK",
     "message": "Sick",
     "module": "hcm-base-closehousehold-bednet",
@@ -996,14 +972,20 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "SyncNotWorking",
-    "message": "Sync Not Working",
+    "code": "SYNCNOTWORKING",
+    "message": "Sync not working",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
   {
-    "code": "SYNCNOTWORKING",
-    "message": "Sync not working",
+    "code": "SecurityIssues",
+    "message": "Security Issues",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "Sync Not Working",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   },
@@ -1022,6 +1004,36 @@
   {
     "code": "UserAccountIssues",
     "message": "User Account Issues",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "administrativeArea",
+    "message": "Village Name",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "closeHouseholdSuccess",
+    "message": "Data Recorded Successfully",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "headName",
+    "message": "Household Head Name",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "latLng",
+    "message": "GPS Coordinate Accuracy",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "scanner",
+    "message": "Scan Voucher",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "en_DEMO"
   }

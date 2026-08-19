@@ -6,12 +6,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "batteryOptimizationTag",
-    "message": "Battery permission status",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "BENEFICIARY_ABSENT",
     "message": "Beneficiary Absent",
     "module": "hcm-base-stockreports-default",
@@ -20,18 +14,6 @@
   {
     "code": "BENEFICIARY_REFUSED",
     "message": "Beneficiary Refused",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "blueToothScan",
-    "message": "Bluetooth scan permission status",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cameraPermissionStatus",
-    "message": "Camera permission status",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -62,6 +44,12 @@
   {
     "code": "CORE_COMMON_ALLOW_PERMISSIONS_DESCRIPTION",
     "message": "Allow Permissions",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSIONS_ALERT",
+    "message": "Allow required permissions",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -108,20 +96,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "CORE_COMMON_PERMISSION_NOT_GRANTED",
-    "message": "Permission not granted",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "CORE_COMMON_PERMISSION_NOTIFICATION",
     "message": "Notifications",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "CORE_COMMON_PERMISSIONS_ALERT",
-    "message": "Allow required permissions",
+    "code": "CORE_COMMON_PERMISSION_NOT_GRANTED",
+    "message": "Permission not granted",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -228,12 +210,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "locationPermission",
-    "message": "Location permission status",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "METAL",
     "message": "Metal",
     "module": "hcm-base-stockreports-default",
@@ -242,6 +218,18 @@
   {
     "code": "NEAR_BY_WIFI_DEVICES",
     "message": "Nearby Share permission status",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Not Enough Stock",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOTIFICATION_PERMISSION_TAG",
+    "message": "Notifications permission status",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -264,26 +252,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "NOTENOUGHSTOCK",
-    "message": "Not Enough Stock",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NOTIFICATION_PERMISSION_TAG",
-    "message": "Notifications permission status",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "OPEN_SETTINGS",
     "message": "Settings",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Other",
-    "message": "Other",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -300,8 +270,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "PerformanceIssue",
-    "message": "PERFORMANCEISSUE",
+    "code": "Other",
+    "message": "Other",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PERMISSIONS_ALERT",
+    "message": "Allow required permissions",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -324,20 +300,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "PERMISSIONS_ALERT",
-    "message": "Allow required permissions",
+    "code": "PerformanceIssue",
+    "message": "PERFORMANCEISSUE",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
   {
     "code": "REEDS",
     "message": "Reeds",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SecurityIssues",
-    "message": "SECURITYISSUES",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -360,80 +330,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "STOCK_QUANTITY",
-    "message": "Stock Quantity",
+    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
+    "message": "Select Product",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
-    "message": "Please select warehouse and product variant to view the report",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_DATE",
-    "message": "Date",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
-    "message": "Stock on hand = (Stock received + stock returned) − (stock issued + stock lost + stock damaged)",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_INFO_CARD_TITLE",
-    "message": "Info",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
-    "message": "Stock Damaged",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
-    "message": "Stock Issued",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_STOCK_LOST",
-    "message": "Stock Lost",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_STOCK_ON_HAND",
-    "message": "Stock in hand",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
-    "message": "Stock Received",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
-    "message": "Stock Returned",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_REPORT_INFO_NO_RESULTS_TITLE",
-    "message": "No results",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCK_REPORT_INFO_REPORTS_TITLE",
-    "message": "Reports Info",
+    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
+    "message": "Select Facility",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -504,26 +408,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
-    "message": "Select Product",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
-    "message": "Select Facility",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "stockReconTable",
-    "message": "Stock Reconciliation Table",
-    "module": "hcm-base-stockreports-default",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "STOCKREPORTS_REPORT_DETAILS_BACK_BUTTON_LABEL",
     "message": "Back",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_DESCRIPTION",
+    "message": " ",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -590,6 +482,12 @@
   {
     "code": "STOCKREPORTS_VIEW_REPORTS_BACK_BUTTON_LABEL",
     "message": "Back",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_DESCRIPTION",
+    "message": " ",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -672,8 +570,80 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "stockTable",
-    "message": "Stock Table",
+    "code": "STOCK_QUANTITY",
+    "message": "Stock Quantity",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_DATE",
+    "message": "Date",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
+    "message": "Stock on hand = (Stock received + stock returned) \u2212 (stock issued + stock lost + stock damaged)",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_TITLE",
+    "message": "Info",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
+    "message": "Stock Damaged",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
+    "message": "Stock Issued",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_LOST",
+    "message": "Stock Lost",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ON_HAND",
+    "message": "Stock in hand",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
+    "message": "Stock Received",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
+    "message": "Stock Returned",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Please select warehouse and product variant to view the report",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_INFO_NO_RESULTS_TITLE",
+    "message": "No results",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_INFO_REPORTS_TITLE",
+    "message": "Reports Info",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -684,14 +654,20 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "SyncNotWorking",
-    "message": "Sync Not Working",
+    "code": "SYNCNOTWORKING",
+    "message": "Sync not working",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
   {
-    "code": "SYNCNOTWORKING",
-    "message": "Sync not working",
+    "code": "SecurityIssues",
+    "message": "SECURITYISSUES",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "Sync Not Working",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -704,6 +680,42 @@
   {
     "code": "UserAccountIssues",
     "message": "USERACCOUNTISSUES",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "batteryOptimizationTag",
+    "message": "Battery permission status",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "blueToothScan",
+    "message": "Bluetooth scan permission status",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cameraPermissionStatus",
+    "message": "Camera permission status",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "locationPermission",
+    "message": "Location permission status",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockReconTable",
+    "message": "Stock Reconciliation Table",
+    "module": "hcm-base-stockreports-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockTable",
+    "message": "Stock Table",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   }

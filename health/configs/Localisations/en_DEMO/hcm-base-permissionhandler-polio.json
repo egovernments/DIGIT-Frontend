@@ -1,41 +1,5 @@
 [
   {
-    "code": "{{context.bluetoothScanPermissionStatus}}",
-    "message": "Bluetooth Status Tag",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "{{context.cameraPermissionStatus}}",
-    "message": "Camera Status Tag",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "{{context.ignoreBatteryOptimizationsPermissionStatus}}",
-    "message": "Battery Status Tag",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "{{context.locationPermissionStatus}}",
-    "message": "Location Status Tag",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "{{context.nearbyWifiDevicesPermissionStatus}}",
-    "message": "Nearby Wifi Status Tag",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "{{context.notificationPermissionStatus}}",
-    "message": "Notification Status Tag",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "ABDOMINAL_PAIN",
     "message": "Abdominal Pain",
     "module": "hcm-base-permissionhandler-polio",
@@ -50,78 +14,6 @@
   {
     "code": "ADMINISTRATION_SUCCESS",
     "message": "Administration Success",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Administrtion Failed",
-    "message": "Administration Failed",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_ACTION_BUTTON_LABEL",
-    "message": "Action Button Label",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_CATEGORY_PERMISSIONHANDLER",
-    "message": "App Permissions",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
-    "message": "App Permissions",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
-    "message": "Permissions",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER_PERMISSIONHANDLER",
-    "message": "App Permissions",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIGURATION_REDESIGN",
-    "message": "App Design",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_DETAILS_SCREEN_DESCRIPTION",
-    "message": "Overview of household details",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
-    "message": "Provide the primary street address or house number.",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
-    "message": "Additional address information, like block or apartment name.",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_helpText",
-    "message": "Enter the area of settlement where the house is located.",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark_helpText",
-    "message": "Nearby landmark of the house",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -156,68 +48,74 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "backgroundActivityConfirmed",
-    "message": "Please check if background activity is enabled from settings.",
+    "code": "APPONE_REGISTRATION_BENEFICIARY_DETAILS_SCREEN_DESCRIPTION",
+    "message": "Overview of household details",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "batteryCard",
-    "message": "Battery Optimization",
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
+    "message": "Provide the primary street address or house number.",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "batteryGrantButton",
-    "message": "Grant Battery Permission",
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
+    "message": "Additional address information, like block or apartment name.",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "batteryIcon",
-    "message": "Battery",
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_helpText",
+    "message": "Enter the area of settlement where the house is located.",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "batteryIconTextRow",
-    "message": "Battery Details",
+    "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark_helpText",
+    "message": "Nearby landmark of the house",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "batteryOptimizationTag",
-    "message": "Battery permission status",
+    "code": "APP_CONFIGURATION_REDESIGN",
+    "message": "App Design",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "batteryRow",
-    "message": "Battery Permission",
+    "code": "APP_CONFIG_ACTION_BUTTON_LABEL",
+    "message": "Action Button Label",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "batteryStatus",
-    "message": "Battery Status",
+    "code": "APP_CONFIG_CATEGORY_PERMISSIONHANDLER",
+    "message": "App Permissions",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "batteryStatusTag",
-    "message": "Battery Status",
+    "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
+    "message": "App Permissions",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "batteryText",
-    "message": "Battery Optimization",
+    "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
+    "message": "Permissions",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "batteryTextColumn",
-    "message": "Battery",
+    "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER_PERMISSIONHANDLER",
+    "message": "App Permissions",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Administrtion Failed",
+    "message": "Administration Failed",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -230,72 +128,6 @@
   {
     "code": "BENEFICIARY_REFUSED",
     "message": "Beneficiary Refused",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "beneficiaryIdMinCheck",
-    "message": "Minimum beneficiary ID length not met",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "bluetoothCard",
-    "message": "Bluetooth",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "bluetoothGrantButton",
-    "message": "Grant Bluetooth Permission",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "bluetoothIcon",
-    "message": "Bluetooth",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "bluetoothIconTextRow",
-    "message": "Bluetooth Details",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "blueToothPermissionStatus",
-    "message": "Bluetooth Status",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "bluetoothRow",
-    "message": "Bluetooth Permission",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "blueToothScan",
-    "message": "Bluetooth scan permission status",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "bluetoothStatusTag",
-    "message": "Bluetooth Status",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "bluetoothText",
-    "message": "Bluetooth",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "bluetoothTextColumn",
-    "message": "Bluetooth",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -324,72 +156,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "cameraCard",
-    "message": "Camera",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cameraGrantButton",
-    "message": "Grant Camera Permission",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cameraIcon",
-    "message": "Camera",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cameraIconTextRow",
-    "message": "Camera Details",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cameraPermissionStatus",
-    "message": "Camera Status",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cameraRow",
-    "message": "Camera Permission",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cameraStatusTag",
-    "message": "Camera Status",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cameraText",
-    "message": "Camera",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cameraTextColumn",
-    "message": "Camera",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cancel2",
-    "message": "Cancel",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cancel3",
-    "message": "Cancel",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "CEMENT",
     "message": "Cement",
     "module": "hcm-base-permissionhandler-polio",
@@ -398,12 +164,6 @@
   {
     "code": "CLAY",
     "message": "Clay",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "clearFilter2",
-    "message": "Skip & Continue",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -420,6 +180,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "COMPLAINTS_RAISED_FOR_MYSELF",
+    "message": "Myself",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "COMPLAINT_INBOX_SORT_LATEST_FIRST",
     "message": "Latest First",
     "module": "hcm-base-permissionhandler-polio",
@@ -428,12 +194,6 @@
   {
     "code": "COMPLAINT_INBOX_SORT_LATEST_LAST",
     "message": "Oldest First",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_RAISED_FOR_MYSELF",
-    "message": "Myself",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -487,13 +247,19 @@
   },
   {
     "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-    "message": "We couldn’t find this beneficiary in the records. You can add them as a new beneficiary.",
+    "message": "We couldn\u2019t find this beneficiary in the records. You can add them as a new beneficiary.",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "CORE_COMMON_DONT_ALLOW",
-    "message": "Don’t Allow",
+    "message": "Don\u2019t Allow",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSIONS_ALERT",
+    "message": "Allow required permissions",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -564,12 +330,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "CORE_COMMON_PERMISSION_NOT_GRANTED",
-    "message": "Permission not granted",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "CORE_COMMON_PERMISSION_NOTIFICATION",
     "message": "Notifications",
     "module": "hcm-base-permissionhandler-polio",
@@ -582,86 +342,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "CORE_COMMON_PERMISSIONS_ALERT",
-    "message": "Allow required permissions",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionBluetoothscan",
-    "message": "Bluetooth",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionBluetoothscanDesc",
-    "message": "Scan for nearby Bluetooth devices.",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionCamera",
-    "message": "Camera",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionCameraDesc",
-    "message": "Use your device camera.",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionIgnorebatteryoptimizations",
-    "message": "Ignore Battery Optimization",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionLocation",
-    "message": "Location",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionLocationDesc",
-    "message": "Access your device location.",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionNearbywifidevices",
-    "message": "Nearby Share",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionNearbywifidevicesDesc",
-    "message": "Share data with nearby devices.",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionNotification",
-    "message": "Notifications",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionNotificationDesc",
-    "message": "Get alerts and updates from the app.",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Data Issues",
-    "message": "Data Issues",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DataIssues",
-    "message": "Data Issues",
+    "code": "CORE_COMMON_PERMISSION_NOT_GRANTED",
+    "message": "Permission not granted",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -686,12 +368,6 @@
   {
     "code": "DELIVERY_SUCCESSFUL_PANEL_CARD_DESC",
     "message": "Resources have been delivered successfully.",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DeliveryDetails",
-    "message": "Delivery Details",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -728,6 +404,24 @@
   {
     "code": "DUPLICATE_ERROR",
     "message": "Form has been configured incorrectly. Please refresh, check, and fix it.",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Data Issues",
+    "message": "Data Issues",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DataIssues",
+    "message": "Data Issues",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DeliveryDetails",
+    "message": "Delivery Details",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -786,14 +480,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "FOOTER_ACTION_permissionHandlerButton_LABEL",
-    "message": "Allow Access",
+    "code": "FOOTER_ACTION_permissionHandlerButton2_LABEL",
+    "message": "Settings",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "FOOTER_ACTION_permissionHandlerButton2_LABEL",
-    "message": "Settings",
+    "code": "FOOTER_ACTION_permissionHandlerButton_LABEL",
+    "message": "Allow Access",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -824,12 +518,6 @@
   {
     "code": "GLASS",
     "message": "Glass",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "GoHome",
-    "message": "Go Home",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -876,6 +564,18 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "GoHome",
+    "message": "Go Home",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM.ID_TYPE_OPTIONS_POPULATOR",
+    "message": "ID Type",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "HCM_PLEASE_WAIT_TRY_IN_SOME_TIME",
     "message": "Please wait. Template generation is in progress.",
     "module": "hcm-base-permissionhandler-polio",
@@ -888,14 +588,32 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "HCM.ID_TYPE_OPTIONS_POPULATOR",
-    "message": "ID Type",
+    "code": "INCOMPATIBLE",
+    "message": "Incompatible",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "INCOMPATIBLE",
-    "message": "Incompatible",
+    "code": "INELIGIBLE",
+    "message": "Ineligible",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVALID_REQUEST",
+    "message": "Form has been configured incorrectly. Please refresh, check and fix it.",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVALID_REQUEST1",
+    "message": "Form has been configured incorrectly. Please refresh, check and fix it.",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVALID_REQUEST2",
+    "message": "Form has been configured incorrectly. Please refresh, check and fix it.",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -930,38 +648,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "INELIGIBLE",
-    "message": "Ineligible",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "infocard",
-    "message": "Info Card",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "InfoCard",
     "message": "Information",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INVALID_REQUEST",
-    "message": "Form has been configured incorrectly. Please refresh, check and fix it.",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INVALID_REQUEST1",
-    "message": "Form has been configured incorrectly. Please refresh, check and fix it.",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INVALID_REQUEST2",
-    "message": "Form has been configured incorrectly. Please refresh, check and fix it.",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -972,31 +660,19 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
-    "message": "Quantity",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
-    "message": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_AGE",
     "message": "Age",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_BATCH_NUMBER",
+    "code": "LABEL_PAIR_BATCHNUMBER",
     "message": "Batch Number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_BATCHNUMBER",
+    "code": "LABEL_PAIR_BATCH_NUMBER",
     "message": "Batch Number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
@@ -1080,6 +756,30 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "LABEL_PAIR_COMPLAINTAREA",
+    "message": "Area",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTDATE",
+    "message": "Complaint Date",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTNUMBER",
+    "message": "Complaint Number",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTSTATUS",
+    "message": "Status",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
     "message": "Complainant Contact",
     "module": "hcm-base-permissionhandler-polio",
@@ -1122,18 +822,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Complaint Description",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "Complaint Status",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
     "message": "Area",
     "module": "hcm-base-permissionhandler-polio",
@@ -1158,32 +846,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Area",
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+    "message": "Complaint Description",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_COMPLAINTDATE",
-    "message": "Complaint Date",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINTNUMBER",
-    "message": "Complaint Number",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINTSTATUS",
-    "message": "Status",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Date of Registration",
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
+    "message": "Complaint Status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1196,6 +866,12 @@
   {
     "code": "LABEL_PAIR_DATEOFREGISTRATION",
     "message": "Registration Date",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
+    "message": "Date of Registration",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1214,6 +890,12 @@
   {
     "code": "LABEL_PAIR_GIVENNAME",
     "message": "Name",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCMTOTALMEMBERS",
+    "message": "Total Members",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1260,12 +942,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_HCMTOTALMEMBERS",
-    "message": "Total Members",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_HEADNAME",
     "message": "Head of Household",
     "module": "hcm-base-permissionhandler-polio",
@@ -1284,18 +960,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "ID Number",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_ID_TYPE",
-    "message": "ID Type",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_IDNUMBER",
     "message": "ID Number",
     "module": "hcm-base-permissionhandler-polio",
@@ -1308,104 +972,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
-    "message": "Source",
+    "code": "LABEL_PAIR_ID_NUMBER",
+    "message": "ID Number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Children Present",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Children Vaccinated",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Final Comments",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
-    "message": "Missed (Absent)",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
-    "message": "Missed (Asleep)",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Missed (Not Revisited)",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Missed (Not Visited)",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Missed (Other)",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Missed (Refusal)",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
-    "message": "Missed (Routine)",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Monitor Designation",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Monitor Name",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Monitoring Date",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Poorly Covered",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Settlement Area",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Settlement Type",
+    "code": "LABEL_PAIR_ID_TYPE",
+    "message": "ID Type",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1501,6 +1075,108 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTTYPE",
+    "message": "Settlement Type",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+    "message": "Source",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
+    "message": "Children Present",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
+    "message": "Children Vaccinated",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
+    "message": "Final Comments",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
+    "message": "Missed (Absent)",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
+    "message": "Missed (Asleep)",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
+    "message": "Missed (Not Revisited)",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
+    "message": "Missed (Not Visited)",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
+    "message": "Missed (Other)",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
+    "message": "Missed (Refusal)",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
+    "message": "Missed (Routine)",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
+    "message": "Monitoring Date",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
+    "message": "Monitor Designation",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
+    "message": "Monitor Name",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
+    "message": "Poorly Covered",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
+    "message": "Settlement Area",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
     "message": "Settlement Type",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
@@ -1604,132 +1280,6 @@
   {
     "code": "LABEL_PAIR_LOCALITY",
     "message": "Settlement Area",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Absence Reason",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "AFP Awareness",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "AFP Case Count",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Other Awareness",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Campaign Awareness",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Caregiver Informed",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Child Age (Months)",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Child Sex",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Children Under 5",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Cluster Number",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Finger Marked",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Lot Number",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "OPV Doses",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Other Absence Reason",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Other Reason (Specify)",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Other Refusal Reason",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Reason Not Marked",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Refusal Reason",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Settlement Area",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Survey Date",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Surveyor Name",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1860,8 +1410,128 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_MEMBER_COUNT",
-    "message": "Member Count",
+    "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
+    "message": "Absence Reason",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
+    "message": "AFP Awareness",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
+    "message": "AFP Case Count",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
+    "message": "Other Awareness",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
+    "message": "Campaign Awareness",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
+    "message": "Caregiver Informed",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
+    "message": "Children Under 5",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
+    "message": "Child Age (Months)",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
+    "message": "Child Sex",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
+    "message": "Cluster Number",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
+    "message": "Finger Marked",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
+    "message": "Lot Number",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
+    "message": "OPV Doses",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
+    "message": "Other Absence Reason",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
+    "message": "Other Reason (Specify)",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
+    "message": "Other Refusal Reason",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
+    "message": "Reason Not Marked",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
+    "message": "Refusal Reason",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
+    "message": "Settlement Area",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
+    "message": "Surveyor Name",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
+    "message": "Survey Date",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1872,8 +1542,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_MOBILE_NUMBER",
-    "message": "Mobile Number",
+    "code": "LABEL_PAIR_MEMBER_COUNT",
+    "message": "Member Count",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1884,13 +1554,19 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "MRN Number",
+    "code": "LABEL_PAIR_MOBILE_NUMBER",
+    "message": "Mobile Number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRNNUMBER",
+    "message": "MRN Number",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MRN_NUMBER",
     "message": "MRN Number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
@@ -1908,13 +1584,13 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_QUANTITY_RECEIVED",
+    "code": "LABEL_PAIR_QUANTITYRECEIVED",
     "message": "Quantity Received",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_QUANTITYRECEIVED",
+    "code": "LABEL_PAIR_QUANTITY_RECEIVED",
     "message": "Quantity Received",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
@@ -1922,6 +1598,18 @@
   {
     "code": "LABEL_PAIR_RECEIVER",
     "message": "Receiver",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRALNAME",
+    "message": "Name",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRALSTATUS",
+    "message": "Status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1940,18 +1628,6 @@
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
     "message": "Referral Symptom",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFERRALNAME",
-    "message": "Name",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFERRALSTATUS",
-    "message": "Status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1980,13 +1656,13 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_STOCK_EXPIRY",
+    "code": "LABEL_PAIR_STOCKEXPIRY",
     "message": "Stock Expiry",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_STOCKEXPIRY",
+    "code": "LABEL_PAIR_STOCK_EXPIRY",
     "message": "Stock Expiry",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
@@ -2034,20 +1710,680 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "LABEL_PAIR_WAYBILL_NUMBER",
-    "message": "Waybill Number",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "LABEL_PAIR_WAYBILLNUMBER",
     "message": "Waybill Number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
+    "code": "LABEL_PAIR_WAYBILL_NUMBER",
+    "message": "Waybill Number",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "Quantity",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "message": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "LOCALISATION_ERROR",
     "message": "Unable to load translations. Please try again.",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MALE",
+    "message": "Male",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "Metal",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NEAR_BY_WIFI_DEVICES",
+    "message": "Nearby Devices",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOTIFICATION_PERMISSION_TAG",
+    "message": "Notifications permission status",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOT_ADMINISTERED",
+    "message": "Not Administered",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOT_REGISTERED",
+    "message": "Not Registered",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Not Enough Stock",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "OPEN_SETTINGS",
+    "message": "Settings",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Other",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Other",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PERMISSIONHANDLER",
+    "message": "Permissions",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PERMISSIONS_ALERT",
+    "message": "Allow required permissions",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PERMISSION_CONTINUE",
+    "message": "Continue",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PERMISSION_DENIED_OPEN_SETTINGS",
+    "message": "Enable permission in Settings.",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY",
+    "message": "Please check if background activity is enabled from settings.",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROXIMITY_SEARCH",
+    "message": "Nearby Households",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROXIMITY_SEARCH_REGISTRATION",
+    "message": "Nearby Households",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "Performance Issue",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITY_RECEIVED",
+    "message": "Quantity Received",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RAINMAKER-PGR.ServiceDefs",
+    "message": "Complaint Type",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RECORDSTOCK",
+    "message": "Record Stock Details",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REDOSE_REASON_VOMITTING",
+    "message": "Vomiting",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Reeds",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
+    "message": "Administrative Unit",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATIONFLOW_beneficiaryDetail_lengthmessage_phone",
+    "message": "Please enter a 9-digit phone number",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATIONFLOW_beneficiaryLocation_71b53895",
+    "message": "Beneficiary location is required",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_NOT_REGISTERD",
+    "message": "Not Registered",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Sick",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SKIN_REACTION",
+    "message": "Skin Reaction",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Successful Delivery",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Security Issues",
+    "message": "Security Issues",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "Security Issues",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "StockModel.QUANTITY_RECEIVED",
+    "message": "Quantity Received",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "StockModel.RECEIVED_FROM",
+    "message": "Received From",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "Sync Not Working",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_1",
+    "message": "Transport Type 1",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_2",
+    "message": "Transport Type 2",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Technical Issues",
+    "message": "Technical Issues",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Technical Issues",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UNIQUE_BENEFICIARY_ID",
+    "message": "Beneficiary ID",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "User Account Issues",
+    "message": "User Account Issues",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "User Account Issues",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "VOMITTING",
+    "message": "Vomiting",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WEAKNESS",
+    "message": "Weakness",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "backgroundActivityConfirmed",
+    "message": "Please check if background activity is enabled from settings.",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "batteryCard",
+    "message": "Battery Optimization",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "batteryGrantButton",
+    "message": "Grant Battery Permission",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "batteryIcon",
+    "message": "Battery",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "batteryIconTextRow",
+    "message": "Battery Details",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "batteryOptimizationTag",
+    "message": "Battery permission status",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "batteryRow",
+    "message": "Battery Permission",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "batteryStatus",
+    "message": "Battery Status",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "batteryStatusTag",
+    "message": "Battery Status",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "batteryText",
+    "message": "Battery Optimization",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "batteryTextColumn",
+    "message": "Battery",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "beneficiaryIdMinCheck",
+    "message": "Minimum beneficiary ID length not met",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "blueToothPermissionStatus",
+    "message": "Bluetooth Status",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "blueToothScan",
+    "message": "Bluetooth scan permission status",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "bluetoothCard",
+    "message": "Bluetooth",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "bluetoothGrantButton",
+    "message": "Grant Bluetooth Permission",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "bluetoothIcon",
+    "message": "Bluetooth",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "bluetoothIconTextRow",
+    "message": "Bluetooth Details",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "bluetoothRow",
+    "message": "Bluetooth Permission",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "bluetoothStatusTag",
+    "message": "Bluetooth Status",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "bluetoothText",
+    "message": "Bluetooth",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "bluetoothTextColumn",
+    "message": "Bluetooth",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cameraCard",
+    "message": "Camera",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cameraGrantButton",
+    "message": "Grant Camera Permission",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cameraIcon",
+    "message": "Camera",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cameraIconTextRow",
+    "message": "Camera Details",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cameraPermissionStatus",
+    "message": "Camera Status",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cameraRow",
+    "message": "Camera Permission",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cameraStatusTag",
+    "message": "Camera Status",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cameraText",
+    "message": "Camera",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cameraTextColumn",
+    "message": "Camera",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cancel2",
+    "message": "Cancel",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "cancel3",
+    "message": "Cancel",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "card",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "card2",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "card3",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "card4",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "card5",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "card6",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "clearFilter2",
+    "message": "Skip & Continue",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "column",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "column2",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "column3",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "column4",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "column5",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "column6",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "coreCommonPermissionBluetoothscan",
+    "message": "Bluetooth",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "coreCommonPermissionBluetoothscanDesc",
+    "message": "Scan for nearby Bluetooth devices.",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "coreCommonPermissionCamera",
+    "message": "Camera",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "coreCommonPermissionCameraDesc",
+    "message": "Use your device camera.",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "coreCommonPermissionIgnorebatteryoptimizations",
+    "message": "Ignore Battery Optimization",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "coreCommonPermissionLocation",
+    "message": "Location",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "coreCommonPermissionLocationDesc",
+    "message": "Access your device location.",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "coreCommonPermissionNearbywifidevices",
+    "message": "Nearby Share",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "coreCommonPermissionNearbywifidevicesDesc",
+    "message": "Share data with nearby devices.",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "coreCommonPermissionNotification",
+    "message": "Notifications",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "coreCommonPermissionNotificationDesc",
+    "message": "Get alerts and updates from the app.",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "icon",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "icon2",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "icon3",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "icon4",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "icon5",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "icon6",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "infocard",
+    "message": "Info Card",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2112,12 +2448,6 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "MALE",
-    "message": "Male",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "meberDetails",
     "message": "Member Details",
     "module": "hcm-base-permissionhandler-polio",
@@ -2126,18 +2456,6 @@
   {
     "code": "menu_card",
     "message": "Menu",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "METAL",
-    "message": "Metal",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NEAR_BY_WIFI_DEVICES",
-    "message": "Nearby Devices",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2196,26 +2514,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "NOT_ADMINISTERED",
-    "message": "Not Administered",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NOT_REGISTERED",
-    "message": "Not Registered",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NotEnoughStock",
-    "message": "Not Enough Stock",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NOTIFICATION_PERMISSION_TAG",
-    "message": "Notifications permission status",
+    "code": "notificansIcon",
+    "message": " ",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2274,62 +2574,8 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "OPEN_SETTINGS",
-    "message": "Settings",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "oroductdetail",
     "message": "Product Detail",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Other",
-    "message": "Other",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "OTHER",
-    "message": "Other",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PerformanceIssue",
-    "message": "Performance Issue",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PERMISSION_CONTINUE",
-    "message": "Continue",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PERMISSION_DENIED_OPEN_SETTINGS",
-    "message": "Enable permission in Settings.",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY",
-    "message": "Please check if background activity is enabled from settings.",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PERMISSIONHANDLER",
-    "message": "Permissions",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "permissionHandler_column",
-    "message": "Permissions",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2352,26 +2598,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "PERMISSIONS_ALERT",
-    "message": "Allow required permissions",
+    "code": "permissionHandler_column",
+    "message": "Permissions",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "permissionsColumn",
     "message": "Permissions Column",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PROXIMITY_SEARCH",
-    "message": "Nearby Households",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PROXIMITY_SEARCH_REGISTRATION",
-    "message": "Nearby Households",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2388,56 +2622,74 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "QUANTITY_RECEIVED",
-    "message": "Quantity Received",
+    "code": "row",
+    "message": " ",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "RAINMAKER-PGR.ServiceDefs",
-    "message": "Complaint Type",
+    "code": "row10",
+    "message": " ",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "RECORDSTOCK",
-    "message": "Record Stock Details",
+    "code": "row11",
+    "message": " ",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "REDOSE_REASON_VOMITTING",
-    "message": "Vomiting",
+    "code": "row12",
+    "message": " ",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "REEDS",
-    "message": "Reeds",
+    "code": "row2",
+    "message": " ",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
-    "message": "Administrative Unit",
+    "code": "row3",
+    "message": " ",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "REGISTRATION_NOT_REGISTERD",
-    "message": "Not Registered",
+    "code": "row4",
+    "message": " ",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "REGISTRATIONFLOW_beneficiaryDetail_lengthmessage_phone",
-    "message": "Please enter a 9-digit phone number",
+    "code": "row5",
+    "message": " ",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "REGISTRATIONFLOW_beneficiaryLocation_71b53895",
-    "message": "Beneficiary location is required",
+    "code": "row6",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "row7",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "row8",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "row9",
+    "message": " ",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2448,68 +2700,14 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "Security Issues",
-    "message": "Security Issues",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SecurityIssues",
-    "message": "Security Issues",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SICK",
-    "message": "Sick",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SKIN_REACTION",
-    "message": "Skin Reaction",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "StockModel.QUANTITY_RECEIVED",
-    "message": "Quantity Received",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "StockModel.RECEIVED_FROM",
-    "message": "Received From",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SUCCESSFUL_DELIVERY",
-    "message": "Successful Delivery",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SyncNotWorking",
-    "message": "Sync Not Working",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Technical Issues",
-    "message": "Technical Issues",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "TechnicalIssues",
-    "message": "Technical Issues",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
     "code": "textTemplate",
     "message": "Notifications",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "textTemplate10",
+    "message": " ",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2550,50 +2748,68 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "textTemplate6",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "textTemplate7",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "textTemplate8",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "textTemplate9",
+    "message": " ",
+    "module": "hcm-base-permissionhandler-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "textTemplatetext",
     "message": "Permission",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "TRANSPORT_TYPE_1",
-    "message": "Transport Type 1",
+    "code": "{{context.bluetoothScanPermissionStatus}}",
+    "message": "Bluetooth Status Tag",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "TRANSPORT_TYPE_2",
-    "message": "Transport Type 2",
+    "code": "{{context.cameraPermissionStatus}}",
+    "message": "Camera Status Tag",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Beneficiary ID",
+    "code": "{{context.ignoreBatteryOptimizationsPermissionStatus}}",
+    "message": "Battery Status Tag",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "User Account Issues",
-    "message": "User Account Issues",
+    "code": "{{context.locationPermissionStatus}}",
+    "message": "Location Status Tag",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "UserAccountIssues",
-    "message": "User Account Issues",
+    "code": "{{context.nearbyWifiDevicesPermissionStatus}}",
+    "message": "Nearby Wifi Status Tag",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
-    "code": "VOMITTING",
-    "message": "Vomiting",
-    "module": "hcm-base-permissionhandler-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "WEAKNESS",
-    "message": "Weakness",
+    "code": "{{context.notificationPermissionStatus}}",
+    "message": "Notification Status Tag",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   }

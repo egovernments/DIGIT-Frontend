@@ -1,0 +1,254 @@
+[
+  {
+    "code": "ANOTHER_USER",
+    "message": "Un autre utilisateur",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ASSIGN_SUCCESSFULLY",
+    "message": "Attribu\u00e9 avec succ\u00e8s !",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINANT_CONTACT_NUMBER",
+    "message": "Num\u00e9ro de contact du plaignant",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINANT_NAME",
+    "message": "Nom du plaignant",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_SUPERVISOR_CONTACT_NUMBER",
+    "message": "Num\u00e9ro de contact du superviseur",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_SUPERVISOR_NAME",
+    "message": "Nom du superviseur",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_COMMON_PGR_STATE_PENDING_ASSIGNMENT",
+    "message": "En attente d'affectation",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_COMMON_PGR_STATE_REJECTED",
+    "message": "Rejet\u00e9",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_COMMON_PGR_STATE_RESOLVED",
+    "message": "R\u00e9solu",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_COMMON_SELECT_EMPLOYEE",
+    "message": "S\u00e9lectionner un employ\u00e9",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON1",
+    "message": "Plainte invalide",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON2",
+    "message": "Plainte en double",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON3",
+    "message": "Informations insuffisantes ou manquantes",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON4",
+    "message": "Probl\u00e8me non exploitable",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON5",
+    "message": "Probl\u00e8me r\u00e9solu ou ferm\u00e9",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_CREATECOMPLAINT_FOR",
+    "message": "Plainte pour",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_CREATECOMPLAINT_PROVIDE_COMPLAINANT_DETAILS",
+    "message": "D\u00e9tails du plaignant",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_PGR_FILTER_STATUS",
+    "message": "Statut",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE",
+    "message": "Type de hi\u00e9rarchie",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_DESCRIPTION",
+    "message": "Veuillez s\u00e9lectionner votre hi\u00e9rarchie",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_HEADER",
+    "message": "S\u00e9lectionnez le type de hi\u00e9rarchie",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MYSELF",
+    "message": "Moi-m\u00eame",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PGR_ACTION_REJECT",
+    "message": "Rejeter",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PGR_ACTION_RESOLVE",
+    "message": "R\u00e9soudre",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PGR_CREATE_ANOTHER_COMPLAIN",
+    "message": "Cr\u00e9er une autre plainte",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PGR_INBOX",
+    "message": "Bo\u00eete de r\u00e9ception",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PGR_SEARCH_RESULTS_HEADING",
+    "message": "Recherche de plainte",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REJECT_SUCCESSFULLY",
+    "message": "Rejet\u00e9 avec succ\u00e8s !",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RESOLVE_SUCCESSFULLY",
+    "message": "R\u00e9solu avec succ\u00e8s !",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.DATAISSUES.eGov",
+    "message": "Probl\u00e8mes de donn\u00e9es",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.OTHER.OTHER",
+    "message": "Autre",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.PERFORMANCEISSUE.eGov",
+    "message": "Probl\u00e8mes de performances",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.SECURITYISSUES.eGov",
+    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.TECHNICALISSUES.eGov",
+    "message": "Probl\u00e8mes techniques",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.USERACCOUNTISSUES.eGov",
+    "message": "Probl\u00e8mes de compte utilisateur",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WF_INBOX_HEADER_CURRENT_OWNER",
+    "message": "Propri\u00e9taire actuel",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WF_INBOX_HEADER_LOCALITY",
+    "message": "Localit\u00e9",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WF_INBOX_HEADER_SLA_DAYS_REMAINING",
+    "message": "SLA restant",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WF_PGR_ASSIGN",
+    "message": "Assign\u00e9",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WF_PGR_CREATE",
+    "message": "Cr\u00e9\u00e9",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WF_PGR_REJECT",
+    "message": "Rejet\u00e9",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WF_PGR_RESOLVE",
+    "message": "R\u00e9soudre",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  }
+]

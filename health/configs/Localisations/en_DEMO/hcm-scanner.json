@@ -1,0 +1,164 @@
+[
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message",
+    "message": "Length should not be less than 2 characters.",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message",
+    "message": "Length should not be less than 2 characters.",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message",
+    "message": "Length should not be less than 2 characters.",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_BATCH_NO_REQUIRED",
+    "message": "This is required field.",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_BATCH_NUMBER",
+    "message": "Barcode batch number",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_EXPIRY_DATE",
+    "message": "Barcode expiry date",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_SERIAL_NO_REQUIRED",
+    "message": "This is required field.",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_SERIAL_NUMBER",
+    "message": "Barcode serial number",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ENTER_MANUAL_CODE",
+    "message": "Enter Code Manually",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FLASH_OFF",
+    "message": "Flash off",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FLASH_ON",
+    "message": "Flash on",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVALID_RESOURCE_CODE",
+    "message": "Invalid Barcode",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MANUAL_SCAN",
+    "message": "Couldn't Scan The QR Code?",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RESOURCES_ALREADY_SCANNED",
+    "message": "Resource already scanned",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RESOURCE_ALREADY_SCANNED",
+    "message": "Resource already scanned",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RESOURCE_CODE",
+    "message": "Resource code",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RESOURCE_SCANNED",
+    "message": "Resources Scanned",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RESOURCE_SCAN_FAILED",
+    "message": "Resource scan failed",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_CONTENT",
+    "message": "The number of scanned resources is less than the minimum quantity of {quantity}.",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_PRIMARY_ACTION",
+    "message": "Back",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_PRIMARY_BUTTON",
+    "message": "Keep Scanning",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_SECONDARY_ACTION",
+    "message": "Confirm",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_SECONDARY_BUTTON",
+    "message": "Save And Close",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_TITLE",
+    "message": "Scanner",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_TITTLE",
+    "message": "Are You Sure You Want To Go Back?",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_LABEL",
+    "message": "Scan QR Code",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_MANUAL_CODE_DESCRIPTION",
+    "message": "Please enter the resource code present on the package.",
+    "module": "hcm-scanner",
+    "locale": "en_DEMO"
+  }
+]

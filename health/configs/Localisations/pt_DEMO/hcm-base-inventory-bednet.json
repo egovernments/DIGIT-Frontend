@@ -1,0 +1,4202 @@
+[
+  {
+    "code": "ABDOMINAL_PAIN",
+    "message": "Dor Abdominal",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "Falha na administra\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_SUCCESS",
+    "message": "Sucesso administrativo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_BATCH_NUMBER_HELPTEXT",
+    "message": "Insira o n\u00famero do lote",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_BATCH_NUMBER_LABEL",
+    "message": "N\u00famero do lote",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_BATCH_NUMBER_REQUIRED",
+    "message": "O n\u00famero do lote \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_COMMENT_HELPTEXT",
+    "message": "Adicione coment\u00e1rios se as quantidades forem diferentes",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_COMMENT_LABEL",
+    "message": "Coment\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_COMMENT_REQUIRED",
+    "message": "Coment\u00e1rio \u00e9 necess\u00e1rio quando as quantidades diferem",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_EXPIRY_DATE_HELPTEXT",
+    "message": "Selecione a data de validade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_EXPIRY_DATE_LABEL",
+    "message": "Data de validade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_EXPIRY_DATE_REQUIRED",
+    "message": "A data de validade \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_PRODUCTDETAILS_ACTION_BUTTON_LABEL_1",
+    "message": "Enviar",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_PRODUCTDETAILS_HELPTEXT",
+    "message": "Selecione v\u00e1rios produtos que est\u00e3o sendo registrados",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_PRODUCTDETAILS_HELPTEXT1",
+    "message": "Selecione a variante do produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_PRODUCTDETAILS_LABEL",
+    "message": "Selecione o produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_PRODUCTDETAILS_LABEL_HELPTEXT2",
+    "message": "Selecione a variante do produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_DESCRIPTION",
+    "message": "Insira os detalhes do produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_PRODUCTDETAILS_SCREEN_HEADING",
+    "message": "Detalhes do produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_DAMAGED_HELPTEXT",
+    "message": "Insira a quantidade de estoque danificado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_DAMAGED_LABEL",
+    "message": "Quantidade danificada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_DAMAGED_REGEX",
+    "message": "Por favor insira um n\u00famero v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_DAMAGED_REQUIRED",
+    "message": "Quantidade danificada \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_LOST_HELPTEXT",
+    "message": "Insira a quantidade perdida durante o tr\u00e2nsito ou armazenamento",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_LOST_LABEL",
+    "message": "Quantidade perdida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_LOST_REGEX",
+    "message": "Por favor insira um n\u00famero v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_LOST_REQUIRED",
+    "message": "A quantidade perdida \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_PARTIAL_USED_LABEL",
+    "message": "Quantidade parcialmente usada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_RECEIVED_HELPTEXT",
+    "message": "Insira a quantidade real recebida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_RECEIVED_LABEL",
+    "message": "Quantidade recebida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_RECEIVED_REGEX",
+    "message": "Por favor insira um n\u00famero v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_RECEIVED_REQUIRED",
+    "message": "A quantidade recebida \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_RETURNED_HELPTEXT",
+    "message": "Insira a quantidade real devolvida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_RETURNED_LABEL",
+    "message": "Quantidade devolvida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_RETURNED_REGEX",
+    "message": "Por favor insira um n\u00famero v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_RETURNED_REQUIRED",
+    "message": "A quantidade devolvida \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_SENT_HELPTEXT",
+    "message": "Insira a quantidade enviada pelo armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_SENT_LABEL",
+    "message": "Quantidade enviada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_SENT_REGEX",
+    "message": "Por favor insira um n\u00famero v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_SENT_REQUIRED",
+    "message": "A quantidade enviada \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_WASTAGE_LABEL",
+    "message": "Quantidade de desperd\u00edcio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_STOCKDETAILS_ACTION_BUTTON_LABEL",
+    "message": "Pr\u00f3ximo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_STOCKDETAILS_SCREEN_DESCRIPTION",
+    "message": "Insira os detalhes do estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_STOCKDETAILS_SCREEN_HEADING",
+    "message": "Detalhes do estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_TRANSPORT_LABEL",
+    "message": "Tipo de transporte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_TRANSPORT_LABEL_HELPTEXT",
+    "message": "Selecione o tipo de transporte utilizado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_VEHICLE_NUMBER_LABEL",
+    "message": "N\u00famero do ve\u00edculo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_VEHICLE_NUMBER_LABEL_HELPTEXT",
+    "message": "Digite o n\u00famero do ve\u00edculo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_WAYBILL_LABEL",
+    "message": "N\u00famero da carta de porte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_WAYBILL_LABEL_HELPTEXT",
+    "message": "Digite o n\u00famero da carta de porte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_WAYBILL_LABEL_HELPTEXT_REQUIRED",
+    "message": "O n\u00famero do conhecimento de embarque \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_ASMINISTRATIVEAREA_HELPTEXT",
+    "message": "Selecione a \u00e1rea administrativa do armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_HELPTEXT",
+    "message": "Insira a data em que o estoque foi recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_ACTION_BUTTON_LABEL_1",
+    "message": "Pr\u00f3ximo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_HELPTEXT_administrativeArea",
+    "message": "Selecione a \u00e1rea administrativa do armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_SCREEN_DESCRIPTION",
+    "message": "Insira os detalhes do armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_SCREEN_HEADING",
+    "message": "Detalhes do armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_dateOfReceipt_HELPTEXT",
+    "message": "Insira a data em que o estoque foi recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_administrativeArea",
+    "message": "\u00c1rea de liquida\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_administrativeArea_HELPTEXT",
+    "message": "Selecione a \u00e1rea administrativa do armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_administrativeArea_mandatory_message",
+    "message": "A \u00e1rea administrativa \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceip_helptext",
+    "message": "Insira a data em que o estoque foi recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceipt",
+    "message": "Data de recebimento",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceipt_mandatory_message",
+    "message": "A data de recebimento \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceipt_mandatory_message1",
+    "message": "A data de recebimento \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode",
+    "message": "C\u00f3digo da equipe de entrega",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode_HELPTEXT",
+    "message": "Digitalizar c\u00f3digo da equipe",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityFromWhich",
+    "message": "Instala\u00e7\u00e3o de",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityFromWhich_HELPTEXT",
+    "message": "Selecione a instala\u00e7\u00e3o da qual o estoque est\u00e1 sendo recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityFromWhich_HELPTEXT2",
+    "message": "Selecione a instala\u00e7\u00e3o da qual o estoque est\u00e1 sendo recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityFromWhich_HELPTEXTS",
+    "message": "Selecione a instala\u00e7\u00e3o da qual o estoque est\u00e1 sendo recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityFromWhich_mandatory_message",
+    "message": "O recurso de envio \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
+    "message": "Facilidade para",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_EXCESS_HELPTEXT",
+    "message": "Selecione a instala\u00e7\u00e3o para a qual o estoque est\u00e1 sendo enviado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_HELPTEXT",
+    "message": "Selecione a instala\u00e7\u00e3o para a qual o estoque est\u00e1 sendo enviado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_HELPTEXT1",
+    "message": "Selecione a instala\u00e7\u00e3o para a qual o estoque est\u00e1 sendo enviado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_NOTEQUALTO_message",
+    "message": "A instala\u00e7\u00e3o de e para deve ser diferente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich_mandatory_message",
+    "message": "A instala\u00e7\u00e3o de recebimento \u00e9 necess\u00e1ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_scanResource",
+    "message": "Recurso de verifica\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_CATEGORY_INVENTORY",
+    "message": "Invent\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_INCOMINGTRANSACTIONS",
+    "message": "Transa\u00e7\u00f5es recebidas",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_MANAGESTOCK",
+    "message": "Gerenciar estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_RECORDLESSEXCESS",
+    "message": "Grave menos/excesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_RECORDSTOCK",
+    "message": "Estoque recorde",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_RETURNORISSUESELECTION",
+    "message": "Sele\u00e7\u00e3o de devolu\u00e7\u00e3o ou emiss\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_STOCKRECEIPTDETAILS",
+    "message": "Detalhes do recebimento de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_STOCKSCANCONFIRM",
+    "message": "Digitalize e confirme o estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_STOCKSUCCESS",
+    "message": "Estoque registrado com sucesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_VIEWTRANSACTION",
+    "message": "Ver transa\u00e7\u00f5es",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_VIEWTRANSACTIONDETAILS",
+    "message": "Detalhes da transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_LESS_EXCESS_DETAILS_HEADING",
+    "message": "Registrar detalhes de estoque inferior/excesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_SENDER_LABEL",
+    "message": "Remetente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_STOCKDETAILS_ACTION_BUTTON_LABEL",
+    "message": "Pr\u00f3ximo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_STOCKDETAILS_SCREEN_DESCRIPTION",
+    "message": "Insira os detalhes da transa\u00e7\u00e3o de a\u00e7\u00f5es",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_BACK_BUTTON_LABEL",
+    "message": "Voltar",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RECEIVED_AT_THE_WAREHOUSE_DESCRIPTION",
+    "message": "Criar registos de stock recebido no armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RETURNED_TO_THE_WAREHOUSE_DESCRIPTION",
+    "message": "Criar registros para estoque devolvido ao armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_SENT_OUT_FROM_THE_WAREHOUSE_DESCRIPTION",
+    "message": "Criar registros para estoque enviado do armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_HEADING",
+    "message": "Gerenciar estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_DAMAGED_HEADING",
+    "message": "Estoque recorde danificado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
+    "message": "Estoque recorde emitido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_LOSS_HEADING",
+    "message": "Perda recorde de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RECEIPT_HEADING",
+    "message": "Registro de recebimento de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RETURNED_HEADING",
+    "message": "Estoque recorde devolvido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_DAMAGED_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
+    "message": "Registre a lista de recursos danificados durante as opera\u00e7\u00f5es da campanha",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_LOST_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
+    "message": "Registre a lista de recursos perdidos durante as opera\u00e7\u00f5es da campanha",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_VIEW_TRANSACTIONS_FOOTER_BUTTON_LABEL",
+    "message": "Ver transa\u00e7\u00f5es",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_productDetails_LABEL",
+    "message": "Detalhes do produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_productDetails_PRODUCT_SELECTION_IS_REQUIRED_MESSAGE",
+    "message": "A sele\u00e7\u00e3o do produto \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_productDetails_SELECT_MULTIPLE_PRODUCTS_HELP_TEXT",
+    "message": "Selecione v\u00e1rios produtos",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_returnOrIssueSelection_HEADING",
+    "message": "Selecione o tipo de transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_returnOrIssueSelection_NEXT_BUTTON_LABEL",
+    "message": "Pr\u00f3ximo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_returnOrIssueSelection_OPTION_ISSUED",
+    "message": "Emitir",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_returnOrIssueSelection_OPTION_RETURNED",
+    "message": "Retornar",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_returnOrIssueSelection_TRANSACTION_TYPE_LABEL",
+    "message": "Tipo de transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_ENTER_THE_VEHICLE_NUMBER_HELP_TEXT",
+    "message": "Digite o n\u00famero do ve\u00edculo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_SCAN_TEAM_CODE_HELP_TEXT",
+    "message": "Digitalize o c\u00f3digo da equipe",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_SCREEN_HEADING",
+    "message": "Detalhes do estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_SELECT_THE_FACILITY_FROM_WHICH_THE_STOCK_IS_BEING_RECEIVED_HELP_TEXT",
+    "message": "Selecione a instala\u00e7\u00e3o da qual o estoque est\u00e1 sendo recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_SELECT_THE_TYPE_OF_TRANSPORT_USED_HELP_TEXT",
+    "message": "Selecione o tipo de transporte utilizado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_TRANSPORT_TYPE_IS_REQUIRED_MESSAGE",
+    "message": "O tipo de transporte \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_VEHICLE_NUMBER_IS_REQUIRED_MESSAGE",
+    "message": "O n\u00famero do ve\u00edculo \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_deliveryTeamCode_IS_REQUIRED_MESSAGE",
+    "message": "O c\u00f3digo da equipe de entrega \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_deliveryTeamCode_LABEL",
+    "message": "C\u00f3digo da equipe de entrega",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_facilityFromWhich_IS_REQUIRED_MESSAGE",
+    "message": "Unidade de sa\u00fade \u00e9 necess\u00e1ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_facilityFromWhich_LABEL",
+    "message": "Unidade de Sa\u00fade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_transportType_LABEL",
+    "message": "Tipo de transporte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_vehicleNumber_LABEL",
+    "message": "N\u00famero do ve\u00edculo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ACTION_BUTTON_LABEL_1",
+    "message": "Pr\u00f3ximo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ADD_COMMENTS_IF_QUANTITIES_DIFFER_HELP_TEXT",
+    "message": "Adicione coment\u00e1rios se as quantidades forem diferentes",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_BATCH_NUMBER_LABEL",
+    "message": "N\u00famero do lote",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_COMMENT_LABEL",
+    "message": "Coment\u00e1rios",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_ACTUAL_QUANTITY_RECEIVED_HELP_TEXT",
+    "message": "Insira a quantidade real recebida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_BATCH_NUMBER_HELP_TEXT",
+    "message": "Insira o n\u00famero do lote",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_DAMAGED_BY_THE_WAREHOUSE_HELP_TEXT",
+    "message": "Insira a quantidade real danificada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_LOST_BY_THE_WAREHOUSE_HELP_TEXT",
+    "message": "Insira a quantidade real perdida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_RETURNED_BY_THE_WAREHOUSE_HELP_TEXT",
+    "message": "Insira a quantidade real devolvida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_SENT_BY_THE_WAREHOUSE_HELP_TEXT",
+    "message": "Insira a quantidade enviada pelo armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_WAYBILL_NUMBER_HELP_TEXT",
+    "message": "Digite o n\u00famero da carta de porte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_EXPIRY_DATE_IS_REQUIRED_MESSAGE",
+    "message": "A data de validade \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_EXPIRY_DATE_LABEL",
+    "message": "Data de validade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_DAMAGED_IS_REQUIRED_MESSAGE",
+    "message": "Quantidade danificada \u00e9 necess\u00e1ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_DAMAGED_LABEL",
+    "message": "Quantidade danificada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_LOST_IS_REQUIRED_MESSAGE",
+    "message": "A quantidade perdida \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_LOST_LABEL",
+    "message": "Quantidade perdida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RECEIVED_IS_REQUIRED_MESSAGE",
+    "message": "A quantidade recebida \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RECEIVED_LABEL",
+    "message": "Quantidade recebida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RETURNED_IS_REQUIRED_MESSAGE",
+    "message": "A quantidade devolvida \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RETURNED_LABEL",
+    "message": "Quantidade devolvida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_SENT_IS_REQUIRED_MESSAGE",
+    "message": "A quantidade enviada \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_SENT_LABEL",
+    "message": "Quantidade enviada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCAN_RESOURCE_HELP_TEXT",
+    "message": "Digitalize o c\u00f3digo QR do recurso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCAN_RESOURCE_LABEL",
+    "message": "Recurso de verifica\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCREEN_DESCRIPTION",
+    "message": "Insira os detalhes do produto para a transa\u00e7\u00e3o de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCREEN_HEADING",
+    "message": "Detalhes do produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_SELECT_THE_EXPIRY_DATE_HELP_TEXT",
+    "message": "Selecione a data de validade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_WAYBILL_LABEL",
+    "message": "N\u00famero da carta de porte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockSuccess_CREATE_NEW_TRANSACTION",
+    "message": "Criar nova transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockSuccess_MATERIAL_RECEIPT_CREATED_SUCCESSFULLY",
+    "message": "Recibo de material criado com sucesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockSuccess_MRN_NUMBER_DESCRIPTION",
+    "message": "Seu n\u00famero MRN foi gerado com sucesso.",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockSuccess_VIEW_TRANSACTION",
+    "message": "Ver transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransactionDetails_BACK_TO_TRANSACTIONS",
+    "message": "Voltar para transa\u00e7\u00f5es",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransactionDetails_TRANSACTION_DETAILS_SCREEN_HEADING",
+    "message": "Detalhes da transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransaction_BACK",
+    "message": "Voltar",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransaction_NO_TRANSACTIONS_FOUND_INFOCARD_DESCRIPTION",
+    "message": "N\u00e3o h\u00e1 transa\u00e7\u00f5es dispon\u00edveis no momento.",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransaction_NO_TRANSACTIONS_FOUND_INFOCARD_LABEL",
+    "message": "Nenhuma transa\u00e7\u00e3o encontrada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransaction_SELECT_THE_MRN_NUMBER",
+    "message": "Selecione o n\u00famero MRN",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransaction_SELECT_TRANSACTION",
+    "message": "Selecione Transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransaction_VIEW_QR",
+    "message": "Ver QR",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_ACTION_BUTTON_LABEL_1",
+    "message": "Pr\u00f3ximo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_ENTER_THE_DATE_ON_WHICH_THE_STOCK_WAS_RECEIVED_HELP_TEXT",
+    "message": "Insira a data em que o estoque foi recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_SCAN_TEAM_CODE_HELP_TEXT",
+    "message": "Digitalize o c\u00f3digo da equipe",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_SCREEN_DESCRIPTION",
+    "message": "Insira os detalhes do armaz\u00e9m e das instala\u00e7\u00f5es",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_SELECT_THE_ADMINISTRATIVE_AREA_OF_THE_WAREHOUSE_HELP_TEXT",
+    "message": "Selecione a \u00e1rea administrativa do armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_SELECT_THE_FACILITY_TO_WHICH_THE_STOCK_IS_BEING_SENT_HELP_TEXT",
+    "message": "Selecione a instala\u00e7\u00e3o para a qual o estoque est\u00e1 sendo enviado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_WAREHOUSE_SCREEN_HEADING",
+    "message": "Detalhes do armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_administrativeArea_IS_REQUIRED_MESSAGE",
+    "message": "A \u00e1rea administrativa \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_administrativeArea_LABEL",
+    "message": "\u00c1rea Administrativa",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_dateOfReceipt_IS_REQUIRED_MESSAGE",
+    "message": "A data de recebimento \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_dateOfReceipt_LABEL",
+    "message": "Data de recebimento",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_facilityToWhich_IS_REQUIRED_MESSAGE",
+    "message": "Unidade de sa\u00fade \u00e9 necess\u00e1ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_facilityToWhich_LABEL",
+    "message": "Unidade de Sa\u00fade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_IS_REQUIRED_MESSAGE",
+    "message": "O c\u00f3digo da equipe \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_LABEL",
+    "message": "C\u00f3digo da equipe",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_LESSEXCESSDETAILS",
+    "message": "Menos/excesso de detalhes",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_STOCKDETAILS",
+    "message": "Detalhes do estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_STOCKPRODUCTDETAILS",
+    "message": "Detalhes do produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_STOCKRECEIPTDETAILS",
+    "message": "Detalhes do recebimento de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_WAREHOUSEDETAILS",
+    "message": "Detalhes do armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "App_config_inventory_stockproductdetails_enter the_quantity_damaged_by_the_warehouse_help_text",
+    "message": "Insira a quantidade danificada pelo armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BATCH_NUMBER",
+    "message": "N\u00famero do lote",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "Benefici\u00e1rio Ausente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFERRED",
+    "message": "Benefici\u00e1rio Indicado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Benefici\u00e1rio recusado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BUS",
+    "message": "\u00d4nibus",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Bus",
+    "message": "\u00d4nibus",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Cimento",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Argila",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSED_HOUSEHOLD",
+    "message": "Domic\u00edlio Fechado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "COMMENTS",
+    "message": "Coment\u00e1rios",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_BACK",
+    "message": "Voltar",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_HELP",
+    "message": "Ajuda",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_SUBMIT",
+    "message": "Enviar",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_VALIDATION_ERROR",
+    "message": "Este \u00e9 um campo obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DEFAULT",
+    "message": "Padr\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DELIVERY_TEAM",
+    "message": "Equipe de entrega",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DIARRHOEA",
+    "message": "Diarr\u00e9ia",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DISPATCHED",
+    "message": "Despachado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DISTRIBUTOR",
+    "message": "Distribuidor",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Efeito colateral da droga do ciclo atual",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Efeito colateral da droga do ciclo anterior",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DataIssues",
+    "message": "Problemas de dados",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "EXCESS",
+    "message": "Excesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Excess",
+    "message": "Excesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEMALE",
+    "message": "F\u00eamea",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Febre",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_confirmReceiveLabel_LABEL",
+    "message": "Confirmar recebimento",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_footerButtonLabel_LABEL",
+    "message": "Ver transa\u00e7\u00f5es",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_nextButtonLabel_LABEL",
+    "message": "Pr\u00f3ximo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_scannedQrPayload_LABEL",
+    "message": "C\u00f3digo QR digitalizado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_stockReceiptHeading_LABEL",
+    "message": "Digitalizar recibo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FUNERAL",
+    "message": "Funeral",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Facility_from_and_to_must_be_different",
+    "message": "A instala\u00e7\u00e3o de e para deve ser diferente.",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Vidro",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INCOMPATIBLE",
+    "message": "Incompat\u00edvel",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INELIGIBLE",
+    "message": "Ineleg\u00edvel",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Recursos insuficientes",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_ACCEPT_CANCEL_ACTION",
+    "message": "Cancelar",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_ACCEPT_CONFIRMATION_DESCRIPTION",
+    "message": "Tem certeza de que deseja aceitar este estoque?",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_ACCEPT_CONFIRMATION_TITLE",
+    "message": "Aceitar confirma\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_ACCEPT_CONFIRM_ACTION",
+    "message": "Confirmar",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_ACCEPT_STOCK_LABEL",
+    "message": "Aceitar estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_ACKNOWLEDGE_RECEIPT_LABEL",
+    "message": "Aceitar",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_ADMINISTRATIVE_AREA_HELP_TEXT",
+    "message": "Selecione a \u00e1rea administrativa do armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_BATCH_LABEL",
+    "message": "N\u00famero do lote",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_BATCH_NUMBER_HELP_TEXT",
+    "message": "Insira o n\u00famero do lote",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_BATCH_NUMBER_LABEL",
+    "message": "N\u00famero do lote",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_BATCH_NUMBER_LABEL1",
+    "message": "N\u00famero do lote",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_BATCH_NUMBER_REQUIRED_ERROR_MESSAGE",
+    "message": "O n\u00famero do lote \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_COMMENTS_HELPTEXT",
+    "message": "Adicione quaisquer coment\u00e1rios",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_COMMENTS_LABEL",
+    "message": "Coment\u00e1rios",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_COMMENTS_REQUIRED",
+    "message": "Coment\u00e1rios s\u00e3o obrigat\u00f3rios",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_COMMENT_HELP_TEXT",
+    "message": "Adicione coment\u00e1rios se as quantidades forem diferentes",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_CREATE_NEW_TRANSACTION_LABEL",
+    "message": "Criar nova transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_DATE_OF_ENTRY_HELP_TEXT",
+    "message": "Insira a data em que o estoque foi recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_DECLINE_STOCK_LABEL",
+    "message": "Rejeitar",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_DELIVERY_TEAM_HELP_TEXT",
+    "message": "Digitalize o c\u00f3digo da equipe de entrega",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_EXPIRY_LABEL",
+    "message": "Data de validade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_EXPIRY_LABEL_1",
+    "message": "Selecione a data de validade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_FACILITY_FROM_WHICH_HELP_TEXT",
+    "message": "Selecione a instala\u00e7\u00e3o da qual o estoque est\u00e1 sendo recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_FACILITY_TO_WHICH_HELP_TEXT",
+    "message": "Selecione a instala\u00e7\u00e3o para a qual o estoque est\u00e1 sendo enviado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_INCOMING_TRANSACTIONS_DESCRIPTION",
+    "message": "Visualize e aceite transa\u00e7\u00f5es de a\u00e7\u00f5es recebidas",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_INCOMING_TRANSACTIONS_HEADING",
+    "message": "Transa\u00e7\u00f5es recebidas",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_LESS_EXCESS_DETAILS_DESCRIPTION",
+    "message": "Capture detalhes do estoque se voc\u00ea recebeu quantidade menor ou em excesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_LESS_EXCESS_DETAILS_HEADING",
+    "message": "Menos/excesso de detalhes",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_LESS_EXCESS_QUANTITY_LABEL",
+    "message": "Quantidade recebida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_MATERIAL_ISSUE_NUMBER_LABEL",
+    "message": "N\u00famero de emiss\u00e3o de material",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_MRN_NUMBER_LABEL",
+    "message": "MRN",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_MRN_TAG_LABEL",
+    "message": "NRM N\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_MRN_TAG_LABEL ",
+    "message": "NRM N\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_NO_INCOMING_TRANSACTIONS_DESCRIPTION",
+    "message": "Nenhuma transa\u00e7\u00e3o de estoque recebida encontrada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_NO_INCOMING_TRANSACTIONS_LABEL",
+    "message": "Nenhuma transa\u00e7\u00e3o recebida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_NO_TRANSACTIONS_DESCRIPTION",
+    "message": "Nenhuma transa\u00e7\u00e3o de a\u00e7\u00f5es encontrada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_NO_TRANSACTIONS_LABEL",
+    "message": "Nenhuma transa\u00e7\u00e3o dispon\u00edvel",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_PRODUCTDETAILS_REQUIRED_ERROR_MESSAGE",
+    "message": "A sele\u00e7\u00e3o do produto \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_PRODUCT_VARIANT_HELP_TEXT",
+    "message": "Selecione a variante do produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_PRODUCT_VARIANT_REQUIRED_MESSAGE",
+    "message": "Selecione uma variante do produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_QR_CODE_TITLE",
+    "message": "C\u00f3digo QR",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_QTY_HELPTEXT",
+    "message": "Insira a quantidade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_QTY_REGEX",
+    "message": "Por favor insira um n\u00famero v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_QUANTITY_HELP_TEXT",
+    "message": "Insira a quantidade enviada por armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_QUANTITY_LABEL",
+    "message": "Quantidade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_QUANTITY_LABEL_HELPTEXT",
+    "message": "Insira a quantidade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_QUANTITY_LABEL_HELPTEXT_REGEXT",
+    "message": "Por favor insira um n\u00famero v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_QUANTITY_REQUIRED_MESSAGE",
+    "message": "A quantidade \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_QUANTITY_SENT_BY_WAREHOUSE_HELPTEXT1",
+    "message": "Insira a quantidade de blisters enviados por armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_QUANTITY_SENT_BY_WAREHOUSE_LABEL",
+    "message": "Quantidade Enviada por Armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_QUANTITY_SENT_BY_WAREHOUSE_REGEX",
+    "message": "Por favor insira um n\u00famero v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_QUANTITY_SENT_BY_WAREHOUSE_REQUIRED",
+    "message": "A quantidade \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_REASON_FOR_LESS_EXCESS_HELPTEXT",
+    "message": "Insira o motivo do menos/excesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_REASON_FOR_LESS_EXCESS_HELP_TEXT",
+    "message": "Insira o motivo do menos/excesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_REASON_FOR_LESS_EXCESS_LABEL",
+    "message": "Raz\u00e3o para Menos/Excesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_REASON_FOR_LESS_EXCESS_LABEL_HELPTEXT",
+    "message": "Insira o motivo do menos/excesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_REASON_LESS_EXCESS_REQUIRED_MESSAGE",
+    "message": "A raz\u00e3o \u00e9 necess\u00e1ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_REASON_REQUIRED_MESSAGE",
+    "message": "Por favor insira um motivo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECEIVED_FROM_LABEL",
+    "message": "Recebido de",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECEIVER_LABEL",
+    "message": "Receptor",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDLESSEXCESS_MESSAGE",
+    "message": "Falha ao buscar a configura\u00e7\u00e3o. Por favor, tente novamente.",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDLESSEXCESS_administrativeArea_ERROR",
+    "message": "A \u00e1rea administrativa \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDLESSEXCESS_dateOfEntry_ERROR",
+    "message": "A data de entrada \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDLESSEXCESS_deliveryTeam_ERROR",
+    "message": "O c\u00f3digo da equipe de entrega \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDLESSEXCESS_facilityFromWhich_ERROR",
+    "message": "O recurso de origem \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDLESSEXCESS_facilityToWhich_ERROR",
+    "message": "A instala\u00e7\u00e3o \u00e9 necess\u00e1ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDLESSEXCESS_productVariant_ERROR",
+    "message": "A sele\u00e7\u00e3o do produto \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDLESSEXCESS_quantity_ERROR",
+    "message": "A quantidade \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDLESSEXCESS_quantity_REGEX_ERROR",
+    "message": "Por favor insira um n\u00famero v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDLESSEXCESS_reasonForLessExcess_ERROR",
+    "message": "O motivo para menos/excesso \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDLESSEXCESS_recordType_ERROR",
+    "message": "O tipo de registro \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDLESSEXCESS_teamCode_ERROR",
+    "message": "O c\u00f3digo da equipe \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_MESSAGE",
+    "message": "Estoque recorde",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_administrativeArea_ERROR",
+    "message": "Selecione uma \u00e1rea administrativa",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_batchNumber_ERROR",
+    "message": "Insira um n\u00famero de lote v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_comment_ERROR",
+    "message": "Por favor insira um coment\u00e1rio v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_dateOfEntry_ERROR",
+    "message": "Selecione uma data de entrada v\u00e1lida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_deliveryTeam_ERROR",
+    "message": "Insira ou digitalize um c\u00f3digo de equipe de entrega v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_facilityFromWhich_ERROR",
+    "message": "Selecione um recurso de envio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_facilityFromWhich_FACILITY_HIERARCHY_ERROR",
+    "message": "O recurso de envio selecionado n\u00e3o \u00e9 v\u00e1lido para esta \u00e1rea administrativa",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_facilityFromWhich_NOT_EQUAL_TO_ERROR",
+    "message": "A instala\u00e7\u00e3o de envio deve ser diferente da instala\u00e7\u00e3o de recebimento",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_facilityToWhich_ERROR",
+    "message": "Selecione um local de recebimento",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_facilityToWhich_FACILITY_HIERARCHY_ERROR",
+    "message": "O local de recebimento selecionado n\u00e3o \u00e9 v\u00e1lido para esta \u00e1rea administrativa",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_productdetail_ERROR",
+    "message": "Selecione um produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_quantityDamaged_ERROR",
+    "message": "Por favor insira uma quantidade v\u00e1lida danificada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_quantityLost_ERROR",
+    "message": "Insira uma quantidade v\u00e1lida perdida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_quantityPartialUsed_ERROR",
+    "message": "Insira uma quantidade v\u00e1lida parcialmente usada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_quantityReceived_ERROR",
+    "message": "Insira uma quantidade v\u00e1lida recebida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_quantityReturned_ERROR",
+    "message": "Insira uma quantidade v\u00e1lida devolvida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_quantitySent_ERROR",
+    "message": "Por favor insira uma quantidade v\u00e1lida enviada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_quantityWastage_ERROR",
+    "message": "Insira uma quantidade de desperd\u00edcio v\u00e1lida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_scanResource_ERROR",
+    "message": "Verifique um recurso v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_scanResource_IS_G_S1_ERROR",
+    "message": "Leia um c\u00f3digo de barras de recurso v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_teamCode_ERROR",
+    "message": "Por favor, insira ou escaneie um c\u00f3digo de equipe v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORDSTOCK_wayBillNumber_ERROR",
+    "message": "Por favor insira um n\u00famero de conhecimento de embarque v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORD_LESS_EXCESS_DESCRIPTION",
+    "message": "Crie registros de estoque para menos/excesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORD_LESS_EXCESS_HEADING",
+    "message": "Registrar estoque menor/excesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORD_TYPE_HELP_TEXT",
+    "message": "Selecione se voc\u00ea est\u00e1 gravando menos ou mais",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECORD_TYPE_REQUIRED_MESSAGE",
+    "message": "Selecione um tipo de registro",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_REJECT_CANCEL_ACTION",
+    "message": "Cancelar",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_REJECT_COMMENT_LABEL",
+    "message": "Motivo da rejei\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_REJECT_CONFIRMATION_DESCRIPTION",
+    "message": "Tem certeza de que deseja rejeitar este estoque?",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_REJECT_CONFIRMATION_TITLE",
+    "message": "Rejeitar confirma\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_REJECT_CONFIRM_ACTION",
+    "message": "Confirmar",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RESOURCE_LABEL",
+    "message": "Recurso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SCAN_ALREADY_RECEIVED_DESCRIPTION",
+    "message": "Este recibo de estoque j\u00e1 foi recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SCAN_ALREADY_RECEIVED_LABEL",
+    "message": "Este recibo de estoque j\u00e1 foi recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SCAN_BOUNDARY_MISMATCH_DESCRIPTION",
+    "message": "O limite no QR digitalizado n\u00e3o corresponde \u00e0 \u00e1rea atribu\u00edda. Por favor, verifique o recibo.",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SCAN_BOUNDARY_MISMATCH_LABEL",
+    "message": "O recibo digitalizado n\u00e3o corresponde ao limite atual",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SCAN_CONFIRM_DESCRIPTION",
+    "message": "Revise e confirme os detalhes do recibo de estoque digitalizado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SCAN_CONFIRM_HEADING",
+    "message": "Confirmar recebimento de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SCAN_CONFIRM_RECEIVE_LABEL",
+    "message": "Confirmar recebimento",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SCAN_INVALID_QR",
+    "message": "C\u00f3digo QR inv\u00e1lido digitalizado. Por favor, digitalize um c\u00f3digo QR v\u00e1lido.",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SCAN_MRN_LABEL",
+    "message": "Digitalizar MRN",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SCAN_RECEIVER_MISMATCH_DESCRIPTION",
+    "message": "O receptor no QR digitalizado n\u00e3o corresponde \u00e0s suas instala\u00e7\u00f5es. Por favor, verifique o recibo.",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SCAN_RECEIVER_MISMATCH_LABEL",
+    "message": "O recibo digitalizado n\u00e3o corresponde ao destinat\u00e1rio atual",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SCAN_RESOURCE_HELP_TEXT",
+    "message": "Digitalize o c\u00f3digo de barras do recurso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SCAN_STOCK_RECEIPT_DESCRIPTION",
+    "message": "Digitalize o c\u00f3digo QR no recibo de estoque para registrar o estoque recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SCAN_STOCK_RECEIPT_HEADING",
+    "message": "Digitalizar recibo de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SELECT_FACILITY_LABEL",
+    "message": "Selecione a instala\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SELECT_LABEL",
+    "message": "Selecione",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SELECT_TRANSACTION",
+    "message": "Selecione",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SELECT_TRANSACTION_LABEL",
+    "message": "Selecione Transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SENDER_LABEL",
+    "message": "Remetente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SKU_LABEL",
+    "message": "SKU",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCKRECEIPTDETAILS_MESSAGE",
+    "message": "Detalhes do recebimento de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCKRECEIPTDETAILS_comment_ERROR",
+    "message": "Por favor insira um coment\u00e1rio v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCKRECEIPTDETAILS_comment_REQUIRED_ERROR",
+    "message": "Coment\u00e1rio \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCKRECEIPTDETAILS_quantity_ERROR",
+    "message": "Insira uma quantidade v\u00e1lida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCKRECEIPTDETAILS_quantity_REGEX_ERROR",
+    "message": "Insira um n\u00famero v\u00e1lido para quantidade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCKRECEIPTDETAILS_quantity_REQUIRED_ERROR",
+    "message": "A quantidade enviada pelo armaz\u00e9m \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCKSCANCONFIRM_MESSAGE",
+    "message": "N\u00e3o foi poss\u00edvel carregar os detalhes do recebimento de estoque. Por favor, tente novamente.",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCKSUCCESS_MESSAGE",
+    "message": "Estoque registrado com sucesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCK_ACCEPTED_SUCCESS",
+    "message": "Estoque aceito com sucesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCK_RECEIPT_DETAILS_HEADING",
+    "message": "Detalhes do recebimento de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCK_RECEIVED_SUCCESS",
+    "message": "Estoque recebido com sucesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCK_REJECTED_SUCCESS",
+    "message": "Estoque rejeitado com sucesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCK_SUCCESS_LABEL",
+    "message": "Estoque registrado com sucesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCK_SUCCESS_MRN_DESCRIPTION",
+    "message": "Sua transa\u00e7\u00e3o foi registrada com sucesso. {1}",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_TEAM_CODE_LABEL",
+    "message": "C\u00f3digo da equipe",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_TRANSACTING_PARTY_LABEL",
+    "message": "Parte da Transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_TRANSACTION_REASON_LABEL",
+    "message": "Motivo da transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
+    "message": "Tipo de transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_TRANSPORT_TYPE_HELP_TEXT",
+    "message": "Selecione o tipo de transporte utilizado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_VEHICLE_NUMBER_HELP_TEXT",
+    "message": "Digite o n\u00famero do ve\u00edculo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_VIEW_DETAILS_LABEL",
+    "message": "Ver detalhes",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_VIEW_QR_LABEL",
+    "message": "Ver QR",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_VIEW_TRANSACTION_DESCRIPTION",
+    "message": "Ver todas as transa\u00e7\u00f5es de a\u00e7\u00f5es",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_VIEW_TRANSACTION_HEADING",
+    "message": "Ver transa\u00e7\u00f5es",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_VIEW_TRANSACTION_LABEL",
+    "message": "Ver transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_WAYBILL_LABEL",
+    "message": "N\u00famero da carta de porte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_WAYBILL_NUMBER_LABEL",
+    "message": "N\u00famero da carta de porte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_WAYBILL_NUMBER_LABEL1",
+    "message": "Insira o n\u00famero do conhecimento de embarque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_WAYBILL_NUMBER_REQUIRED_ERROR_MESSAGE",
+    "message": "O n\u00famero do conhecimento de embarque \u00e9 obrigat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_WAY_BILL_NUMBER_HELP_TEXT",
+    "message": "Digite o n\u00famero da carta de porte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_WHAT_ARE_YOU_RECORDING_HELPTEXT",
+    "message": "Selecione se voc\u00ea est\u00e1 gravando menos ou mais",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_WHAT_ARE_YOU_RECORDING_LABEL",
+    "message": "O que voc\u00ea est\u00e1 gravando?",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_WHAT_ARE_YOU_RECORDING_LABEL_HELPTEXT1",
+    "message": "Selecione se voc\u00ea est\u00e1 gravando menos ou mais",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ISSUED",
+    "message": "Publicado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Inventory_no_transactions_description",
+    "message": "N\u00e3o h\u00e1 novas transa\u00e7\u00f5es criadas.",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Inventory_no_transactions_label",
+    "message": "Nenhuma transa\u00e7\u00e3o dispon\u00edvel",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Inventory_select_transaction",
+    "message": "Selecione Transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_AGE",
+    "message": "Idade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_BATCH_NUMBER",
+    "message": "N\u00famero do lote",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
+    "message": "Reclama\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
+    "message": "Refer\u00eancia de IC",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
+    "message": "Dom\u00e9stico",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
+    "message": "Individual",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
+    "message": "Monitoramento",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_ITEMMODEL",
+    "message": "Item",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
+    "message": "Modelo LQA",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_NAVIGATIONMODEL",
+    "message": "Navega\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
+    "message": "Benefici\u00e1rio do Projeto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
+    "message": "Estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMMENTS",
+    "message": "Coment\u00e1rios",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
+    "message": "N\u00famero de contato",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
+    "message": "\u00c1rea",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
+    "message": "Data da reclama\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
+    "message": "N\u00famero da reclama\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
+    "message": "Status",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
+    "message": "Tipo de reclama\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+    "message": "N\u00famero de contato",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
+    "message": "\u00c1rea",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
+    "message": "Data da reclama\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
+    "message": "N\u00famero da reclama\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
+    "message": "Tipo de reclama\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+    "message": "Descri\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
+    "message": "Status",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
+    "message": "Data de Registro",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_GENDER",
+    "message": "G\u00eanero",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
+    "message": "Idade do Benefici\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
+    "message": "G\u00eanero do Benefici\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
+    "message": "Nome do Benefici\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
+    "message": "Data de registro",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
+    "message": "Chefe de fam\u00edlia",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
+    "message": "Povoado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
+    "message": "Total de membros",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
+    "message": "Chefe de fam\u00edlia",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
+    "message": "Localidade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_ID_NUMBER",
+    "message": "N\u00famero de identifica\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_ID_TYPE",
+    "message": "Tipo de identifica\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
+    "message": "Crian\u00e7as presentes",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
+    "message": "Crian\u00e7as vacinadas",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
+    "message": "Coment\u00e1rios Finais",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
+    "message": "Perdido (ausente)",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
+    "message": "Perdido (adormecido)",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
+    "message": "Perdido (n\u00e3o revisitado)",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
+    "message": "Perdido (n\u00e3o visitado)",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
+    "message": "Perdido (Outro)",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
+    "message": "Perdido (recusa)",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
+    "message": "Perdido (rotina)",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
+    "message": "Data de monitoramento",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
+    "message": "Designa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
+    "message": "Nome do monitor",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
+    "message": "Mal coberto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
+    "message": "\u00c1rea de Liquida\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
+    "message": "Tipo de liquida\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_BATCH_LABEL",
+    "message": "Lote",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
+    "message": "N\u00famero do lote",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_COMMENTS_LABEL",
+    "message": "Coment\u00e1rios",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
+    "message": "Data de validade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
+    "message": "N\u00famero MRN",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_QUANTITY_LABEL",
+    "message": "Quantidade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_RESOURCE_LABEL",
+    "message": "Recurso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_SENDER_LABEL",
+    "message": "Remetente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_SKU_LABEL",
+    "message": "SKU",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
+    "message": "Motivo da transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
+    "message": "Tipo de transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
+    "message": "Conhecimento de embarque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
+    "message": "N\u00famero da carta de porte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
+    "message": "Motivo de Aus\u00eancia",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
+    "message": "Conscientiza\u00e7\u00e3o AFP",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
+    "message": "Contagem de casos AFP",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
+    "message": "Conscientiza\u00e7\u00e3o (Outro)",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
+    "message": "Conscientiza\u00e7\u00e3o da campanha",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
+    "message": "Cuidador informado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
+    "message": "Crian\u00e7as menores de 5 anos",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
+    "message": "Idade da crian\u00e7a (meses)",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
+    "message": "Sexo Infantil",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
+    "message": "N\u00famero do cluster",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
+    "message": "Dedo marcado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
+    "message": "N\u00famero do lote",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
+    "message": "Doses de OPV",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
+    "message": "Outro motivo de aus\u00eancia",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
+    "message": "Outro motivo (especifique)",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
+    "message": "Outro motivo de recusa",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
+    "message": "Motivo n\u00e3o marcado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
+    "message": "Motivo da recusa",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
+    "message": "\u00c1rea de Liquida\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
+    "message": "Nome do pesquisador",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
+    "message": "Data da pesquisa",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MEMBER_COUNT",
+    "message": "Contagem de membros",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MOBILE_NUMBER",
+    "message": "N\u00famero de telem\u00f3vel",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MRN_NUMBER",
+    "message": "N\u00famero MRN",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
+    "message": "Nome",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_QUANTITY_RECEIVED",
+    "message": "Quantidade recebida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_NAME",
+    "message": "Nome",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
+    "message": "Status de refer\u00eancia",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
+    "message": "Sintoma",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_RESOURCE",
+    "message": "Recurso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_STOCK_EXPIRY",
+    "message": "Expira\u00e7\u00e3o de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_WAYBILL_NUMBER",
+    "message": "N\u00famero da carta de porte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "message": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LESS",
+    "message": "Menos",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Less",
+    "message": "Menos",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "MALE",
+    "message": "Macho",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "MANAGESTOCK_WAREHOUSE_label_facilityToWhich_HELPTEXT_LABEL",
+    "message": "Selecione a instala\u00e7\u00e3o para a qual o estoque est\u00e1 sendo enviado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "Metal",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "MRN",
+    "message": "NRM {1}",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "MRN_NUMBER",
+    "message": "N\u00famero MRN",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Estoque insuficiente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NOT_ADMINISTERED",
+    "message": "N\u00e3o administrado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NOT_REGISTERED",
+    "message": "N\u00e3o registrado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO_DATA_FOUND",
+    "message": "Nenhum dado encontrado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO_DATA_FOUND_CONTENT",
+    "message": "Nenhum dado encontrado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO_FACILITIES_FOUND",
+    "message": "Nenhuma instala\u00e7\u00e3o encontrada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO_PRODUCTS_FOUND",
+    "message": "Nenhum produto encontrado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO_STOCK_AVAILABLE_IN_HAND",
+    "message": "N\u00e3o h\u00e1 estoque dispon\u00edvel",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "No_options_available",
+    "message": "Nenhuma op\u00e7\u00e3o dispon\u00edvel",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Estoque insuficiente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Not_found",
+    "message": "N\u00e3o encontrado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Outro",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Outro",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Outro",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PERFORMANCEISSUE",
+    "message": "Problemas de desempenho",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "Problemas de desempenho",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QR_ATTENDANCE",
+    "message": "QR de atendimento",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QR_INVENTORY",
+    "message": "C\u00f3digo QR do invent\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0",
+    "message": "A quantidade recebida n\u00e3o deve ser inferior a 0.",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityDamaged",
+    "message": "A quantidade danificada n\u00e3o deve ser inferior a 0",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityDamaged_number",
+    "message": "A quantidade danificada deve ser um n\u00famero",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityLost",
+    "message": "A quantidade perdida n\u00e3o deve ser inferior a 0",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityLost_number",
+    "message": "A quantidade perdida deve ser um n\u00famero",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityReceived",
+    "message": "A quantidade recebida n\u00e3o deve ser inferior a 0",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityReceived_number",
+    "message": "A quantidade recebida deve ser um n\u00famero",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityReturned",
+    "message": "A quantidade devolvida n\u00e3o deve ser inferior a 0",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityReturned_number",
+    "message": "A quantidade devolvida deve ser um n\u00famero",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantitySent",
+    "message": "A quantidade enviada n\u00e3o deve ser inferior a 0",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantitySent_number",
+    "message": "A quantidade enviada deve ser um n\u00famero",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITYSENT_NOT_LESS_THAN_0",
+    "message": "A quantidade enviada n\u00e3o deve ser inferior a 0.",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_CANNOT_EXCEED_STOCK_IN_HAND_VALUE",
+    "message": "A quantidade n\u00e3o pode exceder o estoque dispon\u00edvel {maxValue}",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_CANNOT_EXCEED_STOCK_MAX_LIMIT_VALUE",
+    "message": "A quantidade n\u00e3o pode exceder 1.000.0000",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_DAMAGE_MIN_REQUIRED_ERROR_MESSAGE",
+    "message": "A quantidade danificada deve ser de pelo menos 1",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_DAMAGE_REQUIRED_ERROR_MESSAGE",
+    "message": "Quantidade danificada \u00e9 necess\u00e1ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_DIFFER_COMMENT_REQUIRED_ERROR_MASSAGE",
+    "message": "Coment\u00e1rio \u00e9 necess\u00e1rio quando as quantidades diferem",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_LOST_MIN_REQUIRED_ERROR_MESSAGE",
+    "message": "A quantidade perdida deve ser de pelo menos 1",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_LOST_REQUIRED_ERROR_MESSAGE",
+    "message": "A quantidade perdida \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_RECEIVED",
+    "message": "Quantidade recebida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_RECEIVED_REQUIRED_ERROR_MESSAGE",
+    "message": "A quantidade recebida \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_RETURN_MIN_REQUIRED_ERROR_MESSAGE",
+    "message": "A quantidade devolvida deve ser de pelo menos 1",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_RETURN_REQUIRED_ERROR_MESSAGE",
+    "message": "A quantidade devolvida \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_SENT_IS_REQUIRED",
+    "message": "A quantidade enviada \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_SENT_MIN_REQUIRED_ERROR_MESSAGE",
+    "message": "A quantidade enviada deve ser de pelo menos 1",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_SENT_REQUIRED_ERROR_MESSAGE",
+    "message": "A quantidade enviada \u00e9 obrigat\u00f3ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_VALID_NUMBER_ERROR_MESSAGE",
+    "message": "Por favor insira um n\u00famero v\u00e1lido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "QUANTITY_WASTAGE_REQUIRED_ERROR_MESSAGE",
+    "message": "A quantidade de desperd\u00edcio \u00e9 necess\u00e1ria",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "RECEIVED",
+    "message": "Recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "RECEIVED_FROM",
+    "message": "Recebido de",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Juncos",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "RESOURCE",
+    "message": "Recurso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "RESOURCES_ALREADY_SCANNED",
+    "message": "Este recurso j\u00e1 foi verificado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "RETURNED",
+    "message": "Devolvido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SECURITYISSUES",
+    "message": "Problemas de seguran\u00e7a",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SELECT_PRODUCT",
+    "message": "Selecione a variante do produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SELECT_PRODUCT_VARIANTS",
+    "message": "Selecione variantes de produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SELECT_PRODUCT_VARIENT",
+    "message": "Selecione a variante do produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SELECT_WAREHOUSE",
+    "message": "Selecione o armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Doente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SKIN_REACTION",
+    "message": "Rea\u00e7\u00e3o cut\u00e2nea",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "Informa\u00e7\u00f5es",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_EXCESS_DESCRIPTION",
+    "message": "Visualizar relat\u00f3rios de excesso de estoque registrado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_EXCESS_HEADING",
+    "message": "Visualizar relat\u00f3rios de excesso de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LESS_DESCRIPTION",
+    "message": "Veja relat\u00f3rios de faltas de estoque registradas",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LESS_HEADING",
+    "message": "Ver relat\u00f3rios de perda de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_EXPIRY",
+    "message": "Expira\u00e7\u00e3o do estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_METRICS",
+    "message": "M\u00e9tricas de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_DATE",
+    "message": "Data",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
+    "message": "Estoque dispon\u00edvel = (estoque recebido + estoque devolvido) - (estoque emitido + estoque perdido + estoque danificado)",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_TITLE",
+    "message": "Informa\u00e7\u00f5es",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
+    "message": "Estoque danificado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
+    "message": "A\u00e7\u00f5es emitidas",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_LOST",
+    "message": "Estoque perdido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ON_HAND",
+    "message": "Estoque em m\u00e3os",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
+    "message": "Estoque recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
+    "message": "Estoque devolvido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Selecione o armaz\u00e9m e a variante do produto para visualizar o relat\u00f3rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Entrega bem-sucedida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "A sincroniza\u00e7\u00e3o n\u00e3o funciona",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "Problemas de seguran\u00e7a",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "A sincroniza\u00e7\u00e3o n\u00e3o funciona",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TECHNICALISSUES",
+    "message": "Problemas t\u00e9cnicos",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_1",
+    "message": "Tipo de Transporte 1",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_2",
+    "message": "Tipo de Transporte 2",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TRUCK",
+    "message": "Caminh\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Problemas t\u00e9cnicos",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Truck",
+    "message": "Caminh\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "UNIQUE_BENEFICIARY_ID",
+    "message": "ID exclusivo do benefici\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "USERACCOUNTISSUES",
+    "message": "Problemas de conta de usu\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "Problemas de conta de usu\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "VOMITTING",
+    "message": "V\u00f4mito",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_MANAGER",
+    "message": "Gerente de Armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WAYBILL_NUMBER",
+    "message": "N\u00famero da carta de porte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WEAKNESS",
+    "message": "Fraqueza",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "additionalFields",
+    "message": "Detalhes Adicionais",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "administrativeArea",
+    "message": "\u00c1rea de Liquida\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "alreadyReceivedLabel",
+    "message": "Este recibo de estoque j\u00e1 foi recebido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "auditCreatedBy",
+    "message": "Auditoria criada por",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "batchNumber",
+    "message": "N\u00famero do lote",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "boundaryCode",
+    "message": "C\u00f3digo de limite",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "boundaryMismatchLabel",
+    "message": "O recibo digitalizado n\u00e3o corresponde ao limite atual",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "card",
+    "message": " ",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "clientCreatedBy",
+    "message": "Criado por",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "clientCreatedBy,clientModifiedBy",
+    "message": "Cliente criado por, cliente modificado por",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "clientReferenceId",
+    "message": "ID de refer\u00eancia do cliente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "column",
+    "message": " ",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "comment",
+    "message": "Coment\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "confirmReceiveLabel",
+    "message": "Confirmar recebimento",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "dateOfEntry",
+    "message": "Data de entrada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "deliveryTeam",
+    "message": "C\u00f3digo da equipe de entrega",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "dispatchClientReferenceId",
+    "message": "ID de refer\u00eancia de despacho",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "facilityFromWhich",
+    "message": "Instala\u00e7\u00e3o de",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "facilityToWhich",
+    "message": "Facilidade para",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "footerButtonLabel",
+    "message": "Ver transa\u00e7\u00f5es",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "forceCreate",
+    "message": "For\u00e7ar cria\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "getSecondPagePartyLabel(item.additionalFields.fields)",
+    "message": "Receptor",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "message": "Receptor",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)",
+    "message": "Remetente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
+    "message": "Remetente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "groupedItems",
+    "message": " ",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "incomingList",
+    "message": " ",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "incomingTransactionsLabel",
+    "message": "Nenhuma transa\u00e7\u00e3o de entrada dispon\u00edvel",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "inventoryNoTransactionsLabel",
+    "message": "Nenhuma transa\u00e7\u00e3o dispon\u00edvel",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "inventorySelectLabel",
+    "message": "Selecione",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "inventorySelectTransactionLabel",
+    "message": "Selecione Transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "inventorySender",
+    "message": "Remetente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "inventoryStockSuccessLabel",
+    "message": "Estoque registrado com sucesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "inventoryViewQrLabel",
+    "message": "Ver QR",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "isDistributor",
+    "message": "\u00c9 Distribuidor",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "isEdit",
+    "message": "\u00c9 editar",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "issuedTo",
+    "message": "Emitido para",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "labelPairList",
+    "message": " ",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "lessExcessHeading",
+    "message": "Registrar estoque menor/excesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "listView",
+    "message": " ",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "manageStock_manageStock_PAGE_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "materialIssueNumber",
+    "message": "N\u00famero de emiss\u00e3o de material",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "mrnNumber",
+    "message": "N\u00famero MRN",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "mrnTag",
+    "message": "Dia MRN",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "nextButtonLabel",
+    "message": "Pr\u00f3ximo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "prefillFromScan",
+    "message": "Pr\u00e9-preenchimento da digitaliza\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "primaryRole",
+    "message": "Fun\u00e7\u00e3o principal",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "productVariant",
+    "message": "Selecione o produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "productVariantId",
+    "message": "Variante do produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "productdetail",
+    "message": "Selecione o produto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "projectId",
+    "message": "ID do projeto",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "qr_view",
+    "message": " ",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "quantity",
+    "message": "Quantidade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "quantityDamaged",
+    "message": "Quantidade danificada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "quantityLost",
+    "message": "Quantidade perdida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "quantityPartialUsed",
+    "message": "Quantidade parcialmente usada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "quantityReceived",
+    "message": "Quantidade recebida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "quantityReturned",
+    "message": "Quantidade devolvida",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "quantitySent",
+    "message": "Quantidade enviada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "quantityWastage",
+    "message": "Quantidade de desperd\u00edcio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "reasonForLessExcess",
+    "message": "Raz\u00e3o para Menos/Excesso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "receivedFrom",
+    "message": "Recebido de",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "receiverFacilityId",
+    "message": "Instala\u00e7\u00e3o do receptor",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "receiverId",
+    "message": "ID do receptor",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "receiverMismatchLabel",
+    "message": "O recibo digitalizado n\u00e3o corresponde ao destinat\u00e1rio atual",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "receiverPartyType",
+    "message": "Tipo de destinat\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "recordType",
+    "message": "O que voc\u00ea est\u00e1 gravando?",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "resource",
+    "message": "Recurso",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "row",
+    "message": " ",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "row2",
+    "message": " ",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "scanResource",
+    "message": "Recurso de verifica\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "scannedQrPayload",
+    "message": "Carga QR digitalizada",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "secondaryRole",
+    "message": "Papel Secund\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "secondaryType",
+    "message": "Tipo Secund\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "selectedStock",
+    "message": "Estoque selecionado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "sender",
+    "message": "Remetente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "senderFacilityId",
+    "message": "Recurso de remetente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "senderId",
+    "message": "ID do remetente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "senderPartyType",
+    "message": "Tipo de remetente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "sku",
+    "message": "SKU",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockBalances",
+    "message": "Saldos de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockDamagedHeading",
+    "message": "Estoque recorde danificado",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockDetails",
+    "message": "Detalhes do estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockEntryType",
+    "message": "Tipo de entrada de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockFieldPair",
+    "message": "Detalhes do estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockInHand",
+    "message": "Estoque em m\u00e3os",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockIssuedHeading",
+    "message": "Estoque recorde emitido",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockItems",
+    "message": "Itens de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockLossHeading",
+    "message": "Perda recorde de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockProductDetails",
+    "message": "Detalhes do produto em estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockReceiptHeading",
+    "message": "Registro de recebimento de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockReconTable",
+    "message": "Tabela de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockTable",
+    "message": "Tabela de estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stocksuccess_primaryAction",
+    "message": "Ver transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stocksuccess_secondaryAction",
+    "message": "Nova transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "teamCode",
+    "message": "C\u00f3digo da equipe",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "tenantId",
+    "message": "ID do locat\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "transactionType",
+    "message": "Tipo de transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "transactionType2",
+    "message": "Tipo de transa\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "transportType",
+    "message": "Tipo de transporte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "userFacilityId",
+    "message": "Instala\u00e7\u00e3o do usu\u00e1rio",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "userFacilityType",
+    "message": "Tipo de instala\u00e7\u00e3o",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "vehicleNumber",
+    "message": "N\u00famero do ve\u00edculo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "warehouseDetails",
+    "message": "Detalhes do armaz\u00e9m",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "wayBillNumber",
+    "message": "N\u00famero da carta de porte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "waybillNumber",
+    "message": "N\u00famero da carta de porte",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "{{fn:getFirstPagePartyLabel(item.items[0].additionalFields.fields)}}",
+    "message": "Remetente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "Quantidade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "message": "Receptor",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "{{fn:getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
+    "message": "Remetente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  }
+]

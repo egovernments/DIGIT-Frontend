@@ -1,0 +1,920 @@
+[
+  {
+    "code": "HCM_CONSOLE_APP_LINK_LABEL",
+    "message": "T\u00e9l\u00e9charger l'APK",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_APP_LINK_LABEL_BEDNET",
+    "message": "T\u00e9l\u00e9charger l'APK",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_APP_LINK_LABEL_Bednet",
+    "message": "T\u00e9l\u00e9charger l'APK",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_APP_LINK_LABEL_CO-DELIVERT",
+    "message": "T\u00e9l\u00e9charger l'APK",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_APP_LINK_LABEL_CO-DELIVERY",
+    "message": "T\u00e9l\u00e9charger l'APK",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_APP_LINK_LABEL_DEFAULT",
+    "message": "T\u00e9l\u00e9charger l'APK",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_APP_LINK_LABEL_MR-DN",
+    "message": "T\u00e9l\u00e9charger l'APK",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_APP_LINK_LABEL_Oncho",
+    "message": "T\u00e9l\u00e9charger l'APK",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_APP_LINK_LABEL_POLIO",
+    "message": "T\u00e9l\u00e9charger l'APK",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_HEADER",
+    "message": "Votre campagne est pr\u00eate\u00a0!",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_HEADER_BEDNET",
+    "message": "Votre campagne est pr\u00eate\u00a0!",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_HEADER_Bednet",
+    "message": "Votre campagne est pr\u00eate\u00a0!",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_HEADER_CO-DELIVERT",
+    "message": "Votre campagne est pr\u00eate\u00a0!",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_HEADER_CO-DELIVERY",
+    "message": "Votre campagne est pr\u00eate\u00a0!",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_HEADER_DEFAULT",
+    "message": "Votre campagne est pr\u00eate\u00a0!",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_HEADER_MR-DN",
+    "message": "Votre campagne est pr\u00eate\u00a0!",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_HEADER_Oncho",
+    "message": "Votre campagne est pr\u00eate\u00a0!",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_HEADER_POLIO",
+    "message": "Votre campagne est pr\u00eate\u00a0!",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_NAME",
+    "message": "Nom de la campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_NAME_BEDNET",
+    "message": "Nom de la campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_NAME_Bednet",
+    "message": "Nom de la campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_NAME_CO-DELIVERT",
+    "message": "Nom de la campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_NAME_CO-DELIVERY",
+    "message": "Nom de la campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_NAME_DEFAULT",
+    "message": "Nom de la campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_NAME_MR-DN",
+    "message": "Nom de la campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_NAME_Oncho",
+    "message": "Nom de la campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_NAME_POLIO",
+    "message": "Nom de la campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT",
+    "message": "N'h\u00e9sitez pas \u00e0 nous contacter en cas de questions \u00e0",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_BEDNET",
+    "message": "N'h\u00e9sitez pas \u00e0 nous contacter en cas de questions \u00e0",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_Bednet",
+    "message": "N'h\u00e9sitez pas \u00e0 nous contacter en cas de questions \u00e0",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_CO-DELIVERT",
+    "message": "N'h\u00e9sitez pas \u00e0 nous contacter en cas de questions \u00e0",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_CO-DELIVERY",
+    "message": "N'h\u00e9sitez pas \u00e0 nous contacter en cas de questions \u00e0",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_DEFAULT",
+    "message": "N'h\u00e9sitez pas \u00e0 nous contacter en cas de questions \u00e0",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_MR-DN",
+    "message": "N'h\u00e9sitez pas \u00e0 nous contacter en cas de questions \u00e0",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_Oncho",
+    "message": "N'h\u00e9sitez pas \u00e0 nous contacter en cas de questions \u00e0",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_POLIO",
+    "message": "N'h\u00e9sitez pas \u00e0 nous contacter en cas de questions \u00e0",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_TEAM",
+    "message": "\u00c9quipe Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_TEAM_BEDNET",
+    "message": "\u00c9quipe Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_TEAM_Bednet",
+    "message": "\u00c9quipe Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_TEAM_CO-DELIVERT",
+    "message": "\u00c9quipe Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_TEAM_CO-DELIVERY",
+    "message": "\u00c9quipe Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_TEAM_DEFAULT",
+    "message": "\u00c9quipe Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_TEAM_MR-DN",
+    "message": "\u00c9quipe Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_TEAM_Oncho",
+    "message": "\u00c9quipe Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_TEAM_POLIO",
+    "message": "\u00c9quipe Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL",
+    "message": "CHIFFRE",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_BEDNET",
+    "message": "CHIFFRE",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_Bednet",
+    "message": "CHIFFRE",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_CO-DELIVERT",
+    "message": "CHIFFRE",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_CO-DELIVERY",
+    "message": "CHIFFRE",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_DEFAULT",
+    "message": "CHIFFRE",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_MR-DN",
+    "message": "CHIFFRE",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_Oncho",
+    "message": "CHIFFRE",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_POLIO",
+    "message": "CHIFFRE",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_EGOV_WEBSITE_LINK_LABEL",
+    "message": "Site web",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_EGOV_WEBSITE_LINK_LABEL_BEDNET",
+    "message": "Site web",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_EGOV_WEBSITE_LINK_LABEL_Bednet",
+    "message": "Site web",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_EGOV_WEBSITE_LINK_LABEL_CO-DELIVERT",
+    "message": "Site web",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_EGOV_WEBSITE_LINK_LABEL_CO-DELIVERY",
+    "message": "Site web",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_EGOV_WEBSITE_LINK_LABEL_DEFAULT",
+    "message": "Site web",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_EGOV_WEBSITE_LINK_LABEL_MR-DN",
+    "message": "Site web",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_EGOV_WEBSITE_LINK_LABEL_Oncho",
+    "message": "Site web",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_EGOV_WEBSITE_LINK_LABEL_POLIO",
+    "message": "Site web",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_FOOTER_CONTENT",
+    "message": "\u00a92025 Fondation eGov. Tous droits r\u00e9serv\u00e9s.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_FOOTER_CONTENT_BEDNET",
+    "message": "\u00a92025 Fondation eGov. Tous droits r\u00e9serv\u00e9s.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_FOOTER_CONTENT_Bednet",
+    "message": "\u00a92025 Fondation eGov. Tous droits r\u00e9serv\u00e9s.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_FOOTER_CONTENT_CO-DELIVERT",
+    "message": "\u00a92025 Fondation eGov. Tous droits r\u00e9serv\u00e9s.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_FOOTER_CONTENT_CO-DELIVERY",
+    "message": "\u00a92025 Fondation eGov. Tous droits r\u00e9serv\u00e9s.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_FOOTER_CONTENT_DEFAULT",
+    "message": "\u00a92025 Fondation eGov. Tous droits r\u00e9serv\u00e9s.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_FOOTER_CONTENT_MR-DN",
+    "message": "\u00a92025 Fondation eGov. Tous droits r\u00e9serv\u00e9s.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_FOOTER_CONTENT_Oncho",
+    "message": "\u00a92025 Fondation eGov. Tous droits r\u00e9serv\u00e9s.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_FOOTER_CONTENT_POLIO",
+    "message": "\u00a92025 Fondation eGov. Tous droits r\u00e9serv\u00e9s.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_GREETING_CONTENT",
+    "message": "Excellente nouvelle ! La configuration de votre campagne de sant\u00e9 est termin\u00e9e. L'application a \u00e9t\u00e9 configur\u00e9e et les informations d'identification utilisateur ont \u00e9t\u00e9 g\u00e9n\u00e9r\u00e9es pour votre \u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_GREETING_CONTENT_BEDNET",
+    "message": "Excellente nouvelle ! La configuration de votre campagne de sant\u00e9 est termin\u00e9e. L'application a \u00e9t\u00e9 configur\u00e9e et les informations d'identification utilisateur ont \u00e9t\u00e9 g\u00e9n\u00e9r\u00e9es pour votre \u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_GREETING_CONTENT_Bednet",
+    "message": "Excellente nouvelle ! La configuration de votre campagne de sant\u00e9 est termin\u00e9e. L'application a \u00e9t\u00e9 configur\u00e9e et les informations d'identification utilisateur ont \u00e9t\u00e9 g\u00e9n\u00e9r\u00e9es pour votre \u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_GREETING_CONTENT_CO-DELIVERT",
+    "message": "Excellente nouvelle ! La configuration de votre campagne de sant\u00e9 est termin\u00e9e. L'application a \u00e9t\u00e9 configur\u00e9e et les informations d'identification utilisateur ont \u00e9t\u00e9 g\u00e9n\u00e9r\u00e9es pour votre \u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_GREETING_CONTENT_CO-DELIVERY",
+    "message": "Excellente nouvelle ! La configuration de votre campagne de sant\u00e9 est termin\u00e9e. L'application a \u00e9t\u00e9 configur\u00e9e et les informations d'identification utilisateur ont \u00e9t\u00e9 g\u00e9n\u00e9r\u00e9es pour votre \u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_GREETING_CONTENT_DEFAULT",
+    "message": "Excellente nouvelle ! La configuration de votre campagne de sant\u00e9 est termin\u00e9e. L'application a \u00e9t\u00e9 configur\u00e9e et les informations d'identification utilisateur ont \u00e9t\u00e9 g\u00e9n\u00e9r\u00e9es pour votre \u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_GREETING_CONTENT_MR-DN",
+    "message": "Excellente nouvelle ! La configuration de votre campagne de sant\u00e9 est termin\u00e9e. L'application a \u00e9t\u00e9 configur\u00e9e et les informations d'identification utilisateur ont \u00e9t\u00e9 g\u00e9n\u00e9r\u00e9es pour votre \u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_GREETING_CONTENT_Oncho",
+    "message": "Excellente nouvelle ! La configuration de votre campagne de sant\u00e9 est termin\u00e9e. L'application a \u00e9t\u00e9 configur\u00e9e et les informations d'identification utilisateur ont \u00e9t\u00e9 g\u00e9n\u00e9r\u00e9es pour votre \u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_GREETING_CONTENT_POLIO",
+    "message": "Excellente nouvelle ! La configuration de votre campagne de sant\u00e9 est termin\u00e9e. L'application a \u00e9t\u00e9 configur\u00e9e et les informations d'identification utilisateur ont \u00e9t\u00e9 g\u00e9n\u00e9r\u00e9es pour votre \u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_HEADER_CONTENT_LABEL",
+    "message": "Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_HEADER_CONTENT_LABEL_BEDNET",
+    "message": "Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_HEADER_CONTENT_LABEL_Bednet",
+    "message": "Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_HEADER_CONTENT_LABEL_CO-DELIVERT",
+    "message": "Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_HEADER_CONTENT_LABEL_CO-DELIVERY",
+    "message": "Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_HEADER_CONTENT_LABEL_DEFAULT",
+    "message": "Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_HEADER_CONTENT_LABEL_MR-DN",
+    "message": "Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_HEADER_CONTENT_LABEL_Oncho",
+    "message": "Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_HEADER_CONTENT_LABEL_POLIO",
+    "message": "Console HCM",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_1",
+    "message": "Toutes les informations d'identification de l'\u00e9quipe sont actives et pr\u00eates \u00e0 \u00eatre utilis\u00e9es",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_1_BEDNET",
+    "message": "Toutes les informations d'identification de l'\u00e9quipe sont actives et pr\u00eates \u00e0 \u00eatre utilis\u00e9es",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_1_Bednet",
+    "message": "Toutes les informations d'identification de l'\u00e9quipe sont actives et pr\u00eates \u00e0 \u00eatre utilis\u00e9es",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_1_CO-DELIVERT",
+    "message": "Toutes les informations d'identification de l'\u00e9quipe sont actives et pr\u00eates \u00e0 \u00eatre utilis\u00e9es",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_1_CO-DELIVERY",
+    "message": "Toutes les informations d'identification de l'\u00e9quipe sont actives et pr\u00eates \u00e0 \u00eatre utilis\u00e9es",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_1_DEFAULT",
+    "message": "Toutes les informations d'identification de l'\u00e9quipe sont actives et pr\u00eates \u00e0 \u00eatre utilis\u00e9es",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_1_MR-DN",
+    "message": "Toutes les informations d'identification de l'\u00e9quipe sont actives et pr\u00eates \u00e0 \u00eatre utilis\u00e9es",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_1_Oncho",
+    "message": "Toutes les informations d'identification de l'\u00e9quipe sont actives et pr\u00eates \u00e0 \u00eatre utilis\u00e9es",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_1_POLIO",
+    "message": "Toutes les informations d'identification de l'\u00e9quipe sont actives et pr\u00eates \u00e0 \u00eatre utilis\u00e9es",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_2",
+    "message": "L'application comprend toutes les configurations sp\u00e9cifiques aux besoins de votre campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_2_BEDNET",
+    "message": "L'application comprend toutes les configurations sp\u00e9cifiques aux besoins de votre campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_2_Bednet",
+    "message": "L'application comprend toutes les configurations sp\u00e9cifiques aux besoins de votre campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_2_CO-DELIVERT",
+    "message": "L'application comprend toutes les configurations sp\u00e9cifiques aux besoins de votre campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_2_CO-DELIVERY",
+    "message": "L'application comprend toutes les configurations sp\u00e9cifiques aux besoins de votre campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_2_DEFAULT",
+    "message": "L'application comprend toutes les configurations sp\u00e9cifiques aux besoins de votre campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_2_MR-DN",
+    "message": "L'application comprend toutes les configurations sp\u00e9cifiques aux besoins de votre campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_2_Oncho",
+    "message": "L'application comprend toutes les configurations sp\u00e9cifiques aux besoins de votre campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_2_POLIO",
+    "message": "L'application comprend toutes les configurations sp\u00e9cifiques aux besoins de votre campagne",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_3",
+    "message": "Veuillez distribuer les informations d'identification en toute s\u00e9curit\u00e9 uniquement aux membres autoris\u00e9s de l'\u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_3_BEDNET",
+    "message": "Veuillez distribuer les informations d'identification en toute s\u00e9curit\u00e9 uniquement aux membres autoris\u00e9s de l'\u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_3_Bednet",
+    "message": "Veuillez distribuer les informations d'identification en toute s\u00e9curit\u00e9 uniquement aux membres autoris\u00e9s de l'\u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_3_CO-DELIVERT",
+    "message": "Veuillez distribuer les informations d'identification en toute s\u00e9curit\u00e9 uniquement aux membres autoris\u00e9s de l'\u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_3_CO-DELIVERY",
+    "message": "Veuillez distribuer les informations d'identification en toute s\u00e9curit\u00e9 uniquement aux membres autoris\u00e9s de l'\u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_3_DEFAULT",
+    "message": "Veuillez distribuer les informations d'identification en toute s\u00e9curit\u00e9 uniquement aux membres autoris\u00e9s de l'\u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_3_MR-DN",
+    "message": "Veuillez distribuer les informations d'identification en toute s\u00e9curit\u00e9 uniquement aux membres autoris\u00e9s de l'\u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_3_Oncho",
+    "message": "Veuillez distribuer les informations d'identification en toute s\u00e9curit\u00e9 uniquement aux membres autoris\u00e9s de l'\u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_3_POLIO",
+    "message": "Veuillez distribuer les informations d'identification en toute s\u00e9curit\u00e9 uniquement aux membres autoris\u00e9s de l'\u00e9quipe.",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_HEADER",
+    "message": "Important",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_HEADER_BEDNET",
+    "message": "Important",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_HEADER_Bednet",
+    "message": "Important",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_HEADER_CO-DELIVERT",
+    "message": "Important",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_HEADER_CO-DELIVERY",
+    "message": "Important",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_HEADER_DEFAULT",
+    "message": "Important",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_HEADER_MR-DN",
+    "message": "Important",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_HEADER_Oncho",
+    "message": "Important",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_INSTRUCTION_HEADER_POLIO",
+    "message": "Important",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_LINKEDIN_LINK_LABEL",
+    "message": "LinkedIn",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_LINKEDIN_LINK_LABEL_BEDNET",
+    "message": "LinkedIn",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_LINKEDIN_LINK_LABEL_Bednet",
+    "message": "LinkedIn",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_LINKEDIN_LINK_LABEL_CO-DELIVERT",
+    "message": "LinkedIn",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_LINKEDIN_LINK_LABEL_CO-DELIVERY",
+    "message": "LinkedIn",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_LINKEDIN_LINK_LABEL_DEFAULT",
+    "message": "LinkedIn",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_LINKEDIN_LINK_LABEL_MR-DN",
+    "message": "LinkedIn",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_LINKEDIN_LINK_LABEL_Oncho",
+    "message": "LinkedIn",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_LINKEDIN_LINK_LABEL_POLIO",
+    "message": "LinkedIn",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_USERSHEET_LINK_LABEL",
+    "message": "Acc\u00e9der aux informations d'identification",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_USERSHEET_LINK_LABEL_BEDNET",
+    "message": "Acc\u00e9der aux informations d'identification",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_USERSHEET_LINK_LABEL_Bednet",
+    "message": "Acc\u00e9der aux informations d'identification",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_USERSHEET_LINK_LABEL_CO-DELIVERT",
+    "message": "Acc\u00e9der aux informations d'identification",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_USERSHEET_LINK_LABEL_CO-DELIVERY",
+    "message": "Acc\u00e9der aux informations d'identification",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_USERSHEET_LINK_LABEL_DEFAULT",
+    "message": "Acc\u00e9der aux informations d'identification",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_USERSHEET_LINK_LABEL_MR-DN",
+    "message": "Acc\u00e9der aux informations d'identification",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_USERSHEET_LINK_LABEL_Oncho",
+    "message": "Acc\u00e9der aux informations d'identification",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CONSOLE_USERSHEET_LINK_LABEL_POLIO",
+    "message": "Acc\u00e9der aux informations d'identification",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USER_CREDENTIAL_SUBJECT",
+    "message": "Informations d'identification de l'utilisateur",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USER_CREDENTIAL_SUBJECT_BEDNET",
+    "message": "Informations d'identification de l'utilisateur",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USER_CREDENTIAL_SUBJECT_Bednet",
+    "message": "Informations d'identification de l'utilisateur",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USER_CREDENTIAL_SUBJECT_CO-DELIVERT",
+    "message": "Informations d'identification de l'utilisateur",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USER_CREDENTIAL_SUBJECT_CO-DELIVERY",
+    "message": "Informations d'identification de l'utilisateur",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USER_CREDENTIAL_SUBJECT_DEFAULT",
+    "message": "Informations d'identification de l'utilisateur",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USER_CREDENTIAL_SUBJECT_MR-DN",
+    "message": "Informations d'identification de l'utilisateur",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USER_CREDENTIAL_SUBJECT_Oncho",
+    "message": "Informations d'identification de l'utilisateur",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USER_CREDENTIAL_SUBJECT_POLIO",
+    "message": "Informations d'identification de l'utilisateur",
+    "module": "hcm-admin-notification",
+    "locale": "fr_DEMO"
+  }
+]
