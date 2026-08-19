@@ -9,6 +9,11 @@
 import Urls from "../utils/urls";
 
 const PGRSearchInboxConfig = () => {
+  // TODO: Once the inbox API supports hierarchyType as a filter param, uncomment the lines below
+  // and pass hierarchyType in moduleSearchCriteria so results are scoped to the selected hierarchy.
+  // const selectedHierarchy = Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED");
+  // const hierarchyType = (selectedHierarchy && selectedHierarchy.hierarchyType) || null;
+
   return {
     label: "CS_COMMON_INBOX",
     type: "inbox",
@@ -21,7 +26,9 @@ const PGRSearchInboxConfig = () => {
             businessService: ["PGR"],
             moduleName: "RAINMAKER-PGR",
           },
-          moduleSearchCriteria: {},
+          moduleSearchCriteria: {
+            // hierarchyType: hierarchyType, // TODO: enable once API supports this filter
+          },
         },
       },
       minParametersForSearchForm: 0,
