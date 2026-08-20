@@ -553,7 +553,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_DESCRIPTION",
-    "message": "Confirmez si l'enfant a re\u00e7u un m\u00e9dicament contenant de la sulfadoxine-pyrim\u00e9thamine (SP) ou du cotrimoxazole (CTX) au cours des 28 derniers jours, que ce soit pour la pr\u00e9vention ou le traitement de maladies.",
+    "message": "Confirmez si l'enfant a re\u00e7u un m\u00e9dicament des 28 derniers jours, que ce soit pour la pr\u00e9vention ou le traitement de maladies.",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -571,7 +571,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_5_LABEL",
-    "message": "L'enfant a pris des m\u00e9dicaments contenant du SP ou du CTX au cours des 28 derniers jours\u00a0?",
+    "message": "L'enfant a pris des m\u00e9dicaments contenant des 28 derniers jours\u00a0?",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
