@@ -2581,7 +2581,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_REDOSE_REDOSEDETAILS",
-    "message": "Revisit Details",
+    "message": "Redose Details",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
