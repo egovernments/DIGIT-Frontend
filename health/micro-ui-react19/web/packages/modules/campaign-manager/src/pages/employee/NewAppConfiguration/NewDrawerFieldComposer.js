@@ -1241,7 +1241,10 @@ const LocalizationInput = React.memo(
     };
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      <div
+        className={isTableColumn ? "drawer-table-column-group" : ""}
+        style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+      >
         {/* Label row with toggle for table columns */}
         <div
           style={{

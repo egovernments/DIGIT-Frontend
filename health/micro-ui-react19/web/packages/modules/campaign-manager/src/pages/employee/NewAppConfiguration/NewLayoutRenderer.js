@@ -57,7 +57,9 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
         }}
       >
         <Card
-          className="app-preview-card"
+          className={`app-preview-card ${
+            data?.flow === "CHECKLIST" || /checklist/i.test(t(data?.heading || "")) ? "checklist-preview" : ""
+          }`}
           style={{
             padding: "1rem",
             backgroundColor: "#eee",
