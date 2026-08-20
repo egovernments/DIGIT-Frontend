@@ -1045,7 +1045,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         generatedResource?.fileStoreId || generatedResource?.fileStoreid;
       const customFileName = `${campaignName}_${t(
         "HCM_FILLED",
-      )}_Unified_Template`;
+      )}_${t(I18N_KEYS.COMPONENTS.HCM_MICROPLAN_TEMPLATE)}`;
       downloadExcelWithCustomName({
         fileStoreId,
         customName: customFileName,
@@ -1322,7 +1322,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         }
         // Download the file directly using fileStoreId
         setDownloadError(false);
-        const customFileName = parentId ? `${campaignName}_${t(I18N_KEYS.COMPONENTS.HCM_FILLED)}_Unified_Template` : `${campaignName}_Unified_Template`;
+        const customFileName = parentId ? `${campaignName}_${t(I18N_KEYS.COMPONENTS.HCM_FILLED)}_${t(I18N_KEYS.COMPONENTS.HCM_MICROPLAN_TEMPLATE)}` : `${campaignName}_${t(I18N_KEYS.COMPONENTS.HCM_MICROPLAN_TEMPLATE)}`;
         downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName });
         setDownloadedTemplates((prev) => ({
           ...prev,
