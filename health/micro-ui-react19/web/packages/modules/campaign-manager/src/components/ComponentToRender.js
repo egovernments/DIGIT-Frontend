@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import {
   getAppTypeFromMasterData,
   getFieldTypeFromMasterData,
-  getFieldTypeFromMasterData2,
 } from "../pages/employee/NewAppConfiguration/helpers/getFieldTypeFromMasterData";
 import { getComponentFromMasterData } from "../pages/employee/NewAppConfiguration/helpers/getComponentFromMasterData";
 
@@ -157,7 +156,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
             : null
         }}
         withoutLabel={field?.format === "checkbox" || !resolvedLabel}
-        required={getFieldTypeFromMasterData2(field) === "custom" ? null : field?.required}
+        required={field?.required ?? field?.mandatory ?? null}
         type={fieldType}
         value={previewValue}
         disabled={field?.readOnly || false}
