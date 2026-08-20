@@ -553,7 +553,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_DESCRIPTION",
-    "message": "Confirmar se a crian\u00e7a recebeu algum medicamento contendo Sulfadoxina Pirimetamina (SP) ou Cotrimoxazol (CTX) nos \u00faltimos 28 dias, seja para preven\u00e7\u00e3o ou tratamento de doen\u00e7as.",
+    "message": "Confirmar se a crian\u00e7a recebeu algum medicamento \u00faltimos 28 dias, seja para preven\u00e7\u00e3o ou tratamento de doen\u00e7as.",
     "module": "hcm-base-registration-oncho",
     "locale": "pt_DEMO"
   },
@@ -571,7 +571,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_5_LABEL",
-    "message": "A crian\u00e7a tomou medicamentos contendo SP ou CTX nos \u00faltimos 28 dias?",
+    "message": "A crian\u00e7a tomou medicamentos nos \u00faltimos 28 dias?",
     "module": "hcm-base-registration-oncho",
     "locale": "pt_DEMO"
   },
