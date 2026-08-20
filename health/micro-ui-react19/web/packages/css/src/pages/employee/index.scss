@@ -1301,6 +1301,14 @@ tbody {
   background: #fafafa;
   border-radius: 0.5rem;
   padding: 1rem;
+  // Table drawer: each column (label + toggle + localization input) is its own white
+  // bordered sub-group on the grey container
+  .drawer-table-column-group {
+    background-color: #ffffff;
+    border: 1px solid #d6d5d4;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+  }
   .drawer-container-tooltip {
     position: relative;
     display: flex;
@@ -1568,6 +1576,24 @@ tbody {
   }
   .app-preview-card-header {
     color: #0b4b66;
+  }
+  // Checklist questions follow Heading S - Mobile: 16px, bold, black
+  // (px on purpose: the app root font-size is 90%, so 1rem computes to 14.4px)
+  &.checklist-preview .digit-label-field-pair .digit-header-content label.label-styles {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--digitv2-lightTheme-text-primary);
+  }
+  // Divider between consecutive checklist questions. Each question sits in a wrapper div
+  // directly under .app-card, so the divider goes on every question wrapper that follows
+  // another one — nothing before the first question.
+  &.checklist-preview
+    .app-card
+    > div:has(.digit-label-field-pair)
+    + div:has(.digit-label-field-pair) {
+    border-top: 1px solid #d6d5d4;
+    padding-top: 1rem;
+    margin-top: 0.5rem;
   }
 }
 .app-card{
