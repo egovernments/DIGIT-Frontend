@@ -466,7 +466,7 @@ const CommodityDashboard = () => {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <HeaderComponent className="cm-header">
           {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_COMMODITY_MANAGEMENT_MODULE)}{" "}
-          <span className="cm-header-tenant">({tenantName})</span>
+          <span className="cm-header-tenant">({t(`HCM_TENANT_${tenantName}`)})</span>
         </HeaderComponent>
         {!isCompleted && (
           <Button
