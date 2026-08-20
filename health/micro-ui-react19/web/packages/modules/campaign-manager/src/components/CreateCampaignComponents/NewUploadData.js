@@ -1277,50 +1277,83 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   });
 
   const downloadTemplate = async () => {
-    // For unified-console type, use generation search API
+    // For unified-console type, always regenerate before downloading: the template is first
+    // generated at boundary selection, BEFORE delivery resources are configured, so the cached
+    // file has no per-resource target columns. Regenerating at download time picks up the
+    // delivery resources configured since (same generate+poll pattern as attendanceRegister).
     if (type === "unified-console") {
-      try {
+      const locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || Digit?.Utils?.getDefaultLanguage();
+      const pollRetryInterval = 2000;
+      const maxPollTime = 120000;
+
+      const IN_FLIGHT_STATUSES = ["queued", "pending", "inprogress"];
+
+      // Helper: search for the latest generated resource. The type is matched client-side: the
+      // search API does not filter on a `types` criteria (passing it silently returns no records).
+      // Each _init expires all previous records and creates a new one with status "queued".
+      const searchGeneration = async () => {
         const response = await Digit.CustomService.getResponse({
           url: "/excel-ingestion/v1/data/generate/_search",
           body: {
             GenerationSearchCriteria: {
               tenantId: tenantId,
               referenceIds: [id],
-              statuses: ["completed"],
+              statuses: ["completed", "failed", ...IN_FLIGHT_STATUSES],
               limit: 5,
               offset: 0,
-              locale:Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || Digit?.Utils?.getDefaultLanguage(),
-              referenceTypes : ["campaign"],
+              locale: locale,
+              referenceTypes: ["campaign"],
             },
           },
         });
-        // API returns GenerationDetails array
-        const generatedResource = response?.GenerationDetails?.[0];
-        if (!generatedResource) {
-          setDownloadError(true);
-          setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
-          return;
-        }
+        return (response?.GenerationDetails || [])
+          .filter((g) => g?.type === type)
+          .sort((a, b) => (b?.auditDetails?.createdTime || 0) - (a?.auditDetails?.createdTime || 0))[0];
+      };
 
-        if (generatedResource?.status === "failed") {
-          setDownloadError(true);
-          setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.ERROR_WHILE_DOWNLOADING) });
-          return;
+      // Helper: poll until completed/failed or timeout. An absent record just means the init
+      // hasn't been persisted/searchable yet, so keep polling until the deadline.
+      const pollUntilDone = async () => {
+        const startTime = Date.now();
+        while (Date.now() - startTime < maxPollTime) {
+          await new Promise((resolve) => setTimeout(resolve, pollRetryInterval));
+          const resource = await searchGeneration();
+          if (resource?.status === "completed" || resource?.status === "failed") {
+            return resource;
+          }
         }
+        return null; // timeout
+      };
 
-        if (generatedResource?.status === "inprogress") {
-          setDownloadError(true);
-          setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
-          return;
-        }
+      // Helper: trigger a fresh generation
+      const triggerGenerate = async () => {
+        await Digit.CustomService.getResponse({
+          url: "/excel-ingestion/v1/data/generate/_init",
+          body: {
+            GenerateResource: {
+              tenantId: tenantId,
+              type: type,
+              hierarchyType: params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
+              referenceId: id,
+              referenceType: "campaign",
+              locale: locale,
+              additionalDetails: {
+                campaignName: campaignName,
+                campaignId: id,
+              },
+            },
+          },
+        });
+      };
 
-        const fileStoreId = generatedResource?.fileStoreid || generatedResource?.fileStoreId;
+      // Helper: download from a completed resource
+      const downloadFromResource = (resource) => {
+        const fileStoreId = resource?.fileStoreid || resource?.fileStoreId;
         if (!fileStoreId) {
           setDownloadError(true);
           setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
           return;
         }
-        // Download the file directly using fileStoreId
         setDownloadError(false);
         const customFileName = parentId ? `${campaignName}_${t(I18N_KEYS.COMPONENTS.HCM_FILLED)}_Unified_Template` : `${campaignName}_Unified_Template`;
         downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName });
@@ -1328,7 +1361,35 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           ...prev,
           [type]: true,
         }));
+      };
+
+      try {
+        setLoaderText("CAMPAIGN_DOWNLOADING_TEMPLATE");
+        setLoader(true);
+
+        // Always trigger a fresh generation first so the template reflects the currently
+        // configured delivery resources, then poll the search API until it completes (up to
+        // maxPollTime). _init synchronously expires all previous records, so any completed
+        // record the polls find is the one this click triggered.
+        await triggerGenerate();
+        const resource = await pollUntilDone();
+
+        setLoader(false);
+
+        if (resource?.status === "completed") {
+          downloadFromResource(resource);
+          return;
+        }
+
+        if (resource?.status === "failed") {
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.ERROR_WHILE_DOWNLOADING) });
+        } else {
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
+        }
       } catch (error) {
+        setLoader(false);
         console.error("Error in unified-console download:", error);
         const errorCode = error?.response?.data?.Errors?.[0]?.code;
         if (errorCode === "NativeIoException") {

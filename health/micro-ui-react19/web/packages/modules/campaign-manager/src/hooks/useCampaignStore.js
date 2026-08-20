@@ -1,4 +1,4 @@
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useRef, useSyncExternalStore } from "react";
 import {
   campaignStore,
   STORAGE_KEYS,
@@ -145,7 +145,12 @@ const useCampaignStore = (key, defaultValue = null) => {
 
   const reduxValue = useSyncExternalStore(subscribe, getSnapshot);
 
-  const value = reduxValue !== null && reduxValue !== undefined ? reduxValue : defaultValue;
+  // Pin the default to its first-render identity: callers pass inline literals ({} / []) that are a
+  // new reference every render, which turns any useEffect keyed on the returned value into an
+  // infinite setState loop while the store is empty.
+  const defaultValueRef = useRef(defaultValue);
+
+  const value = reduxValue !== null && reduxValue !== undefined ? reduxValue : defaultValueRef.current;
 
   const setValue = useCallback(
     (newValue) => {

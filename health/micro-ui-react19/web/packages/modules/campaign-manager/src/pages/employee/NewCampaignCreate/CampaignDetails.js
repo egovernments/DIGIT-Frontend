@@ -380,6 +380,23 @@ const CampaignDetails = () => {
     }
   }, [campaignData, BOUNDARY_HIERARCHY_TYPE, hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy]);
 
+  // Delivery conditions are complete only when every condition of every delivery has at least one
+  // resource attached (same rule the delivery screen enforces on Next). Upload stays disabled until
+  // then because the generated template's target columns are derived from these resources.
+  const isDeliveryConditionComplete = !!campaignData?.deliveryRules?.some(
+    (rule) =>
+      rule?.cycles?.length > 0 &&
+      rule.cycles.every(
+        (cycle) =>
+          cycle?.deliveries?.length > 0 &&
+          cycle.deliveries.every(
+            (delivery) =>
+              delivery?.doseCriteria?.length > 0 &&
+              delivery.doseCriteria.every((criteria) => criteria?.ProductVariants?.length > 0)
+          )
+      )
+  );
+
   const data = {
     cards: [
       {
@@ -503,13 +520,20 @@ const CampaignDetails = () => {
                     icon: (
                       <UploadCloud
                         fill={
-                          campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId
+                          campaignData?.boundaries?.length <= 0 ||
+                          !isDeliveryConditionComplete ||
+                          campaignData?.status === "created" ||
+                          campaignData?.parentId
                             ? "#c5c5c5"
                             : "#C84C0E"
                         }
                       />
                     ),
-                    disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
+                    disabled:
+                      campaignData?.boundaries?.length <= 0 ||
+                      !isDeliveryConditionComplete ||
+                      campaignData?.status === "created" ||
+                      campaignData?.parentId,
                   },
                 },
               ],
@@ -533,13 +557,20 @@ const CampaignDetails = () => {
                     icon: (
                       <UploadCloud
                         fill={
-                          campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId
+                          campaignData?.boundaries?.length <= 0 ||
+                          !isDeliveryConditionComplete ||
+                          campaignData?.status === "created" ||
+                          campaignData?.parentId
                             ? "#c5c5c5"
                             : "#C84C0E"
                         }
                       />
                     ),
-                    disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
+                    disabled:
+                      campaignData?.boundaries?.length <= 0 ||
+                      !isDeliveryConditionComplete ||
+                      campaignData?.status === "created" ||
+                      campaignData?.parentId,
                   },
                 },
               ],
