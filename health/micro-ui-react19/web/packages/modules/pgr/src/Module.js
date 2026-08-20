@@ -19,49 +19,18 @@ import UploadFileComponent from "./components/UploadFileComponent";
 
 export const PGRModule = ({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
+
   useEffect(() => {
     Digit.SessionStorage.del("filtersForInbox");
+    Digit.SessionStorage.del("HIERARCHY_TYPE_SELECTED");
   }, []);
 
- 
+  const { data: hierarchies, isLoading: isHierarchyLoading } =
+    Digit.Hooks.pgr.useFetchAllBoundaryHierarchies({ tenantId });
 
-  // Fetch hierarchy type from MDMS v2
-  const { isLoading: isMDMSLoading, data: HierarchySelectedForPGR } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    "PGR",
-    [{ name: "HierarchySelectedForPGR" }],
-    {
-      select: (data) => {
-        // Extract hierarchyTypeCode from MDMS response
-        const hierarchyTypeCode = data?.PGR?.HierarchySelectedForPGR?.[0]?.hierarchyTypeCode;
-        return hierarchyTypeCode;
-      },
-    },
-    {
-      schemaCode: "PGR.HierarchySelectedForPGR",
-      limit: 10,
-      offset: 0
-    }
-  );
+  Digit.SessionStorage.set("BOUNDARY_HIERARCHIES", hierarchies);
 
-  const { data: hierarchies,
-    isLoading: isHierarchyLoading,
-  } = Digit.Hooks.pgr.useFetchAllBoundaryHierarchies({ tenantId, config:{refetchKey: HierarchySelectedForPGR, enabled: !!HierarchySelectedForPGR} });
-
-  // Set hierarchy in SessionStorage when both hierarchies and HierarchySelectedForPGR are available
-  useEffect(() => {
-    if (hierarchies && HierarchySelectedForPGR) {
-      // Find the matching hierarchy from hierarchies data
-      const selectedHierarchy = hierarchies.find(h => h.hierarchyType === HierarchySelectedForPGR);
-      if (selectedHierarchy) {
-        // Store the complete hierarchy object in sessionStorage
-        Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", selectedHierarchy);
-      }
-    }
-  }, [hierarchies, HierarchySelectedForPGR]);
-
-
-  const moduleCode = ["pgr",];
+  const moduleCode = ["pgr"];
   const modulePrefix = "hcm";
   const language = Digit.StoreData.getCurrentLanguage();
 
@@ -72,11 +41,7 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
     modulePrefix,
   });
 
-  Digit.SessionStorage.set("BOUNDARY_HIERARCHIES", hierarchies);
-  let user = Digit?.SessionStorage.get("User");
-
-
-  if (isLoading || isHierarchyLoading || isMDMSLoading) {
+  if (isLoading || isHierarchyLoading) {
     return (
       <Loader variant={"PageLoader"} className={"digit-center-loader"} />
     );

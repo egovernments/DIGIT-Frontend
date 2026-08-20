@@ -318,7 +318,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
                 <Tag label={campaignName} type="monochrome" stroke={true} />
                 {hierarchyType && (
                   <Tag
-                    label={`${t(I18N_KEYS.COMPONENTS.HCM_HIERARCHY_TYPE)} : ${hierarchyType}`}
+                    label={`${t(I18N_KEYS.COMPONENTS.HCM_HIERARCHY_TYPE)} : ${t(hierarchyType)}`}
                     type="warning"
                     stroke={true}
                   />

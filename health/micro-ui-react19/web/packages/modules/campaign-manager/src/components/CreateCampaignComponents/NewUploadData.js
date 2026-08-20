@@ -1045,7 +1045,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         generatedResource?.fileStoreId || generatedResource?.fileStoreid;
       const customFileName = `${campaignName}_${t(
         "HCM_FILLED",
-      )}_Unified_Template`;
+      )}_${t(I18N_KEYS.COMPONENTS.HCM_MICROPLAN_TEMPLATE)}`;
       downloadExcelWithCustomName({
         fileStoreId,
         customName: customFileName,
@@ -1322,7 +1322,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         }
         // Download the file directly using fileStoreId
         setDownloadError(false);
-        const customFileName = parentId ? `${campaignName}_${t(I18N_KEYS.COMPONENTS.HCM_FILLED)}_Unified_Template` : `${campaignName}_Unified_Template`;
+        const customFileName = parentId ? `${campaignName}_${t(I18N_KEYS.COMPONENTS.HCM_FILLED)}_${t(I18N_KEYS.COMPONENTS.HCM_MICROPLAN_TEMPLATE)}` : `${campaignName}_${t(I18N_KEYS.COMPONENTS.HCM_MICROPLAN_TEMPLATE)}`;
         downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName });
         setDownloadedTemplates((prev) => ({
           ...prev,
@@ -1436,15 +1436,12 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           return;
         }
 
-        // If pending/inprogress, poll till timeout
+        // If pending/inprogress, show toast immediately and let user retry
         if (resource?.status === "pending" || resource?.status === "inprogress") {
-          resource = await pollUntilDone();
-          if (resource?.status === "completed") {
-            setLoader(false);
-            downloadFromResource(resource);
-            return;
-          }
-          // If still not completed after polling, treat as failed
+          setLoader(false);
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
+          return;
         }
 
         // If failed or no resource found, trigger generate

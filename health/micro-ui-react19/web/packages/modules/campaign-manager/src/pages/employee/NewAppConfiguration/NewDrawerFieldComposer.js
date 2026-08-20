@@ -1581,8 +1581,8 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
                 }
               }
 
-              // Enforce maxLength for text/textarea conditional fields
-              if ((cField.type === "text" || cField.type === "textarea") && cFieldMaxLength && newValue.length > cFieldMaxLength) {
+              // Enforce maxLength for text/textarea/number/numeric conditional fields
+              if ((cField.type === "text" || cField.type === "textarea" || cField.type === "number" || cField.type === "numeric") && cFieldMaxLength && newValue.length > cFieldMaxLength) {
                 return;
               }
 
@@ -1612,7 +1612,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
                 ...(cField.type === "number" && cFieldMax !== undefined && { max: cFieldMax }),
               },
               ...((isMobileNumberPrefix || isIntegerPrefixOrSuffix) && { maxLength: maxPrefixSuffixLength }),
-              ...((cField.type === "text" || cField.type === "textarea") && cFieldMaxLength && { maxLength: cFieldMaxLength }),
+              ...((cField.type === "text" || cField.type === "textarea" || cField.type === "number" || cField.type === "numeric") && cFieldMaxLength && { maxLength: cFieldMaxLength }),
             }}
           />
         </div>

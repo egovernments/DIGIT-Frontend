@@ -334,7 +334,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
                   cardIndex={actualCardIndex}
                   indexOfCard={index}
                   moveField={viewMode ? null : type !== "template" ? moveField : null}
-                  hideToggle={rest?.format === "panelCard" || (rest?.format === "button" && isOnlyButton)}
+                  hideToggle={rest?.format === "panelCard" || rest?.format === "labelPairList" || (rest?.format === "button" && isOnlyButton)}
                   toggleResetKey={toggleResetKey}
                   fields={c}
                   isTemplate={currentCard?.type === "template"}

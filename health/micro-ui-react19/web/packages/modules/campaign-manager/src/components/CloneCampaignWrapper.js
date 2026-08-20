@@ -61,9 +61,14 @@ const CloneCampaignWrapper = (props) => {
       setNameError(null);
     }
 
+    const minStartDate = new Date(Date.now() + 86400000).toISOString().split("T")[0];
+
     // Start date validation
     if (!startDate) {
       setStartError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
+      hasError = true;
+    } else if (startDate < minStartDate) {
+      setStartError({ message: "CAMPAIGN_START_DATE_ERROR" });
       hasError = true;
     } else {
       setStartError(null);
@@ -197,15 +202,17 @@ const CloneCampaignWrapper = (props) => {
                     value={startDate}
                     placeholder={t(I18N_KEYS.COMPONENTS.CAMPAIGN_START_DATE)}
                     populators={{
+                      newDateFormat: true,
                       fieldPairClassName: "clonecampaign-popup-field",
-                      validation: {
-                        min: new Date(Date.now() + 86400000).toISOString().split("T")[0],
-                      },
+                      min: new Date(Date.now() + 86400000).toISOString().split("T")[0],
                     }}
                     min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
                     onChange={(d) => {
-                      setStartDate(d || null);
-                      if (d) setStartError(null);
+                      if (!d) { setStartDate(null); return; }
+                      const localDate = new Date(d);
+                      localDate.setHours(0, 0, 0, 0);
+                      setStartDate(new Date(localDate.getTime() + 19800000).toISOString());
+                      setStartError(null);
                     }}
                   />
                   <FieldV1
@@ -216,15 +223,17 @@ const CloneCampaignWrapper = (props) => {
                     value={endDate}
                     placeholder={t(I18N_KEYS.COMPONENTS.CAMPAIGN_END_DATE)}
                     populators={{
+                      newDateFormat: true,
                       fieldPairClassName: "clonecampaign-popup-field",
-                      validation: {
-                        min: endMin,
-                      },
+                      min: endMin,
                     }}
                     min={endMin}
                     onChange={(d) => {
-                      setEndDate(d || null);
-                      if (d) setEndError(null);
+                      if (!d) { setEndDate(null); return; }
+                      const localDate = new Date(d);
+                      localDate.setHours(0, 0, 0, 0);
+                      setEndDate(new Date(localDate.getTime() + 19800000).toISOString());
+                      setEndError(null);
                     }}
                   />
                 </div>
