@@ -2389,7 +2389,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_REDOSEDETAILS",
-    "message": "Revisit Details",
+    "message": "Redose Details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
