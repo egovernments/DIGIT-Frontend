@@ -1,19 +1,19 @@
 [
   {
     "code": " DRUG_SE_CC",
-    "message": "Effet secondaire du m\u00e9dicament du cycle en cours",
+    "message": "Effet secondaire du médicament du cycle en cours",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": " DRUG_SE_PC",
-    "message": "Effet secondaire du m\u00e9dicament du cycle pr\u00e9c\u00e9dent",
+    "message": "Effet secondaire du médicament du cycle précédent",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": " FEVER",
-    "message": "Fi\u00e8vre",
+    "message": "Fièvre",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -37,43 +37,43 @@
   },
   {
     "code": "ADD_MEMBER",
-    "message": "D\u00e9tails du membre",
+    "message": "Détails du membre",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "ADMINISTERED_SUCCESS",
-    "message": "Livr\u00e9 avec succ\u00e8s",
+    "message": "Livré avec succès",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "ADMINISTRATION_SUCCESS",
-    "message": "Succ\u00e8s de la livraison",
+    "message": "Succès de la livraison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "AGE",
-    "message": "\u00c2ge",
+    "message": "Âge",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "AGE_OF_BENEFICIARY",
-    "message": "\u00c2ge",
+    "message": "Âge",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "AGE_VALIDATION",
-    "message": "Veuillez saisir un \u00e2ge compris entre 3 mois et 150 ans",
+    "message": "Veuillez saisir un âge compris entre 3 mois et 150 ans",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "AGE_VALIDATION_ADDMEMBER",
-    "message": "L'\u00e2ge doit \u00eatre compris entre 3 mois et 150 ans",
+    "message": "L'âge doit être compris entre 3 mois et 150 ans",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -85,7 +85,7 @@
   },
   {
     "code": "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SCREEN_HEADING",
-    "message": "Veuillez v\u00e9rifier que vous avez effectu\u00e9 les op\u00e9rations suivantes",
+    "message": "Veuillez vérifier que vous avez effectué les opérations suivantes",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -97,19 +97,19 @@
   },
   {
     "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_GIVE_TABLET",
-    "message": "Donner 2 comprim\u00e9s AQ au soignant",
+    "message": "Donner 2 comprimés AQ au soignant",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_SPAQ",
-    "message": "Compte tenu d'une discussion de sant\u00e9 sur l'utilisation du SPAQ aux jours 2 et 3",
+    "message": "Compte tenu d'une discussion de santé sur l'utilisation du SPAQ aux jours 2 et 3",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_WRITE_CODE",
-    "message": "Avez-vous inscrit cette pi\u00e8ce d'identit\u00e9 sur la carte enfant (A utiliser au cycle suivant)",
+    "message": "Avez-vous inscrit cette pièce d'identité sur la carte enfant (A utiliser au cycle suivant)",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -121,7 +121,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_ALERT_DESCRIPTION",
-    "message": "En fonction des r\u00e9ponses, vous allez \u00e0 \u00ab\u00a0{value}\u00a0\u00bb. \u00cates-vous s\u00fbr de vouloir continuer\u00a0?",
+    "message": "En fonction des réponses, vous allez à « {value} ». Êtes-vous sûr de vouloir continuer ?",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -139,25 +139,25 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_ALERT_TITLE",
-    "message": "Pr\u00eat \u00e0 soumettre ?",
+    "message": "Prêt à soumettre ?",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_INELIGIBLE_ALERT_DESCRIPTION",
-    "message": "L'utilisateur sera redirig\u00e9 vers le parcours des personnes non \u00e9ligibles",
+    "message": "L'utilisateur sera redirigé vers le parcours des personnes non éligibles",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_INELIGIBLE_ALERT_TITLE",
-    "message": "Pr\u00eat \u00e0 soumettre ?",
+    "message": "Prêt à soumettre ?",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_DESCRIPTION",
-    "message": "Demandez \u00e0 la personne qui s'occupe de vous si l'enfant souffre d'une maladie ou d'un inconfort g\u00e9n\u00e9ral, comme une faiblesse, de la diarrh\u00e9e, des vomissements, des difficult\u00e9s respiratoires ou d'autres probl\u00e8mes de sant\u00e9.",
+    "message": "Demandez à la personne qui s'occupe de vous si l'enfant souffre d'une maladie ou d'un inconfort général, comme une faiblesse, de la diarrhée, des vomissements, des difficultés respiratoires ou d'autres problèmes de santé.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -175,13 +175,13 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_DESCRIPTION",
-    "message": "V\u00e9rifiez si l'enfant se sent actuellement inhabituellement chaud au toucher ou si la personne qui s'occupe de lui a mesur\u00e9 une temp\u00e9rature \u00e9lev\u00e9e au cours des derni\u00e8res 24 heures. Si possible, mesurez la temp\u00e9rature de l\u2019enfant avec un thermom\u00e8tre.",
+    "message": "Vérifiez si l'enfant se sent actuellement inhabituellement chaud au toucher ou si la personne qui s'occupe de lui a mesuré une température élevée au cours des dernières 24 heures. Si possible, mesurez la température de l’enfant avec un thermomètre.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_LABEL",
-    "message": "L'enfant a-t-il de la fi\u00e8vre ?",
+    "message": "L'enfant a-t-il de la fièvre ?",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -193,13 +193,13 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_DESCRIPTION",
-    "message": "Demandez au soignant si l'enfant a pr\u00e9sent\u00e9 des sympt\u00f4mes inhabituels apr\u00e8s avoir pris SPAQ au cours du cycle pr\u00e9c\u00e9dent, tels qu'une \u00e9ruption cutan\u00e9e, des vomissements, de la diarrh\u00e9e ou tout signe de r\u00e9action allergique.",
+    "message": "Demandez au soignant si l'enfant a présenté des symptômes inhabituels après avoir pris SPAQ au cours du cycle précédent, tels qu'une éruption cutanée, des vomissements, de la diarrhée ou tout signe de réaction allergique.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL",
-    "message": "Y a-t-il des effets secondaires avec le SPAQ administr\u00e9 lors du dernier cycle\u00a0?",
+    "message": "Y a-t-il des effets secondaires avec le SPAQ administré lors du dernier cycle ?",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -211,13 +211,13 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_DESCRIPTION",
-    "message": "Confirmez si l'enfant a re\u00e7u un m\u00e9dicament contenant de la sulfadoxine-pyrim\u00e9thamine (SP) ou du cotrimoxazole (CTX) au cours des 28 derniers jours, que ce soit pour la pr\u00e9vention ou le traitement de maladies.",
+    "message": "Confirmez si l'enfant a reçu un médicament contenant de la sulfadoxine-pyriméthamine (SP) ou du cotrimoxazole (CTX) au cours des 28 derniers jours, que ce soit pour la prévention ou le traitement de maladies.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL",
-    "message": "L'enfant a pris des m\u00e9dicaments contenant du SP ou du CTX au cours des 28 derniers jours\u00a0?",
+    "message": "L'enfant a pris des médicaments contenant du SP ou du CTX au cours des 28 derniers jours ?",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -229,25 +229,25 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_REFERRAL_ALERT_DESCRIPTION",
-    "message": "L'utilisateur sera redirig\u00e9 vers le parcours d'orientation",
+    "message": "L'utilisateur sera redirigé vers le parcours d'orientation",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_REFERRAL_ALERT_TITLE",
-    "message": "Pr\u00eat \u00e0 soumettre ?",
+    "message": "Prêt à soumettre ?",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_DESCRIPTION",
-    "message": "L'utilisateur sera redirig\u00e9 vers le parcours d'administration",
+    "message": "L'utilisateur sera redirigé vers le parcours d'administration",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_TITLE",
-    "message": "Pr\u00eat \u00e0 soumettre ?",
+    "message": "Prêt à soumettre ?",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -259,13 +259,13 @@
   },
   {
     "code": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_HEADING",
-    "message": "\u00c9valuation de l'\u00e9ligibilit\u00e9",
+    "message": "Évaluation de l'éligibilité",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_HOUSEDETAILS_SCREEN_HEADING",
-    "message": "D\u00e9tails du m\u00e9nage",
+    "message": "Détails du ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -295,25 +295,25 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION",
-    "message": "Entrez les d\u00e9tails de chaque individu du m\u00e9nage.",
+    "message": "Entrez les détails de chaque individu du ménage.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember",
-    "message": "Entrez les d\u00e9tails de chaque individu du m\u00e9nage.",
+    "message": "Entrez les détails de chaque individu du ménage.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
-    "message": "D\u00e9tails du b\u00e9n\u00e9ficiaire",
+    "message": "Détails du bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING_addmember",
-    "message": "D\u00e9tails du membre",
+    "message": "Détails du membre",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -337,13 +337,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText",
-    "message": "S\u00e9lectionnez la date de naissance dans le calendrier.",
+    "message": "Sélectionnez la date de naissance dans le calendrier.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText_addmember",
-    "message": "S\u00e9lectionnez la date de naissance dans le calendrier.",
+    "message": "Sélectionnez la date de naissance dans le calendrier.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -367,13 +367,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip",
-    "message": "Utilis\u00e9 pour l\u2019\u00e9ligibilit\u00e9 au programme en fonction de l\u2019\u00e2ge.",
+    "message": "Utilisé pour l’éligibilité au programme en fonction de l’âge.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip_addmember",
-    "message": "Utilis\u00e9 pour l\u2019\u00e9ligibilit\u00e9 au programme en fonction de l\u2019\u00e2ge.",
+    "message": "Utilisé pour l’éligibilité au programme en fonction de l’âge.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -403,13 +403,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message",
-    "message": "La longueur doit \u00eatre comprise entre 2 et 200\u00a0caract\u00e8res",
+    "message": "La longueur doit être comprise entre 2 et 200 caractères",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message_addmember",
-    "message": "Le nom de famille doit comporter au moins 2\u00a0caract\u00e8res",
+    "message": "Le nom de famille doit comporter au moins 2 caractères",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -433,7 +433,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
-    "message": "La longueur doit \u00eatre comprise entre 2 et 200\u00a0caract\u00e8res",
+    "message": "La longueur doit être comprise entre 2 et 200 caractères",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -451,13 +451,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
-    "message": "D\u00e9tails d'identification",
+    "message": "Détails d'identification",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers_addmember",
-    "message": "D\u00e9tails d'identification",
+    "message": "Détails d'identification",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -481,31 +481,31 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily_mandatory_message",
-    "message": "La s\u00e9lection du chef de m\u00e9nage est obligatoire",
+    "message": "La sélection du chef de ménage est obligatoire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual",
-    "message": "Pr\u00e9nom",
+    "message": "Prénom",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_addmember",
-    "message": "Pr\u00e9nom",
+    "message": "Prénom",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText",
-    "message": "Entrez le nom l\u00e9gal complet de la personne.",
+    "message": "Entrez le nom légal complet de la personne.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText_addmember",
-    "message": "Entrez le nom l\u00e9gal complet de la personne.",
+    "message": "Entrez le nom légal complet de la personne.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -517,85 +517,85 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message",
-    "message": "Le pr\u00e9nom est obligatoire",
+    "message": "Le prénom est obligatoire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message_addmember",
-    "message": "Le pr\u00e9nom est obligatoire",
+    "message": "Le prénom est obligatoire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message",
-    "message": "Le pr\u00e9nom doit \u00eatre compris entre 2 et 200 caract\u00e8res",
+    "message": "Le prénom doit être compris entre 2 et 200 caractères",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message_addmember",
-    "message": "Le pr\u00e9nom doit \u00eatre compris entre 2 et 200 caract\u00e8res",
+    "message": "Le prénom doit être compris entre 2 et 200 caractères",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_min_message",
-    "message": "La taille doit \u00eatre comprise entre 2 et 200\u00a0caract\u00e8res",
+    "message": "La taille doit être comprise entre 2 et 200 caractères",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_min_message_addmember",
-    "message": "Le pr\u00e9nom doit \u00eatre compris entre 2 et 200 caract\u00e8res",
+    "message": "Le prénom doit être compris entre 2 et 200 caractères",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_tooltip",
-    "message": "Le nom doit correspondre aux documents d\u2019identit\u00e9 officiels.",
+    "message": "Le nom doit correspondre aux documents d’identité officiels.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone",
-    "message": "Num\u00e9ro de portable",
+    "message": "Numéro de portable",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_addmember",
-    "message": "Num\u00e9ro de portable",
+    "message": "Numéro de portable",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText",
-    "message": "Entrez un num\u00e9ro de mobile valide.",
+    "message": "Entrez un numéro de mobile valide.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText_addmember",
-    "message": "Entrez un num\u00e9ro de mobile valide.",
+    "message": "Entrez un numéro de mobile valide.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_regex",
-    "message": "Seuls les chiffres sont autoris\u00e9s.",
+    "message": "Seuls les chiffres sont autorisés.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip",
-    "message": "Sera utilis\u00e9 pour la communication et la v\u00e9rification bas\u00e9e sur OTP.",
+    "message": "Sera utilisé pour la communication et la vérification basée sur OTP.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip_addmember",
-    "message": "Sera utilis\u00e9 pour la communication et la v\u00e9rification bas\u00e9e sur OTP.",
+    "message": "Sera utilisé pour la communication et la vérification basée sur OTP.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -655,13 +655,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_SCREEN_DESCRIPTION",
-    "message": "Veuillez fournir l'adresse actuelle et les d\u00e9tails de localisation du b\u00e9n\u00e9ficiaire.",
+    "message": "Veuillez fournir l'adresse actuelle et les détails de localisation du bénéficiaire.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_SCREEN_HEADING",
-    "message": "Localisation du b\u00e9n\u00e9ficiaire",
+    "message": "Localisation du bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -673,13 +673,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_helpText",
-    "message": "Indiquez l'adresse postale principale ou le num\u00e9ro de la maison.",
+    "message": "Indiquez l'adresse postale principale ou le numéro de la maison.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message",
-    "message": "La ligne d'adresse 1 doit contenir au moins 2\u00a0caract\u00e8res",
+    "message": "La ligne d'adresse 1 doit contenir au moins 2 caractères",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -691,13 +691,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_helpText",
-    "message": "Informations d'adresse suppl\u00e9mentaires, comme le nom du bloc ou de l'appartement.",
+    "message": "Informations d'adresse supplémentaires, comme le nom du bloc ou de l'appartement.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message",
-    "message": "La ligne d'adresse 2 doit contenir au moins 2\u00a0caract\u00e8res",
+    "message": "La ligne d'adresse 2 doit contenir au moins 2 caractères",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -709,7 +709,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_helpText",
-    "message": "Entrez la r\u00e9gion ou le nom du quartier o\u00f9 r\u00e9side le b\u00e9n\u00e9ficiaire.",
+    "message": "Entrez la région ou le nom du quartier où réside le bénéficiaire.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -721,25 +721,25 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark",
-    "message": "Point de rep\u00e8re",
+    "message": "Point de repère",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_helpText",
-    "message": "Mentionnez un point de rep\u00e8re \u00e0 proximit\u00e9 pour vous aider \u00e0 localiser l'adresse.",
+    "message": "Mentionnez un point de repère à proximité pour vous aider à localiser l'adresse.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message",
-    "message": "Le point de rep\u00e8re doit comporter au moins 2\u00a0caract\u00e8res",
+    "message": "Le point de repère doit comporter au moins 2 caractères",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong",
-    "message": "Coordonn\u00e9es g\u00e9ographiques",
+    "message": "Coordonnées géographiques",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -763,7 +763,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode_helpText",
-    "message": "Entrez le code postal de la r\u00e9gion (Code PIN)",
+    "message": "Entrez le code postal de la région (Code PIN)",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -775,13 +775,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_DESCRIPTION",
-    "message": "Les donn\u00e9es ont \u00e9t\u00e9 enregistr\u00e9es avec succ\u00e8s. La synchronisation en arri\u00e8re-plan va bient\u00f4t commencer",
+    "message": "Les données ont été enregistrées avec succès. La synchronisation en arrière-plan va bientôt commencer",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_PRIMARY_LABEL",
-    "message": "Afficher les d\u00e9tails du b\u00e9n\u00e9ficiaire",
+    "message": "Afficher les détails du bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -793,7 +793,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_TITLE",
-    "message": "Donn\u00e9es enregistr\u00e9es avec succ\u00e8s\u00a0!",
+    "message": "Données enregistrées avec succès !",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -805,13 +805,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_DESCRIPTION",
-    "message": "Capturez les d\u00e9tails de l'emplacement de la maison",
+    "message": "Capturez les détails de l'emplacement de la maison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",
-    "message": "Localisation du b\u00e9n\u00e9ficiaire",
+    "message": "Localisation du bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -835,37 +835,37 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
-    "message": "Entrez des d\u00e9tails d'adresse suppl\u00e9mentaires",
+    "message": "Entrez des détails d'adresse supplémentaires",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea",
-    "message": "Zone d'habitation o\u00f9 se situe la maison",
+    "message": "Zone d'habitation où se situe la maison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_helpText",
-    "message": "S\u00e9lectionnez la zone administrative o\u00f9 se situe le m\u00e9nage",
+    "message": "Sélectionnez la zone administrative où se situe le ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark",
-    "message": "Point de rep\u00e8re",
+    "message": "Point de repère",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark_helpText",
-    "message": "Point de rep\u00e8re \u00e0 proximit\u00e9 de la maison",
+    "message": "Point de repère à proximité de la maison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_latlong",
-    "message": "Coordonn\u00e9es g\u00e9ographiques",
+    "message": "Coordonnées géographiques",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -889,7 +889,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_onlynumber",
-    "message": "Seuls les chiffres sont autoris\u00e9s.",
+    "message": "Seuls les chiffres sont autorisés.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -907,13 +907,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION",
-    "message": "Capturez les d\u00e9tails des ressources \u00e0 livrer",
+    "message": "Capturez les détails des ressources à livrer",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
-    "message": "D\u00e9tails de livraison",
+    "message": "Détails de livraison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -931,7 +931,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_DELIVERYDETAILS_label_scanner",
-    "message": "Livraison de num\u00e9risation",
+    "message": "Livraison de numérisation",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -967,13 +967,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_height_Max_message",
-    "message": "La hauteur ne peut pas d\u00e9passer 999 cm.",
+    "message": "La hauteur ne peut pas dépasser 999 cm.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_height_Min_message",
-    "message": "La hauteur ne peut pas \u00eatre inf\u00e9rieure ou \u00e9gale \u00e0 0.",
+    "message": "La hauteur ne peut pas être inférieure ou égale à 0.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -997,13 +997,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION",
-    "message": "Entrez la taille de la famille, la date d'inscription et les donn\u00e9es d\u00e9mographiques.",
+    "message": "Entrez la taille de la famille, la date d'inscription et les données démographiques.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
-    "message": "D\u00e9tails du m\u00e9nage",
+    "message": "Détails du ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1027,7 +1027,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount",
-    "message": "Nombre total de membres du m\u00e9nage",
+    "message": "Nombre total de membres du ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1039,13 +1039,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_max_message",
-    "message": "Le nombre de membres doit \u00eatre compris entre 1 et 10",
+    "message": "Le nombre de membres doit être compris entre 1 et 10",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_min_message",
-    "message": "Le nombre total de membres du m\u00e9nage ne peut pas \u00eatre inf\u00e9rieur \u00e0 1",
+    "message": "Le nombre total de membres du ménage ne peut pas être inférieur à 1",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1063,7 +1063,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_DELIVERY_DETAILS_LABEL",
-    "message": "D\u00e9tails de livraison",
+    "message": "Détails de livraison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1087,25 +1087,25 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_SCREEN_DESCRIPTION",
-    "message": "Aper\u00e7u des membres du m\u00e9nage et de l'\u00e9tat de livraison",
+    "message": "Aperçu des membres du ménage et de l'état de livraison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_SCREEN_HEADING",
-    "message": "Aper\u00e7u du m\u00e9nage",
+    "message": "Aperçu du ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_NO_OF_ROOMS",
-    "message": "Nombre de pi\u00e8ces dans la maison",
+    "message": "Nombre de pièces dans la maison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BAR",
-    "message": "Recherche par chef de m\u00e9nage",
+    "message": "Recherche par chef de ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1123,7 +1123,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BY_PROXIMITY",
-    "message": "Rechercher des m\u00e9nages \u00e0 proximit\u00e9",
+    "message": "Rechercher des ménages à proximité",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1141,7 +1141,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_REGISTRATION_LABEL",
-    "message": "Enregistrer un nouveau m\u00e9nage",
+    "message": "Enregistrer un nouveau ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1159,7 +1159,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_HEADING",
-    "message": "Rechercher un b\u00e9n\u00e9ficiaire",
+    "message": "Rechercher un bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1171,7 +1171,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_onlynumber_validation",
-    "message": "Veuillez entrer un num\u00e9ro de mobile valide",
+    "message": "Veuillez entrer un numéro de mobile valide",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1189,7 +1189,7 @@
   },
   {
     "code": "APPONE_rEGISTRATION_minAge_message_dobPicker",
-    "message": "Le chef de famille doit \u00eatre \u00e2g\u00e9 d'au moins 18 ans",
+    "message": "Le chef de famille doit être âgé d'au moins 18 ans",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1201,13 +1201,13 @@
   },
   {
     "code": "APP_CONFIG_FLOW_SEARCHBENEFICIARY",
-    "message": "Rechercher un b\u00e9n\u00e9ficiaire",
+    "message": "Rechercher un bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_PAGE_SEARCHBENEFICIARY",
-    "message": "Rechercher un b\u00e9n\u00e9ficiaire",
+    "message": "Rechercher un bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1219,7 +1219,7 @@
   },
   {
     "code": "Add Member",
-    "message": "D\u00e9tails du membre",
+    "message": "Détails du membre",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1231,7 +1231,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "B\u00e9n\u00e9ficiaire",
+    "message": "Bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1255,7 +1255,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "B\u00e9n\u00e9ficiaire absent",
+    "message": "Bénéficiaire absent",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1267,13 +1267,13 @@
   },
   {
     "code": "BENEFICIARY_DETAILS_DESC",
-    "message": "Aper\u00e7u de la livraison du b\u00e9n\u00e9ficiaire",
+    "message": "Aperçu de la livraison du bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_DETAILS_HEADING",
-    "message": "D\u00e9tails du b\u00e9n\u00e9ficiaire",
+    "message": "Détails du bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1285,31 +1285,31 @@
   },
   {
     "code": "BENEFICIARY_NOT_ELIGIBLE",
-    "message": "Le b\u00e9n\u00e9ficiaire ne r\u00e9pond pas aux crit\u00e8res d'\u00e9ligibilit\u00e9",
+    "message": "Le bénéficiaire ne répond pas aux critères d'éligibilité",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "B\u00e9n\u00e9ficiaire r\u00e9f\u00e9r\u00e9",
+    "message": "Bénéficiaire référé",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "B\u00e9n\u00e9ficiaire refus\u00e9",
+    "message": "Bénéficiaire refusé",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "Beneficiary Referred",
-    "message": "B\u00e9n\u00e9ficiaire r\u00e9f\u00e9r\u00e9",
+    "message": "Bénéficiaire référé",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "Beneficiary details",
-    "message": "D\u00e9tails du b\u00e9n\u00e9ficiaire",
+    "message": "Détails du bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1327,7 +1327,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "M\u00e9nage ferm\u00e9",
+    "message": "Ménage fermé",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1345,13 +1345,13 @@
   },
   {
     "code": "COMPLETED_ON",
-    "message": "Termin\u00e9 le",
+    "message": "Terminé le",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-    "message": "Nous n\u2019avons pas pu retrouver ce b\u00e9n\u00e9ficiaire dans les dossiers. Vous pouvez l'ajouter en tant que nouveau b\u00e9n\u00e9ficiaire.",
+    "message": "Nous n’avons pas pu retrouver ce bénéficiaire dans les dossiers. Vous pouvez l'ajouter en tant que nouveau bénéficiaire.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1369,7 +1369,7 @@
   },
   {
     "code": "Cycle",
-    "message": "Faire du v\u00e9lo",
+    "message": "Faire du vélo",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1381,13 +1381,13 @@
   },
   {
     "code": "DEFAULT",
-    "message": "D\u00e9faut",
+    "message": "Défaut",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "DELIVERY",
-    "message": "R\u00e9aliser une intervention",
+    "message": "Réaliser une intervention",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1405,13 +1405,13 @@
   },
   {
     "code": "DELIVERY_SUCCESSFUL_PANEL_CARD_DESC",
-    "message": "Les ressources ont \u00e9t\u00e9 fournies avec succ\u00e8s.",
+    "message": "Les ressources ont été fournies avec succès.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "DELIVERY_SUCCESSFUL_PANEL_CARD_HEADING",
-    "message": "Livraison r\u00e9ussie",
+    "message": "Livraison réussie",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1423,31 +1423,31 @@
   },
   {
     "code": "DRUG_SE_CC",
-    "message": "Effet secondaire du m\u00e9dicament du cycle en cours",
+    "message": "Effet secondaire du médicament du cycle en cours",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "DRUG_SE_PC",
-    "message": "Effet secondaire du m\u00e9dicament du cycle pr\u00e9c\u00e9dent",
+    "message": "Effet secondaire du médicament du cycle précédent",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "DataIssues",
-    "message": "Probl\u00e8mes de donn\u00e9es",
+    "message": "Problèmes de données",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "Deliver Intervention",
-    "message": "R\u00e9aliser une intervention",
+    "message": "Réaliser une intervention",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "ELIGIBILITY_CHECKLIST",
-    "message": "Liste de contr\u00f4le d'\u00e9ligibilit\u00e9",
+    "message": "Liste de contrôle d'éligibilité",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1459,7 +1459,7 @@
   },
   {
     "code": "FEVER",
-    "message": "Fi\u00e8vre",
+    "message": "Fièvre",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1555,13 +1555,13 @@
   },
   {
     "code": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
-    "message": "Enregistrer le b\u00e9n\u00e9ficiaire",
+    "message": "Enregistrer le bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
-    "message": "Quelle est la raison de la r\u00e9f\u00e9rence ?",
+    "message": "Quelle est la raison de la référence ?",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1573,7 +1573,7 @@
   },
   {
     "code": "HOUSEHOLD",
-    "message": "D\u00e9tails du m\u00e9nage",
+    "message": "Détails du ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1591,13 +1591,13 @@
   },
   {
     "code": "HOUSEHOLD_LOCALITY",
-    "message": "Zone de r\u00e8glement",
+    "message": "Zone de règlement",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "Household",
-    "message": "D\u00e9tails du m\u00e9nage",
+    "message": "Détails du ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1609,7 +1609,7 @@
   },
   {
     "code": "Household.locality",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1633,13 +1633,13 @@
   },
   {
     "code": "HouseholdClientReferenceId",
-    "message": "ID de r\u00e9f\u00e9rence du m\u00e9nage",
+    "message": "ID de référence du ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "ID_NUMBER",
-    "message": "Num\u00e9ro d'identification",
+    "message": "Numéro d'identification",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1651,7 +1651,7 @@
   },
   {
     "code": "INELIGIBLE",
-    "message": "In\u00e9ligible",
+    "message": "Inéligible",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1675,7 +1675,7 @@
   },
   {
     "code": "IS_CHILD_WITH_FEVER",
-    "message": "L'enfant a-t-il de la fi\u00e8vre\u00a0?",
+    "message": "L'enfant a-t-il de la fièvre ?",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1699,7 +1699,7 @@
   },
   {
     "code": "Individual.identifierId",
-    "message": "Num\u00e9ro d'identification",
+    "message": "Numéro d'identification",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1711,13 +1711,13 @@
   },
   {
     "code": "Individual.locality",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "Individual.mobileNumber",
-    "message": "Num\u00e9ro de portable",
+    "message": "Numéro de portable",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1729,25 +1729,25 @@
   },
   {
     "code": "Ineligible",
-    "message": "In\u00e9ligible",
+    "message": "Inéligible",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "MALE",
-    "message": "M\u00e2le",
+    "message": "Mâle",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "MB_ONLY_NUMBER",
-    "message": "Le num\u00e9ro de mobile ne doit contenir que des chiffres",
+    "message": "Le numéro de mobile ne doit contenir que des chiffres",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "MB_ONLY_NUMBERS",
-    "message": "Le num\u00e9ro de mobile ne doit contenir que des chiffres",
+    "message": "Le numéro de mobile ne doit contenir que des chiffres",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1759,25 +1759,25 @@
   },
   {
     "code": "METAL",
-    "message": "M\u00e9tal",
+    "message": "Métal",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "MOBILE_LENGTH_10_DIGIT_ERROR",
-    "message": "Le num\u00e9ro de portable doit contenir exactement 10 chiffres",
+    "message": "Le numéro de portable doit contenir exactement 10 chiffres",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "MOBILE_LENGTH_10_DIGIT_ERROR_ADDMEMBER",
-    "message": "Le num\u00e9ro de portable doit contenir exactement 10 chiffres",
+    "message": "Le numéro de portable doit contenir exactement 10 chiffres",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "MOBILE_NUMBER",
-    "message": "Num\u00e9ro de portable",
+    "message": "Numéro de portable",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1789,7 +1789,7 @@
   },
   {
     "code": "NEAR_BY_WIFI_DEVICES",
-    "message": "Statut d'autorisation de partage \u00e0 proximit\u00e9",
+    "message": "Statut d'autorisation de partage à proximité",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1813,25 +1813,25 @@
   },
   {
     "code": "NOT_ADMINISTERED",
-    "message": "Non livr\u00e9",
+    "message": "Non livré",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "NOT_ELIGIBLE",
-    "message": "Non \u00e9ligible",
+    "message": "Non éligible",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "NOT_REGISTERED",
-    "message": "Non enregistr\u00e9",
+    "message": "Non enregistré",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "NOT_VISITED",
-    "message": "Non livr\u00e9",
+    "message": "Non livré",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1867,7 +1867,7 @@
   },
   {
     "code": "PERFORMANCEISSUE",
-    "message": "Probl\u00e8mes de performances",
+    "message": "Problèmes de performances",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1897,31 +1897,31 @@
   },
   {
     "code": "PROXIMITY_RADIUS_ERROR_MESSAGE",
-    "message": "Veuillez saisir un rayon de proximit\u00e9 valide",
+    "message": "Veuillez saisir un rayon de proximité valide",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "PROXIMITY_SEARCH",
-    "message": "M\u00e9nages \u00e0 proximit\u00e9",
+    "message": "Ménages à proximité",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "PROXIMITY_SEARCH_REGISTRATION",
-    "message": "M\u00e9nages \u00e0 proximit\u00e9",
+    "message": "Ménages à proximité",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "PerformanceIssue",
-    "message": "Probl\u00e8mes de performances",
+    "message": "Problèmes de performances",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "ProjectBeneficiaryClientReferenceId",
-    "message": "Identifiant de r\u00e9f\u00e9rence du b\u00e9n\u00e9ficiaire",
+    "message": "Identifiant de référence du bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1993,7 +1993,7 @@
   },
   {
     "code": "RECORD_DELIVERY_PRIMARY_LABEL",
-    "message": "Enregistrer les donn\u00e9es",
+    "message": "Enregistrer les données",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2011,19 +2011,19 @@
   },
   {
     "code": "REFERRAL_SUCCESSFUL_PANEL_CARD_DESC",
-    "message": "Les donn\u00e9es de r\u00e9f\u00e9rence ont \u00e9t\u00e9 enregistr\u00e9es avec succ\u00e8s.",
+    "message": "Les données de référence ont été enregistrées avec succès.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFERRAL_SUCCESSFUL_PANEL_CARD_HEADING",
-    "message": "Parrainage enregistr\u00e9 avec succ\u00e8s",
+    "message": "Parrainage enregistré avec succès",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFERRAL_VIEW_HOUSEHOLD_DETAILS",
-    "message": "Afficher les d\u00e9tails du m\u00e9nage",
+    "message": "Afficher les détails du ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2035,31 +2035,31 @@
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
-    "message": "Unit\u00e9 administrative",
+    "message": "Unité administrative",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_DATE_OF_REFERRAL",
-    "message": "Date de r\u00e9f\u00e9rence",
+    "message": "Date de référence",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_REASON_FOR_REFERRAL",
-    "message": "Quelle est la raison de la r\u00e9f\u00e9rence ?",
+    "message": "Quelle est la raison de la référence ?",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_REFERRED_BY",
-    "message": "R\u00e9f\u00e9r\u00e9 par",
+    "message": "Référé par",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_REFERRED_TO",
-    "message": "\u00c9tablissement de sant\u00e9",
+    "message": "Établissement de santé",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2077,7 +2077,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_SCREEN_HEADING",
-    "message": "R\u00e9f\u00e9rer le b\u00e9n\u00e9ficiaire",
+    "message": "Référer le bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2089,13 +2089,13 @@
   },
   {
     "code": "REGISTER_BENEFICIARY",
-    "message": "Inscrire le b\u00e9n\u00e9ficiaire",
+    "message": "Inscrire le bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATIONFLOW_ISPREGNANT",
-    "message": "\u00cates-vous enceinte?",
+    "message": "Êtes-vous enceinte?",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2107,7 +2107,7 @@
   },
   {
     "code": "REGISTRATIONFLOW_beneficiaryDetail_lengthmessage_phone",
-    "message": "Veuillez saisir un num\u00e9ro de t\u00e9l\u00e9phone \u00e0 9 chiffres",
+    "message": "Veuillez saisir un numéro de téléphone à 9 chiffres",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2119,7 +2119,7 @@
   },
   {
     "code": "REGISTRATION_ADD_MEMBER_MESSAGE",
-    "message": "Impossible de charger le formulaire d'inscription des membres. Veuillez r\u00e9essayer.",
+    "message": "Impossible de charger le formulaire d'inscription des membres. Veuillez réessayer.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2137,7 +2137,7 @@
   },
   {
     "code": "REGISTRATION_ADD_MEMBER_gender_ERROR",
-    "message": "Veuillez s\u00e9lectionner un sexe",
+    "message": "Veuillez sélectionner un sexe",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2155,43 +2155,43 @@
   },
   {
     "code": "REGISTRATION_ADD_MEMBER_phone_ERROR",
-    "message": "Veuillez entrer un num\u00e9ro de t\u00e9l\u00e9phone valide",
+    "message": "Veuillez entrer un numéro de téléphone valide",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_ADMINISTRATION_FAILED",
-    "message": "\u00c9chec de la livraison",
+    "message": "Échec de la livraison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_ADMINISTRATION_SUCCESS",
-    "message": "Succ\u00e8s de la livraison",
+    "message": "Succès de la livraison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_BENEFICIARYDETAILS_MESSAGE",
-    "message": "Impossible de charger les d\u00e9tails du b\u00e9n\u00e9ficiaire. Veuillez r\u00e9essayer.",
+    "message": "Impossible de charger les détails du bénéficiaire. Veuillez réessayer.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_BENEFICIARYLOCATION_MESSAGE",
-    "message": "Impossible de charger le formulaire de localisation du b\u00e9n\u00e9ficiaire. Veuillez r\u00e9essayer.",
+    "message": "Impossible de charger le formulaire de localisation du bénéficiaire. Veuillez réessayer.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_BENEFICIARY_REFERRED",
-    "message": "B\u00e9n\u00e9ficiaire r\u00e9f\u00e9r\u00e9",
+    "message": "Bénéficiaire référé",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_CLOSED_HOUSEHOLD",
-    "message": "M\u00e9nage ferm\u00e9",
+    "message": "Ménage fermé",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2203,7 +2203,7 @@
   },
   {
     "code": "REGISTRATION_CURRENT_DOSE_STATUS_ADMINISTERED",
-    "message": "Livr\u00e9",
+    "message": "Livré",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2221,19 +2221,19 @@
   },
   {
     "code": "REGISTRATION_DELIVERYDETAILS_MESSAGE",
-    "message": "Impossible de charger les d\u00e9tails de la livraison. Veuillez r\u00e9essayer.",
+    "message": "Impossible de charger les détails de la livraison. Veuillez réessayer.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_DELIVERYSUCCESS_MESSAGE",
-    "message": "Impossible de naviguer vers le succ\u00e8s de la livraison. Veuillez r\u00e9essayer.",
+    "message": "Impossible de naviguer vers le succès de la livraison. Veuillez réessayer.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_DELIVERY_MESSAGE",
-    "message": "Impossible de charger le formulaire de livraison. Veuillez r\u00e9essayer.",
+    "message": "Impossible de charger le formulaire de livraison. Veuillez réessayer.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2251,37 +2251,37 @@
   },
   {
     "code": "REGISTRATION_HIDE_PAST_CYCLES",
-    "message": "Masquer les cycles pass\u00e9s",
+    "message": "Masquer les cycles passés",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_HOUSEHOLDDETAILS_MESSAGE",
-    "message": "Impossible de charger le formulaire de d\u00e9tails du m\u00e9nage. Veuillez r\u00e9essayer.",
+    "message": "Impossible de charger le formulaire de détails du ménage. Veuillez réessayer.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_HOUSEHOLDOVERVIEW_MESSAGE",
-    "message": "Impossible d'acc\u00e9der \u00e0 l'aper\u00e7u du foyer. Veuillez r\u00e9essayer.",
+    "message": "Impossible d'accéder à l'aperçu du foyer. Veuillez réessayer.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_MESSAGE",
-    "message": "Impossible de charger le formulaire d'enregistrement du m\u00e9nage. Veuillez r\u00e9essayer.",
+    "message": "Impossible de charger le formulaire d'enregistrement du ménage. Veuillez réessayer.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_OVERVIEW_DESC",
-    "message": "Aper\u00e7u du m\u00e9nage",
+    "message": "Aperçu du ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_OVERVIEW_HEADING",
-    "message": "Aper\u00e7u du m\u00e9nage",
+    "message": "Aperçu du ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2323,13 +2323,13 @@
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_isHeadOfFamily_ERROR",
-    "message": "La s\u00e9lection du chef de famille n'est pas valide",
+    "message": "La sélection du chef de famille n'est pas valide",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_landmark_ERROR",
-    "message": "Le point de rep\u00e8re n'est pas valide",
+    "message": "Le point de repère n'est pas valide",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2353,7 +2353,7 @@
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_phone_ERROR",
-    "message": "Le num\u00e9ro de t\u00e9l\u00e9phone n'est pas valide",
+    "message": "Le numéro de téléphone n'est pas valide",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2365,49 +2365,49 @@
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_pincode_MAX_ERROR",
-    "message": "Le code PIN d\u00e9passe la valeur maximale autoris\u00e9e",
+    "message": "Le code PIN dépasse la valeur maximale autorisée",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_pincode_MIN_ERROR",
-    "message": "Le code PIN ne r\u00e9pond pas \u00e0 la valeur minimale requise",
+    "message": "Le code PIN ne répond pas à la valeur minimale requise",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_INELIGIBLE",
-    "message": "In\u00e9ligible",
+    "message": "Inéligible",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_NOT_ADMINISTERED",
-    "message": "Non livr\u00e9",
+    "message": "Non livré",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_NOT_REGISTERD",
-    "message": "Non enregistr\u00e9",
+    "message": "Non enregistré",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_PAST_CYCLE",
-    "message": "Cycle pass\u00e9",
+    "message": "Cycle passé",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_PAST_DOSE",
-    "message": "Dose pass\u00e9e",
+    "message": "Dose passée",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_PAST_DOSE_STATUS_ADMINISTERED",
-    "message": "Livr\u00e9",
+    "message": "Livré",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2425,13 +2425,13 @@
   },
   {
     "code": "REGISTRATION_RESOURCE_CARD_SELECTION_REQUIRED",
-    "message": "Veuillez s\u00e9lectionner le produit",
+    "message": "Veuillez sélectionner le produit",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_DESC",
-    "message": "Rechercher des b\u00e9n\u00e9ficiaires inscrits \u00e0 la campagne en cours",
+    "message": "Rechercher des bénéficiaires inscrits à la campagne en cours",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2479,19 +2479,19 @@
   },
   {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_HEADING",
-    "message": "Rechercher un b\u00e9n\u00e9ficiaire",
+    "message": "Rechercher un bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_VIEW_DETAILS",
-    "message": "Afficher les d\u00e9tails",
+    "message": "Afficher les détails",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_VIEW_PAST_CYCLES",
-    "message": "Afficher les cycles pass\u00e9s",
+    "message": "Afficher les cycles passés",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2503,13 +2503,13 @@
   },
   {
     "code": "SCANLIMIT_ERROR_MESSAGE",
-    "message": "Limite d'analyse atteinte. Veuillez r\u00e9essayer plus tard",
+    "message": "Limite d'analyse atteinte. Veuillez réessayer plus tard",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "SCANLIMIT_VALIDATION_MESSAGE",
-    "message": "Une seule analyse est autoris\u00e9e.",
+    "message": "Une seule analyse est autorisée.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2533,13 +2533,13 @@
   },
   {
     "code": "SCAN_BENEFICIARY",
-    "message": "B\u00e9n\u00e9ficiaire du scan",
+    "message": "Bénéficiaire du scan",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "SECURITYISSUES",
-    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "message": "Problèmes de sécurité",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2551,7 +2551,7 @@
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Livraison r\u00e9ussie",
+    "message": "Livraison réussie",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2563,7 +2563,7 @@
   },
   {
     "code": "SecurityIssues",
-    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "message": "Problèmes de sécurité",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2575,19 +2575,19 @@
   },
   {
     "code": "TECHNICALISSUES",
-    "message": "Probl\u00e8mes techniques",
+    "message": "Problèmes techniques",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "Task",
-    "message": "T\u00e2che",
+    "message": "Tâche",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "Task.createdTime",
-    "message": "Termin\u00e9 le",
+    "message": "Terminé le",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2617,31 +2617,31 @@
   },
   {
     "code": "TechnicalIssues",
-    "message": "Probl\u00e8mes techniques",
+    "message": "Problèmes techniques",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Identifiant unique du b\u00e9n\u00e9ficiaire",
+    "message": "Identifiant unique du bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERACCOUNTISSUES",
-    "message": "Probl\u00e8mes de compte utilisateur",
+    "message": "Problèmes de compte utilisateur",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "UserAccountIssues",
-    "message": "Probl\u00e8mes de compte utilisateur",
+    "message": "Problèmes de compte utilisateur",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "VIEW_HOUSEHOLD_DETAILS",
-    "message": "Afficher les d\u00e9tails du m\u00e9nage",
+    "message": "Afficher les détails du ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2653,31 +2653,31 @@
   },
   {
     "code": "administrationSuccess",
-    "message": "Livr\u00e9 avec succ\u00e8s",
+    "message": "Livré avec succès",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "batteryOptimizationTag",
-    "message": "\u00c9tat d'autorisation de la batterie",
+    "message": "État d'autorisation de la batterie",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "beneficiaryDetails",
-    "message": "D\u00e9tails du b\u00e9n\u00e9ficiaire",
+    "message": "Détails du bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "blueToothScan",
-    "message": "\u00c9tat d'autorisation de num\u00e9risation Bluetooth",
+    "message": "État d'autorisation de numérisation Bluetooth",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "cameraPermissionStatus",
-    "message": "\u00c9tat d'autorisation de la cam\u00e9ra",
+    "message": "État d'autorisation de la caméra",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2689,13 +2689,13 @@
   },
   {
     "code": "clientReferenceId",
-    "message": "Num\u00e9ro de r\u00e9f\u00e9rence",
+    "message": "Numéro de référence",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "createdTime",
-    "message": "Termin\u00e9 le",
+    "message": "Terminé le",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2707,7 +2707,7 @@
   },
   {
     "code": "cycleNumber",
-    "message": "Num\u00e9ro de cycle",
+    "message": "Numéro de cycle",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2725,13 +2725,13 @@
   },
   {
     "code": "deliveryDetails",
-    "message": "D\u00e9tails de livraison",
+    "message": "Détails de livraison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "deliverySuccess",
-    "message": "Succ\u00e8s de la livraison",
+    "message": "Succès de la livraison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2749,7 +2749,7 @@
   },
   {
     "code": "entities",
-    "message": "Entit\u00e9s",
+    "message": "Entités",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2761,7 +2761,7 @@
   },
   {
     "code": "genderAge",
-    "message": "Genre | \u00c2ge",
+    "message": "Genre | Âge",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2773,7 +2773,7 @@
   },
   {
     "code": "householdDetails",
-    "message": "D\u00e9tails du m\u00e9nage",
+    "message": "Détails du ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2785,13 +2785,13 @@
   },
   {
     "code": "householdOverview",
-    "message": "Aper\u00e7u du m\u00e9nage",
+    "message": "Aperçu du ménage",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "identifierId",
-    "message": "Num\u00e9ro d'identification",
+    "message": "Numéro d'identification",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2803,25 +2803,25 @@
   },
   {
     "code": "individualName",
-    "message": "Nom du b\u00e9n\u00e9ficiaire",
+    "message": "Nom du bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "isClosedHousehold",
-    "message": "M\u00e9nage ferm\u00e9",
+    "message": "Ménage fermé",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "isEdit",
-    "message": "Mode \u00e9dition",
+    "message": "Mode édition",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "locality",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2833,7 +2833,7 @@
   },
   {
     "code": "meberDetails",
-    "message": "D\u00e9tails du membre",
+    "message": "Détails du membre",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2851,7 +2851,7 @@
   },
   {
     "code": "mobileNumber",
-    "message": "Num\u00e9ro de portable",
+    "message": "Numéro de portable",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2863,19 +2863,19 @@
   },
   {
     "code": "notEligible",
-    "message": "Non \u00e9ligible",
+    "message": "Non éligible",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "notVisited",
-    "message": "Non livr\u00e9",
+    "message": "Non livré",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "pastCycleTable",
-    "message": "Tableau des cycles pass\u00e9s",
+    "message": "Tableau des cycles passés",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2893,7 +2893,7 @@
   },
   {
     "code": "proximityRadius",
-    "message": "Rayon de proximit\u00e9",
+    "message": "Rayon de proximité",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2905,7 +2905,7 @@
   },
   {
     "code": "searchBeneficiary",
-    "message": "Rechercher un b\u00e9n\u00e9ficiaire",
+    "message": "Rechercher un bénéficiaire",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },

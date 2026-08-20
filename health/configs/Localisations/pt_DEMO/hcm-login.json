@@ -7,7 +7,7 @@
   },
   {
     "code": "CORE_COMMON_ACCESS_REQUIRED",
-    "message": "Acesso necess\u00e1rio!",
+    "message": "Acesso necessário!",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
@@ -25,7 +25,7 @@
   },
   {
     "code": "FORGOT_PASSWORD_CONTENT_TEXT",
-    "message": "Entre em contato com seu administrador se voc\u00ea esqueceu sua senha",
+    "message": "Entre em contato com seu administrador se você esqueceu sua senha",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
@@ -37,13 +37,13 @@
   },
   {
     "code": "HR_COMMON_TABLE_COL_ROLE_MAIN",
-    "message": "Fun\u00e7\u00e3o principal",
+    "message": "Função principal",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
   {
     "code": "LOGIN_ACTION",
-    "message": "Iniciar Sess\u00e3o",
+    "message": "Iniciar Sessão",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
@@ -79,19 +79,19 @@
   },
   {
     "code": "LOGIN_SUCCESS_MESSAGE",
-    "message": "Sess\u00e3o iniciada com sucesso.",
+    "message": "Sessão iniciada com sucesso.",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
   {
     "code": "LOGIN_USERNAME_LABEL",
-    "message": "Nome de usu\u00e1rio",
+    "message": "Nome de usuário",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
   {
     "code": "LOGIN_VALIDATION_ERROR",
-    "message": "Por favor insira um nome de usu\u00e1rio e senha v\u00e1lidos.",
+    "message": "Por favor insira um nome de usuário e senha válidos.",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
@@ -103,13 +103,13 @@
   },
   {
     "code": "PASSWORD_PLACEHOLDER_IS_REQUIRED",
-    "message": "A senha \u00e9 obrigat\u00f3ria",
+    "message": "A senha é obrigatória",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
   {
     "code": "PERMISSION_DENIED_OPEN_SETTINGS",
-    "message": "Habilite a permiss\u00e3o em Configura\u00e7\u00f5es.",
+    "message": "Habilite a permissão em Configurações.",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
@@ -121,7 +121,7 @@
   },
   {
     "code": "STOCK_RECONCILIATION_COUNT_EXPECTS_NUMBER",
-    "message": "N\u00famero",
+    "message": "Número",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
@@ -133,7 +133,7 @@
   },
   {
     "code": "SWITCH_MOBILE_DIALOG_CONTENT",
-    "message": "Voc\u00ea est\u00e1 mudando para um novo telefone. Certifique-se de que todos os seus dados do telefone antigo estejam sincronizados antes de continuar.",
+    "message": "Você está mudando para um novo telefone. Certifique-se de que todos os seus dados do telefone antigo estejam sincronizados antes de continuar.",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
@@ -157,13 +157,13 @@
   },
   {
     "code": "SWITCH_REASON_HEADER_LABEL",
-    "message": "Por que voc\u00ea est\u00e1 trocando de telefone?",
+    "message": "Por que você está trocando de telefone?",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
   {
     "code": "SWITCH_REASON_LABEL",
-    "message": "Isso nos ajuda a entender sua situa\u00e7\u00e3o.",
+    "message": "Isso nos ajuda a entender sua situação.",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
@@ -175,19 +175,19 @@
   },
   {
     "code": "UNABLE_TO_LOGIN",
-    "message": "N\u00e3o foi poss\u00edvel fazer login",
+    "message": "Não foi possível fazer login",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_ID_PLACEHOLDER",
-    "message": "ID do usu\u00e1rio",
+    "message": "ID do usuário",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_ID_PLACEHOLDER_IS_REQUIRED",
-    "message": "O ID do usu\u00e1rio \u00e9 obrigat\u00f3rio",
+    "message": "O ID do usuário é obrigatório",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   }

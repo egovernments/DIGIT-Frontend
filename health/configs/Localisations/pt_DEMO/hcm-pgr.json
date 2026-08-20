@@ -1,19 +1,19 @@
 [
   {
     "code": "ANOTHER_USER",
-    "message": "Outro usu\u00e1rio",
+    "message": "Outro usuário",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ASSIGN_SUCCESSFULLY",
-    "message": "Atribu\u00eddo com sucesso!",
+    "message": "Atribuído com sucesso!",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINTS_COMPLAINANT_CONTACT_NUMBER",
-    "message": "N\u00famero de contato do reclamante",
+    "message": "Número de contato do reclamante",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
@@ -25,7 +25,7 @@
   },
   {
     "code": "COMPLAINTS_SUPERVISOR_CONTACT_NUMBER",
-    "message": "N\u00famero de contato do supervisor",
+    "message": "Número de contato do supervisor",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
@@ -37,7 +37,7 @@
   },
   {
     "code": "CS_COMMON_PGR_STATE_PENDING_ASSIGNMENT",
-    "message": "Pendente para atribui\u00e7\u00e3o",
+    "message": "Pendente para atribuição",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
@@ -55,31 +55,31 @@
   },
   {
     "code": "CS_COMMON_SELECT_EMPLOYEE",
-    "message": "Selecione o funcion\u00e1rio",
+    "message": "Selecione o funcionário",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
   {
     "code": "CS_REJECTION__REASON1",
-    "message": "Reclama\u00e7\u00e3o inv\u00e1lida",
+    "message": "Reclamação inválida",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
   {
     "code": "CS_REJECTION__REASON2",
-    "message": "Reclama\u00e7\u00e3o Duplicada",
+    "message": "Reclamação Duplicada",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
   {
     "code": "CS_REJECTION__REASON3",
-    "message": "Informa\u00e7\u00f5es insuficientes ou ausentes",
+    "message": "Informações insuficientes ou ausentes",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
   {
     "code": "CS_REJECTION__REASON4",
-    "message": "Problema n\u00e3o acion\u00e1vel",
+    "message": "Problema não acionável",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
@@ -91,7 +91,7 @@
   },
   {
     "code": "ES_CREATECOMPLAINT_FOR",
-    "message": "Reclama\u00e7\u00e3o para",
+    "message": "Reclamação para",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
@@ -110,6 +110,12 @@
   {
     "code": "HCM_HIERARCHY_TYPE",
     "message": "Tipo de hierarquia",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_BREADCRUMB",
+    "message": "Selecione a hierarquia",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
@@ -145,7 +151,7 @@
   },
   {
     "code": "PGR_CREATE_ANOTHER_COMPLAIN",
-    "message": "Criar outra reclama\u00e7\u00e3o",
+    "message": "Criar outra reclamação",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
@@ -157,7 +163,7 @@
   },
   {
     "code": "PGR_SEARCH_RESULTS_HEADING",
-    "message": "Pesquisar Reclama\u00e7\u00e3o",
+    "message": "Pesquisar Reclamação",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
@@ -193,25 +199,25 @@
   },
   {
     "code": "SERVICEDEFS.SECURITYISSUES.eGov",
-    "message": "Problemas de seguran\u00e7a",
+    "message": "Problemas de segurança",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
   {
     "code": "SERVICEDEFS.TECHNICALISSUES.eGov",
-    "message": "Problemas t\u00e9cnicos",
+    "message": "Problemas técnicos",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
   {
     "code": "SERVICEDEFS.USERACCOUNTISSUES.eGov",
-    "message": "Problemas com a conta do usu\u00e1rio",
+    "message": "Problemas com a conta do usuário",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
   {
     "code": "WF_INBOX_HEADER_CURRENT_OWNER",
-    "message": "Propriet\u00e1rio atual",
+    "message": "Proprietário atual",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },
@@ -229,7 +235,7 @@
   },
   {
     "code": "WF_PGR_ASSIGN",
-    "message": "Atribu\u00eddo",
+    "message": "Atribuído",
     "module": "hcm-pgr",
     "locale": "pt_DEMO"
   },

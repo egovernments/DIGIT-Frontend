@@ -7,13 +7,13 @@
   },
   {
     "code": "ADMINISTRATION_FAILED",
-    "message": "\u00c9chec de l'administration",
+    "message": "Échec de l'administration",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "ADMINISTRATION_SUCCESS",
-    "message": "Succ\u00e8s administratif",
+    "message": "Succès administratif",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -31,13 +31,13 @@
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "B\u00e9n\u00e9ficiaire r\u00e9f\u00e9r\u00e9",
+    "message": "Bénéficiaire référé",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "B\u00e9n\u00e9ficiaire refus\u00e9",
+    "message": "Bénéficiaire refusé",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -55,37 +55,37 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "M\u00e9nage ferm\u00e9",
+    "message": "Ménage fermé",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_COMMON_ACCESS_PERMISSION_DIALOG_DESC",
-    "message": "L'application HCM n\u00e9cessite l'acc\u00e8s \u00e0 certaines fonctionnalit\u00e9s du t\u00e9l\u00e9phone pour fonctionner correctement. Veuillez autoriser l'acc\u00e8s \u00e0 continuer.",
+    "message": "L'application HCM nécessite l'accès à certaines fonctionnalités du téléphone pour fonctionner correctement. Veuillez autoriser l'accès à continuer.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_COMMON_ACCESS_REQUIRED",
-    "message": "Acc\u00e8s requis",
+    "message": "Accès requis",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_COMMON_ALLOW_ACCESS",
-    "message": "Autoriser l'acc\u00e8s",
+    "message": "Autoriser l'accès",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_COMMON_ALLOW_BACKGROUND_ACTIVITY",
-    "message": "Veuillez v\u00e9rifier si l'activit\u00e9 en arri\u00e8re-plan est activ\u00e9e dans les param\u00e8tres.",
+    "message": "Veuillez vérifier si l'activité en arrière-plan est activée dans les paramètres.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_COMMON_ALLOW_PERMISSIONS",
-    "message": "Autoriser l'acc\u00e8s",
+    "message": "Autoriser l'accès",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -103,13 +103,13 @@
   },
   {
     "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
-    "message": "B\u00e9n\u00e9ficiaire introuvable\u00a0!",
+    "message": "Bénéficiaire introuvable !",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-    "message": "Nous n\u2019avons pas pu retrouver ce b\u00e9n\u00e9ficiaire dans les dossiers. Vous pouvez l'ajouter en tant que nouveau b\u00e9n\u00e9ficiaire.",
+    "message": "Nous n’avons pas pu retrouver ce bénéficiaire dans les dossiers. Vous pouvez l'ajouter en tant que nouveau bénéficiaire.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -127,7 +127,7 @@
   },
   {
     "code": "CORE_COMMON_PERMISSION_ACCESS_PAGE_DESC",
-    "message": "Autorisez l'acc\u00e8s aux fonctionnalit\u00e9s t\u00e9l\u00e9phoniques requises pour continuer \u00e0 utiliser l'application DIGIT HCM.",
+    "message": "Autorisez l'accès aux fonctionnalités téléphoniques requises pour continuer à utiliser l'application DIGIT HCM.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -139,7 +139,7 @@
   },
   {
     "code": "CORE_COMMON_PERMISSION_CAMERA",
-    "message": "Cam\u00e9ra",
+    "message": "Caméra",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -151,7 +151,7 @@
   },
   {
     "code": "CORE_COMMON_PERMISSION_GRANTED",
-    "message": "Autorisation accord\u00e9e",
+    "message": "Autorisation accordée",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -163,7 +163,7 @@
   },
   {
     "code": "CORE_COMMON_PERMISSION_IGNOREBATTERYOPTIMIZATIONS_WARNING",
-    "message": "Autoriser l'activit\u00e9 en arri\u00e8re-plan dans Param\u00e8tres\u00a0> Batterie",
+    "message": "Autoriser l'activité en arrière-plan dans Paramètres > Batterie",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -175,19 +175,19 @@
   },
   {
     "code": "CORE_COMMON_PERMISSION_LOCATION_DESC",
-    "message": "Acc\u00e9dez \u00e0 l'emplacement de votre appareil.",
+    "message": "Accédez à l'emplacement de votre appareil.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES",
-    "message": "Partage \u00e0 proximit\u00e9",
+    "message": "Partage à proximité",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES_DESC",
-    "message": "Partagez des donn\u00e9es avec des appareils \u00e0 proximit\u00e9.",
+    "message": "Partagez des données avec des appareils à proximité.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -199,25 +199,25 @@
   },
   {
     "code": "CORE_COMMON_PERMISSION_NOTIFICATION_DESC",
-    "message": "Recevez des alertes et des mises \u00e0 jour depuis l'application.",
+    "message": "Recevez des alertes et des mises à jour depuis l'application.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_COMMON_PERMISSION_NOT_GRANTED",
-    "message": "Autorisation non accord\u00e9e",
+    "message": "Autorisation non accordée",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT",
-    "message": "D\u00e9faut",
+    "message": "Défaut",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "DIARRHOEA",
-    "message": "Diarrh\u00e9e",
+    "message": "Diarrhée",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -235,7 +235,7 @@
   },
   {
     "code": "Data Issues",
-    "message": "Probl\u00e8mes de donn\u00e9es",
+    "message": "Problèmes de données",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -253,7 +253,7 @@
   },
   {
     "code": "FEVER",
-    "message": "Fi\u00e8vre",
+    "message": "Fièvre",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -265,19 +265,19 @@
   },
   {
     "code": "FOOTER_ACTION_permissionHandlerButton2_LABEL",
-    "message": "Param\u00e8tres",
+    "message": "Paramètres",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FOOTER_ACTION_permissionHandlerButton_LABEL",
-    "message": "Autoriser l'acc\u00e8s",
+    "message": "Autoriser l'accès",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FUNERAL",
-    "message": "Fun\u00e9railles",
+    "message": "Funérailles",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -337,25 +337,25 @@
   },
   {
     "code": "INELIGIBLE",
-    "message": "In\u00e9ligible",
+    "message": "Inéligible",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_AGE",
-    "message": "\u00c2ge",
+    "message": "Âge",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_BATCHNUMBER",
-    "message": "Num\u00e9ro de lot",
+    "message": "Numéro de lot",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_BATCH_NUMBER",
-    "message": "Num\u00e9ro de lot",
+    "message": "Numéro de lot",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -367,13 +367,13 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "Mod\u00e8le de r\u00e9f\u00e9rence HF",
+    "message": "Modèle de référence HF",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
-    "message": "M\u00e9nage",
+    "message": "Ménage",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -391,25 +391,25 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_ITEMMODEL",
-    "message": "Mod\u00e8le d'article",
+    "message": "Modèle d'article",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
-    "message": "Mod\u00e8le LQA",
+    "message": "Modèle LQA",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_NAVIGATIONMODEL",
-    "message": "Mod\u00e8le de navigation",
+    "message": "Modèle de navigation",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "B\u00e9n\u00e9ficiaire du projet",
+    "message": "Bénéficiaire du projet",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -421,7 +421,7 @@
   },
   {
     "code": "LABEL_PAIR_CODE",
-    "message": "Zone de r\u00e8glement",
+    "message": "Zone de règlement",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -445,7 +445,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINTNUMBER",
-    "message": "Num\u00e9ro de plainte",
+    "message": "Numéro de plainte",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -463,7 +463,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Zone de r\u00e9clamation",
+    "message": "Zone de réclamation",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -475,7 +475,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Num\u00e9ro de plainte",
+    "message": "Numéro de plainte",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -511,7 +511,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Num\u00e9ro de plainte",
+    "message": "Numéro de plainte",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -577,7 +577,7 @@
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
-    "message": "\u00c2ge",
+    "message": "Âge",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -607,7 +607,7 @@
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
-    "message": "R\u00e8glement",
+    "message": "Règlement",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -631,13 +631,13 @@
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IDNUMBER",
-    "message": "Num\u00e9ro d'identification",
+    "message": "Numéro d'identification",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -649,7 +649,7 @@
   },
   {
     "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "Num\u00e9ro d'identification",
+    "message": "Numéro d'identification",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -661,13 +661,13 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYCHILDRENPRESENT",
-    "message": "Enfants pr\u00e9sents",
+    "message": "Enfants présents",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYCHILDRENVACCINATED",
-    "message": "Enfants vaccin\u00e9s",
+    "message": "Enfants vaccinés",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -679,49 +679,49 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDABSENT",
-    "message": "Manqu\u00e9 (absent)",
+    "message": "Manqué (absent)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDASLEEP",
-    "message": "Manqu\u00e9 (endormi)",
+    "message": "Manqué (endormi)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTREVISITED",
-    "message": "Manqu\u00e9 (non revisit\u00e9)",
+    "message": "Manqué (non revisité)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTVISITED",
-    "message": "Manqu\u00e9 (non visit\u00e9)",
+    "message": "Manqué (non visité)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDOTHER",
-    "message": "Manqu\u00e9 (Autre)",
+    "message": "Manqué (Autre)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDREFUSAL",
-    "message": "Manqu\u00e9 (Refus)",
+    "message": "Manqué (Refus)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDROUTINE",
-    "message": "Manqu\u00e9 (Routine)",
+    "message": "Manqué (Routine)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMONITORDESIGNATION",
-    "message": "D\u00e9signation du moniteur",
+    "message": "Désignation du moniteur",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -745,25 +745,25 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
-    "message": "Zone de r\u00e8glement",
+    "message": "Zone de règlement",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTTYPE",
-    "message": "Type de r\u00e8glement",
+    "message": "Type de règlement",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Enfants pr\u00e9sents",
+    "message": "Enfants présents",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Enfants vaccin\u00e9s",
+    "message": "Enfants vaccinés",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -775,43 +775,43 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
-    "message": "Manqu\u00e9 (absent)",
+    "message": "Manqué (absent)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
-    "message": "Manqu\u00e9 (endormi)",
+    "message": "Manqué (endormi)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Manqu\u00e9 (non revisit\u00e9)",
+    "message": "Manqué (non revisité)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Manqu\u00e9 (non visit\u00e9)",
+    "message": "Manqué (non visité)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Manqu\u00e9 (Autre)",
+    "message": "Manqué (Autre)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Manqu\u00e9 (Refus)",
+    "message": "Manqué (Refus)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
-    "message": "Manqu\u00e9 (Routine)",
+    "message": "Manqué (Routine)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -823,7 +823,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "D\u00e9signation du moniteur",
+    "message": "Désignation du moniteur",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -841,13 +841,13 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Zone de r\u00e8glement",
+    "message": "Zone de règlement",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Type de r\u00e8glement",
+    "message": "Type de règlement",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -859,7 +859,7 @@
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINTNUMBER",
-    "message": "Num\u00e9ro de plainte",
+    "message": "Numéro de plainte",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -871,13 +871,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_BATCH_LABEL",
-    "message": "Num\u00e9ro de lot",
+    "message": "Numéro de lot",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
-    "message": "Num\u00e9ro de lot",
+    "message": "Numéro de lot",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -895,13 +895,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
-    "message": "Num\u00e9ro MRN",
+    "message": "Numéro MRN",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_QUANTITY_LABEL",
-    "message": "Quantit\u00e9",
+    "message": "Quantité",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -913,7 +913,7 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_SENDER_LABEL",
-    "message": "Exp\u00e9diteur",
+    "message": "Expéditeur",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -937,19 +937,19 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
-    "message": "Num\u00e9ro de lettre de transport",
+    "message": "Numéro de lettre de transport",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
-    "message": "Num\u00e9ro de lettre de transport",
+    "message": "Numéro de lettre de transport",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LOCALITY",
-    "message": "Zone de r\u00e8glement",
+    "message": "Zone de règlement",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -961,7 +961,7 @@
   },
   {
     "code": "LABEL_PAIR_LQAAFPAWARENESSLABEL",
-    "message": "Sensibilisation \u00e0 l'AFP",
+    "message": "Sensibilisation à l'AFP",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -979,19 +979,19 @@
   },
   {
     "code": "LABEL_PAIR_LQACAMPAIGNAWARENESSLABEL",
-    "message": "Sensibilisation \u00e0 la campagne",
+    "message": "Sensibilisation à la campagne",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACAREGIVERINFORMEDLABEL",
-    "message": "Le soignant inform\u00e9",
+    "message": "Le soignant informé",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACHILDAGEMONTHSLABEL",
-    "message": "\u00c2ge de l'enfant (mois)",
+    "message": "Âge de l'enfant (mois)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1009,19 +1009,19 @@
   },
   {
     "code": "LABEL_PAIR_LQACLUSTERNUMBERLABEL",
-    "message": "Num\u00e9ro de cluster LQA",
+    "message": "Numéro de cluster LQA",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAFINGERMARKEDLABEL",
-    "message": "Doigt marqu\u00e9",
+    "message": "Doigt marqué",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQALOTNUMBERLABEL",
-    "message": "Num\u00e9ro de lot LQA",
+    "message": "Numéro de lot LQA",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1039,7 +1039,7 @@
   },
   {
     "code": "LABEL_PAIR_LQAOTHERREASONSPECIFYLABEL",
-    "message": "Autre raison (pr\u00e9ciser)",
+    "message": "Autre raison (préciser)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1051,7 +1051,7 @@
   },
   {
     "code": "LABEL_PAIR_LQAREASONNOTMARKEDLABEL",
-    "message": "Raison non marqu\u00e9e",
+    "message": "Raison non marquée",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1063,19 +1063,19 @@
   },
   {
     "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
-    "message": "Zone de r\u00e8glement LQA",
+    "message": "Zone de règlement LQA",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQASURVEYDATELABEL",
-    "message": "Date de l'enqu\u00eate LQA",
+    "message": "Date de l'enquête LQA",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQASURVEYORNAMELABEL",
-    "message": "Nom de l'enqu\u00eateur LQA",
+    "message": "Nom de l'enquêteur LQA",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1087,7 +1087,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "Sensibilisation \u00e0 l'AFP",
+    "message": "Sensibilisation à l'AFP",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1105,13 +1105,13 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Sensibilisation \u00e0 la campagne",
+    "message": "Sensibilisation à la campagne",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Le soignant inform\u00e9",
+    "message": "Le soignant informé",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1123,7 +1123,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "\u00c2ge de l'enfant (mois)",
+    "message": "Âge de l'enfant (mois)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1135,19 +1135,19 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Num\u00e9ro de cluster",
+    "message": "Numéro de cluster",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Doigt marqu\u00e9",
+    "message": "Doigt marqué",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Num\u00e9ro de lot",
+    "message": "Numéro de lot",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1165,7 +1165,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Autre raison (pr\u00e9ciser)",
+    "message": "Autre raison (préciser)",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1177,7 +1177,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Raison non marqu\u00e9e",
+    "message": "Raison non marquée",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1189,7 +1189,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Zone de r\u00e8glement",
+    "message": "Zone de règlement",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1201,7 +1201,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Date de l'enqu\u00eate",
+    "message": "Date de l'enquête",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1219,25 +1219,25 @@
   },
   {
     "code": "LABEL_PAIR_MOBILENUMBER",
-    "message": "Num\u00e9ro de portable",
+    "message": "Numéro de portable",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_MOBILE_NUMBER",
-    "message": "Num\u00e9ro de portable",
+    "message": "Numéro de portable",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRNNUMBER",
-    "message": "Num\u00e9ro MRN",
+    "message": "Numéro MRN",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "Num\u00e9ro MRN",
+    "message": "Numéro MRN",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1249,25 +1249,25 @@
   },
   {
     "code": "LABEL_PAIR_QUANTITY",
-    "message": "Quantit\u00e9",
+    "message": "Quantité",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_QUANTITYRECEIVED",
-    "message": "Quantit\u00e9 re\u00e7ue",
+    "message": "Quantité reçue",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_QUANTITY_RECEIVED",
-    "message": "Quantit\u00e9 re\u00e7ue",
+    "message": "Quantité reçue",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_RECEIVER",
-    "message": "R\u00e9cepteur",
+    "message": "Récepteur",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1291,19 +1291,19 @@
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
-    "message": "Statut de r\u00e9f\u00e9rence",
+    "message": "Statut de référence",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
-    "message": "Sympt\u00f4me de r\u00e9f\u00e9rence",
+    "message": "Symptôme de référence",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFRRALSYMPTOM",
-    "message": "Sympt\u00f4me de r\u00e9f\u00e9rence",
+    "message": "Symptôme de référence",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1315,7 +1315,7 @@
   },
   {
     "code": "LABEL_PAIR_SENDERID",
-    "message": "ID de l'exp\u00e9diteur",
+    "message": "ID de l'expéditeur",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1381,13 +1381,13 @@
   },
   {
     "code": "LABEL_PAIR_WAYBILLNUMBER",
-    "message": "Num\u00e9ro de lettre de transport",
+    "message": "Numéro de lettre de transport",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_WAYBILL_NUMBER",
-    "message": "Num\u00e9ro de lettre de transport",
+    "message": "Numéro de lettre de transport",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1399,19 +1399,19 @@
   },
   {
     "code": "MALE",
-    "message": "M\u00e2le",
+    "message": "Mâle",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "METAL",
-    "message": "M\u00e9tal",
+    "message": "Métal",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "NEAR_BY_WIFI_DEVICES",
-    "message": "Appareils \u00e0 proximit\u00e9",
+    "message": "Appareils à proximité",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1423,13 +1423,13 @@
   },
   {
     "code": "NOT_ADMINISTERED",
-    "message": "Non administr\u00e9",
+    "message": "Non administré",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "NOT_REGISTERED",
-    "message": "Non enregistr\u00e9",
+    "message": "Non enregistré",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1441,7 +1441,7 @@
   },
   {
     "code": "OPEN_SETTINGS",
-    "message": "Param\u00e8tres",
+    "message": "Paramètres",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1471,19 +1471,19 @@
   },
   {
     "code": "PERMISSION_DENIED_OPEN_SETTINGS",
-    "message": "Activez l'autorisation dans Param\u00e8tres.",
+    "message": "Activez l'autorisation dans Paramètres.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY",
-    "message": "Veuillez v\u00e9rifier si l'activit\u00e9 en arri\u00e8re-plan est activ\u00e9e dans les param\u00e8tres.",
+    "message": "Veuillez vérifier si l'activité en arrière-plan est activée dans les paramètres.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "PerformanceIssue",
-    "message": "Probl\u00e8me de performances",
+    "message": "Problème de performances",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1501,19 +1501,19 @@
   },
   {
     "code": "SKIN_REACTION",
-    "message": "R\u00e9action cutan\u00e9e",
+    "message": "Réaction cutanée",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Livraison r\u00e9ussie",
+    "message": "Livraison réussie",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "Security Issues",
-    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "message": "Problèmes de sécurité",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1537,19 +1537,19 @@
   },
   {
     "code": "Technical Issues",
-    "message": "Probl\u00e8mes techniques",
+    "message": "Problèmes techniques",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Identifiant unique du b\u00e9n\u00e9ficiaire",
+    "message": "Identifiant unique du bénéficiaire",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "User Account Issues",
-    "message": "Probl\u00e8mes de compte utilisateur",
+    "message": "Problèmes de compte utilisateur",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1567,19 +1567,19 @@
   },
   {
     "code": "backgroundActivityConfirmed",
-    "message": "Veuillez v\u00e9rifier si l'activit\u00e9 en arri\u00e8re-plan est activ\u00e9e dans les param\u00e8tres.",
+    "message": "Veuillez vérifier si l'activité en arrière-plan est activée dans les paramètres.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "batteryOptimizationTag",
-    "message": "\u00c9tat d'autorisation de la batterie",
+    "message": "État d'autorisation de la batterie",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "batteryStatus",
-    "message": "\u00c9tat de la batterie",
+    "message": "État de la batterie",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1591,13 +1591,13 @@
   },
   {
     "code": "blueToothScan",
-    "message": "\u00c9tat d'autorisation de num\u00e9risation Bluetooth",
+    "message": "État d'autorisation de numérisation Bluetooth",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "cameraPermissionStatus",
-    "message": "\u00c9tat de la cam\u00e9ra",
+    "message": "État de la caméra",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1681,13 +1681,13 @@
   },
   {
     "code": "coreCommonPermissionBluetoothscanDesc",
-    "message": "Recherchez les appareils Bluetooth \u00e0 proximit\u00e9.",
+    "message": "Recherchez les appareils Bluetooth à proximité.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "coreCommonPermissionCamera",
-    "message": "Cam\u00e9ra",
+    "message": "Caméra",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1711,19 +1711,19 @@
   },
   {
     "code": "coreCommonPermissionLocationDesc",
-    "message": "Acc\u00e9dez \u00e0 l'emplacement de votre appareil.",
+    "message": "Accédez à l'emplacement de votre appareil.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "coreCommonPermissionNearbywifidevices",
-    "message": "Partager \u00e0 proximit\u00e9",
+    "message": "Partager à proximité",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "coreCommonPermissionNearbywifidevicesDesc",
-    "message": "Partagez des donn\u00e9es avec des appareils \u00e0 proximit\u00e9.",
+    "message": "Partagez des données avec des appareils à proximité.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1735,7 +1735,7 @@
   },
   {
     "code": "coreCommonPermissionNotificationDesc",
-    "message": "Recevez des alertes et des mises \u00e0 jour depuis l'application.",
+    "message": "Recevez des alertes et des mises à jour depuis l'application.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1789,7 +1789,7 @@
   },
   {
     "code": "nearByDevicesStatus",
-    "message": "\u00c9tat des appareils \u00e0 proximit\u00e9",
+    "message": "État des appareils à proximité",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1807,19 +1807,19 @@
   },
   {
     "code": "permissionHandlerAllowBackGroundActivity",
-    "message": "Autoriser l'activit\u00e9 en arri\u00e8re-plan dans Param\u00e8tres\u00a0> Batterie",
+    "message": "Autoriser l'activité en arrière-plan dans Paramètres > Batterie",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "permissionHandlerButton",
-    "message": "Autoriser l'acc\u00e8s",
+    "message": "Autoriser l'accès",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "permissionHandlerButton2",
-    "message": "Param\u00e8tres",
+    "message": "Paramètres",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1921,13 +1921,13 @@
   },
   {
     "code": "textTemplate12",
-    "message": "Autorisez l'application \u00e0 s'ex\u00e9cuter en arri\u00e8re-plan pour un service ininterrompu.",
+    "message": "Autorisez l'application à s'exécuter en arrière-plan pour un service ininterrompu.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "textTemplate2",
-    "message": "Activez les notifications pour recevoir des alertes et des mises \u00e0 jour de campagne.",
+    "message": "Activez les notifications pour recevoir des alertes et des mises à jour de campagne.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1939,7 +1939,7 @@
   },
   {
     "code": "textTemplate4",
-    "message": "D\u00e9sactivez l'optimisation de la batterie pour que l'application continue de fonctionner pendant le travail sur le terrain.",
+    "message": "Désactivez l'optimisation de la batterie pour que l'application continue de fonctionner pendant le travail sur le terrain.",
     "module": "hcm-base-permissionhandler-co-delivery",
     "locale": "fr_DEMO"
   },

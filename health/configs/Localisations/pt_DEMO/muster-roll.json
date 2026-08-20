@@ -1,0 +1,182 @@
+[
+  {
+    "code": "ATTENDANCE_REPORT_CAMPAIGN_INFO",
+    "message": " ",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_ATTENDANCE_MARKER",
+    "message": "Marcador de presença",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_BASE_SIGNATURE",
+    "message": "Assinatura Base",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_DE_ENROLLMENT_DATE",
+    "message": "Data de cancelamento de inscrição",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_ENROLLMENT_DATE",
+    "message": "Data de inscrição",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_EVENING",
+    "message": "Tarde",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_LOGIN_ID",
+    "message": "ID de login",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_MORNING",
+    "message": "Manhã",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_NAME",
+    "message": "Nome do participante",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_PHONE",
+    "message": "Número de telefone",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_PRESENT_DAYS_MODIFIED",
+    "message": "Dias finais de atendimento (ajustado pelo supervisor de proximidade)",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_PRESENT_DAYS_ORIGINAL",
+    "message": "Dias reais de frequência (relatados pelo sistema)",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_ROLE",
+    "message": "Papel",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_SIGNATURE",
+    "message": "Assinatura",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_SL_NO",
+    "message": "S. Não.",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_STATUS",
+    "message": "Status",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_TEAM_CODE",
+    "message": "Código da equipe",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_HEADER_USER_ID",
+    "message": "ID do usuário",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_REGISTER_INFO",
+    "message": "Número da lista de reunião %s de %s a %s para %d total de participantes",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_ROLE_DISTRIBUTOR",
+    "message": "Distribuidor",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_ROLE_HEALTH_FACILITY_WORKER",
+    "message": "Trabalhador de estabelecimento de saúde",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_ROLE_REGISTRAR",
+    "message": "Registrador",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_STATUS_ABSENT",
+    "message": "Ausente",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_STATUS_PRESENT",
+    "message": "Presente",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_TITLE",
+    "message": "Relatório de Presença",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REPORT_TOTAL_PERFORMANCE_HEADER",
+    "message": "Métrica de Desempenho",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_FOOD",
+    "message": "Subsídio Alimentar",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_TRANSPORTATION",
+    "message": "Transporte",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PDF_STATIC_LABEL_BILL_TABLE_WAGE",
+    "message": "Taxa salarial",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_MANAGER",
+    "message": "Warehouse Manager",
+    "module": "muster-roll",
+    "locale": "pt_DEMO"
+  }
+]

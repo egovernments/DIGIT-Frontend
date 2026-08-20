@@ -1,19 +1,19 @@
 [
   {
     "code": " HCM_ADMIN_CONSOLE_TARGET_INT_CAMP_AGE_12_TO_59",
-    "message": "12 \u00e0 59 mois",
+    "message": "12 à 59 mois",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": " HCM_ADMIN_CONSOLE_TARGET_INT_CAMP_AGE_1_TO_11",
-    "message": "1 \u00e0 11 mois",
+    "message": "1 à 11 mois",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": " HCM_ADMIN_CONSOLE_TARGET_INT_CAMP_COLUUM_HOUSEHOLD",
-    "message": "Cible du m\u00e9nage",
+    "message": "Cible du ménage",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -61,7 +61,7 @@
   },
   {
     "code": "ADMIN10_STATE",
-    "message": "\u00c9tat",
+    "message": "État",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -91,7 +91,7 @@
   },
   {
     "code": "ADMIN11_STATE",
-    "message": "\u00c9tat",
+    "message": "État",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -211,7 +211,7 @@
   },
   {
     "code": "ADMINE_QA",
-    "message": "Assurance qualit\u00e9",
+    "message": "Assurance qualité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -229,7 +229,7 @@
   },
   {
     "code": "ADMIN_CONSOLE_TARGET",
-    "message": "Cible du m\u00e9nage au niveau du village (obligatoire et \u00e0 saisir par l'utilisateur)",
+    "message": "Cible du ménage au niveau du village (obligatoire et à saisir par l'utilisateur)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -247,7 +247,7 @@
   },
   {
     "code": "ADMIN_LOCALIDADE",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -271,13 +271,13 @@
   },
   {
     "code": "ADMIN_STATE",
-    "message": "\u00c9tat",
+    "message": "État",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "AGE",
-    "message": "\u00c2ge",
+    "message": "Âge",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -301,7 +301,7 @@
   },
   {
     "code": "AU_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -355,139 +355,139 @@
   },
   {
     "code": "Admin9.State",
-    "message": "\u00c9tat",
+    "message": "État",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_1",
-    "message": "D\u00e9finition de la population totale et cible une fois le mod\u00e8le t\u00e9l\u00e9charg\u00e9\u00a0:",
+    "message": "Définition de la population totale et cible une fois le modèle téléchargé :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_1_DESC_1",
-    "message": "Acc\u00e9dez \u00e0 la feuille du district pour lequel vous souhaitez d\u00e9finir des objectifs et ajoutez les donn\u00e9es de population totale et cible pour chaque village.",
+    "message": "Accédez à la feuille du district pour lequel vous souhaitez définir des objectifs et ajoutez les données de population totale et cible pour chaque village.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_1_DESC_2",
-    "message": "Entrez la population cible et la population totale de chaque village dans la feuille de chaque district. Si un village n\u2019a pas d\u2019objectifs fix\u00e9s, la feuille comportera des erreurs.",
+    "message": "Entrez la population cible et la population totale de chaque village dans la feuille de chaque district. Si un village n’a pas d’objectifs fixés, la feuille comportera des erreurs.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_1_DESC_3",
-    "message": "Enregistrez la feuille avec la cible mise \u00e0 jour et la population totale pour chaque village sur le mod\u00e8le Excel.",
+    "message": "Enregistrez la feuille avec la cible mise à jour et la population totale pour chaque village sur le modèle Excel.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_1_DESC_4",
-    "message": "Appuyez sur le bouton \u00ab\u00a0Parcourir mes fichiers\u00a0\u00bb sur l'\u00e9cran de t\u00e9l\u00e9chargement de la population et s\u00e9lectionnez le fichier enregistr\u00e9 avec toute la population cible et totale du syst\u00e8me.",
+    "message": "Appuyez sur le bouton « Parcourir mes fichiers » sur l'écran de téléchargement de la population et sélectionnez le fichier enregistré avec toute la population cible et totale du système.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_2",
-    "message": "Cas d'erreurs courantes\u00a0:",
+    "message": "Cas d'erreurs courantes :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_2_DESC_1",
-    "message": "Si l'utilisateur n'a pas d\u00e9fini d'objectifs ou de population totale pour chaque village, le syst\u00e8me g\u00e9n\u00e9rera une erreur avec le num\u00e9ro de ligne o\u00f9 l'objectif ou la population totale est manquant.",
+    "message": "Si l'utilisateur n'a pas défini d'objectifs ou de population totale pour chaque village, le système générera une erreur avec le numéro de ligne où l'objectif ou la population totale est manquant.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_2_DESC_2",
-    "message": "Si l'utilisateur supprime un village de la feuille ou supprime une feuille de district compl\u00e8te et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur. L'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es corrig\u00e9es.",
+    "message": "Si l'utilisateur supprime un village de la feuille ou supprime une feuille de district complète et télécharge la feuille, le système générera une erreur. L'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données corrigées.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_2_DESC_3",
-    "message": "Si l'utilisateur supprime l'un des en-t\u00eates de la feuille et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur. L'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es corrig\u00e9es.",
+    "message": "Si l'utilisateur supprime l'un des en-têtes de la feuille et télécharge la feuille, le système générera une erreur. L'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données corrigées.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_1",
-    "message": "T\u00e9l\u00e9chargement de mod\u00e8les Excel pour d\u00e9finir des objectifs\u00a0:",
+    "message": "Téléchargement de modèles Excel pour définir des objectifs :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_1_DESC_1",
-    "message": "T\u00e9l\u00e9chargez le mod\u00e8le Excel en cliquant sur le bouton \u00ab T\u00e9l\u00e9charger le mod\u00e8le \u00bb.",
+    "message": "Téléchargez le modèle Excel en cliquant sur le bouton « Télécharger le modèle ».",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_1_DESC_2",
-    "message": "Ouvrez le mod\u00e8le Excel t\u00e9l\u00e9charg\u00e9 \u00e0 l'\u00e9tape pr\u00e9c\u00e9dente et la premi\u00e8re feuille que vous verrez est une feuille \u00ab\u00a0Lisez-moi\u00a0\u00bb. Les feuilles restantes seront nomm\u00e9es d'apr\u00e8s le nom des districts s\u00e9lectionn\u00e9s \u00e0 l'\u00e9tape \u00ab S\u00e9lection des limites \u00bb, chaque feuille de district comportant une liste de tous les villages cartographi\u00e9s dans ce district.",
+    "message": "Ouvrez le modèle Excel téléchargé à l'étape précédente et la première feuille que vous verrez est une feuille « Lisez-moi ». Les feuilles restantes seront nommées d'après le nom des districts sélectionnés à l'étape « Sélection des limites », chaque feuille de district comportant une liste de tous les villages cartographiés dans ce district.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_2",
-    "message": "D\u00e9finition des objectifs une fois le mod\u00e8le t\u00e9l\u00e9charg\u00e9\u00a0:",
+    "message": "Définition des objectifs une fois le modèle téléchargé :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_2_DESC_1",
-    "message": "Acc\u00e9dez \u00e0 la feuille du district pour lequel vous souhaitez d\u00e9finir des objectifs et ajoutez des chiffres dans la colonne \u00ab\u00a0Cibles\u00a0\u00bb pour chaque village.",
+    "message": "Accédez à la feuille du district pour lequel vous souhaitez définir des objectifs et ajoutez des chiffres dans la colonne « Cibles » pour chaque village.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_2_DESC_2",
-    "message": "Entrez les objectifs pour chaque village dans la feuille de chaque district sous la colonne \u00ab\u00a0Cible au niveau de la limite s\u00e9lectionn\u00e9e\u00a0\u00bb. Si un village n\u2019a pas d\u2019objectifs fix\u00e9s, la feuille comportera des erreurs.",
+    "message": "Entrez les objectifs pour chaque village dans la feuille de chaque district sous la colonne « Cible au niveau de la limite sélectionnée ». Si un village n’a pas d’objectifs fixés, la feuille comportera des erreurs.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_2_DESC_3",
-    "message": "Enregistrez la feuille avec les objectifs mis \u00e0 jour pour chaque village sur le mod\u00e8le Excel.",
+    "message": "Enregistrez la feuille avec les objectifs mis à jour pour chaque village sur le modèle Excel.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_2_DESC_4",
-    "message": "Appuyez sur le bouton \u00ab\u00a0Parcourir mes fichiers\u00a0\u00bb sur l'\u00e9cran \u00ab\u00a0T\u00e9l\u00e9charger la cible\u00a0\u00bb et s\u00e9lectionnez le fichier enregistr\u00e9 avec toutes les cibles du syst\u00e8me.",
+    "message": "Appuyez sur le bouton « Parcourir mes fichiers » sur l'écran « Télécharger la cible » et sélectionnez le fichier enregistré avec toutes les cibles du système.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_3",
-    "message": "Cas d'erreurs courantes\u00a0:",
+    "message": "Cas d'erreurs courantes :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_3_DESC_1",
-    "message": "Si l'utilisateur n'a pas d\u00e9fini d'objectifs pour chaque village, le syst\u00e8me g\u00e9n\u00e9rera une erreur avec le num\u00e9ro de ligne o\u00f9 les cibles sont manquantes.",
+    "message": "Si l'utilisateur n'a pas défini d'objectifs pour chaque village, le système générera une erreur avec le numéro de ligne où les cibles sont manquantes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_3_DESC_2",
-    "message": "Si l'utilisateur supprime un village de la feuille ou supprime une feuille de district compl\u00e8te et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime un village de la feuille ou supprime une feuille de district complète et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_3_DESC_3",
-    "message": "Si l'utilisateur supprime l'un des en-t\u00eates de la feuille et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime l'un des en-têtes de la feuille et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "BOUNDARY_README_MAINHEADER",
-    "message": "Lisez-moi les instructions pour le t\u00e9l\u00e9chargement cible",
+    "message": "Lisez-moi les instructions pour le téléchargement cible",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -499,7 +499,7 @@
   },
   {
     "code": "CAMPAIGN_BEDNET_HOUSEHOLD_LABEL",
-    "message": "Nombre de moustiquaires par m\u00e9nage",
+    "message": "Nombre de moustiquaires par ménage",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -517,7 +517,7 @@
   },
   {
     "code": "CAMPAIGN_END_DATE_BEFORE_ERROR",
-    "message": "La date de fin de la campagne ne peut pas \u00eatre ant\u00e9rieure \u00e0 la date de d\u00e9but de la campagne.",
+    "message": "La date de fin de la campagne ne peut pas être antérieure à la date de début de la campagne.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -535,7 +535,7 @@
   },
   {
     "code": "CAMPAIGN_NAME_ERROR",
-    "message": "Le nom de la campagne existe d\u00e9j\u00e0. Veuillez le changer.",
+    "message": "Le nom de la campagne existe déjà. Veuillez le changer.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -559,7 +559,7 @@
   },
   {
     "code": "CC_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -589,37 +589,37 @@
   },
   {
     "code": "DIGIT_LOC_MESSAGE_HEADER_FRENCH",
-    "message": "Messages en fran\u00e7ais",
+    "message": "Messages en français",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "DISPLAY_LLIM_MZ_capacity",
-    "message": "Capacit\u00e9 (Unit\u00e9s : Balles)",
+    "message": "Capacité (Unités : Balles)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "DISPLAY_LLIM_mz_capacity",
-    "message": "Capacit\u00e9 (Unit\u00e9s : Balles)",
+    "message": "Capacité (Unités : Balles)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "DISPLAY_LLIN_mz_capacity",
-    "message": "Capacit\u00e9 (Unit\u00e9s : Balles)",
+    "message": "Capacité (Unités : Balles)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "DISPLAY_MR_DN__capacity",
-    "message": "Capacit\u00e9",
+    "message": "Capacité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "DISPLAY_MR_DN_capacity",
-    "message": "Capacit\u00e9 ( Unit\u00e9s : SPAQ Blister )",
+    "message": "Capacité ( Unités : SPAQ Blister )",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -643,7 +643,7 @@
   },
   {
     "code": "EQUAL_TO",
-    "message": "\u00e9gal \u00e0",
+    "message": "égal à",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -667,241 +667,241 @@
   },
   {
     "code": "FACILITIES_EXCEL_README_POINTS_1",
-    "message": "S'il n'y a aucune installation disponible pour la s\u00e9lection, l'onglet \u00ab\u00a0Liste des installations disponibles\u00a0\u00bb dans le mod\u00e8le sera vide. Pour cr\u00e9er de nouvelles donn\u00e9es d'installation, ajoutez le nom de l'installation, le type d'installation, l'\u00e9tat de l'installation et la capacit\u00e9. La colonne \u00ab\u00a0Code d'\u00e9tablissement\u00a0\u00bb doit rester vide s'il s'agit d'un nouvel \u00e9tablissement. S'il s'agit d'une installation en cours de r\u00e9utilisation (qui est disponible dans le mod\u00e8le apr\u00e8s le t\u00e9l\u00e9chargement), l'utilisateur n'a qu'\u00e0 effectuer l'\u00e9tape 2.",
+    "message": "S'il n'y a aucune installation disponible pour la sélection, l'onglet « Liste des installations disponibles » dans le modèle sera vide. Pour créer de nouvelles données d'installation, ajoutez le nom de l'installation, le type d'installation, l'état de l'installation et la capacité. La colonne « Code d'établissement » doit rester vide s'il s'agit d'un nouvel établissement. S'il s'agit d'une installation en cours de réutilisation (qui est disponible dans le modèle après le téléchargement), l'utilisateur n'a qu'à effectuer l'étape 2.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITIES_EXCEL_README_POINTS_2",
-    "message": "Pour mapper l'installation \u00e0 la limite correcte, l'utilisateur doit copier le code de limite correct de la limite de la feuille \u00ab Liste des limites de campagne \u00bb sur laquelle l'installation doit \u00eatre cartographi\u00e9e. S'il existe une installation mapp\u00e9e \u00e0 plusieurs limites, l'administrateur syst\u00e8me devra ajouter les codes de limite de toutes les limites auxquelles cette installation est mapp\u00e9e en les s\u00e9parant par des virgules dans la cellule pour ajouter des codes de limite pour cette installation.",
+    "message": "Pour mapper l'installation à la limite correcte, l'utilisateur doit copier le code de limite correct de la limite de la feuille « Liste des limites de campagne » sur laquelle l'installation doit être cartographiée. S'il existe une installation mappée à plusieurs limites, l'administrateur système devra ajouter les codes de limite de toutes les limites auxquelles cette installation est mappée en les séparant par des virgules dans la cellule pour ajouter des codes de limite pour cette installation.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_1",
-    "message": "Cr\u00e9ation de nouvelles donn\u00e9es d'installation/utilisation des donn\u00e9es d'installation existantes une fois le mod\u00e8le t\u00e9l\u00e9charg\u00e9\u00a0:",
+    "message": "Création de nouvelles données d'installation/utilisation des données d'installation existantes une fois le modèle téléchargé :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_1",
-    "message": "S'il n'y a aucune installation disponible pour la s\u00e9lection, l'onglet \u00ab\u00a0Liste des installations disponibles\u00a0\u00bb dans le mod\u00e8le sera vide. Pour cr\u00e9er de nouvelles donn\u00e9es d'installation, ajoutez le nom de l'installation, le type d'installation, l'\u00e9tat de l'installation, la capacit\u00e9 et l'utilisation de l'installation.",
+    "message": "S'il n'y a aucune installation disponible pour la sélection, l'onglet « Liste des installations disponibles » dans le modèle sera vide. Pour créer de nouvelles données d'installation, ajoutez le nom de l'installation, le type d'installation, l'état de l'installation, la capacité et l'utilisation de l'installation.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_2",
-    "message": "Pour mapper l'installation \u00e0 la limite correcte, l'utilisateur doit copier le code de limite correct de la limite de la feuille \u00ab\u00a0Donn\u00e9es de limite\u00a0\u00bb sur laquelle l'installation doit \u00eatre cartographi\u00e9e.",
+    "message": "Pour mapper l'installation à la limite correcte, l'utilisateur doit copier le code de limite correct de la limite de la feuille « Données de limite » sur laquelle l'installation doit être cartographiée.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_3",
-    "message": "Enregistrez la feuille avec les d\u00e9tails de l'\u00e9tablissement saisis dans le mod\u00e8le Excel.",
+    "message": "Enregistrez la feuille avec les détails de l'établissement saisis dans le modèle Excel.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_4",
-    "message": "Appuyez sur le bouton \u00ab Parcourir mes fichiers \u00bb sur l'\u00e9cran \u00ab T\u00e9l\u00e9charger les donn\u00e9es de l'installation \u00bb et s\u00e9lectionnez le fichier enregistr\u00e9 avec toutes les donn\u00e9es de l'installation du syst\u00e8me.",
+    "message": "Appuyez sur le bouton « Parcourir mes fichiers » sur l'écran « Télécharger les données de l'installation » et sélectionnez le fichier enregistré avec toutes les données de l'installation du système.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_2",
-    "message": "D\u00e9sactivation des installations existantes pour une campagne",
+    "message": "Désactivation des installations existantes pour une campagne",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_2_DESC_1",
-    "message": "Une fois que l'utilisateur a t\u00e9l\u00e9charg\u00e9 le mod\u00e8le pour les installations, si le syst\u00e8me dispose de donn\u00e9es d'installation existantes \u00e0 r\u00e9utiliser, le mod\u00e8le sera pr\u00e9-rempli avec cette liste d'installations.",
+    "message": "Une fois que l'utilisateur a téléchargé le modèle pour les installations, si le système dispose de données d'installation existantes à réutiliser, le modèle sera pré-rempli avec cette liste d'installations.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_2_DESC_2",
-    "message": "Si l'utilisateur choisit ensuite de ne pas utiliser des installations sp\u00e9cifiques, il peut d\u00e9sactiver ces installations en marquant le champ \u00ab Utilisation des installations \u00bb comme \u00ab Inactif \u00bb.",
+    "message": "Si l'utilisateur choisit ensuite de ne pas utiliser des installations spécifiques, il peut désactiver ces installations en marquant le champ « Utilisation des installations » comme « Inactif ».",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_3",
-    "message": "Cas d'erreurs courantes\u00a0:",
+    "message": "Cas d'erreurs courantes :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_3_DESC_1",
-    "message": "Si l'utilisateur a supprim\u00e9 le code de limite d'installation pour une installation existante dans la liste, le syst\u00e8me affichera un message d'erreur.",
+    "message": "Si l'utilisateur a supprimé le code de limite d'installation pour une installation existante dans la liste, le système affichera un message d'erreur.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_3_DESC_2",
-    "message": "Si l'utilisateur supprime des colonnes de la \u00ab Liste des installations disponibles \u00bb de la feuille et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime des colonnes de la « Liste des installations disponibles » de la feuille et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_3_DESC_3",
-    "message": "Si l'utilisateur supprime l'un des en-t\u00eates de la feuille et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime l'un des en-têtes de la feuille et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_1",
-    "message": "T\u00e9l\u00e9chargement de mod\u00e8les Excel pour la configuration des installations\u00a0:",
+    "message": "Téléchargement de modèles Excel pour la configuration des installations :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_1_DESC_1",
-    "message": "T\u00e9l\u00e9chargez le mod\u00e8le Excel en cliquant sur le bouton \u00ab T\u00e9l\u00e9charger le mod\u00e8le \u00bb.",
+    "message": "Téléchargez le modèle Excel en cliquant sur le bouton « Télécharger le modèle ».",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_1_DESC_2",
-    "message": "Ouvrez le mod\u00e8le t\u00e9l\u00e9charg\u00e9 \u00e0 l'\u00e9tape pr\u00e9c\u00e9dente et comportera 3 feuilles et la premi\u00e8re feuille que vous verrez est une feuille \u00ab\u00a0Lisez-moi\u00a0\u00bb. La deuxi\u00e8me feuille intitul\u00e9e \u00ab Liste des installations disponibles \u00bb contiendra une liste de toutes les installations disponibles pouvant \u00eatre utilis\u00e9es dans la campagne. S'il n'y a aucune installation disponible, cette feuille sera vide. La troisi\u00e8me feuille sera nomm\u00e9e \u00ab Liste des limites de campagne \u00bb et contiendra toutes les limites avec leurs codes de limites respectifs.",
+    "message": "Ouvrez le modèle téléchargé à l'étape précédente et comportera 3 feuilles et la première feuille que vous verrez est une feuille « Lisez-moi ». La deuxième feuille intitulée « Liste des installations disponibles » contiendra une liste de toutes les installations disponibles pouvant être utilisées dans la campagne. S'il n'y a aucune installation disponible, cette feuille sera vide. La troisième feuille sera nommée « Liste des limites de campagne » et contiendra toutes les limites avec leurs codes de limites respectifs.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2",
-    "message": "Cr\u00e9ation de nouvelles donn\u00e9es d'installation/utilisation des donn\u00e9es d'installation existantes une fois le mod\u00e8le t\u00e9l\u00e9charg\u00e9\u00a0:",
+    "message": "Création de nouvelles données d'installation/utilisation des données d'installation existantes une fois le modèle téléchargé :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_1",
-    "message": "S'il n'y a aucune installation disponible pour la s\u00e9lection, l'onglet \u00ab\u00a0Liste des installations disponibles\u00a0\u00bb dans le mod\u00e8le sera vide. Pour cr\u00e9er de nouvelles donn\u00e9es d'installation, ajoutez le nom de l'installation, le type d'installation, l'\u00e9tat de l'installation et la capacit\u00e9. La colonne \u00ab\u00a0Code d'\u00e9tablissement\u00a0\u00bb doit rester vide s'il s'agit d'un nouvel \u00e9tablissement. S'il s'agit d'une installation en cours de r\u00e9utilisation (qui est disponible dans le mod\u00e8le apr\u00e8s le t\u00e9l\u00e9chargement), l'utilisateur n'a qu'\u00e0 effectuer l'\u00e9tape 2.",
+    "message": "S'il n'y a aucune installation disponible pour la sélection, l'onglet « Liste des installations disponibles » dans le modèle sera vide. Pour créer de nouvelles données d'installation, ajoutez le nom de l'installation, le type d'installation, l'état de l'installation et la capacité. La colonne « Code d'établissement » doit rester vide s'il s'agit d'un nouvel établissement. S'il s'agit d'une installation en cours de réutilisation (qui est disponible dans le modèle après le téléchargement), l'utilisateur n'a qu'à effectuer l'étape 2.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_2",
-    "message": "Pour mapper l'installation \u00e0 la limite correcte, l'utilisateur doit copier le code de limite correct de la limite de la feuille \u00ab Liste des limites de campagne \u00bb sur laquelle l'installation doit \u00eatre cartographi\u00e9e. S'il existe une installation mapp\u00e9e \u00e0 plusieurs limites, l'administrateur syst\u00e8me devra ajouter les codes de limite de toutes les limites auxquelles cette installation est mapp\u00e9e en les s\u00e9parant par des virgules dans la cellule pour ajouter des codes de limite pour cette installation.",
+    "message": "Pour mapper l'installation à la limite correcte, l'utilisateur doit copier le code de limite correct de la limite de la feuille « Liste des limites de campagne » sur laquelle l'installation doit être cartographiée. S'il existe une installation mappée à plusieurs limites, l'administrateur système devra ajouter les codes de limite de toutes les limites auxquelles cette installation est mappée en les séparant par des virgules dans la cellule pour ajouter des codes de limite pour cette installation.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_3",
-    "message": "Enregistrez la feuille avec les objectifs mis \u00e0 jour pour chaque village sur le mod\u00e8le Excel.",
+    "message": "Enregistrez la feuille avec les objectifs mis à jour pour chaque village sur le modèle Excel.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_4",
-    "message": "Appuyez sur le bouton \u00ab Parcourir mes fichiers \u00bb sur l'\u00e9cran \u00ab T\u00e9l\u00e9charger les donn\u00e9es de l'installation \u00bb et s\u00e9lectionnez le fichier enregistr\u00e9 avec toutes les cibles du syst\u00e8me.",
+    "message": "Appuyez sur le bouton « Parcourir mes fichiers » sur l'écran « Télécharger les données de l'installation » et sélectionnez le fichier enregistré avec toutes les cibles du système.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_5",
-    "message": "D\u00e9sactivation des installations existantes pour une campagne.",
+    "message": "Désactivation des installations existantes pour une campagne.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_6",
-    "message": "Une fois que l'utilisateur a t\u00e9l\u00e9charg\u00e9 le mod\u00e8le pour les installations, si le syst\u00e8me dispose de donn\u00e9es d'installation existantes \u00e0 r\u00e9utiliser, le mod\u00e8le sera pr\u00e9-rempli avec cette liste d'installations.",
+    "message": "Une fois que l'utilisateur a téléchargé le modèle pour les installations, si le système dispose de données d'installation existantes à réutiliser, le modèle sera pré-rempli avec cette liste d'installations.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_7",
-    "message": "Si l'utilisateur choisit ensuite de ne pas utiliser des installations sp\u00e9cifiques, il peut supprimer les lignes de donn\u00e9es pour ces installations sp\u00e9cifiques qui doivent \u00eatre supprim\u00e9es et t\u00e9l\u00e9charger la feuille avec uniquement les installations n\u00e9cessaires \u00e0 la campagne avec les codes de limite corrects mapp\u00e9s \u00e0 ces installations.",
+    "message": "Si l'utilisateur choisit ensuite de ne pas utiliser des installations spécifiques, il peut supprimer les lignes de données pour ces installations spécifiques qui doivent être supprimées et télécharger la feuille avec uniquement les installations nécessaires à la campagne avec les codes de limite corrects mappés à ces installations.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_1",
-    "message": "Cas o\u00f9 il n'y a pas de donn\u00e9es d'installation dans le syst\u00e8me\u00a0:",
+    "message": "Cas où il n'y a pas de données d'installation dans le système :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_1_DESC_1",
-    "message": "\u00c9tape 1\u00a0: Lorsqu'il n'y a pas de donn\u00e9es d'\u00e9tablissement dans le syst\u00e8me, le mod\u00e8le \u00ab\u00a0Liste des \u00e9tablissements disponibles\u00a0\u00bb sera vide. Pour chaque \u00e9tablissement ajout\u00e9, l'utilisateur doit saisir le nom de l'\u00e9tablissement (doit \u00eatre unique), le type d'\u00e9tablissement (entrep\u00f4t/\u00e9tablissement de sant\u00e9), le statut de l'\u00e9tablissement (temporaire/permanent), la capacit\u00e9 (saisie du num\u00e9ro)",
+    "message": "Étape 1 : Lorsqu'il n'y a pas de données d'établissement dans le système, le modèle « Liste des établissements disponibles » sera vide. Pour chaque établissement ajouté, l'utilisateur doit saisir le nom de l'établissement (doit être unique), le type d'établissement (entrepôt/établissement de santé), le statut de l'établissement (temporaire/permanent), la capacité (saisie du numéro)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_1_DESC_2",
-    "message": "\u00c9tape 2\u00a0: Pour cartographier les installations sur une limite donn\u00e9e, l'utilisateur doit copier le code de limite correct \u00e0 partir de la feuille \u00ab Donn\u00e9es de limite \u00bb. S'il existe plusieurs limites auxquelles une installation doit \u00eatre mapp\u00e9e, l'utilisateur peut ajouter tous les codes de limite s\u00e9par\u00e9s par des virgules.",
+    "message": "Étape 2 : Pour cartographier les installations sur une limite donnée, l'utilisateur doit copier le code de limite correct à partir de la feuille « Données de limite ». S'il existe plusieurs limites auxquelles une installation doit être mappée, l'utilisateur peut ajouter tous les codes de limite séparés par des virgules.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_1_DESC_3",
-    "message": "\u00c9tape 3 : Pour chaque installation, l'utilisateur doit ajouter Actif ou Inactif pour toutes les installations dans la colonne \u00ab Utilisation des installations \u00bb. Toutes les installations marqu\u00e9es comme \u00ab Actives \u00bb seront utilis\u00e9es dans la campagne en cours de cr\u00e9ation, celles marqu\u00e9es \u00ab Inactives \u00bb ne seront pas utilis\u00e9es dans la campagne en cours de cr\u00e9ation.",
+    "message": "Étape 3 : Pour chaque installation, l'utilisateur doit ajouter Actif ou Inactif pour toutes les installations dans la colonne « Utilisation des installations ». Toutes les installations marquées comme « Actives » seront utilisées dans la campagne en cours de création, celles marquées « Inactives » ne seront pas utilisées dans la campagne en cours de création.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_1_DESC_4",
-    "message": "\u00c9tape 4 : Une fois toutes les fonctionnalit\u00e9s ajout\u00e9es, l'utilisateur doit enregistrer le fichier sur son syst\u00e8me et t\u00e9l\u00e9charger le fichier en appuyant sur l'option \u00ab Parcourir dans mes fichiers \u00bb.",
+    "message": "Étape 4 : Une fois toutes les fonctionnalités ajoutées, l'utilisateur doit enregistrer le fichier sur son système et télécharger le fichier en appuyant sur l'option « Parcourir dans mes fichiers ».",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_2",
-    "message": "Cas o\u00f9 il existe des donn\u00e9es d'installation existantes dans le syst\u00e8me\u00a0:",
+    "message": "Cas où il existe des données d'installation existantes dans le système :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_2_DESC_1",
-    "message": "\u00c9tape 1\u00a0: Lorsque vous ouvrez le mod\u00e8le d'installation t\u00e9l\u00e9charg\u00e9, veuillez vous r\u00e9f\u00e9rer \u00e0 la feuille Liste des installations disponibles. Pour les installations existantes, veuillez ajouter des entr\u00e9es dans la colonne Code limite. Vous pouvez trouver les codes de limites dans la feuille de donn\u00e9es des limites. Si une installation correspond \u00e0 plusieurs limites, veuillez s\u00e9parer les codes par des virgules.",
+    "message": "Étape 1 : Lorsque vous ouvrez le modèle d'installation téléchargé, veuillez vous référer à la feuille Liste des installations disponibles. Pour les installations existantes, veuillez ajouter des entrées dans la colonne Code limite. Vous pouvez trouver les codes de limites dans la feuille de données des limites. Si une installation correspond à plusieurs limites, veuillez séparer les codes par des virgules.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_2_DESC_2",
-    "message": "\u00c9tape 2 : Dans cette \u00e9tape, l'utilisateur devra ajouter des entr\u00e9es dans la colonne Utilisation de l'installation avec des entr\u00e9es valides \u00e9tant soit Actives, soit Inactives, o\u00f9 l'utilisateur peut d\u00e9finir l'utilisation d'une installation sur Active si l'installation est utilis\u00e9e pour une campagne ou bien peut \u00eatre d\u00e9finie sur Inactif. Les entr\u00e9es dans la colonne Utilisation des installations doivent \u00eatre ajout\u00e9es pour toutes les entr\u00e9es.",
+    "message": "Étape 2 : Dans cette étape, l'utilisateur devra ajouter des entrées dans la colonne Utilisation de l'installation avec des entrées valides étant soit Actives, soit Inactives, où l'utilisateur peut définir l'utilisation d'une installation sur Active si l'installation est utilisée pour une campagne ou bien peut être définie sur Inactif. Les entrées dans la colonne Utilisation des installations doivent être ajoutées pour toutes les entrées.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_2_DESC_3",
-    "message": "\u00c9tape 3\u00a0: Pour ajouter de nouvelles installations qui ne sont pas pr\u00e9sentes dans la liste des installations existantes, l'utilisateur doit saisir le nom de l'installation (doit \u00eatre unique), le type d'installation (entrep\u00f4t/\u00e9tablissement de sant\u00e9), le statut de l'installation (temporaire/permanent), la capacit\u00e9 (saisie num\u00e9rique), le code de limite (\u00e0 partir de la fiche de donn\u00e9es des limites) et l'utilisation de l'installation (active/inactive), comme expliqu\u00e9 pr\u00e9c\u00e9demment.",
+    "message": "Étape 3 : Pour ajouter de nouvelles installations qui ne sont pas présentes dans la liste des installations existantes, l'utilisateur doit saisir le nom de l'installation (doit être unique), le type d'installation (entrepôt/établissement de santé), le statut de l'installation (temporaire/permanent), la capacité (saisie numérique), le code de limite (à partir de la fiche de données des limites) et l'utilisation de l'installation (active/inactive), comme expliqué précédemment.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_2_DESC_4",
-    "message": "\u00c9tape 4 : Une fois toutes les fonctionnalit\u00e9s ajout\u00e9es, l'utilisateur doit enregistrer le fichier sur son syst\u00e8me et t\u00e9l\u00e9charger le fichier en appuyant sur l'option \u00ab Parcourir dans mes fichiers \u00bb.",
+    "message": "Étape 4 : Une fois toutes les fonctionnalités ajoutées, l'utilisateur doit enregistrer le fichier sur son système et télécharger le fichier en appuyant sur l'option « Parcourir dans mes fichiers ».",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_3",
-    "message": "Cas d'erreurs courantes\u00a0:",
+    "message": "Cas d'erreurs courantes :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_3_DESC_1",
-    "message": "Si l'utilisateur a supprim\u00e9 les codes d'\u00e9tablissement pour un \u00e9tablissement existant dans la liste, le syst\u00e8me cr\u00e9era un \u00e9tablissement en double avec ces valeurs de colonne.",
+    "message": "Si l'utilisateur a supprimé les codes d'établissement pour un établissement existant dans la liste, le système créera un établissement en double avec ces valeurs de colonne.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_3_DESC_2",
-    "message": "Si l'utilisateur supprime des colonnes de la \u00ab Liste des installations disponibles \u00bb de la feuille et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime des colonnes de la « Liste des installations disponibles » de la feuille et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_3_DESC_3",
-    "message": "Si l'utilisateur supprime l'un des en-t\u00eates de la feuille et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime l'un des en-têtes de la feuille et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_MAINHEADER",
-    "message": "Lisez-moi les instructions pour le t\u00e9l\u00e9chargement des installations",
+    "message": "Lisez-moi les instructions pour le téléchargement des installations",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -943,7 +943,7 @@
   },
   {
     "code": "GP_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -967,13 +967,13 @@
   },
   {
     "code": "GREATER_THAN",
-    "message": "sup\u00e9rieur \u00e0",
+    "message": "supérieur à",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "GREATER_THAN_EQUAL_TO",
-    "message": "sup\u00e9rieur ou \u00e9gal \u00e0",
+    "message": "supérieur ou égal à",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1045,19 +1045,19 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_BOUNDARY_CODE_MANDATORY_ERROR",
-    "message": "est invalide. Il doit \u00eatre extrait de la feuille \u00ab\u00a0Donn\u00e9es de limite\u00a0\u00bb",
+    "message": "est invalide. Il doit être extrait de la feuille « Données de limite »",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_BOUNDARY_CODE_OLD",
-    "message": "Ancien code de d\u00e9limitation",
+    "message": "Ancien code de délimitation",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_BOUNDARY_DATA",
-    "message": "Donn\u00e9es de limite",
+    "message": "Données de limite",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1093,31 +1093,31 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_ERROR",
-    "message": "La colonne \u00ab Capacit\u00e9 \u00bb ne doit pas \u00eatre vide et doit contenir un nombre compris entre 1 et 10 millions.",
+    "message": "La colonne « Capacité » ne doit pas être vide et doit contenir un nombre compris entre 1 et 10 millions.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_MICROPLAN",
-    "message": "Capacit\u00e9 (unit\u00e9s\u00a0: balles pour moustiquaires/",
+    "message": "Capacité (unités : balles pour moustiquaires/",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_MICROPLAN_LLIN-mz",
-    "message": "Capacit\u00e9 (Unit\u00e9s\u00a0:\u00a0balles)",
+    "message": "Capacité (Unités : balles)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_MICROPLAN_MR-DN",
-    "message": "Capacit\u00e9 (Unit\u00e9s\u00a0: Blisters)",
+    "message": "Capacité (Unités : Blisters)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_CODE",
-    "message": "Code de l'\u00e9tablissement",
+    "message": "Code de l'établissement",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1141,37 +1141,37 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_NAME",
-    "message": "Nom de l'\u00e9tablissement",
+    "message": "Nom de l'établissement",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_NAME_MICROPLAN",
-    "message": "Nom de l'\u00e9tablissement",
+    "message": "Nom de l'établissement",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_STATUS",
-    "message": "Statut de l'\u00e9tablissement",
+    "message": "Statut de l'établissement",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_STATUS_MICROPLAN",
-    "message": "Statut de l'\u00e9tablissement",
+    "message": "Statut de l'établissement",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_TYPE",
-    "message": "Type d'\u00e9tablissement",
+    "message": "Type d'établissement",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_TYPE_MICROPLAN",
-    "message": "Type d'\u00e9tablissement",
+    "message": "Type d'établissement",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1189,7 +1189,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FRENCH_LOCALIZATION_MESSAGE",
-    "message": "Fronti\u00e8re (fran\u00e7ais)",
+    "message": "Frontière (français)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1207,7 +1207,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_PORTUGESE_LOCALIZATION_MESSAGE",
-    "message": "Fronti\u00e8re (portugais)",
+    "message": "Frontière (portugais)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1219,13 +1219,13 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET",
-    "message": "Cible du m\u00e9nage au niveau du village (obligatoire et \u00e0 saisir par l'utilisateur)",
+    "message": "Cible du ménage au niveau du village (obligatoire et à saisir par l'utilisateur)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL",
-    "message": "Cible du m\u00e9nage au niveau du village (obligatoire et \u00e0 saisir par l'utilisateur)",
+    "message": "Cible du ménage au niveau du village (obligatoire et à saisir par l'utilisateur)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1237,7 +1237,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_BEDNET_COLUMN_3",
-    "message": "Nombre de moustiquaires \u00e0 distribuer",
+    "message": "Nombre de moustiquaires à distribuer",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1249,13 +1249,13 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_CO-DELIVERY_AGE_6_TO_59",
-    "message": "Cible pour le dosage (suppl\u00e9ment de vitamine A)",
+    "message": "Cible pour le dosage (supplément de vitamine A)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_HOUSEHOLD",
-    "message": "Cible des m\u00e9nages",
+    "message": "Cible des ménages",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1267,19 +1267,19 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_INT_CAMP_AGE_12_TO_59",
-    "message": "12 \u00e0 59 mois",
+    "message": "12 à 59 mois",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_INT_CAMP_AGE_1_TO_11",
-    "message": "1 \u00e0 11 mois",
+    "message": "1 à 11 mois",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_INT_CAMP_COLUUM_HOUSEHOLD",
-    "message": "Cible du m\u00e9nage",
+    "message": "Cible du ménage",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1291,7 +1291,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_IRS_1",
-    "message": "Cible des m\u00e9nages au niveau du village",
+    "message": "Cible des ménages au niveau du village",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1303,7 +1303,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_IRS_3",
-    "message": "Nombre de flacons pulv\u00e9risateurs (obligatoire)",
+    "message": "Nombre de flacons pulvérisateurs (obligatoire)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1315,13 +1315,13 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_IRS_NUMBER_OF_BOTTLE",
-    "message": "Nombre de flacons pulv\u00e9risateurs (obligatoire)",
+    "message": "Nombre de flacons pulvérisateurs (obligatoire)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_IRS_TOTAL_HOUSEHOLD",
-    "message": "Cible des m\u00e9nages au niveau du village",
+    "message": "Cible des ménages au niveau du village",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1345,13 +1345,13 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_LLIN",
-    "message": "Cible du m\u00e9nage au niveau du village (obligatoire et \u00e0 saisir par l'utilisateur)",
+    "message": "Cible du ménage au niveau du village (obligatoire et à saisir par l'utilisateur)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_LLIN_BEDNET",
-    "message": "Nombre de moustiquaires \u00e0 distribuer",
+    "message": "Nombre de moustiquaires à distribuer",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1399,13 +1399,13 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUMN_1",
-    "message": "Cible au niveau du village - \u00c2ge de 5 \u00e0 15 ans (Obligatoire et \u00e0 saisir par l'utilisateur)",
+    "message": "Cible au niveau du village - Âge de 5 à 15 ans (Obligatoire et à saisir par l'utilisateur)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUMN_2",
-    "message": "Cible au niveau du village - \u00c2ge sup\u00e9rieur \u00e0 15 ans (Obligatoire et \u00e0 saisir par l'utilisateur)",
+    "message": "Cible au niveau du village - Âge supérieur à 15 ans (Obligatoire et à saisir par l'utilisateur)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1423,13 +1423,13 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUUM_2",
-    "message": "M\u00e9nages cibles",
+    "message": "Ménages cibles",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUUM_3",
-    "message": "Nombre de comprim\u00e9s",
+    "message": "Nombre de comprimés",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1453,13 +1453,13 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_ONCHO_COLUMN_1",
-    "message": "Cible au niveau du village - \u00c2ge de 5 \u00e0 15 ans (Obligatoire et \u00e0 saisir par l'utilisateur)",
+    "message": "Cible au niveau du village - Âge de 5 à 15 ans (Obligatoire et à saisir par l'utilisateur)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_ONCHO_COLUMN_2",
-    "message": "Cible au niveau du village - \u00c2ge sup\u00e9rieur \u00e0 15 ans (Obligatoire et \u00e0 saisir par l'utilisateur)",
+    "message": "Cible au niveau du village - Âge supérieur à 15 ans (Obligatoire et à saisir par l'utilisateur)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1471,7 +1471,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_POLIO_AGE",
-    "message": "Population cible confirm\u00e9e (\u00e2ge de 0 \u00e0 59 mois)",
+    "message": "Population cible confirmée (âge de 0 à 59 mois)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1501,13 +1501,13 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_POPULATION_AGE_12TO59",
-    "message": "Population cible (\u00e2ge 12-59 mois)",
+    "message": "Population cible (âge 12-59 mois)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_POPULATION_AGE_3TO11",
-    "message": "Population cible (\u00e2ge 3-11 mois)",
+    "message": "Population cible (âge 3-11 mois)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1519,13 +1519,13 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SCHISTO_COLUMN_1",
-    "message": "Cible au niveau du village - \u00c2ge de 5 \u00e0 15 ans (Obligatoire et \u00e0 saisir par l'utilisateur)",
+    "message": "Cible au niveau du village - Âge de 5 à 15 ans (Obligatoire et à saisir par l'utilisateur)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SCHISTO_COLUMN_2",
-    "message": "Cible au niveau du village - \u00c2ge sup\u00e9rieur \u00e0 15 ans (Obligatoire et \u00e0 saisir par l'utilisateur)",
+    "message": "Cible au niveau du village - Âge supérieur à 15 ans (Obligatoire et à saisir par l'utilisateur)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1537,37 +1537,37 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC",
-    "message": "Cible au niveau du village (Obligatoire et \u00e0 saisir par l'utilisateur)",
+    "message": "Cible au niveau du village (Obligatoire et à saisir par l'utilisateur)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_AGE_12_TO_59",
-    "message": "Cible au niveau du village - \u00c2ge 12 \u00e0 59 mois (Obligatoire et \u00e0 saisir par l'utilisateur)",
+    "message": "Cible au niveau du village - Âge 12 à 59 mois (Obligatoire et à saisir par l'utilisateur)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_AGE_3_TO_11",
-    "message": "Cible au niveau du village - \u00c2ge 3 \u00e0 11 mois (Obligatoire et \u00e0 saisir par l'utilisateur)",
+    "message": "Cible au niveau du village - Âge 3 à 11 mois (Obligatoire et à saisir par l'utilisateur)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_COLUUM_3",
-    "message": "M\u00e9nages cibles",
+    "message": "Ménages cibles",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_COLUUM_4",
-    "message": "Nombre de comprim\u00e9s",
+    "message": "Nombre de comprimés",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_COLUUM_HOUSEHOLD",
-    "message": "Cible du m\u00e9nage",
+    "message": "Cible du ménage",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1579,19 +1579,19 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_NUMBER_OF_TABLETS",
-    "message": "Nombre de comprim\u00e9s",
+    "message": "Nombre de comprimés",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_TOTAL_HOUSEHOLD",
-    "message": "M\u00e9nages cibles",
+    "message": "Ménages cibles",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_TOTAL_HOUSEHOLDS",
-    "message": "Total des m\u00e9nages",
+    "message": "Total des ménages",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1627,7 +1627,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_BENEFICIARY_CODE",
-    "message": "Code du b\u00e9n\u00e9ficiaire",
+    "message": "Code du bénéficiaire",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1651,7 +1651,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_LIST",
-    "message": "Cr\u00e9er une liste d'utilisateurs",
+    "message": "Créer une liste d'utilisateurs",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1669,13 +1669,13 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_PAYEE_NAME",
-    "message": "Nom du b\u00e9n\u00e9ficiaire",
+    "message": "Nom du bénéficiaire",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_PAYEE_PHONE_NUMBER",
-    "message": "Num\u00e9ro de t\u00e9l\u00e9phone du b\u00e9n\u00e9ficiaire",
+    "message": "Numéro de téléphone du bénéficiaire",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1687,55 +1687,55 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_PHONE_NUMBER",
-    "message": "Num\u00e9ro de t\u00e9l\u00e9phone (obligatoire)",
+    "message": "Numéro de téléphone (obligatoire)",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_PHONE_NUMBER_ERROR",
-    "message": "doit \u00eatre fourni et doit \u00eatre un num\u00e9ro de t\u00e9l\u00e9phone de 10 chiffres",
+    "message": "doit être fourni et doit être un numéro de téléphone de 10 chiffres",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_PHONE_NUMBER_MICROPLAN",
-    "message": "Num\u00e9ro de t\u00e9l\u00e9phone",
+    "message": "Numéro de téléphone",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_ROLE",
-    "message": "R\u00f4le de l'utilisateur",
+    "message": "Rôle de l'utilisateur",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_1",
-    "message": "R\u00f4le utilisateur 1",
+    "message": "Rôle utilisateur 1",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_2",
-    "message": "R\u00f4le utilisateur 2",
+    "message": "Rôle utilisateur 2",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_3",
-    "message": "R\u00f4le utilisateur 3",
+    "message": "Rôle utilisateur 3",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_4",
-    "message": "R\u00f4le utilisateur 4",
+    "message": "Rôle utilisateur 4",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_5",
-    "message": "R\u00f4le utilisateur 5",
+    "message": "Rôle utilisateur 5",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1753,7 +1753,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE____ERROR_DETAILS",
-    "message": "D\u00e9tails de l'erreur",
+    "message": "Détails de l'erreur",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1765,19 +1765,19 @@
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_APPROVER_SHEET",
-    "message": "Approbateurs de pr\u00e9sence",
+    "message": "Approbateurs de présence",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_DATE_OUT_OF_RANGE",
-    "message": "La date doit \u00eatre comprise entre la date de d\u00e9but et la date de fin de l'inscription",
+    "message": "La date doit être comprise entre la date de début et la date de fin de l'inscription",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_DEENROLLMENT_BEFORE_ENROLLMENT",
-    "message": "La date de d\u00e9sinscription ne doit pas \u00eatre ant\u00e9rieure \u00e0 la date d\u2019inscription",
+    "message": "La date de désinscription ne doit pas être antérieure à la date d’inscription",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1789,7 +1789,7 @@
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_DEENROLLMENT_WITHOUT_ENROLLMENT",
-    "message": "La date de d\u00e9sinscription n\u00e9cessite que l\u2019inscription existe",
+    "message": "La date de désinscription nécessite que l’inscription existe",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1801,13 +1801,13 @@
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_INVALID_DATE_FORMAT",
-    "message": "La date doit \u00eatre au format jj-MM-aaaa ou jj/MM/aaaa",
+    "message": "La date doit être au format jj-MM-aaaa ou jj/MM/aaaa",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_MARKER_SHEET",
-    "message": "Marqueurs de pr\u00e9sence",
+    "message": "Marqueurs de présence",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1819,7 +1819,7 @@
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_TEAM_CODE",
-    "message": "Code d'\u00e9quipe",
+    "message": "Code d'équipe",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1831,19 +1831,19 @@
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_WORKER_SHEET",
-    "message": "Travailleurs de premi\u00e8re ligne",
+    "message": "Travailleurs de première ligne",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_CREATION_FAILED",
-    "message": "\u00c9chec de la cr\u00e9ation du registre de pr\u00e9sence",
+    "message": "Échec de la création du registre de présence",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_EVENT_TYPE",
-    "message": "Type d'\u00e9v\u00e9nement",
+    "message": "Type d'événement",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1855,13 +1855,13 @@
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_LIST",
-    "message": "Registres de pr\u00e9sence",
+    "message": "Registres de présence",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_PROJECT_NOT_READY",
-    "message": "Les projets doivent \u00eatre cr\u00e9\u00e9s avant de g\u00e9n\u00e9rer le mod\u00e8le de registre de pr\u00e9sence",
+    "message": "Les projets doivent être créés avant de générer le modèle de registre de présence",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1873,19 +1873,19 @@
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_README_INSTRUCTIONS",
-    "message": "Instructions pour remplir le mod\u00e8le de registre de pr\u00e9sence\u00a0:\n\n1. Remplissez au moins une colonne de limite pour chaque ligne\n2. L'ID de registre est g\u00e9n\u00e9r\u00e9 automatiquement \u00e0 partir de la limite la plus profonde s\u00e9lectionn\u00e9e. Vous pouvez le modifier si n\u00e9cessaire.\n3. Assurez-vous que tous les identifiants de registre sont uniques\n4. T\u00e9l\u00e9chargez le fichier compl\u00e9t\u00e9 sur le syst\u00e8me\n\nRemarque\u00a0: Les projets doivent \u00eatre cr\u00e9\u00e9s avant de g\u00e9n\u00e9rer les registres de pr\u00e9sence.",
+    "message": "Instructions pour remplir le modèle de registre de présence :\n\n1. Remplissez au moins une colonne de limite pour chaque ligne\n2. L'ID de registre est généré automatiquement à partir de la limite la plus profonde sélectionnée. Vous pouvez le modifier si nécessaire.\n3. Assurez-vous que tous les identifiants de registre sont uniques\n4. Téléchargez le fichier complété sur le système\n\nRemarque : Les projets doivent être créés avant de générer les registres de présence.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_SESSIONS",
-    "message": "S\u00e9ances",
+    "message": "Séances",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_VALIDATION_DUPLICATE_ID",
-    "message": "ID de registre en double trouv\u00e9",
+    "message": "ID de registre en double trouvé",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1903,7 +1903,7 @@
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_VALIDATION_NO_BOUNDARY",
-    "message": "Au moins une colonne de limite doit \u00eatre remplie",
+    "message": "Au moins une colonne de limite doit être remplie",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1921,19 +1921,19 @@
   },
   {
     "code": "HCM_MODULE_DESCRIPTION_POLIO_ATTENDANCEFLOW",
-    "message": "Pr\u00e9sence record des agents de terrain et des b\u00e9n\u00e9ficiaires lors des activit\u00e9s de distribution. Assure un suivi pr\u00e9cis de la participation pour les rapports.",
+    "message": "Présence record des agents de terrain et des bénéficiaires lors des activités de distribution. Assure un suivi précis de la participation pour les rapports.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_MODULE_DESCRIPTION_POLIO_COMPLAINTFLOW",
-    "message": "Enregistrez et g\u00e9rez les plaintes li\u00e9es aux campagnes de distribution. Permet une capture et une r\u00e9solution rapides des probl\u00e8mes pour am\u00e9liorer la qualit\u00e9 du service.",
+    "message": "Enregistrez et gérez les plaintes liées aux campagnes de distribution. Permet une capture et une résolution rapides des problèmes pour améliorer la qualité du service.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_MODULE_DESCRIPTION_POLIO_INVENTORYFLOW",
-    "message": "G\u00e9rer l\u2019inventaire des insecticides et des \u00e9quipements pour les campagnes de pulv\u00e9risation intradomiciliaire \u00e0 effet r\u00e9manent.",
+    "message": "Gérer l’inventaire des insecticides et des équipements pour les campagnes de pulvérisation intradomiciliaire à effet rémanent.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1945,19 +1945,19 @@
   },
   {
     "code": "HCM_REGISTER_APPROVER_SHEET",
-    "message": "Approbateurs de pr\u00e9sence",
+    "message": "Approbateurs de présence",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REGISTER_MARKER_SHEET",
-    "message": "Marqueurs de pr\u00e9sence",
+    "message": "Marqueurs de présence",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REGISTER_WORKER_SHEET",
-    "message": "Travailleurs de premi\u00e8re ligne",
+    "message": "Travailleurs de première ligne",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -1981,7 +1981,7 @@
   },
   {
     "code": "HEALTH_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -2029,7 +2029,7 @@
   },
   {
     "code": "HIERARCHYTEST_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -2053,7 +2053,7 @@
   },
   {
     "code": "HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO",
-    "message": "Les filtres ne peuvent \u00eatre appliqu\u00e9s qu'au niveau 0",
+    "message": "Les filtres ne peuvent être appliqués qu'au niveau 0",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -2071,7 +2071,7 @@
   },
   {
     "code": "ID_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -2107,175 +2107,175 @@
   },
   {
     "code": "LESS_THAN_EQUAL_TO",
-    "message": "inf\u00e9rieur ou \u00e9gal \u00e0",
+    "message": "inférieur ou égal à",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIM_MZ_capacity",
-    "message": "Capacit\u00e9",
+    "message": "Capacité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIM_mz_capacity",
-    "message": "Capacit\u00e9",
+    "message": "Capacité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_1",
-    "message": "S'il n'y a aucune installation disponible pour la s\u00e9lection, l'onglet \u00ab\u00a0Liste des installations disponibles\u00a0\u00bb dans le mod\u00e8le sera vide. Pour cr\u00e9er de nouvelles donn\u00e9es d'installation, ajoutez le nom de l'installation, le type d'installation, l'\u00e9tat de l'installation et la capacit\u00e9. La colonne \u00ab\u00a0Code d'\u00e9tablissement\u00a0\u00bb doit rester vide s'il s'agit d'un nouvel \u00e9tablissement. S'il s'agit d'une installation en cours de r\u00e9utilisation (qui est disponible dans le mod\u00e8le apr\u00e8s le t\u00e9l\u00e9chargement), l'utilisateur n'a qu'\u00e0 effectuer l'\u00e9tape 2.",
+    "message": "S'il n'y a aucune installation disponible pour la sélection, l'onglet « Liste des installations disponibles » dans le modèle sera vide. Pour créer de nouvelles données d'installation, ajoutez le nom de l'installation, le type d'installation, l'état de l'installation et la capacité. La colonne « Code d'établissement » doit rester vide s'il s'agit d'un nouvel établissement. S'il s'agit d'une installation en cours de réutilisation (qui est disponible dans le modèle après le téléchargement), l'utilisateur n'a qu'à effectuer l'étape 2.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_10",
-    "message": "Si l'utilisateur supprime l'un des en-t\u00eates de la feuille et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime l'un des en-têtes de la feuille et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_2",
-    "message": "Pour mapper l'installation \u00e0 la limite correcte, l'utilisateur doit copier le code de limite correct de la limite de la feuille \u00ab Liste des limites de campagne \u00bb sur laquelle l'installation doit \u00eatre cartographi\u00e9e. S'il existe une installation mapp\u00e9e \u00e0 plusieurs limites, l'administrateur syst\u00e8me devra ajouter les codes de limite de toutes les limites auxquelles l'installation est mapp\u00e9e en les s\u00e9parant par des virgules dans la cellule pour ajouter des codes de limite pour cette installation.",
+    "message": "Pour mapper l'installation à la limite correcte, l'utilisateur doit copier le code de limite correct de la limite de la feuille « Liste des limites de campagne » sur laquelle l'installation doit être cartographiée. S'il existe une installation mappée à plusieurs limites, l'administrateur système devra ajouter les codes de limite de toutes les limites auxquelles l'installation est mappée en les séparant par des virgules dans la cellule pour ajouter des codes de limite pour cette installation.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_3",
-    "message": "Enregistrez la feuille avec les objectifs mis \u00e0 jour pour chaque village sur le mod\u00e8le Excel.",
+    "message": "Enregistrez la feuille avec les objectifs mis à jour pour chaque village sur le modèle Excel.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_4",
-    "message": "Appuyez sur le bouton \u00ab Parcourir mes fichiers \u00bb sur l'\u00e9cran \u00ab T\u00e9l\u00e9charger les donn\u00e9es de l'installation \u00bb et s\u00e9lectionnez le fichier enregistr\u00e9 avec toutes les cibles du syst\u00e8me.",
+    "message": "Appuyez sur le bouton « Parcourir mes fichiers » sur l'écran « Télécharger les données de l'installation » et sélectionnez le fichier enregistré avec toutes les cibles du système.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_5",
-    "message": "D\u00e9sactivation des installations existantes pour une campagne.",
+    "message": "Désactivation des installations existantes pour une campagne.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_6",
-    "message": "Une fois que l'utilisateur a t\u00e9l\u00e9charg\u00e9 le mod\u00e8le pour les installations, si le syst\u00e8me dispose de donn\u00e9es d'installation existantes \u00e0 r\u00e9utiliser, le mod\u00e8le sera pr\u00e9-rempli avec la liste des installations.",
+    "message": "Une fois que l'utilisateur a téléchargé le modèle pour les installations, si le système dispose de données d'installation existantes à réutiliser, le modèle sera pré-rempli avec la liste des installations.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_7",
-    "message": "Si l'utilisateur choisit ensuite de ne pas utiliser des installations sp\u00e9cifiques, il peut supprimer les lignes de donn\u00e9es pour ces installations sp\u00e9cifiques qui doivent \u00eatre supprim\u00e9es et t\u00e9l\u00e9charger la feuille avec uniquement les installations n\u00e9cessaires \u00e0 la campagne avec les codes de limite corrects mapp\u00e9s \u00e0 ces installations.",
+    "message": "Si l'utilisateur choisit ensuite de ne pas utiliser des installations spécifiques, il peut supprimer les lignes de données pour ces installations spécifiques qui doivent être supprimées et télécharger la feuille avec uniquement les installations nécessaires à la campagne avec les codes de limite corrects mappés à ces installations.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_8",
-    "message": "Si l'utilisateur a supprim\u00e9 les codes d'\u00e9tablissement pour un \u00e9tablissement existant dans la liste, le syst\u00e8me cr\u00e9era un \u00e9tablissement en double avec ces valeurs de colonne.",
+    "message": "Si l'utilisateur a supprimé les codes d'établissement pour un établissement existant dans la liste, le système créera un établissement en double avec ces valeurs de colonne.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_9",
-    "message": "Si l'utilisateur supprime des colonnes de la \u00ab Liste des installations disponibles \u00bb de la feuille et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime des colonnes de la « Liste des installations disponibles » de la feuille et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITY_EXCEL_HEADER_1",
-    "message": "Cr\u00e9ation de nouvelles donn\u00e9es d'installation/utilisation des donn\u00e9es d'installation existantes une fois le mod\u00e8le t\u00e9l\u00e9charg\u00e9",
+    "message": "Création de nouvelles données d'installation/utilisation des données d'installation existantes une fois le modèle téléchargé",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITY_EXCEL_HEADER_2",
-    "message": "Cas d'erreurs courantes\u00a0:",
+    "message": "Cas d'erreurs courantes :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITY_EXCEL_MAIN_HEADER",
-    "message": "Lisez-moi les instructions pour le t\u00e9l\u00e9chargement des installations",
+    "message": "Lisez-moi les instructions pour le téléchargement des installations",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_HEADER",
-    "message": "Cr\u00e9ation de nouvelles donn\u00e9es d'installation/utilisation des donn\u00e9es d'installation existantes une fois le mod\u00e8le t\u00e9l\u00e9charg\u00e9\u00a0:",
+    "message": "Création de nouvelles données d'installation/utilisation des données d'installation existantes une fois le modèle téléchargé :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_HEADER_1",
-    "message": "D\u00e9finition des objectifs une fois le mod\u00e8le t\u00e9l\u00e9charg\u00e9\u00a0:",
+    "message": "Définition des objectifs une fois le modèle téléchargé :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_HEADER_2",
-    "message": "Cas d'erreurs courantes\u00a0:",
+    "message": "Cas d'erreurs courantes :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_MAIN_HEADER",
-    "message": "Lisez-moi les instructions pour le t\u00e9l\u00e9chargement de la population",
+    "message": "Lisez-moi les instructions pour le téléchargement de la population",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_1",
-    "message": "Acc\u00e9dez \u00e0 la feuille du district pour lequel vous souhaitez d\u00e9finir des objectifs et ajoutez des chiffres dans la colonne \u00ab\u00a0Cibles\u00a0\u00bb pour chaque village.",
+    "message": "Accédez à la feuille du district pour lequel vous souhaitez définir des objectifs et ajoutez des chiffres dans la colonne « Cibles » pour chaque village.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_2",
-    "message": "Entrez les objectifs pour chaque village dans la feuille de chaque district sous la colonne \u00ab\u00a0Cible au niveau de la limite s\u00e9lectionn\u00e9e\u00a0\u00bb. Si un village n\u2019a pas d\u2019objectifs fix\u00e9s, la feuille comportera des erreurs.",
+    "message": "Entrez les objectifs pour chaque village dans la feuille de chaque district sous la colonne « Cible au niveau de la limite sélectionnée ». Si un village n’a pas d’objectifs fixés, la feuille comportera des erreurs.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_3",
-    "message": "Si l'utilisateur n'a pas d\u00e9fini d'objectifs pour chaque village, le syst\u00e8me g\u00e9n\u00e9rera une erreur avec le num\u00e9ro de ligne o\u00f9 les cibles sont manquantes.",
+    "message": "Si l'utilisateur n'a pas défini d'objectifs pour chaque village, le système générera une erreur avec le numéro de ligne où les cibles sont manquantes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_4",
-    "message": "Si l'utilisateur supprime un village de la feuille ou supprime une feuille de district compl\u00e8te et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime un village de la feuille ou supprime une feuille de district complète et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_5",
-    "message": "Si l'utilisateur n'a pas d\u00e9fini d'objectifs pour chaque village, le syst\u00e8me g\u00e9n\u00e9rera une erreur avec le num\u00e9ro de ligne o\u00f9 les cibles sont manquantes.",
+    "message": "Si l'utilisateur n'a pas défini d'objectifs pour chaque village, le système générera une erreur avec le numéro de ligne où les cibles sont manquantes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_6",
-    "message": "Si l'utilisateur supprime un village de la feuille ou supprime une feuille de district compl\u00e8te et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime un village de la feuille ou supprime une feuille de district complète et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_7",
-    "message": "Si l'utilisateur supprime l'un des en-t\u00eates de la feuille et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime l'un des en-têtes de la feuille et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "LLIN_mz_capacity",
-    "message": "Capacit\u00e9",
+    "message": "Capacité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MALE",
-    "message": "M\u00e2le",
+    "message": "Mâle",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -2293,7 +2293,7 @@
   },
   {
     "code": "MH_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -2335,7 +2335,7 @@
   },
   {
     "code": "MICROPLAN_BOUNDARY_DATA_SHEET",
-    "message": "Donn\u00e9es de limite",
+    "message": "Données de limite",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -2353,7 +2353,7 @@
   },
   {
     "code": "MICROPLAN_ERROR_COLUMN",
-    "message": "D\u00e9tails de l'erreur",
+    "message": "Détails de l'erreur",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -2371,13 +2371,13 @@
   },
   {
     "code": "MICROPLAN_FACILITY_DATA_SHEET",
-    "message": "Donn\u00e9es des installations",
+    "message": "Données des installations",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MICROPLAN_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -2395,7 +2395,7 @@
   },
   {
     "code": "MICROPLAN_TEMPLATE_README_MAIN_HEADER",
-    "message": "Lisez-moi les instructions pour le t\u00e9l\u00e9chargement cible",
+    "message": "Lisez-moi les instructions pour le téléchargement cible",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -2425,7 +2425,7 @@
   },
   {
     "code": "MP_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -2449,7 +2449,7 @@
   },
   {
     "code": "MP_VILLAGE_ROAD_CONDITION",
-    "message": "\u00c9tat des routes du village",
+    "message": "État des routes du village",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -2461,145 +2461,145 @@
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_1",
-    "message": "S'il n'y a aucune installation disponible pour la s\u00e9lection, l'onglet \u00ab\u00a0Liste des installations disponibles\u00a0\u00bb dans le mod\u00e8le sera vide. Pour cr\u00e9er de nouvelles donn\u00e9es d'installation, ajoutez le nom de l'installation, le type d'installation, l'\u00e9tat de l'installation et la capacit\u00e9. La colonne \u00ab\u00a0Code d'\u00e9tablissement\u00a0\u00bb doit rester vide s'il s'agit d'un nouvel \u00e9tablissement. S'il s'agit d'une installation en cours de r\u00e9utilisation (qui est disponible dans le mod\u00e8le apr\u00e8s le t\u00e9l\u00e9chargement), l'utilisateur n'a qu'\u00e0 effectuer l'\u00e9tape 2.",
+    "message": "S'il n'y a aucune installation disponible pour la sélection, l'onglet « Liste des installations disponibles » dans le modèle sera vide. Pour créer de nouvelles données d'installation, ajoutez le nom de l'installation, le type d'installation, l'état de l'installation et la capacité. La colonne « Code d'établissement » doit rester vide s'il s'agit d'un nouvel établissement. S'il s'agit d'une installation en cours de réutilisation (qui est disponible dans le modèle après le téléchargement), l'utilisateur n'a qu'à effectuer l'étape 2.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_10",
-    "message": "Si l'utilisateur supprime l'un des en-t\u00eates de la feuille et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime l'un des en-têtes de la feuille et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_2",
-    "message": "Pour mapper l'installation \u00e0 la limite correcte, l'utilisateur doit copier le code de limite correct de la limite de la feuille \u00ab Liste des limites de campagne \u00bb sur laquelle l'installation doit \u00eatre cartographi\u00e9e. S'il existe une installation mapp\u00e9e \u00e0 plusieurs limites, l'administrateur syst\u00e8me devra ajouter les codes de limite de toutes les limites auxquelles l'installation est mapp\u00e9e en les s\u00e9parant par des virgules dans la cellule pour ajouter des codes de limite pour cette installation.",
+    "message": "Pour mapper l'installation à la limite correcte, l'utilisateur doit copier le code de limite correct de la limite de la feuille « Liste des limites de campagne » sur laquelle l'installation doit être cartographiée. S'il existe une installation mappée à plusieurs limites, l'administrateur système devra ajouter les codes de limite de toutes les limites auxquelles l'installation est mappée en les séparant par des virgules dans la cellule pour ajouter des codes de limite pour cette installation.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_3",
-    "message": "Enregistrez la feuille avec les objectifs mis \u00e0 jour pour chaque village sur le mod\u00e8le Excel.",
+    "message": "Enregistrez la feuille avec les objectifs mis à jour pour chaque village sur le modèle Excel.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_4",
-    "message": "Appuyez sur le bouton \u00ab Parcourir mes fichiers \u00bb sur l'\u00e9cran \u00ab T\u00e9l\u00e9charger les donn\u00e9es de l'installation \u00bb et s\u00e9lectionnez le fichier enregistr\u00e9 avec toutes les cibles du syst\u00e8me.",
+    "message": "Appuyez sur le bouton « Parcourir mes fichiers » sur l'écran « Télécharger les données de l'installation » et sélectionnez le fichier enregistré avec toutes les cibles du système.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_5",
-    "message": "D\u00e9sactivation des installations existantes pour une campagne.",
+    "message": "Désactivation des installations existantes pour une campagne.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_6",
-    "message": "Une fois que l'utilisateur a t\u00e9l\u00e9charg\u00e9 le mod\u00e8le pour les installations, si le syst\u00e8me dispose de donn\u00e9es d'installation existantes \u00e0 r\u00e9utiliser, le mod\u00e8le sera pr\u00e9-rempli avec la liste des installations.",
+    "message": "Une fois que l'utilisateur a téléchargé le modèle pour les installations, si le système dispose de données d'installation existantes à réutiliser, le modèle sera pré-rempli avec la liste des installations.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_7",
-    "message": "Si l'utilisateur choisit ensuite de ne pas utiliser des installations sp\u00e9cifiques, il peut supprimer les lignes de donn\u00e9es pour ces installations sp\u00e9cifiques qui doivent \u00eatre supprim\u00e9es et t\u00e9l\u00e9charger la feuille avec uniquement les installations n\u00e9cessaires \u00e0 la campagne avec les codes de limite corrects mapp\u00e9s \u00e0 ces installations.",
+    "message": "Si l'utilisateur choisit ensuite de ne pas utiliser des installations spécifiques, il peut supprimer les lignes de données pour ces installations spécifiques qui doivent être supprimées et télécharger la feuille avec uniquement les installations nécessaires à la campagne avec les codes de limite corrects mappés à ces installations.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_8",
-    "message": "Si l'utilisateur a supprim\u00e9 les codes d'\u00e9tablissement pour un \u00e9tablissement existant dans la liste, le syst\u00e8me cr\u00e9era un \u00e9tablissement en double avec ces valeurs de colonne.",
+    "message": "Si l'utilisateur a supprimé les codes d'établissement pour un établissement existant dans la liste, le système créera un établissement en double avec ces valeurs de colonne.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_9",
-    "message": "Si l'utilisateur supprime des colonnes de la \u00ab Liste des installations disponibles \u00bb de la feuille et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime des colonnes de la « Liste des installations disponibles » de la feuille et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_FACILITY_EXCEL_HEADER_1",
-    "message": "Cr\u00e9ation de nouvelles donn\u00e9es d'installation/utilisation des donn\u00e9es d'installation existantes une fois le mod\u00e8le t\u00e9l\u00e9charg\u00e9",
+    "message": "Création de nouvelles données d'installation/utilisation des données d'installation existantes une fois le modèle téléchargé",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_FACILITY_EXCEL_HEADER_2",
-    "message": "Cas d'erreurs courantes\u00a0:",
+    "message": "Cas d'erreurs courantes :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_FACILITY_EXCEL_MAIN_HEADER",
-    "message": "Lisez-moi les instructions pour le t\u00e9l\u00e9chargement des installations",
+    "message": "Lisez-moi les instructions pour le téléchargement des installations",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_HEADER_1",
-    "message": "D\u00e9finition des cibles une fois le mod\u00e8le t\u00e9l\u00e9charg\u00e9\u00a0:",
+    "message": "Définition des cibles une fois le modèle téléchargé :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_HEADER_2",
-    "message": "Cas d'erreurs courantes\u00a0:",
+    "message": "Cas d'erreurs courantes :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_MAIN_HEADER",
-    "message": "Lisez-moi les instructions pour le t\u00e9l\u00e9chargement de la population",
+    "message": "Lisez-moi les instructions pour le téléchargement de la population",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_1",
-    "message": "Acc\u00e9dez \u00e0 la feuille du district pour lequel vous souhaitez d\u00e9finir des objectifs et ajoutez des chiffres dans la colonne \u00ab\u00a0Cibles\u00a0\u00bb pour chaque village.",
+    "message": "Accédez à la feuille du district pour lequel vous souhaitez définir des objectifs et ajoutez des chiffres dans la colonne « Cibles » pour chaque village.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_2",
-    "message": "Entrez les objectifs pour chaque village dans la feuille de chaque district sous la colonne \u00ab\u00a0Cibles\u00a0\u00bb. Si un village n\u2019a pas d\u2019objectifs d\u00e9finis, la feuille comportera des erreurs.",
+    "message": "Entrez les objectifs pour chaque village dans la feuille de chaque district sous la colonne « Cibles ». Si un village n’a pas d’objectifs définis, la feuille comportera des erreurs.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_3",
-    "message": "Enregistrez la feuille avec les objectifs mis \u00e0 jour pour chaque village sur le mod\u00e8le Excel.",
+    "message": "Enregistrez la feuille avec les objectifs mis à jour pour chaque village sur le modèle Excel.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_4",
-    "message": "Appuyez sur le bouton \u00ab\u00a0Parcourir mes fichiers\u00a0\u00bb sur l'\u00e9cran \u00ab\u00a0T\u00e9l\u00e9charger la cible\u00a0\u00bb et s\u00e9lectionnez le fichier enregistr\u00e9 avec toutes les cibles du syst\u00e8me.",
+    "message": "Appuyez sur le bouton « Parcourir mes fichiers » sur l'écran « Télécharger la cible » et sélectionnez le fichier enregistré avec toutes les cibles du système.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_5",
-    "message": "Si l'utilisateur n'a pas d\u00e9fini d'objectifs pour chaque village, le syst\u00e8me g\u00e9n\u00e9rera une erreur avec le num\u00e9ro de ligne o\u00f9 les cibles sont manquantes.",
+    "message": "Si l'utilisateur n'a pas défini d'objectifs pour chaque village, le système générera une erreur avec le numéro de ligne où les cibles sont manquantes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_6",
-    "message": "Si l'utilisateur supprime un village de la feuille ou supprime une feuille de district compl\u00e8te et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime un village de la feuille ou supprime une feuille de district complète et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_7",
-    "message": "Si l'utilisateur supprime l'un des en-t\u00eates de la feuille et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime l'un des en-têtes de la feuille et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "MR_DN_capacity",
-    "message": "Capacit\u00e9",
+    "message": "Capacité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -2629,7 +2629,7 @@
   },
   {
     "code": "NEWTEST0005_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -2659,7 +2659,7 @@
   },
   {
     "code": "NG_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -40279,7 +40279,7 @@
   },
   {
     "code": "NITISH_STATE",
-    "message": "\u00c9tat",
+    "message": "État",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -40315,13 +40315,13 @@
   },
   {
     "code": "PLAN_ESTIMATION_APPROVER",
-    "message": "Approbateur de l\u2019estimation du plan",
+    "message": "Approbateur de l’estimation du plan",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "POPULATION_DATA_APPROVER",
-    "message": "Approbateur des donn\u00e9es d\u00e9mographiques",
+    "message": "Approbateur des données démographiques",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -40333,13 +40333,13 @@
   },
   {
     "code": "ROOT_PLAN_ESTIMATION_APPROVER",
-    "message": "Approbateur de l\u2019estimation du plan racine",
+    "message": "Approbateur de l’estimation du plan racine",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "ROOT_POPULATION_DATA_APPROVER",
-    "message": "Approbateur des donn\u00e9es de population racine",
+    "message": "Approbateur des données de population racine",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -40363,7 +40363,7 @@
   },
   {
     "code": "SV_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -40387,13 +40387,13 @@
   },
   {
     "code": "Svefewg4YCb",
-    "message": "Elle a murmur\u00e9",
+    "message": "Elle a murmuré",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "TARGET_HOUSEHOLDS",
-    "message": "M\u00e9nages cibles",
+    "message": "Ménages cibles",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -40417,13 +40417,13 @@
   },
   {
     "code": "TEST BOUNDARY_REGION",
-    "message": "R\u00e9gion",
+    "message": "Région",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "TEST BOUNDARY_STATE",
-    "message": "\u00c9tat",
+    "message": "État",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -40447,127 +40447,127 @@
   },
   {
     "code": "TO",
-    "message": "\u00e0",
+    "message": "à",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_CONSOLE_README_HEADER_1",
-    "message": "T\u00e9l\u00e9chargement Microplan d'une seule feuille",
+    "message": "Téléchargement Microplan d'une seule feuille",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_CONSOLE_README_HEADER_1_DESC_1",
-    "message": "T\u00e9l\u00e9chargez le mod\u00e8le de microplan pour ajouter les d\u00e9tails des installations, les affectations des utilisateurs et les donn\u00e9es cibles en un seul endroit. La feuille comprend des listes d\u00e9roulantes pour s\u00e9lectionner les limites, les types d'installations, les r\u00f4les et d'autres champs obligatoires.",
+    "message": "Téléchargez le modèle de microplan pour ajouter les détails des installations, les affectations des utilisateurs et les données cibles en un seul endroit. La feuille comprend des listes déroulantes pour sélectionner les limites, les types d'installations, les rôles et d'autres champs obligatoires.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_CONSOLE_README_HEADER_1_DESC_2",
-    "message": "Remplissez tous les champs obligatoires, mettez \u00e0 jour les cibles pour chaque limite et v\u00e9rifiez l'exactitude des entr\u00e9es avant de t\u00e9l\u00e9charger le fichier compl\u00e9t\u00e9. Les entr\u00e9es manquantes, les colonnes supprim\u00e9es ou les en-t\u00eates modifi\u00e9s entra\u00eeneront des erreurs de t\u00e9l\u00e9chargement. Une fois la feuille termin\u00e9e, enregistrez-la et t\u00e9l\u00e9chargez-la pour charger toutes les donn\u00e9es du microplan de la campagne.",
+    "message": "Remplissez tous les champs obligatoires, mettez à jour les cibles pour chaque limite et vérifiez l'exactitude des entrées avant de télécharger le fichier complété. Les entrées manquantes, les colonnes supprimées ou les en-têtes modifiés entraîneront des erreurs de téléchargement. Une fois la feuille terminée, enregistrez-la et téléchargez-la pour charger toutes les données du microplan de la campagne.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_1",
-    "message": "Donn\u00e9es relatives aux installations : Cr\u00e9ation de nouvelles installations ou r\u00e9utilisation d'installations existantes",
+    "message": "Données relatives aux installations : Création de nouvelles installations ou réutilisation d'installations existantes",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_1_DESC_1",
-    "message": "Une fois le mod\u00e8le t\u00e9l\u00e9charg\u00e9, l'onglet \u00ab\u00a0Liste des installations disponibles\u00a0\u00bb sera pr\u00e9rempli avec les donn\u00e9es des installations existantes pouvant \u00eatre r\u00e9utilis\u00e9es. Si aucune installation n'est encore disponible, l'onglet sera vide. Pour cr\u00e9er une nouvelle installation, indiquez son nom, son type, son statut et sa capacit\u00e9, et laissez la colonne \u00ab\u00a0Code de l'installation\u00a0\u00bb vide. Pour une installation d\u00e9j\u00e0 r\u00e9utilis\u00e9e, il suffit de l'associer \u00e0 la zone appropri\u00e9e (voir ci-dessous).",
+    "message": "Une fois le modèle téléchargé, l'onglet « Liste des installations disponibles » sera prérempli avec les données des installations existantes pouvant être réutilisées. Si aucune installation n'est encore disponible, l'onglet sera vide. Pour créer une nouvelle installation, indiquez son nom, son type, son statut et sa capacité, et laissez la colonne « Code de l'installation » vide. Pour une installation déjà réutilisée, il suffit de l'associer à la zone appropriée (voir ci-dessous).",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_1_DESC_2",
-    "message": "Associez chaque installation \u00e0 la limite correspondante en copiant le code de limite de la feuille \u00ab\u00a0Liste des limites de campagne\u00a0\u00bb dans la ligne de cette installation. Si une installation est associ\u00e9e \u00e0 plusieurs limites, additionnez tous les codes de limite pertinents, s\u00e9par\u00e9s par des virgules, dans la m\u00eame cellule.",
+    "message": "Associez chaque installation à la limite correspondante en copiant le code de limite de la feuille « Liste des limites de campagne » dans la ligne de cette installation. Si une installation est associée à plusieurs limites, additionnez tous les codes de limite pertinents, séparés par des virgules, dans la même cellule.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_1_DESC_3",
-    "message": "Pour exclure une installation existante de la campagne, supprimez la ligne enti\u00e8re de cette installation de la feuille avant de la t\u00e9l\u00e9charger\u00a0; seules les installations que vous souhaitez inclure doivent rester, chacune avec le ou les codes de limite corrects cartographi\u00e9s.",
+    "message": "Pour exclure une installation existante de la campagne, supprimez la ligne entière de cette installation de la feuille avant de la télécharger ; seules les installations que vous souhaitez inclure doivent rester, chacune avec le ou les codes de limite corrects cartographiés.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_2",
-    "message": "Donn\u00e9es utilisateur : Cr\u00e9ation d'utilisateurs pour la campagne",
+    "message": "Données utilisateur : Création d'utilisateurs pour la campagne",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_2_DESC_1",
-    "message": "Cr\u00e9ez une ligne distincte pour chaque utilisateur. Les champs suivants sont obligatoires pour chaque utilisateur\u00a0: Nom, Num\u00e9ro de t\u00e9l\u00e9phone, R\u00f4le, Type d\u2019emploi et Code de zone.",
+    "message": "Créez une ligne distincte pour chaque utilisateur. Les champs suivants sont obligatoires pour chaque utilisateur : Nom, Numéro de téléphone, Rôle, Type d’emploi et Code de zone.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_2_DESC_2",
-    "message": "Si un utilisateur est associ\u00e9 \u00e0 plusieurs r\u00f4les, ajoutez tous les r\u00f4les concern\u00e9s, s\u00e9par\u00e9s par des virgules, dans la cellule R\u00f4le de cet utilisateur.",
+    "message": "Si un utilisateur est associé à plusieurs rôles, ajoutez tous les rôles concernés, séparés par des virgules, dans la cellule Rôle de cet utilisateur.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_2_DESC_3",
-    "message": "Attribuez chaque utilisateur \u00e0 la zone g\u00e9ographique correspondante \u00e0 l'aide du code de zone figurant dans la feuille \u00ab\u00a0Liste des zones de campagne\u00a0\u00bb. Si un utilisateur est associ\u00e9 \u00e0 plusieurs zones, ajoutez tous les codes de zone pertinents, s\u00e9par\u00e9s par des virgules, dans la m\u00eame cellule.",
+    "message": "Attribuez chaque utilisateur à la zone géographique correspondante à l'aide du code de zone figurant dans la feuille « Liste des zones de campagne ». Si un utilisateur est associé à plusieurs zones, ajoutez tous les codes de zone pertinents, séparés par des virgules, dans la même cellule.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_2_DESC_4",
-    "message": "Une fois toutes les saisies des utilisateurs termin\u00e9es, enregistrez la feuille et t\u00e9l\u00e9chargez-la \u00e0 l'aide du bouton \u00ab\u00a0Parcourir mes fichiers\u00a0\u00bb sur l'\u00e9cran de t\u00e9l\u00e9chargement.",
+    "message": "Une fois toutes les saisies des utilisateurs terminées, enregistrez la feuille et téléchargez-la à l'aide du bouton « Parcourir mes fichiers » sur l'écran de téléchargement.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_3",
-    "message": "Donn\u00e9es cibles\u00a0: D\u00e9finition des cibles pour chaque limite",
+    "message": "Données cibles : Définition des cibles pour chaque limite",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_3_DESC_1",
-    "message": "Rendez-vous \u00e0 la section correspondante de la feuille, en fonction des limites ou du district, et saisissez un nombre dans la colonne \u00ab\u00a0Cible\u00a0\u00bb pour chaque village ou limite r\u00e9pertori\u00e9e.",
+    "message": "Rendez-vous à la section correspondante de la feuille, en fonction des limites ou du district, et saisissez un nombre dans la colonne « Cible » pour chaque village ou limite répertoriée.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_3_DESC_2",
-    "message": "Chaque village ou limite r\u00e9pertori\u00e9 doit avoir une valeur cible saisie dans la colonne \u00ab\u00a0Cible au niveau de limite s\u00e9lectionn\u00e9\u00a0\u00bb\u00a0; si l\u2019une d\u2019entre elles est laiss\u00e9e vide, la feuille comportera des erreurs lors du t\u00e9l\u00e9chargement.",
+    "message": "Chaque village ou limite répertorié doit avoir une valeur cible saisie dans la colonne « Cible au niveau de limite sélectionné » ; si l’une d’entre elles est laissée vide, la feuille comportera des erreurs lors du téléchargement.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_3_DESC_3",
-    "message": "Une fois les objectifs saisis pour tous les villages, enregistrez la feuille et t\u00e9l\u00e9chargez-la \u00e0 l'aide du bouton \u00ab\u00a0Parcourir mes fichiers\u00a0\u00bb sur l'\u00e9cran de t\u00e9l\u00e9chargement.",
+    "message": "Une fois les objectifs saisis pour tous les villages, enregistrez la feuille et téléchargez-la à l'aide du bouton « Parcourir mes fichiers » sur l'écran de téléchargement.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_4",
-    "message": "Erreurs courantes et comment les \u00e9viter",
+    "message": "Erreurs courantes et comment les éviter",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_4_DESC_1",
-    "message": "Si un champ obligatoire est manquant \u2014 comme un code de limite pour une installation/un utilisateur ou une valeur cible pour un village \u2014 le syst\u00e8me affichera une erreur indiquant le num\u00e9ro de ligne pr\u00e9cis \u00e0 corriger.",
+    "message": "Si un champ obligatoire est manquant — comme un code de limite pour une installation/un utilisateur ou une valeur cible pour un village — le système affichera une erreur indiquant le numéro de ligne précis à corriger.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_4_DESC_2",
-    "message": "Si des en-t\u00eates, des colonnes ou des feuilles sont supprim\u00e9s du mod\u00e8le avant le chargement, le syst\u00e8me affichera une erreur. T\u00e9l\u00e9chargez \u00e0 nouveau le mod\u00e8le et saisissez les donn\u00e9es correctes au lieu de poursuivre la modification du fichier concern\u00e9.",
+    "message": "Si des en-têtes, des colonnes ou des feuilles sont supprimés du modèle avant le chargement, le système affichera une erreur. Téléchargez à nouveau le modèle et saisissez les données correctes au lieu de poursuivre la modification du fichier concerné.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_4_DESC_3",
-    "message": "Si le code d'\u00e9tablissement est supprim\u00e9 pour un \u00e9tablissement existant (au lieu de le laisser vide uniquement pour les \u00e9tablissements v\u00e9ritablement nouveaux), le syst\u00e8me cr\u00e9era un doublon plut\u00f4t que de mettre \u00e0 jour l'\u00e9tablissement existant.",
+    "message": "Si le code d'établissement est supprimé pour un établissement existant (au lieu de le laisser vide uniquement pour les établissements véritablement nouveaux), le système créera un doublon plutôt que de mettre à jour l'établissement existant.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -40579,145 +40579,145 @@
   },
   {
     "code": "USERWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_1",
-    "message": "Veuillez parcourir la fiche \u00ab R\u00f4les utilisateur \u00bb pour lire et comprendre l'accessibilit\u00e9 de chaque r\u00f4le.",
+    "message": "Veuillez parcourir la fiche « Rôles utilisateur » pour lire et comprendre l'accessibilité de chaque rôle.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_2",
-    "message": "Veuillez remplir les d\u00e9tails de l'utilisateur (nom, num\u00e9ro de contact et e-mail) dans chacune des feuilles appartenant au r\u00f4le en cons\u00e9quence.",
+    "message": "Veuillez remplir les détails de l'utilisateur (nom, numéro de contact et e-mail) dans chacune des feuilles appartenant au rôle en conséquence.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_3",
-    "message": "Veuillez ne pas attribuer l'utilisateur en double aux r\u00f4les d'approbateur d'estimation Microplan et d'approbateur d'estimation Microplan national.",
+    "message": "Veuillez ne pas attribuer l'utilisateur en double aux rôles d'approbateur d'estimation Microplan et d'approbateur d'estimation Microplan national.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_4",
-    "message": "Veuillez ne pas attribuer d'utilisateurs en double dans les r\u00f4les d'attribution de limites d'installation et d'attribution de limites d'installation nationale.",
+    "message": "Veuillez ne pas attribuer d'utilisateurs en double dans les rôles d'attribution de limites d'installation et d'attribution de limites d'installation nationale.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_5",
-    "message": "Veuillez ne pas attribuer d'utilisateurs en double dans les r\u00f4les d'approbateur de donn\u00e9es d\u00e9mographiques et d'approbateur de donn\u00e9es d\u00e9mographiques nationales.",
+    "message": "Veuillez ne pas attribuer d'utilisateurs en double dans les rôles d'approbateur de données démographiques et d'approbateur de données démographiques nationales.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_1",
-    "message": "T\u00e9l\u00e9chargement de mod\u00e8les Excel pour cr\u00e9er des utilisateurs\u00a0:",
+    "message": "Téléchargement de modèles Excel pour créer des utilisateurs :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_1_DESC_1",
-    "message": "T\u00e9l\u00e9chargez le mod\u00e8le Excel en cliquant sur le bouton \u00ab T\u00e9l\u00e9charger le mod\u00e8le \u00bb.",
+    "message": "Téléchargez le modèle Excel en cliquant sur le bouton « Télécharger le modèle ».",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_1_DESC_2",
-    "message": "Ouvrez le mod\u00e8le Excel t\u00e9l\u00e9charg\u00e9 \u00e0 l'\u00e9tape pr\u00e9c\u00e9dente et comportera 3 feuilles et la premi\u00e8re feuille que vous verrez est une feuille \u00ab\u00a0Lisez-moi\u00a0\u00bb. La deuxi\u00e8me feuille nomm\u00e9e \u00ab Cr\u00e9er une liste d'utilisateurs \u00bb qui sera une feuille vide dans laquelle l'utilisateur devra saisir des donn\u00e9es pour cr\u00e9er des utilisateurs pour la campagne. La troisi\u00e8me feuille sera nomm\u00e9e \u00ab Liste des limites de campagne \u00bb et contiendra toutes les limites s\u00e9lectionn\u00e9es \u00e0 l'\u00e9tape \u00ab D\u00e9tails des limites \u00bb avec leurs codes de limites respectifs.",
+    "message": "Ouvrez le modèle Excel téléchargé à l'étape précédente et comportera 3 feuilles et la première feuille que vous verrez est une feuille « Lisez-moi ». La deuxième feuille nommée « Créer une liste d'utilisateurs » qui sera une feuille vide dans laquelle l'utilisateur devra saisir des données pour créer des utilisateurs pour la campagne. La troisième feuille sera nommée « Liste des limites de campagne » et contiendra toutes les limites sélectionnées à l'étape « Détails des limites » avec leurs codes de limites respectifs.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_2",
-    "message": "Cr\u00e9ation d'utilisateurs pour la campagne\u00a0:",
+    "message": "Création d'utilisateurs pour la campagne :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_2_DESC_1",
-    "message": "L'administrateur syst\u00e8me devra cr\u00e9er une entr\u00e9e distincte pour chaque utilisateur. L'administrateur syst\u00e8me devra ajouter le nom de l'utilisateur (obligatoire), le num\u00e9ro de t\u00e9l\u00e9phone (obligatoire), le r\u00f4le (obligatoire), le type d'emploi (obligatoire), le code limite (obligatoire). Si un utilisateur est mapp\u00e9 \u00e0 plusieurs r\u00f4les, l'administrateur syst\u00e8me devra ajouter tous les r\u00f4les auxquels cet utilisateur est mapp\u00e9 en les s\u00e9parant par des virgules dans la cellule pour ajouter des r\u00f4les pour cet utilisateur.",
+    "message": "L'administrateur système devra créer une entrée distincte pour chaque utilisateur. L'administrateur système devra ajouter le nom de l'utilisateur (obligatoire), le numéro de téléphone (obligatoire), le rôle (obligatoire), le type d'emploi (obligatoire), le code limite (obligatoire). Si un utilisateur est mappé à plusieurs rôles, l'administrateur système devra ajouter tous les rôles auxquels cet utilisateur est mappé en les séparant par des virgules dans la cellule pour ajouter des rôles pour cet utilisateur.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_2_DESC_2",
-    "message": "Chaque utilisateur cr\u00e9\u00e9 doit \u00eatre attribu\u00e9 \u00e0 une limite \u00e0 l'aide du code de limite de la limite requise qui se trouve dans la \u00ab\u00a0Liste des limites de campagne\u00a0\u00bb. Si un utilisateur est mapp\u00e9 \u00e0 plusieurs limites, l'administrateur syst\u00e8me devra ajouter les codes de limite de toutes les limites auxquelles cet utilisateur est mapp\u00e9 en les s\u00e9parant par des virgules dans la cellule pour ajouter des codes de limite pour cet utilisateur.",
+    "message": "Chaque utilisateur créé doit être attribué à une limite à l'aide du code de limite de la limite requise qui se trouve dans la « Liste des limites de campagne ». Si un utilisateur est mappé à plusieurs limites, l'administrateur système devra ajouter les codes de limite de toutes les limites auxquelles cet utilisateur est mappé en les séparant par des virgules dans la cellule pour ajouter des codes de limite pour cet utilisateur.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_2_DESC_3",
-    "message": "Enregistrez la feuille avec les objectifs mis \u00e0 jour pour chaque village sur le mod\u00e8le Excel.",
+    "message": "Enregistrez la feuille avec les objectifs mis à jour pour chaque village sur le modèle Excel.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_2_DESC_4",
-    "message": "Appuyez sur le bouton \u00ab\u00a0Parcourir mes fichiers\u00a0\u00bb sur l'\u00e9cran \u00ab\u00a0T\u00e9l\u00e9charger la cible\u00a0\u00bb et s\u00e9lectionnez le fichier enregistr\u00e9 avec toutes les cibles du syst\u00e8me.",
+    "message": "Appuyez sur le bouton « Parcourir mes fichiers » sur l'écran « Télécharger la cible » et sélectionnez le fichier enregistré avec toutes les cibles du système.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_3",
-    "message": "Cas d'erreurs courantes\u00a0:",
+    "message": "Cas d'erreurs courantes :",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_3_DESC_1",
-    "message": "Si l'utilisateur n'a pas ajout\u00e9 de codes limites pour toutes les entr\u00e9es utilisateur, le syst\u00e8me g\u00e9n\u00e9rera une erreur avec le num\u00e9ro de ligne o\u00f9 le code limite est manquant.",
+    "message": "Si l'utilisateur n'a pas ajouté de codes limites pour toutes les entrées utilisateur, le système générera une erreur avec le numéro de ligne où le code limite est manquant.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_3_DESC_2",
-    "message": "Si l'utilisateur supprime l'un des en-t\u00eates de la feuille et t\u00e9l\u00e9charge la feuille, le syst\u00e8me g\u00e9n\u00e9rera une erreur et l'utilisateur devra t\u00e9l\u00e9charger \u00e0 nouveau le mod\u00e8le et t\u00e9l\u00e9charger \u00e0 nouveau la bonne feuille avec les donn\u00e9es correctes.",
+    "message": "Si l'utilisateur supprime l'un des en-têtes de la feuille et télécharge la feuille, le système générera une erreur et l'utilisateur devra télécharger à nouveau le modèle et télécharger à nouveau la bonne feuille avec les données correctes.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_MAINHEADER",
-    "message": "Lisez-moi les instructions pour le t\u00e9l\u00e9chargement par l'utilisateur",
+    "message": "Lisez-moi les instructions pour le téléchargement par l'utilisateur",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_BODY_DETAILS",
-    "message": "<strong>D\u00e9tails de la campagne\u00a0:</strong><br/><strong>Campagne\u00a0:</strong> {campaignName}<br/><strong>Lien d'acc\u00e8s aux informations d'identification de l'utilisateur\u00a0:</strong> <a href=\"{accessLink}\">Lien d'acc\u00e8s</a><br/><strong>T\u00e9l\u00e9chargement de l'application\u00a0:</strong> <a href=\"{appLink}\">Lien de l'application</a>",
+    "message": "<strong>Détails de la campagne :</strong><br/><strong>Campagne :</strong> {campaignName}<br/><strong>Lien d'accès aux informations d'identification de l'utilisateur :</strong> <a href=\"{accessLink}\">Lien d'accès</a><br/><strong>Téléchargement de l'application :</strong> <a href=\"{appLink}\">Lien de l'application</a>",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_BODY_INTRO",
-    "message": "Bonjour {campaignManagerName},<br/><br/>La configuration de votre campagne de sant\u00e9 est maintenant termin\u00e9e\u00a0! L'application a \u00e9t\u00e9 configur\u00e9e et les informations d'identification utilisateur ont \u00e9t\u00e9 g\u00e9n\u00e9r\u00e9es pour votre \u00e9quipe.",
+    "message": "Bonjour {campaignManagerName},<br/><br/>La configuration de votre campagne de santé est maintenant terminée ! L'application a été configurée et les informations d'identification utilisateur ont été générées pour votre équipe.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_BODY_NOTES",
-    "message": "<strong>Remarques importantes\u00a0:</strong><br/>Tous les identifiants de l'\u00e9quipe sont actifs et pr\u00eats \u00e0 \u00eatre utilis\u00e9s.<br/>L'application inclut toutes les configurations sp\u00e9cifiques aux exigences de votre campagne.<br/>Veuillez distribuer les identifiants en toute s\u00e9curit\u00e9 aux membres autoris\u00e9s de l'\u00e9quipe uniquement.",
+    "message": "<strong>Remarques importantes :</strong><br/>Tous les identifiants de l'équipe sont actifs et prêts à être utilisés.<br/>L'application inclut toutes les configurations spécifiques aux exigences de votre campagne.<br/>Veuillez distribuer les identifiants en toute sécurité aux membres autorisés de l'équipe uniquement.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_BODY_SUPPORT",
-    "message": "<strong>Besoin d'assistance\u00a0?</strong><br/>Si vous rencontrez des probl\u00e8mes lors du t\u00e9l\u00e9chargement ou si vous avez des questions sur la configuration, veuillez contacter notre \u00e9quipe d'assistance \u00e0 l'adresse <a href=mailto:support@egov.org.in'>support@egov.org.in</a>.",
+    "message": "<strong>Besoin d'assistance ?</strong><br/>Si vous rencontrez des problèmes lors du téléchargement ou si vous avez des questions sur la configuration, veuillez contacter notre équipe d'assistance à l'adresse <a href=mailto:support@egov.org.in'>support@egov.org.in</a>.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_BODY_THANKS",
-    "message": "Votre campagne est pr\u00eate \u00e0 \u00eatre lanc\u00e9e.<br/><br/>Merci d'utiliser Console pour la gestion de votre campagne de sant\u00e9.<br/>Cordialement,<br/>\u00c9quipe Console",
+    "message": "Votre campagne est prête à être lancée.<br/><br/>Merci d'utiliser Console pour la gestion de votre campagne de santé.<br/>Cordialement,<br/>Équipe Console",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_SUBJECT",
-    "message": "{campaignName}\u00a0\u2013\u00a0Les informations d'identification de votre \u00e9quipe et votre application sont pr\u00eates \u00e0 \u00eatre t\u00e9l\u00e9charg\u00e9es",
+    "message": "{campaignName} – Les informations d'identification de votre équipe et votre application sont prêtes à être téléchargées",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_COLUMN1",
-    "message": "R\u00f4le de l'utilisateur",
+    "message": "Rôle de l'utilisateur",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -40729,19 +40729,19 @@
   },
   {
     "code": "USER_MICROPLAN_SHEET_ROLES",
-    "message": "R\u00f4les des utilisateurs",
+    "message": "Rôles des utilisateurs",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE1",
-    "message": "Approbateur de l\u2019estimation du plan",
+    "message": "Approbateur de l’estimation du plan",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE10",
-    "message": "Ce r\u00f4le aura acc\u00e8s \u00e0 l'affectation de l'installation aux zones de chalandise de la limite administrative attribu\u00e9e.",
+    "message": "Ce rôle aura accès à l'affectation de l'installation aux zones de chalandise de la limite administrative attribuée.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -40753,7 +40753,7 @@
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE12",
-    "message": "Ce r\u00f4le aura acc\u00e8s \u00e0 l'attribution et \u00e0 la finalisation de l'installation dans les zones de chalandise du pays.",
+    "message": "Ce rôle aura accès à l'attribution et à la finalisation de l'installation dans les zones de chalandise du pays.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -40765,49 +40765,49 @@
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE14",
-    "message": "Ce r\u00f4le aura acc\u00e8s \u00e0 la visualisation des estimations du microplan de la limite administrative attribu\u00e9e.",
+    "message": "Ce rôle aura accès à la visualisation des estimations du microplan de la limite administrative attribuée.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE2",
-    "message": "Ce r\u00f4le aura acc\u00e8s \u00e0 la modification des hypoth\u00e8ses du microplan et \u00e0 l'approbation de l'estimation du microplan pour tous les villages de la limite administrative attribu\u00e9e.",
+    "message": "Ce rôle aura accès à la modification des hypothèses du microplan et à l'approbation de l'estimation du microplan pour tous les villages de la limite administrative attribuée.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE3",
-    "message": "Approbateur de l\u2019estimation du plan racine",
+    "message": "Approbateur de l’estimation du plan racine",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE4",
-    "message": "Ce r\u00f4le aura acc\u00e8s \u00e0 la modification des hypoth\u00e8ses du microplan, \u00e0 l'approbation et \u00e0 la finalisation de l'estimation du microplan pour tous les villages du pays.",
+    "message": "Ce rôle aura accès à la modification des hypothèses du microplan, à l'approbation et à la finalisation de l'estimation du microplan pour tous les villages du pays.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE5",
-    "message": "Approbateur des donn\u00e9es d\u00e9mographiques",
+    "message": "Approbateur des données démographiques",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE6",
-    "message": "Ce r\u00f4le aura acc\u00e8s \u00e0 la validation et \u00e0 l'approbation des donn\u00e9es d\u00e9mographiques pour les villages de la limite administrative assign\u00e9e.",
+    "message": "Ce rôle aura accès à la validation et à l'approbation des données démographiques pour les villages de la limite administrative assignée.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE7",
-    "message": "Approbateur des donn\u00e9es de population racine",
+    "message": "Approbateur des données de population racine",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE8",
-    "message": "Ce r\u00f4le aura acc\u00e8s \u00e0 valider, approuver et finaliser les donn\u00e9es d\u00e9mographiques pour tous les villages du pays.",
+    "message": "Ce rôle aura accès à valider, approuver et finaliser les données démographiques pour tous les villages du pays.",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -40831,7 +40831,7 @@
   },
   {
     "code": "UY_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -40903,7 +40903,7 @@
   },
   {
     "code": "mobile_Locality",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },
@@ -40939,7 +40939,7 @@
   },
   {
     "code": "w22L4En0Zgg",
-    "message": "Nihessiu\u00e9",
+    "message": "Nihessiué",
     "module": "hcm-admin-schemas",
     "locale": "fr_DEMO"
   },

@@ -31,13 +31,13 @@
   },
   {
     "code": "DATA_UN_SYNCED_DESCRIPTION",
-    "message": "Seus dados n\u00e3o foram baixados completamente. Tem certeza de que deseja baixar os dados restantes?",
+    "message": "Seus dados não foram baixados completamente. Tem certeza de que deseja baixar os dados restantes?",
     "module": "hcm-peer-to-peer",
     "locale": "pt_DEMO"
   },
   {
     "code": "FAILED_TO_RECEIVE",
-    "message": "A transfer\u00eancia de dados falhou!",
+    "message": "A transferência de dados falhou!",
     "module": "hcm-peer-to-peer",
     "locale": "pt_DEMO"
   },
@@ -49,7 +49,7 @@
   },
   {
     "code": "FAILED_TO_TRANSFER",
-    "message": "A transfer\u00eancia de dados falhou!",
+    "message": "A transferência de dados falhou!",
     "module": "hcm-peer-to-peer",
     "locale": "pt_DEMO"
   },
@@ -61,13 +61,13 @@
   },
   {
     "code": "FILE_NOT_FOUND_ERROR",
-    "message": "Arquivo n\u00e3o encontrado",
+    "message": "Arquivo não encontrado",
     "module": "hcm-peer-to-peer",
     "locale": "pt_DEMO"
   },
   {
     "code": "INVALID_FILE_FORMAT_ERROR",
-    "message": "Formato de arquivo inv\u00e1lido, n\u00e3o \u00e9 poss\u00edvel ler o arquivo.",
+    "message": "Formato de arquivo inválido, não é possível ler o arquivo.",
     "module": "hcm-peer-to-peer",
     "locale": "pt_DEMO"
   },
@@ -109,7 +109,7 @@
   },
   {
     "code": "RECEIVER_DIALOG_DESCRIPTION",
-    "message": "Tem certeza de que deseja receber dados de {}? Depois de receber os dados, seu aplicativo ser\u00e1 preenchido com os registros compartilhados pelo remetente.",
+    "message": "Tem certeza de que deseja receber dados de {}? Depois de receber os dados, seu aplicativo será preenchido com os registros compartilhados pelo remetente.",
     "module": "hcm-peer-to-peer",
     "locale": "pt_DEMO"
   },
@@ -127,13 +127,13 @@
   },
   {
     "code": "RECEIVE_ACTION_DESCRIPTION",
-    "message": "Receba registros de benefici\u00e1rios para limites atribu\u00eddos a voc\u00ea",
+    "message": "Receba registros de beneficiários para limites atribuídos a você",
     "module": "hcm-peer-to-peer",
     "locale": "pt_DEMO"
   },
   {
     "code": "RECEIVE_ACTION_MESSAGE",
-    "message": "Esperando que algu\u00e9m compartilhe dados",
+    "message": "Esperando que alguém compartilhe dados",
     "module": "hcm-peer-to-peer",
     "locale": "pt_DEMO"
   },
@@ -145,7 +145,7 @@
   },
   {
     "code": "SELECT_RECIPIENTS",
-    "message": "Selecione seus destinat\u00e1rios",
+    "message": "Selecione seus destinatários",
     "module": "hcm-peer-to-peer",
     "locale": "pt_DEMO"
   },
@@ -157,7 +157,7 @@
   },
   {
     "code": "SENDER_DIALOG_DESCRIPTION",
-    "message": "Os dados, uma vez compartilhados, ser\u00e3o substitu\u00eddos e preencher\u00e3o o banco de dados local do receptor. Certifique-se de ter selecionado o conjunto certo de usu\u00e1rios com os quais compartilhar dados.",
+    "message": "Os dados, uma vez compartilhados, serão substituídos e preencherão o banco de dados local do receptor. Certifique-se de ter selecionado o conjunto certo de usuários com os quais compartilhar dados.",
     "module": "hcm-peer-to-peer",
     "locale": "pt_DEMO"
   },
@@ -169,7 +169,7 @@
   },
   {
     "code": "SENDING_ACTION_MESSAGE",
-    "message": "Envio de dados ao destinat\u00e1rio",
+    "message": "Envio de dados ao destinatário",
     "module": "hcm-peer-to-peer",
     "locale": "pt_DEMO"
   },
@@ -181,13 +181,13 @@
   },
   {
     "code": "SEND_ACTION_DESCRIPTION",
-    "message": "Envie registros de benefici\u00e1rios para limites atribu\u00eddos a voc\u00ea",
+    "message": "Envie registros de beneficiários para limites atribuídos a você",
     "module": "hcm-peer-to-peer",
     "locale": "pt_DEMO"
   },
   {
     "code": "SEND_ACTION_MESSAGE",
-    "message": "Procurando por receptores perto de voc\u00ea",
+    "message": "Procurando por receptores perto de você",
     "module": "hcm-peer-to-peer",
     "locale": "pt_DEMO"
   }

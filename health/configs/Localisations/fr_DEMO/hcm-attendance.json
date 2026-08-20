@@ -31,13 +31,13 @@
   },
   {
     "code": "ATTENDANCE_COMPLETION_LABEL",
-    "message": "Ach\u00e8vement de la participation",
+    "message": "Achèvement de la participation",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_MANUAL_SCAN",
-    "message": "Vous n'avez pas pu scanner le QR Code\u00a0?",
+    "message": "Vous n'avez pas pu scanner le QR Code ?",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -49,19 +49,19 @@
   },
   {
     "code": "ATTENDANCE_REGISTAR_LABEL",
-    "message": "G\u00e9rer les pr\u00e9sences",
+    "message": "Gérer les présences",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_SUBMITTED_SUCCESS_MSG",
-    "message": "La pr\u00e9sence a \u00e9t\u00e9 enregistr\u00e9e avec succ\u00e8s",
+    "message": "La présence a été enregistrée avec succès",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_UNMARKED",
-    "message": "Participation non marqu\u00e9e",
+    "message": "Participation non marquée",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -73,19 +73,19 @@
   },
   {
     "code": "Attendance",
-    "message": "Pr\u00e9sence",
+    "message": "Présence",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "BACK_TO_ATTENDANCE_MANAGER",
-    "message": "Retour au gestionnaire de pr\u00e9sence",
+    "message": "Retour au gestionnaire de présence",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "BUTTON_MARK_ATTENDANCE",
-    "message": "Marquer la pr\u00e9sence",
+    "message": "Marquer la présence",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -97,7 +97,7 @@
   },
   {
     "code": "CAMERA_PERMISSION_DENIED",
-    "message": "Autorisation de la cam\u00e9ra refus\u00e9e",
+    "message": "Autorisation de la caméra refusée",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -109,7 +109,7 @@
   },
   {
     "code": "CHECK_ATTENDANCE_MARK",
-    "message": "G\u00e9rer les pr\u00e9sences",
+    "message": "Gérer les présences",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -133,25 +133,25 @@
   },
   {
     "code": "COMMENT_VALIDATION_REQUIRED_ERROR",
-    "message": "Le champ obligatoire ne peut pas \u00eatre vide",
+    "message": "Le champ obligatoire ne peut pas être vide",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "CONFIRMATION_DESCRIPTION",
-    "message": "Les d\u00e9tails de participation \u00e0 la session ont \u00e9t\u00e9 pr\u00e9-remplis en fonction des sessions pr\u00e9c\u00e9dentes. Veuillez confirmer avant de soumettre.",
+    "message": "Les détails de participation à la session ont été pré-remplis en fonction des sessions précédentes. Veuillez confirmer avant de soumettre.",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "CONFIRMATION_DESCRIPTION_NOTE",
-    "message": "Remarque\u00a0: Vous ne pouvez pas modifier les d\u00e9tails de la participation apr\u00e8s avoir soumis",
+    "message": "Remarque : Vous ne pouvez pas modifier les détails de la participation après avoir soumis",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "CONFIRMATION_LABEL",
-    "message": "Veuillez confirmer votre pr\u00e9sence avant de soumettre",
+    "message": "Veuillez confirmer votre présence avant de soumettre",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -169,7 +169,7 @@
   },
   {
     "code": "CORE_COMMON_SEARCH_BY_NAME_OR_ID",
-    "message": "Recherche par nom/num\u00e9ro d'identification",
+    "message": "Recherche par nom/numéro d'identification",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -181,25 +181,25 @@
   },
   {
     "code": "DATE_CHANGE_PROCEED",
-    "message": "Proc\u00e9der au changement de date",
+    "message": "Procéder au changement de date",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEVICE_CAMERA_NOT_WORKING",
-    "message": "La cam\u00e9ra de l'appareil ne fonctionne pas",
+    "message": "La caméra de l'appareil ne fonctionne pas",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEVICE_NOT_SUPPORTING_SCANNING",
-    "message": "Appareil ne prenant pas en charge la fonctionnalit\u00e9 de num\u00e9risation",
+    "message": "Appareil ne prenant pas en charge la fonctionnalité de numérisation",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "DRAFT_SAVED_MESSAGE",
-    "message": "La participation a \u00e9t\u00e9 soumise sous forme de projet",
+    "message": "La participation a été soumise sous forme de projet",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -217,13 +217,13 @@
   },
   {
     "code": "EVENING_SESSION",
-    "message": "S\u00e9ance du soir",
+    "message": "Séance du soir",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "EVENT_TYPE_LABEL",
-    "message": "Type d'\u00e9v\u00e9nement",
+    "message": "Type d'événement",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -235,19 +235,19 @@
   },
   {
     "code": "GO_TO_ATTENDANCE_REGISTERS",
-    "message": "Retour au gestionnaire de pr\u00e9sence",
+    "message": "Retour au gestionnaire de présence",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "HALF_DAY",
-    "message": "Demi-journ\u00e9e",
+    "message": "Demi-journée",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "HOME_MANAGE_ATTENDANCE_LABEL",
-    "message": "G\u00e9rer les pr\u00e9sences",
+    "message": "Gérer les présences",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -265,7 +265,7 @@
   },
   {
     "code": "LABEL_MARK_ATTENDANCE",
-    "message": "Marquer la pr\u00e9sence",
+    "message": "Marquer la présence",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -277,19 +277,19 @@
   },
   {
     "code": "LOW_LIGHT",
-    "message": "Faible luminosit\u00e9 / mauvaise visibilit\u00e9",
+    "message": "Faible luminosité / mauvaise visibilité",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "MARKED_AS_ABSENT",
-    "message": "Marqu\u00e9 comme absent",
+    "message": "Marqué comme absent",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "MARKED_AS_PRESENT",
-    "message": "Marqu\u00e9 comme pr\u00e9sent",
+    "message": "Marqué comme présent",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -301,7 +301,7 @@
   },
   {
     "code": "MARK_AS_PRESENT",
-    "message": "Marqu\u00e9 comme pr\u00e9sent",
+    "message": "Marqué comme présent",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -313,7 +313,7 @@
   },
   {
     "code": "MARK_ATTENDANCE_ACTUAL_SIGNATURE_LABEL",
-    "message": "Signature r\u00e9elle",
+    "message": "Signature réelle",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -361,19 +361,19 @@
   },
   {
     "code": "MARK_ATTENDANCE_INFO_DESC",
-    "message": "Tous les participants sont marqu\u00e9s pour cette date",
+    "message": "Tous les participants sont marqués pour cette date",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "MARK_ATTENDANCE_INFO_TITLE",
-    "message": "D\u00e9j\u00e0 marqu\u00e9",
+    "message": "Déjà marqué",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "MARK_ATTENDANCE_MANUALLY",
-    "message": "Marquer manuellement la pr\u00e9sence",
+    "message": "Marquer manuellement la présence",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -385,7 +385,7 @@
   },
   {
     "code": "MARK_ATTENDANCE_REFERENCE_SIGNATURE_LABEL",
-    "message": "Signature de r\u00e9f\u00e9rence",
+    "message": "Signature de référence",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -409,31 +409,31 @@
   },
   {
     "code": "MISSED_ATTENDANCE_DESC",
-    "message": "Veuillez vous assurer de marquer votre pr\u00e9sence pour les dates manquantes.",
+    "message": "Veuillez vous assurer de marquer votre présence pour les dates manquantes.",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "MISSED_ATTENDANCE_DESCRIPTION",
-    "message": "Veuillez vous assurer de marquer votre pr\u00e9sence pour les dates manquantes.",
+    "message": "Veuillez vous assurer de marquer votre présence pour les dates manquantes.",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "MISSED_ATTENDANCE_HEADER",
-    "message": "Pr\u00e9sence manqu\u00e9e",
+    "message": "Présence manquée",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "MISSED_ATTENDANCE_INFO",
-    "message": "Participation manqu\u00e9e\u00a0!",
+    "message": "Participation manquée !",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "MORNING_SESSION",
-    "message": "S\u00e9ance du matin",
+    "message": "Séance du matin",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -445,43 +445,43 @@
   },
   {
     "code": "NO_ATTENDEES_ENROLLED_TO_THE_REGISTER",
-    "message": "Aucun participant n'a encore \u00e9t\u00e9 inscrit au registre",
+    "message": "Aucun participant n'a encore été inscrit au registre",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "PLEASE_TRY_AGAIN",
-    "message": "Veuillez r\u00e9essayer",
+    "message": "Veuillez réessayer",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "PLZ_MARK_ATTENDANCE_FOR_INDIVIDUALS",
-    "message": "Veuillez marquer la pr\u00e9sence du personnel",
+    "message": "Veuillez marquer la présence du personnel",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "PLZ_SELECT_THE_SESSION",
-    "message": "Veuillez s\u00e9lectionner la s\u00e9ance",
+    "message": "Veuillez sélectionner la séance",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "PRESENT",
-    "message": "Pr\u00e9sent",
+    "message": "Présent",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "PROCEED_BUTTON",
-    "message": "Proc\u00e9der",
+    "message": "Procéder",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "QR_CREATED_TIME",
-    "message": "Heure de cr\u00e9ation du QR",
+    "message": "Heure de création du QR",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -499,25 +499,25 @@
   },
   {
     "code": "REASON_FOR_MARKING_ATTENDANCE_MANUALLY",
-    "message": "Raison du marquage manuel des pr\u00e9sences",
+    "message": "Raison du marquage manuel des présences",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "REASON_FOR_MARKING_ATTENDANCE_MANUALLY_DESC",
-    "message": "Veuillez s\u00e9lectionner manuellement le motif du marquage de la pr\u00e9sence.",
+    "message": "Veuillez sélectionner manuellement le motif du marquage de la présence.",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTER_NOT_STARTED_MSG",
-    "message": "L'inscription n'a pas encore commenc\u00e9. Veuillez attendre la date de d\u00e9but.",
+    "message": "L'inscription n'a pas encore commencé. Veuillez attendre la date de début.",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "RETRY_BUTTON",
-    "message": "R\u00e9essayer",
+    "message": "Réessayer",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -535,7 +535,7 @@
   },
   {
     "code": "SCANNER_NOT_AVAILABLE_DESCRIPTION",
-    "message": "Le scanner ne sera pas disponible pour marquer la pr\u00e9sence aux dates pass\u00e9es.",
+    "message": "Le scanner ne sera pas disponible pour marquer la présence aux dates passées.",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -547,7 +547,7 @@
   },
   {
     "code": "SCANNER_NOT_OPENING",
-    "message": "Le scanner ne s'ouvre pas ou ne r\u00e9pond pas",
+    "message": "Le scanner ne s'ouvre pas ou ne répond pas",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -565,31 +565,31 @@
   },
   {
     "code": "SELECT_REASON",
-    "message": "S\u00e9lectionnez la raison",
+    "message": "Sélectionnez la raison",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "SESSION_DATE_OF_SESSION",
-    "message": "Date de la s\u00e9ance",
+    "message": "Date de la séance",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "SESSION_RADIO_INFO",
-    "message": "S\u00e9lectionnez la session pour laquelle vous avez marqu\u00e9 votre pr\u00e9sence",
+    "message": "Sélectionnez la session pour laquelle vous avez marqué votre présence",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "SESSION_SELECTION_HEADER",
-    "message": "S\u00e9lectionnez une s\u00e9ance",
+    "message": "Sélectionnez une séance",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "SOMETHING_WENT_WRONG",
-    "message": "Quelque chose s'est mal pass\u00e9",
+    "message": "Quelque chose s'est mal passé",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -601,13 +601,13 @@
   },
   {
     "code": "STAFF_COUNT_LABEL",
-    "message": "Nombre d'employ\u00e9s",
+    "message": "Nombre d'employés",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "START_DATE_LABEL",
-    "message": "Date de d\u00e9but",
+    "message": "Date de début",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -619,7 +619,7 @@
   },
   {
     "code": "TABLE_HEADER_ATTENDANCE",
-    "message": "Pr\u00e9sence",
+    "message": "Présence",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
@@ -643,31 +643,31 @@
   },
   {
     "code": "UNMARKED_ATTENDANCE_ONLY",
-    "message": "Participation non marqu\u00e9e uniquement",
+    "message": "Participation non marquée uniquement",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "UN_MARKED",
-    "message": "Participation non marqu\u00e9e",
+    "message": "Participation non marquée",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_QR_ALREADY_SCANNED",
-    "message": "Utilisateur d\u00e9j\u00e0 analys\u00e9",
+    "message": "Utilisateur déjà analysé",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_QR_TIME_EXPIRED_ERROR",
-    "message": "Le temps QR est expir\u00e9",
+    "message": "Le temps QR est expiré",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },
   {
     "code": "USER_SKIPPED_SCANNING",
-    "message": "L'utilisateur a ignor\u00e9 l'analyse",
+    "message": "L'utilisateur a ignoré l'analyse",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },

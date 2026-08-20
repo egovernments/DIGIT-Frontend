@@ -7,7 +7,7 @@
   },
   {
     "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
-    "message": "Selecione a instala\u00e7\u00e3o",
+    "message": "Selecione a instalação",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
@@ -19,19 +19,19 @@
   },
   {
     "code": "STOCKRECON_REPORT_DETAILS_DESCRIPTION",
-    "message": "Relat\u00f3rios de reconcilia\u00e7\u00e3o",
+    "message": "Relatórios de reconciliação",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "STOCKRECON_REPORT_DETAILS_HEADING",
-    "message": "Concilia\u00e7\u00e3o de estoque",
+    "message": "Conciliação de estoque",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
-    "message": "Selecione o armaz\u00e9m e o produto para visualizar o relat\u00f3rio.",
+    "message": "Selecione o armazém e o produto para visualizar o relatório.",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
@@ -43,13 +43,13 @@
   },
   {
     "code": "STOCKRECON_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
-    "message": "Voltar para a p\u00e1gina inicial",
+    "message": "Voltar para a página inicial",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_1_LABEL",
-    "message": "Data da reconcilia\u00e7\u00e3o",
+    "message": "Data da reconciliação",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
@@ -67,7 +67,7 @@
   },
   {
     "code": "STOCKRECON_REPORT_INFO_REPORTS_TITLE",
-    "message": "Informa\u00e7\u00f5es",
+    "message": "Informações",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
@@ -79,13 +79,13 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_HEADING",
-    "message": "Relat\u00f3rios",
+    "message": "Relatórios",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_INFO_CARD_LABEL",
-    "message": "Selecione o armaz\u00e9m e o produto para visualizar o relat\u00f3rio.",
+    "message": "Selecione o armazém e o produto para visualizar o relatório.",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
@@ -97,7 +97,7 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
-    "message": "Voltar para a p\u00e1gina inicial",
+    "message": "Voltar para a página inicial",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
@@ -109,7 +109,7 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
-    "message": "Armaz\u00e9m selecionado",
+    "message": "Armazém selecionado",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
@@ -127,7 +127,7 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
-    "message": "N\u00famero da guia de remessa",
+    "message": "Número da guia de remessa",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
@@ -139,13 +139,13 @@
   },
   {
     "code": "STOCKREPORTS_VIEW_REPORTS_HEADING",
-    "message": "Ver relat\u00f3rios",
+    "message": "Ver relatórios",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_DAMAGED_DESCRIPTION",
-    "message": "Veja os relat\u00f3rios de danos ao estoque",
+    "message": "Veja os relatórios de danos ao estoque",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
@@ -157,31 +157,31 @@
   },
   {
     "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_ISSUED_DESCRIPTION",
-    "message": "Veja os relat\u00f3rios de a\u00e7\u00f5es emitidas",
+    "message": "Veja os relatórios de ações emitidas",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_ISSUED_HEADING",
-    "message": "A\u00e7\u00f5es emitidas",
+    "message": "Ações emitidas",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_DESCRIPTION",
-    "message": "Veja os relat\u00f3rios de perdas de a\u00e7\u00f5es",
+    "message": "Veja os relatórios de perdas de ações",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_HEADING",
-    "message": "Perda de a\u00e7\u00f5es",
+    "message": "Perda de ações",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECIEVE_DESCRIPTION",
-    "message": "Veja os relat\u00f3rios de estoque recebido",
+    "message": "Veja os relatórios de estoque recebido",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
@@ -193,19 +193,19 @@
   },
   {
     "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECON_DESCRIPTION",
-    "message": "Visualizar relat\u00f3rios de reconcilia\u00e7\u00e3o de estoque",
+    "message": "Visualizar relatórios de reconciliação de estoque",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECON_HEADING",
-    "message": "Concilia\u00e7\u00e3o de estoque",
+    "message": "Conciliação de estoque",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RETURNED_DESCRIPTION",
-    "message": "Veja os relat\u00f3rios de a\u00e7\u00f5es devolvidas",
+    "message": "Veja os relatórios de ações devolvidas",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },
@@ -229,7 +229,7 @@
   },
   {
     "code": "STOCK_REPORT_INFO_REPORTS_TITLE",
-    "message": "Informa\u00e7\u00f5es sobre relat\u00f3rios",
+    "message": "Informações sobre relatórios",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   }

@@ -7,13 +7,13 @@
   },
   {
     "code": "ASSIGN_SUCCESSFULLY",
-    "message": "Attribu\u00e9 avec succ\u00e8s !",
+    "message": "Attribué avec succès !",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "COMPLAINTS_COMPLAINANT_CONTACT_NUMBER",
-    "message": "Num\u00e9ro de contact du plaignant",
+    "message": "Numéro de contact du plaignant",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
@@ -25,7 +25,7 @@
   },
   {
     "code": "COMPLAINTS_SUPERVISOR_CONTACT_NUMBER",
-    "message": "Num\u00e9ro de contact du superviseur",
+    "message": "Numéro de contact du superviseur",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
@@ -43,19 +43,19 @@
   },
   {
     "code": "CS_COMMON_PGR_STATE_REJECTED",
-    "message": "Rejet\u00e9",
+    "message": "Rejeté",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "CS_COMMON_PGR_STATE_RESOLVED",
-    "message": "R\u00e9solu",
+    "message": "Résolu",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "CS_COMMON_SELECT_EMPLOYEE",
-    "message": "S\u00e9lectionner un employ\u00e9",
+    "message": "Sélectionner un employé",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
@@ -79,13 +79,13 @@
   },
   {
     "code": "CS_REJECTION__REASON4",
-    "message": "Probl\u00e8me non exploitable",
+    "message": "Problème non exploitable",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "CS_REJECTION__REASON5",
-    "message": "Probl\u00e8me r\u00e9solu ou ferm\u00e9",
+    "message": "Problème résolu ou fermé",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
@@ -97,7 +97,7 @@
   },
   {
     "code": "ES_CREATECOMPLAINT_PROVIDE_COMPLAINANT_DETAILS",
-    "message": "D\u00e9tails du plaignant",
+    "message": "Détails du plaignant",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
@@ -109,25 +109,31 @@
   },
   {
     "code": "HCM_HIERARCHY_TYPE",
-    "message": "Type de hi\u00e9rarchie",
+    "message": "Type de hiérarchie",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_BREADCRUMB",
+    "message": "Sélectionner la hiérarchie",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_HIERARCHY_TYPE_DESCRIPTION",
-    "message": "Veuillez s\u00e9lectionner votre hi\u00e9rarchie",
+    "message": "Veuillez sélectionner votre hiérarchie",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_HIERARCHY_TYPE_HEADER",
-    "message": "S\u00e9lectionnez le type de hi\u00e9rarchie",
+    "message": "Sélectionnez le type de hiérarchie",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "MYSELF",
-    "message": "Moi-m\u00eame",
+    "message": "Moi-même",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
@@ -139,19 +145,19 @@
   },
   {
     "code": "PGR_ACTION_RESOLVE",
-    "message": "R\u00e9soudre",
+    "message": "Résoudre",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "PGR_CREATE_ANOTHER_COMPLAIN",
-    "message": "Cr\u00e9er une autre plainte",
+    "message": "Créer une autre plainte",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "PGR_INBOX",
-    "message": "Bo\u00eete de r\u00e9ception",
+    "message": "Boîte de réception",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
@@ -163,19 +169,19 @@
   },
   {
     "code": "REJECT_SUCCESSFULLY",
-    "message": "Rejet\u00e9 avec succ\u00e8s !",
+    "message": "Rejeté avec succès !",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "RESOLVE_SUCCESSFULLY",
-    "message": "R\u00e9solu avec succ\u00e8s !",
+    "message": "Résolu avec succès !",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "SERVICEDEFS.DATAISSUES.eGov",
-    "message": "Probl\u00e8mes de donn\u00e9es",
+    "message": "Problèmes de données",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
@@ -187,37 +193,37 @@
   },
   {
     "code": "SERVICEDEFS.PERFORMANCEISSUE.eGov",
-    "message": "Probl\u00e8mes de performances",
+    "message": "Problèmes de performances",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "SERVICEDEFS.SECURITYISSUES.eGov",
-    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "message": "Problèmes de sécurité",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "SERVICEDEFS.TECHNICALISSUES.eGov",
-    "message": "Probl\u00e8mes techniques",
+    "message": "Problèmes techniques",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "SERVICEDEFS.USERACCOUNTISSUES.eGov",
-    "message": "Probl\u00e8mes de compte utilisateur",
+    "message": "Problèmes de compte utilisateur",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "WF_INBOX_HEADER_CURRENT_OWNER",
-    "message": "Propri\u00e9taire actuel",
+    "message": "Propriétaire actuel",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "WF_INBOX_HEADER_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
@@ -229,25 +235,25 @@
   },
   {
     "code": "WF_PGR_ASSIGN",
-    "message": "Assign\u00e9",
+    "message": "Assigné",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "WF_PGR_CREATE",
-    "message": "Cr\u00e9\u00e9",
+    "message": "Créé",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "WF_PGR_REJECT",
-    "message": "Rejet\u00e9",
+    "message": "Rejeté",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   },
   {
     "code": "WF_PGR_RESOLVE",
-    "message": "R\u00e9soudre",
+    "message": "Résoudre",
     "module": "hcm-pgr",
     "locale": "fr_DEMO"
   }

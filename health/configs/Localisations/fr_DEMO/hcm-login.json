@@ -1,43 +1,43 @@
 [
   {
     "code": "CORE_COMMON_ACCESS_PERMISSION_DIALOG_DESC",
-    "message": "L'application HCM n\u00e9cessite l'acc\u00e8s \u00e0 certaines fonctionnalit\u00e9s du t\u00e9l\u00e9phone pour fonctionner correctement. Veuillez autoriser l'acc\u00e8s \u00e0 continuer.",
+    "message": "L'application HCM nécessite l'accès à certaines fonctionnalités du téléphone pour fonctionner correctement. Veuillez autoriser l'accès à continuer.",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_COMMON_ACCESS_REQUIRED",
-    "message": "Acc\u00e8s requis !",
+    "message": "Accès requis !",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_COMMON_ALLOW_ACCESS",
-    "message": "Autoriser l'acc\u00e8s",
+    "message": "Autoriser l'accès",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
   {
     "code": "FORGOT_PASSWORD_ACTION_LABEL",
-    "message": "Mot de passe oubli\u00e9 ?",
+    "message": "Mot de passe oublié ?",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
   {
     "code": "FORGOT_PASSWORD_CONTENT_TEXT",
-    "message": "Veuillez contacter votre administrateur si vous avez oubli\u00e9 votre mot de passe",
+    "message": "Veuillez contacter votre administrateur si vous avez oublié votre mot de passe",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
   {
     "code": "FORGOT_PASSWORD_LABEL_TEXT",
-    "message": "Mot de passe oubli\u00e9",
+    "message": "Mot de passe oublié",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
   {
     "code": "HR_COMMON_TABLE_COL_ROLE_MAIN",
-    "message": "R\u00f4le principal",
+    "message": "Rôle principal",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
@@ -49,13 +49,13 @@
   },
   {
     "code": "LOGIN_FAILURE_MESSAGE",
-    "message": "La connexion a \u00e9chou\u00e9. Veuillez r\u00e9essayer plus tard.",
+    "message": "La connexion a échoué. Veuillez réessayer plus tard.",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
   {
     "code": "LOGIN_FORGOT_PASSWORD",
-    "message": "Vous avez oubli\u00e9 votre mot de passe ?",
+    "message": "Vous avez oublié votre mot de passe ?",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
@@ -73,7 +73,7 @@
   },
   {
     "code": "LOGIN_SUCCESS_MESSAGE",
-    "message": "La session a d\u00e9marr\u00e9 avec succ\u00e8s.",
+    "message": "La session a démarré avec succès.",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
@@ -103,7 +103,7 @@
   },
   {
     "code": "PERMISSION_DENIED_OPEN_SETTINGS",
-    "message": "Activez l'autorisation dans Param\u00e8tres.",
+    "message": "Activez l'autorisation dans Paramètres.",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
@@ -121,13 +121,13 @@
   },
   {
     "code": "SWITCH_MOBILE_DIALOG_BACK",
-    "message": "Retour \u00e0 la connexion",
+    "message": "Retour à la connexion",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
   {
     "code": "SWITCH_MOBILE_DIALOG_CONTENT",
-    "message": "Vous d\u00e9m\u00e9nagez vers un nouveau t\u00e9l\u00e9phone. Assurez-vous que toutes vos donn\u00e9es de l'ancien t\u00e9l\u00e9phone sont synchronis\u00e9es avant de continuer.",
+    "message": "Vous déménagez vers un nouveau téléphone. Assurez-vous que toutes vos données de l'ancien téléphone sont synchronisées avant de continuer.",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
@@ -139,7 +139,7 @@
   },
   {
     "code": "SWITCH_MOBILE_DIALOG_TITLE",
-    "message": "Passer \u00e0 ce mobile\u00a0?",
+    "message": "Passer à ce mobile ?",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
@@ -151,19 +151,19 @@
   },
   {
     "code": "SWITCH_REASON_HEADER_LABEL",
-    "message": "Pourquoi tu changes de t\u00e9l\u00e9phone ?",
+    "message": "Pourquoi tu changes de téléphone ?",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
   {
     "code": "SWITCH_REASON_LABEL",
-    "message": "Cela nous aide \u00e0 comprendre votre situation.",
+    "message": "Cela nous aide à comprendre votre situation.",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },
   {
     "code": "SWITCH_REASON_REQUIRED_ERROR",
-    "message": "Veuillez s\u00e9lectionner une raison",
+    "message": "Veuillez sélectionner une raison",
     "module": "hcm-login",
     "locale": "fr_DEMO"
   },

@@ -1,19 +1,19 @@
 [
   {
     "code": "ADMINISTRATION_FAILED",
-    "message": "L'administration a \u00e9chou\u00e9",
+    "message": "L'administration a échoué",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "B\u00e9n\u00e9ficiaire absent",
+    "message": "Bénéficiaire absent",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "Refus du b\u00e9n\u00e9ficiaire",
+    "message": "Refus du bénéficiaire",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -37,19 +37,19 @@
   },
   {
     "code": "DRUG_SE_CC",
-    "message": "Effet secondaire du m\u00e9dicament du cycle actuel",
+    "message": "Effet secondaire du médicament du cycle actuel",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "DRUG_SE_PC",
-    "message": "Effet secondaire du m\u00e9dicament du cycle pr\u00e9c\u00e9dent",
+    "message": "Effet secondaire du médicament du cycle précédent",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "FEVER",
-    "message": "Fi\u00e8vre",
+    "message": "Fièvre",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -67,13 +67,13 @@
   },
   {
     "code": "INVENTORY_RECEIVER_LABEL",
-    "message": "R\u00e9cepteur",
+    "message": "Récepteur",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "INVENTORY_SENDER_LABEL",
-    "message": "Exp\u00e9diteur",
+    "message": "Expéditeur",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -85,7 +85,7 @@
   },
   {
     "code": "METAL",
-    "message": "M\u00e9tal",
+    "message": "Métal",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -97,13 +97,13 @@
   },
   {
     "code": "NO_FACILITIES_FOUND",
-    "message": "Aucune installation trouv\u00e9e",
+    "message": "Aucune installation trouvée",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "NO_PRODUCTS_FOUND",
-    "message": "Aucun produit trouv\u00e9",
+    "message": "Aucun produit trouvé",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -133,7 +133,7 @@
   },
   {
     "code": "PerformanceIssue",
-    "message": "PROBL\u00c8ME DE PERFORMANCE",
+    "message": "PROBLÈME DE PERFORMANCE",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -145,13 +145,13 @@
   },
   {
     "code": "SELECT_PRODUCT",
-    "message": "S\u00e9lectionnez la variante du produit",
+    "message": "Sélectionnez la variante du produit",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "SELECT_WAREHOUSE",
-    "message": "S\u00e9lectionner l'entrep\u00f4t",
+    "message": "Sélectionner l'entrepôt",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -163,19 +163,19 @@
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_DESCRIPTION",
-    "message": "Votre rapprochement de stock a \u00e9t\u00e9 enregistr\u00e9",
+    "message": "Votre rapprochement de stock a été enregistré",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_HEADING",
-    "message": "Rapprochement des stocks effectu\u00e9 avec succ\u00e8s",
+    "message": "Rapprochement des stocks effectué avec succès",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_PRIMARY_ACTION_LABEL",
-    "message": "Retour \u00e0 l'accueil",
+    "message": "Retour à l'accueil",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -187,7 +187,7 @@
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_DESCRIPTION",
-    "message": "Effectuez le rapprochement des stocks de votre \u00e9tablissement",
+    "message": "Effectuez le rapprochement des stocks de votre établissement",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -199,7 +199,7 @@
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_comments_HELP_TEXT",
-    "message": "Ajoutez tout commentaire ou observation concernant la r\u00e9conciliation",
+    "message": "Ajoutez tout commentaire ou observation concernant la réconciliation",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -211,7 +211,7 @@
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_HELP_TEXT",
-    "message": "Saisir le nombre physique de stock apr\u00e8s v\u00e9rification manuelle",
+    "message": "Saisir le nombre physique de stock après vérification manuelle",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -223,31 +223,31 @@
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_MIN_ERROR",
-    "message": "Le nombre de comptages manuels doit \u00eatre \u00e9gal ou sup\u00e9rieur \u00e0 0.",
+    "message": "Le nombre de comptages manuels doit être égal ou supérieur à 0.",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_REQUIRED_ERROR",
-    "message": "Un comptage manuel est n\u00e9cessaire",
+    "message": "Un comptage manuel est nécessaire",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_HELP_TEXT",
-    "message": "S\u00e9lectionnez l'installation et le produit pour rapprocher les stocks",
+    "message": "Sélectionnez l'installation et le produit pour rapprocher les stocks",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_LABEL",
-    "message": "S\u00e9lection des installations et des produits",
+    "message": "Sélection des installations et des produits",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_REQUIRED_ERROR",
-    "message": "Veuillez s\u00e9lectionner l'installation et le produit",
+    "message": "Veuillez sélectionner l'installation et le produit",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -271,7 +271,7 @@
   },
   {
     "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
-    "message": "Stock disponible = (Stock re\u00e7u + stock retourn\u00e9) \u2212 (stock \u00e9mis + stock perdu + stock endommag\u00e9)",
+    "message": "Stock disponible = (Stock reçu + stock retourné) − (stock émis + stock perdu + stock endommagé)",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -283,13 +283,13 @@
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
-    "message": "Stock endommag\u00e9",
+    "message": "Stock endommagé",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
-    "message": "Actions \u00e9mises",
+    "message": "Actions émises",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -307,7 +307,7 @@
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
-    "message": "Stock re\u00e7u",
+    "message": "Stock reçu",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -319,13 +319,13 @@
   },
   {
     "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
-    "message": "Veuillez s\u00e9lectionner l'entrep\u00f4t et la variante de produit pour consulter le rapport.",
+    "message": "Veuillez sélectionner l'entrepôt et la variante de produit pour consulter le rapport.",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Livraison r\u00e9ussie",
+    "message": "Livraison réussie",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -337,7 +337,7 @@
   },
   {
     "code": "SecurityIssues",
-    "message": "PROBL\u00c8MES DE S\u00c9CURIT\u00c9",
+    "message": "PROBLÈMES DE SÉCURITÉ",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
@@ -349,13 +349,13 @@
   },
   {
     "code": "TechnicalIssues",
-    "message": "PROBL\u00c8MES TECHNIQUES",
+    "message": "PROBLÈMES TECHNIQUES",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "UserAccountIssues",
-    "message": "PROBL\u00c8MES DE COMPTE UTILISATEUR",
+    "message": "PROBLÈMES DE COMPTE UTILISATEUR",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "fr_DEMO"
   },

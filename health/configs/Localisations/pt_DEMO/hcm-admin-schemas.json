@@ -13,7 +13,7 @@
   },
   {
     "code": " HCM_ADMIN_CONSOLE_TARGET_INT_CAMP_COLUUM_HOUSEHOLD",
-    "message": "Alvo dom\u00e9stico",
+    "message": "Alvo doméstico",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -37,7 +37,7 @@
   },
   {
     "code": "ADMIN10_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -49,7 +49,7 @@
   },
   {
     "code": "ADMIN10_LOCALIDADE",
-    "message": "Localiza\u00e7\u00e3o",
+    "message": "Localização",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -67,7 +67,7 @@
   },
   {
     "code": "ADMIN11_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -79,7 +79,7 @@
   },
   {
     "code": "ADMIN11_LOCALIDADE",
-    "message": "Localiza\u00e7\u00e3o",
+    "message": "Localização",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -103,7 +103,7 @@
   },
   {
     "code": "ADMIN1_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -115,7 +115,7 @@
   },
   {
     "code": "ADMIN1_LOCALIDADE",
-    "message": "Localiza\u00e7\u00e3o",
+    "message": "Localização",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -127,7 +127,7 @@
   },
   {
     "code": "ADMIN1_PROVINCIA",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -139,7 +139,7 @@
   },
   {
     "code": "ADMIN2_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -151,7 +151,7 @@
   },
   {
     "code": "ADMIN2_LOCALIDADE",
-    "message": "Localiza\u00e7\u00e3o",
+    "message": "Localização",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -163,7 +163,7 @@
   },
   {
     "code": "ADMIN2_PROVINCIA",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -175,7 +175,7 @@
   },
   {
     "code": "ADMIN3_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -187,7 +187,7 @@
   },
   {
     "code": "ADMIN3_LOCALIDADE",
-    "message": "Localiza\u00e7\u00e3o",
+    "message": "Localização",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -205,7 +205,7 @@
   },
   {
     "code": "ADMIN3_PROVINCIA",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -229,13 +229,13 @@
   },
   {
     "code": "ADMIN_CONSOLE_TARGET",
-    "message": "Alvo do agregado familiar ao n\u00edvel da aldeia (obrigat\u00f3rio e a ser introduzido pelo utilizador)",
+    "message": "Alvo do agregado familiar ao nível da aldeia (obrigatório e a ser introduzido pelo utilizador)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -253,7 +253,7 @@
   },
   {
     "code": "ADMIN_MO",
-    "message": "Mo\u00e7ambique",
+    "message": "Moçambique",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -703,7 +703,7 @@
   },
   {
     "code": "ADMIN_MO_01_01_02_01_03_MACATA",
-    "message": "Macat\u00e1",
+    "message": "Macatá",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -721,7 +721,7 @@
   },
   {
     "code": "ADMIN_MO_01_01_02_01_04_JULIO CHAMALULO",
-    "message": "J\u00falio Chamalulo",
+    "message": "Júlio Chamalulo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -757,7 +757,7 @@
   },
   {
     "code": "ADMIN_MO_01_01_02_01_07_ADAMO",
-    "message": "Ad\u00e3o",
+    "message": "Adão",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -823,7 +823,7 @@
   },
   {
     "code": "ADMIN_MO_01_01_02_01_13_AMBULEZI",
-    "message": "Ambul\u00e9zi",
+    "message": "Ambulézi",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -853,7 +853,7 @@
   },
   {
     "code": "ADMIN_MO_01_01_02_01_15_COFATI 2",
-    "message": "Caf\u00e9 2",
+    "message": "Café 2",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -937,19 +937,19 @@
   },
   {
     "code": "ADMIN_MO_01_01_MOSSURILEE",
-    "message": "Mossuril\u00ea",
+    "message": "Mossurilê",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_01_01_MOSSURILEE ",
-    "message": "Mossuril\u00ea",
+    "message": "Mossurilê",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_01_01_MURRUPULA",
-    "message": "M\u00farrupula",
+    "message": "Múrrupula",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -1315,7 +1315,7 @@
   },
   {
     "code": "ADMIN_MO_01_02_02_01_09_CAVULANCIE",
-    "message": "Cavul\u00e2ncia",
+    "message": "Cavulância",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -1471,7 +1471,7 @@
   },
   {
     "code": "ADMIN_MO_01_02_03_01_14_MANKACA 1",
-    "message": "Mankac\u00e1 1",
+    "message": "Mankacá 1",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -1519,7 +1519,7 @@
   },
   {
     "code": "ADMIN_MO_01_02_03_01_22_MANKACA 2",
-    "message": "Mankac\u00e1 2",
+    "message": "Mankacá 2",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -1543,7 +1543,7 @@
   },
   {
     "code": "ADMIN_MO_01_02_03_01_26_CHIMPOYO",
-    "message": "Chimpoi\u00f3",
+    "message": "Chimpoió",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -1603,7 +1603,7 @@
   },
   {
     "code": "ADMIN_MO_01_02_03_01_36_ANTIGA MIGRACAO",
-    "message": "Antiga Migra\u00e7\u00e3o",
+    "message": "Antiga Migração",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -1753,7 +1753,7 @@
   },
   {
     "code": "ADMIN_MO_01_02_MURRUPULA",
-    "message": "M\u00farrupula",
+    "message": "Múrrupula",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -1975,7 +1975,7 @@
   },
   {
     "code": "ADMIN_MO_02_01_01_01_35_ZIMBAZE",
-    "message": "ZIMBAZ\u00c9",
+    "message": "ZIMBAZÉ",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -2101,7 +2101,7 @@
   },
   {
     "code": "ADMIN_MO_03_01_ADMIN_MO_10_ZAMBEZIA",
-    "message": "ADMIN_MO_10_ZAMB\u00c9ZIA",
+    "message": "ADMIN_MO_10_ZAMBÉZIA",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -2113,7 +2113,7 @@
   },
   {
     "code": "ADMIN_MO_03_ZAMBEZIA",
-    "message": "Zamb\u00e9zia",
+    "message": "Zambézia",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -2179,13 +2179,13 @@
   },
   {
     "code": "ADMIN_MO_04_01_03_01_MUTUA SEDE",
-    "message": "Sede M\u00fatua",
+    "message": "Sede Mútua",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_04_01_03_MUTUA",
-    "message": "M\u00fatua",
+    "message": "Mútua",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -2275,7 +2275,7 @@
   },
   {
     "code": "ADMIN_MO_04_02_02_01_01_MAGOMBE",
-    "message": "MAGOMB\u00c9",
+    "message": "MAGOMBÉ",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -2353,7 +2353,7 @@
   },
   {
     "code": "ADMIN_MO_04_03_01_01_01_MARANGA",
-    "message": "MARANG\u00c1",
+    "message": "MARANGÁ",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -2551,7 +2551,7 @@
   },
   {
     "code": "ADMIN_MO_04_04_BUZI",
-    "message": "B\u00fazi",
+    "message": "Búzi",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -2587,7 +2587,7 @@
   },
   {
     "code": "ADMIN_MO_04_05_02_01_02_MACUNHE",
-    "message": "MACUNH\u00c9",
+    "message": "MACUNHÉ",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -2694,14 +2694,14 @@
     "locale": "pt_DEMO"
   },
   {
-    "code": "ADMIN_MO_04_06_02_01_MURRA\u00c7A SEDE",
-    "message": "Murra\u00e7a Sede",
+    "code": "ADMIN_MO_04_06_02_01_MURRAÇA SEDE",
+    "message": "Murraça Sede",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
-    "code": "ADMIN_MO_04_06_02_MURRA\u00c7A",
-    "message": "Murra\u00e7a",
+    "code": "ADMIN_MO_04_06_02_MURRAÇA",
+    "message": "Murraça",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -2731,7 +2731,7 @@
   },
   {
     "code": "ADMIN_MO_04_06_04_01_01_MAZUQUA",
-    "message": "MAZUQU\u00c1",
+    "message": "MAZUQUÁ",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -2797,7 +2797,7 @@
   },
   {
     "code": "ADMIN_MO_05_TETEA",
-    "message": "Tet\u00e9a",
+    "message": "Tetéa",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -2995,19 +2995,19 @@
   },
   {
     "code": "ADMIN_MO_06_05_01_01_MANHICA SEDE",
-    "message": "Sede de Manhi\u00e7a",
+    "message": "Sede de Manhiça",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_06_05_01_MANHICAE",
-    "message": "Manhi\u00e7ae",
+    "message": "Manhiçae",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_06_05_MANHICA",
-    "message": "Manhi\u00e7a",
+    "message": "Manhiça",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -3061,7 +3061,7 @@
   },
   {
     "code": "ADMIN_MO_06_07_01_NOMEA",
-    "message": "Nom\u00e9a",
+    "message": "Noméa",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -3355,7 +3355,7 @@
   },
   {
     "code": "ADMIN_MO_08_02_01_01_01_MACIA",
-    "message": "M\u00c1CIA",
+    "message": "MÁCIA",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -3367,7 +3367,7 @@
   },
   {
     "code": "ADMIN_MO_08_02_01_01_CHOKWE SEDE",
-    "message": "Sede de Ch\u00f3kwe",
+    "message": "Sede de Chókwe",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -3379,7 +3379,7 @@
   },
   {
     "code": "ADMIN_MO_08_02_CHOKWE",
-    "message": "Ch\u00f3kwe",
+    "message": "Chókwe",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -3403,25 +3403,25 @@
   },
   {
     "code": "ADMIN_MO_08_03_01_01_GUIJA SEDE",
-    "message": "Guij\u00e1 Sede",
+    "message": "Guijá Sede",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_08_03_01_GUIJAA",
-    "message": "Guij\u00e1",
+    "message": "Guijá",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_08_03_GUIJA",
-    "message": "Guij\u00e1",
+    "message": "Guijá",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_08_04_01_01_01_MACUACUA",
-    "message": "MACUACU\u00c1",
+    "message": "MACUACUÁ",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -3643,7 +3643,7 @@
   },
   {
     "code": "ADMIN_MO_09_01_01_01_02_CHACAME",
-    "message": "CHACAM\u00c9",
+    "message": "CHACAMÉ",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -3673,7 +3673,7 @@
   },
   {
     "code": "ADMIN_MO_09_01_ADMIN_MO_10_ZAMBEZIA",
-    "message": "ADMIN_MO_10_ZAMB\u00c9ZIA",
+    "message": "ADMIN_MO_10_ZAMBÉZIA",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -3799,7 +3799,7 @@
   },
   {
     "code": "ADMIN_MO_09_03_01_ADMIN_MO_10_01_ALTO MOLOCULE",
-    "message": "ADMIN_MO_10_01_ALTO MOL\u00d3CULA",
+    "message": "ADMIN_MO_10_01_ALTO MOLÓCULA",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -3811,7 +3811,7 @@
   },
   {
     "code": "ADMIN_MO_09_03_ALTO MOLOCULE",
-    "message": "Alto Mol\u00f3culo",
+    "message": "Alto Molóculo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -3895,7 +3895,7 @@
   },
   {
     "code": "ADMIN_MO_09_06_01_01_01_MACATANE",
-    "message": "MACAT\u00c2NE",
+    "message": "MACATÂNE",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4039,79 +4039,79 @@
   },
   {
     "code": "ADMIN_MO_09_ZAMBEZIA",
-    "message": "Zamb\u00e9zia",
+    "message": "Zambézia",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_01_01_01_01_LOCATION1",
-    "message": "Localiza\u00e7\u00e3o1",
+    "message": "Localização1",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_01_01_01_02_LOCATION2",
-    "message": "Localiza\u00e7\u00e3o2",
+    "message": "Localização2",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_01_01_01_03_LOCATION3",
-    "message": "Localiza\u00e7\u00e3o3",
+    "message": "Localização3",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_01_01_01_04_LOCATION4",
-    "message": "Localiza\u00e7\u00e3o4",
+    "message": "Localização4",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_01_01_01_05_LOCATION5",
-    "message": "Localiza\u00e7\u00e3o5",
+    "message": "Localização5",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_01_01_01_06_LOCATION6",
-    "message": "Localiza\u00e7\u00e3o6",
+    "message": "Localização6",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_01_01_01_07_LOCATION7",
-    "message": "Localiza\u00e7\u00e3o7",
+    "message": "Localização7",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_01_01_01_08_LOCATION8",
-    "message": "Localiza\u00e7\u00e3o8",
+    "message": "Localização8",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_01_01_01_09_LOCATION9",
-    "message": "Localiza\u00e7\u00e3o9",
+    "message": "Localização9",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_01_01_01_10_LOCATION10",
-    "message": "Localiza\u00e7\u00e3o10",
+    "message": "Localização10",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_01_01_01_ALTO MOLOCUE SEDE",
-    "message": "Sede do Alto Mol\u00f3cu\u00e9",
+    "message": "Sede do Alto Molócué",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_01_01_ALTO MOLOCUE",
-    "message": "Alto Mol\u00f3cu\u00e9",
+    "message": "Alto Molócué",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4129,187 +4129,187 @@
   },
   {
     "code": "ADMIN_MO_10_01_ALTO MOLOCULE",
-    "message": "Alto Mol\u00f3culo",
+    "message": "Alto Molóculo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_01_REGION1",
-    "message": "Regi\u00e3o1",
+    "message": "Região1",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_02_REGION2",
-    "message": "Regi\u00e3o2",
+    "message": "Região2",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_03_REGION3",
-    "message": "Regi\u00e3o3",
+    "message": "Região3",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_04_REGION4",
-    "message": "Regi\u00e3o4",
+    "message": "Região4",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_05_REGION5",
-    "message": "Regi\u00e3o5",
+    "message": "Região5",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_06_REGION6",
-    "message": "Regi\u00e3o6",
+    "message": "Região6",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_07_REGION7",
-    "message": "Regi\u00e3o7",
+    "message": "Região7",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_08_REGION8",
-    "message": "Regi\u00e3o8",
+    "message": "Região8",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_09_REGION9",
-    "message": "Regi\u00e3o9",
+    "message": "Região9",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_10_REGION10",
-    "message": "Regi\u00e3o10",
+    "message": "Região10",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_11_REGION11",
-    "message": "Regi\u00e3o11",
+    "message": "Região11",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_12_REGION12",
-    "message": "Regi\u00e3o12",
+    "message": "Região12",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_13_REGION13",
-    "message": "Regi\u00e3o13",
+    "message": "Região13",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_14_REGION14",
-    "message": "Regi\u00e3o14",
+    "message": "Região14",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_15_REGION15",
-    "message": "Regi\u00e3o15",
+    "message": "Região15",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_16_REGION16",
-    "message": "Regi\u00e3o16",
+    "message": "Região16",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_17_REGION17",
-    "message": "Regi\u00e3o17",
+    "message": "Região17",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_18_REGION18",
-    "message": "Regi\u00e3o18",
+    "message": "Região18",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_19_REGION19",
-    "message": "Regi\u00e3o19",
+    "message": "Região19",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_20_REGION20",
-    "message": "Regi\u00e3o20",
+    "message": "Região20",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_21_REGION21",
-    "message": "Regi\u00e3o21",
+    "message": "Região21",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_22_REGION22",
-    "message": "Regi\u00e3o22",
+    "message": "Região22",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_23_REGION23",
-    "message": "Regi\u00e3o23",
+    "message": "Região23",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_24_REGION24",
-    "message": "Regi\u00e3o24",
+    "message": "Região24",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_25_REGION25",
-    "message": "Regi\u00e3o25",
+    "message": "Região25",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_26_REGION26",
-    "message": "Regi\u00e3o26",
+    "message": "Região26",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_27_REGION27",
-    "message": "Regi\u00e3o27",
+    "message": "Região27",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_28_REGION28",
-    "message": "Regi\u00e3o28",
+    "message": "Região28",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_29_REGION29",
-    "message": "Regi\u00e3o29",
+    "message": "Região29",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_10_02_01_01_30_REGION30",
-    "message": "Regi\u00e3o30",
+    "message": "Região30",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4345,7 +4345,7 @@
   },
   {
     "code": "ADMIN_MO_10_ZAMBEZIA",
-    "message": "Zamb\u00e9zia",
+    "message": "Zambézia",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4363,7 +4363,7 @@
   },
   {
     "code": "ADMIN_MO_11_01_01_01_03_VILLAGETHREE",
-    "message": "Aldeia Tr\u00eas",
+    "message": "Aldeia Três",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4489,7 +4489,7 @@
   },
   {
     "code": "ADMIN_MO_11_01_01_02_11_VILLAGETWENTY-THREE",
-    "message": "VillageTwenty-tr\u00eas",
+    "message": "VillageTwenty-três",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4555,7 +4555,7 @@
   },
   {
     "code": "ADMIN_MO_11_01_01_03_09_VILLAGETHIRTY-THREE",
-    "message": "Aldeia Trinta e Tr\u00eas",
+    "message": "Aldeia Trinta e Três",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4579,13 +4579,13 @@
   },
   {
     "code": "ADMIN_MO_11_01_01_03_LOCALITYTHREE",
-    "message": "Localidade Tr\u00eas",
+    "message": "Localidade Três",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_MO_11_01_01_POST ADMINISTRATIVEONE",
-    "message": "P\u00f3s AdministrativoUm",
+    "message": "Pós AdministrativoUm",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4627,7 +4627,7 @@
   },
   {
     "code": "ADMIN_MO_11_01_02_01_07_VILLAGEFORTY-THREE",
-    "message": "VillageQuarenta e tr\u00eas",
+    "message": "VillageQuarenta e três",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4693,7 +4693,7 @@
   },
   {
     "code": "ADMIN_MO_11_01_02_02_05_VILLAGEFIFTY-THREE",
-    "message": "VillageFifty-tr\u00eas",
+    "message": "VillageFifty-três",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4747,7 +4747,7 @@
   },
   {
     "code": "ADMIN_MO_11_01_02_POST ADMINISTRATIVETWO",
-    "message": "P\u00f3s Administrativo Dois",
+    "message": "Pós Administrativo Dois",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4783,7 +4783,7 @@
   },
   {
     "code": "ADMIN_MO_11_02_01_01_03_VILLAGESIXTY-THREE",
-    "message": "VillageSessenta e tr\u00eas",
+    "message": "VillageSessenta e três",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4849,7 +4849,7 @@
   },
   {
     "code": "ADMIN_MO_11_02_01_02_01_VILLAGESEVENTY-THREE",
-    "message": "Aldeia Setenta e tr\u00eas",
+    "message": "Aldeia Setenta e três",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4897,7 +4897,7 @@
   },
   {
     "code": "ADMIN_MO_11_02_01_POST ADMINISTRATIVETHREE",
-    "message": "P\u00f3s-Administrativo Tr\u00eas",
+    "message": "Pós-Administrativo Três",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4921,7 +4921,7 @@
   },
   {
     "code": "ADMIN_MO_11_02_02_01_04_VILLAGEEIGHTY-THREE",
-    "message": "VillageOitenta e tr\u00eas",
+    "message": "VillageOitenta e três",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -4987,7 +4987,7 @@
   },
   {
     "code": "ADMIN_MO_11_02_02_02_04_VILLAGENINETY-THREE",
-    "message": "Aldeia Noventa e tr\u00eas",
+    "message": "Aldeia Noventa e três",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5035,7 +5035,7 @@
   },
   {
     "code": "ADMIN_MO_11_02_02_POST ADMINISTRATIVEFOUR",
-    "message": "P\u00f3s AdministrativoQuatro",
+    "message": "Pós AdministrativoQuatro",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5047,7 +5047,7 @@
   },
   {
     "code": "ADMIN_MO_11_TEST PROVINCE",
-    "message": "Prov\u00edncia de teste",
+    "message": "Província de teste",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5130,8 +5130,8 @@
     "locale": "pt_DEMO"
   },
   {
-    "code": "ADMIN_MO_12_02_ANG\u00d3NIA",
-    "message": "Ang\u00f3nia",
+    "code": "ADMIN_MO_12_02_ANGÓNIA",
+    "message": "Angónia",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5160,8 +5160,8 @@
     "locale": "pt_DEMO"
   },
   {
-    "code": "ADMIN_MO_12_03_01_ADMIN_MO_12_02_ANG\u00d3NIA",
-    "message": "ADMIN_MO_12_02_ANG\u00d3NIA",
+    "code": "ADMIN_MO_12_03_01_ADMIN_MO_12_02_ANGÓNIA",
+    "message": "ADMIN_MO_12_02_ANGÓNIA",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5196,8 +5196,8 @@
     "locale": "pt_DEMO"
   },
   {
-    "code": "ADMIN_MO_12_03_ANG\u00d3NIA",
-    "message": "Ang\u00f3nia",
+    "code": "ADMIN_MO_12_03_ANGÓNIA",
+    "message": "Angónia",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5335,7 +5335,7 @@
   },
   {
     "code": "ADMIN_MO_12_05_03_01_02_MACAPA",
-    "message": "MACAP\u00c1",
+    "message": "MACAPÁ",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5389,7 +5389,7 @@
   },
   {
     "code": "ADMIN_MO_12_06_01_CHARRE",
-    "message": "Charr\u00e9",
+    "message": "Charré",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5724,8 +5724,8 @@
     "locale": "pt_DEMO"
   },
   {
-    "code": "ADMIN_MO_12_13_D\u00d4A",
-    "message": "D\u00f4a",
+    "code": "ADMIN_MO_12_13_DÔA",
+    "message": "Dôa",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5743,13 +5743,13 @@
   },
   {
     "code": "ADMIN_POSTO ADMINISTRATIVO",
-    "message": "P\u00f3s-administrativo",
+    "message": "Pós-administrativo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMIN_PROVINCIA",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5767,13 +5767,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_weight_IS_MANDATORY",
-    "message": "O peso \u00e9 obrigat\u00f3rio",
+    "message": "O peso é obrigatório",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "AU_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5791,13 +5791,13 @@
   },
   {
     "code": "AU_POST ADMINISTRATIVE",
-    "message": "P\u00f3s-administrativo",
+    "message": "Pós-administrativo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "AU_PROVINCE",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5809,7 +5809,7 @@
   },
   {
     "code": "Admin9.Country",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5821,7 +5821,7 @@
   },
   {
     "code": "Admin9.Localidade",
-    "message": "Localiza\u00e7\u00e3o",
+    "message": "Localização",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5845,31 +5845,31 @@
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_1",
-    "message": "Definir a popula\u00e7\u00e3o total e alvo ap\u00f3s o download do modelo:",
+    "message": "Definir a população total e alvo após o download do modelo:",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_1_DESC_1",
-    "message": "V\u00e1 \u00e0 ficha do distrito para o qual pretende definir as metas e adicione os dados da popula\u00e7\u00e3o total e alvo para cada aldeia.",
+    "message": "Vá à ficha do distrito para o qual pretende definir as metas e adicione os dados da população total e alvo para cada aldeia.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_1_DESC_2",
-    "message": "Insira a popula\u00e7\u00e3o alvo e total de cada aldeia na ficha de cada distrito. Se alguma aldeia n\u00e3o tiver metas definidas, a ficha ter\u00e1 erros.",
+    "message": "Insira a população alvo e total de cada aldeia na ficha de cada distrito. Se alguma aldeia não tiver metas definidas, a ficha terá erros.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_1_DESC_3",
-    "message": "Salve a planilha com o alvo atualizado e a popula\u00e7\u00e3o total de cada aldeia no modelo Excel.",
+    "message": "Salve a planilha com o alvo atualizado e a população total de cada aldeia no modelo Excel.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_1_DESC_4",
-    "message": "Pressione o bot\u00e3o 'Navegar em meus arquivos' na tela de upload da popula\u00e7\u00e3o e selecione o arquivo salvo com toda a popula\u00e7\u00e3o alvo e total do sistema.",
+    "message": "Pressione o botão 'Navegar em meus arquivos' na tela de upload da população e selecione o arquivo salvo com toda a população alvo e total do sistema.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5881,55 +5881,55 @@
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_2_DESC_1",
-    "message": "Se o usu\u00e1rio n\u00e3o tiver definido metas ou popula\u00e7\u00e3o total para cada aldeia, o sistema gerar\u00e1 um erro com o n\u00famero da linha onde falta a popula\u00e7\u00e3o alvo ou total.",
+    "message": "Se o usuário não tiver definido metas ou população total para cada aldeia, o sistema gerará um erro com o número da linha onde falta a população alvo ou total.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_2_DESC_2",
-    "message": "Se o usu\u00e1rio excluir qualquer aldeia da planilha ou excluir uma planilha de distrito completa e carregar a planilha, o sistema gerar\u00e1 um erro. O usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corrigidos.",
+    "message": "Se o usuário excluir qualquer aldeia da planilha ou excluir uma planilha de distrito completa e carregar a planilha, o sistema gerará um erro. O usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corrigidos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_2_DESC_3",
-    "message": "Se o usu\u00e1rio excluir qualquer um dos cabe\u00e7alhos da planilha e carreg\u00e1-la, o sistema gerar\u00e1 um erro. O usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corrigidos.",
+    "message": "Se o usuário excluir qualquer um dos cabeçalhos da planilha e carregá-la, o sistema gerará um erro. O usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corrigidos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_1",
-    "message": "Baixando modelos do Excel para defini\u00e7\u00e3o de metas:",
+    "message": "Baixando modelos do Excel para definição de metas:",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_1_DESC_1",
-    "message": "Baixe o modelo Excel clicando no bot\u00e3o \u201cBaixar modelo\u201d.",
+    "message": "Baixe o modelo Excel clicando no botão “Baixar modelo”.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_1_DESC_2",
-    "message": "Abra o modelo Excel que foi baixado na etapa anterior e a primeira planilha que voc\u00ea ver\u00e1 \u00e9 uma planilha \u201cLeia-me\u201d. As restantes folhas ser\u00e3o nomeadas de acordo com o nome dos distritos seleccionados no passo \u201cSelec\u00e7\u00e3o de Limites\u201d, tendo cada folha de distrito uma lista de todas as aldeias mapeadas para esse distrito.",
+    "message": "Abra o modelo Excel que foi baixado na etapa anterior e a primeira planilha que você verá é uma planilha “Leia-me”. As restantes folhas serão nomeadas de acordo com o nome dos distritos seleccionados no passo “Selecção de Limites”, tendo cada folha de distrito uma lista de todas as aldeias mapeadas para esse distrito.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_2",
-    "message": "Definir metas ap\u00f3s o download do modelo:",
+    "message": "Definir metas após o download do modelo:",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_2_DESC_1",
-    "message": "V\u00e1 para a ficha do distrito para o qual deseja definir metas e adicione n\u00fameros na coluna \u201cMetas\u201d para cada Aldeia.",
+    "message": "Vá para a ficha do distrito para o qual deseja definir metas e adicione números na coluna “Metas” para cada Aldeia.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_2_DESC_2",
-    "message": "Insira as metas para cada aldeia na ficha de cada distrito na coluna \u201cMeta ao n\u00edvel do limite seleccionado\u201d. Se alguma aldeia n\u00e3o tiver metas definidas, a ficha ter\u00e1 erros.",
+    "message": "Insira as metas para cada aldeia na ficha de cada distrito na coluna “Meta ao nível do limite seleccionado”. Se alguma aldeia não tiver metas definidas, a ficha terá erros.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5941,7 +5941,7 @@
   },
   {
     "code": "BOUNDARY_README_HEADER_2_DESC_4",
-    "message": "Pressione o bot\u00e3o \u201cBrowse In My Files\u201d na tela \u201cUpload Target\u201d e selecione o arquivo salvo com todos os alvos do sistema.",
+    "message": "Pressione o botão “Browse In My Files” na tela “Upload Target” e selecione o arquivo salvo com todos os alvos do sistema.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -5953,85 +5953,85 @@
   },
   {
     "code": "BOUNDARY_README_HEADER_3_DESC_1",
-    "message": "Se o usu\u00e1rio n\u00e3o tiver definido metas para cada aldeia, o sistema gerar\u00e1 um erro com o n\u00famero da linha onde as metas est\u00e3o faltando.",
+    "message": "Se o usuário não tiver definido metas para cada aldeia, o sistema gerará um erro com o número da linha onde as metas estão faltando.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_3_DESC_2",
-    "message": "Se o usu\u00e1rio excluir qualquer aldeia da planilha ou excluir uma planilha distrital completa e carregar a planilha, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir qualquer aldeia da planilha ou excluir uma planilha distrital completa e carregar a planilha, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_3_DESC_3",
-    "message": "Se o usu\u00e1rio excluir qualquer um dos cabe\u00e7alhos da planilha e carregar a planilha, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir qualquer um dos cabeçalhos da planilha e carregar a planilha, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "BOUNDARY_README_MAINHEADER",
-    "message": "Leia-me as instru\u00e7\u00f5es para upload de destino",
+    "message": "Leia-me as instruções para upload de destino",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_ATTRIBUTE_CAMPAIGN_BEDNET_INDIVIDUAL_LABEL",
-    "message": "N\u00famero de indiv\u00edduos por mosquiteiro",
+    "message": "Número de indivíduos por mosquiteiro",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_BEDNET_HOUSEHOLD_LABEL",
-    "message": "N\u00famero de mosquiteiros por domic\u00edlio",
+    "message": "Número de mosquiteiros por domicílio",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_BEDNET_INDIVIDUAL_LABEL",
-    "message": "N\u00famero de indiv\u00edduos por mosquiteiro",
+    "message": "Número de indivíduos por mosquiteiro",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_DELIVERY_TAB_SUB_TEXT_LLIN",
-    "message": "Configurar condi\u00e7\u00e3o de entrega para campanha LLIN",
+    "message": "Configurar condição de entrega para campanha LLIN",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_END_DATE_BEFORE_ERROR",
-    "message": "A data de t\u00e9rmino da campanha n\u00e3o pode ser anterior \u00e0 data de in\u00edcio da campanha.",
+    "message": "A data de término da campanha não pode ser anterior à data de início da campanha.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_END_DATE_ERROR",
-    "message": "Campo obrigat\u00f3rio!",
+    "message": "Campo obrigatório!",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_FIELD_MANDATORY",
-    "message": "Campo obrigat\u00f3rio!",
+    "message": "Campo obrigatório!",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_NAME_ERROR",
-    "message": "O nome da campanha j\u00e1 existe. Por favor, mude.",
+    "message": "O nome da campanha já existe. Por favor, mude.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_START_DATE_ERROR",
-    "message": "Campo obrigat\u00f3rio!",
+    "message": "Campo obrigatório!",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "CC_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6049,13 +6049,13 @@
   },
   {
     "code": "CC_POST ADMINISTRATIVE",
-    "message": "P\u00f3s-administrativo",
+    "message": "Pós-administrativo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "CC_PROVINCE",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6067,7 +6067,7 @@
   },
   {
     "code": "DIGIT_LOC_MESSAGE_HEADER_ENGLISH",
-    "message": "Mensagens em ingl\u00eas",
+    "message": "Mensagens em inglês",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6109,13 +6109,13 @@
   },
   {
     "code": "DISPLAY_boundaryCode",
-    "message": "C\u00f3digo de limite de capta\u00e7\u00e3o (obrigat\u00f3rio)",
+    "message": "Código de limite de captação (obrigatório)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "DISPLAY_facilityUsage",
-    "message": "Uso das instala\u00e7\u00f5es",
+    "message": "Uso das instalações",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6133,13 +6133,13 @@
   },
   {
     "code": "ERROR_LOADING_BASE_MAP",
-    "message": "N\u00e3o \u00e9 poss\u00edvel encontrar o mapa base necess\u00e1rio. Entre em contato com o administrador.",
+    "message": "Não é possível encontrar o mapa base necessário. Entre em contato com o administrador.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERROR_READ_ME_MISSING",
-    "message": "Por favor, n\u00e3o altere os nomes das planilhas.",
+    "message": "Por favor, não altere os nomes das planilhas.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6151,61 +6151,61 @@
   },
   {
     "code": "FACILITIES_EXCEL_README_POINTS_1",
-    "message": "Se n\u00e3o houver instala\u00e7\u00f5es dispon\u00edveis para sele\u00e7\u00e3o, a aba \u201cLista de instala\u00e7\u00f5es dispon\u00edveis\u201d no modelo estar\u00e1 vazia. Para criar novos dados de instala\u00e7\u00e3o, adicione o nome do Nome da Instala\u00e7\u00e3o, Tipo de Instala\u00e7\u00e3o, Status da Instala\u00e7\u00e3o, Capacidade. A coluna \u201cC\u00f3digo da Instala\u00e7\u00e3o\u201d precisa ser deixada em branco se esta for uma instala\u00e7\u00e3o nova. Caso se trate de uma instala\u00e7\u00e3o sendo reaproveitada (que fica dispon\u00edvel no template ap\u00f3s o download) o usu\u00e1rio s\u00f3 precisa realizar o passo 2.",
+    "message": "Se não houver instalações disponíveis para seleção, a aba “Lista de instalações disponíveis” no modelo estará vazia. Para criar novos dados de instalação, adicione o nome do Nome da Instalação, Tipo de Instalação, Status da Instalação, Capacidade. A coluna “Código da Instalação” precisa ser deixada em branco se esta for uma instalação nova. Caso se trate de uma instalação sendo reaproveitada (que fica disponível no template após o download) o usuário só precisa realizar o passo 2.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITIES_EXCEL_README_POINTS_2",
-    "message": "Para mapear a instala\u00e7\u00e3o para o limite correto, o usu\u00e1rio precisa copiar o c\u00f3digo de limite correto do limite da planilha \u201cLista de Limites de Campanha\u201d para a qual a instala\u00e7\u00e3o precisa ser mapeada. Se houver uma instala\u00e7\u00e3o mapeada para v\u00e1rios limites, o administrador do sistema ter\u00e1 que adicionar os c\u00f3digos de limite de todos os limites para os quais a instala\u00e7\u00e3o est\u00e1 mapeada, separando-os por v\u00edrgulas na c\u00e9lula para adicionar c\u00f3digos de limite para essa instala\u00e7\u00e3o.",
+    "message": "Para mapear a instalação para o limite correto, o usuário precisa copiar o código de limite correto do limite da planilha “Lista de Limites de Campanha” para a qual a instalação precisa ser mapeada. Se houver uma instalação mapeada para vários limites, o administrador do sistema terá que adicionar os códigos de limite de todos os limites para os quais a instalação está mapeada, separando-os por vírgulas na célula para adicionar códigos de limite para essa instalação.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_1",
-    "message": "Criar novos dados de instala\u00e7\u00f5es/usar dados de instala\u00e7\u00f5es existentes ap\u00f3s o download do modelo:",
+    "message": "Criar novos dados de instalações/usar dados de instalações existentes após o download do modelo:",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_1",
-    "message": "Se n\u00e3o houver instala\u00e7\u00f5es dispon\u00edveis para sele\u00e7\u00e3o, a aba \u201cLista de instala\u00e7\u00f5es dispon\u00edveis\u201d no modelo estar\u00e1 vazia. Para criar novos dados de instala\u00e7\u00e3o, adicione o nome do Nome da Instala\u00e7\u00e3o, Tipo de Instala\u00e7\u00e3o, Status da Instala\u00e7\u00e3o, Capacidade e Uso da Instala\u00e7\u00e3o.",
+    "message": "Se não houver instalações disponíveis para seleção, a aba “Lista de instalações disponíveis” no modelo estará vazia. Para criar novos dados de instalação, adicione o nome do Nome da Instalação, Tipo de Instalação, Status da Instalação, Capacidade e Uso da Instalação.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_2",
-    "message": "Para mapear a instala\u00e7\u00e3o para o limite correto, o usu\u00e1rio precisa copiar o c\u00f3digo de limite correto do limite da planilha \u201cDados do limite\u201d para a qual a instala\u00e7\u00e3o precisa ser mapeada.",
+    "message": "Para mapear a instalação para o limite correto, o usuário precisa copiar o código de limite correto do limite da planilha “Dados do limite” para a qual a instalação precisa ser mapeada.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_3",
-    "message": "Salve a planilha com os detalhes da instala\u00e7\u00e3o inseridos no modelo Excel.",
+    "message": "Salve a planilha com os detalhes da instalação inseridos no modelo Excel.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_4",
-    "message": "Pressione o bot\u00e3o \u201cNavegar em meus arquivos\u201d na tela \u201cCarregar dados da instala\u00e7\u00e3o\u201d e selecione o arquivo salvo com todos os dados da instala\u00e7\u00e3o do sistema.",
+    "message": "Pressione o botão “Navegar em meus arquivos” na tela “Carregar dados da instalação” e selecione o arquivo salvo com todos os dados da instalação do sistema.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_2",
-    "message": "Desativando instala\u00e7\u00f5es existentes para uma campanha",
+    "message": "Desativando instalações existentes para uma campanha",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_2_DESC_1",
-    "message": "Depois que o usu\u00e1rio tiver baixado o modelo para instala\u00e7\u00f5es, se o sistema tiver dados de instala\u00e7\u00f5es existentes para serem reutilizados, o modelo ser\u00e1 pr\u00e9-preenchido com essa lista de instala\u00e7\u00f5es.",
+    "message": "Depois que o usuário tiver baixado o modelo para instalações, se o sistema tiver dados de instalações existentes para serem reutilizados, o modelo será pré-preenchido com essa lista de instalações.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_2_DESC_2",
-    "message": "Se o usu\u00e1rio optar por n\u00e3o usar instala\u00e7\u00f5es espec\u00edficas, ele poder\u00e1 desativar essa instala\u00e7\u00e3o marcando o campo 'Uso da instala\u00e7\u00e3o' como 'Inativo'.",
+    "message": "Se o usuário optar por não usar instalações específicas, ele poderá desativar essa instalação marcando o campo 'Uso da instalação' como 'Inativo'.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6217,55 +6217,55 @@
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_3_DESC_1",
-    "message": "Se o usu\u00e1rio tiver removido o c\u00f3digo de limite da instala\u00e7\u00e3o para uma instala\u00e7\u00e3o existente na lista, o sistema emitir\u00e1 uma mensagem de erro.",
+    "message": "Se o usuário tiver removido o código de limite da instalação para uma instalação existente na lista, o sistema emitirá uma mensagem de erro.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_3_DESC_2",
-    "message": "Se o usu\u00e1rio excluir alguma coluna da \u201cLista de Instala\u00e7\u00f5es Dispon\u00edveis\u201d da planilha e carregar a planilha, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir alguma coluna da “Lista de Instalações Disponíveis” da planilha e carregar a planilha, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_3_DESC_3",
-    "message": "Se o usu\u00e1rio excluir algum dos cabe\u00e7alhos da planilha e carreg\u00e1-la, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir algum dos cabeçalhos da planilha e carregá-la, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_1",
-    "message": "Baixando modelos do Excel para configura\u00e7\u00e3o de instala\u00e7\u00f5es:",
+    "message": "Baixando modelos do Excel para configuração de instalações:",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_1_DESC_1",
-    "message": "Baixe o modelo Excel clicando no bot\u00e3o \u201cBaixar modelo\u201d.",
+    "message": "Baixe o modelo Excel clicando no botão “Baixar modelo”.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_1_DESC_2",
-    "message": "Abra o modelo que foi baixado na etapa anterior ter\u00e1 3 planilhas e a primeira planilha que voc\u00ea ver\u00e1 \u00e9 uma planilha \u201cLeia-me\u201d. A segunda Folha denominada \u201cLista de Instala\u00e7\u00f5es Dispon\u00edveis\u201d conter\u00e1 uma lista de todas as instala\u00e7\u00f5es dispon\u00edveis que podem ser utilizadas na campanha. Se n\u00e3o houver nenhuma facilidade dispon\u00edvel, esta folha estar\u00e1 vazia. A terceira folha ser\u00e1 denominada \u201cLista de Limites de Campanha\u201d que conter\u00e1 todos os limites com seus respectivos C\u00f3digos de Limites.",
+    "message": "Abra o modelo que foi baixado na etapa anterior terá 3 planilhas e a primeira planilha que você verá é uma planilha “Leia-me”. A segunda Folha denominada “Lista de Instalações Disponíveis” conterá uma lista de todas as instalações disponíveis que podem ser utilizadas na campanha. Se não houver nenhuma facilidade disponível, esta folha estará vazia. A terceira folha será denominada “Lista de Limites de Campanha” que conterá todos os limites com seus respectivos Códigos de Limites.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2",
-    "message": "Criar novos dados de instala\u00e7\u00f5es/usar dados de instala\u00e7\u00f5es existentes ap\u00f3s o download do modelo:",
+    "message": "Criar novos dados de instalações/usar dados de instalações existentes após o download do modelo:",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_1",
-    "message": "Se n\u00e3o houver instala\u00e7\u00f5es dispon\u00edveis para sele\u00e7\u00e3o, a aba \u201cLista de instala\u00e7\u00f5es dispon\u00edveis\u201d no modelo estar\u00e1 vazia. Para criar novos dados de instala\u00e7\u00e3o, adicione o nome do Nome da Instala\u00e7\u00e3o, Tipo de Instala\u00e7\u00e3o, Status da Instala\u00e7\u00e3o, Capacidade. A coluna \u201cC\u00f3digo da Instala\u00e7\u00e3o\u201d precisa ser deixada em branco se esta for uma instala\u00e7\u00e3o nova. Caso se trate de uma instala\u00e7\u00e3o sendo reaproveitada (que fica dispon\u00edvel no template ap\u00f3s o download) o usu\u00e1rio s\u00f3 precisa realizar o passo 2.",
+    "message": "Se não houver instalações disponíveis para seleção, a aba “Lista de instalações disponíveis” no modelo estará vazia. Para criar novos dados de instalação, adicione o nome do Nome da Instalação, Tipo de Instalação, Status da Instalação, Capacidade. A coluna “Código da Instalação” precisa ser deixada em branco se esta for uma instalação nova. Caso se trate de uma instalação sendo reaproveitada (que fica disponível no template após o download) o usuário só precisa realizar o passo 2.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_2",
-    "message": "Para mapear a instala\u00e7\u00e3o para o limite correto, o usu\u00e1rio precisa copiar o c\u00f3digo de limite correto do limite da planilha \u201cLista de Limites de Campanha\u201d para a qual a instala\u00e7\u00e3o precisa ser mapeada. Se houver uma instala\u00e7\u00e3o mapeada para v\u00e1rios limites, o administrador do sistema ter\u00e1 que adicionar os c\u00f3digos de limite de todos os limites para os quais a instala\u00e7\u00e3o est\u00e1 mapeada, separando-os por v\u00edrgulas na c\u00e9lula para adicionar c\u00f3digos de limite para essa instala\u00e7\u00e3o.",
+    "message": "Para mapear a instalação para o limite correto, o usuário precisa copiar o código de limite correto do limite da planilha “Lista de Limites de Campanha” para a qual a instalação precisa ser mapeada. Se houver uma instalação mapeada para vários limites, o administrador do sistema terá que adicionar os códigos de limite de todos os limites para os quais a instalação está mapeada, separando-os por vírgulas na célula para adicionar códigos de limite para essa instalação.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6277,85 +6277,85 @@
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_4",
-    "message": "Pressione o bot\u00e3o \u201cBrowse In My Files\u201d na tela \u201cUpload Facility Data\u201d e selecione o arquivo salvo com todos os alvos do sistema.",
+    "message": "Pressione o botão “Browse In My Files” na tela “Upload Facility Data” e selecione o arquivo salvo com todos os alvos do sistema.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_5",
-    "message": "Desativando Instala\u00e7\u00f5es existentes para uma campanha.",
+    "message": "Desativando Instalações existentes para uma campanha.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_6",
-    "message": "Depois que o usu\u00e1rio tiver baixado o modelo para instala\u00e7\u00f5es, se o sistema tiver dados de instala\u00e7\u00f5es existentes para serem reutilizados, o modelo ser\u00e1 pr\u00e9-preenchido com essa lista de instala\u00e7\u00f5es.",
+    "message": "Depois que o usuário tiver baixado o modelo para instalações, se o sistema tiver dados de instalações existentes para serem reutilizados, o modelo será pré-preenchido com essa lista de instalações.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_7",
-    "message": "Se o usu\u00e1rio optar por n\u00e3o usar instala\u00e7\u00f5es espec\u00edficas, ele poder\u00e1 excluir as linhas de dados dessas instala\u00e7\u00f5es espec\u00edficas que precisam ser removidas e carregar a planilha apenas com as instala\u00e7\u00f5es necess\u00e1rias para a campanha com os c\u00f3digos de limite corretos mapeados para essas instala\u00e7\u00f5es.",
+    "message": "Se o usuário optar por não usar instalações específicas, ele poderá excluir as linhas de dados dessas instalações específicas que precisam ser removidas e carregar a planilha apenas com as instalações necessárias para a campanha com os códigos de limite corretos mapeados para essas instalações.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_1",
-    "message": "Caso em que n\u00e3o h\u00e1 dados da instala\u00e7\u00e3o no sistema:",
+    "message": "Caso em que não há dados da instalação no sistema:",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_1_DESC_1",
-    "message": "Passo 1: Quando n\u00e3o houver dados de instala\u00e7\u00f5es no sistema, o modelo \u201cLista de instala\u00e7\u00f5es dispon\u00edveis\u201d estar\u00e1 vazio. Para cada instala\u00e7\u00e3o adicionada, o usu\u00e1rio precisa inserir o nome da instala\u00e7\u00e3o (deve ser exclusivo), tipo de instala\u00e7\u00e3o (armaz\u00e9m/instala\u00e7\u00e3o de sa\u00fade), status da instala\u00e7\u00e3o (tempor\u00e1rio/permanente), capacidade (entrada de n\u00famero)",
+    "message": "Passo 1: Quando não houver dados de instalações no sistema, o modelo “Lista de instalações disponíveis” estará vazio. Para cada instalação adicionada, o usuário precisa inserir o nome da instalação (deve ser exclusivo), tipo de instalação (armazém/instalação de saúde), status da instalação (temporário/permanente), capacidade (entrada de número)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_1_DESC_2",
-    "message": "Passo 2: Para mapear as instala\u00e7\u00f5es para um determinado limite, o usu\u00e1rio precisa copiar o C\u00f3digo do Limite correto da planilha \u201cDados do Limite\u201d. Se houver mais de um limite para o qual uma instala\u00e7\u00e3o precisa ser mapeada, o usu\u00e1rio poder\u00e1 adicionar todos os c\u00f3digos de limite separados por v\u00edrgulas",
+    "message": "Passo 2: Para mapear as instalações para um determinado limite, o usuário precisa copiar o Código do Limite correto da planilha “Dados do Limite”. Se houver mais de um limite para o qual uma instalação precisa ser mapeada, o usuário poderá adicionar todos os códigos de limite separados por vírgulas",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_1_DESC_3",
-    "message": "Etapa 3: Para cada instala\u00e7\u00e3o, o usu\u00e1rio precisa adicionar Ativo ou Inativo para todas as instala\u00e7\u00f5es na coluna \u201cUso da Instala\u00e7\u00e3o\u201d. Todas as Instala\u00e7\u00f5es marcadas como \u201cAtivas\u201d ser\u00e3o utilizadas na campanha que est\u00e1 sendo criada, as marcadas como \u201cInativas\u201d n\u00e3o ser\u00e3o utilizadas na campanha que est\u00e1 sendo criada.",
+    "message": "Etapa 3: Para cada instalação, o usuário precisa adicionar Ativo ou Inativo para todas as instalações na coluna “Uso da Instalação”. Todas as Instalações marcadas como “Ativas” serão utilizadas na campanha que está sendo criada, as marcadas como “Inativas” não serão utilizadas na campanha que está sendo criada.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_1_DESC_4",
-    "message": "Passo 4: Depois que todas as facilidades forem adicionadas, o usu\u00e1rio precisa salvar o arquivo em seu sistema e fazer upload do arquivo pressionando a op\u00e7\u00e3o \u201cNavegar em Meus Arquivos\u201d.",
+    "message": "Passo 4: Depois que todas as facilidades forem adicionadas, o usuário precisa salvar o arquivo em seu sistema e fazer upload do arquivo pressionando a opção “Navegar em Meus Arquivos”.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_2",
-    "message": "Caso em que existem dados de instala\u00e7\u00f5es existentes no sistema:",
+    "message": "Caso em que existem dados de instalações existentes no sistema:",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_2_DESC_1",
-    "message": "Passo 1: Ao abrir o modelo de instala\u00e7\u00e3o baixado, consulte a folha Lista de instala\u00e7\u00f5es dispon\u00edveis. Para instala\u00e7\u00f5es existentes, adicione entradas na coluna C\u00f3digo de limite. Voc\u00ea pode encontrar os c\u00f3digos de limite na planilha Dados de limite. Se uma instala\u00e7\u00e3o mapear v\u00e1rios limites, separe os c\u00f3digos com v\u00edrgulas.",
+    "message": "Passo 1: Ao abrir o modelo de instalação baixado, consulte a folha Lista de instalações disponíveis. Para instalações existentes, adicione entradas na coluna Código de limite. Você pode encontrar os códigos de limite na planilha Dados de limite. Se uma instalação mapear vários limites, separe os códigos com vírgulas.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_2_DESC_2",
-    "message": "Etapa 2: nesta etapa, o usu\u00e1rio ter\u00e1 que adicionar entradas na coluna Uso da instala\u00e7\u00e3o com entradas v\u00e1lidas sendo Ativas ou Inativas, onde o usu\u00e1rio pode definir o uso de uma instala\u00e7\u00e3o como Ativo se a instala\u00e7\u00e3o estiver sendo usada para uma campanha ou ent\u00e3o pode ser definida como Inativa. As entradas na coluna Uso da Instala\u00e7\u00e3o precisam ser adicionadas para todas as entradas.",
+    "message": "Etapa 2: nesta etapa, o usuário terá que adicionar entradas na coluna Uso da instalação com entradas válidas sendo Ativas ou Inativas, onde o usuário pode definir o uso de uma instalação como Ativo se a instalação estiver sendo usada para uma campanha ou então pode ser definida como Inativa. As entradas na coluna Uso da Instalação precisam ser adicionadas para todas as entradas.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_2_DESC_3",
-    "message": "Etapa 3: Para adicionar novas instala\u00e7\u00f5es que n\u00e3o est\u00e3o presentes na lista de instala\u00e7\u00f5es existentes, o usu\u00e1rio precisa inserir o nome da instala\u00e7\u00e3o (deve ser exclusivo), tipo de instala\u00e7\u00e3o (armaz\u00e9m/instala\u00e7\u00e3o de sa\u00fade), status da instala\u00e7\u00e3o (tempor\u00e1rio/permanente), capacidade (entrada de n\u00famero), c\u00f3digo de limite (da folha de dados de limite) e uso da instala\u00e7\u00e3o (ativo/inativo) conforme explicado anteriormente",
+    "message": "Etapa 3: Para adicionar novas instalações que não estão presentes na lista de instalações existentes, o usuário precisa inserir o nome da instalação (deve ser exclusivo), tipo de instalação (armazém/instalação de saúde), status da instalação (temporário/permanente), capacidade (entrada de número), código de limite (da folha de dados de limite) e uso da instalação (ativo/inativo) conforme explicado anteriormente",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_2_DESC_4",
-    "message": "Passo 4: Depois que todas as facilidades forem adicionadas, o usu\u00e1rio precisa salvar o arquivo em seu sistema e fazer upload do arquivo pressionando a op\u00e7\u00e3o \u201cNavegar em Meus Arquivos\u201d.",
+    "message": "Passo 4: Depois que todas as facilidades forem adicionadas, o usuário precisa salvar o arquivo em seu sistema e fazer upload do arquivo pressionando a opção “Navegar em Meus Arquivos”.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6367,37 +6367,37 @@
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_3_DESC_1",
-    "message": "Se o usu\u00e1rio tiver removido os c\u00f3digos de instala\u00e7\u00e3o de uma instala\u00e7\u00e3o existente na lista, o sistema criar\u00e1 uma instala\u00e7\u00e3o duplicada com esses valores de coluna.",
+    "message": "Se o usuário tiver removido os códigos de instalação de uma instalação existente na lista, o sistema criará uma instalação duplicada com esses valores de coluna.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_3_DESC_2",
-    "message": "Se o usu\u00e1rio excluir alguma coluna da \u201cLista de Instala\u00e7\u00f5es Dispon\u00edveis\u201d da planilha e carregar a planilha, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir alguma coluna da “Lista de Instalações Disponíveis” da planilha e carregar a planilha, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_3_DESC_3",
-    "message": "Se o usu\u00e1rio excluir algum dos cabe\u00e7alhos da planilha e carreg\u00e1-la, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir algum dos cabeçalhos da planilha e carregá-la, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_MAINHEADER",
-    "message": "Leia-me as instru\u00e7\u00f5es para upload de instala\u00e7\u00f5es",
+    "message": "Leia-me as instruções para upload de instalações",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FACILITY_CATCHMENT_MAPPER",
-    "message": "Atribuidor de limites da instala\u00e7\u00e3o",
+    "message": "Atribuidor de limites da instalação",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "FEMALE",
-    "message": "F\u00eamea",
+    "message": "Fêmea",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6409,13 +6409,13 @@
   },
   {
     "code": "GENDER",
-    "message": "G\u00eanero",
+    "message": "Gênero",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "GP_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6433,13 +6433,13 @@
   },
   {
     "code": "GP_POST ADMINISTRATIVE",
-    "message": "P\u00f3s-administrativo",
+    "message": "Pós-administrativo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "GP_PROVINCE",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6469,7 +6469,7 @@
   },
   {
     "code": "HCM-MOZ-HIERARCHY_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6487,7 +6487,7 @@
   },
   {
     "code": "HCM-MOZ-HIERARCHY_LOCALIDADE",
-    "message": "Localiza\u00e7\u00e3o",
+    "message": "Localização",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6505,37 +6505,37 @@
   },
   {
     "code": "HCM-MOZ-HIERARCHY_PROVINCIA",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES",
-    "message": "Lista de instala\u00e7\u00f5es",
+    "message": "Lista de instalações",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_BOUNDARY_CODE",
-    "message": "C\u00f3digo de limite de servi\u00e7o",
+    "message": "Código de limite de serviço",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_BOUNDARY_CODE_MANDATORY",
-    "message": "C\u00f3digo de limite",
+    "message": "Código de limite",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_BOUNDARY_CODE_MANDATORY_ERROR",
-    "message": "\u00e9 inv\u00e1lido. Deve ser retirado da planilha 'Dados de limite'",
+    "message": "é inválido. Deve ser retirado da planilha 'Dados de limite'",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_BOUNDARY_CODE_OLD",
-    "message": "C\u00f3digo de limite antigo",
+    "message": "Código de limite antigo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6553,19 +6553,19 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITIES",
-    "message": "Lista de instala\u00e7\u00f5es dispon\u00edveis",
+    "message": "Lista de instalações disponíveis",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITIES_LI",
-    "message": "Lista de instala\u00e7\u00f5es",
+    "message": "Lista de instalações",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITIES_LIST",
-    "message": "Lista de instala\u00e7\u00f5es",
+    "message": "Lista de instalações",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6577,7 +6577,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_ERROR",
-    "message": "A coluna 'Capacidade' n\u00e3o deve estar vazia e deve ser um n\u00famero de 1 a 10 milh\u00f5es",
+    "message": "A coluna 'Capacidade' não deve estar vazia e deve ser um número de 1 a 10 milhões",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6601,13 +6601,13 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_CODE",
-    "message": "C\u00f3digo da instala\u00e7\u00e3o",
+    "message": "Código da instalação",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_FIXED_POST_MICROPLAN",
-    "message": "\u00c9 posto fixo (Sim/N\u00e3o)",
+    "message": "É posto fixo (Sim/Não)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6625,55 +6625,55 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_NAME",
-    "message": "Nome da instala\u00e7\u00e3o",
+    "message": "Nome da instalação",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_NAME_MICROPLAN",
-    "message": "Nome da instala\u00e7\u00e3o",
+    "message": "Nome da instalação",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_STATUS",
-    "message": "Status da instala\u00e7\u00e3o",
+    "message": "Status da instalação",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_STATUS_MICROPLAN",
-    "message": "Status da instala\u00e7\u00e3o",
+    "message": "Status da instalação",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_TYPE",
-    "message": "Tipo de instala\u00e7\u00e3o",
+    "message": "Tipo de instalação",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_TYPE_MICROPLAN",
-    "message": "Tipo de instala\u00e7\u00e3o",
+    "message": "Tipo de instalação",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_USAGE",
-    "message": "Uso das instala\u00e7\u00f5es",
+    "message": "Uso das instalações",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_USAGE_MICROPLAN",
-    "message": "Uso das instala\u00e7\u00f5es",
+    "message": "Uso das instalações",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FRENCH_LOCALIZATION_MESSAGE",
-    "message": "Limite (franc\u00eas)",
+    "message": "Limite (francês)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6691,37 +6691,37 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_PORTUGESE_LOCALIZATION_MESSAGE",
-    "message": "Limite (Portugu\u00eas)",
+    "message": "Limite (Português)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_RESIDING_BOUNDARY_CODE_MICROPLAN",
-    "message": "C\u00f3digo de limite de jurisdi\u00e7\u00e3o",
+    "message": "Código de limite de jurisdição",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET",
-    "message": "Alvo do agregado familiar ao n\u00edvel da aldeia (obrigat\u00f3rio e a ser introduzido pelo utilizador)",
+    "message": "Alvo do agregado familiar ao nível da aldeia (obrigatório e a ser introduzido pelo utilizador)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL",
-    "message": "Alvo do agregado familiar ao n\u00edvel da aldeia (obrigat\u00f3rio e a ser introduzido pelo utilizador)",
+    "message": "Alvo do agregado familiar ao nível da aldeia (obrigatório e a ser introduzido pelo utilizador)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_BEDNET_COLUMN_2",
-    "message": "Popula\u00e7\u00e3o-alvo",
+    "message": "População-alvo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_BEDNET_COLUMN_3",
-    "message": "N\u00famero de mosquiteiros a serem distribu\u00eddos",
+    "message": "Número de mosquiteiros a serem distribuídos",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6739,7 +6739,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_HOUSEHOLD",
-    "message": "Alvo Dom\u00e9stico",
+    "message": "Alvo Doméstico",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6763,7 +6763,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_INT_CAMP_COLUUM_HOUSEHOLD",
-    "message": "Alvo dom\u00e9stico",
+    "message": "Alvo doméstico",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6775,49 +6775,49 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_IRS_1",
-    "message": "Alvo do agregado familiar ao n\u00edvel da aldeia",
+    "message": "Alvo do agregado familiar ao nível da aldeia",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_IRS_2",
-    "message": "Sala alvo em n\u00edvel de vila",
+    "message": "Sala alvo em nível de vila",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_IRS_3",
-    "message": "N\u00famero de frascos de spray (obrigat\u00f3rio)",
+    "message": "Número de frascos de spray (obrigatório)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_IRS_4",
-    "message": "Popula\u00e7\u00e3o-alvo",
+    "message": "População-alvo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_IRS_NUMBER_OF_BOTTLE",
-    "message": "N\u00famero de frascos de spray (obrigat\u00f3rio)",
+    "message": "Número de frascos de spray (obrigatório)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_IRS_TOTAL_HOUSEHOLD",
-    "message": "Alvo do agregado familiar ao n\u00edvel da aldeia",
+    "message": "Alvo do agregado familiar ao nível da aldeia",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_IRS_TOTAL_POPULATION",
-    "message": "Popula\u00e7\u00e3o-alvo",
+    "message": "População-alvo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_IRS_TOTAL_ROOM",
-    "message": "Sala alvo em n\u00edvel de vila",
+    "message": "Sala alvo em nível de vila",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6829,13 +6829,13 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_LLIN",
-    "message": "Alvo do agregado familiar ao n\u00edvel da aldeia (obrigat\u00f3rio e a ser introduzido pelo utilizador)",
+    "message": "Alvo do agregado familiar ao nível da aldeia (obrigatório e a ser introduzido pelo utilizador)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_LLIN_BEDNET",
-    "message": "N\u00famero de redes mosquiteiras a serem distribu\u00eddas",
+    "message": "Número de redes mosquiteiras a serem distribuídas",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6853,7 +6853,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_LLIN_TARGET_POPULATION",
-    "message": "Popula\u00e7\u00e3o-alvo",
+    "message": "População-alvo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6883,37 +6883,37 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUMN_1",
-    "message": "Alvo ao n\u00edvel da aldeia - Idade dos 5 aos 15 anos (obrigat\u00f3rio e a inserir pelo utilizador)",
+    "message": "Alvo ao nível da aldeia - Idade dos 5 aos 15 anos (obrigatório e a inserir pelo utilizador)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUMN_2",
-    "message": "Alvo ao n\u00edvel da aldeia - Idade superior a 15 anos (Obrigat\u00f3rio e a inserir pelo utilizador)",
+    "message": "Alvo ao nível da aldeia - Idade superior a 15 anos (Obrigatório e a inserir pelo utilizador)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUMN_3",
-    "message": "Popula\u00e7\u00e3o alvo total",
+    "message": "População alvo total",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUUM_1",
-    "message": "Alvo ao n\u00edvel da aldeia",
+    "message": "Alvo ao nível da aldeia",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUUM_2",
-    "message": "Fam\u00edlias-alvo",
+    "message": "Famílias-alvo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUUM_3",
-    "message": "N\u00famero de comprimidos",
+    "message": "Número de comprimidos",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6937,25 +6937,25 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_ONCHO_COLUMN_1",
-    "message": "Alvo ao n\u00edvel da aldeia - Idade dos 5 aos 15 anos (obrigat\u00f3rio e a inserir pelo utilizador)",
+    "message": "Alvo ao nível da aldeia - Idade dos 5 aos 15 anos (obrigatório e a inserir pelo utilizador)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_ONCHO_COLUMN_2",
-    "message": "Alvo ao n\u00edvel da aldeia - Idade superior a 15 anos (Obrigat\u00f3rio e a inserir pelo utilizador)",
+    "message": "Alvo ao nível da aldeia - Idade superior a 15 anos (Obrigatório e a inserir pelo utilizador)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_ONCHO_COLUMN_3",
-    "message": "Popula\u00e7\u00e3o alvo total",
+    "message": "População alvo total",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_POLIO_AGE",
-    "message": "Popula\u00e7\u00e3o-alvo confirmada (idade de 0 a 59 meses)",
+    "message": "População-alvo confirmada (idade de 0 a 59 meses)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -6979,19 +6979,19 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_POPULATION",
-    "message": "Popula\u00e7\u00e3o alvo",
+    "message": "População alvo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_POPULATION_AGE_12TO59",
-    "message": "Popula\u00e7\u00e3o-alvo (12 a 59 meses de idade)",
+    "message": "População-alvo (12 a 59 meses de idade)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_POPULATION_AGE_3TO11",
-    "message": "Popula\u00e7\u00e3o-alvo (3 a 11 meses de idade)",
+    "message": "População-alvo (3 a 11 meses de idade)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7003,115 +7003,115 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SCHISTO_COLUMN_1",
-    "message": "Alvo ao n\u00edvel da aldeia - Idade dos 5 aos 15 anos (obrigat\u00f3rio e a inserir pelo utilizador)",
+    "message": "Alvo ao nível da aldeia - Idade dos 5 aos 15 anos (obrigatório e a inserir pelo utilizador)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SCHISTO_COLUMN_2",
-    "message": "Alvo ao n\u00edvel da aldeia - Idade superior a 15 anos (Obrigat\u00f3rio e a inserir pelo utilizador)",
+    "message": "Alvo ao nível da aldeia - Idade superior a 15 anos (Obrigatório e a inserir pelo utilizador)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SCHISTO_COLUMN_3",
-    "message": "Popula\u00e7\u00e3o alvo total",
+    "message": "População alvo total",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC",
-    "message": "Alvo ao n\u00edvel da aldeia (obrigat\u00f3rio e a ser inserido pelo usu\u00e1rio)",
+    "message": "Alvo ao nível da aldeia (obrigatório e a ser inserido pelo usuário)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_AGE_12_TO_59",
-    "message": "Alvo ao n\u00edvel da aldeia - Idade dos 12 aos 59 meses (obrigat\u00f3rio e a inserir pelo utilizador)",
+    "message": "Alvo ao nível da aldeia - Idade dos 12 aos 59 meses (obrigatório e a inserir pelo utilizador)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_AGE_3_TO_11",
-    "message": "Alvo ao n\u00edvel da aldeia - Idade dos 3 aos 11 meses (obrigat\u00f3rio e a inserir pelo utilizador)",
+    "message": "Alvo ao nível da aldeia - Idade dos 3 aos 11 meses (obrigatório e a inserir pelo utilizador)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_COLUUM_3",
-    "message": "Fam\u00edlias-alvo",
+    "message": "Famílias-alvo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_COLUUM_4",
-    "message": "N\u00famero de comprimidos",
+    "message": "Número de comprimidos",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_COLUUM_HOUSEHOLD",
-    "message": "Alvo dom\u00e9stico",
+    "message": "Alvo doméstico",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_COLUUM_PRODUCT",
-    "message": "N\u00famero do produto",
+    "message": "Número do produto",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_NUMBER_OF_TABLETS",
-    "message": "N\u00famero de comprimidos",
+    "message": "Número de comprimidos",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_TOTAL_HOUSEHOLD",
-    "message": "Fam\u00edlias-alvo",
+    "message": "Famílias-alvo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_TOTAL_HOUSEHOLDS",
-    "message": "Total de fam\u00edlias",
+    "message": "Total de famílias",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_SMC_TOTAL_POPULATION",
-    "message": "Popula\u00e7\u00e3o total",
+    "message": "População total",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TOTAL_POPULATION",
-    "message": "Popula\u00e7\u00e3o total",
+    "message": "População total",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USERS_LIST",
-    "message": "Lista de usu\u00e1rios",
+    "message": "Lista de usuários",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_BANK_ACCOUNT",
-    "message": "Conta banc\u00e1ria",
+    "message": "Conta bancária",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_BANK_CODE",
-    "message": "C\u00f3digo do Banco",
+    "message": "Código do Banco",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_BENEFICIARY_CODE",
-    "message": "C\u00f3digo do Benefici\u00e1rio",
+    "message": "Código do Beneficiário",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7123,19 +7123,19 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_EMPLOYMENT_TYPE",
-    "message": "Tipo de emprego (obrigat\u00f3rio)",
+    "message": "Tipo de emprego (obrigatório)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_ERRORS",
-    "message": "Erros do usu\u00e1rio",
+    "message": "Erros do usuário",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_LIST",
-    "message": "Criar lista de usu\u00e1rios",
+    "message": "Criar lista de usuários",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7153,13 +7153,13 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_PAYEE_NAME",
-    "message": "Nome do benefici\u00e1rio",
+    "message": "Nome do beneficiário",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_PAYEE_PHONE_NUMBER",
-    "message": "N\u00famero de telefone do benefici\u00e1rio",
+    "message": "Número de telefone do beneficiário",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7171,55 +7171,55 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_PHONE_NUMBER",
-    "message": "N\u00famero de telefone (obrigat\u00f3rio)",
+    "message": "Número de telefone (obrigatório)",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_PHONE_NUMBER_ERROR",
-    "message": "deve ser fornecido e deve ser um n\u00famero de telefone de 10 d\u00edgitos",
+    "message": "deve ser fornecido e deve ser um número de telefone de 10 dígitos",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_PHONE_NUMBER_MICROPLAN",
-    "message": "N\u00famero de contato",
+    "message": "Número de contato",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_ROLE",
-    "message": "Fun\u00e7\u00e3o do usu\u00e1rio",
+    "message": "Função do usuário",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_1",
-    "message": "Fun\u00e7\u00e3o do usu\u00e1rio 1",
+    "message": "Função do usuário 1",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_2",
-    "message": "Fun\u00e7\u00e3o de usu\u00e1rio 2",
+    "message": "Função de usuário 2",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_3",
-    "message": "Fun\u00e7\u00e3o do usu\u00e1rio 3",
+    "message": "Função do usuário 3",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_4",
-    "message": "Fun\u00e7\u00e3o do usu\u00e1rio 4",
+    "message": "Função do usuário 4",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_5",
-    "message": "Fun\u00e7\u00e3o do usu\u00e1rio 5",
+    "message": "Função do usuário 5",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7231,7 +7231,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_USER_WORKER_ID",
-    "message": "ID do usu\u00e1rio",
+    "message": "ID do usuário",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7249,37 +7249,37 @@
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_APPROVER_SHEET",
-    "message": "Aprovadores de presen\u00e7a",
+    "message": "Aprovadores de presença",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_DATE_OUT_OF_RANGE",
-    "message": "A data deve estar entre a data de in\u00edcio e de t\u00e9rmino do registro",
+    "message": "A data deve estar entre a data de início e de término do registro",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_DEENROLLMENT_BEFORE_ENROLLMENT",
-    "message": "A data de cancelamento da inscri\u00e7\u00e3o n\u00e3o deve ser anterior \u00e0 data de inscri\u00e7\u00e3o",
+    "message": "A data de cancelamento da inscrição não deve ser anterior à data de inscrição",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_DEENROLLMENT_DATE",
-    "message": "Data de cancelamento de inscri\u00e7\u00e3o",
+    "message": "Data de cancelamento de inscrição",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_DEENROLLMENT_WITHOUT_ENROLLMENT",
-    "message": "A data de cancelamento da inscri\u00e7\u00e3o exige que a inscri\u00e7\u00e3o exista",
+    "message": "A data de cancelamento da inscrição exige que a inscrição exista",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_ENROLLMENT_DATE",
-    "message": "Data de inscri\u00e7\u00e3o",
+    "message": "Data de inscrição",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7291,25 +7291,25 @@
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_MARKER_SHEET",
-    "message": "Marcadores de presen\u00e7a",
+    "message": "Marcadores de presença",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_REGISTER_NOT_FOUND",
-    "message": "ID de registro n\u00e3o encontrado ou inv\u00e1lido",
+    "message": "ID de registro não encontrado ou inválido",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_TEAM_CODE",
-    "message": "C\u00f3digo da equipe",
+    "message": "Código da equipe",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_USER_NOT_FOUND",
-    "message": "Usu\u00e1rio n\u00e3o encontrado no HRMS",
+    "message": "Usuário não encontrado no HRMS",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7321,7 +7321,7 @@
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_CREATION_FAILED",
-    "message": "Falha ao criar registro de presen\u00e7a",
+    "message": "Falha ao criar registro de presença",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7339,31 +7339,31 @@
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_LIST",
-    "message": "Registros de Presen\u00e7a",
+    "message": "Registros de Presença",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_PROJECT_NOT_READY",
-    "message": "Os projetos devem ser criados antes de gerar o modelo de registro de presen\u00e7a",
+    "message": "Os projetos devem ser criados antes de gerar o modelo de registro de presença",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_README",
-    "message": "Instru\u00e7\u00f5es",
+    "message": "Instruções",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_README_INSTRUCTIONS",
-    "message": "Instru\u00e7\u00f5es para preenchimento do modelo de Registro de Presen\u00e7a:\n\n1. Preencha pelo menos uma coluna de limite para cada linha\n2. O ID do registro \u00e9 gerado automaticamente a partir do limite mais profundo selecionado. Voc\u00ea pode edit\u00e1-lo, se necess\u00e1rio.\n3. Certifique-se de que todos os IDs de registro sejam exclusivos\n4. Carregue o arquivo conclu\u00eddo de volta ao sistema\n\nNota: Os projetos devem ser criados antes da gera\u00e7\u00e3o dos registros de presen\u00e7a.",
+    "message": "Instruções para preenchimento do modelo de Registro de Presença:\n\n1. Preencha pelo menos uma coluna de limite para cada linha\n2. O ID do registro é gerado automaticamente a partir do limite mais profundo selecionado. Você pode editá-lo, se necessário.\n3. Certifique-se de que todos os IDs de registro sejam exclusivos\n4. Carregue o arquivo concluído de volta ao sistema\n\nNota: Os projetos devem ser criados antes da geração dos registros de presença.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_SESSIONS",
-    "message": "Sess\u00f5es",
+    "message": "Sessões",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7375,13 +7375,13 @@
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_VALIDATION_EMPTY_ID",
-    "message": "O ID de registro \u00e9 obrigat\u00f3rio",
+    "message": "O ID de registro é obrigatório",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_VALIDATION_INVALID_BOUNDARY",
-    "message": "C\u00f3digo de limite inv\u00e1lido",
+    "message": "Código de limite inválido",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7411,19 +7411,19 @@
   },
   {
     "code": "HCM_MODULE_DESCRIPTION_POLIO_ATTENDANCEFLOW",
-    "message": "Registar a presen\u00e7a dos trabalhadores de campo e dos benefici\u00e1rios durante as actividades de distribui\u00e7\u00e3o. Garante um rastreamento preciso da participa\u00e7\u00e3o para relat\u00f3rios.",
+    "message": "Registar a presença dos trabalhadores de campo e dos beneficiários durante as actividades de distribuição. Garante um rastreamento preciso da participação para relatórios.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_MODULE_DESCRIPTION_POLIO_COMPLAINTFLOW",
-    "message": "Registre e gerencie reclama\u00e7\u00f5es de campanhas de distribui\u00e7\u00e3o. Permite captura e resolu\u00e7\u00e3o r\u00e1pida de problemas para melhorar a qualidade do servi\u00e7o.",
+    "message": "Registre e gerencie reclamações de campanhas de distribuição. Permite captura e resolução rápida de problemas para melhorar a qualidade do serviço.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_MODULE_DESCRIPTION_POLIO_INVENTORYFLOW",
-    "message": "Gerenciar invent\u00e1rio de inseticidas e equipamentos para campanhas de pulveriza\u00e7\u00e3o residual interna.",
+    "message": "Gerenciar inventário de inseticidas e equipamentos para campanhas de pulverização residual interna.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7435,13 +7435,13 @@
   },
   {
     "code": "HCM_REGISTER_APPROVER_SHEET",
-    "message": "Aprovadores de presen\u00e7a",
+    "message": "Aprovadores de presença",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_REGISTER_MARKER_SHEET",
-    "message": "Marcadores de presen\u00e7a",
+    "message": "Marcadores de presença",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7459,7 +7459,7 @@
   },
   {
     "code": "HEALTH_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7483,7 +7483,7 @@
   },
   {
     "code": "HEALTH_PROVINCE",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7501,13 +7501,13 @@
   },
   {
     "code": "HIERARCHYTEST_ADMINISTRATIVEPOST",
-    "message": "P\u00f3s-administrativo",
+    "message": "Pós-administrativo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "HIERARCHYTEST_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7531,7 +7531,7 @@
   },
   {
     "code": "HIERARCHYTEST_PROVINCE",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7543,13 +7543,13 @@
   },
   {
     "code": "HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO",
-    "message": "Os filtros s\u00f3 podem ser aplicados no n\u00edvel 0",
+    "message": "Os filtros só podem ser aplicados no nível 0",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ID_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7567,13 +7567,13 @@
   },
   {
     "code": "ID_POST ADMINISTRATIVE",
-    "message": "P\u00f3s-administrativo",
+    "message": "Pós-administrativo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "ID_PROVINCE",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7615,19 +7615,19 @@
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_1",
-    "message": "Se n\u00e3o houver instala\u00e7\u00f5es dispon\u00edveis para sele\u00e7\u00e3o, a aba \u201cLista de instala\u00e7\u00f5es dispon\u00edveis\u201d no modelo estar\u00e1 vazia. Para criar novos dados de instala\u00e7\u00e3o, adicione o nome do Nome da Instala\u00e7\u00e3o, Tipo de Instala\u00e7\u00e3o, Status da Instala\u00e7\u00e3o, Capacidade. A coluna \u201cC\u00f3digo da Instala\u00e7\u00e3o\u201d precisa ser deixada em branco se esta for uma instala\u00e7\u00e3o nova. Caso se trate de uma instala\u00e7\u00e3o sendo reaproveitada (que fica dispon\u00edvel no template ap\u00f3s o download) o usu\u00e1rio s\u00f3 precisa realizar o passo 2.",
+    "message": "Se não houver instalações disponíveis para seleção, a aba “Lista de instalações disponíveis” no modelo estará vazia. Para criar novos dados de instalação, adicione o nome do Nome da Instalação, Tipo de Instalação, Status da Instalação, Capacidade. A coluna “Código da Instalação” precisa ser deixada em branco se esta for uma instalação nova. Caso se trate de uma instalação sendo reaproveitada (que fica disponível no template após o download) o usuário só precisa realizar o passo 2.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_10",
-    "message": "Se o usu\u00e1rio excluir algum dos cabe\u00e7alhos da planilha e carreg\u00e1-la, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir algum dos cabeçalhos da planilha e carregá-la, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_2",
-    "message": "Para mapear a instala\u00e7\u00e3o para o limite correto, o usu\u00e1rio precisa copiar o c\u00f3digo de limite correto do limite da planilha \u201cLista de Limites de Campanha\u201d para a qual a instala\u00e7\u00e3o precisa ser mapeada. Se houver uma instala\u00e7\u00e3o mapeada para v\u00e1rios limites, o administrador do sistema ter\u00e1 que adicionar os c\u00f3digos de limite de todos os limites para os quais a instala\u00e7\u00e3o est\u00e1 mapeada, separando-os por v\u00edrgulas na c\u00e9lula para adicionar c\u00f3digos de limite para essa instala\u00e7\u00e3o.",
+    "message": "Para mapear a instalação para o limite correto, o usuário precisa copiar o código de limite correto do limite da planilha “Lista de Limites de Campanha” para a qual a instalação precisa ser mapeada. Se houver uma instalação mapeada para vários limites, o administrador do sistema terá que adicionar os códigos de limite de todos os limites para os quais a instalação está mapeada, separando-os por vírgulas na célula para adicionar códigos de limite para essa instalação.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7639,43 +7639,43 @@
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_4",
-    "message": "Pressione o bot\u00e3o \u201cBrowse In My Files\u201d na tela \u201cUpload Facility Data\u201d e selecione o arquivo salvo com todos os alvos do sistema.",
+    "message": "Pressione o botão “Browse In My Files” na tela “Upload Facility Data” e selecione o arquivo salvo com todos os alvos do sistema.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_5",
-    "message": "Desativando Instala\u00e7\u00f5es existentes para uma campanha.",
+    "message": "Desativando Instalações existentes para uma campanha.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_6",
-    "message": "Ap\u00f3s o usu\u00e1rio ter baixado o modelo para Instala\u00e7\u00f5es, se o sistema tiver dados de instala\u00e7\u00f5es existentes para serem reutilizados, o modelo ser\u00e1 pr\u00e9-preenchido com essa lista de Instala\u00e7\u00f5es.",
+    "message": "Após o usuário ter baixado o modelo para Instalações, se o sistema tiver dados de instalações existentes para serem reutilizados, o modelo será pré-preenchido com essa lista de Instalações.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_7",
-    "message": "Se o usu\u00e1rio optar por n\u00e3o usar instala\u00e7\u00f5es espec\u00edficas, ele poder\u00e1 excluir as linhas de dados dessas instala\u00e7\u00f5es espec\u00edficas que precisam ser removidas e carregar a planilha apenas com as instala\u00e7\u00f5es necess\u00e1rias para a campanha com os c\u00f3digos de limite corretos mapeados para essas instala\u00e7\u00f5es.",
+    "message": "Se o usuário optar por não usar instalações específicas, ele poderá excluir as linhas de dados dessas instalações específicas que precisam ser removidas e carregar a planilha apenas com as instalações necessárias para a campanha com os códigos de limite corretos mapeados para essas instalações.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_8",
-    "message": "Se o usu\u00e1rio tiver removido os c\u00f3digos de instala\u00e7\u00e3o de uma instala\u00e7\u00e3o existente na lista, o sistema criar\u00e1 uma instala\u00e7\u00e3o duplicada com esses valores de coluna.",
+    "message": "Se o usuário tiver removido os códigos de instalação de uma instalação existente na lista, o sistema criará uma instalação duplicada com esses valores de coluna.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_9",
-    "message": "Se o usu\u00e1rio excluir alguma coluna da \u201cLista de Instala\u00e7\u00f5es Dispon\u00edveis\u201d da planilha e carregar a planilha, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir alguma coluna da “Lista de Instalações Disponíveis” da planilha e carregar a planilha, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_FACILITY_EXCEL_HEADER_1",
-    "message": "Cria\u00e7\u00e3o de novos dados de instala\u00e7\u00f5es/utiliza\u00e7\u00e3o de dados de instala\u00e7\u00f5es existentes ap\u00f3s o download do modelo",
+    "message": "Criação de novos dados de instalações/utilização de dados de instalações existentes após o download do modelo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7687,19 +7687,19 @@
   },
   {
     "code": "LLIN_MZ_FACILITY_EXCEL_MAIN_HEADER",
-    "message": "Leia-me as instru\u00e7\u00f5es para upload de instala\u00e7\u00f5es",
+    "message": "Leia-me as instruções para upload de instalações",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_HEADER",
-    "message": "Criar novos dados de instala\u00e7\u00f5es/usar dados de instala\u00e7\u00f5es existentes ap\u00f3s o download do modelo:",
+    "message": "Criar novos dados de instalações/usar dados de instalações existentes após o download do modelo:",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_HEADER_1",
-    "message": "Definir metas ap\u00f3s o download do modelo:",
+    "message": "Definir metas após o download do modelo:",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7711,49 +7711,49 @@
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_MAIN_HEADER",
-    "message": "Leia-me instru\u00e7\u00f5es para upload de popula\u00e7\u00e3o",
+    "message": "Leia-me instruções para upload de população",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_1",
-    "message": "V\u00e1 para a ficha do distrito para o qual deseja definir metas e adicione n\u00fameros na coluna \u201cMetas\u201d para cada Aldeia.",
+    "message": "Vá para a ficha do distrito para o qual deseja definir metas e adicione números na coluna “Metas” para cada Aldeia.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_2",
-    "message": "Insira as metas para cada aldeia na ficha de cada distrito na coluna \u201cMeta ao n\u00edvel do limite seleccionado\u201d. Se alguma aldeia n\u00e3o tiver metas definidas, a ficha ter\u00e1 erros.",
+    "message": "Insira as metas para cada aldeia na ficha de cada distrito na coluna “Meta ao nível do limite seleccionado”. Se alguma aldeia não tiver metas definidas, a ficha terá erros.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_3",
-    "message": "Se o usu\u00e1rio n\u00e3o tiver definido metas para cada aldeia, o sistema gerar\u00e1 um erro com o n\u00famero da linha onde as metas est\u00e3o faltando.",
+    "message": "Se o usuário não tiver definido metas para cada aldeia, o sistema gerará um erro com o número da linha onde as metas estão faltando.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_4",
-    "message": "Se o usu\u00e1rio excluir qualquer aldeia da planilha ou excluir uma planilha distrital completa e carregar a planilha, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir qualquer aldeia da planilha ou excluir uma planilha distrital completa e carregar a planilha, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_5",
-    "message": "Se o usu\u00e1rio n\u00e3o tiver definido metas para cada aldeia, o sistema gerar\u00e1 um erro com o n\u00famero da linha onde as metas est\u00e3o faltando.",
+    "message": "Se o usuário não tiver definido metas para cada aldeia, o sistema gerará um erro com o número da linha onde as metas estão faltando.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_6",
-    "message": "Se o usu\u00e1rio excluir qualquer aldeia da planilha ou excluir uma planilha distrital completa e carregar a planilha, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir qualquer aldeia da planilha ou excluir uma planilha distrital completa e carregar a planilha, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_7",
-    "message": "Se o usu\u00e1rio excluir qualquer um dos cabe\u00e7alhos da planilha e fazer upload da planilha, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir qualquer um dos cabeçalhos da planilha e fazer upload da planilha, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7771,7 +7771,7 @@
   },
   {
     "code": "MH_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7789,13 +7789,13 @@
   },
   {
     "code": "MH_POST ADMINISTRATIVE",
-    "message": "P\u00f3s-administrativo",
+    "message": "Pós-administrativo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MH_PROVINCE",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7831,7 +7831,7 @@
   },
   {
     "code": "MICROPLAN_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7855,13 +7855,13 @@
   },
   {
     "code": "MICROPLAN_ERROR_STATUS_INVALID",
-    "message": "INV\u00c1LIDO",
+    "message": "INVÁLIDO",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MICROPLAN_FACILITY_DATA_SHEET",
-    "message": "Dados da instala\u00e7\u00e3o",
+    "message": "Dados da instalação",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7873,7 +7873,7 @@
   },
   {
     "code": "MICROPLAN_PROVINCE",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7885,7 +7885,7 @@
   },
   {
     "code": "MICROPLAN_TEMPLATE_README_MAIN_HEADER",
-    "message": "Leia-me as instru\u00e7\u00f5es para upload de destino",
+    "message": "Leia-me as instruções para upload de destino",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7897,13 +7897,13 @@
   },
   {
     "code": "MODULES",
-    "message": "M\u00f3dulos",
+    "message": "Módulos",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MP_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7921,13 +7921,13 @@
   },
   {
     "code": "MP_POST ADMINISTRATIVE",
-    "message": "P\u00f3s-administrativo",
+    "message": "Pós-administrativo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MP_PROVINCE",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7951,19 +7951,19 @@
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_1",
-    "message": "Se n\u00e3o houver instala\u00e7\u00f5es dispon\u00edveis para sele\u00e7\u00e3o, a aba \u201cLista de instala\u00e7\u00f5es dispon\u00edveis\u201d no modelo estar\u00e1 vazia. Para criar novos dados de instala\u00e7\u00e3o, adicione o nome do Nome da Instala\u00e7\u00e3o, Tipo de Instala\u00e7\u00e3o, Status da Instala\u00e7\u00e3o, Capacidade. A coluna \u201cC\u00f3digo da Instala\u00e7\u00e3o\u201d precisa ser deixada em branco se esta for uma instala\u00e7\u00e3o nova. Caso se trate de uma instala\u00e7\u00e3o sendo reaproveitada (que fica dispon\u00edvel no template ap\u00f3s o download) o usu\u00e1rio s\u00f3 precisa realizar o passo 2.",
+    "message": "Se não houver instalações disponíveis para seleção, a aba “Lista de instalações disponíveis” no modelo estará vazia. Para criar novos dados de instalação, adicione o nome do Nome da Instalação, Tipo de Instalação, Status da Instalação, Capacidade. A coluna “Código da Instalação” precisa ser deixada em branco se esta for uma instalação nova. Caso se trate de uma instalação sendo reaproveitada (que fica disponível no template após o download) o usuário só precisa realizar o passo 2.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_10",
-    "message": "Se o usu\u00e1rio excluir algum dos cabe\u00e7alhos da planilha e carreg\u00e1-la, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir algum dos cabeçalhos da planilha e carregá-la, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_2",
-    "message": "Para mapear a instala\u00e7\u00e3o para o limite correto, o usu\u00e1rio precisa copiar o c\u00f3digo de limite correto do limite da planilha \u201cLista de Limites de Campanha\u201d para a qual a instala\u00e7\u00e3o precisa ser mapeada. Se houver uma instala\u00e7\u00e3o mapeada para v\u00e1rios limites, o administrador do sistema ter\u00e1 que adicionar os c\u00f3digos de limite de todos os limites para os quais a instala\u00e7\u00e3o est\u00e1 mapeada, separando-os por v\u00edrgulas na c\u00e9lula para adicionar c\u00f3digos de limite para essa instala\u00e7\u00e3o.",
+    "message": "Para mapear a instalação para o limite correto, o usuário precisa copiar o código de limite correto do limite da planilha “Lista de Limites de Campanha” para a qual a instalação precisa ser mapeada. Se houver uma instalação mapeada para vários limites, o administrador do sistema terá que adicionar os códigos de limite de todos os limites para os quais a instalação está mapeada, separando-os por vírgulas na célula para adicionar códigos de limite para essa instalação.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -7975,43 +7975,43 @@
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_4",
-    "message": "Pressione o bot\u00e3o \u201cBrowse In My Files\u201d na tela \u201cUpload Facility Data\u201d e selecione o arquivo salvo com todos os alvos do sistema.",
+    "message": "Pressione o botão “Browse In My Files” na tela “Upload Facility Data” e selecione o arquivo salvo com todos os alvos do sistema.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_5",
-    "message": "Desativando Instala\u00e7\u00f5es existentes para uma campanha.",
+    "message": "Desativando Instalações existentes para uma campanha.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_6",
-    "message": "Ap\u00f3s o usu\u00e1rio ter baixado o modelo para Instala\u00e7\u00f5es, se o sistema tiver dados de instala\u00e7\u00f5es existentes para serem reutilizados, o modelo ser\u00e1 pr\u00e9-preenchido com essa lista de Instala\u00e7\u00f5es.",
+    "message": "Após o usuário ter baixado o modelo para Instalações, se o sistema tiver dados de instalações existentes para serem reutilizados, o modelo será pré-preenchido com essa lista de Instalações.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_7",
-    "message": "Se o usu\u00e1rio optar por n\u00e3o usar instala\u00e7\u00f5es espec\u00edficas, ele poder\u00e1 excluir as linhas de dados dessas instala\u00e7\u00f5es espec\u00edficas que precisam ser removidas e carregar a planilha apenas com as instala\u00e7\u00f5es necess\u00e1rias para a campanha com os c\u00f3digos de limite corretos mapeados para essas instala\u00e7\u00f5es.",
+    "message": "Se o usuário optar por não usar instalações específicas, ele poderá excluir as linhas de dados dessas instalações específicas que precisam ser removidas e carregar a planilha apenas com as instalações necessárias para a campanha com os códigos de limite corretos mapeados para essas instalações.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_8",
-    "message": "Se o usu\u00e1rio tiver removido os c\u00f3digos de instala\u00e7\u00e3o de uma instala\u00e7\u00e3o existente na lista, o sistema criar\u00e1 uma instala\u00e7\u00e3o duplicada com esses valores de coluna.",
+    "message": "Se o usuário tiver removido os códigos de instalação de uma instalação existente na lista, o sistema criará uma instalação duplicada com esses valores de coluna.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_9",
-    "message": "Se o usu\u00e1rio excluir alguma coluna da \u201cLista de Instala\u00e7\u00f5es Dispon\u00edveis\u201d da planilha e carregar a planilha, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir alguma coluna da “Lista de Instalações Disponíveis” da planilha e carregar a planilha, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MR_DN_FACILITY_EXCEL_HEADER_1",
-    "message": "Cria\u00e7\u00e3o de novos dados de instala\u00e7\u00f5es/utiliza\u00e7\u00e3o de dados de instala\u00e7\u00f5es existentes ap\u00f3s o download do modelo",
+    "message": "Criação de novos dados de instalações/utilização de dados de instalações existentes após o download do modelo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -8023,13 +8023,13 @@
   },
   {
     "code": "MR_DN_FACILITY_EXCEL_MAIN_HEADER",
-    "message": "Leia-me as instru\u00e7\u00f5es para upload de instala\u00e7\u00f5es",
+    "message": "Leia-me as instruções para upload de instalações",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_HEADER_1",
-    "message": "Definir metas ap\u00f3s o download do modelo:",
+    "message": "Definir metas após o download do modelo:",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -8041,19 +8041,19 @@
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_MAIN_HEADER",
-    "message": "Leia-me instru\u00e7\u00f5es para upload de popula\u00e7\u00e3o",
+    "message": "Leia-me instruções para upload de população",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_1",
-    "message": "V\u00e1 para a ficha do distrito para o qual deseja definir metas e adicione n\u00fameros na coluna \u201cMetas\u201d para cada Aldeia.",
+    "message": "Vá para a ficha do distrito para o qual deseja definir metas e adicione números na coluna “Metas” para cada Aldeia.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_2",
-    "message": "Insira as metas para cada aldeia na planilha de cada distrito na coluna \u201cMetas\u201d. Se alguma aldeia n\u00e3o tiver metas definidas, a planilha conter\u00e1 erros.",
+    "message": "Insira as metas para cada aldeia na planilha de cada distrito na coluna “Metas”. Se alguma aldeia não tiver metas definidas, a planilha conterá erros.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -8065,25 +8065,25 @@
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_4",
-    "message": "Pressione o bot\u00e3o \u201cBrowse In My Files\u201d na tela \u201cUpload Target\u201d e selecione o arquivo salvo com todos os alvos do sistema.",
+    "message": "Pressione o botão “Browse In My Files” na tela “Upload Target” e selecione o arquivo salvo com todos os alvos do sistema.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_5",
-    "message": "Se o usu\u00e1rio n\u00e3o tiver definido metas para cada aldeia, o sistema gerar\u00e1 um erro com o n\u00famero da linha onde as metas est\u00e3o faltando.",
+    "message": "Se o usuário não tiver definido metas para cada aldeia, o sistema gerará um erro com o número da linha onde as metas estão faltando.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_6",
-    "message": "Se o usu\u00e1rio excluir qualquer aldeia da planilha ou excluir uma planilha distrital completa e carregar a planilha, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir qualquer aldeia da planilha ou excluir uma planilha distrital completa e carregar a planilha, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_7",
-    "message": "Se o usu\u00e1rio excluir qualquer um dos cabe\u00e7alhos da planilha e fazer upload da planilha, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir qualquer um dos cabeçalhos da planilha e fazer upload da planilha, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -8107,7 +8107,7 @@
   },
   {
     "code": "NEWTEST0005_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -8125,7 +8125,7 @@
   },
   {
     "code": "NEWTEST0005_PROVINCE",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -8137,7 +8137,7 @@
   },
   {
     "code": "NG_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -8155,13 +8155,13 @@
   },
   {
     "code": "NG_POST ADMINISTRATIVE",
-    "message": "P\u00f3s-administrativo",
+    "message": "Pós-administrativo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "NG_PROVINCE",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -45745,7 +45745,7 @@
   },
   {
     "code": "NITISH_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -45757,7 +45757,7 @@
   },
   {
     "code": "NITISH_LOCALIDADE",
-    "message": "Localiza\u00e7\u00e3o",
+    "message": "Localização",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -45775,7 +45775,7 @@
   },
   {
     "code": "Number of Individuals per bed net",
-    "message": "N\u00famero de indiv\u00edduos por mosquiteiro",
+    "message": "Número de indivíduos por mosquiteiro",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -45787,7 +45787,7 @@
   },
   {
     "code": "PDF_STATIC_LABEL_BILL_TABLE_FOOD",
-    "message": "Subs\u00eddio Alimentar",
+    "message": "Subsídio Alimentar",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -45817,7 +45817,7 @@
   },
   {
     "code": "ROOT_FACILITY_CATCHMENT_MAPPER",
-    "message": "Atribuidor de limite de instala\u00e7\u00e3o raiz",
+    "message": "Atribuidor de limite de instalação raiz",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -45841,7 +45841,7 @@
   },
   {
     "code": "SV_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -45859,13 +45859,13 @@
   },
   {
     "code": "SV_POST ADMINISTRATIVE",
-    "message": "P\u00f3s-administrativo",
+    "message": "Pós-administrativo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "SV_PROVINCE",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -45883,7 +45883,7 @@
   },
   {
     "code": "TARGET_HOUSEHOLDS",
-    "message": "Fam\u00edlias-alvo",
+    "message": "Famílias-alvo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -45895,7 +45895,7 @@
   },
   {
     "code": "TEST BOUNDARY_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -45907,7 +45907,7 @@
   },
   {
     "code": "TEST BOUNDARY_REGION",
-    "message": "Regi\u00e3o",
+    "message": "Região",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -45943,73 +45943,73 @@
   },
   {
     "code": "UNIFIED_CONSOLE_README_HEADER_1",
-    "message": "Upload de microplano de folha \u00fanica",
+    "message": "Upload de microplano de folha única",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_CONSOLE_README_HEADER_1_DESC_1",
-    "message": "Baixe o modelo de microplano para adicionar detalhes de instala\u00e7\u00f5es, atribui\u00e7\u00f5es de usu\u00e1rios e dados de destino em um s\u00f3 lugar. A planilha inclui menus suspensos para selecionar limites, tipos de instala\u00e7\u00f5es, fun\u00e7\u00f5es e outros campos obrigat\u00f3rios.",
+    "message": "Baixe o modelo de microplano para adicionar detalhes de instalações, atribuições de usuários e dados de destino em um só lugar. A planilha inclui menus suspensos para selecionar limites, tipos de instalações, funções e outros campos obrigatórios.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_CONSOLE_README_HEADER_1_DESC_2",
-    "message": "Preencha todos os campos obrigat\u00f3rios, atualize as metas para cada limite e revise as entradas para verificar a precis\u00e3o antes de enviar o arquivo conclu\u00eddo. Entradas ausentes, colunas exclu\u00eddas ou cabe\u00e7alhos modificados resultar\u00e3o em erros de upload. Assim que a planilha estiver conclu\u00edda, salve-a e carregue-a para carregar todos os dados do microplano da campanha.",
+    "message": "Preencha todos os campos obrigatórios, atualize as metas para cada limite e revise as entradas para verificar a precisão antes de enviar o arquivo concluído. Entradas ausentes, colunas excluídas ou cabeçalhos modificados resultarão em erros de upload. Assim que a planilha estiver concluída, salve-a e carregue-a para carregar todos os dados do microplano da campanha.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_1",
-    "message": "Dados das instala\u00e7\u00f5es: Cria\u00e7\u00e3o de novas instala\u00e7\u00f5es ou reutiliza\u00e7\u00e3o de instala\u00e7\u00f5es existentes",
+    "message": "Dados das instalações: Criação de novas instalações ou reutilização de instalações existentes",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_1_DESC_1",
-    "message": "Ap\u00f3s o download do modelo, a aba \"Lista de Instala\u00e7\u00f5es Dispon\u00edveis\" ser\u00e1 preenchida automaticamente com os dados de quaisquer instala\u00e7\u00f5es existentes dispon\u00edveis para reutiliza\u00e7\u00e3o \u2014 caso ainda n\u00e3o haja nenhuma, a aba estar\u00e1 vazia. Para criar uma nova instala\u00e7\u00e3o, adicione o Nome da Instala\u00e7\u00e3o, o Tipo de Instala\u00e7\u00e3o, o Status da Instala\u00e7\u00e3o e a Capacidade, e deixe a coluna \"C\u00f3digo da Instala\u00e7\u00e3o\" em branco. Para uma instala\u00e7\u00e3o que est\u00e1 sendo reutilizada, nenhuma altera\u00e7\u00e3o \u00e9 necess\u00e1ria al\u00e9m de mape\u00e1-la para o limite correto (veja abaixo).",
+    "message": "Após o download do modelo, a aba \"Lista de Instalações Disponíveis\" será preenchida automaticamente com os dados de quaisquer instalações existentes disponíveis para reutilização — caso ainda não haja nenhuma, a aba estará vazia. Para criar uma nova instalação, adicione o Nome da Instalação, o Tipo de Instalação, o Status da Instalação e a Capacidade, e deixe a coluna \"Código da Instalação\" em branco. Para uma instalação que está sendo reutilizada, nenhuma alteração é necessária além de mapeá-la para o limite correto (veja abaixo).",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_1_DESC_2",
-    "message": "Mapeie cada instala\u00e7\u00e3o para o limite correto copiando o C\u00f3digo do Limite da planilha \"Lista de Limites da Campanha\" para a linha da instala\u00e7\u00e3o. Se uma instala\u00e7\u00e3o estiver mapeada para mais de um limite, adicione todos os C\u00f3digos de Limite relevantes, separados por v\u00edrgulas, na mesma c\u00e9lula.",
+    "message": "Mapeie cada instalação para o limite correto copiando o Código do Limite da planilha \"Lista de Limites da Campanha\" para a linha da instalação. Se uma instalação estiver mapeada para mais de um limite, adicione todos os Códigos de Limite relevantes, separados por vírgulas, na mesma célula.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_1_DESC_3",
-    "message": "Para excluir uma instala\u00e7\u00e3o existente da campanha, apague a linha inteira dessa instala\u00e7\u00e3o da planilha antes de fazer o upload \u2014 somente as instala\u00e7\u00f5es que voc\u00ea deseja incluir devem permanecer, cada uma com o(s) C\u00f3digo(s) de Limite correto(s) mapeado(s).",
+    "message": "Para excluir uma instalação existente da campanha, apague a linha inteira dessa instalação da planilha antes de fazer o upload — somente as instalações que você deseja incluir devem permanecer, cada uma com o(s) Código(s) de Limite correto(s) mapeado(s).",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_2",
-    "message": "Dados do usu\u00e1rio: Criando usu\u00e1rios para a campanha",
+    "message": "Dados do usuário: Criando usuários para a campanha",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_2_DESC_1",
-    "message": "Crie uma linha separada para cada usu\u00e1rio. Os seguintes campos s\u00e3o obrigat\u00f3rios para todos os usu\u00e1rios: Nome, N\u00famero de Telefone, Cargo, Tipo de Contrato e C\u00f3digo de \u00c1rea.",
+    "message": "Crie uma linha separada para cada usuário. Os seguintes campos são obrigatórios para todos os usuários: Nome, Número de Telefone, Cargo, Tipo de Contrato e Código de Área.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_2_DESC_2",
-    "message": "Se um usu\u00e1rio estiver associado a v\u00e1rias fun\u00e7\u00f5es, adicione todas as fun\u00e7\u00f5es relevantes separadas por v\u00edrgulas na c\u00e9lula \"Fun\u00e7\u00e3o\" para esse usu\u00e1rio.",
+    "message": "Se um usuário estiver associado a várias funções, adicione todas as funções relevantes separadas por vírgulas na célula \"Função\" para esse usuário.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_2_DESC_3",
-    "message": "Atribua cada usu\u00e1rio ao limite correto usando o C\u00f3digo de Limite da planilha \"Lista de Limites de Campanha\". Se um usu\u00e1rio estiver mapeado para v\u00e1rios limites, adicione todos os C\u00f3digos de Limite relevantes separados por v\u00edrgulas na mesma c\u00e9lula.",
+    "message": "Atribua cada usuário ao limite correto usando o Código de Limite da planilha \"Lista de Limites de Campanha\". Se um usuário estiver mapeado para vários limites, adicione todos os Códigos de Limite relevantes separados por vírgulas na mesma célula.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_2_DESC_4",
-    "message": "Ap\u00f3s concluir todas as entradas do usu\u00e1rio, salve a planilha e fa\u00e7a o upload usando o bot\u00e3o \"Procurar em meus arquivos\" na tela de upload.",
+    "message": "Após concluir todas as entradas do usuário, salve a planilha e faça o upload usando o botão \"Procurar em meus arquivos\" na tela de upload.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46021,115 +46021,115 @@
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_3_DESC_1",
-    "message": "Acesse a se\u00e7\u00e3o correspondente ao limite ou distrito na planilha e insira um n\u00famero na coluna \"Meta\" para cada vila ou limite listado.",
+    "message": "Acesse a seção correspondente ao limite ou distrito na planilha e insira um número na coluna \"Meta\" para cada vila ou limite listado.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_3_DESC_2",
-    "message": "Para cada aldeia ou limite listado, deve ser inserido um valor alvo na coluna \"Alvo no N\u00edvel do Limite Selecionado\" \u2014 se alguma coluna for deixada em branco, a planilha apresentar\u00e1 erros ao ser carregada.",
+    "message": "Para cada aldeia ou limite listado, deve ser inserido um valor alvo na coluna \"Alvo no Nível do Limite Selecionado\" — se alguma coluna for deixada em branco, a planilha apresentará erros ao ser carregada.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_3_DESC_3",
-    "message": "Depois de inserir as metas para todas as aldeias, salve a planilha e fa\u00e7a o upload usando o bot\u00e3o \"Procurar em meus arquivos\" na tela de upload.",
+    "message": "Depois de inserir as metas para todas as aldeias, salve a planilha e faça o upload usando o botão \"Procurar em meus arquivos\" na tela de upload.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_4",
-    "message": "Erros comuns e como evit\u00e1-los",
+    "message": "Erros comuns e como evitá-los",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_4_DESC_1",
-    "message": "Se um campo obrigat\u00f3rio estiver faltando \u2014 como um C\u00f3digo de Limite para uma Instala\u00e7\u00e3o/Usu\u00e1rio ou um valor Alvo para uma vila \u2014 o sistema exibir\u00e1 um erro listando o n\u00famero da linha espec\u00edfica que precisa ser corrigida.",
+    "message": "Se um campo obrigatório estiver faltando — como um Código de Limite para uma Instalação/Usuário ou um valor Alvo para uma vila — o sistema exibirá um erro listando o número da linha específica que precisa ser corrigida.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_4_DESC_2",
-    "message": "Se algum cabe\u00e7alho, coluna ou planilha for exclu\u00eddo do modelo antes do upload, o sistema exibir\u00e1 um erro. Baixe o modelo novamente e insira os dados corretos em vez de continuar editando o arquivo afetado.",
+    "message": "Se algum cabeçalho, coluna ou planilha for excluído do modelo antes do upload, o sistema exibirá um erro. Baixe o modelo novamente e insira os dados corretos em vez de continuar editando o arquivo afetado.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UNIFIED_SHEET_README_HEADER_4_DESC_3",
-    "message": "Se o c\u00f3digo da instala\u00e7\u00e3o for removido para uma instala\u00e7\u00e3o j\u00e1 existente (em vez de deix\u00e1-lo em branco apenas para instala\u00e7\u00f5es genuinamente novas), o sistema criar\u00e1 uma instala\u00e7\u00e3o duplicada em vez de atualizar a existente.",
+    "message": "Se o código da instalação for removido para uma instalação já existente (em vez de deixá-lo em branco apenas para instalações genuinamente novas), o sistema criará uma instalação duplicada em vez de atualizar a existente.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_MICROPLAN_README_HEADER_1",
-    "message": "Orienta\u00e7\u00f5es para preenchimento da ficha de usu\u00e1rio",
+    "message": "Orientações para preenchimento da ficha de usuário",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_1",
-    "message": "Consulte a planilha 'Fun\u00e7\u00f5es do usu\u00e1rio' para ler e compreender a acessibilidade de cada fun\u00e7\u00e3o.",
+    "message": "Consulte a planilha 'Funções do usuário' para ler e compreender a acessibilidade de cada função.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_2",
-    "message": "Por favor, preencha os dados do usu\u00e1rio (Nome, n\u00famero de contato e e-mail) em cada uma das planilhas pertencentes \u00e0 fun\u00e7\u00e3o de acordo.",
+    "message": "Por favor, preencha os dados do usuário (Nome, número de contato e e-mail) em cada uma das planilhas pertencentes à função de acordo.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_3",
-    "message": "N\u00e3o atribua o usu\u00e1rio duplicado nas fun\u00e7\u00f5es de aprovador de estimativa de microplano e aprovador de estimativa de microplano nacional.",
+    "message": "Não atribua o usuário duplicado nas funções de aprovador de estimativa de microplano e aprovador de estimativa de microplano nacional.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_4",
-    "message": "N\u00e3o atribua usu\u00e1rios duplicados nas fun\u00e7\u00f5es de atribuidor de limites de instala\u00e7\u00f5es e de atribuidor de limites de instala\u00e7\u00f5es nacionais.",
+    "message": "Não atribua usuários duplicados nas funções de atribuidor de limites de instalações e de atribuidor de limites de instalações nacionais.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_5",
-    "message": "N\u00e3o atribua usu\u00e1rios duplicados nas fun\u00e7\u00f5es de aprovador de dados populacionais e de aprovador de dados populacionais nacionais.",
+    "message": "Não atribua usuários duplicados nas funções de aprovador de dados populacionais e de aprovador de dados populacionais nacionais.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_1",
-    "message": "Baixando modelos do Excel para cria\u00e7\u00e3o de usu\u00e1rios:",
+    "message": "Baixando modelos do Excel para criação de usuários:",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_1_DESC_1",
-    "message": "Baixe o modelo Excel clicando no bot\u00e3o \u201cBaixar modelo\u201d.",
+    "message": "Baixe o modelo Excel clicando no botão “Baixar modelo”.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_1_DESC_2",
-    "message": "Abra o modelo Excel que foi baixado na etapa anterior ter\u00e1 3 planilhas e a primeira planilha que voc\u00ea ver\u00e1 \u00e9 uma planilha \u201cLeia-me\u201d. A segunda Planilha denominada \u201cCriar Lista de Usu\u00e1rios\u201c que ser\u00e1 uma planilha vazia onde o usu\u00e1rio dever\u00e1 inserir os dados para criar usu\u00e1rios para a campanha. A terceira folha ser\u00e1 denominada \u201cLista de Limites de Campanha\u201d que ter\u00e1 todos os limites selecionados na etapa \u201cDetalhes dos Limites\u201d com seus respectivos c\u00f3digos de limites.",
+    "message": "Abra o modelo Excel que foi baixado na etapa anterior terá 3 planilhas e a primeira planilha que você verá é uma planilha “Leia-me”. A segunda Planilha denominada “Criar Lista de Usuários“ que será uma planilha vazia onde o usuário deverá inserir os dados para criar usuários para a campanha. A terceira folha será denominada “Lista de Limites de Campanha” que terá todos os limites selecionados na etapa “Detalhes dos Limites” com seus respectivos códigos de limites.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_2",
-    "message": "Criando usu\u00e1rios para a campanha:",
+    "message": "Criando usuários para a campanha:",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_2_DESC_1",
-    "message": "O administrador do sistema ter\u00e1 que criar uma entrada separada para cada usu\u00e1rio. O administrador do sistema ter\u00e1 que adicionar o nome do usu\u00e1rio (obrigat\u00f3rio), n\u00famero de telefone (obrigat\u00f3rio), fun\u00e7\u00e3o (obrigat\u00f3rio), tipo de emprego (obrigat\u00f3rio), c\u00f3digo de limite (obrigat\u00f3rio). Se houver um usu\u00e1rio mapeado para diversas fun\u00e7\u00f5es, o administrador do sistema ter\u00e1 que adicionar todas as fun\u00e7\u00f5es para as quais esse usu\u00e1rio est\u00e1 mapeado, separando-as por v\u00edrgulas na c\u00e9lula para adicionar fun\u00e7\u00f5es para esse usu\u00e1rio.",
+    "message": "O administrador do sistema terá que criar uma entrada separada para cada usuário. O administrador do sistema terá que adicionar o nome do usuário (obrigatório), número de telefone (obrigatório), função (obrigatório), tipo de emprego (obrigatório), código de limite (obrigatório). Se houver um usuário mapeado para diversas funções, o administrador do sistema terá que adicionar todas as funções para as quais esse usuário está mapeado, separando-as por vírgulas na célula para adicionar funções para esse usuário.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_2_DESC_2",
-    "message": "Cada usu\u00e1rio criado precisa ser atribu\u00eddo a um limite usando o C\u00f3digo de Limite do limite necess\u00e1rio, que pode ser encontrado na \u201cLista de Limites de Campanha\u201c. Se houver um usu\u00e1rio mapeado para v\u00e1rios limites, o administrador do sistema ter\u00e1 que adicionar os c\u00f3digos de limite de todos os limites para os quais o usu\u00e1rio est\u00e1 mapeado, separando-os por v\u00edrgulas na c\u00e9lula para adicionar c\u00f3digos de limite para esse usu\u00e1rio.",
+    "message": "Cada usuário criado precisa ser atribuído a um limite usando o Código de Limite do limite necessário, que pode ser encontrado na “Lista de Limites de Campanha“. Se houver um usuário mapeado para vários limites, o administrador do sistema terá que adicionar os códigos de limite de todos os limites para os quais o usuário está mapeado, separando-os por vírgulas na célula para adicionar códigos de limite para esse usuário.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46141,7 +46141,7 @@
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_2_DESC_4",
-    "message": "Pressione o bot\u00e3o \u201cBrowse In My Files\u201d na tela \u201cUpload Target\u201d e selecione o arquivo salvo com todos os alvos do sistema.",
+    "message": "Pressione o botão “Browse In My Files” na tela “Upload Target” e selecione o arquivo salvo com todos os alvos do sistema.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46153,49 +46153,49 @@
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_3_DESC_1",
-    "message": "Se o usu\u00e1rio n\u00e3o adicionou c\u00f3digos de limite para todas as entradas do usu\u00e1rio, o sistema gerar\u00e1 um erro com o n\u00famero da linha onde o c\u00f3digo de limite est\u00e1 faltando",
+    "message": "Se o usuário não adicionou códigos de limite para todas as entradas do usuário, o sistema gerará um erro com o número da linha onde o código de limite está faltando",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_3_DESC_2",
-    "message": "Se o usu\u00e1rio excluir algum dos cabe\u00e7alhos da planilha e carreg\u00e1-la, o sistema gerar\u00e1 um erro e o usu\u00e1rio ter\u00e1 que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
+    "message": "Se o usuário excluir algum dos cabeçalhos da planilha e carregá-la, o sistema gerará um erro e o usuário terá que baixar o modelo novamente e recarregar a planilha correta com os dados corretos.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_MAINHEADER",
-    "message": "Leia-me instru\u00e7\u00f5es para upload do usu\u00e1rio",
+    "message": "Leia-me instruções para upload do usuário",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_BODY_DETAILS",
-    "message": "<strong>Detalhes da campanha:</strong><br/><strong>Campanha:</strong> {campaignName}<br/><strong>Link de acesso \u00e0 credencial do usu\u00e1rio:</strong> <a href=\"{accessLink}\">Link de acesso</a><br/><strong>Download do aplicativo:</strong> <a href=\"{appLink}\">Link do aplicativo</a>",
+    "message": "<strong>Detalhes da campanha:</strong><br/><strong>Campanha:</strong> {campaignName}<br/><strong>Link de acesso à credencial do usuário:</strong> <a href=\"{accessLink}\">Link de acesso</a><br/><strong>Download do aplicativo:</strong> <a href=\"{appLink}\">Link do aplicativo</a>",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_BODY_INTRO",
-    "message": "Ol\u00e1, {campaignManagerName},<br/><br/>A configura\u00e7\u00e3o da sua campanha de sa\u00fade foi conclu\u00edda. O aplicativo foi configurado e as credenciais de usu\u00e1rio foram geradas para sua equipe.",
+    "message": "Olá, {campaignManagerName},<br/><br/>A configuração da sua campanha de saúde foi concluída. O aplicativo foi configurado e as credenciais de usuário foram geradas para sua equipe.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_BODY_NOTES",
-    "message": "<strong>Observa\u00e7\u00f5es importantes:</strong><br/>Todas as credenciais da equipe est\u00e3o ativas e prontas para uso.<br/>O aplicativo inclui todas as configura\u00e7\u00f5es espec\u00edficas para os requisitos da sua campanha.<br/>Distribua as credenciais com seguran\u00e7a apenas para membros autorizados da equipe.",
+    "message": "<strong>Observações importantes:</strong><br/>Todas as credenciais da equipe estão ativas e prontas para uso.<br/>O aplicativo inclui todas as configurações específicas para os requisitos da sua campanha.<br/>Distribua as credenciais com segurança apenas para membros autorizados da equipe.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_BODY_SUPPORT",
-    "message": "<strong>Precisa de suporte?</strong><br/>Se voc\u00ea encontrar algum problema durante o download ou tiver d\u00favidas sobre a configura\u00e7\u00e3o, entre em contato com nossa equipe de suporte em <a href=mailto:support@egov.org.in'>support@egov.org.in</a>.",
+    "message": "<strong>Precisa de suporte?</strong><br/>Se você encontrar algum problema durante o download ou tiver dúvidas sobre a configuração, entre em contato com nossa equipe de suporte em <a href=mailto:support@egov.org.in'>support@egov.org.in</a>.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_BODY_THANKS",
-    "message": "Sua campanha est\u00e1 pronta para ser publicada.<br/><br/>Obrigado por usar o Console para gerenciar sua campanha de sa\u00fade.<br/>Atenciosamente,<br/>Equipe do Console",
+    "message": "Sua campanha está pronta para ser publicada.<br/><br/>Obrigado por usar o Console para gerenciar sua campanha de saúde.<br/>Atenciosamente,<br/>Equipe do Console",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46207,19 +46207,19 @@
   },
   {
     "code": "USER_MICROPLAN_SHEET_COLUMN1",
-    "message": "Fun\u00e7\u00e3o do usu\u00e1rio",
+    "message": "Função do usuário",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_COLUMN2",
-    "message": "Descri\u00e7\u00e3o",
+    "message": "Descrição",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_ROLES",
-    "message": "Fun\u00e7\u00f5es de usu\u00e1rio",
+    "message": "Funções de usuário",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46231,19 +46231,19 @@
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE10",
-    "message": "Esta fun\u00e7\u00e3o ter\u00e1 acesso para atribuir a instala\u00e7\u00e3o \u00e0s \u00e1reas de influ\u00eancia do limite administrativo atribu\u00eddo",
+    "message": "Esta função terá acesso para atribuir a instalação às áreas de influência do limite administrativo atribuído",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE11",
-    "message": "Atribuidor de limite de instala\u00e7\u00e3o raiz",
+    "message": "Atribuidor de limite de instalação raiz",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE12",
-    "message": "Esta fun\u00e7\u00e3o ter\u00e1 acesso para atribuir e finalizar a instala\u00e7\u00e3o para as \u00e1reas de influ\u00eancia do pa\u00eds",
+    "message": "Esta função terá acesso para atribuir e finalizar a instalação para as áreas de influência do país",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46255,13 +46255,13 @@
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE14",
-    "message": "Esta fun\u00e7\u00e3o ter\u00e1 acesso para visualizar estimativas de microplano do limite administrativo atribu\u00eddo.",
+    "message": "Esta função terá acesso para visualizar estimativas de microplano do limite administrativo atribuído.",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE2",
-    "message": "Esta fun\u00e7\u00e3o ter\u00e1 acesso para editar as suposi\u00e7\u00f5es do microplano e aprovar a estimativa do microplano para todas as aldeias do limite administrativo atribu\u00eddo",
+    "message": "Esta função terá acesso para editar as suposições do microplano e aprovar a estimativa do microplano para todas as aldeias do limite administrativo atribuído",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46273,7 +46273,7 @@
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE4",
-    "message": "Esta fun\u00e7\u00e3o ter\u00e1 acesso para editar as suposi\u00e7\u00f5es do microplano, aprovar e finalizar a estimativa do microplano para todas as aldeias do pa\u00eds",
+    "message": "Esta função terá acesso para editar as suposições do microplano, aprovar e finalizar a estimativa do microplano para todas as aldeias do país",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46285,7 +46285,7 @@
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE6",
-    "message": "Esta fun\u00e7\u00e3o ter\u00e1 acesso para validar e aprovar os dados populacionais das aldeias da fronteira administrativa atribu\u00edda",
+    "message": "Esta função terá acesso para validar e aprovar os dados populacionais das aldeias da fronteira administrativa atribuída",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46297,19 +46297,19 @@
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE8",
-    "message": "Esta fun\u00e7\u00e3o ter\u00e1 acesso para validar, aprovar e finalizar os dados populacionais de todas as aldeias do pa\u00eds",
+    "message": "Esta função terá acesso para validar, aprovar e finalizar os dados populacionais de todas as aldeias do país",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_MICROPLAN_SHEET_VALUE9",
-    "message": "Atribuidor de limites da instala\u00e7\u00e3o",
+    "message": "Atribuidor de limites da instalação",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UY_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46327,13 +46327,13 @@
   },
   {
     "code": "UY_POST ADMINISTRATIVE",
-    "message": "P\u00f3s-administrativo",
+    "message": "Pós-administrativo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "UY_PROVINCE",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46345,7 +46345,7 @@
   },
   {
     "code": "UserName",
-    "message": "Nome de usu\u00e1rio",
+    "message": "Nome de usuário",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46369,19 +46369,19 @@
   },
   {
     "code": "facilityUsage",
-    "message": "Uso das instala\u00e7\u00f5es",
+    "message": "Uso das instalações",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "mobile_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "mobile_Country",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46399,13 +46399,13 @@
   },
   {
     "code": "mobile_Post administrative",
-    "message": "P\u00f3s-administrativo",
+    "message": "Pós-administrativo",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "mobile_Province",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46417,13 +46417,13 @@
   },
   {
     "code": "mobile_country",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
   {
     "code": "mz",
-    "message": "Mo\u00e7ambique",
+    "message": "Moçambique",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   },
@@ -46435,7 +46435,7 @@
   },
   {
     "code": "{{hierarchytype}}_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-admin-schemas",
     "locale": "pt_DEMO"
   }

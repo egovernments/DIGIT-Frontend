@@ -13,7 +13,7 @@
   },
   {
     "code": "COMPLAINTFLOW_RAISED_FOR_ANOTHER_USER",
-    "message": "Outro usu\u00e1rio",
+    "message": "Outro usuário",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -25,7 +25,7 @@
   },
   {
     "code": "COMPLAINTS_RAISED_FOR_ANOTHER_USER",
-    "message": "Outro usu\u00e1rio",
+    "message": "Outro usuário",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -37,25 +37,25 @@
   },
   {
     "code": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_ACTION_LABEL",
-    "message": "Voltar para Reclama\u00e7\u00f5es",
+    "message": "Voltar para Reclamações",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_DESCRIPTION",
-    "message": "Sincronize o registro para gerar o n\u00famero da reclama\u00e7\u00e3o.",
+    "message": "Sincronize o registro para gerar o número da reclamação.",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_LABEL",
-    "message": "Den\u00fancia criada com sucesso!",
+    "message": "Denúncia criada com sucesso!",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_CREATE",
-    "message": "Criar reclama\u00e7\u00e3o",
+    "message": "Criar reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -67,7 +67,7 @@
   },
   {
     "code": "COMPLAINT_DETAILS_HEADING",
-    "message": "Detalhes da reclama\u00e7\u00e3o",
+    "message": "Detalhes da reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -79,49 +79,49 @@
   },
   {
     "code": "COMPLAINT_DETAILS_administrativeArea_LABEL",
-    "message": "\u00c1rea administrativa",
+    "message": "Área administrativa",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_DETAILS_administrativeArea_REQUIRED_ERROR",
-    "message": "Campo obrigat\u00f3rio",
+    "message": "Campo obrigatório",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_DETAILS_complaintDescription_LABEL",
-    "message": "Descri\u00e7\u00e3o da reclama\u00e7\u00e3o",
+    "message": "Descrição da reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_DETAILS_complaintDescription_REQUIRED_ERROR",
-    "message": "Este campo \u00e9 obrigat\u00f3rio",
+    "message": "Este campo é obrigatório",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_DETAILS_complaintRaisedFor_LABEL",
-    "message": "Voc\u00ea est\u00e1 registrando uma reclama\u00e7\u00e3o em seu pr\u00f3prio nome ou em nome de outro usu\u00e1rio?",
+    "message": "Você está registrando uma reclamação em seu próprio nome ou em nome de outro usuário?",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_DETAILS_complaintRaisedFor_REQUIRED_ERROR",
-    "message": "Este campo \u00e9 obrigat\u00f3rio",
+    "message": "Este campo é obrigatório",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_DETAILS_contactNumber_LABEL",
-    "message": "N\u00famero de contato do reclamante",
+    "message": "Número de contato do reclamante",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_DETAILS_contactNumber_REQUIRED_ERROR",
-    "message": "Este campo \u00e9 obrigat\u00f3rio",
+    "message": "Este campo é obrigatório",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -133,13 +133,13 @@
   },
   {
     "code": "COMPLAINT_DETAILS_name_REQUIRED_ERROR",
-    "message": "Este campo \u00e9 obrigat\u00f3rio",
+    "message": "Este campo é obrigatório",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_DETAILS_supervisorContactNumber_LABEL",
-    "message": "N\u00famero de contato do supervisor",
+    "message": "Número de contato do supervisor",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -157,19 +157,19 @@
   },
   {
     "code": "COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "\u00c1rea",
+    "message": "Área",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Data da reclama\u00e7\u00e3o",
+    "message": "Data da reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "N\u00famero da reclama\u00e7\u00e3o",
+    "message": "Número da reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -181,13 +181,13 @@
   },
   {
     "code": "COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Tipo de reclama\u00e7\u00e3o",
+    "message": "Tipo de reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_INBOX_FILTER_COMPLAINT_TYPE_LABEL",
-    "message": "Tipo de reclama\u00e7\u00e3o",
+    "message": "Tipo de reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -217,7 +217,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_HEADING",
-    "message": "Caixa de entrada de reclama\u00e7\u00f5es",
+    "message": "Caixa de entrada de reclamações",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -229,7 +229,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_SEARCH_COMPLAINT_NUMBER_LABEL",
-    "message": "N\u00famero da reclama\u00e7\u00e3o",
+    "message": "Número da reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -241,7 +241,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_SEARCH_MOBILE_NUMBER_LABEL",
-    "message": "N\u00famero de telem\u00f3vel",
+    "message": "Número de telemóvel",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -271,7 +271,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_SORT_LATEST_LAST",
-    "message": "\u00daltimo",
+    "message": "Último",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -295,55 +295,55 @@
   },
   {
     "code": "COMPLAINT_TYPE_ACTION_LABEL",
-    "message": "Pr\u00f3ximo",
+    "message": "Próximo",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_TYPE_HEADING",
-    "message": "Tipo de reclama\u00e7\u00e3o",
+    "message": "Tipo de reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_TYPE_complaintType_LABEL",
-    "message": "Selecione o tipo de reclama\u00e7\u00e3o",
+    "message": "Selecione o tipo de reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_TYPE_complaintType_REQUIRED_ERROR",
-    "message": "\u00c9 necess\u00e1rio especificar o tipo de reclama\u00e7\u00e3o.",
+    "message": "É necessário especificar o tipo de reclamação.",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_TYPE_otherReason_LABEL",
-    "message": "Motivo da reclama\u00e7\u00e3o",
+    "message": "Motivo da reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_TYPE_otherReason_REQUIRED_ERROR",
-    "message": "Este campo \u00e9 obrigat\u00f3rio",
+    "message": "Este campo é obrigatório",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_VIEW_ACTION_LABEL",
-    "message": "Voltar para Reclama\u00e7\u00f5es",
+    "message": "Voltar para Reclamações",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "N\u00famero de contato",
+    "message": "Número de contato",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_AREA",
-    "message": "\u00c1rea",
+    "message": "Área",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -355,7 +355,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "N\u00famero da reclama\u00e7\u00e3o",
+    "message": "Número da reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -367,7 +367,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Descri\u00e7\u00e3o",
+    "message": "Descrição",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -379,13 +379,13 @@
   },
   {
     "code": "COMPLAINT_VIEW_HEADING",
-    "message": "Detalhes da reclama\u00e7\u00e3o",
+    "message": "Detalhes da reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "CORRESPONDENCE",
-    "message": "Correspond\u00eancia",
+    "message": "Correspondência",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -397,7 +397,7 @@
   },
   {
     "code": "FEMALE",
-    "message": "F\u00eamea",
+    "message": "Fêmea",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -415,37 +415,37 @@
   },
   {
     "code": "LATEST_LAST",
-    "message": "\u00daltimo",
+    "message": "Último",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "LOCATION_DETAILS_ACTION_LABEL",
-    "message": "Pr\u00f3ximo",
+    "message": "Próximo",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "LOCATION_DETAILS_HEADING",
-    "message": "Detalhes da localiza\u00e7\u00e3o",
+    "message": "Detalhes da localização",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "LOCATION_DETAILS_addressLine1_LABEL",
-    "message": "Endere\u00e7o Linha 1",
+    "message": "Endereço Linha 1",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "LOCATION_DETAILS_addressLine2_LABEL",
-    "message": "Linha de endere\u00e7o 2",
+    "message": "Linha de endereço 2",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "LOCATION_DETAILS_landmark_LABEL",
-    "message": "Marco hist\u00f3rico",
+    "message": "Marco histórico",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -457,7 +457,7 @@
   },
   {
     "code": "LOCATION_DETAILS_typeOfAddress_LABEL",
-    "message": "Tipo de endere\u00e7o",
+    "message": "Tipo de endereço",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -469,13 +469,13 @@
   },
   {
     "code": "MOBILE_LENGTH_10_DIGIT",
-    "message": "O n\u00famero de celular deve ter 10 d\u00edgitos.",
+    "message": "O número de celular deve ter 10 dígitos.",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "MOBILE_LENGTH_10_DIGITS",
-    "message": "O n\u00famero de celular deve ter 10 d\u00edgitos.",
+    "message": "O número de celular deve ter 10 dígitos.",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -529,37 +529,37 @@
   },
   {
     "code": "SecurityIssues",
-    "message": "Quest\u00f5es de seguran\u00e7a",
+    "message": "Questões de segurança",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "SyncNotWorking",
-    "message": "Sincroniza\u00e7\u00e3o n\u00e3o est\u00e1 funcionando",
+    "message": "Sincronização não está funcionando",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "TechnicalIssues",
-    "message": "Problemas t\u00e9cnicos",
+    "message": "Problemas técnicos",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "UserAccountIssues",
-    "message": "Problemas com a conta de usu\u00e1rio",
+    "message": "Problemas com a conta de usuário",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "complaintAcknowledgement",
-    "message": "Sucesso na resolu\u00e7\u00e3o de reclama\u00e7\u00f5es",
+    "message": "Sucesso na resolução de reclamações",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "complaintInbox",
-    "message": "Caixa de entrada de reclama\u00e7\u00f5es",
+    "message": "Caixa de entrada de reclamações",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   }

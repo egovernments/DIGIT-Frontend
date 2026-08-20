@@ -2173,7 +2173,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_SCANSTOCKRECEIPT",
-    "message": "Scan Stock Receipt",
+    "message": "Stock Reciept Details",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -2677,7 +2677,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_SCANSTOCKRECEIPT",
-    "message": "Scan Stock Receipt",
+    "message": "Stock Receipt Details",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -2695,7 +2695,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_STOCKRECEIPTDETAILS_STOCKRECEIPTDETAILS",
-    "message": "Scan Stock Receipt",
+    "message": "Stock Receipt Details",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -4297,7 +4297,7 @@
   },
   {
     "code": "CAMPAIGN_OBSERVATION_STRATEGY_HEADING",
-    "message": "Selected the observation strategy for the campaign",
+    "message": "Select the observation strategy for the campaign",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -5557,7 +5557,7 @@
   },
   {
     "code": "CONSOLE_NAMING_CONVENTION_NO_LEADING_TRAILING_SPACE",
-    "message": "Campaign name must start with a letter and end with a letter or number or ).",
+    "message": "Campaign name must start with a letter and end with a letter or number.",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -8329,13 +8329,13 @@
   },
   {
     "code": "GREATER_THAN_EQUAL_TO",
-    "message": "Greater than or equal to",
+    "message": "greater than or equal to",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
   {
     "code": "GREATER_THAN_OR_EQUALS_TO",
-    "message": "Greater than or equal to",
+    "message": "greater than or equal to",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -10756,6 +10756,12 @@
     "message": "Failed to update master data. Please refresh the page and try again.",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_MICROPLAN_TEMPLATE",
+    "message":"Microplan Template",
+    "module":"hcm-campaignmanager",
+    "locale":"en_DEMO"
   },
   {
     "code": "HCM_MIN_3_CHARS_REQUIRED",
@@ -14821,7 +14827,7 @@
   },
   {
     "code": "PLEASE_WAIT_WHILE_UPDATING",
-    "message": "Please wait while updating",
+    "message": "Please wait while updating the campaign",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },

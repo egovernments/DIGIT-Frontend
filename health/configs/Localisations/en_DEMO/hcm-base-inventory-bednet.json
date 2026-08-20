@@ -1627,7 +1627,7 @@
   },
   {
     "code": "INVENTORY_QUANTITY_HELP_TEXT",
-    "message": "Enter the quantity sent by warehouse",
+    "message": "Enter the quantity",
     "module": "hcm-base-inventory-bednet",
     "locale": "en_DEMO"
   },

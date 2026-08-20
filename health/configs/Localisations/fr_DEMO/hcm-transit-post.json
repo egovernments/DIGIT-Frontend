@@ -1,13 +1,13 @@
 [
   {
     "code": "BARCODE_BATCH_NO_REQUIRED",
-    "message": "Le num\u00e9ro de lot est requis",
+    "message": "Le numéro de lot est requis",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
   {
     "code": "BARCODE_BATCH_NUMBER",
-    "message": "Num\u00e9ro de lot",
+    "message": "Numéro de lot",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
@@ -19,37 +19,37 @@
   },
   {
     "code": "BARCODE_SERIAL_NO_REQUIRED",
-    "message": "Le num\u00e9ro de s\u00e9rie est requis",
+    "message": "Le numéro de série est requis",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
   {
     "code": "BARCODE_SERIAL_NUMBER",
-    "message": "Num\u00e9ro de s\u00e9rie",
+    "message": "Numéro de série",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
   {
     "code": "BUS_STOP",
-    "message": "Arr\u00eat de bus",
+    "message": "Arrêt de bus",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
   {
     "code": "GS1_00",
-    "message": "Code du conteneur d'exp\u00e9dition en s\u00e9rie",
+    "message": "Code du conteneur d'expédition en série",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
   {
     "code": "GS1_01",
-    "message": "Num\u00e9ro d'article du commerce mondial",
+    "message": "Numéro d'article du commerce mondial",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
   {
     "code": "GS1_10",
-    "message": "Num\u00e9ro de lot ou de lot",
+    "message": "Numéro de lot ou de lot",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
@@ -67,7 +67,7 @@
   },
   {
     "code": "GS1_21",
-    "message": "Num\u00e9ro de s\u00e9rie",
+    "message": "Numéro de série",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
@@ -79,13 +79,13 @@
   },
   {
     "code": "SCHOOL",
-    "message": "\u00c9cole",
+    "message": "École",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
   {
     "code": "TRANSIT_POST_ALERT_POPUP_DESCRIPTION",
-    "message": "Vous num\u00e9risez un nouveau flacon. Veuillez vous assurer d'avoir termin\u00e9 le flacon pr\u00e9c\u00e9dent avant de scanner l'autre.",
+    "message": "Vous numérisez un nouveau flacon. Veuillez vous assurer d'avoir terminé le flacon précédent avant de scanner l'autre.",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
@@ -97,19 +97,19 @@
   },
   {
     "code": "TRANSIT_POST_BATCH_NUMBER_LABEL",
-    "message": "Num\u00e9ro de lot",
+    "message": "Numéro de lot",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
   {
     "code": "TRANSIT_POST_BENEFICIARY_AGE_DESCRIPTION",
-    "message": "L'\u00e2ge doit \u00eatre dans la fourchette",
+    "message": "L'âge doit être dans la fourchette",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
   {
     "code": "TRANSIT_POST_BENEFICIARY_AGE_LABEL",
-    "message": "\u00c2ge du b\u00e9n\u00e9ficiaire",
+    "message": "Âge du bénéficiaire",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
@@ -139,13 +139,13 @@
   },
   {
     "code": "TRANSIT_POST_DELIVERY_SUCCESSFUL_DESCRIPTION",
-    "message": "La livraison a \u00e9t\u00e9 enregistr\u00e9e avec succ\u00e8s.",
+    "message": "La livraison a été enregistrée avec succès.",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
   {
     "code": "TRANSIT_POST_DELIVERY_SUCCESSFUL_LABEL",
-    "message": "Livraison r\u00e9ussie !",
+    "message": "Livraison réussie !",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
@@ -169,7 +169,7 @@
   },
   {
     "code": "TRANSIT_POST_RESOURCE_DELIVERED_LABEL",
-    "message": "Ressource \u00e0 livrer",
+    "message": "Ressource à livrer",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
@@ -199,13 +199,13 @@
   },
   {
     "code": "TRANSIT_POST_TODAY_DELIVERIES_DESCRIPTION",
-    "message": "Livraisons effectu\u00e9es aujourd'hui par l'utilisateur",
+    "message": "Livraisons effectuées aujourd'hui par l'utilisateur",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
   {
     "code": "TRANSIT_POST_TOTAL_DELIVERIES_DESCRIPTION",
-    "message": "Total des livraisons effectu\u00e9es par l'utilisateur",
+    "message": "Total des livraisons effectuées par l'utilisateur",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
@@ -217,13 +217,13 @@
   },
   {
     "code": "TRANSIT_POST_TYPE_SELECTION_LABEL",
-    "message": "S\u00e9lectionnez le type de poste de transit",
+    "message": "Sélectionnez le type de poste de transit",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   },
   {
     "code": "TRANSIT_POST_VACCINATION_DETAILS_LABEL",
-    "message": "D\u00e9tails de la vaccination",
+    "message": "Détails de la vaccination",
     "module": "hcm-transit-post",
     "locale": "fr_DEMO"
   }
