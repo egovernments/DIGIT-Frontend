@@ -12,8 +12,8 @@
  * - Navigates to complaint response screen after submission
  */
 
-import { FormComposerV2, Toast } from "@egovernments/digit-ui-components";
-import React, { useEffect, useState, useMemo } from "react";
+import { FormComposerV2, Toast, Card, Dropdown, LabelFieldPair } from "@egovernments/digit-ui-components";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { formPayloadToCreateComplaint } from "../../../utils";
@@ -45,6 +45,23 @@ const CreateComplaintForm = ({
   const [selectedHierarchy, setSelectedHierarchy] = useState(
     Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED") || null
   );
+
+  // Hierarchies PGR is configured for (published by PGRModule from PGR.HierarchySelectedForPGR)
+  const hierarchies = Digit.SessionStorage.get("BOUNDARY_HIERARCHIES") || [];
+
+  // Captured from FormComposerV2 so the boundary value can be cleared when the hierarchy changes
+  const formSetValueRef = useRef(null);
+
+  /**
+   * Switch the boundary hierarchy the complaint is being raised against.
+   * The boundary already picked belongs to the previous hierarchy, so it is cleared.
+   */
+  const onHierarchyChange = (hierarchy) => {
+    if (!hierarchy || hierarchy?.hierarchyType === selectedHierarchy?.hierarchyType) return;
+    setSelectedHierarchy(hierarchy);
+    Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", hierarchy);
+    formSetValueRef.current?.("SelectedBoundary", null);
+  };
 
   // Construct module code for localization fetch
   const moduleCode = selectedHierarchy
@@ -137,6 +154,13 @@ const CreateComplaintForm = ({
       return {
         ...section,
         body: section.body.map(field => {
+          // Drive the boundary dropdowns off the hierarchy chosen on this screen
+          if (field.type === "component" && field?.component?.includes("Boundary")) {
+            return {
+              ...field,
+              hierarchy: selectedHierarchy,
+            };
+          }
           if (
             field.populators?.name === "ComplainantName" ||
             field.populators?.name === "ComplainantContactNumber"
@@ -152,9 +176,11 @@ const CreateComplaintForm = ({
     });
 
     return { ...baseConfig, form: updatedForm };
-  }, [createComplaintConfig, serviceDefs, t, disabledFields]);
+  }, [createComplaintConfig, serviceDefs, t, disabledFields, selectedHierarchy]);
 
   const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors) => {
+    formSetValueRef.current = setValue;
+
     const ComplainantName = formData?.ComplainantName;
     const selectedUser = formData?.complaintUser?.code;
     const ComplainantContactNumber = formData?.ComplainantContactNumber;
@@ -270,6 +296,27 @@ const CreateComplaintForm = ({
 
   return (
     <div className="pgr-create-complaint-form">
+      {/* Hierarchy switch - only shown when PGR is configured for more than one hierarchy */}
+      {hierarchies?.length > 1 && (
+        <Card>
+          <LabelFieldPair>
+            <div className="comment-label-without-card" style={{ width: "33%" }}>
+              {t(I18N_KEYS.COMPONENTS.HCM_HIERARCHY_TYPE)}
+              <span style={{ color: "#d4351c" }}> *</span>
+            </div>
+            <div className="digit-field digit-text-input-field-without-card">
+              <Dropdown
+                t={t}
+                option={hierarchies}
+                optionKey={"hierarchyType"}
+                selected={selectedHierarchy}
+                select={onHierarchyChange}
+              />
+            </div>
+          </LabelFieldPair>
+        </Card>
+      )}
+
       <FormComposerV2
         onSubmit={onFormSubmit}
         defaultValues={sessionFormData}

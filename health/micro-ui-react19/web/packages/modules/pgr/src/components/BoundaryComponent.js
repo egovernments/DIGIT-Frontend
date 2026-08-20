@@ -4,7 +4,9 @@ import { useTranslation } from "react-i18next";
 
 const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const hierarchy = Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED");
+  // Hierarchy passed down from the screen (lets the user switch it); falls back to the
+  // module-level selection for screens that do not offer a hierarchy switch.
+  const hierarchy = config?.hierarchy || Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED");
   const { data: childrenData, isLoading: isBoundaryLoading } = Digit.Hooks.pgr.useFetchBoundaries({
     tenantId, hierarchyType: hierarchy?.hierarchyType, config: { enabled: !!hierarchy?.hierarchyType } });
 

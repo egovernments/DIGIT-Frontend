@@ -1,5 +1,5 @@
 import { Loader } from "@egovernments/digit-ui-components";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { default as EmployeeApp } from "./pages/employee";
 import PGRCard from "./components/PGRCard";
 import { overrideHooks, updateCustomConfigs } from "./utils";
@@ -25,17 +25,14 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
 
  
 
-  // Fetch hierarchy type from MDMS v2
-  const { isLoading: isMDMSLoading, data: HierarchySelectedForPGR } = Digit.Hooks.useCustomMDMS(
+  // Fetch every hierarchy type PGR is configured for, in the order configured in MDMS
+  const { isLoading: isMDMSLoading, data: allowedHierarchyCodes } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "PGR",
     [{ name: "HierarchySelectedForPGR" }],
     {
-      select: (data) => {
-        // Extract hierarchyTypeCode from MDMS response
-        const hierarchyTypeCode = data?.PGR?.HierarchySelectedForPGR?.[0]?.hierarchyTypeCode;
-        return hierarchyTypeCode;
-      },
+      select: (data) =>
+        (data?.PGR?.HierarchySelectedForPGR || []).map((item) => item?.hierarchyTypeCode).filter(Boolean),
     },
     {
       schemaCode: "PGR.HierarchySelectedForPGR",
@@ -44,21 +41,31 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
     }
   );
 
-  const { data: hierarchies,
+  // Fetch all hierarchy definitions (unfiltered) so every configured hierarchy can be selected
+  const { data: allHierarchies,
     isLoading: isHierarchyLoading,
-  } = Digit.Hooks.pgr.useFetchAllBoundaryHierarchies({ tenantId, config:{refetchKey: HierarchySelectedForPGR, enabled: !!HierarchySelectedForPGR} });
+  } = Digit.Hooks.pgr.useFetchAllBoundaryHierarchies({ tenantId, config: { enabled: !!allowedHierarchyCodes?.length } });
 
-  // Set hierarchy in SessionStorage when both hierarchies and HierarchySelectedForPGR are available
+  // Keep only the configured hierarchies, preserving the MDMS order
+  const hierarchies = useMemo(
+    () =>
+      (allowedHierarchyCodes || [])
+        .map((code) => (allHierarchies || []).find((hierarchy) => hierarchy?.hierarchyType === code))
+        .filter(Boolean),
+    [allHierarchies, allowedHierarchyCodes]
+  );
+
+  // Publish the allowed hierarchies, and seed the selection with the first configured hierarchy only
+  // when there is no valid selection yet - so a hierarchy chosen on a screen is not overwritten.
   useEffect(() => {
-    if (hierarchies && HierarchySelectedForPGR) {
-      // Find the matching hierarchy from hierarchies data
-      const selectedHierarchy = hierarchies.find(h => h.hierarchyType === HierarchySelectedForPGR);
-      if (selectedHierarchy) {
-        // Store the complete hierarchy object in sessionStorage
-        Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", selectedHierarchy);
-      }
+    if (!hierarchies?.length) return;
+    Digit.SessionStorage.set("BOUNDARY_HIERARCHIES", hierarchies);
+    const currentSelection = Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED");
+    const isStillValid = hierarchies.some((hierarchy) => hierarchy?.hierarchyType === currentSelection?.hierarchyType);
+    if (!isStillValid) {
+      Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", hierarchies[0]);
     }
-  }, [hierarchies, HierarchySelectedForPGR]);
+  }, [hierarchies]);
 
 
   const moduleCode = ["pgr",];
@@ -72,7 +79,6 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
     modulePrefix,
   });
 
-  Digit.SessionStorage.set("BOUNDARY_HIERARCHIES", hierarchies);
   let user = Digit?.SessionStorage.get("User");
 
 
