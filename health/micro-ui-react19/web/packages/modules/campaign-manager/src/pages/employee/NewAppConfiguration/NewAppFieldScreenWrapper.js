@@ -237,6 +237,21 @@ function NewAppFieldScreenWrapper({viewMode}) {
             fieldKey="description"
             viewMode={viewMode}
           />
+          {/* Info card message (page-level conditions.infoCardText) */}
+          {currentCard?.conditions?.infoCardText && (
+            <HeaderFieldWrapper
+              key="header-infocard-text"
+              label={"INFO_CARD_TEXT"}
+              type="textarea"
+              value={currentCard?.conditions?.infoCardText}
+              currentCard={currentCard}
+              index={2}
+              cardIndex={0}
+              skipPropertyUpdate={true}
+              maxLength={500}
+              viewMode={viewMode}
+            />
+          )}
          <Divider />
         </>
       )}
