@@ -37,7 +37,7 @@ const CreateComplaint = () => {
     {
       select: (data) => data?.["RAINMAKER-PGR"]?.CreateComplaintConfig?.[0],
       retry: false,
-      enable: false, // Disabled fetch by default – relies on fallback config
+      enable: true, // Disabled fetch by default – relies on fallback config
     }
   );
 
