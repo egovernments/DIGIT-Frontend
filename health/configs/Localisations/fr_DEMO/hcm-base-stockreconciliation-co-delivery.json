@@ -7,13 +7,13 @@
   },
   {
     "code": "ADMINISTRATION_FAILED",
-    "message": "\u00c9chec de l'administration",
+    "message": "Échec de l'administration",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "ADMINISTRATION_SUCCESS",
-    "message": "Succ\u00e8s administratif",
+    "message": "Succès administratif",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -31,7 +31,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_STOCKRECONCILIATIONSUCCESS",
-    "message": "Succ\u00e8s du rapprochement des stocks",
+    "message": "Succès du rapprochement des stocks",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -43,19 +43,19 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "B\u00e9n\u00e9ficiaire absent",
+    "message": "Bénéficiaire absent",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "B\u00e9n\u00e9ficiaire r\u00e9f\u00e9r\u00e9",
+    "message": "Bénéficiaire référé",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "B\u00e9n\u00e9ficiaire refus\u00e9",
+    "message": "Bénéficiaire refusé",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -73,7 +73,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Fermer D M\u00e9nage",
+    "message": "Fermer D Ménage",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -85,31 +85,31 @@
   },
   {
     "code": "DEFAULT",
-    "message": "D\u00e9faut",
+    "message": "Défaut",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "DIARRHOEA",
-    "message": "Diarrh\u00e9e",
+    "message": "Diarrhée",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "DRUG_SE_CC",
-    "message": "Effet secondaire du m\u00e9dicament du cycle en cours",
+    "message": "Effet secondaire du médicament du cycle en cours",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "DRUG_SE_PC",
-    "message": "Effet secondaire du m\u00e9dicament du cycle pr\u00e9c\u00e9dent",
+    "message": "Effet secondaire du médicament du cycle précédent",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "Data Issues",
-    "message": "Probl\u00e8mes de donn\u00e9es",
+    "message": "Problèmes de données",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -121,13 +121,13 @@
   },
   {
     "code": "FEVER",
-    "message": "Fi\u00e8vre",
+    "message": "Fièvre",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FUNERAL",
-    "message": "Fun\u00e9railles",
+    "message": "Funérailles",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -145,7 +145,7 @@
   },
   {
     "code": "INELIGIBLE",
-    "message": "In\u00e9ligible",
+    "message": "Inéligible",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -157,13 +157,13 @@
   },
   {
     "code": "INVENTORY_RECEIVER_LABEL",
-    "message": "R\u00e9cepteur",
+    "message": "Récepteur",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "INVENTORY_SENDER_LABEL",
-    "message": "Exp\u00e9diteur",
+    "message": "Expéditeur",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -175,493 +175,493 @@
   },
   {
     "code": "LABEL_PAIR_AGE",
-    "message": "\u00c2ge de la paire d'\u00e9tiquettes",
+    "message": "Âge de la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_BATCH_NUMBER",
-    "message": "Num\u00e9ro de lot de la paire d'\u00e9tiquettes",
+    "message": "Numéro de lot de la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
-    "message": "Mod\u00e8le de plainte de cat\u00e9gorie de paire d'\u00e9tiquettes",
+    "message": "Modèle de plainte de catégorie de paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "Cat\u00e9gorie de paire d'\u00e9tiquettes Hfreferralmodel",
+    "message": "Catégorie de paire d'étiquettes Hfreferralmodel",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
-    "message": "Cat\u00e9gorie de paire d'\u00e9tiquettes Mod\u00e8le de m\u00e9nage",
+    "message": "Catégorie de paire d'étiquettes Modèle de ménage",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
-    "message": "Cat\u00e9gorie de paire d'\u00e9tiquettes Mod\u00e8le individuel",
+    "message": "Catégorie de paire d'étiquettes Modèle individuel",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Cat\u00e9gorie de paire d'\u00e9tiquettesMod\u00e8le de surveillance int\u00e9rieur",
+    "message": "Catégorie de paire d'étiquettesModèle de surveillance intérieur",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
-    "message": "Cat\u00e9gorie de paire d'\u00e9tiquettes Lqamodel",
+    "message": "Catégorie de paire d'étiquettes Lqamodel",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
-    "message": "Cat\u00e9gorie de paire d'\u00e9tiquettes Mod\u00e8le de stock",
+    "message": "Catégorie de paire d'étiquettes Modèle de stock",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMMENTS",
-    "message": "Commentaires sur la paire d'\u00e9tiquettes",
+    "message": "Commentaires sur la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
-    "message": "Paire d'\u00e9tiquettes Bo\u00eete de r\u00e9ception des plaintes Contact du plaignant",
+    "message": "Paire d'étiquettes Boîte de réception des plaintes Contact du plaignant",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Zone de r\u00e9clamation de la bo\u00eete de r\u00e9ception des plaintes concernant les paires d'\u00e9tiquettes",
+    "message": "Zone de réclamation de la boîte de réception des plaintes concernant les paires d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Paire d'\u00e9tiquettes Bo\u00eete de r\u00e9ception de la plainte Date de la plainte",
+    "message": "Paire d'étiquettes Boîte de réception de la plainte Date de la plainte",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Paire d'\u00e9tiquettes Bo\u00eete de r\u00e9ception de la plainte Num\u00e9ro de plainte",
+    "message": "Paire d'étiquettes Boîte de réception de la plainte Numéro de plainte",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
-    "message": "Statut de la plainte dans la bo\u00eete de r\u00e9ception des plaintes concernant les paires d'\u00e9tiquettes",
+    "message": "Statut de la plainte dans la boîte de réception des plaintes concernant les paires d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Type de plainte de la bo\u00eete de r\u00e9ception de la plainte relative aux paires d'\u00e9tiquettes",
+    "message": "Type de plainte de la boîte de réception de la plainte relative aux paires d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Paire d'\u00e9tiquettes Voir la plainte Contact du plaignant",
+    "message": "Paire d'étiquettes Voir la plainte Contact du plaignant",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
-    "message": "Plainte sur les paires d'\u00e9tiquettes Voir la zone des plaintes",
+    "message": "Plainte sur les paires d'étiquettes Voir la zone des plaintes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Paire d'\u00e9tiquettes Plainte Afficher la date des plaintes",
+    "message": "Paire d'étiquettes Plainte Afficher la date des plaintes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Paire d'\u00e9tiquettes Plainte Afficher le num\u00e9ro de plainte",
+    "message": "Paire d'étiquettes Plainte Afficher le numéro de plainte",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Paire d'\u00e9tiquettes Voir la plainte Type de plainte",
+    "message": "Paire d'étiquettes Voir la plainte Type de plainte",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Plainte sur les paires d'\u00e9tiquettes Voir la plainte",
+    "message": "Plainte sur les paires d'étiquettes Voir la plainte",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "R\u00e9clamation relative \u00e0 une paire d'\u00e9tiquettes Afficher l'\u00e9tat de la r\u00e9clamation",
+    "message": "Réclamation relative à une paire d'étiquettes Afficher l'état de la réclamation",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Date d'enregistrement de la paire d'\u00e9tiquettes",
+    "message": "Date d'enregistrement de la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_GENDER",
-    "message": "Sexe de la paire d'\u00e9tiquettes",
+    "message": "Sexe de la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-    "message": "Paire d'\u00e9tiquettes Hcm Aper\u00e7u du m\u00e9nage Total des membres",
+    "message": "Paire d'étiquettes Hcm Aperçu du ménage Total des membres",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
-    "message": "Paire d'\u00e9tiquettes Nom du chef de m\u00e9nage",
+    "message": "Paire d'étiquettes Nom du chef de ménage",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
-    "message": "Paire d'\u00e9tiquettes Localit\u00e9 du m\u00e9nage",
+    "message": "Paire d'étiquettes Localité du ménage",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "Num\u00e9ro d'identification de la paire d'\u00e9tiquettes",
+    "message": "Numéro d'identification de la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_ID_TYPE",
-    "message": "Type d'identifiant de paire d'\u00e9tiquettes",
+    "message": "Type d'identifiant de paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Paire d'\u00e9tiquettes Ihm R\u00e9sum\u00e9 Enfants pr\u00e9sents",
+    "message": "Paire d'étiquettes Ihm Résumé Enfants présents",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Paire d'\u00e9tiquettes Ihm R\u00e9sum\u00e9 Enfants vaccin\u00e9s",
+    "message": "Paire d'étiquettes Ihm Résumé Enfants vaccinés",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Paire d'\u00e9tiquettes R\u00e9sum\u00e9 Ihm Commentaires finaux",
+    "message": "Paire d'étiquettes Résumé Ihm Commentaires finaux",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
-    "message": "Paire d'\u00e9tiquettes R\u00e9sum\u00e9 Ihm Manqu\u00e9 Absent",
+    "message": "Paire d'étiquettes Résumé Ihm Manqué Absent",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
-    "message": "Paire d'\u00e9tiquettes Ihm R\u00e9sum\u00e9 Missed Endormi",
+    "message": "Paire d'étiquettes Ihm Résumé Missed Endormi",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Paire d'\u00e9tiquettes R\u00e9sum\u00e9 Ihm Manqu\u00e9 Non Revisit\u00e9",
+    "message": "Paire d'étiquettes Résumé Ihm Manqué Non Revisité",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Paire d'\u00e9tiquettes R\u00e9sum\u00e9 Ihm Manqu\u00e9 Non visit\u00e9",
+    "message": "Paire d'étiquettes Résumé Ihm Manqué Non visité",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Paire d'\u00e9tiquettes R\u00e9sum\u00e9 Ihm Manqu\u00e9 Autre",
+    "message": "Paire d'étiquettes Résumé Ihm Manqué Autre",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Paire d'\u00e9tiquettes Ihm R\u00e9sum\u00e9 Refus manqu\u00e9",
+    "message": "Paire d'étiquettes Ihm Résumé Refus manqué",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
-    "message": "Paire d'\u00e9tiquettes R\u00e9sum\u00e9 Ihm Routine manqu\u00e9e",
+    "message": "Paire d'étiquettes Résumé Ihm Routine manquée",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Paire d'\u00e9tiquettes Ihm R\u00e9sum\u00e9 Date de surveillance",
+    "message": "Paire d'étiquettes Ihm Résumé Date de surveillance",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Paire d'\u00e9tiquettes R\u00e9sum\u00e9 Ihm D\u00e9signation du moniteur",
+    "message": "Paire d'étiquettes Résumé Ihm Désignation du moniteur",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Paire d'\u00e9tiquettes R\u00e9sum\u00e9 Ihm Nom du moniteur",
+    "message": "Paire d'étiquettes Résumé Ihm Nom du moniteur",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Paire d'\u00e9tiquettes R\u00e9sum\u00e9 Ihm mal couvert",
+    "message": "Paire d'étiquettes Résumé Ihm mal couvert",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Paire d'\u00e9tiquettes Ihm Sommaire Zone de r\u00e8glement",
+    "message": "Paire d'étiquettes Ihm Sommaire Zone de règlement",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Paire d'\u00e9tiquettes Ihm R\u00e9sum\u00e9 Type de r\u00e8glement",
+    "message": "Paire d'étiquettes Ihm Résumé Type de règlement",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction d'inventaire de paire d'\u00e9tiquettes",
+    "message": "Type de transaction d'inventaire de paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Paire d'\u00e9tiquettes Lqa Raison d'absence",
+    "message": "Paire d'étiquettes Lqa Raison d'absence",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "Paire d'\u00e9tiquettes Lqa Afp Sensibilisation",
+    "message": "Paire d'étiquettes Lqa Afp Sensibilisation",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "Paire d'\u00e9tiquettes Lqa Afp Nombre de cas",
+    "message": "Paire d'étiquettes Lqa Afp Nombre de cas",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Paire d'\u00e9tiquettes Sensibilisation Lqa Autre",
+    "message": "Paire d'étiquettes Sensibilisation Lqa Autre",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Sensibilisation \u00e0 la campagne Lqa de la paire d'\u00e9tiquettes",
+    "message": "Sensibilisation à la campagne Lqa de la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Paire d'\u00e9tiquettes Lqa Soignant inform\u00e9",
+    "message": "Paire d'étiquettes Lqa Soignant informé",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Paire d'\u00e9tiquettes Lqa Enfants de moins de 5 ans",
+    "message": "Paire d'étiquettes Lqa Enfants de moins de 5 ans",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Paire d'\u00e9tiquettes Lqa \u00c2ge de l'enfant Mois",
+    "message": "Paire d'étiquettes Lqa Âge de l'enfant Mois",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "\u00c9tiquette Paire Lqa Sexe Enfant",
+    "message": "Étiquette Paire Lqa Sexe Enfant",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Num\u00e9ro de cluster Lqa de la paire d'\u00e9tiquettes",
+    "message": "Numéro de cluster Lqa de la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Paire d'\u00e9tiquettes Lqa marqu\u00e9es au doigt",
+    "message": "Paire d'étiquettes Lqa marquées au doigt",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Paire d'\u00e9tiquettes Num\u00e9ro de lot Lqa",
+    "message": "Paire d'étiquettes Numéro de lot Lqa",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "Paire d'\u00e9tiquettes Doses Lqa Opv",
+    "message": "Paire d'étiquettes Doses Lqa Opv",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Libell\u00e9 Paire Lqa Autre Raison Absence",
+    "message": "Libellé Paire Lqa Autre Raison Absence",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Paire d'\u00e9tiquettes Lqa Autre raison \u00e0 pr\u00e9ciser",
+    "message": "Paire d'étiquettes Lqa Autre raison à préciser",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Paire d'\u00e9tiquettes Lqa Autre motif de refus",
+    "message": "Paire d'étiquettes Lqa Autre motif de refus",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Paire d'\u00e9tiquettes Raison Lqa non marqu\u00e9e",
+    "message": "Paire d'étiquettes Raison Lqa non marquée",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Raison du refus de la paire d'\u00e9tiquettes Lqa",
+    "message": "Raison du refus de la paire d'étiquettes Lqa",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Paire d'\u00e9tiquettes Zone de r\u00e8glement Lqa",
+    "message": "Paire d'étiquettes Zone de règlement Lqa",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Paire d'\u00e9tiquettes Lqa Nom de l'arpenteur",
+    "message": "Paire d'étiquettes Lqa Nom de l'arpenteur",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Date de l'enqu\u00eate Lqa pour la paire d'\u00e9tiquettes",
+    "message": "Date de l'enquête Lqa pour la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_MEMBER_COUNT",
-    "message": "Nombre de membres de la paire d'\u00e9tiquettes",
+    "message": "Nombre de membres de la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_MOBILE_NUMBER",
-    "message": "Num\u00e9ro de portable de la paire d'\u00e9tiquettes",
+    "message": "Numéro de portable de la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "Num\u00e9ro Mrn de la paire d'\u00e9tiquettes",
+    "message": "Numéro Mrn de la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
-    "message": "Paire d'\u00e9tiquettes Nom de l'individu",
+    "message": "Paire d'étiquettes Nom de l'individu",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_QUANTITY_RECEIVED",
-    "message": "Quantit\u00e9 de paires d'\u00e9tiquettes re\u00e7ue",
+    "message": "Quantité de paires d'étiquettes reçue",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_NAME",
-    "message": "Nom de la bo\u00eete de r\u00e9ception de r\u00e9f\u00e9rence de la paire d'\u00e9tiquettes",
+    "message": "Nom de la boîte de réception de référence de la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
-    "message": "Statut de r\u00e9f\u00e9rence de la bo\u00eete de r\u00e9ception de r\u00e9f\u00e9rence de paire d'\u00e9tiquettes",
+    "message": "Statut de référence de la boîte de réception de référence de paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
-    "message": "Sympt\u00f4me de r\u00e9f\u00e9rence de la bo\u00eete de r\u00e9ception de r\u00e9f\u00e9rence de paire d'\u00e9tiquettes",
+    "message": "Symptôme de référence de la boîte de réception de référence de paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_RESOURCE",
-    "message": "Ressource de paire d'\u00e9tiquettes",
+    "message": "Ressource de paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Expiration du stock de la paire d'\u00e9tiquettes",
+    "message": "Expiration du stock de la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_WAYBILL_NUMBER",
-    "message": "Num\u00e9ro de lettre de transport de la paire d'\u00e9tiquettes",
+    "message": "Numéro de lettre de transport de la paire d'étiquettes",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
-    "message": "Paire d'\u00e9tiquettes {{fn:getsecondpagepartylabel(item.additionalfields.fields)}}",
+    "message": "Paire d'étiquettes {{fn:getsecondpagepartylabel(item.additionalfields.fields)}}",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "MALE",
-    "message": "M\u00e2le",
+    "message": "Mâle",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "METAL",
-    "message": "M\u00e9tal",
+    "message": "Métal",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -673,25 +673,25 @@
   },
   {
     "code": "NOT_ADMINISTERED",
-    "message": "Non administr\u00e9",
+    "message": "Non administré",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "NOT_REGISTERED",
-    "message": "Non enregistr\u00e9",
+    "message": "Non enregistré",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "NO_FACILITIES_FOUND",
-    "message": "Aucune installation trouv\u00e9e",
+    "message": "Aucune installation trouvée",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "NO_PRODUCTS_FOUND",
-    "message": "Aucun produit trouv\u00e9",
+    "message": "Aucun produit trouvé",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -733,13 +733,13 @@
   },
   {
     "code": "SELECT_PRODUCT",
-    "message": "S\u00e9lectionnez une variante de produit",
+    "message": "Sélectionnez une variante de produit",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "SELECT_WAREHOUSE",
-    "message": "S\u00e9lectionnez un entrep\u00f4t",
+    "message": "Sélectionnez un entrepôt",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -751,7 +751,7 @@
   },
   {
     "code": "SKIN_REACTION",
-    "message": "R\u00e9action cutan\u00e9e",
+    "message": "Réaction cutanée",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -763,7 +763,7 @@
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONDETAILS_MESSAGE",
-    "message": "\u00c9chec de la r\u00e9cup\u00e9ration de la configuration.",
+    "message": "Échec de la récupération de la configuration.",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -775,37 +775,37 @@
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONDETAILS_manualCount_ERROR",
-    "message": "Veuillez saisir un d\u00e9compte manuel valide",
+    "message": "Veuillez saisir un décompte manuel valide",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONDETAILS_stockReconciliationCard_ERROR",
-    "message": "Veuillez s\u00e9lectionner une installation et un produit",
+    "message": "Veuillez sélectionner une installation et un produit",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_DESCRIPTION",
-    "message": "Votre rapprochement de stock a \u00e9t\u00e9 enregistr\u00e9",
+    "message": "Votre rapprochement de stock a été enregistré",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_HEADING",
-    "message": "Rapprochement des stocks soumis avec succ\u00e8s",
+    "message": "Rapprochement des stocks soumis avec succès",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_MESSAGE",
-    "message": "La navigation a \u00e9chou\u00e9.",
+    "message": "La navigation a échoué.",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_PRIMARY_ACTION_LABEL",
-    "message": "Retour \u00e0 la maison",
+    "message": "Retour à la maison",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -817,7 +817,7 @@
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_DESCRIPTION",
-    "message": "Effectuer un rapprochement des stocks de votre \u00e9tablissement",
+    "message": "Effectuer un rapprochement des stocks de votre établissement",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -847,7 +847,7 @@
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_HELP_TEXT",
-    "message": "Saisir le d\u00e9compte physique du stock apr\u00e8s v\u00e9rification manuelle",
+    "message": "Saisir le décompte physique du stock après vérification manuelle",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -859,7 +859,7 @@
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_MIN_ERROR",
-    "message": "Le d\u00e9compte manuel doit \u00eatre \u00e9gal ou sup\u00e9rieur \u00e0\u00a00",
+    "message": "Le décompte manuel doit être égal ou supérieur à 0",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -871,19 +871,19 @@
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_HELP_TEXT",
-    "message": "S\u00e9lectionnez l'installation et le produit pour rapprocher le stock",
+    "message": "Sélectionnez l'installation et le produit pour rapprocher le stock",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_LABEL",
-    "message": "S\u00e9lection des installations et des produits",
+    "message": "Sélection des installations et des produits",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_REQUIRED_ERROR",
-    "message": "Veuillez s\u00e9lectionner l'\u00e9tablissement et le produit",
+    "message": "Veuillez sélectionner l'établissement et le produit",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -895,7 +895,7 @@
   },
   {
     "code": "STOCK_METRICS",
-    "message": "Mesures boursi\u00e8res",
+    "message": "Mesures boursières",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -907,7 +907,7 @@
   },
   {
     "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
-    "message": "Stock disponible = (Stock re\u00e7u + stock retourn\u00e9) \u2212 (stock sorti + stock perdu + stock endommag\u00e9)",
+    "message": "Stock disponible = (Stock reçu + stock retourné) − (stock sorti + stock perdu + stock endommagé)",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -919,19 +919,19 @@
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
-    "message": "Crosse endommag\u00e9e",
+    "message": "Crosse endommagée",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_EXCESS",
-    "message": "Exc\u00e9dent de stock",
+    "message": "Excédent de stock",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
-    "message": "Actions \u00e9mises",
+    "message": "Actions émises",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -955,25 +955,25 @@
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
-    "message": "Stock re\u00e7u",
+    "message": "Stock reçu",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
-    "message": "Stock retourn\u00e9",
+    "message": "Stock retourné",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
-    "message": "Veuillez s\u00e9lectionner l'entrep\u00f4t et la variante de produit pour afficher le rapport",
+    "message": "Veuillez sélectionner l'entrepôt et la variante de produit pour afficher le rapport",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Livraison r\u00e9ussie",
+    "message": "Livraison réussie",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -985,13 +985,13 @@
   },
   {
     "code": "Security Issues",
-    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "message": "Problèmes de sécurité",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "SecurityIssues",
-    "message": "QUESTIONS DE S\u00c9CURIT\u00c9",
+    "message": "QUESTIONS DE SÉCURITÉ",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1015,7 +1015,7 @@
   },
   {
     "code": "Technical Issues",
-    "message": "Probl\u00e8mes techniques",
+    "message": "Problèmes techniques",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1027,19 +1027,19 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Identifiant unique du b\u00e9n\u00e9ficiaire",
+    "message": "Identifiant unique du bénéficiaire",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "User Account Issues",
-    "message": "Probl\u00e8mes de compte utilisateur",
+    "message": "Problèmes de compte utilisateur",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "UserAccountIssues",
-    "message": "UTILISATEURCOMTEPROBL\u00c8MES",
+    "message": "UTILISATEURCOMTEPROBLÈMES",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1087,13 +1087,13 @@
   },
   {
     "code": "stockReconciliationCard",
-    "message": "S\u00e9lection des installations et des produits",
+    "message": "Sélection des installations et des produits",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "stockReconciliationSuccessPanelCard",
-    "message": "Rapprochement des stocks soumis avec succ\u00e8s",
+    "message": "Rapprochement des stocks soumis avec succès",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1105,7 +1105,7 @@
   },
   {
     "code": "stockreconciliationsuccess_primaryAction",
-    "message": "Retour \u00e0 la maison",
+    "message": "Retour à la maison",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   }

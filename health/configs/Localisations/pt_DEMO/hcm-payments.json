@@ -7,7 +7,7 @@
   },
   {
     "code": "APPROVAL_PENDING",
-    "message": "Pendente para aprova\u00e7\u00e3o",
+    "message": "Pendente para aprovação",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -67,7 +67,7 @@
   },
   {
     "code": "ATTENDANCE_INBOX_CARD",
-    "message": "Registros de presen\u00e7a",
+    "message": "Registros de presença",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -187,7 +187,7 @@
   },
   {
     "code": "CORE_COMMON_GO_TO_HOME_CREATE_SUCCESS",
-    "message": "V\u00e1 para casa",
+    "message": "Vá para casa",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -223,7 +223,7 @@
   },
   {
     "code": "CS_TITLE_MANAGE_BILLS_REVIEWER",
-    "message": "Gerenciar contas (revis\u00e3o)",
+    "message": "Gerenciar contas (revisão)",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -271,7 +271,7 @@
   },
   {
     "code": "ES_INDIVIDUAL_BILL",
-    "message": "Projeto de lei intermedi\u00e1rio",
+    "message": "Projeto de lei intermediário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -307,19 +307,19 @@
   },
   {
     "code": "GO_BACK_TO_HOME",
-    "message": "V\u00e1 para casa",
+    "message": "Vá para casa",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ACTION",
-    "message": "A\u00e7\u00e3o",
+    "message": "Ação",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ACTIONS",
-    "message": "A\u00e7\u00e3o",
+    "message": "Ação",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -331,31 +331,31 @@
   },
   {
     "code": "HCM_AM_ACTIONS_EDIT_ATTENDANCE",
-    "message": "Editar presen\u00e7a",
+    "message": "Editar presença",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ACTION_IN_PROGRESS",
-    "message": "A a\u00e7\u00e3o est\u00e1 em andamento",
+    "message": "A ação está em andamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ACTION_NEEDED_TEAM_CODE",
-    "message": "Atribuir usu\u00e1rios",
+    "message": "Atribuir usuários",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ACTUAL_INTERVENTIONS",
-    "message": "Inscri\u00e7\u00f5es/Interven\u00e7\u00f5es conclu\u00eddas",
+    "message": "Inscrições/Intervenções concluídas",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ADD_JUSTIFICATION_AND_COMMENTS",
-    "message": "Adicione justificativas e coment\u00e1rios",
+    "message": "Adicione justificativas e comentários",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -367,13 +367,13 @@
   },
   {
     "code": "HCM_AM_ALERT_APPROVE_DESCRIPTION",
-    "message": "Uma vez aprovado, voc\u00ea n\u00e3o poder\u00e1 fazer altera\u00e7\u00f5es no atendimento. Tem certeza de que deseja aprovar?",
+    "message": "Uma vez aprovado, você não poderá fazer alterações no atendimento. Tem certeza de que deseja aprovar?",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ALERT_APPROVE_HEADING",
-    "message": "Aprovar participa\u00e7\u00e3o?",
+    "message": "Aprovar participação?",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -391,7 +391,7 @@
   },
   {
     "code": "HCM_AM_ALERT_EDIT_DESCRIPTION",
-    "message": "A edi\u00e7\u00e3o do n\u00famero de dias afetar\u00e1 os pagamentos e congelar\u00e1 o atendimento nesse per\u00edodo.\nTem certeza de que deseja prosseguir?",
+    "message": "A edição do número de dias afetará os pagamentos e congelará o atendimento nesse período.\nTem certeza de que deseja prosseguir?",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -403,7 +403,7 @@
   },
   {
     "code": "HCM_AM_ALERT_PAYMENT_DESCRIPTION",
-    "message": "Este registro ser\u00e1 enviado para Gera\u00e7\u00e3o de Pagamentos. Tem certeza de que deseja continuar?",
+    "message": "Este registro será enviado para Geração de Pagamentos. Tem certeza de que deseja continuar?",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -415,7 +415,7 @@
   },
   {
     "code": "HCM_AM_ALERT_VERIFY_DESCRIPTION",
-    "message": "Este registro ser\u00e1 enviado para verifica\u00e7\u00e3o. Tem certeza de que deseja continuar?",
+    "message": "Este registro será enviado para verificação. Tem certeza de que deseja continuar?",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -463,7 +463,7 @@
   },
   {
     "code": "HCM_AM_APPROVE_COMMENT_LABEL",
-    "message": "Coment\u00e1rios",
+    "message": "Comentários",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -481,7 +481,7 @@
   },
   {
     "code": "HCM_AM_ATTENDANCE",
-    "message": "Presen\u00e7a",
+    "message": "Presença",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -493,25 +493,25 @@
   },
   {
     "code": "HCM_AM_ATTENDANCE_APPROVE_FAILED",
-    "message": "Falha na aprova\u00e7\u00e3o!",
+    "message": "Falha na aprovação!",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ATTENDANCE_APPROVE_SUCCESS",
-    "message": "Presen\u00e7a aprovada",
+    "message": "Presença aprovada",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ATTENDANCE_ASSIGN_USER",
-    "message": "Atribuir usu\u00e1rio",
+    "message": "Atribuir usuário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ATTENDANCE_ATTENDEES",
-    "message": "N\u00famero de participantes",
+    "message": "Número de participantes",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -529,37 +529,37 @@
   },
   {
     "code": "HCM_AM_ATTENDANCE_CAN_NOT_BE_LESS_THAN_ZERO",
-    "message": "A frequ\u00eancia n\u00e3o pode ser inferior a 0 dias",
+    "message": "A frequência não pode ser inferior a 0 dias",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ATTENDANCE_CAN_NOT_EXCEED_EVENT_DURATION_ERROR",
-    "message": "O n\u00famero de dias trabalhados n\u00e3o pode ser superior \u00e0 dura\u00e7\u00e3o do per\u00edodo",
+    "message": "O número de dias trabalhados não pode ser superior à duração do período",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ATTENDANCE_DURATION",
-    "message": "Dura\u00e7\u00e3o do comparecimento",
+    "message": "Duração do comparecimento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ATTENDANCE_EDIT_REGISTER",
-    "message": "Editar registro de presen\u00e7a",
+    "message": "Editar registro de presença",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ATTENDANCE_EXCEEDS_BILLING_PERIOD",
-    "message": "O n\u00famero de dias de atendimento n\u00e3o deve exceder a dura\u00e7\u00e3o do ciclo de faturamento.",
+    "message": "O número de dias de atendimento não deve exceder a duração do ciclo de faturamento.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ATTENDANCE_ID",
-    "message": "ID de presen\u00e7a",
+    "message": "ID de presença",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -571,7 +571,7 @@
   },
   {
     "code": "HCM_AM_ATTENDANCE_MARKED_BY",
-    "message": "Marca de presen\u00e7a por",
+    "message": "Marca de presença por",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -583,7 +583,7 @@
   },
   {
     "code": "HCM_AM_ATTENDANCE_NOT_FIND_USER_LABEL",
-    "message": "N\u00e3o encontra o usu\u00e1rio?",
+    "message": "Não encontra o usuário?",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -601,19 +601,19 @@
   },
   {
     "code": "HCM_AM_ATTENDANCE_PAYMENT_PERIOD_FAILED",
-    "message": "A configura\u00e7\u00e3o do pagamento n\u00e3o est\u00e1 conclu\u00edda para o limite selecionado. Entre em contato com o administrador do sistema.",
+    "message": "A configuração do pagamento não está concluída para o limite selecionado. Entre em contato com o administrador do sistema.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ATTENDANCE_PERIOD_SELECT",
-    "message": "Selecione o per\u00edodo",
+    "message": "Selecione o período",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ATTENDANCE_PLZ_SELECT_BOUNDARY",
-    "message": "Selecione os limites obrigat\u00f3rios",
+    "message": "Selecione os limites obrigatórios",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -631,13 +631,13 @@
   },
   {
     "code": "HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION",
-    "message": "O registro de presen\u00e7a \u00e9 aprovado e o relat\u00f3rio de pagamento pode ser gerado pelo gestor da campanha",
+    "message": "O registro de presença é aprovado e o relatório de pagamento pode ser gerado pelo gestor da campanha",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ATTENDANCE_TABLE_HEADER",
-    "message": "Registro de Presen\u00e7a e Desempenho do Trabalhador",
+    "message": "Registro de Presença e Desempenho do Trabalhador",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -649,13 +649,13 @@
   },
   {
     "code": "HCM_AM_ATTENDANCE_USER_ASSIGN_REGISTER",
-    "message": "Encontre o usu\u00e1rio e atribua para registrar",
+    "message": "Encontre o usuário e atribua para registrar",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ATTENDEE_DE_ENROLL_SUCCESS_MESSAGE",
-    "message": "Participante exclu\u00eddo do registro com sucesso",
+    "message": "Participante excluído do registro com sucesso",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -673,25 +673,25 @@
   },
   {
     "code": "HCM_AM_BANK_ACCOUNT",
-    "message": "Conta banc\u00e1ria",
+    "message": "Conta bancária",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BANK_CODE",
-    "message": "C\u00f3digo do Banco",
+    "message": "Código do Banco",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BENEFICIARY_CODE",
-    "message": "C\u00f3digo do Benefici\u00e1rio",
+    "message": "Código do Beneficiário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BILLING_CYCLE_DURATION_BETWEEN",
-    "message": "A dura\u00e7\u00e3o m\u00ednima do faturamento deve ser",
+    "message": "A duração mínima do faturamento deve ser",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -703,7 +703,7 @@
   },
   {
     "code": "HCM_AM_BILLS_PROCESSING_INFO",
-    "message": "As faturas destacadas em cinza est\u00e3o sendo processadas e n\u00e3o podem ser acionadas. Atualize a p\u00e1gina depois de algum tempo para ver o status mais recente.",
+    "message": "As faturas destacadas em cinza estão sendo processadas e não podem ser acionadas. Atualize a página depois de algum tempo para ver o status mais recente.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -715,13 +715,13 @@
   },
   {
     "code": "HCM_AM_BILL_ACTIONS",
-    "message": "A\u00e7\u00f5es",
+    "message": "Ações",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BILL_AGGREGATION_FOR_EMPLOYEE_MAPPED_AT",
-    "message": "Agrega\u00e7\u00e3o de faturas para funcion\u00e1rios mapeados em",
+    "message": "Agregação de faturas para funcionários mapeados em",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -745,7 +745,7 @@
   },
   {
     "code": "HCM_AM_BILL_DETAIL_UPDATE_ERROR",
-    "message": "Erro! Falha na atualiza\u00e7\u00e3o da fatura.",
+    "message": "Erro! Falha na atualização da fatura.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -769,7 +769,7 @@
   },
   {
     "code": "HCM_AM_BILL_ERROR_INFO_TEXT",
-    "message": "Alguns detalhes est\u00e3o faltando ou incorretos, consulte a tabela abaixo e fa\u00e7a as corre\u00e7\u00f5es necess\u00e1rias.",
+    "message": "Alguns detalhes estão faltando ou incorretos, consulte a tabela abaixo e faça as correções necessárias.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -781,25 +781,25 @@
   },
   {
     "code": "HCM_AM_BILL_GENERATE_ERROR",
-    "message": "N\u00e3o \u00e9 poss\u00edvel gerar faturas antes de concluir o ciclo de cobran\u00e7a anterior.",
+    "message": "Não é possível gerar faturas antes de concluir o ciclo de cobrança anterior.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BILL_GENERATE_INITIATED",
-    "message": "A gera\u00e7\u00e3o da fatura foi iniciada. Aguarde um pouco. Voc\u00ea poder\u00e1 encontrar sua fatura em \"Minhas contas\"",
+    "message": "A geração da fatura foi iniciada. Aguarde um pouco. Você poderá encontrar sua fatura em \"Minhas contas\"",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BILL_GENERATE_INPROGRESS",
-    "message": "A gera\u00e7\u00e3o da fatura est\u00e1 em andamento",
+    "message": "A geração da fatura está em andamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BILL_GENERATION_ALERT_DESCRIPTION",
-    "message": "Uma vez gerado, voc\u00ea n\u00e3o poder\u00e1 gerar outro t\u00edtulo para este per\u00edodo neste limite. Tem certeza de que deseja gerar a fatura?",
+    "message": "Uma vez gerado, você não poderá gerar outro título para este período neste limite. Tem certeza de que deseja gerar a fatura?",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -811,19 +811,19 @@
   },
   {
     "code": "HCM_AM_BILL_GENERATION_FAILED_MESSAGE",
-    "message": "Falha na gera\u00e7\u00e3o falhou",
+    "message": "Falha na geração falhou",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BILL_GENERATION_INITIATED",
-    "message": "Gera\u00e7\u00e3o de fatura iniciada",
+    "message": "Geração de fatura iniciada",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BILL_GENERATION_IN_PROGRESS_MESSAGE",
-    "message": "A gera\u00e7\u00e3o da fatura est\u00e1 em andamento",
+    "message": "A geração da fatura está em andamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -847,31 +847,31 @@
   },
   {
     "code": "HCM_AM_BILL_IS_ALREADY_GENERATED",
-    "message": "A fatura j\u00e1 foi gerada para o limite selecionado",
+    "message": "A fatura já foi gerada para o limite selecionado",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BILL_IS_ALREADY_GENERATED_INFO_MESSAGE",
-    "message": "A fatura j\u00e1 foi gerada para este limite",
+    "message": "A fatura já foi gerada para este limite",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BILL_NOT_FOUND",
-    "message": "Bill n\u00e3o encontrado.",
+    "message": "Bill não encontrado.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BILL_NUMBER",
-    "message": "N\u00famero da conta",
+    "message": "Número da conta",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BILL_PERIOD_DATE",
-    "message": "Per\u00edodo de cobran\u00e7a",
+    "message": "Período de cobrança",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -901,25 +901,25 @@
   },
   {
     "code": "HCM_AM_BILL_VERIFICATION_DONE",
-    "message": "Verifica\u00e7\u00e3o bem-sucedida!",
+    "message": "Verificação bem-sucedida!",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BILL_VERIFICATION_IN_PROGRESS",
-    "message": "A verifica\u00e7\u00e3o dos registros selecionados est\u00e1 em andamento.",
+    "message": "A verificação dos registros selecionados está em andamento.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BILL_VERIFY_ERROR",
-    "message": "Falha na verifica\u00e7\u00e3o.",
+    "message": "Falha na verificação.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BILL_VERIFY_EXCEPTION",
-    "message": "Falha na verifica\u00e7\u00e3o.",
+    "message": "Falha na verificação.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -943,25 +943,25 @@
   },
   {
     "code": "HCM_AM_BREADCRUMBS_ATTENDANCE-APPROVE-FAILED",
-    "message": "Falha na aprova\u00e7\u00e3o de comparecimento",
+    "message": "Falha na aprovação de comparecimento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BREADCRUMBS_ATTENDANCE-APPROVE-SUCCESS",
-    "message": "Presen\u00e7a aprovada com sucesso",
+    "message": "Presença aprovada com sucesso",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BREADCRUMBS_ATTENDANCE_APPROVE_FAILED",
-    "message": "Falha na aprova\u00e7\u00e3o",
+    "message": "Falha na aprovação",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BREADCRUMBS_ATTENDANCE_APPROVE_SUCCESS",
-    "message": "Sucesso na aprova\u00e7\u00e3o",
+    "message": "Sucesso na aprovação",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -973,7 +973,7 @@
   },
   {
     "code": "HCM_AM_BREADCRUMBS_EDIT-ATTENDANCE",
-    "message": "Editar presen\u00e7a",
+    "message": "Editar presença",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -985,7 +985,7 @@
   },
   {
     "code": "HCM_AM_BREADCRUMBS_EDIT_ATTENDANCE",
-    "message": "Editar presen\u00e7a",
+    "message": "Editar presença",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1039,7 +1039,7 @@
   },
   {
     "code": "HCM_AM_BREADCRUMBS_MANAGE_BILLS_PROJECT_SELECTION",
-    "message": "Sele\u00e7\u00e3o de Projetos",
+    "message": "Seleção de Projetos",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1057,31 +1057,31 @@
   },
   {
     "code": "HCM_AM_BREADCRUMBS_PAYMENT_SETUP",
-    "message": "Configura\u00e7\u00e3o de pagamento",
+    "message": "Configuração de pagamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BREADCRUMBS_PAYMENT_SETUP_FAILED",
-    "message": "Falha na configura\u00e7\u00e3o do pagamento",
+    "message": "Falha na configuração do pagamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BREADCRUMBS_PAYMENT_SETUP_SUCCESS",
-    "message": "Configura\u00e7\u00e3o de pagamento",
+    "message": "Configuração de pagamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BREADCRUMBS_PROJECT_AND_AGGREGATION_SELECTION",
-    "message": "Registros de Presen\u00e7a",
+    "message": "Registros de Presença",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BREADCRUMBS_PROJECT_SELECTION",
-    "message": "Sele\u00e7\u00e3o de campanha",
+    "message": "Seleção de campanha",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1099,19 +1099,19 @@
   },
   {
     "code": "HCM_AM_BREADCRUMBS_REVIEWER",
-    "message": "Gerenciar contas (revis\u00e3o)",
+    "message": "Gerenciar contas (revisão)",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BREADCRUMBS_SEND_FOR_APPROVAL_SUCCESS",
-    "message": "Projeto de lei enviado para aprova\u00e7\u00e3o com sucesso",
+    "message": "Projeto de lei enviado para aprovação com sucesso",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BREADCRUMBS_SEND_FOR_REVIEW_SUCCESS",
-    "message": "Projeto de lei enviado para revis\u00e3o com sucesso",
+    "message": "Projeto de lei enviado para revisão com sucesso",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1129,19 +1129,19 @@
   },
   {
     "code": "HCM_AM_BREADCRUMBS_VERIFY_SUCCESS",
-    "message": "Fatura enviada para verifica\u00e7\u00e3o com sucesso",
+    "message": "Fatura enviada para verificação com sucesso",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BREADCRUMBS_VIEW-ATTENDANCE",
-    "message": "Ver presen\u00e7a",
+    "message": "Ver presença",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_BREADCRUMBS_VIEW_ATTENDANCE",
-    "message": "Ver presen\u00e7a",
+    "message": "Ver presença",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1177,7 +1177,7 @@
   },
   {
     "code": "HCM_AM_CAMPAIGN_END_DATE",
-    "message": "Data de t\u00e9rmino da campanha",
+    "message": "Data de término da campanha",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1189,7 +1189,7 @@
   },
   {
     "code": "HCM_AM_CAMPAIGN_START_DATE",
-    "message": "Data de in\u00edcio da campanha",
+    "message": "Data de início da campanha",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1201,13 +1201,13 @@
   },
   {
     "code": "HCM_AM_CANCEL_EDIT",
-    "message": "Cancelar edi\u00e7\u00e3o",
+    "message": "Cancelar edição",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_CAN_NOT_EXCEED",
-    "message": "n\u00e3o pode exceder",
+    "message": "não pode exceder",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1219,7 +1219,7 @@
   },
   {
     "code": "HCM_AM_CHOOSE_BOUNDARY_DESCRIPTION",
-    "message": "Selecione um limite e um per\u00edodo de cobran\u00e7a para visualizar os resultados.",
+    "message": "Selecione um limite e um período de cobrança para visualizar os resultados.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1249,19 +1249,19 @@
   },
   {
     "code": "HCM_AM_COMMENTS",
-    "message": "Coment\u00e1rios",
+    "message": "Comentários",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_COMMENT_LOGS",
-    "message": "Coment\u00e1rios",
+    "message": "Comentários",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_COMMENT_LOG_HEADING",
-    "message": "Registros de coment\u00e1rios",
+    "message": "Registros de comentários",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1273,7 +1273,7 @@
   },
   {
     "code": "HCM_AM_COMMENT_REQUIRED_ERROR_TOAST_MESSAGE",
-    "message": "Por favor adicione os coment\u00e1rios",
+    "message": "Por favor adicione os comentários",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1303,7 +1303,7 @@
   },
   {
     "code": "HCM_AM_CONFIRM_BILL_VERIFICATION",
-    "message": "Confirmar verifica\u00e7\u00e3o de fatura",
+    "message": "Confirmar verificação de fatura",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1315,43 +1315,43 @@
   },
   {
     "code": "HCM_AM_CONFIRM_SAVE_CHANGES_MESSAGE",
-    "message": "Salvar dados atualizados/editados modificar\u00e1 a fatura. Esta a\u00e7\u00e3o n\u00e3o pode ser revertida.",
+    "message": "Salvar dados atualizados/editados modificará a fatura. Esta ação não pode ser revertida.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_CONFIRM_SAVE_HEADING",
-    "message": "Tem certeza de que deseja confirmar os dados banc\u00e1rios do trabalhador?",
+    "message": "Tem certeza de que deseja confirmar os dados bancários do trabalhador?",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_CONFIRM_SAVE_MESSAGE",
-    "message": "Depois que os detalhes forem salvos, eles n\u00e3o poder\u00e3o ser editados novamente",
+    "message": "Depois que os detalhes forem salvos, eles não poderão ser editados novamente",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_CONFIRM_SEND_FOR_REVIEW",
-    "message": "Enviar para revis\u00e3o?",
+    "message": "Enviar para revisão?",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_CONFIRM_SEND_FOR_REVIEW_BILL_MESSAGE",
-    "message": "Tem certeza de que deseja enviar as faturas selecionadas para an\u00e1lise?",
+    "message": "Tem certeza de que deseja enviar as faturas selecionadas para análise?",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_CONFIRM_SEND_FOR_REVIEW_MESSAGE",
-    "message": "Tem certeza de que deseja enviar as faturas selecionadas para an\u00e1lise?",
+    "message": "Tem certeza de que deseja enviar as faturas selecionadas para análise?",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_CONFIRM_VERIFY_MESSAGE",
-    "message": "Voc\u00ea ir\u00e1 verificar a(s) fatura(s) selecionada(s). Tem certeza de que deseja prosseguir?",
+    "message": "Você irá verificar a(s) fatura(s) selecionada(s). Tem certeza de que deseja prosseguir?",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1393,13 +1393,13 @@
   },
   {
     "code": "HCM_AM_DEFUALT_BILL_INBOX_INFO_MESSAGE",
-    "message": "Levar\u00e1 algum tempo para gerar as contas e as contas geradas s\u00e3o encontradas em Minhas contas",
+    "message": "Levará algum tempo para gerar as contas e as contas geradas são encontradas em Minhas contas",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_DENROLLMENT_DATE",
-    "message": "Data de cancelamento de inscri\u00e7\u00e3o",
+    "message": "Data de cancelamento de inscrição",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1441,13 +1441,13 @@
   },
   {
     "code": "HCM_AM_DOWNLOAD_BILL_BEFORE_MAKING_CHANGES",
-    "message": "Baixe a fatura antes de fazer qualquer altera\u00e7\u00e3o",
+    "message": "Baixe a fatura antes de fazer qualquer alteração",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_DOWNLOAD_BILL_BEFORE_MAKING_CHANGES_DESCRIPTION",
-    "message": "As taxas editadas n\u00e3o podem ser revertidas e os valores originais n\u00e3o ser\u00e3o recuper\u00e1veis. Baixe o projeto de lei agora, voc\u00ea pode precisar dele como justificativa para an\u00e1lise.",
+    "message": "As taxas editadas não podem ser revertidas e os valores originais não serão recuperáveis. Baixe o projeto de lei agora, você pode precisar dele como justificativa para análise.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1465,25 +1465,25 @@
   },
   {
     "code": "HCM_AM_DOWNLOAD_NOT_AVAILABLE",
-    "message": "Arquivo n\u00e3o dispon\u00edvel para download.",
+    "message": "Arquivo não disponível para download.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_DOWNLOAD_REPORT",
-    "message": "Baixar relat\u00f3rio",
+    "message": "Baixar relatório",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE",
-    "message": "Relat\u00f3rio ainda n\u00e3o dispon\u00edvel. Ele estar\u00e1 dispon\u00edvel somente ap\u00f3s os inscritos serem aprovados.",
+    "message": "Relatório ainda não disponível. Ele estará disponível somente após os inscritos serem aprovados.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_DURATION",
-    "message": "Dura\u00e7\u00e3o (em dias)",
+    "message": "Duração (em dias)",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1501,7 +1501,7 @@
   },
   {
     "code": "HCM_AM_EDIT_ATTENDANCE",
-    "message": "Editar presen\u00e7a",
+    "message": "Editar presença",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1513,7 +1513,7 @@
   },
   {
     "code": "HCM_AM_EDIT_NOT_ALLOWED_FOR_STATUS",
-    "message": "Os dados do benefici\u00e1rio/banco de um trabalhador s\u00f3 poder\u00e3o ser atualizados se a verifica\u00e7\u00e3o estiver pendente ou falhar.",
+    "message": "Os dados do beneficiário/banco de um trabalhador só poderão ser atualizados se a verificação estiver pendente ou falhar.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1543,7 +1543,7 @@
   },
   {
     "code": "HCM_AM_ENROLLMENT_DATE",
-    "message": "Data de inscri\u00e7\u00e3o",
+    "message": "Data de inscrição",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1555,19 +1555,19 @@
   },
   {
     "code": "HCM_AM_ENTER_TEAM_CODE",
-    "message": "Insira o c\u00f3digo da etiqueta",
+    "message": "Insira o código da etiqueta",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ERROR_MESSAGE",
-    "message": "A data de inscri\u00e7\u00e3o do participante n\u00e3o pode ser anterior \u00e0 data de inscri\u00e7\u00e3o",
+    "message": "A data de inscrição do participante não pode ser anterior à data de inscrição",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_EVENT_DURATION",
-    "message": "Dura\u00e7\u00e3o do evento (em dias)",
+    "message": "Duração do evento (em dias)",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1579,19 +1579,19 @@
   },
   {
     "code": "HCM_AM_EXCEL_GENERATION_FAILED",
-    "message": "Falha ao gerar relat\u00f3rio do Excel",
+    "message": "Falha ao gerar relatório do Excel",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_FAILED_BILL",
-    "message": "Falha na gera\u00e7\u00e3o da fatura",
+    "message": "Falha na geração da fatura",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_FAILED_REPORT_GENERATION",
-    "message": "Falha ao gerar relat\u00f3rio",
+    "message": "Falha ao gerar relatório",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1621,7 +1621,7 @@
   },
   {
     "code": "HCM_AM_FILTER_AND_CHOOSE_BOUNDARY_PLACEHOLDER_TEXT",
-    "message": "Selecione um limite e um per\u00edodo de cobran\u00e7a para visualizar as faturas desse per\u00edodo.",
+    "message": "Selecione um limite e um período de cobrança para visualizar as faturas desse período.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1633,19 +1633,19 @@
   },
   {
     "code": "HCM_AM_FOOD",
-    "message": "Remunera\u00e7\u00e3o",
+    "message": "Remuneração",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_FOOD_ALLOWANCE",
-    "message": "Subs\u00eddio de alimenta\u00e7\u00e3o",
+    "message": "Subsídio de alimentação",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_FORWARD",
-    "message": "Avan\u00e7ar",
+    "message": "Avançar",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1663,7 +1663,7 @@
   },
   {
     "code": "HCM_AM_GENDER",
-    "message": "G\u00eanero",
+    "message": "Gênero",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1693,7 +1693,7 @@
   },
   {
     "code": "HCM_AM_GENERATE_BILLS_CANNOT_BE_CALLED_INFO_MESSAGE",
-    "message": "Selecione todos os filtros obrigat\u00f3rios",
+    "message": "Selecione todos os filtros obrigatórios",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1735,91 +1735,91 @@
   },
   {
     "code": "HCM_AM_HR_USER_NAME_LABEL",
-    "message": "Nome de usu\u00e1rio",
+    "message": "Nome de usuário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_HR_USER_PHONE_LABEL",
-    "message": "N\u00famero de telem\u00f3vel",
+    "message": "Número de telemóvel",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_INFO",
-    "message": "Informa\u00e7\u00f5es",
+    "message": "Informações",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_INFO_TAG_CODE_MSG",
-    "message": "Quer preencher o Tag Code? Se sim, pressione Enter Tag. Caso contr\u00e1rio, atribua-o.",
+    "message": "Quer preencher o Tag Code? Se sim, pressione Enter Tag. Caso contrário, atribua-o.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_INITIATED_INFO_MESSAGE",
-    "message": "A fatura j\u00e1 foi gerada para este limite",
+    "message": "A fatura já foi gerada para este limite",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_INPROGRESS_INFO_MESSAGE",
-    "message": "A gera\u00e7\u00e3o da fatura est\u00e1 em andamento",
+    "message": "A geração da fatura está em andamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_INTERMEDIATE",
-    "message": "Intermedi\u00e1rio",
+    "message": "Intermediário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_INVALID_BANK_ACCOUNT_ERROR",
-    "message": "A conta banc\u00e1ria deve ter exatamente 10 d\u00edgitos.",
+    "message": "A conta bancária deve ter exatamente 10 dígitos.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_INVALID_BANK_CODE_ERROR",
-    "message": "O c\u00f3digo do banco deve ter 3 ou 9 d\u00edgitos.",
+    "message": "O código do banco deve ter 3 ou 9 dígitos.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_INVALID_BENEFICIARY_CODE_ERROR",
-    "message": "O c\u00f3digo do benefici\u00e1rio deve ser alfanum\u00e9rico e ter at\u00e9 35 caracteres.",
+    "message": "O código do beneficiário deve ser alfanumérico e ter até 35 caracteres.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_INVALID_MOBILE_NUMBER_ERROR",
-    "message": "O n\u00famero de telefone deve ter exatamente 10 d\u00edgitos.",
+    "message": "O número de telefone deve ter exatamente 10 dígitos.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_INVALID_NAME_ERROR",
-    "message": "O nome deve ser alfanum\u00e9rico e ter at\u00e9 100 caracteres.",
+    "message": "O nome deve ser alfanumérico e ter até 100 caracteres.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_IS",
-    "message": "\u00e9",
+    "message": "é",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_LGA_LEVEL",
-    "message": "N\u00edvel LGA",
+    "message": "Nível LGA",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_LOCALITY_NOT_SELECTED",
-    "message": "A localidade n\u00e3o est\u00e1 selecionada",
+    "message": "A localidade não está selecionada",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1831,19 +1831,19 @@
   },
   {
     "code": "HCM_AM_MANAGE_BILLS_DESCRIPTION",
-    "message": "Verifique faturas rec\u00e9m-enviadas, revise aquelas j\u00e1 verificadas, edite detalhes quando necess\u00e1rio, baixe c\u00f3pias para seus registros e envie faturas para aprova\u00e7\u00e3o.  Mantenha-se organizado e garanta que todas as faturas sejam processadas sem problemas durante o processo de revis\u00e3o.",
+    "message": "Verifique faturas recém-enviadas, revise aquelas já verificadas, edite detalhes quando necessário, baixe cópias para seus registros e envie faturas para aprovação.  Mantenha-se organizado e garanta que todas as faturas sejam processadas sem problemas durante o processo de revisão.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_MAX_ALLOW",
-    "message": "M\u00e1ximo permitido para",
+    "message": "Máximo permitido para",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_MINIMUM_BILLING_CYCLE_DURATION",
-    "message": "A dura\u00e7\u00e3o m\u00ednima do faturamento deve ser",
+    "message": "A duração mínima do faturamento deve ser",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1867,19 +1867,19 @@
   },
   {
     "code": "HCM_AM_MOBILE_NUMBER",
-    "message": "N\u00famero de telem\u00f3vel",
+    "message": "Número de telemóvel",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_MUSTER_ROLL_ID",
-    "message": "ID do Rolo de Reuni\u00e3o",
+    "message": "ID do Rolo de Reunião",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_MUSTOROLE_GENERATION_INPROGRESS_INFO_MESSAGE",
-    "message": "A gera\u00e7\u00e3o do Muster Roll est\u00e1 em andamento",
+    "message": "A geração do Muster Roll está em andamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1891,25 +1891,25 @@
   },
   {
     "code": "HCM_AM_NEW_EMPLOYEE",
-    "message": "Novo funcion\u00e1rio",
+    "message": "Novo funcionário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_NEXT_LABEL",
-    "message": "Pr\u00f3ximo",
+    "message": "Próximo",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_NOT_RE_ENABLED_DESCRIPTION",
-    "message": "Uma vez desabilitado, o usu\u00e1rio n\u00e3o poder\u00e1 ser rehabilitado neste cadastro",
+    "message": "Uma vez desabilitado, o usuário não poderá ser rehabilitado neste cadastro",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_NOT_VERIFIED",
-    "message": "N\u00e3o verificado",
+    "message": "Não verificado",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1921,37 +1921,37 @@
   },
   {
     "code": "HCM_AM_NO_JUSTIFICATION_FOUND",
-    "message": "Arquivo de justificativa n\u00e3o encontrado.",
+    "message": "Arquivo de justificativa não encontrado.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_NO_OF_ATTENDEE",
-    "message": "N\u00ba de participantes",
+    "message": "Nº de participantes",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_NO_OF_DAYS_WORKED",
-    "message": "N\u00ba de dias trabalhados",
+    "message": "Nº de dias trabalhados",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_NO_OF_REGISTERS",
-    "message": "N\u00ba de registros",
+    "message": "Nº de registros",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_NO_ROLES_FOUND",
-    "message": "Nenhuma fun\u00e7\u00e3o dispon\u00edvel para a campanha selecionada",
+    "message": "Nenhuma função disponível para a campanha selecionada",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_NO_SCHEMA_RATE_FOUND",
-    "message": "Nenhum esquema de divis\u00e3o de taxas dispon\u00edvel",
+    "message": "Nenhum esquema de divisão de taxas disponível",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1963,37 +1963,37 @@
   },
   {
     "code": "HCM_AM_NUMBER_OF_DAYS",
-    "message": "N\u00ba de dias",
+    "message": "Nº de dias",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_NUMBER_OF_FAILURE",
-    "message": "N\u00famero de falhas",
+    "message": "Número de falhas",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_NUMBER_OF_FAILURES",
-    "message": "N\u00ba de falhas",
+    "message": "Nº de falhas",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_NUMBER_OF_PAYEES",
-    "message": "N\u00ba de benefici\u00e1rios",
+    "message": "Nº de beneficiários",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_NUMBER_OF_REGISTERS",
-    "message": "N\u00famero de registros",
+    "message": "Número de registros",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_NUMBER_OF_WORKERS",
-    "message": "N\u00ba de Trabalhadores",
+    "message": "Nº de Trabalhadores",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2017,25 +2017,25 @@
   },
   {
     "code": "HCM_AM_PAYEE_NAME",
-    "message": "Nome do benefici\u00e1rio",
+    "message": "Nome do beneficiário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYEE_NUMBER",
-    "message": "N\u00famero do benefici\u00e1rio",
+    "message": "Número do beneficiário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYEE_PHONE_NUMBER",
-    "message": "N\u00famero de telefone do benefici\u00e1rio",
+    "message": "Número de telefone do beneficiário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYEMENT_BILL_AGGREGATION_HEAD",
-    "message": "Forne\u00e7a os detalhes do projeto e da agrega\u00e7\u00e3o da fatura",
+    "message": "Forneça os detalhes do projeto e da agregação da fatura",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2053,7 +2053,7 @@
   },
   {
     "code": "HCM_AM_PAYEMENT_SELECT_BILLING_CYCLE_CUSTOM_NO_DAYS",
-    "message": "Insira o n\u00famero de dias",
+    "message": "Insira o número de dias",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2089,25 +2089,25 @@
   },
   {
     "code": "HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_ERR_NO_SKILL",
-    "message": "N\u00e3o h\u00e1 dados de habilidades dispon\u00edveis para este tipo de campanha",
+    "message": "Não há dados de habilidades disponíveis para este tipo de campanha",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_HEAD",
-    "message": "Configurar sal\u00e1rios da fun\u00e7\u00e3o",
+    "message": "Configurar salários da função",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_INFO_SELECT_CAMPAIGN",
-    "message": "Selecione uma campanha para ver fun\u00e7\u00f5es e sal\u00e1rios",
+    "message": "Selecione uma campanha para ver funções e salários",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_SUB_HEAD",
-    "message": "Configure sal\u00e1rios de pagamento para cada fun\u00e7\u00e3o de uma campanha. Os trabalhadores ser\u00e3o pagos com base no n\u00famero de dias trabalhados.",
+    "message": "Configure salários de pagamento para cada função de uma campanha. Os trabalhadores serão pagos com base no número de dias trabalhados.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2131,25 +2131,25 @@
   },
   {
     "code": "HCM_AM_PAYMENT_GENERATION_DONE",
-    "message": "Gera\u00e7\u00e3o de pagamento com sucesso!",
+    "message": "Geração de pagamento com sucesso!",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYMENT_GENERATION_ERROR",
-    "message": "Falha na gera\u00e7\u00e3o do pagamento!",
+    "message": "Falha na geração do pagamento!",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYMENT_GENERATION_EXCEPTION",
-    "message": "Falha na gera\u00e7\u00e3o do pagamento!",
+    "message": "Falha na geração do pagamento!",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYMENT_GENERATION_IN_PROGRESS",
-    "message": "A gera\u00e7\u00e3o de pagamento para registros selecionados est\u00e1 em andamento. Por favor, verifique depois de algum tempo.",
+    "message": "A geração de pagamento para registros selecionados está em andamento. Por favor, verifique depois de algum tempo.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2161,55 +2161,55 @@
   },
   {
     "code": "HCM_AM_PAYMENT_REVIEWER_COMMENTS",
-    "message": "Coment\u00e1rios do revisor de pagamento",
+    "message": "Comentários do revisor de pagamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYMENT_SETUP_CONFIRM_ALERT_CREATE_DES",
-    "message": "Voc\u00ea est\u00e1 prestes a fazer altera\u00e7\u00f5es na configura\u00e7\u00e3o de pagamento. Revise os detalhes cuidadosamente antes de prosseguir, pois isso determinar\u00e1 como os pagamentos da campanha ser\u00e3o processados. Tem certeza de que deseja continuar?",
+    "message": "Você está prestes a fazer alterações na configuração de pagamento. Revise os detalhes cuidadosamente antes de prosseguir, pois isso determinará como os pagamentos da campanha serão processados. Tem certeza de que deseja continuar?",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYMENT_SETUP_CONFIRM_ALERT_HEADER",
-    "message": "Confirmar configura\u00e7\u00e3o de pagamento?",
+    "message": "Confirmar configuração de pagamento?",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS",
-    "message": "A configura\u00e7\u00e3o do pagamento foi conclu\u00edda para a campanha Campanha ABC. Voc\u00ea ainda pode prosseguir e fazer altera\u00e7\u00f5es antes do in\u00edcio da campanha",
+    "message": "A configuração do pagamento foi concluída para a campanha Campanha ABC. Você ainda pode prosseguir e fazer alterações antes do início da campanha",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1",
-    "message": "A configura\u00e7\u00e3o do pagamento da campanha foi conclu\u00edda",
+    "message": "A configuração do pagamento da campanha foi concluída",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2",
-    "message": "Voc\u00ea ainda pode prosseguir e fazer altera\u00e7\u00f5es antes do in\u00edcio da campanha.",
+    "message": "Você ainda pode prosseguir e fazer alterações antes do início da campanha.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYMENT_SETUP_HEADER_ERROR",
-    "message": "Falha na configura\u00e7\u00e3o do pagamento",
+    "message": "Falha na configuração do pagamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS",
-    "message": "Configura\u00e7\u00e3o de pagamento conclu\u00edda",
+    "message": "Configuração de pagamento concluída",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS",
-    "message": "Configura\u00e7\u00e3o de pagamento conclu\u00edda",
+    "message": "Configuração de pagamento concluída",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2227,7 +2227,7 @@
   },
   {
     "code": "HCM_AM_PDF_GENERATION_FAILED",
-    "message": "Falha ao gerar relat\u00f3rio em PDF",
+    "message": "Falha ao gerar relatório em PDF",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2245,13 +2245,13 @@
   },
   {
     "code": "HCM_AM_PENDING_FOR_APPROVAL",
-    "message": "Pendente para aprova\u00e7\u00e3o",
+    "message": "Pendente para aprovação",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PENDING_FOR_EDIT",
-    "message": "Pendente para edi\u00e7\u00e3o",
+    "message": "Pendente para edição",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2269,19 +2269,19 @@
   },
   {
     "code": "HCM_AM_PENDING_REGISTER_AND_APPROVAL_REGISTER_VALIDATION_FAILED_INFO_MESSAGE",
-    "message": "N\u00e3o \u00e9 poss\u00edvel gerar um t\u00edtulo pois existem registros pendentes para serem aprovados.",
+    "message": "Não é possível gerar um título pois existem registros pendentes para serem aprovados.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PENDING_REVIEW",
-    "message": "Pendente para revis\u00e3o",
+    "message": "Pendente para revisão",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PENDING_VERIFICATION",
-    "message": "Verifica\u00e7\u00e3o pendente",
+    "message": "Verificação pendente",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2293,13 +2293,13 @@
   },
   {
     "code": "HCM_AM_PERFORMANCE_METRIC",
-    "message": "Atua\u00e7\u00e3o (Inscri\u00e7\u00f5es/Interven\u00e7\u00f5es)",
+    "message": "Atuação (Inscrições/Intervenções)",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PER_DAY",
-    "message": "di\u00e1rias",
+    "message": "diárias",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2311,19 +2311,19 @@
   },
   {
     "code": "HCM_AM_PLEASE_FILL_REQUIRED_FIELDS",
-    "message": "Por favor preencha todos os campos obrigat\u00f3rios.",
+    "message": "Por favor preencha todos os campos obrigatórios.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS",
-    "message": "Por favor selecione todos os campos obrigat\u00f3rios",
+    "message": "Por favor selecione todos os campos obrigatórios",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PLEASE_SELECT_ONE_VERIFY",
-    "message": "Selecione qualquer uma das seguintes op\u00e7\u00f5es para verificar suas faturas",
+    "message": "Selecione qualquer uma das seguintes opções para verificar suas faturas",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2335,25 +2335,25 @@
   },
   {
     "code": "HCM_AM_PROGRESS_BILL",
-    "message": "A gera\u00e7\u00e3o da fatura est\u00e1 em andamento",
+    "message": "A geração da fatura está em andamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PROGRESS_REPORT_GENERATION",
-    "message": "A gera\u00e7\u00e3o do relat\u00f3rio est\u00e1 em andamento",
+    "message": "A geração do relatório está em andamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PROJECT_AND_BILL_AGGREGATION_DESCRIPTION",
-    "message": "Escolha seu projeto e a agrega\u00e7\u00e3o de faturas para funcion\u00e1rios mapeados para um limite para visualizar os registros mapeados para o projeto.",
+    "message": "Escolha seu projeto e a agregação de faturas para funcionários mapeados para um limite para visualizar os registros mapeados para o projeto.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PROJECT_AND_BILL_AGGREGATION_HEADING",
-    "message": "Forne\u00e7a os detalhes do projeto e da agrega\u00e7\u00e3o da fatura",
+    "message": "Forneça os detalhes do projeto e da agregação da fatura",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2419,19 +2419,19 @@
   },
   {
     "code": "HCM_AM_REPORT_DOWNLOAD_FAILED",
-    "message": "Falha no download do relat\u00f3rio.",
+    "message": "Falha no download do relatório.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_REPORT_GENERATION_FAILED",
-    "message": "Falha na gera\u00e7\u00e3o do relat\u00f3rio.",
+    "message": "Falha na geração do relatório.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_REPORT_GENERATION_IN_PROGRESS",
-    "message": "Por favor, espere um pouco. A gera\u00e7\u00e3o do relat\u00f3rio est\u00e1 em andamento.",
+    "message": "Por favor, espere um pouco. A geração do relatório está em andamento.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2443,7 +2443,7 @@
   },
   {
     "code": "HCM_AM_REVIEW_IN_PROGRESS",
-    "message": "Revis\u00e3o em andamento",
+    "message": "Revisão em andamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2467,7 +2467,7 @@
   },
   {
     "code": "HCM_AM_ROWS_PER_PAGE",
-    "message": "Linhas por p\u00e1gina",
+    "message": "Linhas por página",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2485,19 +2485,19 @@
   },
   {
     "code": "HCM_AM_SAVE_CHANGES",
-    "message": "Salvar altera\u00e7\u00f5es",
+    "message": "Salvar alterações",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_SAVE_CHANGES_AND_FORWARD",
-    "message": "Salvar altera\u00e7\u00f5es e encaminhar",
+    "message": "Salvar alterações e encaminhar",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_SAVE_CHANGES_SUCCESS",
-    "message": "Altera\u00e7\u00f5es salvas com sucesso.",
+    "message": "Alterações salvas com sucesso.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2509,7 +2509,7 @@
   },
   {
     "code": "HCM_AM_SEARCH_USER",
-    "message": "Pesquisar usu\u00e1rio",
+    "message": "Pesquisar usuário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2521,19 +2521,19 @@
   },
   {
     "code": "HCM_AM_SELECTED_BILL_DETAILS_SEND_FOR_EDIT_SUCCESS",
-    "message": "Os registros selecionados foram enviados para edi\u00e7\u00e3o com sucesso.",
+    "message": "Os registros selecionados foram enviados para edição com sucesso.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_SELECTE_DATA_RANGE",
-    "message": "Per\u00edodo",
+    "message": "Período",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_SELECT_BOUNDARY_TILL_LAST_LEVEL",
-    "message": "Selecione os limites obrigat\u00f3rios",
+    "message": "Selecione os limites obrigatórios",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2545,13 +2545,13 @@
   },
   {
     "code": "HCM_AM_SELECT_PERIODS_EMPTY",
-    "message": "Nenhum per\u00edodo de faturamento encontrado para o per\u00edodo selecionado",
+    "message": "Nenhum período de faturamento encontrado para o período selecionado",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_SELECT_USER_REQUIRED",
-    "message": "Selecione um usu\u00e1rio.",
+    "message": "Selecione um usuário.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2563,13 +2563,13 @@
   },
   {
     "code": "HCM_AM_SEND_FOR_APPROVAL",
-    "message": "Enviar para aprova\u00e7\u00e3o",
+    "message": "Enviar para aprovação",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_SEND_FOR_APPROVAL_SUCCESS",
-    "message": "Projeto de lei enviado para aprova\u00e7\u00e3o com sucesso",
+    "message": "Projeto de lei enviado para aprovação com sucesso",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2581,19 +2581,19 @@
   },
   {
     "code": "HCM_AM_SEND_FOR_EDIT",
-    "message": "Enviar para edi\u00e7\u00e3o",
+    "message": "Enviar para edição",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_SEND_FOR_REVIEW",
-    "message": "Enviar para revis\u00e3o",
+    "message": "Enviar para revisão",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_SEND_FOR_REVIEW_SUCCESS",
-    "message": "Projeto de lei enviado para revis\u00e3o com sucesso",
+    "message": "Projeto de lei enviado para revisão com sucesso",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2605,13 +2605,13 @@
   },
   {
     "code": "HCM_AM_SENT_FOR_APPROVAL",
-    "message": "Enviado para aprova\u00e7\u00e3o",
+    "message": "Enviado para aprovação",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_SENT_FOR_REVIEW",
-    "message": "Enviado para revis\u00e3o",
+    "message": "Enviado para revisão",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2653,7 +2653,7 @@
   },
   {
     "code": "HCM_AM_STATUS_LOG_FOR_LABEL",
-    "message": "Registros de coment\u00e1rios",
+    "message": "Registros de comentários",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2677,19 +2677,19 @@
   },
   {
     "code": "HCM_AM_TAG_LABEL",
-    "message": "C\u00f3digo de etiqueta",
+    "message": "Código de etiqueta",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_TARGET_ACHIEVED",
-    "message": "Meta alcan\u00e7ada",
+    "message": "Meta alcançada",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_TASK_ID_NOT_FOUND",
-    "message": "Tarefa n\u00e3o encontrada.",
+    "message": "Tarefa não encontrada.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2725,7 +2725,7 @@
   },
   {
     "code": "HCM_AM_TOTAL_WAGE",
-    "message": "Sal\u00e1rio total ($)",
+    "message": "Salário total ($)",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2785,13 +2785,13 @@
   },
   {
     "code": "HCM_AM_USERTYPE",
-    "message": "Tipo de usu\u00e1rio",
+    "message": "Tipo de usuário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_USER_DETAILS",
-    "message": "Detalhes do usu\u00e1rio",
+    "message": "Detalhes do usuário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2809,13 +2809,13 @@
   },
   {
     "code": "HCM_AM_VERIFICATION_FAILED",
-    "message": "Falha na verifica\u00e7\u00e3o",
+    "message": "Falha na verificação",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_VERIFICATION_IN_PROGRESS",
-    "message": "Verifica\u00e7\u00e3o em andamento",
+    "message": "Verificação em andamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2851,7 +2851,7 @@
   },
   {
     "code": "HCM_AM_VERIFY_SUCCESS",
-    "message": "Fatura enviada para verifica\u00e7\u00e3o com sucesso",
+    "message": "Fatura enviada para verificação com sucesso",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2869,7 +2869,7 @@
   },
   {
     "code": "HCM_AM_VIEW_ATTENDANCE",
-    "message": "Ver presen\u00e7a",
+    "message": "Ver presença",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2929,13 +2929,13 @@
   },
   {
     "code": "HCM_AM_VIEW_REGISTER_DISABLE_USER",
-    "message": "Desabilitar usu\u00e1rio",
+    "message": "Desabilitar usuário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_VIEW_REGISTER_PLACE_HOLDER",
-    "message": "Pesquisar por nome/n\u00famero de identifica\u00e7\u00e3o",
+    "message": "Pesquisar por nome/número de identificação",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2947,7 +2947,7 @@
   },
   {
     "code": "HCM_AM_WAGE",
-    "message": "Remunera\u00e7\u00e3o",
+    "message": "Remuneração",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2995,7 +2995,7 @@
   },
   {
     "code": "HCM_AM_YES_DISABLE_USER",
-    "message": "Sim, desabilitar usu\u00e1rio",
+    "message": "Sim, desabilitar usuário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3019,7 +3019,7 @@
   },
   {
     "code": "HCM_HR_EMP_MOBILE_LABEL",
-    "message": "N\u00famero de telem\u00f3vel",
+    "message": "Número de telemóvel",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3037,13 +3037,13 @@
   },
   {
     "code": "HCM_HR_ROLE_NO_LABEL",
-    "message": "Fun\u00e7\u00f5es",
+    "message": "Funções",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HEALTH_FACILITY_WORKER",
-    "message": "Trabalhador de unidade de sa\u00fade",
+    "message": "Trabalhador de unidade de saúde",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3061,7 +3061,7 @@
   },
   {
     "code": "INTERMEDIATE",
-    "message": "Intermedi\u00e1rio",
+    "message": "Intermediário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3073,7 +3073,7 @@
   },
   {
     "code": "MISSING_PAYEE_NAME",
-    "message": "O nome do benefici\u00e1rio est\u00e1 faltando",
+    "message": "O nome do beneficiário está faltando",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3085,7 +3085,7 @@
   },
   {
     "code": "MR-DN",
-    "message": "Quimiopreven\u00e7\u00e3o sazonal da mal\u00e1ria (SMC)",
+    "message": "Quimioprevenção sazonal da malária (SMC)",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3115,7 +3115,7 @@
   },
   {
     "code": "PAYMENTS_LINK_PAYMENTS_MANAGE_BILLSREVIEWER",
-    "message": "Gerenciar contas (revis\u00e3o)",
+    "message": "Gerenciar contas (revisão)",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3127,19 +3127,19 @@
   },
   {
     "code": "PAYMENT_TITLE",
-    "message": "T\u00edtulo de pagamento:",
+    "message": "Título de pagamento:",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "PDF_STATIC_LABEL_BILL_BILLING_PERIOD",
-    "message": "Per\u00edodo",
+    "message": "Período",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "PDF_STATIC_LABEL_BILL_BILLING_PERIOD_RANGE",
-    "message": "Per\u00edodo",
+    "message": "Período",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3169,13 +3169,13 @@
   },
   {
     "code": "PDF_STATIC_LABEL_BILL_TABLE_FOOD",
-    "message": "Subs\u00eddio Alimentar",
+    "message": "Subsídio Alimentar",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "PDF_STATIC_LABEL_BILL_TABLE_ID_NUMBER",
-    "message": "N\u00famero de identifica\u00e7\u00e3o",
+    "message": "Número de identificação",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3187,13 +3187,13 @@
   },
   {
     "code": "PDF_STATIC_LABEL_BILL_TABLE_MOBILE_NUMBER",
-    "message": "N\u00famero de telem\u00f3vel",
+    "message": "Número de telemóvel",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "PDF_STATIC_LABEL_BILL_TABLE_NUMBER_OF_DAYS",
-    "message": "N\u00famero de dias atendidos",
+    "message": "Número de dias atendidos",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3211,7 +3211,7 @@
   },
   {
     "code": "PDF_STATIC_LABEL_BILL_TABLE_SERIAL_NUMBER",
-    "message": "SL N\u00e3o",
+    "message": "SL Não",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3229,7 +3229,7 @@
   },
   {
     "code": "PDF_STATIC_LABEL_BILL_TABLE_TOTAL_WAGE",
-    "message": "Sal\u00e1rio total/dia ($)",
+    "message": "Salário total/dia ($)",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3253,7 +3253,7 @@
   },
   {
     "code": "PDF_STATIC_LABEL_BILL_TOTAL_NUMBER_OF_WORKERS",
-    "message": "N\u00famero total de trabalhadores",
+    "message": "Número total de trabalhadores",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3277,13 +3277,13 @@
   },
   {
     "code": "PDF_STATIC_LABEL_REPORT_RUN_BY",
-    "message": "Relat\u00f3rio executado por",
+    "message": "Relatório executado por",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "PDF_STATIC_LABEL_REPORT_RUN_DT_TIME",
-    "message": "Data e hora de execu\u00e7\u00e3o do relat\u00f3rio",
+    "message": "Data e hora de execução do relatório",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3295,7 +3295,7 @@
   },
   {
     "code": "PDF_STATIC_LABEL_TOTAL_BILL_TABLE_TOTAL_WAGE",
-    "message": "Sal\u00e1rio total ($)",
+    "message": "Salário total ($)",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3313,13 +3313,13 @@
   },
   {
     "code": "PENDING_VERIFICATION",
-    "message": "Verifica\u00e7\u00e3o pendente",
+    "message": "Verificação pendente",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "PGR_SEARCH_COMPLAINT",
-    "message": "Pesquisar reclama\u00e7\u00f5es",
+    "message": "Pesquisar reclamações",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3343,7 +3343,7 @@
   },
   {
     "code": "WAREHOUSE_MANAGER",
-    "message": "Gerente de Armaz\u00e9m",
+    "message": "Gerente de Armazém",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3379,19 +3379,19 @@
   },
   {
     "code": "attendance-approve-failed",
-    "message": "Falha na aprova\u00e7\u00e3o de comparecimento",
+    "message": "Falha na aprovação de comparecimento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "attendance-approve-success",
-    "message": "Sucesso na aprova\u00e7\u00e3o de comparecimento",
+    "message": "Sucesso na aprovação de comparecimento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "edit-attendance",
-    "message": "Editar presen\u00e7a",
+    "message": "Editar presença",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3415,7 +3415,7 @@
   },
   {
     "code": "view-attendance",
-    "message": "Ver presen\u00e7a",
+    "message": "Ver presença",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   }

@@ -1,55 +1,55 @@
 [
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message",
-    "message": "O comprimento n\u00e3o deve ser inferior a 2 caracteres.",
+    "message": "O comprimento não deve ser inferior a 2 caracteres.",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message",
-    "message": "O comprimento n\u00e3o deve ser inferior a 2 caracteres.",
+    "message": "O comprimento não deve ser inferior a 2 caracteres.",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message",
-    "message": "O comprimento n\u00e3o deve ser inferior a 2 caracteres.",
+    "message": "O comprimento não deve ser inferior a 2 caracteres.",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
   {
     "code": "BARCODE_BATCH_NO_REQUIRED",
-    "message": "Este \u00e9 um campo obrigat\u00f3rio.",
+    "message": "Este é um campo obrigatório.",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
   {
     "code": "BARCODE_BATCH_NUMBER",
-    "message": "N\u00famero do lote do c\u00f3digo de barras",
+    "message": "Número do lote do código de barras",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
   {
     "code": "BARCODE_EXPIRY_DATE",
-    "message": "Data de validade do c\u00f3digo de barras",
+    "message": "Data de validade do código de barras",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
   {
     "code": "BARCODE_SERIAL_NO_REQUIRED",
-    "message": "Este \u00e9 um campo obrigat\u00f3rio.",
+    "message": "Este é um campo obrigatório.",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
   {
     "code": "BARCODE_SERIAL_NUMBER",
-    "message": "N\u00famero de s\u00e9rie do c\u00f3digo de barras",
+    "message": "Número de série do código de barras",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
   {
     "code": "ENTER_MANUAL_CODE",
-    "message": "Insira o c\u00f3digo manualmente",
+    "message": "Insira o código manualmente",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
@@ -67,31 +67,31 @@
   },
   {
     "code": "INVALID_RESOURCE_CODE",
-    "message": "C\u00f3digo de barras inv\u00e1lido",
+    "message": "Código de barras inválido",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
   {
     "code": "MANUAL_SCAN",
-    "message": "N\u00e3o foi poss\u00edvel digitalizar o c\u00f3digo QR?",
+    "message": "Não foi possível digitalizar o código QR?",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
   {
     "code": "RESOURCES_ALREADY_SCANNED",
-    "message": "Recurso j\u00e1 verificado",
+    "message": "Recurso já verificado",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
   {
     "code": "RESOURCE_ALREADY_SCANNED",
-    "message": "Recurso j\u00e1 verificado",
+    "message": "Recurso já verificado",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
   {
     "code": "RESOURCE_CODE",
-    "message": "C\u00f3digo de recurso",
+    "message": "Código de recurso",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
@@ -103,13 +103,13 @@
   },
   {
     "code": "RESOURCE_SCAN_FAILED",
-    "message": "Falha na verifica\u00e7\u00e3o de recursos",
+    "message": "Falha na verificação de recursos",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
   {
     "code": "SCANNER_DIALOG_CONTENT",
-    "message": "O n\u00famero de recursos verificados \u00e9 menor que a quantidade m\u00ednima de {quantity}.",
+    "message": "O número de recursos verificados é menor que a quantidade mínima de {quantity}.",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   },
@@ -151,7 +151,7 @@
   },
   {
     "code": "SCANNER_LABEL",
-    "message": "Digitalize o c\u00f3digo QR",
+    "message": "Digitalize o código QR",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
   }

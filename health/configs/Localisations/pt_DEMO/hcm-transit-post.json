@@ -1,13 +1,13 @@
 [
   {
     "code": "BARCODE_BATCH_NO_REQUIRED",
-    "message": "O n\u00famero do lote \u00e9 obrigat\u00f3rio",
+    "message": "O número do lote é obrigatório",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "BARCODE_BATCH_NUMBER",
-    "message": "N\u00famero do lote",
+    "message": "Número do lote",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
@@ -19,43 +19,43 @@
   },
   {
     "code": "BARCODE_SERIAL_NO_REQUIRED",
-    "message": "O n\u00famero de s\u00e9rie \u00e9 obrigat\u00f3rio",
+    "message": "O número de série é obrigatório",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "BARCODE_SERIAL_NUMBER",
-    "message": "N\u00famero de s\u00e9rie",
+    "message": "Número de série",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "BUS_STOP",
-    "message": "Ponto de \u00f4nibus",
+    "message": "Ponto de ônibus",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "GS1_00",
-    "message": "C\u00f3digo do cont\u00eainer de remessa serial",
+    "message": "Código do contêiner de remessa serial",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "GS1_01",
-    "message": "N\u00famero global do item comercial",
+    "message": "Número global do item comercial",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "GS1_10",
-    "message": "Lote ou n\u00famero de lote",
+    "message": "Lote ou número de lote",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "GS1_11",
-    "message": "Data de produ\u00e7\u00e3o",
+    "message": "Data de produção",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
@@ -67,13 +67,13 @@
   },
   {
     "code": "GS1_21",
-    "message": "N\u00famero de s\u00e9rie",
+    "message": "Número de série",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "RAILWAY_STATION",
-    "message": "Esta\u00e7\u00e3o Ferrovi\u00e1ria",
+    "message": "Estação Ferroviária",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
@@ -85,19 +85,19 @@
   },
   {
     "code": "TRANSIT_POST_ALERT_POPUP_DESCRIPTION",
-    "message": "Voc\u00ea est\u00e1 digitalizando um novo frasco. Certifique-se de ter terminado o frasco anterior antes de digitalizar o outro.",
+    "message": "Você está digitalizando um novo frasco. Certifique-se de ter terminado o frasco anterior antes de digitalizar o outro.",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "TRANSIT_POST_ALERT_POPUP_TITLE",
-    "message": "Aten\u00e7\u00e3o!",
+    "message": "Atenção!",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "TRANSIT_POST_BATCH_NUMBER_LABEL",
-    "message": "N\u00famero do lote",
+    "message": "Número do lote",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
@@ -109,7 +109,7 @@
   },
   {
     "code": "TRANSIT_POST_BENEFICIARY_AGE_LABEL",
-    "message": "Idade do benefici\u00e1rio",
+    "message": "Idade do beneficiário",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
@@ -121,7 +121,7 @@
   },
   {
     "code": "TRANSIT_POST_COUNT_ALERT_POPUP_PREFIX_DESCRIPTION",
-    "message": "Voc\u00ea est\u00e1 se aproximando",
+    "message": "Você está se aproximando",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
@@ -151,7 +151,7 @@
   },
   {
     "code": "TRANSIT_POST_NAME_LABEL",
-    "message": "Nome do posto de tr\u00e2nsito",
+    "message": "Nome do posto de trânsito",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
@@ -163,7 +163,7 @@
   },
   {
     "code": "TRANSIT_POST_RESOURCE_CODE_LABEL",
-    "message": "C\u00f3digo de recurso",
+    "message": "Código de recurso",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
@@ -175,13 +175,13 @@
   },
   {
     "code": "TRANSIT_POST_RESOURCE_SCANNED_LABEL",
-    "message": "Recurso em m\u00e3os",
+    "message": "Recurso em mãos",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "TRANSIT_POST_SCAN_RESOURCE_LABEL",
-    "message": "Recurso de verifica\u00e7\u00e3o",
+    "message": "Recurso de verificação",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
@@ -199,31 +199,31 @@
   },
   {
     "code": "TRANSIT_POST_TODAY_DELIVERIES_DESCRIPTION",
-    "message": "Entregas conclu\u00eddas hoje pelo usu\u00e1rio",
+    "message": "Entregas concluídas hoje pelo usuário",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "TRANSIT_POST_TOTAL_DELIVERIES_DESCRIPTION",
-    "message": "Total de entregas conclu\u00eddas pelo usu\u00e1rio",
+    "message": "Total de entregas concluídas pelo usuário",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "TRANSIT_POST_TYPE_LABEL",
-    "message": "Tipo de posto de tr\u00e2nsito",
+    "message": "Tipo de posto de trânsito",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "TRANSIT_POST_TYPE_SELECTION_LABEL",
-    "message": "Selecione o tipo de posto de tr\u00e2nsito",
+    "message": "Selecione o tipo de posto de trânsito",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   },
   {
     "code": "TRANSIT_POST_VACCINATION_DETAILS_LABEL",
-    "message": "Detalhes da vacina\u00e7\u00e3o",
+    "message": "Detalhes da vacinação",
     "module": "hcm-transit-post",
     "locale": "pt_DEMO"
   }

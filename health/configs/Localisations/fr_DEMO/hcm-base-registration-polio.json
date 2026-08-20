@@ -43,19 +43,19 @@
   },
   {
     "code": "ADMINISTERED_SUCCESS",
-    "message": "Vaccin\u00e9 avec succ\u00e8s",
+    "message": "Vacciné avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "ADMINISTRATION_FAILED",
-    "message": "\u00c9chec de la vaccination",
+    "message": "Échec de la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "ADMINISTRATION_SUCCESS",
-    "message": "Succ\u00e8s de la vaccination",
+    "message": "Succès de la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -67,31 +67,31 @@
   },
   {
     "code": "AFRICA_IS_POLIO_FREE",
-    "message": "L\u2019Afrique est exempte de polio",
+    "message": "L’Afrique est exempte de polio",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "AFRICA_POLIO_FREE",
-    "message": "L\u2019Afrique est exempte de polio",
+    "message": "L’Afrique est exempte de polio",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "AGE_OF_BENEFICIARY",
-    "message": "\u00c2ge",
+    "message": "Âge",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "AGE_VALIDATION",
-    "message": "Veuillez entrer un \u00e2ge valide",
+    "message": "Veuillez entrer un âge valide",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "AGE_VALIDATION_ADDMEMBER",
-    "message": "Veuillez entrer un \u00e2ge valide",
+    "message": "Veuillez entrer un âge valide",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -103,7 +103,7 @@
   },
   {
     "code": "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SCREEN_DESCRIPTION",
-    "message": "Compl\u00e9tez les actions de la liste de contr\u00f4le de vaccination",
+    "message": "Complétez les actions de la liste de contrôle de vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -133,19 +133,19 @@
   },
   {
     "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_WRITE_CODE",
-    "message": "\u00c9crire du code",
+    "message": "Écrire du code",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_ALERT_DESCRIPTION",
-    "message": "Veuillez confirmer le statut d'\u00e9ligibilit\u00e9",
+    "message": "Veuillez confirmer le statut d'éligibilité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_ALERT_TITLE",
-    "message": "Confirmer l'\u00e9ligibilit\u00e9",
+    "message": "Confirmer l'éligibilité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -157,55 +157,55 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_LABEL_REQUIRED_MESSAGE",
-    "message": "Veuillez r\u00e9pondre \u00e0 la question d'\u00e9ligibilit\u00e9 1",
+    "message": "Veuillez répondre à la question d'éligibilité 1",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_LABEL",
-    "message": "L'enfant a-t-il de la fi\u00e8vre ?",
+    "message": "L'enfant a-t-il de la fièvre ?",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_LABEL_REQUIRED_MESSAGE",
-    "message": "Veuillez r\u00e9pondre \u00e0 la question d'\u00e9ligibilit\u00e9 2",
+    "message": "Veuillez répondre à la question d'éligibilité 2",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL",
-    "message": "Les SPAQ ont-ils \u00e9t\u00e9 livr\u00e9s avant",
+    "message": "Les SPAQ ont-ils été livrés avant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL_REQUIRED_MESSAGE",
-    "message": "Veuillez r\u00e9pondre \u00e0 la question d'\u00e9ligibilit\u00e9 3",
+    "message": "Veuillez répondre à la question d'éligibilité 3",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL",
-    "message": "Crit\u00e8res d'\u00e9ligibilit\u00e9 4",
+    "message": "Critères d'éligibilité 4",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL_REQUIRED_MESSAGE",
-    "message": "Veuillez r\u00e9pondre \u00e0 la question d'\u00e9ligibilit\u00e9 4",
+    "message": "Veuillez répondre à la question d'éligibilité 4",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_DESCRIPTION",
-    "message": "Remplissez la liste de contr\u00f4le d'\u00e9ligibilit\u00e9",
+    "message": "Remplissez la liste de contrôle d'éligibilité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITY_CHECKLIST_SCREEN_HEADING",
-    "message": "Liste de contr\u00f4le d'\u00e9ligibilit\u00e9",
+    "message": "Liste de contrôle d'éligibilité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -223,25 +223,25 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION",
-    "message": "Entrez les d\u00e9tails du membre",
+    "message": "Entrez les détails du membre",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember",
-    "message": "Entrez les d\u00e9tails du nouveau membre",
+    "message": "Entrez les détails du nouveau membre",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
-    "message": "D\u00e9tails du b\u00e9n\u00e9ficiaire",
+    "message": "Détails du bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING_addmember",
-    "message": "Ajouter les d\u00e9tails du membre",
+    "message": "Ajouter les détails du membre",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -289,13 +289,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip",
-    "message": "S\u00e9lectionnez la date de naissance ou entrez l'\u00e2ge",
+    "message": "Sélectionnez la date de naissance ou entrez l'âge",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip_addmember",
-    "message": "S\u00e9lectionnez la date de naissance ou entrez l'\u00e2ge",
+    "message": "Sélectionnez la date de naissance ou entrez l'âge",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -325,13 +325,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message",
-    "message": "Le nom de famille doit comporter au moins 2 caract\u00e8res",
+    "message": "Le nom de famille doit comporter au moins 2 caractères",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message_addmember",
-    "message": "Le nom de famille doit comporter au moins 2 caract\u00e8res",
+    "message": "Le nom de famille doit comporter au moins 2 caractères",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -349,19 +349,19 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
-    "message": "Le nom doit comporter entre 2 et 200\u00a0caract\u00e8res",
+    "message": "Le nom doit comporter entre 2 et 200 caractères",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
-    "message": "D\u00e9tails d'identification",
+    "message": "Détails d'identification",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers_addmember",
-    "message": "D\u00e9tails d'identification",
+    "message": "Détails d'identification",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -385,91 +385,91 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily_mandatory_message",
-    "message": "La s\u00e9lection du chef de famille est obligatoire",
+    "message": "La sélection du chef de famille est obligatoire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual",
-    "message": "Pr\u00e9nom",
+    "message": "Prénom",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_addmember",
-    "message": "Pr\u00e9nom",
+    "message": "Prénom",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText",
-    "message": "Saisissez le pr\u00e9nom de l'enfant",
+    "message": "Saisissez le prénom de l'enfant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText_addmember",
-    "message": "Saisissez le pr\u00e9nom de l'enfant",
+    "message": "Saisissez le prénom de l'enfant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message",
-    "message": "Le pr\u00e9nom est obligatoire",
+    "message": "Le prénom est obligatoire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message_addmember",
-    "message": "Le pr\u00e9nom est obligatoire",
+    "message": "Le prénom est obligatoire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message",
-    "message": "Le nom doit comporter entre 2 et 200\u00a0caract\u00e8res",
+    "message": "Le nom doit comporter entre 2 et 200 caractères",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message_addmember",
-    "message": "Le nom doit comporter entre 2 et 200\u00a0caract\u00e8res",
+    "message": "Le nom doit comporter entre 2 et 200 caractères",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone",
-    "message": "Num\u00e9ro de t\u00e9l\u00e9phone",
+    "message": "Numéro de téléphone",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_addmember",
-    "message": "Num\u00e9ro de t\u00e9l\u00e9phone",
+    "message": "Numéro de téléphone",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText",
-    "message": "Entrez le num\u00e9ro de t\u00e9l\u00e9phone mobile",
+    "message": "Entrez le numéro de téléphone mobile",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText_addmember",
-    "message": "Entrez le num\u00e9ro de t\u00e9l\u00e9phone mobile",
+    "message": "Entrez le numéro de téléphone mobile",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip",
-    "message": "Entrez le num\u00e9ro de portable",
+    "message": "Entrez le numéro de portable",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip_addmember",
-    "message": "Entrez le num\u00e9ro de portable",
+    "message": "Entrez le numéro de portable",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -499,7 +499,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message",
-    "message": "La ligne d'adresse 1 doit contenir au moins 2\u00a0caract\u00e8res",
+    "message": "La ligne d'adresse 1 doit contenir au moins 2 caractères",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -517,43 +517,43 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message",
-    "message": "La ligne d'adresse 2 doit contenir au moins 2\u00a0caract\u00e8res",
+    "message": "La ligne d'adresse 2 doit contenir au moins 2 caractères",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea",
-    "message": "Nom du r\u00e8glement",
+    "message": "Nom du règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_helpText",
-    "message": "S\u00e9lectionnez le r\u00e8glement",
+    "message": "Sélectionnez le règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_mandatory_message",
-    "message": "Le nom du r\u00e8glement est requis",
+    "message": "Le nom du règlement est requis",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark",
-    "message": "Point de rep\u00e8re",
+    "message": "Point de repère",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_helpText",
-    "message": "Entrez un point de rep\u00e8re \u00e0 proximit\u00e9",
+    "message": "Entrez un point de repère à proximité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message",
-    "message": "Le point de rep\u00e8re doit comporter au moins 2\u00a0caract\u00e8res",
+    "message": "Le point de repère doit comporter au moins 2 caractères",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -565,13 +565,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_helpText",
-    "message": "Capturez les coordonn\u00e9es GPS",
+    "message": "Capturez les coordonnées GPS",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_mandatory_message",
-    "message": "Les coordonn\u00e9es de localisation sont requises",
+    "message": "Les coordonnées de localisation sont requises",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -589,7 +589,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_DETAILS_SCREEN_DESCRIPTION",
-    "message": "Consultez et g\u00e9rez les informations du b\u00e9n\u00e9ficiaire enregistr\u00e9.",
+    "message": "Consultez et gérez les informations du bénéficiaire enregistré.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -601,31 +601,31 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_DESCRIPTION",
-    "message": "Entrez les d\u00e9tails de l'emplacement de la maison",
+    "message": "Entrez les détails de l'emplacement de la maison",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",
-    "message": "Emplacement du m\u00e9nage",
+    "message": "Emplacement du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
-    "message": "Saisissez le nom de la rue, le num\u00e9ro de la maison ou le nom du b\u00e2timent.",
+    "message": "Saisissez le nom de la rue, le numéro de la maison ou le nom du bâtiment.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
-    "message": "Saisissez des d\u00e9tails d'adresse suppl\u00e9mentaires tels que la localit\u00e9 ou le nom de la r\u00e9gion.",
+    "message": "Saisissez des détails d'adresse supplémentaires tels que la localité ou le nom de la région.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_helpText",
-    "message": "S\u00e9lectionnez la zone administrative o\u00f9 se situe la maison du b\u00e9n\u00e9ficiaire.",
+    "message": "Sélectionnez la zone administrative où se situe la maison du bénéficiaire.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -649,13 +649,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION",
-    "message": "Entrez les d\u00e9tails de la vaccination",
+    "message": "Entrez les détails de la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
-    "message": "D\u00e9tails de la vaccination",
+    "message": "Détails de la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -697,13 +697,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION",
-    "message": "Entrez les d\u00e9tails du m\u00e9nage",
+    "message": "Entrez les détails du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
-    "message": "D\u00e9tails du m\u00e9nage",
+    "message": "Détails du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -721,7 +721,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration_mandatory_message",
-    "message": "La date du d\u00e9nombrement est requise",
+    "message": "La date du dénombrement est requise",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -739,7 +739,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_max_message",
-    "message": "Le nombre de membres doit \u00eatre compris entre 1 et 10",
+    "message": "Le nombre de membres doit être compris entre 1 et 10",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -751,7 +751,7 @@
   },
   {
     "code": "APPONE_UNABLETODELIVER_LATLNG_LABEL",
-    "message": "Coordonn\u00e9es GPS",
+    "message": "Coordonnées GPS",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -787,37 +787,37 @@
   },
   {
     "code": "APP_CONFIG_FLOW_BENEFICIARYDETAILS",
-    "message": "D\u00e9tails du b\u00e9n\u00e9ficiaire",
+    "message": "Détails du bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_FLOW_COMPLAINT_CREATE",
-    "message": "Cr\u00e9er une plainte",
+    "message": "Créer une plainte",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_FLOW_DELIVERY",
-    "message": "D\u00e9tails de livraison",
+    "message": "Détails de livraison",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_FLOW_DELIVERYSUCCESS",
-    "message": "Livraison r\u00e9ussie",
+    "message": "Livraison réussie",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_FLOW_HOUSEHOLD",
-    "message": "D\u00e9tails du chef de famille",
+    "message": "Détails du chef de famille",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_FLOW_HOUSEHOLDOVERVIEW",
-    "message": "Aper\u00e7u du m\u00e9nage",
+    "message": "Aperçu du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -829,25 +829,25 @@
   },
   {
     "code": "APP_CONFIG_FLOW_REDOSE",
-    "message": "Revoir les d\u00e9tails",
+    "message": "Revoir les détails",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_FLOW_REFERRAL_CREATE",
-    "message": "Cr\u00e9er une r\u00e9f\u00e9rence",
+    "message": "Créer une référence",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_FLOW_SEARCHBENEFICIARY",
-    "message": "Rechercher un b\u00e9n\u00e9ficiaire",
+    "message": "Rechercher un bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_FLOW_STOCKRECONCILIATIONDETAILS",
-    "message": "D\u00e9tails du rapprochement des stocks",
+    "message": "Détails du rapprochement des stocks",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -859,7 +859,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_VACCINATED_ELSEWHERE",
-    "message": "Vaccin\u00e9 ailleurs",
+    "message": "Vacciné ailleurs",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -871,25 +871,25 @@
   },
   {
     "code": "APP_CONFIG_PAGE_BENEFICIARYLOCATION",
-    "message": "Localisation du b\u00e9n\u00e9ficiaire",
+    "message": "Localisation du bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_PAGE_CLOSEHOUSEHOLDDETAILS",
-    "message": "D\u00e9tails des enfants manqu\u00e9s",
+    "message": "Détails des enfants manqués",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_PAGE_DELIVERYDETAILS",
-    "message": "D\u00e9tails de livraison",
+    "message": "Détails de livraison",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_PAGE_HOUSEHOLDDETAILS",
-    "message": "D\u00e9tails du m\u00e9nage",
+    "message": "Détails du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -907,13 +907,13 @@
   },
   {
     "code": "APP_CONFIG_PAGE_RECORDSTOCK_STOCKPRODUCTDETAILS",
-    "message": "D\u00e9tails du produit en stock",
+    "message": "Détails du produit en stock",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_PAGE_REDOSEDETAILS",
-    "message": "Revoir les d\u00e9tails",
+    "message": "Revoir les détails",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -925,7 +925,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_VACCINATEDELSEWHERE",
-    "message": "Vaccin\u00e9 ailleurs",
+    "message": "Vacciné ailleurs",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -949,13 +949,13 @@
   },
   {
     "code": "AT_FARM",
-    "message": "\u00c0 la ferme",
+    "message": "À la ferme",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "AT_SCHOOL",
-    "message": "\u00c0 l'\u00e9cole",
+    "message": "À l'école",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -997,25 +997,25 @@
   },
   {
     "code": "BENEFICIARY_DETAILS_DESC",
-    "message": "Afficher les d\u00e9tails de la vaccination des enfants",
+    "message": "Afficher les détails de la vaccination des enfants",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_DETAILS_HEADING",
-    "message": "D\u00e9tails des enfants",
+    "message": "Détails des enfants",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_DIED",
-    "message": "Enfant d\u00e9c\u00e9d\u00e9",
+    "message": "Enfant décédé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_DIED_STATUS",
-    "message": "Enfant d\u00e9c\u00e9d\u00e9",
+    "message": "Enfant décédé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1039,37 +1039,37 @@
   },
   {
     "code": "BENEFICIARY_NOT_ELIGIBLE",
-    "message": "Le b\u00e9n\u00e9ficiaire ne r\u00e9pond pas aux crit\u00e8res d'\u00e9ligibilit\u00e9",
+    "message": "Le bénéficiaire ne répond pas aux critères d'éligibilité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "Enfant r\u00e9f\u00e9r\u00e9",
+    "message": "Enfant référé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "Enfant refus\u00e9",
+    "message": "Enfant refusé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_REFUSED_STATUS",
-    "message": "Enfant refus\u00e9",
+    "message": "Enfant refusé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_TAG_ALREADY_ASSIGNED",
-    "message": "Cette balise enfant est d\u00e9j\u00e0 attribu\u00e9e",
+    "message": "Cette balise enfant est déjà attribuée",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "BODY_ITEM_complaintNumber_LABEL",
-    "message": "Num\u00e9ro de plainte",
+    "message": "Numéro de plainte",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1087,7 +1087,7 @@
   },
   {
     "code": "BODY_ITEM_mobileNumber_LABEL",
-    "message": "Num\u00e9ro de portable",
+    "message": "Numéro de portable",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1105,7 +1105,7 @@
   },
   {
     "code": "CAMPAIGN_DELIVERY_TAB_SUB_TEXT_ONCHO",
-    "message": "Param\u00e9trage des conditions de livraison pour les campagnes de type Onchocercose.",
+    "message": "Paramétrage des conditions de livraison pour les campagnes de type Onchocercose.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1129,13 +1129,13 @@
   },
   {
     "code": "CHILD_VACCINATED_IN_ROUTINE",
-    "message": "Enfant vaccin\u00e9 en routine",
+    "message": "Enfant vacciné en routine",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "CHILD_WAS_SICK",
-    "message": "L'enfant \u00e9tait malade",
+    "message": "L'enfant était malade",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1147,7 +1147,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Enfants manqu\u00e9s",
+    "message": "Enfants manqués",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1159,13 +1159,13 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
-    "message": "Assurez-vous que le nom du village correspond \u00e0 celui o\u00f9 vous vous trouvez aujourd'hui. Sinon, cliquez sur la liste d\u00e9roulante du village dans le coin sup\u00e9rieur droit pour le modifier.",
+    "message": "Assurez-vous que le nom du village correspond à celui où vous vous trouvez aujourd'hui. Sinon, cliquez sur la liste déroulante du village dans le coin supérieur droit pour le modifier.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
-    "message": "D\u00e9tails des enfants manqu\u00e9s",
+    "message": "Détails des enfants manqués",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1189,19 +1189,19 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
-    "message": "Nom du chef de m\u00e9nage",
+    "message": "Nom du chef de ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_MIN_LENGTH_ERROR",
-    "message": "Le nom doit comporter au moins 3\u00a0caract\u00e8res",
+    "message": "Le nom doit comporter au moins 3 caractères",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_LABEL",
-    "message": "Coordonn\u00e9es GPS",
+    "message": "Coordonnées GPS",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1231,7 +1231,7 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_headName_ERROR",
-    "message": "Le nom du chef de m\u00e9nage est requis",
+    "message": "Le nom du chef de ménage est requis",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1243,43 +1243,43 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_reasonForRefusal_ERROR",
-    "message": "Veuillez s\u00e9lectionner un motif de refus",
+    "message": "Veuillez sélectionner un motif de refus",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_reasonNotVaccinated_ERROR",
-    "message": "Veuillez s\u00e9lectionner une raison pour ne pas vacciner",
+    "message": "Veuillez sélectionner une raison pour ne pas vacciner",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_whereWasChild_ERROR",
-    "message": "Veuillez s\u00e9lectionner l'endroit o\u00f9 se trouvait l'enfant",
+    "message": "Veuillez sélectionner l'endroit où se trouvait l'enfant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
-    "message": "Les donn\u00e9es ont \u00e9t\u00e9 enregistr\u00e9es avec succ\u00e8s",
+    "message": "Les données ont été enregistrées avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION1",
-    "message": "Les donn\u00e9es ont \u00e9t\u00e9 enregistr\u00e9es avec succ\u00e8s",
+    "message": "Les données ont été enregistrées avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
-    "message": "Donn\u00e9es enregistr\u00e9es avec succ\u00e8s",
+    "message": "Données enregistrées avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING1",
-    "message": "Donn\u00e9es enregistr\u00e9es avec succ\u00e8s",
+    "message": "Données enregistrées avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1309,13 +1309,13 @@
   },
   {
     "code": "COMPLAINTS_RAISED_FOR_MYSELF",
-    "message": "Moi-m\u00eame",
+    "message": "Moi-même",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "COMPLAINT_CREATE",
-    "message": "Cr\u00e9er une plainte",
+    "message": "Créer une plainte",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1333,31 +1333,31 @@
   },
   {
     "code": "COMPLETED_ON",
-    "message": "Termin\u00e9 le",
+    "message": "Terminé le",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "CONCERNS_ABOUT_COVID19",
-    "message": "Pr\u00e9occupations concernant le COVID-19",
+    "message": "Préoccupations concernant le COVID-19",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "CONCERNS_ABOUT_NOPV",
-    "message": "Pr\u00e9occupations concernant le nVPO",
+    "message": "Préoccupations concernant le nVPO",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
-    "message": "B\u00e9n\u00e9ficiaire introuvable",
+    "message": "Bénéficiaire introuvable",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-    "message": "Nous n\u2019avons pas pu retrouver ce b\u00e9n\u00e9ficiaire dans les dossiers. Vous pouvez l'ajouter en tant que nouveau b\u00e9n\u00e9ficiaire.",
+    "message": "Nous n’avons pas pu retrouver ce bénéficiaire dans les dossiers. Vous pouvez l'ajouter en tant que nouveau bénéficiaire.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1375,19 +1375,19 @@
   },
   {
     "code": "COVID_RELATED",
-    "message": "Li\u00e9 au COVID",
+    "message": "Lié au COVID",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT",
-    "message": "D\u00e9faut",
+    "message": "Défaut",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "DELIVERY",
-    "message": "D\u00e9tails de livraison",
+    "message": "Détails de livraison",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1405,25 +1405,25 @@
   },
   {
     "code": "DELIVERY_SUCCESSFUL_PANEL_CARD_DESC",
-    "message": "La vaccination a \u00e9t\u00e9 enregistr\u00e9e avec succ\u00e8s",
+    "message": "La vaccination a été enregistrée avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "DELIVERY_SUCCESSFUL_PANEL_CARD_HEADING",
-    "message": "Vaccination enregistr\u00e9e avec succ\u00e8s",
+    "message": "Vaccination enregistrée avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "DIARRHOEA",
-    "message": "Diarrh\u00e9e",
+    "message": "Diarrhée",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "DIGIT_HCM_CLOSEHOUSEHOLD_MODULE",
-    "message": "Enfants manqu\u00e9s",
+    "message": "Enfants manqués",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1435,37 +1435,37 @@
   },
   {
     "code": "DOWNLOAD_BENEFICIARY_IDS",
-    "message": "T\u00e9l\u00e9charger les identifiants des b\u00e9n\u00e9ficiaires",
+    "message": "Télécharger les identifiants des bénéficiaires",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "DRUG_SE_CC",
-    "message": "Effet secondaire du m\u00e9dicament du cycle en cours",
+    "message": "Effet secondaire du médicament du cycle en cours",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "DRUG_SE_PC",
-    "message": "Effet secondaire du m\u00e9dicament du cycle pr\u00e9c\u00e9dent",
+    "message": "Effet secondaire du médicament du cycle précédent",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "DUPLICATE_ERROR",
-    "message": "Ce formulaire n'a pas \u00e9t\u00e9 configur\u00e9 correctement. Veuillez l'actualiser, le v\u00e9rifier et le corriger.",
+    "message": "Ce formulaire n'a pas été configuré correctement. Veuillez l'actualiser, le vérifier et le corriger.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "Data Issues",
-    "message": "Probl\u00e8mes de donn\u00e9es",
+    "message": "Problèmes de données",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "Default",
-    "message": "D\u00e9faut",
+    "message": "Défaut",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1489,13 +1489,13 @@
   },
   {
     "code": "FEVER",
-    "message": "Fi\u00e8vre",
+    "message": "Fièvre",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "FEVER_INELIGIBLE",
-    "message": "Fi\u00e8vre (in\u00e9ligible)",
+    "message": "Fièvre (inéligible)",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1519,13 +1519,13 @@
   },
   {
     "code": "FOOTER_ACTION_beneficiaryIdMinCheck_LABEL",
-    "message": "T\u00e9l\u00e9charger les identifiants des b\u00e9n\u00e9ficiaires",
+    "message": "Télécharger les identifiants des bénéficiaires",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "FOOTER_ACTION_beneficiaryTag_LABEL",
-    "message": "B\u00e9n\u00e9ficiaire",
+    "message": "Bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1579,7 +1579,7 @@
   },
   {
     "code": "FOOTER_ACTION_registerBeneficiary_LABEL",
-    "message": "Inscrire le b\u00e9n\u00e9ficiaire",
+    "message": "Inscrire le bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1591,7 +1591,7 @@
   },
   {
     "code": "FOOTER_ACTION_saveFilter2_LABEL",
-    "message": "T\u00e9l\u00e9charger les identifiants",
+    "message": "Télécharger les identifiants",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1615,7 +1615,7 @@
   },
   {
     "code": "FOOTER_ACTION_searchScanBeneficiaryButton_LABEL",
-    "message": "B\u00e9n\u00e9ficiaire du scan",
+    "message": "Bénéficiaire du scan",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1645,7 +1645,7 @@
   },
   {
     "code": "FUNERAL",
-    "message": "Fun\u00e9railles",
+    "message": "Funérailles",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1675,7 +1675,7 @@
   },
   {
     "code": "GoHome",
-    "message": "Rentrer \u00e0 la maison",
+    "message": "Rentrer à la maison",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1699,13 +1699,13 @@
   },
   {
     "code": "HCM_ADDMEMBER_VALIDATION_INVALID_AGE",
-    "message": "Veuillez entrer un \u00e2ge valide",
+    "message": "Veuillez entrer un âge valide",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ADD_MEMBER_DESCRIPTION",
-    "message": "Saisissez les d\u00e9tails du nouveau membre du foyer.",
+    "message": "Saisissez les détails du nouveau membre du foyer.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1723,7 +1723,7 @@
   },
   {
     "code": "HCM_BENEFICIARY_AGE_LABEL",
-    "message": "\u00c2ge",
+    "message": "Âge",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1747,7 +1747,7 @@
   },
   {
     "code": "HCM_BENEFICIARY_MOBILE_LABEL",
-    "message": "Num\u00e9ro de portable",
+    "message": "Numéro de portable",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1765,25 +1765,25 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_DETAILS_DESCRIPTION",
-    "message": "Assurez-vous que le nom du village correspond \u00e0 l'emplacement du m\u00e9nage.",
+    "message": "Assurez-vous que le nom du village correspond à l'emplacement du ménage.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_GPS_LABEL",
-    "message": "Emplacement d\u00e9tect\u00e9",
+    "message": "Emplacement détecté",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_HEAD_NAME_LABEL",
-    "message": "Nom du chef de m\u00e9nage",
+    "message": "Nom du chef de ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_MISSED_CHILDREN_LABEL",
-    "message": "D\u00e9tails des enfants manqu\u00e9s",
+    "message": "Détails des enfants manqués",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1801,25 +1801,25 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_REASON_CHILD_VACCINATED_ROUTINE",
-    "message": "Enfant vaccin\u00e9 en routine",
+    "message": "Enfant vacciné en routine",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_REASON_HOUSE_NOT_REVISITED",
-    "message": "Maison non revisit\u00e9e",
+    "message": "Maison non revisitée",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_REASON_NOT_VACCINATED_LABEL",
-    "message": "Raison pour laquelle l'enfant n'a pas \u00e9t\u00e9 vaccin\u00e9",
+    "message": "Raison pour laquelle l'enfant n'a pas été vacciné",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_REASON_NOT_VISITED",
-    "message": "Non visit\u00e9",
+    "message": "Non visité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1837,31 +1837,31 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_AFRICA_POLIO_FREE",
-    "message": "L\u2019Afrique est exempte de polio",
+    "message": "L’Afrique est exempte de polio",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CHILD_SICK",
-    "message": "L'enfant \u00e9tait malade",
+    "message": "L'enfant était malade",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CONCERNS_COVID",
-    "message": "Pr\u00e9occupations concernant le COVID-19",
+    "message": "Préoccupations concernant le COVID-19",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_CONCERNS_NOPV",
-    "message": "Pr\u00e9occupations concernant le nVPO2",
+    "message": "Préoccupations concernant le nVPO2",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_REFUSAL_NOT_DECISION_MAKER",
-    "message": "Pas d\u00e9cideur",
+    "message": "Pas décideur",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1891,13 +1891,13 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_SETTLEMENT_NAME_LABEL",
-    "message": "Nom du r\u00e8glement",
+    "message": "Nom du règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_SUCCESS_DESCRIPTION",
-    "message": "Les donn\u00e9es ont \u00e9t\u00e9 enregistr\u00e9es avec succ\u00e8s",
+    "message": "Les données ont été enregistrées avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1909,13 +1909,13 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_SUCCESS_HEADING",
-    "message": "Donn\u00e9es enregistr\u00e9es avec succ\u00e8s",
+    "message": "Données enregistrées avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_VILLAGE_NAME_LABEL",
-    "message": "Nom du r\u00e8glement",
+    "message": "Nom du règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1927,7 +1927,7 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_WHERE_MARKET",
-    "message": "March\u00e9",
+    "message": "Marché",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1945,13 +1945,13 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_WHERE_SCHOOL",
-    "message": "\u00c9cole",
+    "message": "École",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_WHERE_SOCIAL_EVENT",
-    "message": "\u00c9v\u00e9nement social",
+    "message": "Événement social",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1963,7 +1963,7 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_WHERE_WAS_CHILD_LABEL",
-    "message": "O\u00f9 \u00e9tait l'enfant ?",
+    "message": "Où était l'enfant ?",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1993,7 +1993,7 @@
   },
   {
     "code": "HCM_COMMON_MALE",
-    "message": "M\u00e2le",
+    "message": "Mâle",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2023,13 +2023,13 @@
   },
   {
     "code": "HCM_DELIVERY_BENEFICIARY_DETAILS_DESCRIPTION",
-    "message": "Consultez les d\u00e9tails du b\u00e9n\u00e9ficiaire et l\u2019historique des livraisons.",
+    "message": "Consultez les détails du bénéficiaire et l’historique des livraisons.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_BENEFICIARY_DETAILS_HEADING",
-    "message": "D\u00e9tails du b\u00e9n\u00e9ficiaire",
+    "message": "Détails du bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2053,13 +2053,13 @@
   },
   {
     "code": "HCM_DELIVERY_COMMENT_REFUSED",
-    "message": "Enfant refus\u00e9",
+    "message": "Enfant refusé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_COMMENT_SUCCESSFUL",
-    "message": "Livr\u00e9 avec succ\u00e8s",
+    "message": "Livré avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2071,13 +2071,13 @@
   },
   {
     "code": "HCM_DELIVERY_DETAILS_DESCRIPTION",
-    "message": "Saisissez les d\u00e9tails de livraison pour ce b\u00e9n\u00e9ficiaire.",
+    "message": "Saisissez les détails de livraison pour ce bénéficiaire.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_DETAILS_HEADING",
-    "message": "D\u00e9tails de livraison",
+    "message": "Détails de livraison",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2089,13 +2089,13 @@
   },
   {
     "code": "HCM_DELIVERY_LAT_LONG_LABEL",
-    "message": "Coordonn\u00e9es GPS",
+    "message": "Coordonnées GPS",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_RECEIVED_OPV_BEFORE_LABEL",
-    "message": "Re\u00e7u le VPO avant",
+    "message": "Reçu le VPO avant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2131,7 +2131,7 @@
   },
   {
     "code": "HCM_DELIVERY_STATUS_ADMINISTERED",
-    "message": "Vaccin\u00e9",
+    "message": "Vacciné",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2149,37 +2149,37 @@
   },
   {
     "code": "HCM_DELIVERY_SUCCESS_DESCRIPTION",
-    "message": "La livraison a \u00e9t\u00e9 enregistr\u00e9e avec succ\u00e8s.",
+    "message": "La livraison a été enregistrée avec succès.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_SUCCESS_GO_BACK_BUTTON",
-    "message": "Retour \u00e0 la maison",
+    "message": "Retour à la maison",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_SUCCESS_HEADING",
-    "message": "Livraison r\u00e9ussie",
+    "message": "Livraison réussie",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
-    "message": "Voir le m\u00e9nage",
+    "message": "Voir le ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_TABLE_COMPLETED_ON_HEADER",
-    "message": "Termin\u00e9 le",
+    "message": "Terminé le",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_TABLE_DELIVERY_NO_HEADER",
-    "message": "Num\u00e9ro de livraison",
+    "message": "Numéro de livraison",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2191,55 +2191,55 @@
   },
   {
     "code": "HCM_ERROR_CREATE_BULK_TASKS",
-    "message": "\u00c9chec de la cr\u00e9ation de t\u00e2ches group\u00e9es. Veuillez r\u00e9essayer.",
+    "message": "Échec de la création de tâches groupées. Veuillez réessayer.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ERROR_CREATE_HOUSEHOLD",
-    "message": "\u00c9chec de la cr\u00e9ation du foyer. Veuillez r\u00e9essayer.",
+    "message": "Échec de la création du foyer. Veuillez réessayer.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ERROR_CREATE_STOCK",
-    "message": "\u00c9chec de la cr\u00e9ation du stock.",
+    "message": "Échec de la création du stock.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ERROR_CREATE_TASK",
-    "message": "\u00c9chec de la cr\u00e9ation de la t\u00e2che. Veuillez r\u00e9essayer.",
+    "message": "Échec de la création de la tâche. Veuillez réessayer.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ERROR_FETCH_BULK_DELIVERY_CONFIG",
-    "message": "\u00c9chec du chargement de la configuration de la livraison group\u00e9e. Veuillez r\u00e9essayer.",
+    "message": "Échec du chargement de la configuration de la livraison groupée. Veuillez réessayer.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ERROR_FETCH_CONFIG",
-    "message": "\u00c9chec du chargement de la configuration. Veuillez r\u00e9essayer.",
+    "message": "Échec du chargement de la configuration. Veuillez réessayer.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ERROR_NAVIGATION",
-    "message": "Une erreur de navigation s'est produite. Veuillez r\u00e9essayer.",
+    "message": "Une erreur de navigation s'est produite. Veuillez réessayer.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ERROR_UPDATE_HOUSEHOLD",
-    "message": "\u00c9chec de la mise \u00e0 jour des d\u00e9tails du foyer. Veuillez r\u00e9essayer.",
+    "message": "Échec de la mise à jour des détails du foyer. Veuillez réessayer.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ERROR_UPDATE_MISSED_CHILDREN",
-    "message": "\u00c9chec de la mise \u00e0 jour du nombre d'enfants manqu\u00e9s. Veuillez r\u00e9essayer.",
+    "message": "Échec de la mise à jour du nombre d'enfants manqués. Veuillez réessayer.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2257,19 +2257,19 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTERED_SUCCESS_TAG",
-    "message": "Vaccin\u00e9 avec succ\u00e8s",
+    "message": "Vacciné avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTRATION_FAILED_TAG",
-    "message": "\u00c9chec de la vaccination",
+    "message": "Échec de la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_BENEFICIARY_REFERRED_TAG",
-    "message": "Enfant r\u00e9f\u00e9r\u00e9",
+    "message": "Enfant référé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2287,7 +2287,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_DESCRIPTION",
-    "message": "Aper\u00e7u du m\u00e9nage",
+    "message": "Aperçu du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2311,13 +2311,13 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_GUEST_TAG",
-    "message": "Invit\u00e9",
+    "message": "Invité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_HEADING",
-    "message": "Aper\u00e7u du m\u00e9nage",
+    "message": "Aperçu du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2335,13 +2335,13 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_NOT_ELIGIBLE_TAG",
-    "message": "Non \u00e9ligible",
+    "message": "Non éligible",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_NOT_VISITED_TAG",
-    "message": "Non visit\u00e9",
+    "message": "Non visité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2359,13 +2359,13 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_RE_VACCINATED_TAG",
-    "message": "Re-vaccin\u00e9",
+    "message": "Re-vacciné",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
-    "message": "R\u00e8glement",
+    "message": "Règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2383,31 +2383,31 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_VACCINATED_ELSEWHERE_LABEL",
-    "message": "Vaccin\u00e9 ailleurs",
+    "message": "Vacciné ailleurs",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_VIEW_DETAILS_BUTTON",
-    "message": "Afficher les d\u00e9tails",
+    "message": "Afficher les détails",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_ID_REQUIRED_FIELD",
-    "message": "Veuillez fournir la pi\u00e8ce d'identit\u00e9 requise",
+    "message": "Veuillez fournir la pièce d'identité requise",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_MEMBER_COUNT_MISMATCH_WARNING_DESCRIPTION",
-    "message": "Le nombre de membres enregistr\u00e9s ne correspond pas au nombre d\u00e9clar\u00e9 de membres du m\u00e9nage.",
+    "message": "Le nombre de membres enregistrés ne correspond pas au nombre déclaré de membres du ménage.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_MEMBER_COUNT_MISMATCH_WARNING_TITLE",
-    "message": "Inad\u00e9quation du nombre de membres",
+    "message": "Inadéquation du nombre de membres",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2419,19 +2419,19 @@
   },
   {
     "code": "HCM_MONTH_AUG",
-    "message": "Ao\u00fbt",
+    "message": "Août",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_MONTH_DEC",
-    "message": "D\u00e9c",
+    "message": "Déc",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_MONTH_FEB",
-    "message": "F\u00e9v",
+    "message": "Fév",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2485,7 +2485,7 @@
   },
   {
     "code": "HCM_PLEASE_WAIT_TRY_IN_SOME_TIME",
-    "message": "S'il vous pla\u00eet, attendez. La g\u00e9n\u00e9ration du mod\u00e8le est en cours.",
+    "message": "S'il vous plaît, attendez. La génération du modèle est en cours.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2503,7 +2503,7 @@
   },
   {
     "code": "HCM_REDOSE_COMMENT_ABSENT",
-    "message": "B\u00e9n\u00e9ficiaire absent pour le vaccin",
+    "message": "Bénéficiaire absent pour le vaccin",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2515,13 +2515,13 @@
   },
   {
     "code": "HCM_REDOSE_COMMENT_REFUSED",
-    "message": "Vaccin refus\u00e9",
+    "message": "Vaccin refusé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REDOSE_COMMENT_SUCCESSFUL",
-    "message": "Vaccination r\u00e9ussie",
+    "message": "Vaccination réussie",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2533,25 +2533,25 @@
   },
   {
     "code": "HCM_REDOSE_DETAILS_DESCRIPTION",
-    "message": "Saisissez les d\u00e9tails de la vaccination de ce b\u00e9n\u00e9ficiaire.",
+    "message": "Saisissez les détails de la vaccination de ce bénéficiaire.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REDOSE_DETAILS_HEADING",
-    "message": "Revoir les d\u00e9tails",
+    "message": "Revoir les détails",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REDOSE_LAT_LONG_LABEL",
-    "message": "Coordonn\u00e9es GPS",
+    "message": "Coordonnées GPS",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REDOSE_RECEIVED_OPV_BEFORE_LABEL",
-    "message": "Re\u00e7u le VPO avant",
+    "message": "Reçu le VPO avant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2587,25 +2587,25 @@
   },
   {
     "code": "HCM_REFERRAL_SUCCESS_HEADING",
-    "message": "Parrainage enregistr\u00e9 avec succ\u00e8s",
+    "message": "Parrainage enregistré avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REFERRAL_SUCCESS_VIEW_HOUSEHOLD_BUTTON",
-    "message": "Afficher les d\u00e9tails du m\u00e9nage",
+    "message": "Afficher les détails du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REFER_ADMINISTRATIVE_UNIT_LABEL",
-    "message": "Unit\u00e9 administrative",
+    "message": "Unité administrative",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REFER_BENEFICIARY_HEADING",
-    "message": "R\u00e9f\u00e9rer l'enfant",
+    "message": "Référer l'enfant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2617,25 +2617,25 @@
   },
   {
     "code": "HCM_REFER_HEALTH_FACILITY_LABEL",
-    "message": "\u00c9tablissement de sant\u00e9",
+    "message": "Établissement de santé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REFER_REASON_FEVER",
-    "message": "Fi\u00e8vre",
+    "message": "Fièvre",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REFER_REASON_LABEL",
-    "message": "Quelle est la raison de la r\u00e9f\u00e9rence ?",
+    "message": "Quelle est la raison de la référence ?",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REFER_REFERRED_BY_LABEL",
-    "message": "R\u00e9f\u00e9r\u00e9 par",
+    "message": "Référé par",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2689,19 +2689,19 @@
   },
   {
     "code": "HCM_REGISTRATION_BENEFICIARY_DETAILS_DESCRIPTION",
-    "message": "Saisissez les coordonn\u00e9es du chef de famille.",
+    "message": "Saisissez les coordonnées du chef de famille.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REGISTRATION_BENEFICIARY_DETAILS_HEADING",
-    "message": "D\u00e9tails de l'enfant",
+    "message": "Détails de l'enfant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REGISTRATION_BENEFICIARY_LOCATION_HEADING",
-    "message": "Localisation du b\u00e9n\u00e9ficiaire",
+    "message": "Localisation du bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2755,19 +2755,19 @@
   },
   {
     "code": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_DESCRIPTION",
-    "message": "Entrez les d\u00e9tails du m\u00e9nage pour l\u2019enregistrement.",
+    "message": "Entrez les détails du ménage pour l’enregistrement.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REGISTRATION_HOUSEHOLD_DETAILS_HEADING",
-    "message": "D\u00e9tails du m\u00e9nage",
+    "message": "Détails du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REGISTRATION_HOUSEHOLD_HEAD_DETAILS_HEADING",
-    "message": "D\u00e9tails du chef de famille",
+    "message": "Détails du chef de famille",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2779,7 +2779,7 @@
   },
   {
     "code": "HCM_REGISTRATION_IS_GUEST_LABEL",
-    "message": "Est membre invit\u00e9",
+    "message": "Est membre invité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2791,25 +2791,25 @@
   },
   {
     "code": "HCM_REGISTRATION_LANDMARK_HELPTEXT",
-    "message": "Entrez le point de rep\u00e8re",
+    "message": "Entrez le point de repère",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REGISTRATION_LANDMARK_LABEL",
-    "message": "Point de rep\u00e8re",
+    "message": "Point de repère",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REGISTRATION_LAT_LONG_LABEL",
-    "message": "Coordonn\u00e9es GPS",
+    "message": "Coordonnées GPS",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REGISTRATION_LOCATION_DESCRIPTION",
-    "message": "Saisissez les d\u00e9tails de localisation du b\u00e9n\u00e9ficiaire.",
+    "message": "Saisissez les détails de localisation du bénéficiaire.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2821,25 +2821,25 @@
   },
   {
     "code": "HCM_REGISTRATION_MOBILE_HELPTEXT",
-    "message": "Entrez le num\u00e9ro de t\u00e9l\u00e9phone",
+    "message": "Entrez le numéro de téléphone",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REGISTRATION_MOBILE_LABEL",
-    "message": "T\u00e9l\u00e9phone",
+    "message": "Téléphone",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REGISTRATION_MOBILE_NO_ZERO_HELPTEXT",
-    "message": "Entrez le num\u00e9ro de mobile \u00e0 8 chiffres (ne doit pas commencer par 0)",
+    "message": "Entrez le numéro de mobile à 8 chiffres (ne doit pas commencer par 0)",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REGISTRATION_MOBILE_TOOLTIP",
-    "message": "Entrez un num\u00e9ro de mobile valide \u00e0 10 chiffres",
+    "message": "Entrez un numéro de mobile valide à 10 chiffres",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2887,37 +2887,37 @@
   },
   {
     "code": "HCM_REGISTRATION_SETTLEMENT_AREA_LABEL",
-    "message": "Nom du r\u00e8glement",
+    "message": "Nom du règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_REGISTRATION_TOTAL_MEMBERS_LABEL",
-    "message": "Nombre total de membres du m\u00e9nage",
+    "message": "Nombre total de membres du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_SEARCH_BENEFICIARY_DESCRIPTION",
-    "message": "Recherchez un m\u00e9nage ou un b\u00e9n\u00e9ficiaire individuel par son nom ou sa pi\u00e8ce d'identit\u00e9.",
+    "message": "Recherchez un ménage ou un bénéficiaire individuel par son nom ou sa pièce d'identité.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_SEARCH_BENEFICIARY_HEADING",
-    "message": "Rechercher un b\u00e9n\u00e9ficiaire",
+    "message": "Rechercher un bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_SEARCH_FILTER_ADMINISTRATION_FAILED",
-    "message": "\u00c9chec de la vaccination",
+    "message": "Échec de la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_SEARCH_FILTER_ADMINISTRATION_SUCCESS",
-    "message": "Succ\u00e8s de la vaccination",
+    "message": "Succès de la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2941,19 +2941,19 @@
   },
   {
     "code": "HCM_SEARCH_FILTER_MISSED_CHILDREN",
-    "message": "Enfants manqu\u00e9s",
+    "message": "Enfants manqués",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_SEARCH_FILTER_NOT_ADMINISTERED",
-    "message": "Non vaccin\u00e9",
+    "message": "Non vacciné",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_SEARCH_FILTER_REVISITED",
-    "message": "Revisit\u00e9",
+    "message": "Revisité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2965,7 +2965,7 @@
   },
   {
     "code": "HCM_SEARCH_NEARBY_HOUSEHOLDS_LABEL",
-    "message": "Rechercher des m\u00e9nages \u00e0 proximit\u00e9",
+    "message": "Rechercher des ménages à proximité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2977,25 +2977,25 @@
   },
   {
     "code": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
-    "message": "Inscrire le b\u00e9n\u00e9ficiaire",
+    "message": "Inscrire le bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_SEARCH_SCAN_BENEFICIARY_BUTTON",
-    "message": "B\u00e9n\u00e9ficiaire du scan",
+    "message": "Bénéficiaire du scan",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_SEARCH_TABLE_AGE_HEADER",
-    "message": "\u00c2ge",
+    "message": "Âge",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_SEARCH_TABLE_BENEFICIARY_HEADER",
-    "message": "B\u00e9n\u00e9ficiaire",
+    "message": "Bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3007,7 +3007,7 @@
   },
   {
     "code": "HCM_SEARCH_TABLE_UNIQUE_BENEFICIARY_ID_HEADER",
-    "message": "Identifiant du b\u00e9n\u00e9ficiaire",
+    "message": "Identifiant du bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3031,13 +3031,13 @@
   },
   {
     "code": "HCM_VALIDATION_INVALID_AGE",
-    "message": "Veuillez entrer un \u00e2ge valide",
+    "message": "Veuillez entrer un âge valide",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_VALIDATION_LENGTH_2_TO_200",
-    "message": "La longueur doit \u00eatre comprise entre 2 et 200\u00a0caract\u00e8res",
+    "message": "La longueur doit être comprise entre 2 et 200 caractères",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3049,25 +3049,25 @@
   },
   {
     "code": "HCM_VALIDATION_MAX_MEMBERS",
-    "message": "Le nombre total de membres du m\u00e9nage ne peut pas d\u00e9passer 10",
+    "message": "Le nombre total de membres du ménage ne peut pas dépasser 10",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_VALIDATION_MAX_MEMBERS_500",
-    "message": "Les membres ne doivent pas d\u00e9passer 500",
+    "message": "Les membres ne doivent pas dépasser 500",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_VALIDATION_MIN_2_CHARS",
-    "message": "Doit contenir au moins 2\u00a0caract\u00e8res",
+    "message": "Doit contenir au moins 2 caractères",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_VALIDATION_MIN_2_CHARS_NEEDED",
-    "message": "Doit contenir au moins 2\u00a0caract\u00e8res",
+    "message": "Doit contenir au moins 2 caractères",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3085,31 +3085,31 @@
   },
   {
     "code": "HCM_VALIDATION_MOBILE_10_DIGITS",
-    "message": "Le num\u00e9ro de portable doit comporter 10 chiffres",
+    "message": "Le numéro de portable doit comporter 10 chiffres",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_VALIDATION_MOBILE_8_DIGITS",
-    "message": "Le num\u00e9ro de portable doit comporter au moins 8 chiffres",
+    "message": "Le numéro de portable doit comporter au moins 8 chiffres",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_VALIDATION_MOBILE_NO_LEADING_ZERO",
-    "message": "Le num\u00e9ro de portable ne doit pas commencer par z\u00e9ro",
+    "message": "Le numéro de portable ne doit pas commencer par zéro",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS",
-    "message": "Les caract\u00e8res sp\u00e9ciaux ne sont pas autoris\u00e9s",
+    "message": "Les caractères spéciaux ne sont pas autorisés",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_VALIDATION_ONLY_NUMBERS",
-    "message": "Seuls les chiffres sont autoris\u00e9s",
+    "message": "Seuls les chiffres sont autorisés",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3139,25 +3139,25 @@
   },
   {
     "code": "HCM_VALIDATION_SIZE_2_TO_200",
-    "message": "Doit contenir entre 2 et 200\u00a0caract\u00e8res",
+    "message": "Doit contenir entre 2 et 200 caractères",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HEALTH_WORKER",
-    "message": "Agent de sant\u00e9",
+    "message": "Agent de santé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
-    "message": "Raison de la r\u00e9f\u00e9rence",
+    "message": "Raison de la référence",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR",
-    "message": "La raison de la r\u00e9f\u00e9rence est requise",
+    "message": "La raison de la référence est requise",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3175,19 +3175,19 @@
   },
   {
     "code": "HOUSE_NOT_REVISITED",
-    "message": "Maison non revisit\u00e9e",
+    "message": "Maison non revisitée",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HouseholdClientReferenceId",
-    "message": "ID de r\u00e9f\u00e9rence du client du foyer",
+    "message": "ID de référence du client du foyer",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "ID is required",
-    "message": "Une pi\u00e8ce d'identit\u00e9 est requise",
+    "message": "Une pièce d'identité est requise",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3199,7 +3199,7 @@
   },
   {
     "code": "ID_SEARCH_REGISTRATION",
-    "message": "Recherche d'identit\u00e9",
+    "message": "Recherche d'identité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3211,7 +3211,7 @@
   },
   {
     "code": "IEC_MATERIALS",
-    "message": "Mat\u00e9riel CEI",
+    "message": "Matériel CEI",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3223,7 +3223,7 @@
   },
   {
     "code": "INDIVIDUAL_DETAIL",
-    "message": "D\u00e9tails individuels",
+    "message": "Détails individuels",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3241,25 +3241,25 @@
   },
   {
     "code": "INVALID_REQUEST",
-    "message": "Le formulaire n'a pas \u00e9t\u00e9 configur\u00e9 correctement. Veuillez l'actualiser, le v\u00e9rifier et le corriger.",
+    "message": "Le formulaire n'a pas été configuré correctement. Veuillez l'actualiser, le vérifier et le corriger.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "INVALID_REQUEST1",
-    "message": "Le formulaire n'a pas \u00e9t\u00e9 configur\u00e9 correctement. Veuillez l'actualiser, le v\u00e9rifier et le corriger.",
+    "message": "Le formulaire n'a pas été configuré correctement. Veuillez l'actualiser, le vérifier et le corriger.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "INVALID_REQUEST2",
-    "message": "Le formulaire n'a pas \u00e9t\u00e9 configur\u00e9 correctement. Veuillez l'actualiser, le v\u00e9rifier et le corriger.",
+    "message": "Le formulaire n'a pas été configuré correctement. Veuillez l'actualiser, le vérifier et le corriger.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "IN_MARKET",
-    "message": "Sur le march\u00e9",
+    "message": "Sur le marché",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3283,13 +3283,13 @@
   },
   {
     "code": "IndividualModel",
-    "message": "D\u00e9tails individuels",
+    "message": "Détails individuels",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "IndividualModel.HCM_BENEFICIARY_AGE_LABEL",
-    "message": "\u00c2ge",
+    "message": "Âge",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3313,7 +3313,7 @@
   },
   {
     "code": "IndividualModel.HCM_BENEFICIARY_MOBILE_LABEL",
-    "message": "Num\u00e9ro de portable",
+    "message": "Numéro de portable",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3331,55 +3331,55 @@
   },
   {
     "code": "LABEL",
-    "message": "\u00c9tiquette",
+    "message": "Étiquette",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_AGE",
-    "message": "\u00c2ge",
+    "message": "Âge",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_BATCHNUMBER",
-    "message": "Num\u00e9ro de lot",
+    "message": "Numéro de lot",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_BATCH_NUMBER",
-    "message": "Num\u00e9ro de lot",
+    "message": "Numéro de lot",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
-    "message": "Mod\u00e8le de plainte",
+    "message": "Modèle de plainte",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "R\u00e9f\u00e9rence HF",
+    "message": "Référence HF",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
-    "message": "Mod\u00e8le de m\u00e9nage",
+    "message": "Modèle de ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
-    "message": "Mod\u00e8le individuel",
+    "message": "Modèle individuel",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Mod\u00e8le de surveillance interne",
+    "message": "Modèle de surveillance interne",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3391,7 +3391,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
-    "message": "Mod\u00e8le LQA",
+    "message": "Modèle LQA",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3403,19 +3403,19 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "B\u00e9n\u00e9ficiaire du projet",
+    "message": "Bénéficiaire du projet",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
-    "message": "Mod\u00e8le de base",
+    "message": "Modèle de base",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CODE",
-    "message": "Zone de r\u00e8glement",
+    "message": "Zone de règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3427,7 +3427,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Zone de r\u00e9clamation",
+    "message": "Zone de réclamation",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3439,7 +3439,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINTNUMBER",
-    "message": "Num\u00e9ro de plainte",
+    "message": "Numéro de plainte",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3451,13 +3451,13 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
-    "message": "Num\u00e9ro de contact",
+    "message": "Numéro de contact",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Zone de r\u00e9clamation",
+    "message": "Zone de réclamation",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3469,7 +3469,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Num\u00e9ro de plainte",
+    "message": "Numéro de plainte",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3487,13 +3487,13 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Num\u00e9ro de contact",
+    "message": "Numéro de contact",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
-    "message": "Zone de r\u00e9clamation",
+    "message": "Zone de réclamation",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3505,7 +3505,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Num\u00e9ro de plainte",
+    "message": "Numéro de plainte",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3529,7 +3529,7 @@
   },
   {
     "code": "LABEL_PAIR_DATEOFBIRTH",
-    "message": "\u00c2ge",
+    "message": "Âge",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3571,7 +3571,7 @@
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
-    "message": "\u00c2ge",
+    "message": "Âge",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3601,7 +3601,7 @@
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
-    "message": "R\u00e8glement",
+    "message": "Règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3625,13 +3625,13 @@
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
-    "message": "Localit\u00e9 du m\u00e9nage",
+    "message": "Localité du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IDNUMBER",
-    "message": "Num\u00e9ro d'identification",
+    "message": "Numéro d'identification",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3643,7 +3643,7 @@
   },
   {
     "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "Num\u00e9ro d'identification",
+    "message": "Numéro d'identification",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3655,13 +3655,13 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYCHILDRENPRESENT",
-    "message": "Enfants pr\u00e9sents",
+    "message": "Enfants présents",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYCHILDRENVACCINATED",
-    "message": "Enfants vaccin\u00e9s",
+    "message": "Enfants vaccinés",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3673,49 +3673,49 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDABSENT",
-    "message": "Manqu\u00e9 (absent)",
+    "message": "Manqué (absent)",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDASLEEP",
-    "message": "Manqu\u00e9 de sommeil",
+    "message": "Manqué de sommeil",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTREVISITED",
-    "message": "Manqu\u00e9, non revisit\u00e9",
+    "message": "Manqué, non revisité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTVISITED",
-    "message": "Manqu\u00e9 (non visit\u00e9)",
+    "message": "Manqué (non visité)",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDOTHER",
-    "message": "Autre manqu\u00e9",
+    "message": "Autre manqué",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDREFUSAL",
-    "message": "Manqu\u00e9 (Refus)",
+    "message": "Manqué (Refus)",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDROUTINE",
-    "message": "Routine manqu\u00e9e",
+    "message": "Routine manquée",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMONITORDESIGNATION",
-    "message": "D\u00e9signation du moniteur",
+    "message": "Désignation du moniteur",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3739,25 +3739,25 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
-    "message": "Zone de r\u00e8glement",
+    "message": "Zone de règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTTYPE",
-    "message": "Type de r\u00e8glement",
+    "message": "Type de règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Enfants pr\u00e9sents",
+    "message": "Enfants présents",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Enfants vaccin\u00e9s",
+    "message": "Enfants vaccinés",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3769,43 +3769,43 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
-    "message": "Manqu\u00e9 - Absent",
+    "message": "Manqué - Absent",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
-    "message": "Manqu\u00e9 - Endormi",
+    "message": "Manqué - Endormi",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Manqu\u00e9 - Pas revisit\u00e9",
+    "message": "Manqué - Pas revisité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Manqu\u00e9 - Non visit\u00e9",
+    "message": "Manqué - Non visité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Manqu\u00e9 - Autre",
+    "message": "Manqué - Autre",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Manqu\u00e9 - Refus",
+    "message": "Manqué - Refus",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
-    "message": "Manqu\u00e9 - Routine",
+    "message": "Manqué - Routine",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3817,7 +3817,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "D\u00e9signation du moniteur",
+    "message": "Désignation du moniteur",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3835,13 +3835,13 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Zone de r\u00e8glement",
+    "message": "Zone de règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Type de r\u00e8glement",
+    "message": "Type de règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3853,7 +3853,7 @@
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINTNUMBER",
-    "message": "Num\u00e9ro de plainte",
+    "message": "Numéro de plainte",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3871,7 +3871,7 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
-    "message": "Num\u00e9ro de lot",
+    "message": "Numéro de lot",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3889,13 +3889,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
-    "message": "Num\u00e9ro MRN",
+    "message": "Numéro MRN",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_QUANTITY_LABEL",
-    "message": "Quantit\u00e9",
+    "message": "Quantité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3907,7 +3907,7 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_SENDER_LABEL",
-    "message": "Exp\u00e9diteur",
+    "message": "Expéditeur",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3937,13 +3937,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
-    "message": "Num\u00e9ro de lettre de transport",
+    "message": "Numéro de lettre de transport",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LOCALITY",
-    "message": "Localit\u00e9",
+    "message": "Localité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3955,7 +3955,7 @@
   },
   {
     "code": "LABEL_PAIR_LQAAFPAWARENESSLABEL",
-    "message": "Sensibilisation \u00e0 l'AFP",
+    "message": "Sensibilisation à l'AFP",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3973,19 +3973,19 @@
   },
   {
     "code": "LABEL_PAIR_LQACAMPAIGNAWARENESSLABEL",
-    "message": "Sensibilisation \u00e0 la campagne",
+    "message": "Sensibilisation à la campagne",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACAREGIVERINFORMEDLABEL",
-    "message": "Le soignant inform\u00e9",
+    "message": "Le soignant informé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACHILDAGEMONTHSLABEL",
-    "message": "\u00c2ge de l'enfant (mois)",
+    "message": "Âge de l'enfant (mois)",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4003,19 +4003,19 @@
   },
   {
     "code": "LABEL_PAIR_LQACLUSTERNUMBERLABEL",
-    "message": "Num\u00e9ro de cluster",
+    "message": "Numéro de cluster",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAFINGERMARKEDLABEL",
-    "message": "Doigt marqu\u00e9",
+    "message": "Doigt marqué",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQALOTNUMBERLABEL",
-    "message": "Num\u00e9ro de lot",
+    "message": "Numéro de lot",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4033,7 +4033,7 @@
   },
   {
     "code": "LABEL_PAIR_LQAOTHERREASONSPECIFYLABEL",
-    "message": "Autre raison (pr\u00e9ciser)",
+    "message": "Autre raison (préciser)",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4045,7 +4045,7 @@
   },
   {
     "code": "LABEL_PAIR_LQAREASONNOTMARKEDLABEL",
-    "message": "Raison non marqu\u00e9e",
+    "message": "Raison non marquée",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4057,13 +4057,13 @@
   },
   {
     "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
-    "message": "Zone de r\u00e8glement",
+    "message": "Zone de règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQASURVEYDATELABEL",
-    "message": "Date de l'enqu\u00eate LQA",
+    "message": "Date de l'enquête LQA",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4081,7 +4081,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "Sensibilisation \u00e0 l'AFP",
+    "message": "Sensibilisation à l'AFP",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4099,13 +4099,13 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Sensibilisation \u00e0 la campagne",
+    "message": "Sensibilisation à la campagne",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Le soignant inform\u00e9",
+    "message": "Le soignant informé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4117,7 +4117,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "\u00c2ge de l'enfant (mois)",
+    "message": "Âge de l'enfant (mois)",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4129,19 +4129,19 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Num\u00e9ro de cluster",
+    "message": "Numéro de cluster",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Doigt marqu\u00e9",
+    "message": "Doigt marqué",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Num\u00e9ro de lot",
+    "message": "Numéro de lot",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4159,7 +4159,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Autre raison (pr\u00e9ciser)",
+    "message": "Autre raison (préciser)",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4171,7 +4171,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Raison non marqu\u00e9e",
+    "message": "Raison non marquée",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4183,7 +4183,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Zone de r\u00e8glement",
+    "message": "Zone de règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4195,7 +4195,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Date de l'enqu\u00eate",
+    "message": "Date de l'enquête",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4213,25 +4213,25 @@
   },
   {
     "code": "LABEL_PAIR_MOBILENUMBER",
-    "message": "Num\u00e9ro de portable",
+    "message": "Numéro de portable",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_MOBILE_NUMBER",
-    "message": "Num\u00e9ro de portable",
+    "message": "Numéro de portable",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRNNUMBER",
-    "message": "Num\u00e9ro MRN",
+    "message": "Numéro MRN",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "Num\u00e9ro MRN",
+    "message": "Numéro MRN",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4243,19 +4243,19 @@
   },
   {
     "code": "LABEL_PAIR_QUANTITY",
-    "message": "Quantit\u00e9",
+    "message": "Quantité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_QUANTITYRECEIVED",
-    "message": "Quantit\u00e9 re\u00e7ue",
+    "message": "Quantité reçue",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_QUANTITY_RECEIVED",
-    "message": "Quantit\u00e9 re\u00e7ue",
+    "message": "Quantité reçue",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4273,7 +4273,7 @@
   },
   {
     "code": "LABEL_PAIR_REFERRALSTATUS",
-    "message": "Statut de r\u00e9f\u00e9rence",
+    "message": "Statut de référence",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4285,19 +4285,19 @@
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
-    "message": "Statut de r\u00e9f\u00e9rence",
+    "message": "Statut de référence",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
-    "message": "Sympt\u00f4me",
+    "message": "Symptôme",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFRRALSYMPTOM",
-    "message": "Sympt\u00f4me de r\u00e9f\u00e9rence",
+    "message": "Symptôme de référence",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4309,7 +4309,7 @@
   },
   {
     "code": "LABEL_PAIR_SENDERID",
-    "message": "Exp\u00e9diteur",
+    "message": "Expéditeur",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4351,7 +4351,7 @@
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
-    "message": "Zone de r\u00e9clamation",
+    "message": "Zone de réclamation",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4375,13 +4375,13 @@
   },
   {
     "code": "LABEL_PAIR_WAYBILLNUMBER",
-    "message": "Num\u00e9ro de lettre de transport",
+    "message": "Numéro de lettre de transport",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_WAYBILL_NUMBER",
-    "message": "Num\u00e9ro de lettre de transport",
+    "message": "Numéro de lettre de transport",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4393,7 +4393,7 @@
   },
   {
     "code": "LOCALISATION_ERROR",
-    "message": "Impossible de charger les donn\u00e9es de localisation. Veuillez r\u00e9essayer.",
+    "message": "Impossible de charger les données de localisation. Veuillez réessayer.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4405,13 +4405,13 @@
   },
   {
     "code": "LQA_ENUM_HEALTH_WORKER",
-    "message": "Agent de sant\u00e9",
+    "message": "Agent de santé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LQA_ENUM_IEC_MATERIALS",
-    "message": "Mat\u00e9riel CEI",
+    "message": "Matériel CEI",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4453,13 +4453,13 @@
   },
   {
     "code": "LQA_ENUM_SCHOOL",
-    "message": "\u00c9cole",
+    "message": "École",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LQA_ENUM_SOCIAL_MEDIA",
-    "message": "R\u00e9seaux sociaux",
+    "message": "Réseaux sociaux",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4477,49 +4477,49 @@
   },
   {
     "code": "LQA_ENUM_VOLUNTEER_CHW",
-    "message": "ASC b\u00e9n\u00e9vole",
+    "message": "ASC bénévole",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "MALE",
-    "message": "M\u00e2le",
+    "message": "Mâle",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "MARKET",
-    "message": "March\u00e9",
+    "message": "Marché",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "MB_ONLY_NUMBER",
-    "message": "Seuls les chiffres sont autoris\u00e9s",
+    "message": "Seuls les chiffres sont autorisés",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "MB_ONLY_NUMBERS",
-    "message": "Seuls les chiffres sont autoris\u00e9s",
+    "message": "Seuls les chiffres sont autorisés",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "METAL",
-    "message": "M\u00e9tal",
+    "message": "Métal",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "MOBILE_LENGTH_10_DIGIT_ERROR",
-    "message": "Le num\u00e9ro de portable doit comporter 10 chiffres",
+    "message": "Le numéro de portable doit comporter 10 chiffres",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "MOBILE_LENGTH_10_DIGIT_ERROR_ADDMEMBER",
-    "message": "Le num\u00e9ro de portable doit comporter 10 chiffres",
+    "message": "Le numéro de portable doit comporter 10 chiffres",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4555,7 +4555,7 @@
   },
   {
     "code": "NOPV_CONCERNS",
-    "message": "Pr\u00e9occupations concernant le nVPO",
+    "message": "Préoccupations concernant le nVPO",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4567,19 +4567,19 @@
   },
   {
     "code": "NOT_ADMINISTERED",
-    "message": "Non vaccin\u00e9",
+    "message": "Non vacciné",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "NOT_DECISION_MAKER",
-    "message": "Pas d\u00e9cideur",
+    "message": "Pas décideur",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "NOT_ELIGIBLE",
-    "message": "Non \u00e9ligible",
+    "message": "Non éligible",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4591,7 +4591,7 @@
   },
   {
     "code": "NOT_VISITED",
-    "message": "Non visit\u00e9",
+    "message": "Non visité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4663,31 +4663,31 @@
   },
   {
     "code": "PROXIMITY_SEARCH",
-    "message": "M\u00e9nages \u00e0 proximit\u00e9",
+    "message": "Ménages à proximité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "PROXIMITY_SEARCH_REGISTRATION",
-    "message": "Recherche de proximit\u00e9",
+    "message": "Recherche de proximité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "PerformanceIssue",
-    "message": "Probl\u00e8me de performances",
+    "message": "Problème de performances",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "ProjectBeneficiaryClientReferenceId",
-    "message": "Identifiant de r\u00e9f\u00e9rence du b\u00e9n\u00e9ficiaire",
+    "message": "Identifiant de référence du bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "QUANTITY_RECEIVED",
-    "message": "Quantit\u00e9 re\u00e7ue",
+    "message": "Quantité reçue",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4759,73 +4759,73 @@
   },
   {
     "code": "REFERRAL_BACK",
-    "message": "R\u00e9f\u00e9rence Retour",
+    "message": "Référence Retour",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFERRAL_SUCCESSFUL_PANEL_CARD_HEADING",
-    "message": "R\u00e9f\u00e9rence enregistr\u00e9e avec succ\u00e8s",
+    "message": "Référence enregistrée avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFERRAL_VIEW_HOUSEHOLD_DETAILS",
-    "message": "Afficher les d\u00e9tails du m\u00e9nage",
+    "message": "Afficher les détails du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFER_BENEFICIARY",
-    "message": "R\u00e9f\u00e9rer l'enfant",
+    "message": "Référer l'enfant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED",
-    "message": "Le nom du r\u00e8glement est requis",
+    "message": "Le nom du règlement est requis",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
-    "message": "Nom du r\u00e8glement",
+    "message": "Nom du règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_REFERRED_BY",
-    "message": "R\u00e9f\u00e9r\u00e9 par",
+    "message": "Référé par",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_REFERRED_TO",
-    "message": "R\u00e9f\u00e9r\u00e9 \u00e0",
+    "message": "Référé à",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFER_BENEFICIARY_REFERRED_BY_REQUIRED",
-    "message": "R\u00e9f\u00e9r\u00e9 par est requis",
+    "message": "Référé par est requis",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFER_BENEFICIARY_SCREEN_DESCRIPTION",
-    "message": "Entrez les d\u00e9tails de r\u00e9f\u00e9rence pour les enfants vaccin\u00e9s",
+    "message": "Entrez les détails de référence pour les enfants vaccinés",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFER_BENEFICIARY_SCREEN_HEADING",
-    "message": "R\u00e9f\u00e9rer l'enfant",
+    "message": "Référer l'enfant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REFER_BENEFICIARY_SUBMIT_BUTTON",
-    "message": "Soumettre une r\u00e9f\u00e9rence",
+    "message": "Soumettre une référence",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4837,13 +4837,13 @@
   },
   {
     "code": "REFUSED",
-    "message": "Refus\u00e9",
+    "message": "Refusé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTER_BENEFICIARY",
-    "message": "\u00c9num\u00e9rer le nouvel enfant",
+    "message": "Énumérer le nouvel enfant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4855,7 +4855,7 @@
   },
   {
     "code": "REGISTRATION_ADD_MEMBER_MESSAGE",
-    "message": "\u00c9chec de la mise \u00e0 jour du statut de l'ID de b\u00e9n\u00e9ficiaire.",
+    "message": "Échec de la mise à jour du statut de l'ID de bénéficiaire.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4891,55 +4891,55 @@
   },
   {
     "code": "REGISTRATION_ADMINISTRATION_SUCCESS",
-    "message": "Succ\u00e8s de la vaccination",
+    "message": "Succès de la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_BENEFICIARYDETAILS_MESSAGE",
-    "message": "\u00c9chec de l'enregistrement des d\u00e9tails du membre.",
+    "message": "Échec de l'enregistrement des détails du membre.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_BENEFICIARYLOCATION_MESSAGE",
-    "message": "\u00c9chec de l'enregistrement de l'emplacement du b\u00e9n\u00e9ficiaire.",
+    "message": "Échec de l'enregistrement de l'emplacement du bénéficiaire.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_BENEFICIARY_REFERRED",
-    "message": "Enfants r\u00e9f\u00e9r\u00e9s",
+    "message": "Enfants référés",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_CLOSED_HOUSEHOLD",
-    "message": "Enfants manqu\u00e9s",
+    "message": "Enfants manqués",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_CURRENT_DOSE_STATUS_ADMINISTERED",
-    "message": "Vaccin\u00e9",
+    "message": "Vacciné",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_CURRENT_DOSE_STATUS_TOBE_ADMINISTERED",
-    "message": "\u00catre vaccin\u00e9",
+    "message": "Être vacciné",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_DELIVERY_latLng_ERROR",
-    "message": "Les coordonn\u00e9es GPS sont requises",
+    "message": "Les coordonnées GPS sont requises",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_DELIVERY_receivedOPVBefore_ERROR",
-    "message": "Veuillez indiquer si le VPO a \u00e9t\u00e9 re\u00e7u avant",
+    "message": "Veuillez indiquer si le VPO a été reçu avant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4963,7 +4963,7 @@
   },
   {
     "code": "REGISTRATION_ENUM_UNIQUE_BENEFICIARY_ID",
-    "message": "Identifiant unique du b\u00e9n\u00e9ficiaire",
+    "message": "Identifiant unique du bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4975,13 +4975,13 @@
   },
   {
     "code": "REGISTRATION_HOUSEHOLDDETAILS_MESSAGE",
-    "message": "\u00c9chec de l'enregistrement des d\u00e9tails du foyer.",
+    "message": "Échec de l'enregistrement des détails du foyer.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_HOUSEHOLDOVERVIEW_MESSAGE",
-    "message": "Aper\u00e7u du m\u00e9nage",
+    "message": "Aperçu du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4993,19 +4993,19 @@
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_MESSAGE",
-    "message": "\u00c9chec de l'enregistrement des d\u00e9tails du chef de m\u00e9nage.",
+    "message": "Échec de l'enregistrement des détails du chef de ménage.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_OVERVIEW_DESC",
-    "message": "Afficher les d\u00e9tails du foyer et des membres",
+    "message": "Afficher les détails du foyer et des membres",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_OVERVIEW_HEADING",
-    "message": "Aper\u00e7u du m\u00e9nage",
+    "message": "Aperçu du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5029,7 +5029,7 @@
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_childrenCount_ERROR",
-    "message": "Le d\u00e9compte des enfants est obligatoire",
+    "message": "Le décompte des enfants est obligatoire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5065,19 +5065,19 @@
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_isHeadOfFamily_ERROR",
-    "message": "La s\u00e9lection du chef de famille est obligatoire",
+    "message": "La sélection du chef de famille est obligatoire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_landmark_ERROR",
-    "message": "Un point de rep\u00e8re est obligatoire",
+    "message": "Un point de repère est obligatoire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_latLng_ERROR",
-    "message": "Les coordonn\u00e9es GPS sont requises",
+    "message": "Les coordonnées GPS sont requises",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5089,7 +5089,7 @@
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_phone_ERROR",
-    "message": "Le num\u00e9ro de t\u00e9l\u00e9phone est requis",
+    "message": "Le numéro de téléphone est requis",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5101,31 +5101,31 @@
   },
   {
     "code": "REGISTRATION_INELIGIBLE",
-    "message": "In\u00e9ligible",
+    "message": "Inéligible",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_NOT_ADMINISTERED",
-    "message": "Non vaccin\u00e9",
+    "message": "Non vacciné",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_PAST_DOSE_STATUS_ADMINISTERED",
-    "message": "Vaccin\u00e9",
+    "message": "Vacciné",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_REDOSE_latLng_ERROR",
-    "message": "Les coordonn\u00e9es GPS sont requises",
+    "message": "Les coordonnées GPS sont requises",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_REDOSE_receivedOPVBefore_ERROR",
-    "message": "Veuillez indiquer si le VPO a \u00e9t\u00e9 re\u00e7u avant",
+    "message": "Veuillez indiquer si le VPO a été reçu avant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5137,19 +5137,19 @@
   },
   {
     "code": "REGISTRATION_RESOURCE_CARD_SELECTION_REQUIRED",
-    "message": "La s\u00e9lection des vaccins est obligatoire",
+    "message": "La sélection des vaccins est obligatoire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_DESC",
-    "message": "Recherche d'enfants vaccin\u00e9s",
+    "message": "Recherche d'enfants vaccinés",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_ID",
-    "message": "T\u00e9l\u00e9charger les identifiants",
+    "message": "Télécharger les identifiants",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5179,19 +5179,19 @@
   },
   {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_HEADING",
-    "message": "Rechercher des enfants vaccin\u00e9s",
+    "message": "Rechercher des enfants vaccinés",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_DESCRIPTION",
-    "message": "Vous manquez d\u2019identifiants de b\u00e9n\u00e9ficiaire. Veuillez en t\u00e9l\u00e9charger davantage pour continuer l'inscription.",
+    "message": "Vous manquez d’identifiants de bénéficiaire. Veuillez en télécharger davantage pour continuer l'inscription.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_TITLE",
-    "message": "Faibles identifiants de b\u00e9n\u00e9ficiaires",
+    "message": "Faibles identifiants de bénéficiaires",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5239,13 +5239,13 @@
   },
   {
     "code": "REGISTRATION_VACCINATED_ELSEWHERE_MESSAGE",
-    "message": "Vaccin\u00e9 ailleurs",
+    "message": "Vacciné ailleurs",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "REGISTRATION_VACCINATED_ELSEWHERE_region_ERROR",
-    "message": "La r\u00e9gion est obligatoire",
+    "message": "La région est obligatoire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5263,7 +5263,7 @@
   },
   {
     "code": "REGISTRATION_VIEW_DETAILS",
-    "message": "Afficher les d\u00e9tails",
+    "message": "Afficher les détails",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5293,7 +5293,7 @@
   },
   {
     "code": "SCANLIMIT_ERROR_MESSAGE",
-    "message": "Limite d'analyse d\u00e9pass\u00e9e",
+    "message": "Limite d'analyse dépassée",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5311,7 +5311,7 @@
   },
   {
     "code": "SCHOOL",
-    "message": "\u00c9cole",
+    "message": "École",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5341,13 +5341,13 @@
   },
   {
     "code": "SETTLEMENT_TYPE_IMMIGRANTS",
-    "message": "Immigr\u00e9s",
+    "message": "Immigrés",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "SETTLEMENT_TYPE_LABEL",
-    "message": "Type de r\u00e8glement",
+    "message": "Type de règlement",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5359,7 +5359,7 @@
   },
   {
     "code": "SETTLEMENT_TYPE_REFUGEES_IDPS",
-    "message": "R\u00e9fugi\u00e9s d\u00e9plac\u00e9s internes",
+    "message": "Réfugiés déplacés internes",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5395,19 +5395,19 @@
   },
   {
     "code": "SKIN_REACTION",
-    "message": "R\u00e9action cutan\u00e9e",
+    "message": "Réaction cutanée",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "SOCIAL_EVENT",
-    "message": "\u00c9v\u00e9nement social",
+    "message": "Événement social",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "SOCIAL_MEDIA",
-    "message": "R\u00e9seaux sociaux",
+    "message": "Réseaux sociaux",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5431,7 +5431,7 @@
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Vaccination r\u00e9ussie",
+    "message": "Vaccination réussie",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5443,19 +5443,19 @@
   },
   {
     "code": "Scan limit shouldn't be greater than 1",
-    "message": "Limite de num\u00e9risation du code QR d\u00e9pass\u00e9e",
+    "message": "Limite de numérisation du code QR dépassée",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "Security Issues",
-    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "message": "Problèmes de sécurité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "SecurityIssues",
-    "message": "Probl\u00e8mes de s\u00e9curit\u00e9",
+    "message": "Problèmes de sécurité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5491,7 +5491,7 @@
   },
   {
     "code": "TRAVELLED",
-    "message": "A voyag\u00e9",
+    "message": "A voyagé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5509,13 +5509,13 @@
   },
   {
     "code": "Technical Issues",
-    "message": "Probl\u00e8mes techniques",
+    "message": "Problèmes techniques",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "TechnicalIssues",
-    "message": "Probl\u00e8mes techniques",
+    "message": "Problèmes techniques",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5581,19 +5581,19 @@
   },
   {
     "code": "UNABLETODELIVER_ENUM_AFRICA_POLIO_FREE",
-    "message": "L\u2019Afrique est exempte de polio",
+    "message": "L’Afrique est exempte de polio",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNABLETODELIVER_ENUM_AT_FARM",
-    "message": "\u00c0 la ferme",
+    "message": "À la ferme",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNABLETODELIVER_ENUM_AT_SCHOOL",
-    "message": "\u00c0 l'\u00e9cole",
+    "message": "À l'école",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5605,13 +5605,13 @@
   },
   {
     "code": "UNABLETODELIVER_ENUM_COVID_RELATED",
-    "message": "Li\u00e9 au COVID",
+    "message": "Lié au COVID",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNABLETODELIVER_ENUM_IN_MARKET",
-    "message": "Sur le march\u00e9",
+    "message": "Sur le marché",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5623,7 +5623,7 @@
   },
   {
     "code": "UNABLETODELIVER_ENUM_NOPV_CONCERNS",
-    "message": "Pr\u00e9occupations concernant le nVPO",
+    "message": "Préoccupations concernant le nVPO",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5665,19 +5665,19 @@
   },
   {
     "code": "UNABLETODELIVER_ENUM_TRAVELLED",
-    "message": "A voyag\u00e9",
+    "message": "A voyagé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNABLETODELIVER_ENUM_VACCINE_NOT_SAFE",
-    "message": "Le vaccin n'est pas s\u00fbr",
+    "message": "Le vaccin n'est pas sûr",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNABLETODELIVER_FLOWT_ALERT_DESCRIPTION",
-    "message": "Etes-vous s\u00fbr de vouloir enregistrer ce b\u00e9n\u00e9ficiaire comme incapable de livrer\u00a0?",
+    "message": "Etes-vous sûr de vouloir enregistrer ce bénéficiaire comme incapable de livrer ?",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5719,13 +5719,13 @@
   },
   {
     "code": "UNABLETODELIVER_REFUSED",
-    "message": "Refus\u00e9",
+    "message": "Refusé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNABLETODELIVER_REGION_LABEL",
-    "message": "R\u00e9gion",
+    "message": "Région",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5737,7 +5737,7 @@
   },
   {
     "code": "UNABLETODELIVER_VACCINATED_ELSEWHERE",
-    "message": "Vaccin\u00e9 ailleurs",
+    "message": "Vacciné ailleurs",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5749,31 +5749,31 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Identifiant du b\u00e9n\u00e9ficiaire",
+    "message": "Identifiant du bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNIQUE_KEY_UPDATE_ERR",
-    "message": "Le formulaire n'a pas \u00e9t\u00e9 configur\u00e9 correctement. Veuillez l'actualiser, le v\u00e9rifier et le corriger.",
+    "message": "Le formulaire n'a pas été configuré correctement. Veuillez l'actualiser, le vérifier et le corriger.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "User Account Issues",
-    "message": "Probl\u00e8mes de compte utilisateur",
+    "message": "Problèmes de compte utilisateur",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "UserAccountIssues",
-    "message": "Probl\u00e8mes de compte utilisateur",
+    "message": "Problèmes de compte utilisateur",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "VACCINATED_ELSEWHERE",
-    "message": "Vaccin\u00e9 ailleurs",
+    "message": "Vacciné ailleurs",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5785,19 +5785,19 @@
   },
   {
     "code": "VACCINATED_ELSEWHERE_FLOW_DESCRIPTION",
-    "message": "Enregistrez les d\u00e9tails de la vaccination des b\u00e9n\u00e9ficiaires vaccin\u00e9s sur un autre site.",
+    "message": "Enregistrez les détails de la vaccination des bénéficiaires vaccinés sur un autre site.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "VACCINATED_ELSEWHERE_FLOW_HEADING",
-    "message": "Vaccin\u00e9 ailleurs",
+    "message": "Vacciné ailleurs",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "VACCINATED_ELSEWHERE_FLOW_LABEL",
-    "message": "Vaccin\u00e9 ailleurs",
+    "message": "Vacciné ailleurs",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5809,13 +5809,13 @@
   },
   {
     "code": "VACCINATED_ELSEWHERE_LATLNG_LABEL",
-    "message": "Coordonn\u00e9es GPS",
+    "message": "Coordonnées GPS",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY",
-    "message": "Seuls les lettres et les chiffres sont autoris\u00e9s",
+    "message": "Seuls les lettres et les chiffres sont autorisés",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5827,7 +5827,7 @@
   },
   {
     "code": "VACCINE_NOT_SAFE",
-    "message": "Le vaccin n'est pas s\u00fbr",
+    "message": "Le vaccin n'est pas sûr",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5839,55 +5839,55 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTIONS_REQUIRED_isMdms",
-    "message": "Les options de liste d\u00e9roulante sont requises pour les champs de type \u00e9num\u00e9ration",
+    "message": "Les options de liste déroulante sont requises pour les champs de type énumération",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY_isMdms",
-    "message": "Les \u00e9tiquettes des options de liste d\u00e9roulante sont requises pour les champs de type \u00e9num\u00e9ration",
+    "message": "Les étiquettes des options de liste déroulante sont requises pour les champs de type énumération",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTION_NAME_REQUIREDisMdms",
-    "message": "Les noms d'options d\u00e9roulantes sont requis pour les champs de type \u00e9num\u00e9ration",
+    "message": "Les noms d'options déroulantes sont requis pour les champs de type énumération",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_ERROR_PRODUCT_VARIANT",
-    "message": "La variante du produit est incorrecte. Veuillez s\u00e9lectionner une variante de produit valide.",
+    "message": "La variante du produit est incorrecte. Veuillez sélectionner une variante de produit valide.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_MANDATORY_CONDITIONAL_FIELD_REQUIRED_isMdms",
-    "message": "Les propri\u00e9t\u00e9s obligatoires sont manquantes pour les champs de type \u00e9num\u00e9ration. Veuillez les configurer pour continuer.",
+    "message": "Les propriétés obligatoires sont manquantes pour les champs de type énumération. Veuillez les configurer pour continuer.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_DROPDOWN_OPTIONS_REQUIRED_COMPLAINT_INBOX_FILTER_COMPLAINT_TYPE_LABEL",
-    "message": "Les propri\u00e9t\u00e9s obligatoires sont manquantes pour les champs de type \u00e9num\u00e9ration. Veuillez les configurer pour continuer.",
+    "message": "Les propriétés obligatoires sont manquantes pour les champs de type énumération. Veuillez les configurer pour continuer.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "VIEW_HOUSEHOLD_DETAILS",
-    "message": "Afficher les d\u00e9tails du m\u00e9nage",
+    "message": "Afficher les détails du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "VISITED",
-    "message": "Visit\u00e9",
+    "message": "Visité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "VOLUNTEER_CHW",
-    "message": "ASC b\u00e9n\u00e9vole",
+    "message": "ASC bénévole",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5965,13 +5965,13 @@
   },
   {
     "code": "administrationFailed",
-    "message": "\u00c9chec de la vaccination",
+    "message": "Échec de la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "administrationSuccess",
-    "message": "Vaccin\u00e9 avec succ\u00e8s",
+    "message": "Vacciné avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5983,25 +5983,25 @@
   },
   {
     "code": "beneficiaryIdMinCheck",
-    "message": "T\u00e9l\u00e9charger les identifiants des b\u00e9n\u00e9ficiaires",
+    "message": "Télécharger les identifiants des bénéficiaires",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "beneficiaryNotFound",
-    "message": "B\u00e9n\u00e9ficiaire introuvable",
+    "message": "Bénéficiaire introuvable",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "beneficiaryReferred",
-    "message": "Enfant r\u00e9f\u00e9r\u00e9",
+    "message": "Enfant référé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "beneficiaryTag",
-    "message": "B\u00e9n\u00e9ficiaire",
+    "message": "Bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6037,7 +6037,7 @@
   },
   {
     "code": "clientReferenceId",
-    "message": "ID de r\u00e9f\u00e9rence client",
+    "message": "ID de référence client",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6055,7 +6055,7 @@
   },
   {
     "code": "cycleNumber",
-    "message": "Num\u00e9ro de cycle",
+    "message": "Numéro de cycle",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6067,7 +6067,7 @@
   },
   {
     "code": "datePicker",
-    "message": "S\u00e9lectionnez une date",
+    "message": "Sélectionnez une date",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6085,7 +6085,7 @@
   },
   {
     "code": "deliveryNo",
-    "message": "Num\u00e9ro de livraison",
+    "message": "Numéro de livraison",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6097,13 +6097,13 @@
   },
   {
     "code": "deliveryStrategy",
-    "message": "Strat\u00e9gie de livraison",
+    "message": "Stratégie de livraison",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "deliverySuccess",
-    "message": "Succ\u00e8s de la livraison",
+    "message": "Succès de la livraison",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6121,7 +6121,7 @@
   },
   {
     "code": "deliveryTable",
-    "message": "D\u00e9tails de livraison",
+    "message": "Détails de livraison",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6151,19 +6151,19 @@
   },
   {
     "code": "dropDown",
-    "message": "S\u00e9lectionnez une option",
+    "message": "Sélectionnez une option",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "dropdown",
-    "message": "S\u00e9lectionnez une option",
+    "message": "Sélectionnez une option",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "dropdownTemplate",
-    "message": "S\u00e9lectionnez une option",
+    "message": "Sélectionnez une option",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6181,7 +6181,7 @@
   },
   {
     "code": "eligibleProductVariants",
-    "message": "Variantes de produits \u00e9ligibles",
+    "message": "Variantes de produits éligibles",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6193,13 +6193,13 @@
   },
   {
     "code": "evaluationFacilityKey",
-    "message": "Installation assign\u00e9e",
+    "message": "Installation assignée",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "expandable",
-    "message": "Cycles pass\u00e9s",
+    "message": "Cycles passés",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6235,13 +6235,13 @@
   },
   {
     "code": "givenName",
-    "message": "Pr\u00e9nom",
+    "message": "Prénom",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "goBack",
-    "message": "Retour \u00e0 la maison",
+    "message": "Retour à la maison",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6253,19 +6253,19 @@
   },
   {
     "code": "guestTag",
-    "message": "Invit\u00e9",
+    "message": "Invité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "headMobileNumber",
-    "message": "Num\u00e9ro de portable",
+    "message": "Numéro de portable",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "headName",
-    "message": "Nom du chef de m\u00e9nage",
+    "message": "Nom du chef de ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6283,13 +6283,13 @@
   },
   {
     "code": "heading",
-    "message": "D\u00e9tails",
+    "message": "Détails",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "householdDetails",
-    "message": "D\u00e9tails du m\u00e9nage",
+    "message": "Détails du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6307,7 +6307,7 @@
   },
   {
     "code": "idPopulator",
-    "message": "D\u00e9tails d'identification",
+    "message": "Détails d'identification",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6355,19 +6355,19 @@
   },
   {
     "code": "isClosedHousehold",
-    "message": "M\u00e9nage ferm\u00e9",
+    "message": "Ménage fermé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "isEdit",
-    "message": "Mode \u00e9dition",
+    "message": "Mode édition",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "isGuestMember",
-    "message": "Membre invit\u00e9",
+    "message": "Membre invité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6379,19 +6379,19 @@
   },
   {
     "code": "labelPairList",
-    "message": "D\u00e9tails",
+    "message": "Détails",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "landmark",
-    "message": "Point de rep\u00e8re",
+    "message": "Point de repère",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "latLng",
-    "message": "Coordonn\u00e9es GPS",
+    "message": "Coordonnées GPS",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6415,7 +6415,7 @@
   },
   {
     "code": "meberDetails",
-    "message": "D\u00e9tails du membre",
+    "message": "Détails du membre",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6433,25 +6433,25 @@
   },
   {
     "code": "memberTable",
-    "message": "D\u00e9tails du membre",
+    "message": "Détails du membre",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "nameOfIndividual",
-    "message": "Pr\u00e9nom",
+    "message": "Prénom",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "notEligible",
-    "message": "Non \u00e9ligible",
+    "message": "Non éligible",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "notVisited",
-    "message": "Non visit\u00e9",
+    "message": "Non visité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6463,25 +6463,25 @@
   },
   {
     "code": "panelCard",
-    "message": "Vaccination r\u00e9ussie",
+    "message": "Vaccination réussie",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "pastCycleTable",
-    "message": "D\u00e9tails du cycle pass\u00e9",
+    "message": "Détails du cycle passé",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "pastCyclesList",
-    "message": "Cycles pass\u00e9s",
+    "message": "Cycles passés",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "phone",
-    "message": "Num\u00e9ro de t\u00e9l\u00e9phone",
+    "message": "Numéro de téléphone",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6505,7 +6505,7 @@
   },
   {
     "code": "proximitySearch",
-    "message": "Rechercher des m\u00e9nages \u00e0 proximit\u00e9",
+    "message": "Rechercher des ménages à proximité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6517,7 +6517,7 @@
   },
   {
     "code": "reVaccinatedTag",
-    "message": "Re-vaccin\u00e9",
+    "message": "Re-vacciné",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6535,13 +6535,13 @@
   },
   {
     "code": "reasonNotVaccinated",
-    "message": "Raison non vaccin\u00e9e",
+    "message": "Raison non vaccinée",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "receivedOPVBefore",
-    "message": "Re\u00e7u le VPO avant",
+    "message": "Reçu le VPO avant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6589,13 +6589,13 @@
   },
   {
     "code": "region",
-    "message": "R\u00e9gion",
+    "message": "Région",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "registerBeneficiary",
-    "message": "Inscrire le b\u00e9n\u00e9ficiaire",
+    "message": "Inscrire le bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6613,13 +6613,13 @@
   },
   {
     "code": "row2",
-    "message": "D\u00e9tails du m\u00e9nage",
+    "message": "Détails du ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "rowtemplate",
-    "message": "D\u00e9tails du membre",
+    "message": "Détails du membre",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6637,7 +6637,7 @@
   },
   {
     "code": "saveFilter2",
-    "message": "T\u00e9l\u00e9charger les identifiants",
+    "message": "Télécharger les identifiants",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6685,19 +6685,19 @@
   },
   {
     "code": "searchNearbyHouseholdS",
-    "message": "Rechercher des m\u00e9nages \u00e0 proximit\u00e9",
+    "message": "Rechercher des ménages à proximité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "searchScanBeneficiaryButton",
-    "message": "B\u00e9n\u00e9ficiaire du scan",
+    "message": "Bénéficiaire du scan",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "selectedIndividualAgeInMonths",
-    "message": "\u00c2ge (mois)",
+    "message": "Âge (mois)",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6727,7 +6727,7 @@
   },
   {
     "code": "selectedStatus",
-    "message": "S\u00e9lectionnez le statut",
+    "message": "Sélectionnez le statut",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6745,13 +6745,13 @@
   },
   {
     "code": "successCard",
-    "message": "Livraison r\u00e9ussie",
+    "message": "Livraison réussie",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "tag",
-    "message": "\u00c9tiquette",
+    "message": "Étiquette",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6781,19 +6781,19 @@
   },
   {
     "code": "uniqueBeneficiaryIdModel",
-    "message": "Identifiant unique du b\u00e9n\u00e9ficiaire",
+    "message": "Identifiant unique du bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "uniqueBeneficiaryIdTag",
-    "message": "Identifiant du b\u00e9n\u00e9ficiaire",
+    "message": "Identifiant du bénéficiaire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "vaccinatedElsewhereButton",
-    "message": "Vaccin\u00e9 ailleurs",
+    "message": "Vacciné ailleurs",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6805,19 +6805,19 @@
   },
   {
     "code": "viewDetails",
-    "message": "Afficher les d\u00e9tails",
+    "message": "Afficher les détails",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "viewHouseholdButton",
-    "message": "Voir le m\u00e9nage",
+    "message": "Voir le ménage",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "whereWasChild",
-    "message": "O\u00f9 \u00e9tait l'enfant",
+    "message": "Où était l'enfant",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   }

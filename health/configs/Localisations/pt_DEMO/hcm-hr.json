@@ -1,7 +1,7 @@
 [
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_AIRPORT_AUTHORITY_APPROVER",
-    "message": "Aprovador da autoridade aeroportu\u00e1ria",
+    "message": "Aprovador da autoridade aeroportuária",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -37,7 +37,7 @@
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_EMPLOYEE",
-    "message": "Funcion\u00e1rio",
+    "message": "Funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -55,7 +55,7 @@
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_HELPDESK_USER",
-    "message": "Usu\u00e1rio do suporte t\u00e9cnico",
+    "message": "Usuário do suporte técnico",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -67,7 +67,7 @@
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_INTERNAL_MICROSERVICE_ROLE",
-    "message": "Fun\u00e7\u00e3o de microsservi\u00e7o interno",
+    "message": "Função de microsserviço interno",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -121,7 +121,7 @@
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_PT_CEMP",
-    "message": "Funcion\u00e1rio do Balc\u00e3o de Imposto sobre Propriedade",
+    "message": "Funcionário do Balcão de Imposto sobre Propriedade",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -133,7 +133,7 @@
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_SUPERUSER",
-    "message": "Superusu\u00e1rio",
+    "message": "Superusuário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -151,13 +151,13 @@
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_SW_CEMP",
-    "message": "Funcion\u00e1rio do Balc\u00e3o SW",
+    "message": "Funcionário do Balcão SW",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_SW_CLERK",
-    "message": "Escritur\u00e1rio SW",
+    "message": "Escriturário SW",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -187,7 +187,7 @@
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_WAREHOUSE_MANAGER",
-    "message": "Gerente de Armaz\u00e9m",
+    "message": "Gerente de Armazém",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -199,13 +199,13 @@
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_WS_CEMP",
-    "message": "Funcion\u00e1rio do balc\u00e3o WS",
+    "message": "Funcionário do balcão WS",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_WS_CLERK",
-    "message": "Escritur\u00e1rio",
+    "message": "Escriturário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -223,37 +223,37 @@
   },
   {
     "code": "ACTION",
-    "message": "A\u00e7\u00e3o",
+    "message": "Ação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ACTION_CREATE_CHECKLIST",
-    "message": "Criar lista de verifica\u00e7\u00e3o",
+    "message": "Criar lista de verificação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ACTION_TEST_EMPLOYEE_REPORT",
-    "message": "Relat\u00f3rio de funcion\u00e1rios",
+    "message": "Relatório de funcionários",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ACTION_TEST_HRMS",
-    "message": "Gerenciamento de usu\u00e1rios",
+    "message": "Gerenciamento de usuários",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ACTION_TEST_NATIONAL_CALCULATIONS",
-    "message": "C\u00e1lculos",
+    "message": "Cálculos",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ACTION_TEST_SEARCH_EMPLOYEE",
-    "message": "Pesquisar usu\u00e1rio",
+    "message": "Pesquisar usuário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -265,25 +265,25 @@
   },
   {
     "code": "ACTIVE_EMPLOYEES",
-    "message": "Funcion\u00e1rios Ativos",
+    "message": "Funcionários Ativos",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADD_BOUNDARY_HIERARCHY_LEVEL",
-    "message": "Adicionar n\u00edvel de hierarquia de limite",
+    "message": "Adicionar nível de hierarquia de limite",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADD_HIERARCHY_LEVEL",
-    "message": "Adicionar n\u00edvel de hierarquia",
+    "message": "Adicionar nível de hierarquia",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADD_JURISDICTION",
-    "message": "Adicionar jurisdi\u00e7\u00e3o",
+    "message": "Adicionar jurisdição",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -313,19 +313,19 @@
   },
   {
     "code": "ASSIGNED_SUCCESSFULLY",
-    "message": "Campanha atribu\u00edda com sucesso!",
+    "message": "Campanha atribuída com sucesso!",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ASSIGNMENT",
-    "message": "Atribui\u00e7\u00e3o",
+    "message": "Atribuição",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ASSIGN_CAMPAIGN_MODAL_TITLE",
-    "message": "Atribui\u00e7\u00e3o de campanha",
+    "message": "Atribuição de campanha",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -349,19 +349,19 @@
   },
   {
     "code": "Bednet_HIERARCHYTEST_MO",
-    "message": "Campanha Bednet - Mo\u00e7ambique",
+    "message": "Campanha Bednet - Moçambique",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_RESPONSE_CREATE_ACTION",
-    "message": "Campanha atribu\u00edda com sucesso",
+    "message": "Campanha atribuída com sucesso",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_RESPONSE_UPDATE_ACTION",
-    "message": "Campanhas atribu\u00eddas atualizadas com sucesso",
+    "message": "Campanhas atribuídas atualizadas com sucesso",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -385,13 +385,13 @@
   },
   {
     "code": "COMMON_GENDER_FEMALE",
-    "message": "F\u00eamea",
+    "message": "Fêmea",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMMON_GENDER_FEMALE ",
-    "message": "F\u00eamea",
+    "message": "Fêmea",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -409,13 +409,13 @@
   },
   {
     "code": "COMMON_GENDER_TRANSGENDER",
-    "message": "Transg\u00eanero",
+    "message": "Transgênero",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMMON_GENDER_TRANSGENDER ",
-    "message": "Transg\u00eanero",
+    "message": "Transgênero",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -433,7 +433,7 @@
   },
   {
     "code": "COMMON_MASTERS_DEPARTMENT_undefined",
-    "message": "N\u00e3o atribu\u00eddo",
+    "message": "Não atribuído",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -445,13 +445,13 @@
   },
   {
     "code": "COMMON_MASTERS_DESIGNATION_COMM",
-    "message": "Comiss\u00e1rio",
+    "message": "Comissário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "COMMON_MASTERS_DESIGNATION_undefined",
-    "message": "N\u00e3o atribu\u00eddo",
+    "message": "Não atribuído",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -481,7 +481,7 @@
   },
   {
     "code": "CONFIRM_BOUNDARY_HIERARCHY_LEVEL",
-    "message": "Confirme o n\u00edvel de hierarquia de limite",
+    "message": "Confirme o nível de hierarquia de limite",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -493,31 +493,31 @@
   },
   {
     "code": "CORE_COMMON_APPLICANT_ADDRESS_INVALID",
-    "message": "Endere\u00e7o de correspond\u00eancia inv\u00e1lido",
+    "message": "Endereço de correspondência inválido",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "CORE_COMMON_APPLICANT_CONFIRM_PASSWORD_INVALID",
-    "message": "As senhas n\u00e3o correspondem",
+    "message": "As senhas não correspondem",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "CORE_COMMON_APPLICANT_NAME_INVALID",
-    "message": "Nome inv\u00e1lido",
+    "message": "Nome inválido",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "CORE_COMMON_APPLICANT_PASSWORD_INVALID",
-    "message": "As senhas devem ter um valor alfanum\u00e9rico de 8 a 15 caracteres. Caracteres especiais permitidos: @,#,$,%",
+    "message": "As senhas devem ter um valor alfanumérico de 8 a 15 caracteres. Caracteres especiais permitidos: @,#,$,%",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "CORE_COMMON_CONTINUE_CAMPAIGN_ASSIGNMENTS",
-    "message": "Prossiga para atribui\u00e7\u00e3o de campanha",
+    "message": "Prossiga para atribuição de campanha",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -535,25 +535,25 @@
   },
   {
     "code": "CORE_COMMON_GO_TO_HOME_CREATE_SUCCESS",
-    "message": "V\u00e1 para casa",
+    "message": "Vá para casa",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "CORE_COMMON_GO_TO_HOME_UPDATE_SUCCESS",
-    "message": "V\u00e1 para casa",
+    "message": "Vá para casa",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "CORE_COMMON_GO_TO_USER_CREATION",
-    "message": "Crie um novo usu\u00e1rio",
+    "message": "Crie um novo usuário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "CORE_COMMON_MOBILE_ERROR",
-    "message": "N\u00famero de celular inv\u00e1lido",
+    "message": "Número de celular inválido",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -589,7 +589,7 @@
   },
   {
     "code": "CREATE_MY_OWN_BOUNDARY_DATA",
-    "message": "Criar meus pr\u00f3prios dados de limite",
+    "message": "Criar meus próprios dados de limite",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -601,7 +601,7 @@
   },
   {
     "code": "CREATION_DATE",
-    "message": "Data de cria\u00e7\u00e3o",
+    "message": "Data de criação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -625,7 +625,7 @@
   },
   {
     "code": "CS_PROFILE_EMAIL_ERRORMSG",
-    "message": "Endere\u00e7o de e-mail inv\u00e1lido",
+    "message": "Endereço de e-mail inválido",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -649,13 +649,13 @@
   },
   {
     "code": "DAILYWAGES",
-    "message": "Sal\u00e1rios di\u00e1rios",
+    "message": "Salários diários",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "DATA_CREATION_IN_PROGRESS",
-    "message": "Cria\u00e7\u00e3o de dados em andamento",
+    "message": "Criação de dados em andamento",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -667,7 +667,7 @@
   },
   {
     "code": "DEPUTATION",
-    "message": "Delega\u00e7\u00e3o",
+    "message": "Delegação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -685,7 +685,7 @@
   },
   {
     "code": "EGOV_HRMS_DEACTIVATIONREASON_ORDERBYCOMMISSIONER",
-    "message": "Ordem do Comiss\u00e1rio",
+    "message": "Ordem do Comissário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -727,7 +727,7 @@
   },
   {
     "code": "EGOV_HRMS_DEGREE_MATRICULATION",
-    "message": "MATR\u00cdCULA",
+    "message": "MATRÍCULA",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -805,13 +805,13 @@
   },
   {
     "code": "EGOV_HRMS_EMPLOYEETYPE_DAILYWAGES",
-    "message": "Sal\u00e1rios di\u00e1rios",
+    "message": "Salários diários",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "EGOV_HRMS_EMPLOYEETYPE_DEPUTATION",
-    "message": "Delega\u00e7\u00e3o",
+    "message": "Delegação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -823,13 +823,13 @@
   },
   {
     "code": "EGOV_HRMS_EMPLOYEETYPE_TEMPORARY",
-    "message": "Tempor\u00e1rio",
+    "message": "Temporário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "EGOV_HRMS_EMPLOYMENTTEST_APTITUDETEST",
-    "message": "TESTE DE APTID\u00c3O",
+    "message": "TESTE DE APTIDÃO",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -853,7 +853,7 @@
   },
   {
     "code": "EGOV_HRMS_SPECALIZATION_SCIENCE",
-    "message": "Ci\u00eancia",
+    "message": "Ciência",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -883,469 +883,469 @@
   },
   {
     "code": "EMPLOYEEREPORT",
-    "message": "Relat\u00f3rio de funcion\u00e1rios",
+    "message": "Relatório de funcionários",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "EMPLOYEE_RESPONSE_ACTIVATION_ACTION",
-    "message": "Funcion\u00e1rio reativado com sucesso",
+    "message": "Funcionário reativado com sucesso",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "EMPLOYEE_RESPONSE_CREATE",
-    "message": "Funcion\u00e1rio criado com sucesso",
+    "message": "Funcionário criado com sucesso",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "EMPLOYEE_RESPONSE_CREATE_ACTION",
-    "message": "Funcion\u00e1rio criado com sucesso",
+    "message": "Funcionário criado com sucesso",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "EMPLOYEE_RESPONSE_CREATE_ACTION_ERROR",
-    "message": "Falha na cria\u00e7\u00e3o do funcion\u00e1rio",
+    "message": "Falha na criação do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "EMPLOYEE_RESPONSE_CREATE_LABEL",
-    "message": "Nome de usu\u00e1rio",
+    "message": "Nome de usuário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "EMPLOYEE_RESPONSE_DEACTIVATION_ACTION",
-    "message": "Funcion\u00e1rio desativado com sucesso",
+    "message": "Funcionário desativado com sucesso",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "EMPLOYEE_RESPONSE_DEACTIVATION_ACTION_ERROR",
-    "message": "Falha na desativa\u00e7\u00e3o do funcion\u00e1rio",
+    "message": "Falha na desativação do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "EMPLOYEE_RESPONSE_UPDATE_ACTION",
-    "message": "Detalhes do funcion\u00e1rio atualizados com sucesso",
+    "message": "Detalhes do funcionário atualizados com sucesso",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "EMPLOYEE_RESPONSE_UPDATE_ACTION_ERROR",
-    "message": "Falha na atualiza\u00e7\u00e3o dos detalhes do funcion\u00e1rio",
+    "message": "Falha na atualização dos detalhes do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "END_DATE",
-    "message": "Data de t\u00e9rmino",
+    "message": "Data de término",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_BASE_TENANT_MANDATORY",
-    "message": "Pelo menos uma jurisdi\u00e7\u00e3o deve ser selecionada na cidade matriz",
+    "message": "Pelo menos uma jurisdição deve ser selecionada na cidade matriz",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_BULK_CREATE_DUPLICATE_EMPCODE",
-    "message": "A solicita\u00e7\u00e3o em massa tem c\u00f3digo de funcion\u00e1rio duplicado",
+    "message": "A solicitação em massa tem código de funcionário duplicado",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_BULK_CREATE_DUPLICATE_MOBILE",
-    "message": "A solicita\u00e7\u00e3o em massa tem n\u00famero de celular duplicado",
+    "message": "A solicitação em massa tem número de celular duplicado",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_GENERATE_ID_ERROR",
-    "message": "N\u00e3o foi poss\u00edvel criar IDs",
+    "message": "Não foi possível criar IDs",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_ASSIGNMENT_CURRENT_TO_DATE",
-    "message": "O campo At\u00e9 a Data deve ficar em branco para a atribui\u00e7\u00e3o atual do funcion\u00e1rio.",
+    "message": "O campo Até a Data deve ficar em branco para a atribuição atual do funcionário.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_ASSIGNMENT_DATES",
-    "message": "O per\u00edodo de atribui\u00e7\u00e3o do funcion\u00e1rio (Data Inicial ou At\u00e9) n\u00e3o pode ser anterior \u00e0 data de nascimento.",
+    "message": "O período de atribuição do funcionário (Data Inicial ou Até) não pode ser anterior à data de nascimento.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_ASSIGNMENT_DATES_APPOINTMENT",
-    "message": "O per\u00edodo de atribui\u00e7\u00e3o do funcion\u00e1rio (Data Inicial ou At\u00e9) n\u00e3o pode ser anterior \u00e0 data da nomea\u00e7\u00e3o.",
+    "message": "O período de atribuição do funcionário (Data Inicial ou Até) não pode ser anterior à data da nomeação.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_ASSIGNMENT_NOT_CURRENT_TO_DATE",
-    "message": "O campo At\u00e9 a data n\u00e3o deve ficar em branco para atribui\u00e7\u00f5es n\u00e3o atuais do funcion\u00e1rio.",
+    "message": "O campo Até a data não deve ficar em branco para atribuições não atuais do funcionário.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_ASSIGNMENT_PERIOD",
-    "message": "Per\u00edodo de atribui\u00e7\u00e3o inv\u00e1lido (Data inicial - At\u00e9 a data).",
+    "message": "Período de atribuição inválido (Data inicial - Até a data).",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_BOUNDARY_TYPE_HEIRARCHY",
-    "message": "O valor do tipo de limite de jurisdi\u00e7\u00e3o \u00e9 inv\u00e1lido.",
+    "message": "O valor do tipo de limite de jurisdição é inválido.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_CURRENT_ASSGN",
-    "message": "Deve haver exatamente uma tarefa atual para o funcion\u00e1rio.",
+    "message": "Deve haver exatamente uma tarefa atual para o funcionário.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_DATE_OF_APPOINTMENT",
-    "message": "Data de nomea\u00e7\u00e3o do funcion\u00e1rio inv\u00e1lida inserida pelo usu\u00e1rio.",
+    "message": "Data de nomeação do funcionário inválida inserida pelo usuário.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_DATE_OF_APPOINTMENT_DOB",
-    "message": "A data de nomea\u00e7\u00e3o do funcion\u00e1rio n\u00e3o pode ser anterior \u00e0 data de nascimento.",
+    "message": "A data de nomeação do funcionário não pode ser anterior à data de nascimento.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_DEACT_REASON",
-    "message": "O motivo da desativa\u00e7\u00e3o do funcion\u00e1rio \u00e9 inv\u00e1lido.",
+    "message": "O motivo da desativação do funcionário é inválido.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_DEACT_REQUEST",
-    "message": "O sinalizador ativo do funcion\u00e1rio deve ser definido como falso durante a desativa\u00e7\u00e3o.",
+    "message": "O sinalizador ativo do funcionário deve ser definido como falso durante a desativação.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_DEPARTMENTAL_TEST",
-    "message": "O teste de avalia\u00e7\u00e3o departamental do funcion\u00e1rio \u00e9 inv\u00e1lido.",
+    "message": "O teste de avaliação departamental do funcionário é inválido.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_DEPARTMENTAL_TEST_PASSING_YEAR",
-    "message": "O ano de aprova\u00e7\u00e3o no teste de avalia\u00e7\u00e3o departamental do funcion\u00e1rio n\u00e3o pode ser anterior \u00e0 data de nascimento.",
+    "message": "O ano de aprovação no teste de avaliação departamental do funcionário não pode ser anterior à data de nascimento.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_DEPT",
-    "message": "Departamento inv\u00e1lido do funcion\u00e1rio inserido.",
+    "message": "Departamento inválido do funcionário inserido.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_DESG",
-    "message": "Designa\u00e7\u00e3o de funcion\u00e1rio inv\u00e1lida.",
+    "message": "Designação de funcionário inválida.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_DOB",
-    "message": "Data de nascimento inv\u00e1lida inserida.",
+    "message": "Data de nascimento inválida inserida.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_EDUCATIONAL_PASSING_YEAR",
-    "message": "O ano de escolaridade do falecimento do funcion\u00e1rio n\u00e3o pode ser anterior \u00e0 data de nascimento.",
+    "message": "O ano de escolaridade do falecimento do funcionário não pode ser anterior à data de nascimento.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_EDUCATIONAL_STREAM",
-    "message": "O fluxo educacional do funcion\u00e1rio \u00e9 inv\u00e1lido.",
+    "message": "O fluxo educacional do funcionário é inválido.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_EMP_STATUS_ROLE",
-    "message": "Status de emprego inv\u00e1lido inserido.",
+    "message": "Status de emprego inválido inserido.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_EMP_TYPE",
-    "message": "Tipo de funcion\u00e1rio inv\u00e1lido inserido.",
+    "message": "Tipo de funcionário inválido inserido.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_JURISDICTION_ACTIIEV_NULL",
-    "message": "A jurisdi\u00e7\u00e3o deve ter pelo menos 1 dado ativo",
+    "message": "A jurisdição deve ter pelo menos 1 dado ativo",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_JURISDICTION_BOUNDARY",
-    "message": "O valor do limite da jurisdi\u00e7\u00e3o \u00e9 inv\u00e1lido.",
+    "message": "O valor do limite da jurisdição é inválido.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_JURISDICTION_HEIRARCHY",
-    "message": "O valor da hierarquia de jurisdi\u00e7\u00e3o \u00e9 inv\u00e1lido.",
+    "message": "O valor da hierarquia de jurisdição é inválido.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_MOB_NO",
-    "message": "N\u00famero de celular inv\u00e1lido inserido.",
+    "message": "Número de celular inválido inserido.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_QUALIFICATION",
-    "message": "A qualifica\u00e7\u00e3o do funcion\u00e1rio \u00e9 inv\u00e1lida.",
+    "message": "A qualificação do funcionário é inválida.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_ROLE",
-    "message": "Fun\u00e7\u00e3o inv\u00e1lida atribu\u00edda ao funcion\u00e1rio.",
+    "message": "Função inválida atribuída ao funcionário.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_SEARCH_AOD",
-    "message": "Juntamente com a data, pelo menos um departamento e designa\u00e7\u00e3o precisam ser passados \u200b\u200bcomo crit\u00e9rios de pesquisa.",
+    "message": "Juntamente com a data, pelo menos um departamento e designação precisam ser passados ​​como critérios de pesquisa.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_SEARCH_REQ",
-    "message": "A pesquisa aberta est\u00e1 desativada para este usu\u00e1rio.",
+    "message": "A pesquisa aberta está desativada para este usuário.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_SEARCH_ROLES",
-    "message": "Para pesquisa baseada em fun\u00e7\u00f5es, a passagem do ID do locat\u00e1rio \u00e9 obrigat\u00f3ria.",
+    "message": "Para pesquisa baseada em funções, a passagem do ID do locatário é obrigatória.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_SEARCH_USER",
-    "message": "Para pesquisa com base no n\u00famero de telefone e nome, \u00e9 obrigat\u00f3ria a passagem do ID do inquilino.",
+    "message": "Para pesquisa com base no número de telefone e nome, é obrigatória a passagem do ID do inquilino.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_SERVICE_ASSGN",
-    "message": "Deve haver no m\u00e1ximo um servi\u00e7o atualmente em funcionamento para o funcion\u00e1rio.",
+    "message": "Deve haver no máximo um serviço atualmente em funcionamento para o funcionário.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_SERVICE_CURRENT_TO_DATE",
-    "message": "A data do per\u00edodo de servi\u00e7o deve ficar em branco para os funcion\u00e1rios que trabalham atualmente.",
+    "message": "A data do período de serviço deve ficar em branco para os funcionários que trabalham atualmente.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_SERVICE_DATES",
-    "message": "O per\u00edodo de servi\u00e7o do funcion\u00e1rio (data inicial ou final) n\u00e3o pode ser anterior \u00e0 data de nascimento.",
+    "message": "O período de serviço do funcionário (data inicial ou final) não pode ser anterior à data de nascimento.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_SERVICE_NOT_CURRENT_TO_DATE",
-    "message": "A data do per\u00edodo de servi\u00e7o n\u00e3o deve ficar em branco para funcion\u00e1rios que n\u00e3o trabalham atualmente.",
+    "message": "A data do período de serviço não deve ficar em branco para funcionários que não trabalham atualmente.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_SERVICE_PERIOD",
-    "message": "O per\u00edodo de servi\u00e7o (data inicial ou final) do funcion\u00e1rio \u00e9 inv\u00e1lido.",
+    "message": "O período de serviço (data inicial ou final) do funcionário é inválido.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_INVALID_SERVICE_STATUS",
-    "message": "O status de servi\u00e7o do funcion\u00e1rio \u00e9 inv\u00e1lido.",
+    "message": "O status de serviço do funcionário é inválido.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_MISSING_ROLES",
-    "message": "N\u00famero de celular inv\u00e1lido inserido.",
+    "message": "Número de celular inválido inserido.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_OVERLAPPING_ASSGN",
-    "message": "N\u00e3o deve haver sobreposi\u00e7\u00e3o de per\u00edodos de atribui\u00e7\u00f5es para o funcion\u00e1rio.",
+    "message": "Não deve haver sobreposição de períodos de atribuições para o funcionário.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_OVERLAPPING_ASSGN_CURRENT",
-    "message": "O per\u00edodo de atribui\u00e7\u00f5es do funcion\u00e1rio n\u00e3o deve ser posterior \u00e0 atribui\u00e7\u00e3o atual.",
+    "message": "O período de atribuições do funcionário não deve ser posterior à atribuição atual.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_OVERLAPPING_SERVICEHISTORY_CURRENT",
-    "message": "Os detalhes do per\u00edodo de servi\u00e7o do funcion\u00e1rio n\u00e3o devem ser posteriores \u00e0 atribui\u00e7\u00e3o atual!",
+    "message": "Os detalhes do período de serviço do funcionário não devem ser posteriores à atribuição atual!",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_UPDATE_ASSIGNEMENT_INCOSISTENT",
-    "message": "Os dados de atribui\u00e7\u00e3o em uma solicita\u00e7\u00e3o de atualiza\u00e7\u00e3o devem conter todos os dados inseridos anteriormente.",
+    "message": "Os dados de atribuição em uma solicitação de atualização devem conter todos os dados inseridos anteriormente.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_UPDATE_DEACT_DETAILS_INCORRECT_EFFECTIVEFROM",
-    "message": "A data efetiva de desativa\u00e7\u00e3o do funcion\u00e1rio n\u00e3o deve ser uma data futura.",
+    "message": "A data efetiva de desativação do funcionário não deve ser uma data futura.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_UPDATE_DEACT_DETAILS_INCOSISTENT",
-    "message": "Os dados de desativa\u00e7\u00e3o de funcion\u00e1rios em uma solicita\u00e7\u00e3o de atualiza\u00e7\u00e3o devem conter todos os dados inseridos anteriormente.",
+    "message": "Os dados de desativação de funcionários em uma solicitação de atualização devem conter todos os dados inseridos anteriormente.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_UPDATE_DOCUMENT_INCOSISTENT",
-    "message": "Os dados do documento do funcion\u00e1rio em uma solicita\u00e7\u00e3o de atualiza\u00e7\u00e3o devem conter todos os dados inseridos anteriormente.",
+    "message": "Os dados do documento do funcionário em uma solicitação de atualização devem conter todos os dados inseridos anteriormente.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_UPDATE_EDUCATION_INCOSISTENT",
-    "message": "Os dados educacionais em uma solicita\u00e7\u00e3o de atualiza\u00e7\u00e3o devem conter todos os dados inseridos anteriormente.",
+    "message": "Os dados educacionais em uma solicitação de atualização devem conter todos os dados inseridos anteriormente.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_UPDATE_EMPLOYEE_CODE_CHANGE",
-    "message": "O c\u00f3digo do funcion\u00e1rio n\u00e3o pode ser alterado em uma solicita\u00e7\u00e3o de atualiza\u00e7\u00e3o.",
+    "message": "O código do funcionário não pode ser alterado em uma solicitação de atualização.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE",
-    "message": "Nenhum funcion\u00e1rio encontrado para determinado UUID.",
+    "message": "Nenhum funcionário encontrado para determinado UUID.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_UPDATE_EXISTING_MOBNO",
-    "message": "O usu\u00e1rio existe para determinado celular n\u00e3o",
+    "message": "O usuário existe para determinado celular não",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_UPDATE_JURISDICTION_INCOSISTENT",
-    "message": "Os dados de jurisdi\u00e7\u00e3o em uma solicita\u00e7\u00e3o de atualiza\u00e7\u00e3o devem conter todos os dados inseridos anteriormente.",
+    "message": "Os dados de jurisdição em uma solicitação de atualização devem conter todos os dados inseridos anteriormente.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_UPDATE_NULL",
-    "message": "O C\u00f3digo do Funcion\u00e1rio em uma solicita\u00e7\u00e3o de atualiza\u00e7\u00e3o n\u00e3o deve ser nulo.",
+    "message": "O Código do Funcionário em uma solicitação de atualização não deve ser nulo.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_UPDATE_NULL_ID",
-    "message": "O nome de usu\u00e1rio em uma solicita\u00e7\u00e3o de atualiza\u00e7\u00e3o n\u00e3o deve ser nulo",
+    "message": "O nome de usuário em uma solicitação de atualização não deve ser nulo",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_UPDATE_NULL_UUID",
-    "message": "O UUID do funcion\u00e1rio em uma solicita\u00e7\u00e3o de atualiza\u00e7\u00e3o n\u00e3o deve ser nulo.",
+    "message": "O UUID do funcionário em uma solicitação de atualização não deve ser nulo.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_UPDATE_SERVICE_HISTORY_INCOSISTENT",
-    "message": "Os dados do hist\u00f3rico de servi\u00e7o em uma solicita\u00e7\u00e3o de atualiza\u00e7\u00e3o devem conter todos os dados inseridos anteriormente.",
+    "message": "Os dados do histórico de serviço em uma solicitação de atualização devem conter todos os dados inseridos anteriormente.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_UPDATE_TESTS_INCOSISTENT",
-    "message": "Os dados de teste de avalia\u00e7\u00e3o de funcion\u00e1rios em uma solicita\u00e7\u00e3o de atualiza\u00e7\u00e3o devem conter todos os dados inseridos anteriormente.",
+    "message": "Os dados de teste de avaliação de funcionários em uma solicitação de atualização devem conter todos os dados inseridos anteriormente.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_USER_CREATION_FAILED",
-    "message": "A cria\u00e7\u00e3o do usu\u00e1rio falhou no servi\u00e7o do usu\u00e1rio.",
+    "message": "A criação do usuário falhou no serviço do usuário.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_USER_EXIST_ID",
-    "message": "O nome de usu\u00e1rio existe",
+    "message": "O nome de usuário existe",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_USER_EXIST_MOB",
-    "message": "J\u00e1 existe usu\u00e1rio para o n\u00famero de celular inserido. Use um n\u00famero de celular diferente para continuar.",
+    "message": "Já existe usuário para o número de celular inserido. Use um número de celular diferente para continuar.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_USER_EXIST_MOBILE_NUMBER",
-    "message": "O n\u00famero de celular j\u00e1 existe!",
+    "message": "O número de celular já existe!",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_USER_EXIST_USERNAME",
-    "message": "O usu\u00e1rio j\u00e1 existe para o nome de usu\u00e1rio inserido.",
+    "message": "O usuário já existe para o nome de usuário inserido.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_HRMS_USER_UPDATION_FAILED",
-    "message": "A atualiza\u00e7\u00e3o do usu\u00e1rio falhou no servi\u00e7o do usu\u00e1rio.",
+    "message": "A atualização do usuário falhou no serviço do usuário.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_INVALID_JURISDICTION",
-    "message": "Jurisdi\u00e7\u00e3o inv\u00e1lida",
+    "message": "Jurisdição inválida",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ERR_MOBILE_NUMBER_EXISTS_FIELDS",
-    "message": "N\u00famero de celular j\u00e1 em uso. Digite outro n\u00famero de celular",
+    "message": "Número de celular já em uso. Digite outro número de celular",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
-    "message": "Lista de verifica\u00e7\u00e3o criada com sucesso",
+    "message": "Lista de verificação criada com sucesso",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1369,13 +1369,13 @@
   },
   {
     "code": "ES_SEARCH_APPLICATION_MOBILE_INVALID",
-    "message": "N\u00famero de celular inv\u00e1lido",
+    "message": "Número de celular inválido",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "FAILED_TO_ASSIGN_CAMPAIGN",
-    "message": "Falha na atribui\u00e7\u00e3o da campanha!",
+    "message": "Falha na atribuição da campanha!",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1423,19 +1423,19 @@
   },
   {
     "code": "HE_NEW_EMPLOYEE_CITY_LABEL",
-    "message": "Novo Funcion\u00e1rio ULB",
+    "message": "Novo Funcionário ULB",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
-    "code": "HE_NEW_EMPLOYEE_CITY_LABEL\u2009",
-    "message": "Novo Funcion\u00e1rio ULB",
+    "code": "HE_NEW_EMPLOYEE_CITY_LABEL ",
+    "message": "Novo Funcionário ULB",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HIERARCHY_FIELD_MANDATORY",
-    "message": "Por favor preencha o campo obrigat\u00f3rio",
+    "message": "Por favor preencha o campo obrigatório",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1453,13 +1453,13 @@
   },
   {
     "code": "HRMS_BOUNDARY_LABEL",
-    "message": "\u00c1rea",
+    "message": "Área",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HRMS_CAMPAIGN_ASSIGNED_INFO",
-    "message": "As campanhas foram atribu\u00eddas com sucesso. Clique no bot\u00e3o \u2018Criar um novo usu\u00e1rio\u2019 se desejar criar um usu\u00e1rio. Clique no bot\u00e3o \u2018Voltar \u00e0 p\u00e1gina inicial\u2019 para voltar \u00e0 tela inicial.",
+    "message": "As campanhas foram atribuídas com sucesso. Clique no botão ‘Criar um novo usuário’ se desejar criar um usuário. Clique no botão ‘Voltar à página inicial’ para voltar à tela inicial.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1471,19 +1471,19 @@
   },
   {
     "code": "HRMS_CREATE_EMPLOYEE_INFO",
-    "message": "O funcion\u00e1rio foi criado com sucesso. Clique no bot\u00e3o \u2018Prosseguir para atribui\u00e7\u00e3o de campanha\u2019 se desejar atribuir uma campanha ao usu\u00e1rio. Clique no bot\u00e3o \u2018Voltar \u00e0 p\u00e1gina inicial\u2019 para voltar \u00e0 tela inicial.",
+    "message": "O funcionário foi criado com sucesso. Clique no botão ‘Prosseguir para atribuição de campanha’ se desejar atribuir uma campanha ao usuário. Clique no botão ‘Voltar à página inicial’ para voltar à tela inicial.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HRMS_EMPLOYEE_NAME_VALIDATION_ERROR_MSG",
-    "message": "Insira um nome v\u00e1lido sem n\u00fameros ou caracteres especiais.",
+    "message": "Insira um nome válido sem números ou caracteres especiais.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HRMS_ROLES",
-    "message": "Fun\u00e7\u00f5es",
+    "message": "Funções",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1501,13 +1501,13 @@
   },
   {
     "code": "HR_ACTIVATE_EMPLOYEE_HEAD",
-    "message": "Ativar Funcion\u00e1rio",
+    "message": "Ativar Funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ACTIVATE_EMPLOYEE_LABEL",
-    "message": "ATIVAR FUNCION\u00c1RIO",
+    "message": "ATIVAR FUNCIONÁRIO",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1519,19 +1519,19 @@
   },
   {
     "code": "HR_ACTIVATION_REASON",
-    "message": "Motivo da reativa\u00e7\u00e3o",
+    "message": "Motivo da reativação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ACTIVATION_REASON_SELECT",
-    "message": "Selecione o motivo da reativa\u00e7\u00e3o",
+    "message": "Selecione o motivo da reativação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ADD_ASSIGNMENT",
-    "message": "ADICIONAR ATRIBUI\u00c7\u00c3O",
+    "message": "ADICIONAR ATRIBUIÇÃO",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1543,25 +1543,25 @@
   },
   {
     "code": "HR_ADD_JURISDICTION",
-    "message": "ADICIONAR JURISDI\u00c7\u00c3O",
+    "message": "ADICIONAR JURISDIÇÃO",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ADD_NEW_EMPLOYEE_BUTTON",
-    "message": "Adicionar funcion\u00e1rio",
+    "message": "Adicionar funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ADD_QUALIFICATIONS",
-    "message": "ADICIONAR QUALIFICA\u00c7\u00d5ES",
+    "message": "ADICIONAR QUALIFICAÇÕES",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ADD_SERVICE_ENTRY",
-    "message": "ADICIONAR ENTRADA DE SERVI\u00c7O",
+    "message": "ADICIONAR ENTRADA DE SERVIÇO",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1573,7 +1573,7 @@
   },
   {
     "code": "HR_APPOINTMENT_DATE_LABEL",
-    "message": "Data da Nomea\u00e7\u00e3o",
+    "message": "Data da Nomeação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1585,7 +1585,7 @@
   },
   {
     "code": "HR_APPT_DATE_LABEL",
-    "message": "Data da Nomea\u00e7\u00e3o",
+    "message": "Data da Nomeação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1603,37 +1603,37 @@
   },
   {
     "code": "HR_ASMT_FROM_DATE_LABEL",
-    "message": "Atribu\u00eddo desde a data",
+    "message": "Atribuído desde a data",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ASMT_FROM_DATE_PLACEHOLDER",
-    "message": "Atribu\u00eddo desde a data",
+    "message": "Atribuído desde a data",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ASMT_TO_DATE_LABEL",
-    "message": "Atribu\u00eddo at\u00e9 a data",
+    "message": "Atribuído até a data",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ASMT_TO_DATE_LABEL_PLACEHOLDER",
-    "message": "Atribu\u00eddo at\u00e9 a data",
+    "message": "Atribuído até a data",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ASMT_TO_DATE_PLACEHOLDER",
-    "message": "Atribu\u00eddo at\u00e9 a data",
+    "message": "Atribuído até a data",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ASSIGNMENT",
-    "message": "Atribui\u00e7\u00e3o",
+    "message": "Atribuição",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1645,7 +1645,7 @@
   },
   {
     "code": "HR_ASSIGN_DET_SUB_HEADER",
-    "message": "Verifique os detalhes inseridos antes do envio. Os detalhes da tarefa n\u00e3o podem ser editados depois de enviados.",
+    "message": "Verifique os detalhes inseridos antes do envio. Os detalhes da tarefa não podem ser editados depois de enviados.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1705,7 +1705,7 @@
   },
   {
     "code": "HR_CAMPAIGN_FROM_DATE_LABEL",
-    "message": "Atribu\u00eddo a partir da data",
+    "message": "Atribuído a partir da data",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1723,7 +1723,7 @@
   },
   {
     "code": "HR_CAMPAIGN_TO_DATE_LABEL",
-    "message": "Atribu\u00eddo at\u00e9 a data",
+    "message": "Atribuído até a data",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1734,7 +1734,7 @@
     "locale": "pt_DEMO"
   },
   {
-    "code": "HR_CITY_SELECT_LABEL\u2009",
+    "code": "HR_CITY_SELECT_LABEL ",
     "message": "Selecione",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
@@ -1747,7 +1747,7 @@
   },
   {
     "code": "HR_COMMON_APPL_NEW_HEADER",
-    "message": "Criar novo funcion\u00e1rio",
+    "message": "Criar novo funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1765,7 +1765,7 @@
   },
   {
     "code": "HR_COMMON_BUTTON_NXT_STEP",
-    "message": "Pr\u00f3xima etapa",
+    "message": "Próxima etapa",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1795,31 +1795,31 @@
   },
   {
     "code": "HR_COMMON_CREATE_EMPLOYEE_HEADER",
-    "message": "Criar usu\u00e1rio",
+    "message": "Criar usuário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_COMMON_DEACTIVATED_EMPLOYEE_HEADER",
-    "message": "Desativar Funcion\u00e1rio",
+    "message": "Desativar Funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_COMMON_EDIT_CAMPAIGNS_HEADER",
-    "message": "Editar atribui\u00e7\u00e3o de campanha",
+    "message": "Editar atribuição de campanha",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_COMMON_EDIT_CAMPAIGNS_HEADER ",
-    "message": "Editar atribui\u00e7\u00e3o de campanha",
+    "message": "Editar atribuição de campanha",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_COMMON_EDIT_EMPLOYEE_HEADER",
-    "message": "Editar funcion\u00e1rio",
+    "message": "Editar funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1831,13 +1831,13 @@
   },
   {
     "code": "HR_COMMON_HEADER",
-    "message": "Gest\u00e3o de Funcion\u00e1rios",
+    "message": "Gestão de Funcionários",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_COMMON_REACTIVATED_EMPLOYEE_HEADER",
-    "message": "Reativar Funcion\u00e1rio",
+    "message": "Reativar Funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1855,13 +1855,13 @@
   },
   {
     "code": "HR_COMMON_TABLE_COL_DESG",
-    "message": "Designa\u00e7\u00e3o",
+    "message": "Designação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_COMMON_TABLE_COL_EMP_ID",
-    "message": "Nome de usu\u00e1rio",
+    "message": "Nome de usuário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1873,7 +1873,7 @@
   },
   {
     "code": "HR_COMMON_TABLE_COL_ROLE",
-    "message": "Por fun\u00e7\u00e3o",
+    "message": "Por função",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1897,7 +1897,7 @@
   },
   {
     "code": "HR_COMMON_UPDATE_EMPLOYEE_HEADER",
-    "message": "Atualiza\u00e7\u00e3o de funcion\u00e1rios",
+    "message": "Atualização de funcionários",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1909,31 +1909,31 @@
   },
   {
     "code": "HR_CORRESPONDENCE_ADDRESS_LABEL",
-    "message": "Endere\u00e7o para correspond\u00eancia",
+    "message": "Endereço para correspondência",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_CORRESPONDENCE_ADDRESS_PLACEHOLDER",
-    "message": "Insira o endere\u00e7o de correspond\u00eancia",
+    "message": "Insira o endereço de correspondência",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_CREATE_SUCCESS_MESSAGE",
-    "message": "Funcion\u00e1rio criado com sucesso",
+    "message": "Funcionário criado com sucesso",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_CREATE_SUCCESS_SUBHEADER",
-    "message": "Uma notifica\u00e7\u00e3o foi enviada ao Funcion\u00e1rio criado no celular registrado No.",
+    "message": "Uma notificação foi enviada ao Funcionário criado no celular registrado No.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_CURRENTLY_ASSIGNED_HERE_SWITCH_LABEL",
-    "message": "Atualmente atribu\u00eddo aqui",
+    "message": "Atualmente atribuído aqui",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1945,7 +1945,7 @@
   },
   {
     "code": "HR_CURR_ASSIGN_LABEL",
-    "message": "Atualmente atribu\u00eddo aqui",
+    "message": "Atualmente atribuído aqui",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1963,19 +1963,19 @@
   },
   {
     "code": "HR_DEACTIVATE_EMPLOYEE_BUTTON_TEXT",
-    "message": "Desativar Funcion\u00e1rio",
+    "message": "Desativar Funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_DEACTIVATE_EMPLOYEE_HEAD",
-    "message": "Desativar Funcion\u00e1rio",
+    "message": "Desativar Funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_DEACTIVATE_EMPLOYEE_LABEL",
-    "message": "DESATIVAR FUNCION\u00c1RIO",
+    "message": "DESATIVAR FUNCIONÁRIO",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1987,7 +1987,7 @@
   },
   {
     "code": "HR_DEACTIVATE_SUCCESS_MESSAGE",
-    "message": "Funcion\u00e1rio desativado com sucesso",
+    "message": "Funcionário desativado com sucesso",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1999,13 +1999,13 @@
   },
   {
     "code": "HR_DEACTIVATION_REASON",
-    "message": "Motivo da Desativa\u00e7\u00e3o",
+    "message": "Motivo da Desativação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_DEACTIVATION_REASON_SELECT",
-    "message": "Selecione o motivo da desativa\u00e7\u00e3o",
+    "message": "Selecione o motivo da desativação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2047,19 +2047,19 @@
   },
   {
     "code": "HR_DESG_LABEL",
-    "message": "Designa\u00e7\u00e3o",
+    "message": "Designação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_DESIGNATION_PLACEHOLDER",
-    "message": "Selecione a designa\u00e7\u00e3o",
+    "message": "Selecione a designação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_DESIG_PLACEHOLDER",
-    "message": "Selecione a designa\u00e7\u00e3o",
+    "message": "Selecione a designação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2083,7 +2083,7 @@
   },
   {
     "code": "HR_EDIT_CAMPAIGN_ASSIGNMENT",
-    "message": "Editar atribui\u00e7\u00e3o de campanha",
+    "message": "Editar atribuição de campanha",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2095,7 +2095,7 @@
   },
   {
     "code": "HR_ED_QUAL_HEADER",
-    "message": "Qualifica\u00e7\u00e3o Educacional",
+    "message": "Qualificação Educacional",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2125,13 +2125,13 @@
   },
   {
     "code": "HR_EMPLOYEE_ID_LABEL",
-    "message": "Nome de usu\u00e1rio",
+    "message": "Nome de usuário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_EMPLOYEE_ID_PLACEHOLDER",
-    "message": "Insira o ID do funcion\u00e1rio",
+    "message": "Insira o ID do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2143,7 +2143,7 @@
   },
   {
     "code": "HR_EMPLOYMENT_DESIGNATION_LABEL",
-    "message": "Designa\u00e7\u00e3o",
+    "message": "Designação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2167,49 +2167,49 @@
   },
   {
     "code": "HR_EMP_ID_ERR_MSG",
-    "message": "Nome de usu\u00e1rio inv\u00e1lido",
+    "message": "Nome de usuário inválido",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_EMP_ID_LABEL",
-    "message": "Nome de usu\u00e1rio",
+    "message": "Nome de usuário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_EMP_ID_MESSAGE",
-    "message": "Identifica\u00e7\u00e3o atribu\u00edda ao funcion\u00e1rio pelo munic\u00edpio. Caso n\u00e3o haja ID atribu\u00eddo, deixe a coluna em branco para que o sistema gere o ID do Funcion\u00e1rio.",
+    "message": "Identificação atribuída ao funcionário pelo município. Caso não haja ID atribuído, deixe a coluna em branco para que o sistema gere o ID do Funcionário.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_EMP_ID_PLACEHOLDER",
-    "message": "Digite o nome de usu\u00e1rio",
+    "message": "Digite o nome de usuário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_EMP_MOBILE_ERR_MSG",
-    "message": "N\u00famero de celular inv\u00e1lido",
+    "message": "Número de celular inválido",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_EMP_MOBILE_LABEL",
-    "message": "N\u00famero do celular do funcion\u00e1rio",
+    "message": "Número do celular do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_EMP_MOBILE_PLACEHOLDER",
-    "message": "Insira o n\u00famero do celular do funcion\u00e1rio",
+    "message": "Insira o número do celular do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_EMP_NAME_ERR_MSG",
-    "message": "Nome inv\u00e1lido",
+    "message": "Nome inválido",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2221,7 +2221,7 @@
   },
   {
     "code": "HR_EMP_NAME_PLACEHOLDER",
-    "message": "Insira o nome do funcion\u00e1rio",
+    "message": "Insira o nome do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2233,31 +2233,31 @@
   },
   {
     "code": "HR_EMP_STATUS_LABEL",
-    "message": "Situa\u00e7\u00e3o de emprego",
+    "message": "Situação de emprego",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_EMP_TYPE_LABEL",
-    "message": "Tipo de funcion\u00e1rio",
+    "message": "Tipo de funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_EMP_TYPE_PLACEHOLDER",
-    "message": "Selecione o tipo de funcion\u00e1rio",
+    "message": "Selecione o tipo de funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ENTER_ORDER_NO",
-    "message": "Digite o n\u00famero do pedido",
+    "message": "Digite o número do pedido",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ENTER_REMARKS",
-    "message": "Insira coment\u00e1rios",
+    "message": "Insira comentários",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2275,31 +2275,31 @@
   },
   {
     "code": "HR_FATHER_HUSBAND_NAME_PLACEHOLDER",
-    "message": "Insira o nome do funcion\u00e1rio",
+    "message": "Insira o nome do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_GENDER_LABEL",
-    "message": "G\u00eanero",
+    "message": "Gênero",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_GENDER_PLACEHOLDER",
-    "message": "Selecione o g\u00eanero",
+    "message": "Selecione o gênero",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_GUARDIAN_NAME_LABEL",
-    "message": "Nome do Guardi\u00e3o",
+    "message": "Nome do Guardião",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_GUARDIAN_NAME_PLACEHOLDER",
-    "message": "Digite o nome do respons\u00e1vel",
+    "message": "Digite o nome do responsável",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2335,49 +2335,49 @@
   },
   {
     "code": "HR_HOME_SEARCH_RESULTS_DESC",
-    "message": "Forne\u00e7a pelo menos um par\u00e2metro para procurar um funcion\u00e1rio",
+    "message": "Forneça pelo menos um parâmetro para procurar um funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_HOME_SEARCH_RESULTS_HEADING",
-    "message": "Pesquisar usu\u00e1rio",
+    "message": "Pesquisar usuário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_HOME_SEARCH_RESULTS_TABLE_HEADING",
-    "message": "Resultados da pesquisa por Funcion\u00e1rio",
+    "message": "Resultados da pesquisa por Funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_JURIDICTIONS_LABEL",
-    "message": "Jurisdi\u00e7\u00e3o",
+    "message": "Jurisdição",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_JURISDICTION",
-    "message": "Jurisdi\u00e7\u00e3o",
+    "message": "Jurisdição",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_JURISDICTION_BOUNDARY",
-    "message": "Jurisdi\u00e7\u00e3o",
+    "message": "Jurisdição",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_JURISDICTION_DETAILS_HEADER",
-    "message": "Detalhes da jurisdi\u00e7\u00e3o",
+    "message": "Detalhes da jurisdição",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_JURIS_DET_HEADER",
-    "message": "Detalhes da jurisdi\u00e7\u00e3o",
+    "message": "Detalhes da jurisdição",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2389,7 +2389,7 @@
   },
   {
     "code": "HR_LOCATION_LABEL",
-    "message": "Localiza\u00e7\u00e3o",
+    "message": "Localização",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2413,43 +2413,43 @@
   },
   {
     "code": "HR_MOBILE_NO_CHECK",
-    "message": "O n\u00famero de celular inserido deve ser exclusivo",
+    "message": "O número de celular inserido deve ser exclusivo",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_MOB_NO_LABEL",
-    "message": "N\u00famero de telem\u00f3vel",
+    "message": "Número de telemóvel",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_MOB_NO_PLACEHOLDER",
-    "message": "Digite o n\u00famero do celular",
+    "message": "Digite o número do celular",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_NAME_LABEL",
-    "message": "Nome do funcion\u00e1rio",
+    "message": "Nome do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_NAME_PLACEHOLDER",
-    "message": "Insira o nome do funcion\u00e1rio",
+    "message": "Insira o nome do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_NEW_EMPLOYEE_FORM_HEADER",
-    "message": "Detalhes do funcion\u00e1rio",
+    "message": "Detalhes do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_NEW_EMP_NAME_PLACEHOLDER",
-    "message": "Insira o nome do funcion\u00e1rio",
+    "message": "Insira o nome do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2461,19 +2461,19 @@
   },
   {
     "code": "HR_ORDER_NO",
-    "message": "Pedido n\u00ba.",
+    "message": "Pedido nº.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ORDER_NO_LABEL",
-    "message": "N\u00famero do pedido",
+    "message": "Número do pedido",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ORDER_NO_PLACEHOLDER",
-    "message": "Digite o n\u00famero do pedido",
+    "message": "Digite o número do pedido",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2515,7 +2515,7 @@
   },
   {
     "code": "HR_PROFESSIONAL_DETAILS_FORM_HEADER",
-    "message": "Detalhes do funcion\u00e1rio",
+    "message": "Detalhes do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2527,7 +2527,7 @@
   },
   {
     "code": "HR_RACTIVATE_SUCCESS_MESSAGE",
-    "message": "Funcion\u00e1rio reativado com sucesso",
+    "message": "Funcionário reativado com sucesso",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2539,13 +2539,13 @@
   },
   {
     "code": "HR_READY_TO_SUBMIT_TEXT",
-    "message": "Certifique-se de revisar todos os detalhes antes de clicar no bot\u00e3o Enviar. Clique no bot\u00e3o Cancelar para voltar \u00e0 p\u00e1gina anterior",
+    "message": "Certifique-se de revisar todos os detalhes antes de clicar no botão Enviar. Clique no botão Cancelar para voltar à página anterior",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_RELATIONSHIP_LABEL",
-    "message": "Rela\u00e7\u00e3o",
+    "message": "Relação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2557,19 +2557,19 @@
   },
   {
     "code": "HR_REMARKS",
-    "message": "Observa\u00e7\u00f5es",
+    "message": "Observações",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_REMARKS_LABEL",
-    "message": "Observa\u00e7\u00f5es",
+    "message": "Observações",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_REMARKS_PLACEHOLDER",
-    "message": "Insira coment\u00e1rios",
+    "message": "Insira comentários",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2587,13 +2587,13 @@
   },
   {
     "code": "HR_ROLE_NO_LABEL",
-    "message": "N\u00ba de fun\u00e7\u00f5es",
+    "message": "Nº de funções",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_ROLE_PLACEHOLDER",
-    "message": "Selecione a fun\u00e7\u00e3o",
+    "message": "Selecione a função",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2604,7 +2604,7 @@
     "locale": "pt_DEMO"
   },
   {
-    "code": "HR_SELECT_CITY_PLACEHOLDER\u2009",
+    "code": "HR_SELECT_CITY_PLACEHOLDER ",
     "message": "Selecione ULB",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
@@ -2617,31 +2617,31 @@
   },
   {
     "code": "HR_SER_DET_HEADER",
-    "message": "Detalhes do servi\u00e7o",
+    "message": "Detalhes do serviço",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_SER_DET_SUB_HEADER",
-    "message": "Verifique os detalhes inseridos antes do envio. Os detalhes do servi\u00e7o n\u00e3o podem ser editados depois de enviados.",
+    "message": "Verifique os detalhes inseridos antes do envio. Os detalhes do serviço não podem ser editados depois de enviados.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_SER_FROM_DATE_LABEL",
-    "message": "Data de in\u00edcio do servi\u00e7o",
+    "message": "Data de início do serviço",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_SER_TO_DATE_LABEL",
-    "message": "Servi\u00e7o at\u00e9 o momento",
+    "message": "Serviço até o momento",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_STATUS_LABEL",
-    "message": "Situa\u00e7\u00e3o de emprego",
+    "message": "Situação de emprego",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2689,13 +2689,13 @@
   },
   {
     "code": "HR_SUMMARY_EDUCATION_DEATILS_SUBHEADER",
-    "message": "Detalhes de educa\u00e7\u00e3o",
+    "message": "Detalhes de educação",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_SUMMARY_HEADER",
-    "message": "Criar Novo Funcion\u00e1rio - Resumo",
+    "message": "Criar Novo Funcionário - Resumo",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2743,13 +2743,13 @@
   },
   {
     "code": "HR_UPDATE_PASSWORD_SUCCESS_MESSAGE",
-    "message": "Senha do funcion\u00e1rio atualizada com sucesso",
+    "message": "Senha do funcionário atualizada com sucesso",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_UPDATE_SUCCESS_MESSAGE",
-    "message": "Funcion\u00e1rio atualizado com sucesso",
+    "message": "Funcionário atualizado com sucesso",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2773,13 +2773,13 @@
   },
   {
     "code": "HR_USERNAME_LABEL",
-    "message": "Nome de usu\u00e1rio",
+    "message": "Nome de usuário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "HR_VIEW_HEADER",
-    "message": "Ver informa\u00e7\u00f5es do funcion\u00e1rio",
+    "message": "Ver informações do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2809,19 +2809,19 @@
   },
   {
     "code": "LEVEL",
-    "message": "N\u00edvel",
+    "message": "Nível",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "LEVELS",
-    "message": "N\u00edveis",
+    "message": "Níveis",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "LLIN-MZ_HIERARCHYTEST_MO",
-    "message": "Campanha Bednet - Mo\u00e7ambique",
+    "message": "Campanha Bednet - Moçambique",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2833,7 +2833,7 @@
   },
   {
     "code": "MICROPLAN_COUNTRY",
-    "message": "Pa\u00eds",
+    "message": "País",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2851,7 +2851,7 @@
   },
   {
     "code": "MICROPLAN_PROVINCE",
-    "message": "Prov\u00edncia",
+    "message": "Província",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2863,13 +2863,13 @@
   },
   {
     "code": "MR-DN_HIERARCHYTEST_MO",
-    "message": "Campanha SMC - Mo\u00e7ambique",
+    "message": "Campanha SMC - Moçambique",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "MSG",
-    "message": "Adicione seus n\u00edveis de hierarquia de limite clicando no bot\u00e3o \u201cAdicionar novo n\u00edvel de hierarquia de limite\u201d. Se voc\u00ea quiser remover um n\u00edvel, clique no \u00edcone de exclus\u00e3o pr\u00f3ximo ao n\u00edvel que deseja excluir.",
+    "message": "Adicione seus níveis de hierarquia de limite clicando no botão “Adicionar novo nível de hierarquia de limite”. Se você quiser remover um nível, clique no ícone de exclusão próximo ao nível que deseja excluir.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2881,7 +2881,7 @@
   },
   {
     "code": "NEXT",
-    "message": "Pr\u00f3ximo",
+    "message": "Próximo",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2893,13 +2893,13 @@
   },
   {
     "code": "NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY",
-    "message": "Este n\u00e3o \u00e9 o tipo de hierarquia correto.",
+    "message": "Este não é o tipo de hierarquia correto.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "ORDERBYCOMMISSIONER",
-    "message": "Ordem do Comiss\u00e1rio",
+    "message": "Ordem do Comissário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2911,13 +2911,13 @@
   },
   {
     "code": "OTP_REQUEST_SENT",
-    "message": "Solicita\u00e7\u00e3o OTP enviada",
+    "message": "Solicitação OTP enviada",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "PASSWORD_RESET_SUCCESS",
-    "message": "Redefini\u00e7\u00e3o de senha com sucesso!",
+    "message": "Redefinição de senha com sucesso!",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2935,7 +2935,7 @@
   },
   {
     "code": "PGR_SEARCH_COMPLAINT",
-    "message": "Reclama\u00e7\u00e3o de pesquisa",
+    "message": "Reclamação de pesquisa",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2965,7 +2965,7 @@
   },
   {
     "code": "PROJECT_NUMBER",
-    "message": "N\u00famero do projeto",
+    "message": "Número do projeto",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -3013,7 +3013,7 @@
   },
   {
     "code": "ROWS_PER_PAGE",
-    "message": "Linhas por p\u00e1gina",
+    "message": "Linhas por página",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -3043,7 +3043,7 @@
   },
   {
     "code": "RT_SNO",
-    "message": "SN\u00e3o",
+    "message": "SNão",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -3055,7 +3055,7 @@
   },
   {
     "code": "START_DATE",
-    "message": "Data de in\u00edcio",
+    "message": "Data de início",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -3073,7 +3073,7 @@
   },
   {
     "code": "TEMPORARY",
-    "message": "Tempor\u00e1rio",
+    "message": "Temporário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -3085,25 +3085,25 @@
   },
   {
     "code": "TL_ADD_ASSIGNMENT",
-    "message": "ADICIONAR ATRIBUI\u00c7\u00c3O",
+    "message": "ADICIONAR ATRIBUIÇÃO",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "TL_ADD_JURISDICTION",
-    "message": "ADICIONAR JURISDI\u00c7\u00c3O",
+    "message": "ADICIONAR JURISDIÇÃO",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "TL_ADD_QUALIFICATIONS",
-    "message": "ADICIONAR QUALIFICA\u00c7\u00d5ES",
+    "message": "ADICIONAR QUALIFICAÇÕES",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "TL_ADD_SERVICE_ENTRY",
-    "message": "ADICIONAR ENTRADA DE SERVI\u00c7O",
+    "message": "ADICIONAR ENTRADA DE SERVIÇO",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -3121,7 +3121,7 @@
   },
   {
     "code": "TL_COMMON_BUTTON_HOME",
-    "message": "V\u00c1 PARA CASA",
+    "message": "VÁ PARA CASA",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -3133,7 +3133,7 @@
   },
   {
     "code": "TOTAL_EMPLOYEES",
-    "message": "Total de funcion\u00e1rios",
+    "message": "Total de funcionários",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -3151,7 +3151,7 @@
   },
   {
     "code": "UNASSIGN",
-    "message": "Cancelar atribui\u00e7\u00e3o",
+    "message": "Cancelar atribuição",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -3175,13 +3175,13 @@
   },
   {
     "code": "WAREHOUSE",
-    "message": "Armaz\u00e9m",
+    "message": "Armazém",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "WBH_BOUNDARY_CREATION_FAIL",
-    "message": "Falha na cria\u00e7\u00e3o da hierarquia",
+    "message": "Falha na criação da hierarquia",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -3193,43 +3193,43 @@
   },
   {
     "code": "YOU_WON'T_BE_ABLE_TO_UNDO_THIS_STEP_OF_CREATING_HIERARCHY",
-    "message": "Voc\u00ea n\u00e3o poder\u00e1 desfazer esta etapa de cria\u00e7\u00e3o de hierarquia",
+    "message": "Você não poderá desfazer esta etapa de criação de hierarquia",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "reports.hrms.department",
-    "message": "Departamento de Funcion\u00e1rios",
+    "message": "Departamento de Funcionários",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "reports.hrms.designation",
-    "message": "Designa\u00e7\u00e3o de Funcion\u00e1rio",
+    "message": "Designação de Funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "reports.hrms.id",
-    "message": "ID do funcion\u00e1rio",
+    "message": "ID do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "reports.hrms.name",
-    "message": "Nome do funcion\u00e1rio",
+    "message": "Nome do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "reports.hrms.role",
-    "message": "Fun\u00e7\u00f5es dos funcion\u00e1rios",
+    "message": "Funções dos funcionários",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
   {
     "code": "reports.hrms.status",
-    "message": "Status do funcion\u00e1rio",
+    "message": "Status do funcionário",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   }

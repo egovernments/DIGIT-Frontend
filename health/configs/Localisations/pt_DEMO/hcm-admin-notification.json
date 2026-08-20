@@ -55,55 +55,55 @@
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_HEADER",
-    "message": "Sua campanha est\u00e1 pronta!",
+    "message": "Sua campanha está pronta!",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_HEADER_BEDNET",
-    "message": "Sua campanha est\u00e1 pronta!",
+    "message": "Sua campanha está pronta!",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_HEADER_Bednet",
-    "message": "Sua campanha est\u00e1 pronta!",
+    "message": "Sua campanha está pronta!",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_HEADER_CO-DELIVERT",
-    "message": "Sua campanha est\u00e1 pronta!",
+    "message": "Sua campanha está pronta!",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_HEADER_CO-DELIVERY",
-    "message": "Sua campanha est\u00e1 pronta!",
+    "message": "Sua campanha está pronta!",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_HEADER_DEFAULT",
-    "message": "Sua campanha est\u00e1 pronta!",
+    "message": "Sua campanha está pronta!",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_HEADER_MR-DN",
-    "message": "Sua campanha est\u00e1 pronta!",
+    "message": "Sua campanha está pronta!",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_HEADER_Oncho",
-    "message": "Sua campanha est\u00e1 pronta!",
+    "message": "Sua campanha está pronta!",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_HEADER_POLIO",
-    "message": "Sua campanha est\u00e1 pronta!",
+    "message": "Sua campanha está pronta!",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
@@ -163,55 +163,55 @@
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT",
-    "message": "Fique \u00e0 vontade para entrar em contato em caso de d\u00favidas em",
+    "message": "Fique à vontade para entrar em contato em caso de dúvidas em",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_BEDNET",
-    "message": "Fique \u00e0 vontade para entrar em contato em caso de d\u00favidas em",
+    "message": "Fique à vontade para entrar em contato em caso de dúvidas em",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_Bednet",
-    "message": "Fique \u00e0 vontade para entrar em contato em caso de d\u00favidas em",
+    "message": "Fique à vontade para entrar em contato em caso de dúvidas em",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_CO-DELIVERT",
-    "message": "Fique \u00e0 vontade para entrar em contato em caso de d\u00favidas em",
+    "message": "Fique à vontade para entrar em contato em caso de dúvidas em",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_CO-DELIVERY",
-    "message": "Fique \u00e0 vontade para entrar em contato em caso de d\u00favidas em",
+    "message": "Fique à vontade para entrar em contato em caso de dúvidas em",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_DEFAULT",
-    "message": "Fique \u00e0 vontade para entrar em contato em caso de d\u00favidas em",
+    "message": "Fique à vontade para entrar em contato em caso de dúvidas em",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_MR-DN",
-    "message": "Fique \u00e0 vontade para entrar em contato em caso de d\u00favidas em",
+    "message": "Fique à vontade para entrar em contato em caso de dúvidas em",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_Oncho",
-    "message": "Fique \u00e0 vontade para entrar em contato em caso de d\u00favidas em",
+    "message": "Fique à vontade para entrar em contato em caso de dúvidas em",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_CAMPAIGN_REGARDS_CONTENT_POLIO",
-    "message": "Fique \u00e0 vontade para entrar em contato em caso de d\u00favidas em",
+    "message": "Fique à vontade para entrar em contato em caso de dúvidas em",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
@@ -271,55 +271,55 @@
   },
   {
     "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL",
-    "message": "D\u00cdGITO",
+    "message": "DÍGITO",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_BEDNET",
-    "message": "D\u00cdGITO",
+    "message": "DÍGITO",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_Bednet",
-    "message": "D\u00cdGITO",
+    "message": "DÍGITO",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_CO-DELIVERT",
-    "message": "D\u00cdGITO",
+    "message": "DÍGITO",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_CO-DELIVERY",
-    "message": "D\u00cdGITO",
+    "message": "DÍGITO",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_DEFAULT",
-    "message": "D\u00cdGITO",
+    "message": "DÍGITO",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_MR-DN",
-    "message": "D\u00cdGITO",
+    "message": "DÍGITO",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_Oncho",
-    "message": "D\u00cdGITO",
+    "message": "DÍGITO",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_DIGIT_LOGO_LABEL_POLIO",
-    "message": "D\u00cdGITO",
+    "message": "DÍGITO",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
@@ -379,109 +379,109 @@
   },
   {
     "code": "HCM_CONSOLE_FOOTER_CONTENT",
-    "message": "\u00a92025 Funda\u00e7\u00e3o eGov. Todos os direitos reservados.",
+    "message": "©2025 Fundação eGov. Todos os direitos reservados.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_FOOTER_CONTENT_BEDNET",
-    "message": "\u00a92025 Funda\u00e7\u00e3o eGov. Todos os direitos reservados.",
+    "message": "©2025 Fundação eGov. Todos os direitos reservados.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_FOOTER_CONTENT_Bednet",
-    "message": "\u00a92025 Funda\u00e7\u00e3o eGov. Todos os direitos reservados.",
+    "message": "©2025 Fundação eGov. Todos os direitos reservados.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_FOOTER_CONTENT_CO-DELIVERT",
-    "message": "\u00a92025 Funda\u00e7\u00e3o eGov. Todos os direitos reservados.",
+    "message": "©2025 Fundação eGov. Todos os direitos reservados.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_FOOTER_CONTENT_CO-DELIVERY",
-    "message": "\u00a92025 Funda\u00e7\u00e3o eGov. Todos os direitos reservados.",
+    "message": "©2025 Fundação eGov. Todos os direitos reservados.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_FOOTER_CONTENT_DEFAULT",
-    "message": "\u00a92025 Funda\u00e7\u00e3o eGov. Todos os direitos reservados.",
+    "message": "©2025 Fundação eGov. Todos os direitos reservados.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_FOOTER_CONTENT_MR-DN",
-    "message": "\u00a92025 Funda\u00e7\u00e3o eGov. Todos os direitos reservados.",
+    "message": "©2025 Fundação eGov. Todos os direitos reservados.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_FOOTER_CONTENT_Oncho",
-    "message": "\u00a92025 Funda\u00e7\u00e3o eGov. Todos os direitos reservados.",
+    "message": "©2025 Fundação eGov. Todos os direitos reservados.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_FOOTER_CONTENT_POLIO",
-    "message": "\u00a92025 Funda\u00e7\u00e3o eGov. Todos os direitos reservados.",
+    "message": "©2025 Fundação eGov. Todos os direitos reservados.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_GREETING_CONTENT",
-    "message": "\u00d3timas not\u00edcias! A configura\u00e7\u00e3o da sua campanha de sa\u00fade est\u00e1 conclu\u00edda. O aplicativo foi configurado e as credenciais de usu\u00e1rio foram geradas para sua equipe.",
+    "message": "Ótimas notícias! A configuração da sua campanha de saúde está concluída. O aplicativo foi configurado e as credenciais de usuário foram geradas para sua equipe.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_GREETING_CONTENT_BEDNET",
-    "message": "\u00d3timas not\u00edcias! A configura\u00e7\u00e3o da sua campanha de sa\u00fade est\u00e1 conclu\u00edda. O aplicativo foi configurado e as credenciais de usu\u00e1rio foram geradas para sua equipe.",
+    "message": "Ótimas notícias! A configuração da sua campanha de saúde está concluída. O aplicativo foi configurado e as credenciais de usuário foram geradas para sua equipe.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_GREETING_CONTENT_Bednet",
-    "message": "\u00d3timas not\u00edcias! A configura\u00e7\u00e3o da sua campanha de sa\u00fade est\u00e1 conclu\u00edda. O aplicativo foi configurado e as credenciais de usu\u00e1rio foram geradas para sua equipe.",
+    "message": "Ótimas notícias! A configuração da sua campanha de saúde está concluída. O aplicativo foi configurado e as credenciais de usuário foram geradas para sua equipe.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_GREETING_CONTENT_CO-DELIVERT",
-    "message": "\u00d3timas not\u00edcias! A configura\u00e7\u00e3o da sua campanha de sa\u00fade est\u00e1 conclu\u00edda. O aplicativo foi configurado e as credenciais de usu\u00e1rio foram geradas para sua equipe.",
+    "message": "Ótimas notícias! A configuração da sua campanha de saúde está concluída. O aplicativo foi configurado e as credenciais de usuário foram geradas para sua equipe.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_GREETING_CONTENT_CO-DELIVERY",
-    "message": "\u00d3timas not\u00edcias! A configura\u00e7\u00e3o da sua campanha de sa\u00fade est\u00e1 conclu\u00edda. O aplicativo foi configurado e as credenciais de usu\u00e1rio foram geradas para sua equipe.",
+    "message": "Ótimas notícias! A configuração da sua campanha de saúde está concluída. O aplicativo foi configurado e as credenciais de usuário foram geradas para sua equipe.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_GREETING_CONTENT_DEFAULT",
-    "message": "\u00d3timas not\u00edcias! A configura\u00e7\u00e3o da sua campanha de sa\u00fade est\u00e1 conclu\u00edda. O aplicativo foi configurado e as credenciais de usu\u00e1rio foram geradas para sua equipe.",
+    "message": "Ótimas notícias! A configuração da sua campanha de saúde está concluída. O aplicativo foi configurado e as credenciais de usuário foram geradas para sua equipe.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_GREETING_CONTENT_MR-DN",
-    "message": "\u00d3timas not\u00edcias! A configura\u00e7\u00e3o da sua campanha de sa\u00fade est\u00e1 conclu\u00edda. O aplicativo foi configurado e as credenciais de usu\u00e1rio foram geradas para sua equipe.",
+    "message": "Ótimas notícias! A configuração da sua campanha de saúde está concluída. O aplicativo foi configurado e as credenciais de usuário foram geradas para sua equipe.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_GREETING_CONTENT_Oncho",
-    "message": "\u00d3timas not\u00edcias! A configura\u00e7\u00e3o da sua campanha de sa\u00fade est\u00e1 conclu\u00edda. O aplicativo foi configurado e as credenciais de usu\u00e1rio foram geradas para sua equipe.",
+    "message": "Ótimas notícias! A configuração da sua campanha de saúde está concluída. O aplicativo foi configurado e as credenciais de usuário foram geradas para sua equipe.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_GREETING_CONTENT_POLIO",
-    "message": "\u00d3timas not\u00edcias! A configura\u00e7\u00e3o da sua campanha de sa\u00fade est\u00e1 conclu\u00edda. O aplicativo foi configurado e as credenciais de usu\u00e1rio foram geradas para sua equipe.",
+    "message": "Ótimas notícias! A configuração da sua campanha de saúde está concluída. O aplicativo foi configurado e as credenciais de usuário foram geradas para sua equipe.",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
@@ -541,163 +541,163 @@
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_1",
-    "message": "Todas as credenciais da equipe est\u00e3o ativas e prontas para uso",
+    "message": "Todas as credenciais da equipe estão ativas e prontas para uso",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_1_BEDNET",
-    "message": "Todas as credenciais da equipe est\u00e3o ativas e prontas para uso",
+    "message": "Todas as credenciais da equipe estão ativas e prontas para uso",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_1_Bednet",
-    "message": "Todas as credenciais da equipe est\u00e3o ativas e prontas para uso",
+    "message": "Todas as credenciais da equipe estão ativas e prontas para uso",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_1_CO-DELIVERT",
-    "message": "Todas as credenciais da equipe est\u00e3o ativas e prontas para uso",
+    "message": "Todas as credenciais da equipe estão ativas e prontas para uso",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_1_CO-DELIVERY",
-    "message": "Todas as credenciais da equipe est\u00e3o ativas e prontas para uso",
+    "message": "Todas as credenciais da equipe estão ativas e prontas para uso",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_1_DEFAULT",
-    "message": "Todas as credenciais da equipe est\u00e3o ativas e prontas para uso",
+    "message": "Todas as credenciais da equipe estão ativas e prontas para uso",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_1_MR-DN",
-    "message": "Todas as credenciais da equipe est\u00e3o ativas e prontas para uso",
+    "message": "Todas as credenciais da equipe estão ativas e prontas para uso",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_1_Oncho",
-    "message": "Todas as credenciais da equipe est\u00e3o ativas e prontas para uso",
+    "message": "Todas as credenciais da equipe estão ativas e prontas para uso",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_1_POLIO",
-    "message": "Todas as credenciais da equipe est\u00e3o ativas e prontas para uso",
+    "message": "Todas as credenciais da equipe estão ativas e prontas para uso",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_2",
-    "message": "O aplicativo inclui todas as configura\u00e7\u00f5es espec\u00edficas para os requisitos da sua campanha",
+    "message": "O aplicativo inclui todas as configurações específicas para os requisitos da sua campanha",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_2_BEDNET",
-    "message": "O aplicativo inclui todas as configura\u00e7\u00f5es espec\u00edficas para os requisitos da sua campanha",
+    "message": "O aplicativo inclui todas as configurações específicas para os requisitos da sua campanha",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_2_Bednet",
-    "message": "O aplicativo inclui todas as configura\u00e7\u00f5es espec\u00edficas para os requisitos da sua campanha",
+    "message": "O aplicativo inclui todas as configurações específicas para os requisitos da sua campanha",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_2_CO-DELIVERT",
-    "message": "O aplicativo inclui todas as configura\u00e7\u00f5es espec\u00edficas para os requisitos da sua campanha",
+    "message": "O aplicativo inclui todas as configurações específicas para os requisitos da sua campanha",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_2_CO-DELIVERY",
-    "message": "O aplicativo inclui todas as configura\u00e7\u00f5es espec\u00edficas para os requisitos da sua campanha",
+    "message": "O aplicativo inclui todas as configurações específicas para os requisitos da sua campanha",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_2_DEFAULT",
-    "message": "O aplicativo inclui todas as configura\u00e7\u00f5es espec\u00edficas para os requisitos da sua campanha",
+    "message": "O aplicativo inclui todas as configurações específicas para os requisitos da sua campanha",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_2_MR-DN",
-    "message": "O aplicativo inclui todas as configura\u00e7\u00f5es espec\u00edficas para os requisitos da sua campanha",
+    "message": "O aplicativo inclui todas as configurações específicas para os requisitos da sua campanha",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_2_Oncho",
-    "message": "O aplicativo inclui todas as configura\u00e7\u00f5es espec\u00edficas para os requisitos da sua campanha",
+    "message": "O aplicativo inclui todas as configurações específicas para os requisitos da sua campanha",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_2_POLIO",
-    "message": "O aplicativo inclui todas as configura\u00e7\u00f5es espec\u00edficas para os requisitos da sua campanha",
+    "message": "O aplicativo inclui todas as configurações específicas para os requisitos da sua campanha",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_3",
-    "message": "Distribua credenciais com seguran\u00e7a apenas para membros autorizados da equipe",
+    "message": "Distribua credenciais com segurança apenas para membros autorizados da equipe",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_3_BEDNET",
-    "message": "Distribua credenciais com seguran\u00e7a apenas para membros autorizados da equipe",
+    "message": "Distribua credenciais com segurança apenas para membros autorizados da equipe",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_3_Bednet",
-    "message": "Distribua credenciais com seguran\u00e7a apenas para membros autorizados da equipe",
+    "message": "Distribua credenciais com segurança apenas para membros autorizados da equipe",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_3_CO-DELIVERT",
-    "message": "Distribua credenciais com seguran\u00e7a apenas para membros autorizados da equipe",
+    "message": "Distribua credenciais com segurança apenas para membros autorizados da equipe",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_3_CO-DELIVERY",
-    "message": "Distribua credenciais com seguran\u00e7a apenas para membros autorizados da equipe",
+    "message": "Distribua credenciais com segurança apenas para membros autorizados da equipe",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_3_DEFAULT",
-    "message": "Distribua credenciais com seguran\u00e7a apenas para membros autorizados da equipe",
+    "message": "Distribua credenciais com segurança apenas para membros autorizados da equipe",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_3_MR-DN",
-    "message": "Distribua credenciais com seguran\u00e7a apenas para membros autorizados da equipe",
+    "message": "Distribua credenciais com segurança apenas para membros autorizados da equipe",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_3_Oncho",
-    "message": "Distribua credenciais com seguran\u00e7a apenas para membros autorizados da equipe",
+    "message": "Distribua credenciais com segurança apenas para membros autorizados da equipe",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_CONSOLE_INSTRUCTION_3_POLIO",
-    "message": "Distribua credenciais com seguran\u00e7a apenas para membros autorizados da equipe",
+    "message": "Distribua credenciais com segurança apenas para membros autorizados da equipe",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
@@ -865,55 +865,55 @@
   },
   {
     "code": "USER_CREDENTIAL_SUBJECT",
-    "message": "Credenciais do usu\u00e1rio",
+    "message": "Credenciais do usuário",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_SUBJECT_BEDNET",
-    "message": "Credenciais do usu\u00e1rio",
+    "message": "Credenciais do usuário",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_SUBJECT_Bednet",
-    "message": "Credenciais do usu\u00e1rio",
+    "message": "Credenciais do usuário",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_SUBJECT_CO-DELIVERT",
-    "message": "Credenciais do usu\u00e1rio",
+    "message": "Credenciais do usuário",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_SUBJECT_CO-DELIVERY",
-    "message": "Credenciais do usu\u00e1rio",
+    "message": "Credenciais do usuário",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_SUBJECT_DEFAULT",
-    "message": "Credenciais do usu\u00e1rio",
+    "message": "Credenciais do usuário",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_SUBJECT_MR-DN",
-    "message": "Credenciais do usu\u00e1rio",
+    "message": "Credenciais do usuário",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_SUBJECT_Oncho",
-    "message": "Credenciais do usu\u00e1rio",
+    "message": "Credenciais do usuário",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   },
   {
     "code": "USER_CREDENTIAL_SUBJECT_POLIO",
-    "message": "Credenciais do usu\u00e1rio",
+    "message": "Credenciais do usuário",
     "module": "hcm-admin-notification",
     "locale": "pt_DEMO"
   }

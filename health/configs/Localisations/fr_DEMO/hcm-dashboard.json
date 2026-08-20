@@ -13,7 +13,7 @@
   },
   {
     "code": "BEDNETS_DISTRIBUTED_TODAY",
-    "message": "Moustiquaires distribu\u00e9es aujourd'hui",
+    "message": "Moustiquaires distribuées aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
@@ -31,13 +31,13 @@
   },
   {
     "code": "DSS_HEALTH_NATIONAL_BED_NETS_DISTRIBUTED_TODAY",
-    "message": "Total des moustiquaires distribu\u00e9es aujourd'hui",
+    "message": "Total des moustiquaires distribuées aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "DSS_HEALTH_NATIONAL_BED_NET_DISTRIBUTED_TODAY",
-    "message": "Total des moustiquaires distribu\u00e9es aujourd'hui",
+    "message": "Total des moustiquaires distribuées aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
@@ -61,37 +61,37 @@
   },
   {
     "code": "DSS_LAST_SYNC_TIME",
-    "message": "Heure de la derni\u00e8re synchronisation",
+    "message": "Heure de la dernière synchronisation",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "DSS_NETWORK_FAILURE_ERROR",
-    "message": "Erreur r\u00e9seau !!! Veuillez vous connecter \u00e0 Internet pour actualiser le tableau de bord",
+    "message": "Erreur réseau !!! Veuillez vous connecter à Internet pour actualiser le tableau de bord",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "DSS_NOTE_DESCRIPTION",
-    "message": "Faites d\u00e9filer la barre vers la droite pour afficher tous les d\u00e9tails d'un travailleur\n\nTaux de couverture des maisons = Total des maisons pulv\u00e9ris\u00e9es / Total des maisons visit\u00e9es\n\nTaux de couverture des pi\u00e8ces = Total des pi\u00e8ces pulv\u00e9ris\u00e9es / Total des pi\u00e8ces disponibles",
+    "message": "Faites défiler la barre vers la droite pour afficher tous les détails d'un travailleur\n\nTaux de couverture des maisons = Total des maisons pulvérisées / Total des maisons visitées\n\nTaux de couverture des pièces = Total des pièces pulvérisées / Total des pièces disponibles",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "DSS_NOTE_DESCRIPTION_IRS-mz",
-    "message": "Faites d\u00e9filer la barre vers la droite pour afficher tous les d\u00e9tails d'un travailleur \nTaux de couverture des maisons = Total des maisons pulv\u00e9ris\u00e9es / Total des maisons visit\u00e9es \nTaux de couverture des pi\u00e8ces = Total des pi\u00e8ces pulv\u00e9ris\u00e9es / Total des pi\u00e8ces disponibles",
+    "message": "Faites défiler la barre vers la droite pour afficher tous les détails d'un travailleur \nTaux de couverture des maisons = Total des maisons pulvérisées / Total des maisons visitées \nTaux de couverture des pièces = Total des pièces pulvérisées / Total des pièces disponibles",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "DSS_NOTE_DESCRIPTION_LLIN-mz",
-    "message": "Faites d\u00e9filer la barre vers la droite pour afficher tous les d\u00e9tails d'un travailleur",
+    "message": "Faites défiler la barre vers la droite pour afficher tous les détails d'un travailleur",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "DSS_NOTE_DESCRIPTION_MR-DN",
-    "message": "Faites d\u00e9filer la barre vers la droite pour afficher tous les d\u00e9tails d'un travailleur",
+    "message": "Faites défiler la barre vers la droite pour afficher tous les détails d'un travailleur",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
@@ -121,25 +121,25 @@
   },
   {
     "code": "DSS_NO_OF_BOTTLES_USED_TODAY",
-    "message": "Nombre de bouteilles utilis\u00e9es aujourd'hui",
+    "message": "Nombre de bouteilles utilisées aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "DSS_NO_OF_HOUSES_NOT_SPRAYED_TODAY",
-    "message": "Nombre de maisons non trait\u00e9es aujourd'hui",
+    "message": "Nombre de maisons non traitées aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "DSS_NO_OF_HOUSES_SPRAYED_TODAY",
-    "message": "Nombre de maisons trait\u00e9es aujourd'hui",
+    "message": "Nombre de maisons traitées aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "DSS_NO_OF_HOUSES_VISITED_TODAY",
-    "message": "Nombre de maisons visit\u00e9es aujourd'hui",
+    "message": "Nombre de maisons visitées aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
@@ -163,37 +163,37 @@
   },
   {
     "code": "DSS_TOTAL_BEDNETS_DISTRIBUTED",
-    "message": "Total des moustiquaires distribu\u00e9es",
+    "message": "Total des moustiquaires distribuées",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "DSS_TOTAL_BOTTLES_USED",
-    "message": "Nombre total de bouteilles utilis\u00e9es aujourd'hui",
+    "message": "Nombre total de bouteilles utilisées aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "DSS_TOTAL_CHILDREN_ADMINISTERED",
-    "message": "Nombre total d'enfants administr\u00e9s",
+    "message": "Nombre total d'enfants administrés",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "DSS_TOTAL_HOUSEHOLD_DISTRIBUTED",
-    "message": "Total des m\u00e9nages distribu\u00e9s",
+    "message": "Total des ménages distribués",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "DSS_TOTAL_HOUSEHOLD_SPRAYED",
-    "message": "Nombre total de m\u00e9nages trait\u00e9s aujourd'hui",
+    "message": "Nombre total de ménages traités aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "DSS_TOTAL_SPAQ_USED",
-    "message": "Nombre total de SPAQ utilis\u00e9s",
+    "message": "Nombre total de SPAQ utilisés",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
@@ -229,19 +229,19 @@
   },
   {
     "code": "HOUSEHOLDS_SPRAYED",
-    "message": "Les m\u00e9nages pulv\u00e9ris\u00e9s",
+    "message": "Les ménages pulvérisés",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "HOUSEHOLDS_VISITED",
-    "message": "M\u00e9nages visit\u00e9s",
+    "message": "Ménages visités",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "HOUSEHOLD_COVERAGE",
-    "message": "Couverture des m\u00e9nages",
+    "message": "Couverture des ménages",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
@@ -253,67 +253,67 @@
   },
   {
     "code": "LAST_SYNCED_TIME",
-    "message": "Heure de la derni\u00e8re synchronisation",
+    "message": "Heure de la dernière synchronisation",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "MEDICINES_DISTRIBUTED_TODAY",
-    "message": "M\u00e9dicaments distribu\u00e9s aujourd'hui",
+    "message": "Médicaments distribués aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "NEGATIVEHOUSEHOLDSDISTRIBUTED",
-    "message": "M\u00e9nages n\u00e9gatifs distribu\u00e9s",
+    "message": "Ménages négatifs distribués",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "NO._OF_BENEFICIARIES_DISTRIBUTED_TODAY",
-    "message": "Nombre de b\u00e9n\u00e9ficiaires distribu\u00e9s aujourd'hui",
+    "message": "Nombre de bénéficiaires distribués aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "NO._OF_BENEFICIARIES_NOT_DISTRIBUTED_TODAY",
-    "message": "Nombre de b\u00e9n\u00e9ficiaires non distribu\u00e9s aujourd'hui",
+    "message": "Nombre de bénéficiaires non distribués aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "NO._OF_HOUSES_DISTRIBUTED_TODAY",
-    "message": "Nombre de maisons distribu\u00e9es aujourd'hui",
+    "message": "Nombre de maisons distribuées aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "NO._OF_HOUSES_NOT_DISTRIBUTED_TODAY",
-    "message": "Nombre de maisons non distribu\u00e9es aujourd'hui",
+    "message": "Nombre de maisons non distribuées aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "NO._OF_HOUSES_NOT_SPRAYE",
-    "message": "Nombre de maisons non trait\u00e9es",
+    "message": "Nombre de maisons non traitées",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "NO._OF_HOUSES_NOT_SPRAYED_TODAY",
-    "message": "Nombre de maisons non trait\u00e9es aujourd'hui",
+    "message": "Nombre de maisons non traitées aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "NO._OF_HOUSES_SPRAYED_TODAY",
-    "message": "Nombre de maisons trait\u00e9es aujourd'hui",
+    "message": "Nombre de maisons traitées aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
   {
     "code": "NO._OF_HOUSES_VISITED_TODAY",
-    "message": "Nombre de maisons visit\u00e9es aujourd'hui",
+    "message": "Nombre de maisons visitées aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
@@ -331,7 +331,7 @@
   },
   {
     "code": "NO._OF_REMAINING_MEDICINES",
-    "message": "Nombre de m\u00e9dicaments restants",
+    "message": "Nombre de médicaments restants",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
@@ -361,7 +361,7 @@
   },
   {
     "code": "QUANTITY",
-    "message": "Quantit\u00e9",
+    "message": "Quantité",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
@@ -385,7 +385,7 @@
   },
   {
     "code": "TOTAL_HOUSEHOLDS_VISITED_TODAY",
-    "message": "Nombre de maisons visit\u00e9es aujourd'hui",
+    "message": "Nombre de maisons visitées aujourd'hui",
     "module": "hcm-dashboard",
     "locale": "fr_DEMO"
   },
