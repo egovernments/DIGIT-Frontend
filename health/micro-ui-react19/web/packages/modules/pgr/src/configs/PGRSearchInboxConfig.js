@@ -8,10 +8,7 @@
 
 import Urls from "../utils/urls";
 
-const PGRSearchInboxConfig = () => {
-  const selectedHierarchy = Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED");
-  const hierarchyType = (selectedHierarchy && selectedHierarchy.hierarchyType) || null;
-
+const PGRSearchInboxConfig = (hierarchyType = null) => {
   return {
     label: "CS_COMMON_INBOX",
     type: "inbox",
@@ -168,6 +165,7 @@ const PGRSearchInboxConfig = () => {
             assignedToMe: null,
             locality: null,
             status: [],
+            hierarchyType: hierarchyType,
           },
 
           fields: [

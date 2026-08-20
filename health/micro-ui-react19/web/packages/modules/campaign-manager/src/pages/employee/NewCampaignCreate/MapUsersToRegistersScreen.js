@@ -82,9 +82,14 @@ const MapUsersToRegistersScreen = () => {
     refetch: refetchResourceDetails,
   } = Digit.Hooks.useCustomAPIHook(resourceSearchCriteria);
 
-  // Derive register creation status from resource details
   const registerCreationStatus =
-    resourceDetails.length > 0 ? resourceDetails[0]?.status : null;
+    resourceDetails.some((r) => r.status === "creating" || r.status === "toCreate")
+      ? "creating"
+      : resourceDetails.some((r) => r.status === "failed")
+      ? "failed"
+      : resourceDetails.length > 0
+      ? resourceDetails[0]?.status
+      : null;
 
   // Poll every 5 seconds while register creation is in progress
   useEffect(() => {
@@ -157,7 +162,7 @@ const MapUsersToRegistersScreen = () => {
     params: attendanceParams,
     body: {},
     config: {
-      enabled: !!campaignNumber && isRegisterCreationCompleted,
+      enabled: !!campaignNumber && !isResourceLoading,
       select: (data) => ({
         registers: data?.attendanceRegister || [],
         totalCount: data?.totalCount ?? 0,
@@ -367,7 +372,6 @@ const MapUsersToRegistersScreen = () => {
     isCampaignLoading ||
     isCampaignFetching ||
     isResourceLoading ||
-    isResourceFetching ||
     isLoading
   )
     return (
