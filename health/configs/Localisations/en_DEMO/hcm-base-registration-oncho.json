@@ -553,7 +553,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_DESCRIPTION",
-    "message": "Confirm whether the child has been given any medication containing Sulfadoxine-Pyrimethamine (SP) or Cotrimoxazole (CTX) in the last 28 days, either for prevention or treatment of illnesses.",
+    "message": "Confirm whether the child has been given any medication in the last 28 days, either for prevention or treatment of illnesses.",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -571,7 +571,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_5_LABEL",
-    "message": "Child has taken SP or CTX containing drugs in the past 28 days?",
+    "message": "Child has taken drugs in the past 28 days?",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
