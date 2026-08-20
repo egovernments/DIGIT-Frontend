@@ -282,7 +282,8 @@ module.exports = {
           "/health-service-request",
           "/studio-service-request",
           "/excel-ingestion",
-          "/boundary-management"
+          "/boundary-management",
+          "/studio-hrms",
         ],
         target: envFile.REACT_APP_PROXY_API,
         changeOrigin: true,
