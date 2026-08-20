@@ -1,5 +1,5 @@
 import React, { Fragment, useMemo, useState } from "react";
-import { Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components";
+import { AlertCard, Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components";
 import MobileBezelFrame from "./MobileBezelFrame";
 import ComponentToRender from "./ComponentToRender";
 import useCampaignStore from "../hooks/useCampaignStore";
@@ -129,6 +129,17 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
             {/* RENDERING HEADER AND SUB-HEADING */}
             {data.heading && <CardHeader className="app-preview-card-header">{t(data.heading)}</CardHeader>}
             {data.description && <CardText className="app-preview-sub-heading">{t(data.description)}</CardText>}
+
+            {/* Info card driven by the page-level conditions.infoCardText (mirrors the mobile app) */}
+            {data?.conditions?.infoCardText && (
+              <AlertCard
+                populators={{ name: "infocard" }}
+                variant="default"
+                className="cmn-help-info-card"
+                text={t(data.conditions.infoCardText)}
+                style={{ margin: "0 0 1rem 0" }}
+              />
+            )}
 
             {/* RENDERING TABS */}
             {showTabs && (

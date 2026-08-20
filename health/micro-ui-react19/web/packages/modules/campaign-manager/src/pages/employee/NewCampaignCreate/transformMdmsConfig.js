@@ -120,6 +120,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
           conditionalNavigationProperties: conditionalNavigationProperties,
           showTabView: page?.multiEntityConfig !== null && page?.multiEntityConfig !== undefined ? Object.keys(page?.multiEntityConfig)?.length > 0 ? true : false : false,
           multiEntityConfig: page.multiEntityConfig,
+          conditions: page.conditions || null,
 
         };
 
