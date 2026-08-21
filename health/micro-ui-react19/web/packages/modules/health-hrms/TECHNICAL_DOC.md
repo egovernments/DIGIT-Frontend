@@ -105,6 +105,7 @@ The following tickets resulted in package.json changes only (version bumps or de
 | [#4124](https://github.com/egovernments/DIGIT-Frontend/pull/4124) | Package version bump as part of cross-module CSS and localization work |
 | [#4151](https://github.com/egovernments/DIGIT-Frontend/pull/4151) | Package version bump as part of attendance/CSS fixes across modules |
 | [#4173](https://github.com/egovernments/DIGIT-Frontend/pull/4173) | Dependency vulnerability fix — package.json version update only |
+| [#4244](https://github.com/egovernments/DIGIT-Frontend/pull/4244) | Package version bump as part of cross-module date/sheet and reports fixes |
 
 ---
 
