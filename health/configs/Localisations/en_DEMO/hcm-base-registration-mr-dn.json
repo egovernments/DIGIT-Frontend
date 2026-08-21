@@ -859,13 +859,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual",
-    "message": "Full Name",
+    "message": "Full name",
     "module": "hcm-base-registration-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_addmember",
-    "message": "Full Name",
+    "message": "Full name",
     "module": "hcm-base-registration-mr-dn",
     "locale": "en_DEMO"
   },
@@ -1123,18 +1123,18 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong",
-    "message": "Lat/Long",
+    "message": "GPS accuracy",
     "module": "hcm-base-registration-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_helpText",
-    "message": "Provide latitude and longitude of the address, if available.",
+    "message": "Provide the GPS accuracy of the address, if available.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "en_DEMO"
   },
   {
-    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_mandatory_message",
+    "code": "APPONE_REGISTRATION_ENEFICIARYLOCATION_label_latlong_mandatory_message",
     "message": "This field is required",
     "module": "hcm-base-registration-mr-dn",
     "locale": "en_DEMO"

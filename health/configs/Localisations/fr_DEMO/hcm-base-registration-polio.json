@@ -391,13 +391,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual",
-    "message": "Prénom",
+    "message": "Nom et prénom",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_addmember",
-    "message": "Prénom",
+    "message": "Nom et prénom",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -559,19 +559,19 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong",
-    "message": "Latitude/Longitude",
+    "message": "Précision GPS",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_helpText",
-    "message": "Capturez les coordonnées GPS",
+    "message": "Veuillez indiquer la précision GPS de l'adresse, si elle est disponible.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_mandatory_message",
-    "message": "Les coordonnées de localisation sont requises",
+    "message": "Ce champ est obligatoire",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
