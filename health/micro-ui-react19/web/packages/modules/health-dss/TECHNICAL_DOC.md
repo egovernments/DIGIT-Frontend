@@ -196,8 +196,7 @@ An Excel library (`xlsx ^0.18.5`) has been added to support exporting report dat
 | Issue | PR |
 |---|---|
 | Dashboard inbox filter button relabelled to "Search" with primary variation; loader centered on `Inbox`, `ViewDashboard`, `ReportDetailPage`, and `ReportsListPage` | [#4223](https://github.com/egovernments/DIGIT-Frontend/pull/4223) |
-| View Dashboard button fix on L1 dashboard (`ReportDetailPage.js`); localization keys updated in `i18nKeyConstants.js`; date range picker fix; custom reports status check and end date handling; package version bump | [#4244](https://github.com/egovernments/DIGIT-Frontend/pull/4244) |
-| Loader messages updated to proper i18n format; View Dashboard button fix in L1 dashboard | [#4251](https://github.com/egovernments/DIGIT-Frontend/pull/4251) |
+| `ReportDetailPage.js` — custom report end date now uses end-of-day timestamp (`23:59:59+0530`) via `formatEndDateForPayload`; `InProgressCard` now handles SKIPPED/FAILED as terminal states with appropriate tags (no progress bar shown for terminal states); package version bump | [#4244](https://github.com/egovernments/DIGIT-Frontend/pull/4244) |
 | Final audit and bug bash fixes across dashboard screens | [#4220](https://github.com/egovernments/DIGIT-Frontend/pull/4220) |
 | Newly generated custom reports required navigating away and back to appear — in-progress polling hook was reading pre-select query data so its refetch interval never engaged | [#4186](https://github.com/egovernments/DIGIT-Frontend/pull/4186) |
 | Dashboard build failure — removed campaign-manager module dependency from health-dss; added missing `axios` package; added Terser dependency | [#3842](https://github.com/egovernments/DIGIT-Frontend/pull/3842) |
