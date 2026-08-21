@@ -871,13 +871,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual",
-    "message": "Primeiro nome",
+    "message": "Nome completo",
     "module": "hcm-base-registration-oncho",
     "locale": "pt_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_addmember",
-    "message": "Primeiro nome",
+    "message": "Nome completo",
     "module": "hcm-base-registration-oncho",
     "locale": "pt_DEMO"
   },
@@ -1135,13 +1135,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong",
-    "message": "Lat/Longa",
+    "message": "Precisão do GPS",
     "module": "hcm-base-registration-oncho",
     "locale": "pt_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_helpText",
-    "message": "Forneça a latitude e longitude do endereço, se disponível.",
+    "message": "Forneça a precisão do GPS do endereço, se disponível.",
     "module": "hcm-base-registration-oncho",
     "locale": "pt_DEMO"
   },

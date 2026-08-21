@@ -3547,7 +3547,7 @@
   },
   {
     "code": "CREATE_CAMPAIGN",
-    "message": "Create a New campaign",
+    "message": "Create a New Campaign",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },

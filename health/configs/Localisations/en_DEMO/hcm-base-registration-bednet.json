@@ -505,13 +505,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual",
-    "message": "Full Name",
+    "message": "Full name",
     "module": "hcm-base-registration-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_addmember",
-    "message": "Full Name",
+    "message": "Full name",
     "module": "hcm-base-registration-bednet",
     "locale": "en_DEMO"
   },
@@ -769,13 +769,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong",
-    "message": "Geo Coordinates",
+    "message": "GPS accuracy",
     "module": "hcm-base-registration-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_helpText",
-    "message": "Provide latitude and longitude of the address, if available.",
+    "message": "Provide the GPS accuracy of the address, if available.",
     "module": "hcm-base-registration-bednet",
     "locale": "en_DEMO"
   },
