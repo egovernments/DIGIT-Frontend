@@ -40,6 +40,12 @@ All commits that touched `health/micro-ui-react19/web/packages/modules/pgr/` on 
 | `7c007c97` | HCMPRE-4150 | [#4151](https://github.com/egovernments/DIGIT-Frontend/pull/4151) | Package version bump |
 | `431094ab` | HCMPRE-8346 | [#4173](https://github.com/egovernments/DIGIT-Frontend/pull/4173) | Dependency vulnerability fixes (package.json) |
 | `2864ce4d` | HCMPRE-4193 | [#4194](https://github.com/egovernments/DIGIT-Frontend/pull/4194) | Updated RELEASE-NOTES.md documentation |
+| `c1ae9e29` | — | [#4228](https://github.com/egovernments/DIGIT-Frontend/pull/4228) | Added TECHNICAL_DOC.md documentation |
+| `ff2c862182` | HCMPRE-3684 | [#4281](https://github.com/egovernments/DIGIT-Frontend/pull/4281) | Hierarchy selection screen added; `Module.js` fetches all hierarchies and clears session on mount; `index.js` redirects to `select-hierarchy` if none selected; PGRSearchInboxConfig accepts `hierarchyType` param; new i18n keys; boundary localizations fetched per selected hierarchy |
+| `ec9d53b55c` | HCMPRE-4247 | [#4251](https://github.com/egovernments/DIGIT-Frontend/pull/4251) | Complaints date picker fix in `DatePickerComponent.js` |
+| `4e0e7fd3a2` | HCMPRE-4286 | [#4298](https://github.com/egovernments/DIGIT-Frontend/pull/4298) | `PGRSearchInboxConfig` updated to accept `hierarchyType` parameter; filter defaultValues includes `hierarchyType` |
+| `5bdd948140` | HCMPRE-4296 | [#4304](https://github.com/egovernments/DIGIT-Frontend/pull/4304) | PGR inbox hierarchyType fix — `PGRInbox.js` derives hierarchy from React state (immune to Module.js session clear); `UIcustomizations.js` preProcess now includes `hierarchyType` in built `moduleSearchCriteria` |
+| `2376f890ac` | HCMPRE-0964 | [#4309](https://github.com/egovernments/DIGIT-Frontend/pull/4309) | `BoundaryComponentWithCard.js` boundary labels fix; CSS version update |
 
 ---
 
@@ -68,11 +74,26 @@ Complaints Management is no longer served from the old React 17 standalone shell
 
 ---
 
-### Hierarchy Source Changed — Now from MDMS
+### Hierarchy Selection Screen
 
-The module now reads the boundary hierarchy type from MDMS v2 instead of global config. On startup, `Module.js` calls `Digit.Hooks.useCustomMDMS` with module `PGR` and master `HierarchySelectedForPGR` (schema code: `PGR.HierarchySelectedForPGR`). It extracts `hierarchyTypeCode` from the first element of the result, then uses that value to filter `useFetchAllBoundaryHierarchies` and store the matching hierarchy object in `Digit.SessionStorage` under the key `HIERARCHY_TYPE_SELECTED`. This makes the hierarchy configurable per implementation without requiring a deployment change.
+**Ticket:** HCMPRE-3684
+**PR:** [#4281](https://github.com/egovernments/DIGIT-Frontend/pull/4281)
 
-**Configuration required:** Ensure `PGR.HierarchySelectedForPGR` is present in MDMS with a valid `hierarchyTypeCode` field before deployment. If this master is missing, the module cannot resolve the boundary hierarchy and will not render (it blocks on the loader).
+The module now shows a dedicated hierarchy selection screen at the start of each session instead of automatically resolving the hierarchy from MDMS. The selection is cleared on every module mount and the user must pick a hierarchy before reaching the complaint inbox.
+
+**How it works:**
+
+1. `Module.js` mounts → calls `Digit.SessionStorage.del("HIERARCHY_TYPE_SELECTED")` and fetches all available boundary hierarchies via `useFetchAllBoundaryHierarchies`.
+2. `index.js` checks `Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED")` — if null (or just cleared), the router redirects to `/employee/pgr/select-hierarchy`.
+3. `HierarchySelection.js` renders the available hierarchies as selectable cards. The user picks one and submits.
+4. The selected hierarchy is stored as `{ hierarchyType: "<type>" }` in `Digit.SessionStorage` under `HIERARCHY_TYPE_SELECTED`.
+5. The router redirects to the complaint inbox (`inbox-v2`).
+6. `PGRInbox.js` reads the stored value into React state (`useState(Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED"))`) on first render, and derives `hierarchyType` from that state — not from a session storage read on every render, so it is immune to the Module.js session clear.
+7. Boundary localizations for the selected hierarchy are fetched in `PGRInbox.js` via `Digit.Services.useStore` with `moduleCode = [boundary-{hierarchyType}]`.
+
+**New file:** `src/pages/employee/HierarchySelection.js` — full-page hierarchy picker.
+
+**No MDMS configuration required** for the selection screen itself. All available hierarchies are fetched from the Boundary Management API (`/boundary-service/boundary-hierarchy-definition/_search`).
 
 ---
 
@@ -99,6 +120,47 @@ Before the fix, `FormComposerV2` was passed as an element inside the `children` 
 
 **Issue 2 — Timeline crash when role data was missing (`TimeLineWrapper.js`):**
 The timeline crashed when a workflow instance's `roles` array was `null` or `undefined`, because `.map(...).join(", ")` was called on the result of `.map()` without optional chaining. The fix changed `.join(", ")` to `?.join(", ")` at both the `assignes` and `assigner` role display sites, so that a null `roles` array safely falls through to the `|| t("NA")` fallback.
+
+---
+
+### PGR Inbox — `hierarchyType` Missing from Search Payload
+
+**Ticket:** HCMPRE-4296
+**PRs:** [#4298](https://github.com/egovernments/DIGIT-Frontend/pull/4298), [#4304](https://github.com/egovernments/DIGIT-Frontend/pull/4304)
+
+**Before:** The `/inbox/v2/_search` API call always sent `moduleSearchCriteria: {}` — `hierarchyType` never appeared in the payload even though the config and filter form contained it.
+
+**Root cause:** `UIcustomizations.js` `preProcess` completely replaces `data.body` with a fresh object it builds from scratch. The static `requestBody` in `PGRSearchInboxConfig.js` is irrelevant — if `preProcess` does not explicitly add a field, it is lost from the final API request. `hierarchyType` was missing from the `preProcess` build logic.
+
+**Additionally:** `PGRSearchInboxConfig()` was called with no argument at initial render (before hierarchy was resolved from session storage). `Module.js` clears `HIERARCHY_TYPE_SELECTED` from session storage on mount, so any read of session storage at static config creation time would also return null. This meant even filter `defaultValues` contained a null `hierarchyType`.
+
+**Fix (three-part):**
+
+1. **`PGRInbox.js`** — reads `HIERARCHY_TYPE_SELECTED` from session storage into React `useState` once on first render. State is immune to Module.js clearing the session key after mount. `hierarchyType` is derived from this state, and `PGRSearchInboxConfig(hierarchyType)` is called inside `useMemo([hierarchyType])`.
+
+2. **`PGRSearchInboxConfig.js`** — accepts `hierarchyType = null` parameter. Sets `hierarchyType` in both the static `requestBody.inbox.moduleSearchCriteria` and the filter `defaultValues`. This makes `hierarchyType` available to `preProcess` via `filterForm.hierarchyType`.
+
+3. **`UIcustomizations.js` `preProcess`** — now explicitly reads `hierarchyType` from `filterForm.hierarchyType` (populated via filter `defaultValues`) with a session storage fallback, and sets `moduleSearchCriteria.hierarchyType` when non-null.
+
+---
+
+### Boundary Component Labels Fix
+
+**PR:** [#4309](https://github.com/egovernments/DIGIT-Frontend/pull/4309)
+
+**Before:** `BoundaryComponentWithCard.js` was displaying boundary codes instead of translated boundary labels in the PGR filter.
+
+**After:** Fixed. Boundary labels are now resolved through the localization system.
+
+---
+
+### Date Picker Fix
+
+**PR:** [#4251](https://github.com/egovernments/DIGIT-Frontend/pull/4251)
+
+**Before:** The date input field in `DatePickerComponent.js` used in the complaints filter and creation form had an inconsistent appearance on some screen sizes.
+
+**After:** Fixed. `DatePickerComponent.js` styling corrected for consistent rendering.
 
 ---
 
@@ -135,17 +197,11 @@ Complaints Management is no longer served from the old React 17 standalone shell
 
 > Health Payments and HRMS are also bundled in the same `payments-ui` image.
 
-### 2. Configure `PGR.HierarchySelectedForPGR` in MDMS
+### 2. Boundary Hierarchy Setup
 
-The module reads the boundary hierarchy type from this MDMS v2 master. Without it, the module cannot determine which hierarchy to use for scoping complaints and will block on the loading state.
+The `HierarchySelection` screen fetches all available hierarchies directly from the Boundary Management API (`/boundary-service/boundary-hierarchy-definition/_search`). No MDMS master is required for hierarchy selection — the old `PGR.HierarchySelectedForPGR` MDMS entry is no longer used and can be ignored.
 
-**Required MDMS record shape:**
-
-```json
-{
-  "hierarchyTypeCode": "<your-hierarchy-type>"
-}
-```
+Ensure boundary hierarchy definitions are configured in the Boundary Management service before deployment. If no hierarchies are returned by the API, the selection screen will show no options.
 
 ---
 
@@ -157,6 +213,7 @@ The module registers a React Router v6 sub-router under the employee path. Route
 
 | Route (relative) | Component registered as | Description |
 |---|---|---|
+| `select-hierarchy` | `HierarchySelection` | Hierarchy picker — shown first; redirected here if `HIERARCHY_TYPE_SELECTED` is null in session storage |
 | `create-complaint` | `PGRCreateComplaint` | Multi-step complaint creation form |
 | `complaint-success` | `PGRResponse` | Success confirmation screen after filing |
 | `complaint-failed` | `PGRResponse` | Failure screen after a failed create attempt |
@@ -176,7 +233,7 @@ Create complaint
 
 **Note on inbox filters:** Filters applied in the complaint inbox are automatically cleared when `PGRModule` mounts (`Digit.SessionStorage.del("filtersForInbox")` is called in a `useEffect` with an empty dependency array). Users re-apply filters each time they navigate to the PGR module — this is intentional.
 
-**Note on boundary scoping:** On startup, the module reads the boundary hierarchy from MDMS (`PGR.HierarchySelectedForPGR`) and stores the matching hierarchy object in `SessionStorage["HIERARCHY_TYPE_SELECTED"]`. All complaint data shown to a user is automatically filtered to their assigned boundary.
+**Note on boundary scoping:** On startup, `Module.js` clears `HIERARCHY_TYPE_SELECTED` from session storage. `index.js` redirects to `select-hierarchy` if no hierarchy is in session storage. After the user picks a hierarchy on `HierarchySelection.js`, it is stored as `HIERARCHY_TYPE_SELECTED` and boundary localizations for that hierarchy are loaded. All complaint data shown in the inbox is automatically filtered to the selected hierarchy and the user's assigned boundary.
 
 ### Action Configurations
 

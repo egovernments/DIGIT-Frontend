@@ -157,6 +157,7 @@ All bill and attendance screens now use a consistent header and footer layout, r
 | Header missing in View Register screen | [#4202](https://github.com/egovernments/DIGIT-Frontend/pull/4202) |
 | Crash and state management issues in campaign state; boundary selection performance with 50k+ boundaries | [#4170](https://github.com/egovernments/DIGIT-Frontend/pull/4170) |
 | Dependency version bump to address security vulnerability | [#4173](https://github.com/egovernments/DIGIT-Frontend/pull/4173) |
+| Package version bump as part of cross-module date/sheet and reports fixes | [#4244](https://github.com/egovernments/DIGIT-Frontend/pull/4244) |
 
 ---
 

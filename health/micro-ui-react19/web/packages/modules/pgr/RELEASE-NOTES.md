@@ -14,19 +14,26 @@ The complaint lifecycle is straightforward:
 | Take action | Assigned supervisors — Assign, Resolve, Reject, or Reassign |
 | Track progress | Anyone can view the complaint timeline |
 
-The module works from a single MDMS configuration (`PGR.HierarchySelectedForPGR`) that determines which boundary hierarchy is used to scope all complaints. Inbox filters are always reset at the start of a new session — they do not carry over.
+At the start of each session, users select their boundary hierarchy from a dedicated selection screen. Inbox filters are always reset at the start of a new session — they do not carry over.
 
-In HCM v2.1, this is a **platform migration release** — the module has been moved from React 17 to React 19 and now ships as part of the `payments-ui` build variant. Two bug fixes were also applied during migration.
+In HCM v2.1, this is a **platform migration release** — the module has been moved from React 17 to React 19 and now ships as part of the `payments-ui` build variant. Bug fixes were applied during and after migration.
 
 ---
 
 ## What is this release about?
 
-This release does not add new features. It focuses on:
+The v2.1 release focused on:
 
 1. **Platform migration** — the module has been ported from the older React 17 stack to React 19.
-2. **New deployment method** — Complaints Management   is now shipped as part of the `payments-ui` build and served from a new URL path.
+2. **New deployment method** — Complaints Management is now shipped as part of the `payments-ui` build and served from a new URL path.
 3. **Three bug fixes** — a broken action modal, a crash in the complaint timeline, and a date picker styling issue.
+
+After v2.1, additional capabilities and fixes were added:
+
+4. **Hierarchy selection screen** — users now pick their boundary hierarchy at the start of each session from a dedicated screen, replacing the automatic MDMS-driven resolution.
+5. **PGR inbox hierarchyType fix** — `hierarchyType` is now correctly included in the `/inbox/v2/_search` request payload.
+6. **Boundary component labels fix** — boundary labels in the PGR filter now show translated names.
+7. **Date picker fix** — `DatePickerComponent.js` rendering corrected.
 
 ---
 
@@ -41,6 +48,31 @@ Complaints Management is no longer served from the old React 17 standalone shell
 ---
 
 ## What Changed
+
+### Hierarchy selection screen
+
+At the start of each session, users now see a dedicated **Select Hierarchy** screen before reaching the complaint inbox. They pick the boundary hierarchy to use for that session, and the inbox is scoped to the selected hierarchy.
+
+- Available hierarchies are fetched from the Boundary Management API — no MDMS configuration needed for the selection itself.
+- The `PGR.HierarchySelectedForPGR` MDMS master is no longer used.
+- Module.js clears the previously stored hierarchy on mount, so users always select fresh at the start of each session.
+- Boundary localizations for the selected hierarchy are loaded automatically before the inbox appears.
+
+---
+
+### PGR inbox hierarchyType fix
+
+**Before:** The complaint inbox search always sent `moduleSearchCriteria: {}` to the API — the selected `hierarchyType` was never included in the search payload, causing "Mandatory fields missing" errors from the backend.
+
+**After:** Fixed. `hierarchyType` is now correctly included in the search payload. The fix involves three files: `PGRInbox.js` (reads hierarchy into React state, immune to session storage clearing), `PGRSearchInboxConfig.js` (accepts hierarchyType parameter and includes it in filter defaults), and `UIcustomizations.js` preProcess (explicitly adds `hierarchyType` to the built `moduleSearchCriteria`).
+
+---
+
+### Boundary component labels fix 
+
+Boundary labels in the PGR filter (`BoundaryComponentWithCard.js`) now show translated names instead of raw boundary codes.
+
+---
 
 ### React 19 migration
 
@@ -80,6 +112,28 @@ Complaints Management is now bundled and deployed as part of `payments-ui`, inde
 
 ---
 
+### PGR inbox hierarchyType missing from search payload 
+
+**Before:** The complaint inbox search call always sent `moduleSearchCriteria: {}`. The selected hierarchy was never included, causing "Mandatory fields missing" errors from the backend.
+
+**After:** Fixed. `hierarchyType` is now correctly sent in `moduleSearchCriteria`.
+
+---
+
+### Boundary labels not translated in PGR filter 
+
+**Before:** `BoundaryComponentWithCard.js` displayed raw boundary codes instead of translated boundary names.
+
+**After:** Fixed. Boundary labels are now resolved through the localization system.
+
+---
+
+### Date picker rendering fix (post-v2.1)
+
+`DatePickerComponent.js` styling corrected for consistent rendering across screen sizes.
+
+---
+
 ## How the Module Works
 
 ### Complaint lifecycle flow
@@ -95,7 +149,7 @@ Create complaint
 
 > **Note on inbox filters:** Filters applied in the complaint inbox are automatically cleared at the start of every new session. Users will need to re-apply filters each time they log in — this is intentional behaviour.
 
-> **Note on boundary scoping:** On startup, the module looks up the correct boundary hierarchy from MDMS and stores it for the session. All complaint data shown to a user is automatically filtered to their assigned boundary.
+> **Note on boundary scoping:** On startup, `Module.js` clears any previously stored hierarchy. The user selects a hierarchy from the `select-hierarchy` screen. After selection, boundary localizations for that hierarchy are loaded and the inbox is scoped to the selected hierarchy and the user's assigned boundary.
 
 ---
 
