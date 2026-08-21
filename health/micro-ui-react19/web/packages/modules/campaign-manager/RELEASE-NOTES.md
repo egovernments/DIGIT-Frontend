@@ -184,7 +184,7 @@ Several enhancements were made to AppConfig v2 fields and previews:
 
 ### Boundary Labels and Shipment Sheet
 
-- **Boundary column labels translated** — Boundary column headers in campaign setup and shipment popups now show translated names using the hierarchy's localization module.
+- **Hierarchy type tag translated** — The hierarchy type name shown in the boundary tag in `SelectingBoundariesDuplicate.js` is now passed through `t()` so it displays a localized label instead of the raw hierarchy type code.
 - **Shipment sheet header color** — Header row background corrected from `4CAF50` to `93C47D` to match microplan sheets.
 - **Shipment popup loads its own boundary localizations** — `NewShipmentPopup` no longer relies on the host page to have loaded boundary localizations; it fetches them directly.
 
