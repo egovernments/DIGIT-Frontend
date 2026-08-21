@@ -250,7 +250,7 @@ export const UICustomizations = {
                 variation={existingAssignment ? "secondary" : "primary"}
                 label={existingAssignment ? t("UNASSIGN") : t("ASSIGN")}
                 style={{ minWidth: "10rem" }}
-                onButtonClick={() => {
+                onClick={() => {
                   if (existingAssignment) {
                     deleteStaffMutation.mutateAsync(
                       { projectStaff: existingAssignment },
