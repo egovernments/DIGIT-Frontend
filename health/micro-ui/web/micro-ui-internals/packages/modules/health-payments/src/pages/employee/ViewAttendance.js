@@ -502,7 +502,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         <Card type="primary" className="bottom-gap-card-payment">
           {renderLabelPair("HCM_AM_ATTENDANCE_ID", t(registerNumber))}
           {renderLabelPair("HCM_AM_CAMPAIGN_NAME", t(project?.[0]?.name || "NA"))}
-          {renderLabelPair("HCM_AM_PROJECT_TYPE", t(project?.[0]?.projectType || "NA"))}
+          {renderLabelPair("HCM_AM_PROJECT_TYPE", t(`HCM_PROJECTTYPE_${project?.[0]?.projectType}`) || "NA")}
           {renderLabelPair("HCM_AM_BOUNDARY_CODE", t(boundaryCode || "NA"))}
           {renderLabelPair("HCM_AM_ATTENDANCE_OFFICER", individualsData?.Individual?.[0]?.name?.givenName)}
           {renderLabelPair("HCM_AM_ATTENDANCE_OFFICER_CONTACT_NUMBER", individualsData?.Individual?.[0]?.mobileNumber)}

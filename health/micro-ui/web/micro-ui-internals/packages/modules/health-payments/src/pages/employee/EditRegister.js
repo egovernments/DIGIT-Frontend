@@ -70,7 +70,7 @@ const EditRegister = ({ editAttendance = false }) => {
   useEffect(() => {
     if (AttendanceData) {
       setAttendanceDuration(
-        Math.ceil((AttendanceData?.attendanceRegister[0]?.endDate - AttendanceData?.attendanceRegister[0]?.startDate) / (24 * 60 * 60 * 1000))
+        Math.ceil((AttendanceData?.attendanceRegister[0]?.endDate - AttendanceData?.attendanceRegister[0]?.startDate) / (24 * 60 * 60 * 1000)),
       );
     }
   }, [AttendanceData]);
@@ -220,7 +220,7 @@ const EditRegister = ({ editAttendance = false }) => {
         <Card type="primary" className="bottom-gap-card-payment">
           {renderLabelPair("HCM_AM_ATTENDANCE_ID", t(registerNumber))}
           {renderLabelPair("HCM_AM_CAMPAIGN_NAME", t(project?.[0]?.name || "NA"))}
-          {renderLabelPair("HCM_AM_PROJECT_TYPE", t(project?.[0]?.projectType || "NA"))}
+          {renderLabelPair("HCM_AM_PROJECT_TYPE", t(`HCM_PROJECTTYPE_${project?.[0]?.projectType}`) || "NA")}
           {renderLabelPair("HCM_AM_BOUNDARY_CODE", t(boundaryCode || "NA"))}
 
           {/* ✅ Show additional details only if expanded */}
