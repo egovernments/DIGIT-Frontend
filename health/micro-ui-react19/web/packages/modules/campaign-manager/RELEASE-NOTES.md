@@ -167,10 +167,53 @@ Commodity Management screens (shipment creation, bulk stock upload) now derive h
 
 ---
 
+## What Changed After v2.1
+
+### App Configuration Improvements
+
+Several enhancements were made to AppConfig v2 fields and previews:
+
+- **Field type restriction** — The field type dropdown now only shows types that are compatible with the current field. Compatibility is driven by `HCM-ADMIN-CONSOLE.FieldTypeMappingConfig` MDMS master.
+- **Mandatory asterisk** — The mandatory asterisk now reads from the persisted `mandatory` flag, not computed UI state, so it reflects saved state correctly after navigation.
+- **Toggle-hide for `labelPairList`** — `labelPairList` format fields now support the toggle-hide control.
+- **Checklist preview** — Question labels render at 16px bold with dividers between questions. Table field drawer shows column sub-group cards.
+- **Info card on closed household screen** — A configurable info card can now be shown on the closed household screen, set via `infoCardText` in the page condition.
+- **App preview and button fixes** — App preview row sizing corrected; tertiary button alignment fixed.
+
+---
+
+### Boundary Labels and Shipment Sheet
+
+- **Boundary column labels translated** — Boundary column headers in campaign setup and shipment popups now show translated names using the hierarchy's localization module.
+- **Shipment sheet header color** — Header row background corrected from `4CAF50` to `93C47D` to match microplan sheets.
+- **Shipment popup loads its own boundary localizations** — `NewShipmentPopup` no longer relies on the host page to have loaded boundary localizations; it fetches them directly.
+
+---
+
+### Attendance Registers — Loading Fix
+
+Attendance registers in `MapUsersToRegistersScreen` were previously blocked behind an `isRegisterCreationCompleted` gate that could remain false even when registers were ready, causing the list to never appear. Registers now fetch as soon as `campaignNumber` is present and resource loading is complete.
+
+---
+
 ## Bug Fixes
 
 | Issue fixed | Details |
 |---|---|
+| Bulk stock recovery banner appeared across different campaigns | Session keys for BulkStockUpload are now scoped per campaign |
+| Dashboard showed all project-type reports instead of only campaign-configured reports | Reports list now filters to only those configured for that specific campaign |
+| Attendance card shown before campaign creation completed | Card is now hidden until campaign is created |
+| Date range selection broken in Commodity Management | Fixed |
+| "Rejected" column showing in Transaction Summary | Column removed |
+| Sheet issue in upcoming campaign edit flow | Fixed |
+| Clone campaign date saved with wrong format when using FieldV1 `newDateFormat: true` | `onChange` now converts the display string to an IST-offset ISO timestamp |
+| Loader messages showed raw key strings instead of translated text | Loader message keys corrected to proper i18n format |
+| Delivery details campaign name tag missing or incorrect | Fixed |
+| Localization search call included unnecessary locale modules | Unused modules removed from moduleCode; locale array value now resolved to single string before API call |
+| Ship commodity action button incorrectly shown in completed Stock Summary view | Button removed from Stock Summary tab in completed campaigns |
+| Unified template download filename not localized | Filename now uses the `HCM_MICROPLAN_TEMPLATE` localization key |
+| AppConfig default value not applied correctly | Fixed |
+| AppConfig v2 field type fallback missing for unknown master entries | Fallback tiers added |
 | Stale campaign data on update screen | Old data was shown instead of the latest campaign state |
 | Template polling timeout | Polling interval was too short, causing premature timeouts |
 | Stale data when switching hierarchy | Hierarchy, name, boundary, loader, and cycle display all refreshed incorrectly |
