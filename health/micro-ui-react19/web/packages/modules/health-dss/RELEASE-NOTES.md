@@ -177,6 +177,8 @@ An Excel library (`xlsx ^0.18.5`) has been added to support exporting report dat
 
 | Issue fixed | Details |
 |---|---|
+| Custom report end date sent as start-of-day instead of end-of-day | End date now uses 23:59:59+0530 so the full day's data is included in the report |
+| In-progress report card showed progress bar for SKIPPED/FAILED runs | SKIPPED and FAILED states are now treated as terminal — they show a warning/error tag with no progress bar |
 | Newly generated custom reports required navigating away and back to appear | The in-progress polling hook was reading pre-select query data, so its refetch interval never actually engaged. Reports now update live via 5-second polling while a report is in progress. |
 
 ---
