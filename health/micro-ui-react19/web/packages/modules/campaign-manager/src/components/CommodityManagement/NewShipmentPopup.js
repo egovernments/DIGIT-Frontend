@@ -884,10 +884,10 @@ const NewShipmentPopup = ({
       // --- Stock Data sheet ---
       const ws = wb.addWorksheet("Stock Data");
       // Set column widths before adding data (ExcelJS handles this more reliably)
-      ws.columns = stockHeaders.map((header) => ({ header, width: 30, style: { font: { bold: false, size: 12 } } }));
-      // Style header row: bold, larger font, green background, locked
+      ws.columns = stockHeaders.map((header) => ({ header, width: 30, style: { font: { bold: false, size: 10 } } }));
+      // Style header row: bold, larger font, green background, locked — matches the console unified template's convention
       const headerRow = ws.getRow(1);
-      headerRow.font = { bold: true, size: 14, color: { argb: 'FF000000' } };
+      headerRow.font = { bold: true, size: 11, color: { argb: 'FF000000' } };
       headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF93C47D' } };
       headerRow.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
       headerRow.height = 30;
