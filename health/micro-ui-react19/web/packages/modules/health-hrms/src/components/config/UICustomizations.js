@@ -1,8 +1,8 @@
 import _ from "lodash";
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { CloseSvg, Close } from "@egovernments/digit-ui-react-components";
-import { Button, FormComposerV2, Loader, Modal, Toast } from "@egovernments/digit-ui-components";
+import { CloseSvg, Close, Modal } from "@egovernments/digit-ui-react-components";
+import { Button, FormComposerV2, Loader, Toast } from "@egovernments/digit-ui-components";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import { convertDateToEpoch } from "../../utils/utlis";
 
