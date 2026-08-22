@@ -1,0 +1,314 @@
+[
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "Échec de l'administration",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
+    "message": "Fermer Le nom du chef de ménage doit comporter entre 2 et 200 caractères.",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "Bénéficiaire absent",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Bénéficiaire refusé",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Ciment",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Argile",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_ACTION_LABEL",
+    "message": "Suivant",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
+    "message": "Saisissez les détails du ménage que vous marquez comme fermé.",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
+    "message": "Détails du ménage fermé",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+    "message": " ",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
+    "message": "Nom du village",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
+    "message": "La zone administrative proche du ménage est requise",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
+    "message": "Nom du chef de ménage",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_MIN_LENGTH_ERROR",
+    "message": "Le nom doit comporter au moins 3 caractères",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_LABEL",
+    "message": "Précision des coordonnées GPS",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_REQUIRED_ERROR",
+    "message": "Un suivi rapproché du ménage est requis",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_name_REQUIRED_ERROR",
+    "message": "Le nom du chef est requis",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_scanner_LABEL",
+    "message": "Scanner le bon",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_MESSAGE",
+    "message": "Échec de la récupération de la configuration.",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_administrativeArea_ERROR",
+    "message": "Veuillez sélectionner un nom de village",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_headName_ERROR",
+    "message": "Veuillez saisir le nom du chef de ménage",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_latLng_ERROR",
+    "message": "La localisation GPS est requise",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
+    "message": "Les données ont été enregistrées avec succès",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION1",
+    "message": "Les données ont été enregistrées avec succès",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
+    "message": "Données enregistrées avec succès",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING1",
+    "message": "Données enregistrées avec succès",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_MESSAGE",
+    "message": "La navigation a échoué.",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL",
+    "message": "Retourner",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL1",
+    "message": "Retourner",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Effet secondaire du médicament du cycle en cours",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Effet secondaire du médicament du cycle précédent",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FEMALE",
+    "message": "Femelle",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Fièvre",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Verre",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_INFO_CARD_TEXT",
+    "message": "Veuillez confirmer que vous vous trouvez bien au domicile indiqué dans le village sélectionné. Vos coordonnées GPS seront enregistrées dans le cadre de la clôture du domicile.",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Ressources insuffisantes",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MALE",
+    "message": "Mâle",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "Métal",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Autre",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Autre",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Autre",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "Problème de performances",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Roseaux",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Malade",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Livraison réussie",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "Problèmes de sécurité",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Problèmes techniques",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "Problèmes de compte utilisateur",
+    "module": "hcm-base-closehousehold-bednet",
+    "locale": "fr_DEMO"
+  }
+]

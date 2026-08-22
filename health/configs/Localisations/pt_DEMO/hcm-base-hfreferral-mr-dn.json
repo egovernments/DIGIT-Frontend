@@ -1,0 +1,1706 @@
+[
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "Falha na administração",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_SUCCESS",
+    "message": "Sucesso administrativo",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_SENT_LABEL",
+    "message": "Quantidade enviada",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_addmember",
+    "message": "Sobrenome",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message_addmember",
+    "message": "Este é um campo obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message_addmember",
+    "message": "O comprimento deve ter mais de 2 caracteres.",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_CATEGORY_HFREFERRAL",
+    "message": "Referência de IC",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_REFERRALACKNOWLEDGEMENT",
+    "message": "Sucesso de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_REFERRALINBOX",
+    "message": "Referências de pesquisa",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_REFERRALOVERVIEW",
+    "message": "Visão geral da referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_REFERRAL_CREATE",
+    "message": "Criação de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_FACILITYDETAILS",
+    "message": "Detalhes das instalações de saúde",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_REFERRALDETAILS",
+    "message": "Detalhes de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_SIDEEFFECTFEVER",
+    "message": "Efeitos colaterais - febre",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_SIDEEFFECTFROMCURRENTCYCLE",
+    "message": "Efeitos Colaterais – Ciclo Atual",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_SIDEEFFECTFROMPREVIOUSCYCLE",
+    "message": "Efeitos Colaterais – Ciclo Anterior",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_SIDEEFFECTSICK",
+    "message": "Efeitos colaterais - Doente",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "Beneficiário Ausente",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Beneficiário recusado",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Cimento",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Argila",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSED_HOUSEHOLD",
+    "message": "Domicílio Fechado",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_BLUETOOTHSCAN",
+    "message": "Varredura de Bluetooth",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DEPENDENT_VALUE",
+    "message": "Valor",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Efeito colateral da droga do ciclo atual",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Efeito colateral da droga do ciclo anterior",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ENTER_VALUE_HELP_TEXT",
+    "message": "Insira o número ou texto (ou) escolha o valor nas opções",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEMALE",
+    "message": "Fêmea",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Febre",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVERQ1_NO",
+    "message": "Não",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVERQ1_YES",
+    "message": "Sim",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVERQ2_NEGATIVE",
+    "message": "Negativo",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVERQ2_NO",
+    "message": "Não",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVERQ2_POSITIVE",
+    "message": "Positivo",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVERQ3_YES",
+    "message": "Sim",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVERQ4_NO",
+    "message": "Não",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVERQ4_YES",
+    "message": "Sim",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVERQ5_NO",
+    "message": "Não",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVERQ5_YES",
+    "message": "Sim",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_actionButton2_LABEL",
+    "message": "Continuar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_actionButton_LABEL",
+    "message": "Volte",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_beneficiaryId_LABEL",
+    "message": "ID do beneficiário",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_createReferral_LABEL",
+    "message": "Criar referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_qrScanner_LABEL",
+    "message": "Digitalize o código QR",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_scanBeneficiary_LABEL",
+    "message": "Digitalizar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Vidro",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_COMPARISION_TYPE",
+    "message": "Tipo de comparação",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_FACILITYDETAILS_MESSAGE",
+    "message": "Detalhes das instalações de saúde",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_FACILITY_DETAILS_ACTION_LABEL",
+    "message": "Próximo",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_FACILITY_DETAILS_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_FACILITY_DETAILS_HEADING",
+    "message": "Detalhes das instalações de saúde",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_FACILITY_DETAILS_administrativeArea_LABEL",
+    "message": "Unidade administrativa",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_FACILITY_DETAILS_administrativeArea_REQUIRED_ERROR",
+    "message": "A área administrativa é obrigatória",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_FACILITY_DETAILS_dateOfEvaluation_LABEL",
+    "message": "Data da avaliação",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_FACILITY_DETAILS_dateOfEvaluation_REQUIRED_ERROR",
+    "message": "A data da avaliação é obrigatória",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_FACILITY_DETAILS_evaluationFacility_LABEL",
+    "message": "Unidade de Saúde",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_FACILITY_DETAILS_evaluationFacility_REQUIRED_ERROR",
+    "message": "Unidade de saúde é necessária",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_FACILITY_DETAILS_hfCoordinator_LABEL",
+    "message": "Indicado por (código da equipe CDD)",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRALACKNOWLEDGEMENT_MESSAGE",
+    "message": "Referência enviada com sucesso",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRALDETAILS_MESSAGE",
+    "message": "Detalhes de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_administrativeArea_ERROR",
+    "message": "A área administrativa é obrigatória",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_ageInMonths_ERROR",
+    "message": "A idade em meses é obrigatória",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_dateOfEvaluation_ERROR",
+    "message": "A data da avaliação é obrigatória",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_evaluationFacility_ERROR",
+    "message": "Unidade de saúde é necessária",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_feverQ1_ERROR",
+    "message": "Por favor, responda à pergunta sobre febre",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_feverQ2_ERROR",
+    "message": "Por favor, responda à pergunta sobre febre",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_feverQ3_ERROR",
+    "message": "Por favor, responda à pergunta sobre febre",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_feverQ4_ERROR",
+    "message": "Por favor, responda à pergunta sobre febre",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_feverQ5_ERROR",
+    "message": "Por favor, responda à pergunta sobre febre",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_feverQ6_ERROR",
+    "message": "Forneça detalhes sobre a febre",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_gender_ERROR",
+    "message": "O gênero é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_nameOfChild_ERROR",
+    "message": "O nome da criança é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_referralCycle_ERROR",
+    "message": "O ciclo de referência é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_referralReason_ERROR",
+    "message": "O motivo da indicação é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_sickQ1_ERROR",
+    "message": "Por favor, responda à pergunta sobre doença",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_sickQ2_ERROR",
+    "message": "Por favor, responda à pergunta sobre doença",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_sickQ3_ERROR",
+    "message": "Por favor, responda à pergunta sobre doença",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_sickQ4_ERROR",
+    "message": "Forneça detalhes da doença",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_sickQ5_ERROR",
+    "message": "Forneça detalhes da doença",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_sideEffectPQ1_ERROR",
+    "message": "Por favor, responda à pergunta sobre efeitos colaterais do ciclo anterior",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_sideEffectPQ2_ERROR",
+    "message": "Por favor, responda à pergunta sobre efeitos colaterais do ciclo anterior",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_sideEffectPQ3_ERROR",
+    "message": "Por favor, responda à pergunta sobre efeitos colaterais do ciclo anterior",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_sideEffectQ1_ERROR",
+    "message": "Por favor, responda à pergunta sobre efeitos colaterais",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_sideEffectQ2_ERROR",
+    "message": "Por favor, responda à pergunta sobre efeitos colaterais",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_CREATE_sideEffectQ3_ERROR",
+    "message": "Por favor, responda à pergunta sobre efeitos colaterais",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_ACTION_LABEL",
+    "message": "Próximo",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_HEADING",
+    "message": "Detalhes de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_LABEL",
+    "message": "Idade em meses",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_REQUIRED_ERROR",
+    "message": "A idade em meses é obrigatória",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_VALIDATION",
+    "message": "A idade em meses deve estar entre 3 e 1800",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_beneficiaryId_LABEL",
+    "message": "ID do beneficiário",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_gender_LABEL",
+    "message": "Gênero",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_gender_REQUIRED_ERROR",
+    "message": "O gênero é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_nameOfChild_LABEL",
+    "message": "Nome da criança",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_nameOfChild_REQUIRED_ERROR",
+    "message": "O nome da criança é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_referralCode_LABEL",
+    "message": "Código de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_referralCycle_LABEL",
+    "message": "Ciclo de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_referralCycle_REQUIRED_ERROR",
+    "message": "O ciclo de referência é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
+    "message": "Qual é o motivo do encaminhamento?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR",
+    "message": "O motivo da indicação é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFEVER_MESSAGE",
+    "message": "Não foi possível carregar o formulário. Verifique sua conexão e tente novamente",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_ACTION_LABEL",
+    "message": "Enviar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_HEADING",
+    "message": "Efeito colateral da lista de verificação do ciclo atual",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_MESSAGE",
+    "message": "Não foi possível carregar o formulário. Verifique sua conexão e tente novamente",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ1_LABEL",
+    "message": "Criança avaliada quanto a reação adversa para SP e AQ?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ1_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ2_LABEL",
+    "message": "A Farmacovigilância nacional foi preenchida?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ2_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ3_LABEL",
+    "message": "A criança foi internada/transferida para o hospital devido a doença grave?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ3_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_ACTION_LABEL",
+    "message": "Enviar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_HEADING",
+    "message": "Lista de verificação de febre",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ1_LABEL",
+    "message": "A criança foi testada para malária",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ1_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ2_LABEL",
+    "message": "Resultado do teste de diagnóstico da malária",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ2_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ3_LABEL",
+    "message": "A criança foi internada/transferida para o hospital mais próximo devido a doença grave?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ3_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ4_LABEL",
+    "message": "Criança com teste positivo de malária tratada com antimalárico?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ4_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ5_LABEL",
+    "message": "A criança com teste de malária negativo recebeu SPAQ neste ciclo?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ5_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ6_LABEL",
+    "message": "Razão",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ6_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_ACTION_LABEL",
+    "message": "Enviar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_HEADING",
+    "message": "Efeito colateral da lista de verificação do ciclo anterior",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_MESSAGE",
+    "message": "Não foi possível carregar o formulário. Verifique sua conexão e tente novamente",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ1_LABEL",
+    "message": "Criança avaliada quanto a reação adversa para SP e AQ?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ1_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ2_LABEL",
+    "message": "A Farmacovigilância nacional foi preenchida?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ2_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ3_LABEL",
+    "message": "A criança foi internada/transferida para o hospital devido a doença grave?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ3_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMSICK_ACTION_LABEL",
+    "message": "Enviar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMSICK_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMSICK_HEADING",
+    "message": "Lista de verificação de doenças",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ1_LABEL",
+    "message": "Criança avaliada para determinar a causa da doença",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ1_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ2_LABEL",
+    "message": "A criança foi tratada?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ2_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ3_LABEL",
+    "message": "A criança foi internada/transferida para o hospital mais próximo devido a doença grave?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ3_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ4_LABEL",
+    "message": "Insira comentários para diagnóstico.",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ4_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ5_LABEL",
+    "message": "Nome e dose do medicamento",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ5_REQUIRED_ERROR",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTSICK_MESSAGE",
+    "message": "Não foi possível carregar o formulário. Verifique sua conexão e tente novamente",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HF_REFERRAL_CONTINUE",
+    "message": "Continuar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HF_REFERRAL_GO_BACK",
+    "message": "Volte",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HF_REFERRAL_INBOX_DATE_OF_EVALUATION",
+    "message": "Data da avaliação:",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HF_REFERRAL_NOT_VISITED",
+    "message": "Não visitado",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "IF",
+    "message": "Se",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INELIGIBLE",
+    "message": "Inelegível",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Recursos insuficientes",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_NAME",
+    "message": "Nome",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
+    "message": "Status de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
+    "message": "Sintoma de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "MALE",
+    "message": "Macho",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "Metal",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NEAR_BY_WIFI_DEVICES",
+    "message": "Status de permissão de compartilhamento próximo",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Estoque insuficiente",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NOT_ADMINISTERED",
+    "message": "Não administrado",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NOT_REGISTERED",
+    "message": "Não registrado",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Estoque insuficiente",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ON_PAGE",
+    "message": "na página",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Outro",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Outro",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Open",
+    "message": "Abrir",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Outro",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "Problema de desempenho",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Juncos",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_ACKNOWLEDGEMENT_PANEL_CARD_ACTION_LABEL",
+    "message": "Volte",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_ACKNOWLEDGEMENT_PANEL_CARD_DESCRIPTION",
+    "message": "Os dados foram registrados com sucesso.",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_ACKNOWLEDGEMENT_PANEL_CARD_LABEL",
+    "message": "Dados registrados com sucesso",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_INBOX_BACK_BUTTON_LABEL",
+    "message": "Voltar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_INBOX_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_INBOX_HEADING",
+    "message": "Referências de pesquisa",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_INBOX_INFO_CARD_DESCRIPTION",
+    "message": "Clique no botão criar nova referência para criar uma referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_INBOX_INFO_CARD_HEADING",
+    "message": "Correspondência não encontrada",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_INBOX_NAME",
+    "message": "Nome",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_INBOX_PRIMARY_ACTION_LABEL",
+    "message": "Criar nova referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_INBOX_REFERRAL_STATUS",
+    "message": "Status",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_INBOX_REFERRAL_SYMPTOM",
+    "message": "Sintoma de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_INBOX_SEARCHBAR_LABEL",
+    "message": "Digite o nome da referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_INBOX_SECONDARY_ACTION_LABEL",
+    "message": "Digitalize o código QR",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_OVERVIEW_BACK_BUTTON_LABEL",
+    "message": "Voltar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_OVERVIEW_BACK_LABEL",
+    "message": "Voltar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_OVERVIEW_CONTINUE_LABEL",
+    "message": "Continuar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_OVERVIEW_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_OVERVIEW_HEADING",
+    "message": "Visão geral da referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_OVERVIEW_PRIMARY_ACTION_LABEL",
+    "message": "Voltar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCANLIMIT_ERROR_MESSAGE",
+    "message": "Limite de verificação atingido. Por favor, tente novamente mais tarde",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_PRIMARY_ACTION",
+    "message": "Voltar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_SECONDARY_ACTION",
+    "message": "Confirmar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_TITLE",
+    "message": "Scanner",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCAN_BENEFICIARY",
+    "message": "Digitalizar beneficiário",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Doente",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SICKQ1_NO",
+    "message": "Não",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SICKQ1_YES",
+    "message": "Sim",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SICKQ2_NO",
+    "message": "Não",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SICKQ2_YES",
+    "message": "Sim",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SICKQ3_NO",
+    "message": "Não",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SICKQ3_YES",
+    "message": "Sim",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SIDE_EFFECTQ1_NO",
+    "message": "Não",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SIDE_EFFECTQ1_YES",
+    "message": "Sim",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SIDE_EFFECTQ2_NO",
+    "message": "Não",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SIDE_EFFECTQ2_YES",
+    "message": "Sim",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SIDE_EFFECTQ3_NO",
+    "message": "Não",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SIDE_EFFECTQ3_YES",
+    "message": "Sim",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SIDE_EFFECT_PREQ1_NO",
+    "message": "Não",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SIDE_EFFECT_PREQ1_YES",
+    "message": "Sim",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SIDE_EFFECT_PREQ2_NO",
+    "message": "Não",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SIDE_EFFECT_PREQ2_YES",
+    "message": "Sim",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SIDE_EFFECT_PREQ3_NO",
+    "message": "Não",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SIDE_EFFECT_PREQ3_YES",
+    "message": "Sim",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Entrega bem-sucedida",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "A sincronização não funciona",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "Problemas de segurança",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "A sincronização não funciona",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "THEN_SHOW",
+    "message": "Então mostre",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Problemas técnicos",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "USE_ANOTHER_FIELD",
+    "message": "Use outro campo",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "USE_ANOTHER_FIELD_HELP_TEXT",
+    "message": "Compare com um campo existente no formulário",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "Problemas de conta de usuário",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "actionButton",
+    "message": "Volte",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "actionButton2",
+    "message": "Continuar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "administrativeArea",
+    "message": "Unidade Administrativa",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ageInMonths",
+    "message": "Idade em meses",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "back",
+    "message": "Volte",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "backLink",
+    "message": "Voltar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "backLinkNavigation",
+    "message": "Voltar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "beneficiaryId",
+    "message": "ID do beneficiário",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "buttonLabel",
+    "message": "Enviar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "clientReferenceId",
+    "message": "ID de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "createReferral",
+    "message": "Criar referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "dateOfEvaluation",
+    "message": "Data de avaliação",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "dateRow",
+    "message": "Data",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "evaluationFacility",
+    "message": "Unidade de Saúde",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "feverQ1",
+    "message": "Teste de malária realizado",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "feverQ2",
+    "message": "Resultado do teste de malária",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "feverQ3",
+    "message": "A criança foi internada ou transferida para o hospital mais próximo devido a doença grave?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "feverQ4",
+    "message": "A criança com teste de malária positivo foi tratada com um antimalárico?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "feverQ5",
+    "message": "A criança com teste de malária negativo recebeu SPAQ neste ciclo?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "feverQ6",
+    "message": "Razão",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "gender",
+    "message": "Gênero",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "hfCoordinator",
+    "message": "Indicado por (código da equipe CDD)",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "isEdit",
+    "message": "Edição",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "labelList",
+    "message": "Detalhes",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "listView",
+    "message": "Referências",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "matchNotFound",
+    "message": "Correspondência não encontrada",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "minSearchChars",
+    "message": "Caracteres Mínimos",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "nameOfChild",
+    "message": "Nome da criança",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "openButton",
+    "message": "Abrir",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "qrScanner",
+    "message": "Digitalizar beneficiário",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "referralCode",
+    "message": "Código de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "referralCycle",
+    "message": "Ciclo de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "referralInboxSearchBar",
+    "message": "Pesquise por nome de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "referralName",
+    "message": "Nome de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "referralOverviewBackButton",
+    "message": "Voltar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "referralReason",
+    "message": "Qual é o motivo do encaminhamento?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "referralSuccess",
+    "message": "Dados registrados com sucesso",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "referralSymptom",
+    "message": "Sintoma",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "rowVersion",
+    "message": "Versão",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "rowtemplate",
+    "message": "Entrada de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "scanBeneficiary",
+    "message": "Digitalizar beneficiário",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "searchBar",
+    "message": "Digite o nome da referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "sickQ1",
+    "message": "A criança foi avaliada para determinar a causa da doença?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "sickQ2",
+    "message": "A criança foi tratada?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "sickQ3",
+    "message": "A criança foi internada ou transferida para o hospital mais próximo devido a doença grave?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "sickQ4",
+    "message": "Insira comentários de diagnóstico",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "sickQ5",
+    "message": "Nome e dose do medicamento",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "sideEffectPQ1",
+    "message": "A criança foi avaliada quanto a reações adversas ao SP e ao AQ?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "sideEffectPQ2",
+    "message": "O formulário nacional de Farmacovigilância foi preenchido?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "sideEffectPQ3",
+    "message": "A criança foi internada ou transferida para o hospital devido a doença grave?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "sideEffectQ1",
+    "message": "A criança foi avaliada quanto a reações adversas ao SP e ao AQ?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "sideEffectQ2",
+    "message": "O formulário nacional de Farmacovigilância foi preenchido?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "sideEffectQ3",
+    "message": "A criança foi internada ou transferida para o hospital devido a doença grave?",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "startPage",
+    "message": "Começar",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "templateCard",
+    "message": "Resumo de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "textTemplatetext",
+    "message": "Data de referência",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "pt_DEMO"
+  }
+]

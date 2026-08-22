@@ -1,0 +1,482 @@
+[
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "Falha na administração",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_CATEGORY_STOCKRECONCILIATION",
+    "message": "Reconciliação de estoque",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_STOCKRECONCILIATIONDETAILS",
+    "message": "Reconciliação de estoque",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_STOCKRECONCILIATIONSUCCESS",
+    "message": "Sucesso na reconciliação de estoque",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_STOCKRECON",
+    "message": "Reconciliação de estoque",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "Beneficiário Ausente",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Beneficiário recusado",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Cimento",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Argila",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_VALIDATION_ERROR",
+    "message": "Este é um campo obrigatório",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Efeito colateral da droga do ciclo atual",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Efeito colateral da droga do ciclo anterior",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Febre",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Vidro",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Recursos insuficientes",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECEIVER_LABEL",
+    "message": "Receptor",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SENDER_LABEL",
+    "message": "Remetente",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
+    "message": "Tipo de transação",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "Metal",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Estoque insuficiente",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO_FACILITIES_FOUND",
+    "message": "Nenhuma instalação encontrada",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NO_PRODUCTS_FOUND",
+    "message": "Nenhum produto encontrado",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Estoque insuficiente",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Outro",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Outro",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Outro",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "Problema de desempenho",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Juncos",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SELECT_PRODUCT",
+    "message": "Selecione a variante do produto",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SELECT_WAREHOUSE",
+    "message": "Selecione o armazém",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Doente",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATIONSUCCESS_UNDEFINED_UNDEFINED_PAGE_HEADING",
+    "message": " ",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONDETAILS_MESSAGE",
+    "message": "Falha ao buscar detalhes de reconciliação de estoque",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONDETAILS_comments_ERROR",
+    "message": "Por favor insira um comentário válido",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONDETAILS_manualCount_ERROR",
+    "message": "Insira uma contagem manual válida",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONDETAILS_stockReconciliationCard_ERROR",
+    "message": "Selecione uma instalação e um produto",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_DESCRIPTION",
+    "message": "Sua reconciliação de estoque foi registrada",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_HEADING",
+    "message": "Reconciliação de estoque enviada com sucesso",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_MESSAGE",
+    "message": "Não é possível navegar para a tela inicial",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_PRIMARY_ACTION_LABEL",
+    "message": "De volta para casa",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_ACTION_LABEL",
+    "message": "Enviar",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_DESCRIPTION",
+    "message": "Realize a reconciliação de estoque para suas instalações",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_HEADING",
+    "message": "Reconciliação de estoque",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_comments_HELP_TEXT",
+    "message": "Adicione quaisquer comentários ou observações sobre a reconciliação",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_comments_LABEL",
+    "message": "Comentários",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_comments_REQUIRED_ERROR",
+    "message": "Comentário é obrigatório",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_HELP_TEXT",
+    "message": "Insira a contagem física do estoque após verificação manual",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_LABEL",
+    "message": "Contagem manual",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_MIN_ERROR",
+    "message": "A contagem manual precisa ser 0 ou superior",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_REQUIRED_ERROR",
+    "message": "A contagem manual é obrigatória",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_HELP_TEXT",
+    "message": "Selecione a instalação e o produto para reconciliar o estoque",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_LABEL",
+    "message": "Seleção de instalações e produtos",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_REQUIRED_ERROR",
+    "message": "Selecione a instalação e o produto",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "Informações",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_METRICS",
+    "message": "Métricas de estoque",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_DATE",
+    "message": "Data",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
+    "message": "Estoque disponível = (estoque recebido + estoque devolvido) - (estoque emitido + estoque perdido + estoque danificado)",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_TITLE",
+    "message": "Informações",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
+    "message": "Estoque danificado",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
+    "message": "Ações emitidas",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_LOST",
+    "message": "Estoque perdido",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ON_HAND",
+    "message": "Estoque em mãos",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
+    "message": "Estoque recebido",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
+    "message": "Estoque devolvido",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Selecione o armazém e a variante do produto para visualizar o relatório",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Entrega bem-sucedida",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "A sincronização não funciona",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "Problemas de segurança",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "A sincronização não funciona",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Problemas técnicos",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "Problemas de conta de usuário",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "comments",
+    "message": "Comentários",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "manualCount",
+    "message": "Contagem manual",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "projectId",
+    "message": "ID do projeto",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockInHand",
+    "message": "Estoque em mãos",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockRecon",
+    "message": "Reconciliação de estoque",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockReconciliationCard",
+    "message": "Seleção de instalações e produtos",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockTable",
+    "message": "Tabela de estoque",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockreconciliationStockreconciliationsuccessHeading",
+    "message": "Reconciliação de estoque bem-sucedida",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "stockreconciliationsuccess_primaryAction",
+    "message": "De volta para casa",
+    "module": "hcm-base-stockreconciliation-bednet",
+    "locale": "pt_DEMO"
+  }
+]

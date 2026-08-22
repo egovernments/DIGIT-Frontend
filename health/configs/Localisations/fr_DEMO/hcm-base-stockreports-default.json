@@ -1,0 +1,518 @@
+[
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "L'administration a échoué",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "Bénéficiaire absent",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Refus du bénéficiaire",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Ciment",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Argile",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_VALIDATION_ERROR",
+    "message": "Il s'agit d'un champ obligatoire",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Effet secondaire du médicament du cycle actuel",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Effet secondaire du médicament du cycle précédent",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Fièvre",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Verre",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Ressources insuffisantes",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECEIVER_LABEL",
+    "message": "Récepteur",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVENTORY_SENDER_LABEL",
+    "message": "Expéditeur",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
+    "message": "Type de transaction",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "Métal",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Stock insuffisant",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO_FACILITIES_FOUND",
+    "message": "Aucune installation trouvée",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO_PRODUCTS_FOUND",
+    "message": "Aucun produit trouvé",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Stock insuffisant",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Autre",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Autre",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Autre",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "PROBLÈME DE PERFORMANCE",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Roseaux",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SELECT_PRODUCT",
+    "message": "Sélectionnez la variante du produit",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SELECT_WAREHOUSE",
+    "message": "Sélectionner l'entrepôt",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Malade",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
+    "message": "Sélectionner un produit",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
+    "message": "Sélectionner l'établissement",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_BACK_BUTTON_LABEL",
+    "message": "Dos",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_DESCRIPTION",
+    "message": "Rapports de réconciliation",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_HEADING",
+    "message": "Rapprochement des stocks",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Veuillez sélectionner un entrepôt et un produit pour consulter le rapport.",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "Info",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+    "message": "Aucun résultat trouvé pour les filtres sélectionnés",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
+    "message": "Retour à l'accueil",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_1_LABEL",
+    "message": "Date de rapprochement",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_2_LABEL",
+    "message": "Compter",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_INFO_NO_RESULTS_TITLE",
+    "message": "Aucun résultat trouvé",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_INFO_REPORTS_TITLE",
+    "message": "Info",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_BACK_BUTTON_LABEL",
+    "message": "Dos",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_HEADING",
+    "message": "Rapports",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "Veuillez sélectionner à la fois l'entrepôt et le produit pour consulter le rapport.",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+    "message": "Aucun résultat trouvé pour les filtres sélectionnés",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
+    "message": "Retour à l'accueil",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
+    "message": "Produit",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
+    "message": "Sélectionner l'entrepôt",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_1_LABEL",
+    "message": "Date",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_2_LABEL",
+    "message": "MRN",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
+    "message": "Numéro de bordereau d'expédition",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_PRODUCT_LABEL",
+    "message": "Produit",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_BACK_BUTTON_LABEL",
+    "message": "Dos",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_HEADING",
+    "message": "Consulter les rapports",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_DAMAGED_DESCRIPTION",
+    "message": "Consulter les rapports sur les stocks endommagés",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_DAMAGED_HEADING",
+    "message": "Stock endommagé",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_ISSUED_DESCRIPTION",
+    "message": "Consultez les rapports sur les actions émises",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_ISSUED_HEADING",
+    "message": "Actions émises",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_DESCRIPTION",
+    "message": "Consultez les rapports sur les pertes boursières",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_HEADING",
+    "message": "Perte boursière",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECIEVE_DESCRIPTION",
+    "message": "Consulter les rapports de stock reçus",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECIEVE_HEADING",
+    "message": "Stock reçu",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECON_DESCRIPTION",
+    "message": "Consulter les rapports de rapprochement des stocks",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECON_HEADING",
+    "message": "Rapprochement des stocks",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RETURNED_DESCRIPTION",
+    "message": "Consultez les rapports de retour de stock",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RETURNED_HEADING",
+    "message": "Retours de stock",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_QUANTITY",
+    "message": "Quantité en stock",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_DATE",
+    "message": "Date",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
+    "message": "Stock disponible = (Stock reçu + stock retourné) − (stock émis + stock perdu + stock endommagé)",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_TITLE",
+    "message": "Info",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
+    "message": "Stock endommagé",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
+    "message": "Actions émises",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_LOST",
+    "message": "Stock perdu",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ON_HAND",
+    "message": "Stock en main",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
+    "message": "Stock reçu",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
+    "message": "Retours de stock",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Veuillez sélectionner l'entrepôt et la variante de produit pour consulter le rapport.",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_INFO_NO_RESULTS_TITLE",
+    "message": "Aucun résultat",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_INFO_REPORTS_TITLE",
+    "message": "Informations sur les rapports",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Livraison réussie",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "PROBLÈMES DE SÉCURITÉ",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "PROBLÈMES TECHNIQUES",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "PROBLÈMES DE COMPTE UTILISATEUR",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockReconTable",
+    "message": "Tableau de rapprochement des stocks",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockTable",
+    "message": "Tableau des stocks",
+    "module": "hcm-base-stockreports-default",
+    "locale": "fr_DEMO"
+  }
+]

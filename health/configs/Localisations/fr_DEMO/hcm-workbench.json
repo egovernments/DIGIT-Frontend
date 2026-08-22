@@ -1,0 +1,440 @@
+[
+  {
+    "code": "ACTION_TEST_MY_CAMPAIGN",
+    "message": "Ma campagne",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_MY_CAMPIAGN",
+    "message": "Ma campagne",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_PREVIEW_CAMPAIGN",
+    "message": "Aperçu de la campagne",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_PREVIEW_CAMPIAGN",
+    "message": "Aperçu de la campagne",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_UPLOAD_BOUNDARY",
+    "message": "Gérer les limites",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_CANCEL",
+    "message": "Annuler",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_MESSAGE",
+    "message": "Déconnexion ?",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_WEB_CONFIRMATION_MESSAGE",
+    "message": "Êtes-vous sûr de vouloir",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_WEB_HEADER",
+    "message": "Se déconnecter",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_WEB_YES",
+    "message": "Oui",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CREATE_BOUNDARY_HIERARCHY_TYPE",
+    "message": "Gérer les limites",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CREATE_NEW_CAMPAIGN",
+    "message": "Créer",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DELETE_LEVEL",
+    "message": "Supprimer un niveau",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "EDIT_PROFILE",
+    "message": "Modifier le profil",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_COMMON_PLEASE_ENTER_ALL_MANDATORY_FIELDS",
+    "message": "Veuillez remplir les champs obligatoires.",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG_CODE",
+    "message": "code",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG_I18NKEY",
+    "message": "i18nKey",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG_KEY",
+    "message": "clé",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_BACK",
+    "message": "Retour",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_BENEFICIARY_TYPE",
+    "message": "Type de bénéficiaire",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CAMPAIGN_TYPE",
+    "message": "Type de campagne",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CAMPAIGN_TYPE_DESCRIPTION",
+    "message": "Le type de campagne détermine le type de bénéficiaire de votre campagne. Vos règles de livraison seront préchargées en fonction du type de campagne que vous aurez sélectionné.",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CAMPAIGN_TYPE_HEADER",
+    "message": "Quel est le type de campagne que vous souhaitez mener ?",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CREATE_BOUNDARY_HIERARCHY",
+    "message": "Créer une nouvelle hiérarchie des limites",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_CREATE_BOUNDARY_HIERARCHY_DESCRIPTION",
+    "message": "Vous pouvez créer une nouvelle hiérarchie de délimitation en définissant le nombre de niveaux de la hiérarchie et en nommant les niveaux.",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_FACILITY_MESSAGE",
+    "message": "Veuillez remplir le modèle téléchargé avec les données de délimitation et télécharger la feuille.",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_FILE_VALIDATION_ERROR",
+    "message": "Le fichier téléchargé n'est pas conforme au modèle",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_LEVEL",
+    "message": "Niveau",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_LEVEL_IS_MANDATORY",
+    "message": "Veuillez remplir les champs obligatoires.",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_UPLOAD_BOUNDARY",
+    "message": "Gérer les limites",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD",
+    "message": "Ménage",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INDIVIDUAL",
+    "message": "Individuel",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MANAGE_MASTER_DATA",
+    "message": "Gérer les données de base",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCHEMA_HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG",
+    "message": "attributConfig",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UPLOAD_BOUNDARY",
+    "message": "Gérer les limites",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USER_DETAILS",
+    "message": "Détails de l'utilisateur",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_ADD_LEVEL",
+    "message": "Ajouter un niveau",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_BOUNDARY_CREATION_FAIL",
+    "message": "La création d'un périmètre a échoué",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_BOUNDARY_CREATION_FAIL: DUPLICATE_RECORD.",
+    "message": "Oups ! Il semble que vous ayez déjà saisi ce nom. Veuillez saisir un autre nom de hiérarchie.",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_BOUNDARY_CREATION_FAIL: INTERNAL_SERVER_ERROR.",
+    "message": "Le fichier téléchargé n'est pas conforme au modèle.",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_BOUNDARY_UPSERT_SUCCESS",
+    "message": "La hiérarchie des limites a été créée avec succès.",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_BULK_BROWSE_FILES",
+    "message": "Parcourir mes fichiers",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_CAMPAIGN_CREATED",
+    "message": "Fichier téléchargé avec succès.",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_CONFIRM_UPLOAD",
+    "message": "Confirmer le téléchargement",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_CREATE_HIERARCHY",
+    "message": "Créer une hiérarchie",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_DOWNLOAD_TEMPLATE",
+    "message": "Télécharger le modèle",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_DRAG_DROP",
+    "message": "Glissez et déposez votre feuille Excel remplie ou",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_HIERARCHY_DETAILS",
+    "message": "Détails de la hiérarchie",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_HIERARCHY_NAME",
+    "message": "Nom de la hiérarchie",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_HIERARCHY_TYPE",
+    "message": "Sélectionner le type de hiérarchie",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_LOC_BULK_UPLOAD_XLS",
+    "message": "Télécharger en masse les limites",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MASTER_NAME",
+    "message": "Nom du maître",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_ADMINSCHEMA",
+    "message": "Schéma d'administration",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG",
+    "message": "Attribut Config",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_BASETIMEOUT",
+    "message": "Base Time Out",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_BOUNDARY",
+    "message": "Limite",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_DELIVERYCONFIG",
+    "message": "Configuration de la livraison",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_DELIVERYTYPECONFIG",
+    "message": "Config Type de livraison",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_FACILITYSCHEMA",
+    "message": "Schéma de l'établissement",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_GENDERCONFIG",
+    "message": "Config Genre",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_HIERARCHYCONFIG",
+    "message": "Config Hiérarchie",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_MAILCONFIG",
+    "message": "Config courrier",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_OPERATORCONFIG",
+    "message": "Config opérateur",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_PRODUCTTYPE",
+    "message": "Type de produit",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_READMECONFIG",
+    "message": "Config Lire-moi",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_STRUCTURETYPE",
+    "message": "Type de structure",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_USERSCHEMA",
+    "message": "Schéma de l'utilisateur",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_MASTER_HCM_ADMIN_CONSOLE",
+    "message": "Console d'administration",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_MODULE_NAME",
+    "message": "Nom du module",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_UNABLE_TO_FIND_HIERARCHY_TYPE",
+    "message": "Créer un nouveau type de hiérarchie",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_UPLOAD_BOUNDARY",
+    "message": "Téléchargement des limites",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WBH_UPLOAD_Facility",
+    "message": "Télécharger les données de l'installation",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WORKBENCH_HOME",
+    "message": "Accueil",
+    "module": "hcm-workbench",
+    "locale": "fr_DEMO"
+  }
+]

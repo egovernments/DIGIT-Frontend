@@ -1,0 +1,1052 @@
+[
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "Administrative area is required",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_SUCCESS",
+    "message": "Administration Success",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
+    "message": "Close Household Head Name must be between 2 and 200 characters",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_CATEGORY_CLOSE_HOUSEHOLD",
+    "message": "Close Household",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_CLOSEHOUSEHOLDREGISTRATION",
+    "message": "Close Household Registration",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_CLOSEHOUSEHOLDSUCCESS",
+    "message": "Close Household Success",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_CLOSEHOUSEHOLDDETAILS",
+    "message": "Closed Household Details",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "Beneficiary Absent",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFERRED",
+    "message": "Beneficiary Referred",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Beneficiary Refused",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Cement",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Clay",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSED_HOUSEHOLD",
+    "message": "Closed Household",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_ACTION_LABEL",
+    "message": "Next",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
+    "message": "Capture the details of the household you are marking as closed.",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
+    "message": "Closed Household Details",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+    "message": " ",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
+    "message": "Village name",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
+    "message": "Village name is required",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
+    "message": "Household head name",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_MIN_LENGTH_ERROR",
+    "message": "Name must be at least 3 characters",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_LABEL",
+    "message": "GPS coordinate accuracy",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_REQUIRED_ERROR",
+    "message": "GPS location is required",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_name_REQUIRED_ERROR",
+    "message": "Head Name is required",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_scanner_LABEL",
+    "message": "Scan Voucher",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_MESSAGE",
+    "message": "Close Household Registration",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_administrativeArea_ERROR",
+    "message": "Village name is required",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_headName_ERROR",
+    "message": "Household head name is required",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_latLng_ERROR",
+    "message": "GPS location is required",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
+    "message": "The data has been recorded successfully",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION1",
+    "message": "The data has been recorded successfully",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
+    "message": "Data recorded successfully",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING1",
+    "message": "Data recorded successfully",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_MESSAGE",
+    "message": "Household closed successfully",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL",
+    "message": "Go Back",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL1",
+    "message": "Go Back",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DEFAULT",
+    "message": "Default",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Drug Side Effect from the current cycle",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Drug Side Effect from the previous cycle",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DataIssues",
+    "message": "Data Issues",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FEMALE",
+    "message": "Female",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Fever",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Glass",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GoHome",
+    "message": "Go Back",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_CLOSE_HOUSEHOLD_INFO_CARD_TEXT",
+    "message": "Confirm that you're at the correct household in the selected village. Your GPS location will be recorded as part of the household closure.",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INELIGIBLE",
+    "message": "Ineligible",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Insufficient Resources",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_AGE",
+    "message": "Age",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_BATCH_NUMBER",
+    "message": "Batch Number",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
+    "message": "Complaint",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
+    "message": "Health Facility Referral",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
+    "message": "Household",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
+    "message": "Individual",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
+    "message": "IHM",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_ITEMMODEL",
+    "message": "Item",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
+    "message": "LQA",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_NAVIGATIONMODEL",
+    "message": "Navigation",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
+    "message": "Project Beneficiary",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
+    "message": "Stock Model",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
+    "message": "User Action",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMMENTS",
+    "message": "Comments",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
+    "message": "Contact Number",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
+    "message": "Complaint Area",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
+    "message": "Complaint Date",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
+    "message": "Complaint Number",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
+    "message": "Status",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
+    "message": "Complaint Type",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+    "message": "Contact Number",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
+    "message": "Complaint Area",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
+    "message": "Complaint Date",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
+    "message": "Complaint Number",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
+    "message": "Complaint Type",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+    "message": "Description",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
+    "message": "Status",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
+    "message": "Date of Registration",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_GENDER",
+    "message": "Gender",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
+    "message": "Age",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
+    "message": "Gender",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
+    "message": "Beneficiary Name",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
+    "message": "Registration Date",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
+    "message": "Head of Household",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
+    "message": "Settlement",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
+    "message": "Total Members",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
+    "message": "Head of Household",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
+    "message": "Locality",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_ID_NUMBER",
+    "message": "ID Number",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_ID_TYPE",
+    "message": "ID Type",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+    "message": "Campaign Info Source",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
+    "message": "Children Present",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
+    "message": "Children Vaccinated",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
+    "message": "Final Comments",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
+    "message": "Missed - Absent",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
+    "message": "Missed - Asleep",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
+    "message": "Missed - Not Revisited",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
+    "message": "Missed - Not Visited",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
+    "message": "Missed - Other",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
+    "message": "Missed - Refusal",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
+    "message": "Missed - Routine",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
+    "message": "Monitoring Date",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
+    "message": "Monitor Designation",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
+    "message": "Monitor Name",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
+    "message": "Poorly Covered",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
+    "message": "Settlement Area",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
+    "message": "Settlement Type",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_BATCH_LABEL",
+    "message": "Batch",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
+    "message": "Batch Number",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_COMMENTS_LABEL",
+    "message": "Comments",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
+    "message": "Expiry Date",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
+    "message": "MRN Number",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_QUANTITY_LABEL",
+    "message": "Quantity",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_RESOURCE_LABEL",
+    "message": "Resource",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_SENDER_LABEL",
+    "message": "Sender",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_SKU_LABEL",
+    "message": "SKU",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
+    "message": "Transaction Reason",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
+    "message": "Transaction Type",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
+    "message": "Waybill",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
+    "message": "Waybill Number",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
+    "message": "Absence Reason",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
+    "message": "AFP Awareness",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
+    "message": "AFP Case Count",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
+    "message": "Other Awareness Source",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
+    "message": "Campaign Awareness",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
+    "message": "Caregiver Informed",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
+    "message": "Children Under 5",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
+    "message": "Child Age (Months)",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
+    "message": "Child Sex",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
+    "message": "Cluster Number",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
+    "message": "Finger Marked",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
+    "message": "Lot Number",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
+    "message": "OPV Doses",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
+    "message": "Other Absence Reason",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
+    "message": "Other Reason (Specify)",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
+    "message": "Other Refusal Reason",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
+    "message": "Reason Not Marked",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
+    "message": "Refusal Reason",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
+    "message": "Settlement Area",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
+    "message": "Surveyor Name",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
+    "message": "Survey Date",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MEMBER_COUNT",
+    "message": "Member Count",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MOBILE_NUMBER",
+    "message": "Mobile Number",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MRN_NUMBER",
+    "message": "MRN Number",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
+    "message": "Name",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_QUANTITY_RECEIVED",
+    "message": "Quantity Received",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_NAME",
+    "message": "Name",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
+    "message": "Referral Status",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
+    "message": "Referral Symptom",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_RESOURCE",
+    "message": "Resource",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_STOCK_EXPIRY",
+    "message": "Stock Expiry",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_WAYBILL_NUMBER",
+    "message": "Waybill Number",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "message": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MALE",
+    "message": "Male",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "Metal",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Not Enough Stock",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOT_ADMINISTERED",
+    "message": "Not Administered",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOT_REGISTERED",
+    "message": "Not Registered",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Not Enough Stock",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Other",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Other",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Other",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "Performance Issue",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Reeds",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Sick",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Delivery Successful",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "Sync not working",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "Security Issues",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "Sync Not Working",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Technical Issues",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UNIQUE_BENEFICIARY_ID",
+    "message": "Beneficiary ID",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "User Account Issues",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "administrativeArea",
+    "message": "Village Name",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "closeHouseholdSuccess",
+    "message": "Data Recorded Successfully",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "headName",
+    "message": "Household Head Name",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "latLng",
+    "message": "GPS Coordinate Accuracy",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "scanner",
+    "message": "Scan Voucher",
+    "module": "hcm-base-closehousehold-mr-dn",
+    "locale": "en_DEMO"
+  }
+]

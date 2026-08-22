@@ -1,0 +1,1034 @@
+[
+  {
+    "code": "ACTION_TEST_MY_CAMPAIGN",
+    "message": "My Campaign",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_MY_CAMPIAGN",
+    "message": "My Campaign",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_PREVIEW_CAMPAIGN",
+    "message": "Preview Campaign",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_PREVIEW_CAMPIAGN",
+    "message": "Preview Campaign",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_UPLOAD_BOUNDARY",
+    "message": "Manage Boundaries",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ADD_HIERARCHY_LEVEL",
+    "message": "Add Hierarchy Level",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BACK_TO_PAGE_PROPERTIES",
+    "message": "Back to page properties",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BACK_TO__CAMPAIGN_HOME",
+    "message": "Go Back To Campaign Home",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BAD_REQUEST",
+    "message": "Internal error. Please try again.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BATCH_NUMBER",
+    "message": "Batch number",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNET",
+    "message": "Bednet",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY",
+    "message": "Beneficiary",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARYLOCATION_CORRESPONDENCE",
+    "message": "Correspondence",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARYLOCATION_OTHER",
+    "message": "Other",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARYLOCATION_PERMANENT",
+    "message": "Permanent",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "Beneficiary Absent",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_BACK",
+    "message": "Back",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_DETAILS_DESC",
+    "message": "Delivery Overview of beneficiary",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_DETAILS_HEADING",
+    "message": "Beneficiary Details",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFERRED",
+    "message": "Beneficiary Referred",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Beneficiary Refused",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_complaintNumber_LABEL",
+    "message": "Campaign Number Labels",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_complaintType_LABEL",
+    "message": "Complaint Type Label",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_locality_LABEL",
+    "message": "Village Label",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_mobileNumber_LABEL",
+    "message": "Mobile Number Labels",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY",
+    "message": "Boundary",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_COLUMN",
+    "message": "Column",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_CONFIRMATION_FAILED",
+    "message": "Failed to confirm boundary creation and persistence.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DATA_FROM_GEOPODE",
+    "message": "Boundary Data from GeoPoDe.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DATA_MANAGEMENT",
+    "message": "Boundary Management",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DATA_NOT_FOUND",
+    "message": "There was a problem processing boundary data. Please check and try again.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DATA_UPDATE",
+    "message": "Edit Boundary Data",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DATA_VIEW",
+    "message": "Boundary Data View",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DOWNLOADED",
+    "message": "Boundary data Downloaded",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DOWNLOAD_MESSAGE",
+    "message": "Download the Excel template which has the selected boundary data. Once downloaded, Please populate the template with correct target data and upload the sheet.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_EMPTY",
+    "message": "is empty.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_EMPTY_SHEET",
+    "message": "The sheet is empty or does not have headers.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_ENTITY_CREATE_ERROR",
+    "message": "Error occurred while creating boundary entity.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_EXCEL",
+    "message": "Excel",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_FILLED",
+    "message": "is filled but",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_GEOJSON",
+    "message": "GeoJson",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_HIERARCHY_INFO_MSG",
+    "message": "Add your boundary hierarchy levels by clicking the \u201cAdd New Boundary Hierarchy Level\u201d button. If you want to remove a level, click on the delete icon next to the level you want to delete.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_HIERARCHY_INSERT_ERROR",
+    "message": "Error inserting boundary hierarchy.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_LOCALISATION_ERROR",
+    "message": "Boundary creation failed. Localisation Error.!",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_MANAGEMENT",
+    "message": "Boundary Management",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_NAME",
+    "message": "Boundary name",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_NOT_FOUND",
+    "message": "The specified boundary was not found.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_NO_VALID_ROWS",
+    "message": "Invalid sheet, please download and add the data",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_README_HEADER_3_DESC_2",
+    "message": "Validations are only for Boundary code column and Target at the Selected Boundary level column.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_RELATIONSHIP_CREATE_ERROR",
+    "message": "Failed to create boundary relationship.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_RELATION_CREATE",
+    "message": "Boundary Relation Create",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_ROW",
+    "message": "Row",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_SEARCH_ERROR",
+    "message": "Error searching for boundary.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_SHEET_FIRST_COLUMN_INVALID_ERROR",
+    "message": "The first column of the boundary sheet must be unique.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_SHEET_HEADER_ERROR",
+    "message": "The boundary sheet header is invalid.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_SHEET_UPLOADED_INVALID_ERROR",
+    "message": "One or more boundaries do not have a parent mapped",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_SYNC_ERROR",
+    "message": "Failed to synchronize boundaries from the database.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_TARGET_ERROR",
+    "message": "Target is missing or has an invalid value.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CANCEL",
+    "message": "Cancel",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHOOSE_MEANS_TO_CREATE_BOUNDARY",
+    "message": "Choose your option to create boundary ",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CMN_BOUNDARY_REL_CREATE",
+    "message": "Create Hierarchy Type",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CMN_FILLORDELETE_CREATED_HIERARCHY",
+    "message": "Please fill the all fields ",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMMON_BACK",
+    "message": "Back",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_CANCEL",
+    "message": "Cancel",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_MESSAGE",
+    "message": "Logout?",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_WEB_CONFIRMATION_MESSAGE",
+    "message": "Are you sure you want to",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_WEB_HEADER",
+    "message": "Logout",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_WEB_YES",
+    "message": "Yes",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CREATE",
+    "message": "Create",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CREATE_BOUNDARY_HIERARCHY",
+    "message": "Create Boundary Hierarchy",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CREATE_BOUNDARY_HIERARCHY_TYPE",
+    "message": "Manage boundaries",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CREATE_MY_OWN_BOUNDARY_DATA",
+    "message": "Create My Own Boundary Data",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CREATE_NEW_BOUNDARY_DATA",
+    "message": "Create New Boundary Data",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CREATE_NEW_CAMPAIGN",
+    "message": "Create",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CURRENT_HIERARCHIES",
+    "message": "List of Boundaries",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CURRENT_HIERARCHY_TYPE_IS",
+    "message": "Current Hierarchy is",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_SYNC_WITH_SERVER",
+    "message": "Creating boundaries",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DELETE_LEVEL",
+    "message": "Delete Level",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DOWNLOAD",
+    "message": "Download",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DOWNLOAD_EXCEL_TEMPLATE",
+    "message": "Download Excel Template",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "EDIT_BOUNDARY_DATA",
+    "message": "Edit Boundary Data",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "EDIT_PROFILE",
+    "message": "Edit Profile",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ES_BOUNDARY_DATA_CREATED_SUCCESS_RESPONSE",
+    "message": "Boundary created successfully !",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ES_COMMON_PLEASE_ENTER_ALL_MANDATORY_FIELDS",
+    "message": "Please fill the mandatory fields.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FILE_UPLOADED_SUCCESSFULLY",
+    "message": "File Uploaded Successfully",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GET_BOUNDARY_DATA_FROM_GEOPODE",
+    "message": "Boundary Data from GeoPoDe",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GO_BACK_TO_HOME",
+    "message": "Go Back To Home",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG_CODE",
+    "message": "code",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG_I18NKEY",
+    "message": "i18nKey",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG_KEY",
+    "message": "key",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_AM_ERROR_MESSAGE",
+    "message": "THere is some error.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_BACK",
+    "message": "Back",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_BENEFICIARY_TYPE",
+    "message": "Beneficiary type",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_CAMPAIGN_TYPE",
+    "message": "Campaign type",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_CAMPAIGN_TYPE_DESCRIPTION",
+    "message": "Campaign type will determine the beneficiary type for your campaign. Your delivery rules will be pre loaded based on the campaign type you select.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_CAMPAIGN_TYPE_HEADER",
+    "message": "What is the type of campaign you want to run?",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_CREATE_BOUNDARY_HIERARCHY",
+    "message": "Create A New Boundary Hierarchy",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_CREATE_BOUNDARY_HIERARCHY_DESCRIPTION",
+    "message": "You can create a new boundary hierarchy by defining the number of levels in the hierarchy and naming the levels",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_FACILITY_MESSAGE",
+    "message": "Please populate the downloaded template with boundary data and upload the sheet.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_FILE_VALIDATION_ERROR",
+    "message": "Uploaded file is not as per Template",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_LEVEL",
+    "message": "Level",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_LEVEL_IS_MANDATORY",
+    "message": "Please fill the mandatory fields.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_UPLOAD_BOUNDARY",
+    "message": "Manage Boundaries",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HIERARCHY_CREATED_ON",
+    "message": "Hierarchy created on",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HIERARCHY_CREATED_SUCCESSFULLY",
+    "message": "Hierarchy created successfully",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HIERARCHY_CREATION_FAILED",
+    "message": "Hierarchy creation failed ",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HIERARCHY_LAST_MODIFIED_ON",
+    "message": "Hierarchy last modified on",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HIERARCHY_NAME",
+    "message": "Hierarchy name",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HIERARCHY_PLEASE_WAIT",
+    "message": "Please wait for a few mins as boundary hierarchy is being created",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HIERARCHY_PLEASE_WAIT ",
+    "message": "Creating hierarchy",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD",
+    "message": "Household",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INDIVIDUAL",
+    "message": "Individual",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INFO",
+    "message": "Info",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MANAGE_MASTER_DATA",
+    "message": "Manage Master data",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NEWLY_ADDED_BOUNDARY_DATA",
+    "message": "New Hierarchy Level",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME",
+    "message": "Please wait and retry after sometime",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PREVIEW_ON_MAP",
+    "message": "Preview on Map",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCHEMA_HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG",
+    "message": "attributeConfig",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SIERRALEON",
+    "message": "Sierra Leone - ITN",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SIERRALEONE",
+    "message": "Sierra Leone - ITN",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUBMIT_EXCEL",
+    "message": "Submit",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TEMPLATE_GENERATION_IN_PROGRESS",
+    "message": "Template generation is in progress",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UPLOAD_BOUNDARY",
+    "message": "Manage boundary",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UPLOAD_DATA_MAPPING",
+    "message": "Upload Data Mapping",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UPLOAD_EXCEL",
+    "message": "Upload Excel",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UPLOAD_EXCEL_DESCRIPTION",
+    "message": "Upload Excel",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UPLOAD_EXCEL_FOR_ALL_BOUNDARIES",
+    "message": "Upload Excel for All Boundaries",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UPLOAD_FILE",
+    "message": "Upload File",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UPLOAD_GEOJSONS",
+    "message": "Upload geojson",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "USER_DETAILS",
+    "message": "User Details",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "VIEW_EXISTING_BOUNDARY_DATA",
+    "message": "View All Boundaries",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_ADD_LEVEL",
+    "message": "Add level",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_BOUNDARY_CREATION_FAIL",
+    "message": "Boundary creation has failed",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_BOUNDARY_CREATION_FAIL: DUPLICATE_RECORD.",
+    "message": "Oops! Looks like you've already entered that. Please enter a different hierarchy name.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_BOUNDARY_CREATION_FAIL: INTERNAL_SERVER_ERROR.",
+    "message": "Uploaded file is not as per the template",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_BOUNDARY_UPSERT_SUCCESS",
+    "message": "Boundary heirarchy created successfully.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_BULK_BROWSE_FILES",
+    "message": "Browse in my files",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_CAMPAIGN_CREATED",
+    "message": "File uploaded successfully.",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_CONFIRM_UPLOAD",
+    "message": "Confirm Upload",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_CREATE_HIERARCHY",
+    "message": "Create Hierarchy",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_DELETE",
+    "message": "Delete",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_DOWNLOAD",
+    "message": "Download",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_DOWNLOAD_TEMPLATE",
+    "message": "Download Template",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_DRAG_DROP",
+    "message": "Drag and drop your filled excel sheet or",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_HIERARCHY_DETAILS",
+    "message": "Heirarchy Details",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_HIERARCHY_NAME",
+    "message": "Hierarchy name",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_HIERARCHY_TYPE",
+    "message": "Select hierarchy type",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_LOC_BULK_UPLOAD_XLS",
+    "message": "Bulk Upload Boundaries",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MASTER_NAME",
+    "message": "Master Name",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_ADMINSCHEMA",
+    "message": "Admin Schema",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG",
+    "message": "Attribute Config",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_BASETIMEOUT",
+    "message": "Base Time Out",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_BOUNDARY",
+    "message": "Boundary",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_DELIVERYCONFIG",
+    "message": "Delivery Config",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_DELIVERYTYPECONFIG",
+    "message": "Delivery Type Config",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_FACILITYSCHEMA",
+    "message": "Facility Schema",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_GENDERCONFIG",
+    "message": "Gender Config",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_HIERARCHYCONFIG",
+    "message": "Hierarchy Config",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_MAILCONFIG",
+    "message": "Mail Config",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_OPERATORCONFIG",
+    "message": "Operator Config",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_PRODUCTTYPE",
+    "message": "Product Type",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_READMECONFIG",
+    "message": "Read Me Config",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_STRUCTURETYPE",
+    "message": "Structure Type",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_USERSCHEMA",
+    "message": "User Schema",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_MASTER_HCM_ADMIN_CONSOLE",
+    "message": "Admin Console",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_MODULE_NAME",
+    "message": "Module Name",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_RESPONSE",
+    "message": "Success screen",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_UNABLE_TO_FIND_HIERARCHY_TYPE",
+    "message": "Create new hierarchy type",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_UPLOAD_BOUNDARY",
+    "message": "Upload boundary",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_UPLOAD_Facility",
+    "message": "Upload Facility Data",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WORKBENCH_HOME",
+    "message": "Home",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "YOU_WON'T_BE_ABLE_TO_UNDO_THIS_STEP_OF_CREATING_HIERARCHY",
+    "message": "You won't be able to undo this step of creating hierarchy",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  }
+]

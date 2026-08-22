@@ -1,0 +1,1166 @@
+[
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "Administration Failed",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPONE_INVENTORY_QUANTITY_SENT_LABEL",
+    "message": "Quantity Sent",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_RECORDSTOCK",
+    "message": "Record stock",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_STOCKDETAILS_ACTION_BUTTON_LABEL",
+    "message": "Next",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_STOCKDETAILS_SCREEN_DESCRIPTION",
+    "message": "Enter stock transaction details",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_BACK_BUTTON_LABEL",
+    "message": "Back",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RECEIVED_AT_THE_WAREHOUSE_DESCRIPTION",
+    "message": "Create records for stock received at the warehouse",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RETURNED_TO_THE_WAREHOUSE_DESCRIPTION",
+    "message": "Create records for stock returned to the warehouse",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_SENT_OUT_FROM_THE_WAREHOUSE_DESCRIPTION",
+    "message": "Create records for stock sent out from the warehouse",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_HEADING",
+    "message": "Manage Stock",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_DAMAGED_HEADING",
+    "message": "Record Stock Damaged",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
+    "message": "Record Stock Issued",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_LOSS_HEADING",
+    "message": "Record Stock Loss",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RECEIPT_HEADING",
+    "message": "Record Stock Receipt",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RETURNED_HEADING",
+    "message": "Record Stock Returned",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_DAMAGED_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
+    "message": "Record the list of products damaged during campaign operations",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_LOST_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
+    "message": "Record the list of products lost during campaign operations",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_manageStock_VIEW_TRANSACTIONS_FOOTER_BUTTON_LABEL",
+    "message": "View Transactions",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_productDetails_LABEL",
+    "message": "Product Details",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_productDetails_PRODUCT_SELECTION_IS_REQUIRED_MESSAGE",
+    "message": "Product selection is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_productDetails_SELECT_MULTIPLE_PRODUCTS_HELP_TEXT",
+    "message": "Select multiple products",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_ENTER_THE_VEHICLE_NUMBER_HELP_TEXT",
+    "message": "Enter the vehicle number",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_SCAN_TEAM_CODE_HELP_TEXT",
+    "message": "Scan team code",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_SCREEN_HEADING",
+    "message": "Stock Details",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_SELECT_THE_FACILITY_FROM_WHICH_THE_STOCK_IS_BEING_RECEIVED_HELP_TEXT",
+    "message": "Select the facility from which the stock is being received",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_SELECT_THE_TYPE_OF_TRANSPORT_USED_HELP_TEXT",
+    "message": "Select the type of transport used",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_TRANSPORT_TYPE_IS_REQUIRED_MESSAGE",
+    "message": "Transport type is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_VEHICLE_NUMBER_IS_REQUIRED_MESSAGE",
+    "message": "Vehicle number is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_deliveryTeamCode_IS_REQUIRED_MESSAGE",
+    "message": "Delivery team code is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_deliveryTeamCode_LABEL",
+    "message": "Delivery Team Code",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_facilityFromWhich_IS_REQUIRED_MESSAGE",
+    "message": "Facility from which is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_facilityFromWhich_LABEL",
+    "message": "Health Facility",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_transportType_LABEL",
+    "message": "Transport Type",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockDetails_vehicleNumber_LABEL",
+    "message": "Vehicle Number",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ACTION_BUTTON_LABEL_1",
+    "message": "Next",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ADD_COMMENTS_IF_QUANTITIES_DIFFER_HELP_TEXT",
+    "message": "Add comments if quantities differ",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_BATCH_NUMBER_LABEL",
+    "message": "Batch Number",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_COMMENT_LABEL",
+    "message": "Comments",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_ACTUAL_QUANTITY_RECEIVED_HELP_TEXT",
+    "message": "Enter the actual quantity received",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_BATCH_NUMBER_HELP_TEXT",
+    "message": "Enter the batch number",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_DAMAGED_BY_THE_WAREHOUSE_HELP_TEXT",
+    "message": "Enter actual quantity damaged",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_LOST_BY_THE_WAREHOUSE_HELP_TEXT",
+    "message": "Enter actual quantity lost",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_RETURNED_BY_THE_WAREHOUSE_HELP_TEXT",
+    "message": "Enter actual quantity returned",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_SENT_BY_THE_WAREHOUSE_HELP_TEXT",
+    "message": "Enter the quantity sent by the warehouse",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_WAYBILL_NUMBER_HELP_TEXT",
+    "message": "Enter the waybill number",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_EXPIRY_DATE_IS_REQUIRED_MESSAGE",
+    "message": "Expiry date is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_EXPIRY_DATE_LABEL",
+    "message": "Expiry Date",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_DAMAGED_IS_REQUIRED_MESSAGE",
+    "message": "Quantity damaged is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_DAMAGED_LABEL",
+    "message": "Quantity damaged",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_LOST_IS_REQUIRED_MESSAGE",
+    "message": "Quantity lost is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_LOST_LABEL",
+    "message": "Quantity lost",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RECEIVED_IS_REQUIRED_MESSAGE",
+    "message": "Quantity received is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RECEIVED_LABEL",
+    "message": "Quantity received",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RETURNED_IS_REQUIRED_MESSAGE",
+    "message": "Quantity returned is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RETURNED_LABEL",
+    "message": "Quantity returned",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_SENT_IS_REQUIRED_MESSAGE",
+    "message": "Quantity sent is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_SENT_LABEL",
+    "message": "Quantity sent",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCAN_RESOURCE_HELP_TEXT",
+    "message": "Scan the product QR code",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCAN_RESOURCE_LABEL",
+    "message": "Scan Product",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCREEN_DESCRIPTION",
+    "message": "Enter product details for the stock transaction",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCREEN_HEADING",
+    "message": "Product Details",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_SELECT_THE_EXPIRY_DATE_HELP_TEXT",
+    "message": "Select the expiry date",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockProductDetails_WAYBILL_LABEL",
+    "message": "Waybill Number",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockSuccess_CREATE_NEW_TRANSACTION",
+    "message": "Create New Transaction",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockSuccess_MATERIAL_RECEIPT_CREATED_SUCCESSFULLY",
+    "message": "Material Receipt Created Successfully",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockSuccess_MRN_NUMBER_DESCRIPTION",
+    "message": "Your MRN number has been generated successfully.",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_stockSuccess_VIEW_TRANSACTION",
+    "message": "View Transaction",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransactionDetails_BACK_TO_TRANSACTIONS",
+    "message": "Back to Transactions",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransactionDetails_TRANSACTION_DETAILS_SCREEN_HEADING",
+    "message": "Transaction Details",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransaction_BACK",
+    "message": "Back",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransaction_NO_TRANSACTIONS_FOUND_INFOCARD_DESCRIPTION",
+    "message": "There are no transactions available at the moment.",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransaction_NO_TRANSACTIONS_FOUND_INFOCARD_LABEL",
+    "message": "No Transactions Found",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransaction_SELECT_THE_MRN_NUMBER",
+    "message": "Select the MRN Number",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransaction_SELECT_TRANSACTION",
+    "message": "Select Transaction",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_viewTransaction_VIEW_QR",
+    "message": "View QR",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_ACTION_BUTTON_LABEL_1",
+    "message": "Next",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_ENTER_THE_DATE_ON_WHICH_THE_STOCK_WAS_RECEIVED_HELP_TEXT",
+    "message": "Enter the date on which the stock was received",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_SCAN_TEAM_CODE_HELP_TEXT",
+    "message": "Scan team code",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_SCREEN_DESCRIPTION",
+    "message": "Enter warehouse and facility details",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_SELECT_THE_ADMINISTRATIVE_AREA_OF_THE_WAREHOUSE_HELP_TEXT",
+    "message": "Select the administrative area of the warehouse",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_SELECT_THE_FACILITY_TO_WHICH_THE_STOCK_IS_BEING_SENT_HELP_TEXT",
+    "message": "Select the facility to which the stock is being sent",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_WAREHOUSE_SCREEN_HEADING",
+    "message": "Warehouse Details",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_administrativeArea_IS_REQUIRED_MESSAGE",
+    "message": "Administrative area is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_administrativeArea_LABEL",
+    "message": "Administrative Area",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_dateOfReceipt_IS_REQUIRED_MESSAGE",
+    "message": "Date of receipt is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_dateOfReceipt_LABEL",
+    "message": "Date of Receipt",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_facilityToWhich_IS_REQUIRED_MESSAGE",
+    "message": "Facility to which is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_facilityToWhich_LABEL",
+    "message": "Health Facility",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_IS_REQUIRED_MESSAGE",
+    "message": "Team code is required",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_LABEL",
+    "message": "Team Code",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "App_config_inventory_stockproductdetails_enter the_quantity_damaged_by_the_warehouse_help_text",
+    "message": "Required field",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BATCH_NUMBER",
+    "message": "Batch Number",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "Beneficiary Absent",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Beneficiary Refused",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bus",
+    "message": "Bus",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Cement",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Clay",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMMENTS",
+    "message": "Comments",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_VALIDATION_ERROR",
+    "message": "This is a required field",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Drug Side Effect from the current cycle",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Drug Side Effect from the previous cycle",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FEMALE",
+    "message": "Female",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Fever",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Facility_from_and_to_must_be_different",
+    "message": "Facility from and to must be different.",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Glass",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Insufficient Products",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVENTORY_CREATE_NEW_TRANSACTION_LABEL",
+    "message": "Create a new transaction",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVENTORY_QR_CODE_TITLE",
+    "message": "Scan QR",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECEIVER_LABEL",
+    "message": "Receiver",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVENTORY_SENDER_LABEL",
+    "message": "Sender",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCK_SUCCESS_LABEL",
+    "message": "Stock Transaction Recorded successfully",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCK_SUCCESS_MRN_DESCRIPTION",
+    "message": "The data has been recorded successfully",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
+    "message": "Transaction Type",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVENTORY_VIEW_QR_LABEL",
+    "message": "View QR",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVENTORY_VIEW_TRANSACTION_LABEL",
+    "message": "View Transactions",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MALE",
+    "message": "Male",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "Metal",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MRN_NUMBER",
+    "message": "MRN Number",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Not Enough Stock",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_DATA_FOUND",
+    "message": "No Data Found",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_DATA_FOUND_CONTENT",
+    "message": "No Data Found",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_FACILITIES_FOUND",
+    "message": "No Facilities found",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_PRODUCTS_FOUND",
+    "message": "No Products found",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "No_options_available",
+    "message": "No options available",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Not Enough Stock",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Not_found",
+    "message": "Not found",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Other",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Other",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Other",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "Performance Issues",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QR_ATTENDANCE",
+    "message": "Attendance QR",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QR_INVENTORY",
+    "message": "Inventory QR",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0",
+    "message": "Quantity received should not be less than 0.",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityDamaged",
+    "message": "Quantity should not be less than 0",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityDamaged_number",
+    "message": "Only numbers allowed",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityLost",
+    "message": "Quantity should not be less than 0",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityLost_number",
+    "message": "Only numbers allowed",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityReceived",
+    "message": "Quantity should not be less than 0",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityReceived_number",
+    "message": "Only numbers allowed",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityReturned",
+    "message": "Quantity should not be less than 0",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantityReturned_number",
+    "message": "Only numbers allowed",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantitySent",
+    "message": "Quantity should not be less than 0",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITYRECIEVED_NOT_LESS_THAN_0_quantitySent_number",
+    "message": "Only numbers allowed",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITYSENT_NOT_LESS_THAN_0",
+    "message": "Quantity sent should not be less than 0.",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITY_RECEIVED",
+    "message": "Quantity recieved",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QUANTITY_SENT_IS_REQUIRED",
+    "message": "Please fill the required field.",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RECEIVED_FROM",
+    "message": "Recieved from",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Reeds",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RESOURCE",
+    "message": "Product",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SELECT_PRODUCT",
+    "message": "Select product variant",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SELECT_WAREHOUSE",
+    "message": "Select warehouse",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Sick",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "Info",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_EXPIRY",
+    "message": "Stock expiry",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_METRICS",
+    "message": "Stock metrics",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_DATE",
+    "message": "Date",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
+    "message": "Stock on hand = (Stock received + stock returned) \u2212 (stock issued + stock lost + stock damaged)",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_TITLE",
+    "message": "Info",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
+    "message": "Stock Damaged",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
+    "message": "Stock Issued",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_LOST",
+    "message": "Stock Lost",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ON_HAND",
+    "message": "Stock in hand",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
+    "message": "Stock Received",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
+    "message": "Stock Returned",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Please select warehouse and product variant to view the report",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Delivery Successful",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "Sync not working",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "Security Issues",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "Sync Not Working",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Technical Issues",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Truck",
+    "message": "Truck",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "User Account Issues",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WAYBILL_NUMBER",
+    "message": "Waybill Number",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "dateOfEntry",
+    "message": "Date of entry",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "getSecondPagePartyLabel(item.additionalFields.fields)",
+    "message": "Receiver",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "message": "Receiver",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)",
+    "message": "Sender",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
+    "message": "Sender",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "issuedTo",
+    "message": "Issued to",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "mrnTag",
+    "message": "MRN tag",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "productVariant",
+    "message": "Product variant",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "receiverId",
+    "message": "Reciever ID",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "sender",
+    "message": "Sender",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "senderId",
+    "message": "Sender ID",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockDetails",
+    "message": "Stock Details",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockFieldPair",
+    "message": "Stock Details",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockInHand",
+    "message": "Stock in hand",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockProductDetails",
+    "message": "stock Product Details",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockReconTable",
+    "message": "Stock Table",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockTable",
+    "message": "Stock Table",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "warehouseDetails",
+    "message": "Warehouse Details",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "{{fn:getFirstPagePartyLabel(item.items[0].additionalFields.fields)}}",
+    "message": "Sender",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "message": "Receiver",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "{{fn:getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
+    "message": "Sender",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  }
+]

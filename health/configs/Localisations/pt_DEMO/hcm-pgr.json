@@ -1,0 +1,260 @@
+[
+  {
+    "code": "ANOTHER_USER",
+    "message": "Outro usuário",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ASSIGN_SUCCESSFULLY",
+    "message": "Atribuído com sucesso!",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINANT_CONTACT_NUMBER",
+    "message": "Número de contato do reclamante",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINANT_NAME",
+    "message": "Nome do reclamante",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_SUPERVISOR_CONTACT_NUMBER",
+    "message": "Número de contato do supervisor",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_SUPERVISOR_NAME",
+    "message": "Nome do supervisor",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CS_COMMON_PGR_STATE_PENDING_ASSIGNMENT",
+    "message": "Pendente para atribuição",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CS_COMMON_PGR_STATE_REJECTED",
+    "message": "Rejeitado",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CS_COMMON_PGR_STATE_RESOLVED",
+    "message": "Resolvido",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CS_COMMON_SELECT_EMPLOYEE",
+    "message": "Selecione o funcionário",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON1",
+    "message": "Reclamação inválida",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON2",
+    "message": "Reclamação Duplicada",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON3",
+    "message": "Informações insuficientes ou ausentes",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON4",
+    "message": "Problema não acionável",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON5",
+    "message": "Problema resolvido ou fechado",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ES_CREATECOMPLAINT_FOR",
+    "message": "Reclamação para",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ES_CREATECOMPLAINT_PROVIDE_COMPLAINANT_DETAILS",
+    "message": "Detalhes do reclamante",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ES_PGR_FILTER_STATUS",
+    "message": "Status",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE",
+    "message": "Tipo de hierarquia",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_BREADCRUMB",
+    "message": "Selecione a hierarquia",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_DESCRIPTION",
+    "message": "Selecione sua hierarquia",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_HEADER",
+    "message": "Selecione o tipo de hierarquia",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "MYSELF",
+    "message": "Eu mesmo",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PGR_ACTION_REJECT",
+    "message": "Rejeitar",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PGR_ACTION_RESOLVE",
+    "message": "Resolver",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PGR_CREATE_ANOTHER_COMPLAIN",
+    "message": "Criar outra reclamação",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PGR_INBOX",
+    "message": "Caixa de entrada",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PGR_SEARCH_RESULTS_HEADING",
+    "message": "Pesquisar Reclamação",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REJECT_SUCCESSFULLY",
+    "message": "Rejeitado com sucesso!",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "RESOLVE_SUCCESSFULLY",
+    "message": "Resolvido com sucesso!",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.DATAISSUES.eGov",
+    "message": "Problemas de dados",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.OTHER.OTHER",
+    "message": "Outro",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.PERFORMANCEISSUE.eGov",
+    "message": "Problemas de desempenho",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.SECURITYISSUES.eGov",
+    "message": "Problemas de segurança",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.TECHNICALISSUES.eGov",
+    "message": "Problemas técnicos",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.USERACCOUNTISSUES.eGov",
+    "message": "Problemas com a conta do usuário",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WF_INBOX_HEADER_CURRENT_OWNER",
+    "message": "Proprietário atual",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WF_INBOX_HEADER_LOCALITY",
+    "message": "Localidade",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WF_INBOX_HEADER_SLA_DAYS_REMAINING",
+    "message": "SLA restante",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WF_PGR_ASSIGN",
+    "message": "Atribuído",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WF_PGR_CREATE",
+    "message": "Criado",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WF_PGR_REJECT",
+    "message": "Rejeitado",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WF_PGR_RESOLVE",
+    "message": "Resolver",
+    "module": "hcm-pgr",
+    "locale": "pt_DEMO"
+  }
+]

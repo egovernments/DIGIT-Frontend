@@ -1,0 +1,158 @@
+[
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message",
+    "message": "La longueur ne doit pas être inférieure à 2 caractères.",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message",
+    "message": "La longueur ne doit pas être inférieure à 2 caractères.",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message",
+    "message": "La longueur ne doit pas être inférieure à 2 caractères.",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BARCODE_BATCH_NO_REQUIRED",
+    "message": "C'est un champ obligatoire.",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BARCODE_BATCH_NUMBER",
+    "message": "Numéro de lot du code-barres",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BARCODE_EXPIRY_DATE",
+    "message": "Date d'expiration du code-barres",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BARCODE_SERIAL_NO_REQUIRED",
+    "message": "C'est un champ obligatoire.",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BARCODE_SERIAL_NUMBER",
+    "message": "Numéro de série du code-barres",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ENTER_MANUAL_CODE",
+    "message": "Saisir le code manuellement",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FLASH_OFF",
+    "message": "Flash éteint",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FLASH_ON",
+    "message": "Flash allumé",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVALID_RESOURCE_CODE",
+    "message": "Code-barres invalide",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MANUAL_SCAN",
+    "message": "Vous n'avez pas pu scanner le code QR ?",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RESOURCES_ALREADY_SCANNED",
+    "message": "Ressource déjà analysée",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RESOURCE_ALREADY_SCANNED",
+    "message": "Ressource déjà analysée",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RESOURCE_CODE",
+    "message": "Code ressource",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RESOURCE_SCANNED",
+    "message": "Ressources analysées",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RESOURCE_SCAN_FAILED",
+    "message": "L'analyse des ressources a échoué",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_CONTENT",
+    "message": "Le nombre de ressources analysées est inférieur à la quantité minimale de {quantity}.",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_PRIMARY_ACTION",
+    "message": "Dos",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_PRIMARY_BUTTON",
+    "message": "Continuez à numériser",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_SECONDARY_ACTION",
+    "message": "Confirmer",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_SECONDARY_BUTTON",
+    "message": "Enregistrer et fermer",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_TITLE",
+    "message": "Scanner",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_TITTLE",
+    "message": "Êtes-vous sûr de vouloir revenir en arrière ?",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCANNER_LABEL",
+    "message": "Scanner le code QR",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
+  }
+]

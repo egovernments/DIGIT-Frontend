@@ -1,0 +1,260 @@
+[
+  {
+    "code": "ANOTHER_USER",
+    "message": "Un autre utilisateur",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ASSIGN_SUCCESSFULLY",
+    "message": "Attribué avec succès !",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINANT_CONTACT_NUMBER",
+    "message": "Numéro de contact du plaignant",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINANT_NAME",
+    "message": "Nom du plaignant",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_SUPERVISOR_CONTACT_NUMBER",
+    "message": "Numéro de contact du superviseur",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_SUPERVISOR_NAME",
+    "message": "Nom du superviseur",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_COMMON_PGR_STATE_PENDING_ASSIGNMENT",
+    "message": "En attente d'affectation",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_COMMON_PGR_STATE_REJECTED",
+    "message": "Rejeté",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_COMMON_PGR_STATE_RESOLVED",
+    "message": "Résolu",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_COMMON_SELECT_EMPLOYEE",
+    "message": "Sélectionner un employé",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON1",
+    "message": "Plainte invalide",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON2",
+    "message": "Plainte en double",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON3",
+    "message": "Informations insuffisantes ou manquantes",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON4",
+    "message": "Problème non exploitable",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON5",
+    "message": "Problème résolu ou fermé",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_CREATECOMPLAINT_FOR",
+    "message": "Plainte pour",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_CREATECOMPLAINT_PROVIDE_COMPLAINANT_DETAILS",
+    "message": "Détails du plaignant",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_PGR_FILTER_STATUS",
+    "message": "Statut",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE",
+    "message": "Type de hiérarchie",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_BREADCRUMB",
+    "message": "Sélectionner la hiérarchie",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_DESCRIPTION",
+    "message": "Veuillez sélectionner votre hiérarchie",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_HEADER",
+    "message": "Sélectionnez le type de hiérarchie",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MYSELF",
+    "message": "Moi-même",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PGR_ACTION_REJECT",
+    "message": "Rejeter",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PGR_ACTION_RESOLVE",
+    "message": "Résoudre",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PGR_CREATE_ANOTHER_COMPLAIN",
+    "message": "Créer une autre plainte",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PGR_INBOX",
+    "message": "Boîte de réception",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PGR_SEARCH_RESULTS_HEADING",
+    "message": "Recherche de plainte",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REJECT_SUCCESSFULLY",
+    "message": "Rejeté avec succès !",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RESOLVE_SUCCESSFULLY",
+    "message": "Résolu avec succès !",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.DATAISSUES.eGov",
+    "message": "Problèmes de données",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.OTHER.OTHER",
+    "message": "Autre",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.PERFORMANCEISSUE.eGov",
+    "message": "Problèmes de performances",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.SECURITYISSUES.eGov",
+    "message": "Problèmes de sécurité",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.TECHNICALISSUES.eGov",
+    "message": "Problèmes techniques",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.USERACCOUNTISSUES.eGov",
+    "message": "Problèmes de compte utilisateur",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WF_INBOX_HEADER_CURRENT_OWNER",
+    "message": "Propriétaire actuel",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WF_INBOX_HEADER_LOCALITY",
+    "message": "Localité",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WF_INBOX_HEADER_SLA_DAYS_REMAINING",
+    "message": "SLA restant",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WF_PGR_ASSIGN",
+    "message": "Assigné",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WF_PGR_CREATE",
+    "message": "Créé",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WF_PGR_REJECT",
+    "message": "Rejeté",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WF_PGR_RESOLVE",
+    "message": "Résoudre",
+    "module": "hcm-pgr",
+    "locale": "fr_DEMO"
+  }
+]

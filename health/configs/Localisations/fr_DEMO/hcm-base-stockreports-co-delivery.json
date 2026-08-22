@@ -1,0 +1,2144 @@
+[
+  {
+    "code": "ABDOMINAL_PAIN",
+    "message": "Douleur abdominale",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "Échec de l'administration",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_SUCCESS",
+    "message": "Succès administratif",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_CATEGORY_STOCKREPORTS",
+    "message": "Rapports de stocks",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_RECKONREPORTDETAILS",
+    "message": "Détails du rapport de rapprochement",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_REPORTDETAILS",
+    "message": "Détails du rapport",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_FLOW_VIEWREPORTS",
+    "message": "Afficher les rapports",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "Bénéficiaire absent",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFERRED",
+    "message": "Bénéficiaire référé",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Bénéficiaire refusé",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Ciment",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Argile",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSED_HOUSEHOLD",
+    "message": "Fermer D Ménage",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_VALIDATION_ERROR",
+    "message": "Ceci est un champ obligatoire",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DEFAULT",
+    "message": "Défaut",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DIARRHOEA",
+    "message": "Diarrhée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Effet secondaire du médicament du cycle en cours",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Effet secondaire du médicament du cycle précédent",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Data Issues",
+    "message": "Problèmes de données",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FEMALE",
+    "message": "Femelle",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Fièvre",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_secondaryActionLabel_LABEL",
+    "message": "Retour à la maison",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FUNERAL",
+    "message": "Funérailles",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Verre",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INCOMPATIBLE",
+    "message": "Incompatible",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INELIGIBLE",
+    "message": "Inéligible",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Ressources insuffisantes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECEIVER_LABEL",
+    "message": "Récepteur",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVENTORY_SENDER_LABEL",
+    "message": "Expéditeur",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
+    "message": "Type de transaction",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_AGE",
+    "message": "Âge de la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_BATCHNUMBER",
+    "message": "Numéro de lot",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_BATCH_NUMBER",
+    "message": "Numéro de lot de la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
+    "message": "Modèle de plainte de catégorie de paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
+    "message": "Catégorie de paire d'étiquettes Hfreferralmodel",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
+    "message": "Catégorie de paire d'étiquettes Modèle de ménage",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
+    "message": "Catégorie de paire d'étiquettes Modèle individuel",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
+    "message": "Catégorie de paire d'étiquettesModèle de surveillance intérieur",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
+    "message": "Catégorie de paire d'étiquettes Lqamodel",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
+    "message": "Bénéficiaire du projet",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
+    "message": "Catégorie de paire d'étiquettes Modèle de stock",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CODE",
+    "message": "Code de règlement",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMMENTS",
+    "message": "Commentaires sur la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTAREA",
+    "message": "Zone de réclamation",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTDATE",
+    "message": "Date de la plainte",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTNUMBER",
+    "message": "Numéro de plainte",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINTSTATUS",
+    "message": "Statut de la plainte",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
+    "message": "Paire d'étiquettes Boîte de réception des plaintes Contact du plaignant",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
+    "message": "Zone de réclamation de la boîte de réception des plaintes concernant les paires d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
+    "message": "Paire d'étiquettes Boîte de réception de la plainte Date de la plainte",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
+    "message": "Paire d'étiquettes Boîte de réception de la plainte Numéro de plainte",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
+    "message": "Statut de la plainte dans la boîte de réception des plaintes concernant les paires d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
+    "message": "Type de plainte de la boîte de réception de la plainte relative aux paires d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+    "message": "Paire d'étiquettes Voir la plainte Contact du plaignant",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
+    "message": "Plainte sur les paires d'étiquettes Voir la zone des plaintes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
+    "message": "Paire d'étiquettes Plainte Afficher la date des plaintes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
+    "message": "Paire d'étiquettes Plainte Afficher le numéro de plainte",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
+    "message": "Paire d'étiquettes Voir la plainte Type de plainte",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+    "message": "Plainte sur les paires d'étiquettes Voir la plainte",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
+    "message": "Réclamation relative à une paire d'étiquettes Afficher l'état de la réclamation",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_DATEOFBIRTH",
+    "message": "Date de naissance",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_DATEOFREGISTRATION",
+    "message": "Date d'inscription",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
+    "message": "Date d'enregistrement de la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_GENDER",
+    "message": "Sexe de la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_GIVENNAME",
+    "message": "Nom de la personne",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCMTOTALMEMBERS",
+    "message": "Nombre total de membres",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
+    "message": "Âge",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
+    "message": "Genre",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
+    "message": "Nom du bénéficiaire",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
+    "message": "Date d'inscription",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
+    "message": "Chef de famille",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
+    "message": "Règlement",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
+    "message": "Paire d'étiquettes Hcm Aperçu du ménage Total des membres",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HEADNAME",
+    "message": "Chef de famille",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
+    "message": "Paire d'étiquettes Nom du chef de ménage",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
+    "message": "Paire d'étiquettes Localité du ménage",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IDNUMBER",
+    "message": "Identifiant",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IDTYPE",
+    "message": "Type d'identifiant",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_ID_NUMBER",
+    "message": "Numéro d'identification de la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_ID_TYPE",
+    "message": "Type d'identifiant de paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYCHILDRENPRESENT",
+    "message": "Enfants présents",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYCHILDRENVACCINATED",
+    "message": "Enfants vaccinés",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYFINALCOMMENTS",
+    "message": "Commentaires finaux",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMISSEDABSENT",
+    "message": "Manqué - Absent",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMISSEDASLEEP",
+    "message": "Manqué - Endormi",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTREVISITED",
+    "message": "Manqué - Pas revisité",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTVISITED",
+    "message": "Manqué - Non visité",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMISSEDOTHER",
+    "message": "Manqué - Autre",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMISSEDREFUSAL",
+    "message": "Manqué - Refus",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMISSEDROUTINE",
+    "message": "Manqué - Routine",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMONITORDESIGNATION",
+    "message": "Désignation du moniteur",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMONITORINGDATE",
+    "message": "Date de surveillance",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYMONITORNAME",
+    "message": "Nom du moniteur",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYPOORLYCOVERED",
+    "message": "Mal couvert",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
+    "message": "Zone de règlement",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTTYPE",
+    "message": "Type de règlement",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
+    "message": "Paire d'étiquettes Ihm Résumé Enfants présents",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
+    "message": "Paire d'étiquettes Ihm Résumé Enfants vaccinés",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
+    "message": "Paire d'étiquettes Résumé Ihm Commentaires finaux",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
+    "message": "Paire d'étiquettes Résumé Ihm Manqué Absent",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
+    "message": "Paire d'étiquettes Ihm Résumé Missed Endormi",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
+    "message": "Paire d'étiquettes Résumé Ihm Manqué Non Revisité",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
+    "message": "Paire d'étiquettes Résumé Ihm Manqué Non visité",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
+    "message": "Paire d'étiquettes Résumé Ihm Manqué Autre",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
+    "message": "Paire d'étiquettes Ihm Résumé Refus manqué",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
+    "message": "Paire d'étiquettes Résumé Ihm Routine manquée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
+    "message": "Paire d'étiquettes Ihm Résumé Date de surveillance",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
+    "message": "Paire d'étiquettes Résumé Ihm Désignation du moniteur",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
+    "message": "Paire d'étiquettes Résumé Ihm Nom du moniteur",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
+    "message": "Paire d'étiquettes Résumé Ihm mal couvert",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
+    "message": "Paire d'étiquettes Ihm Sommaire Zone de règlement",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
+    "message": "Paire d'étiquettes Ihm Résumé Type de règlement",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INBOXCOMPLAINANTCONTACT",
+    "message": "Personne-ressource du plaignant",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INBOXCOMPLAINTNUMBER",
+    "message": "Numéro de plainte",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INBOXCOMPLAINTTYPE",
+    "message": "Type de plainte",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
+    "message": "Type de transaction d'inventaire de paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LOCALITY",
+    "message": "Localité",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAABSENCEREASONLABEL",
+    "message": "Motif d'absence",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAAFPAWARENESSLABEL",
+    "message": "Sensibilisation à l'AFP",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAAFPCASECOUNTLABEL",
+    "message": "Nombre de cas de PFA",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAAWARENESSOTHERLABEL",
+    "message": "Autre source de sensibilisation",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQACAMPAIGNAWARENESSLABEL",
+    "message": "Sensibilisation à la campagne",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQACAREGIVERINFORMEDLABEL",
+    "message": "Le soignant informé",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQACHILDAGEMONTHSLABEL",
+    "message": "Âge de l'enfant (mois)",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQACHILDRENUNDER5LABEL",
+    "message": "Enfants de moins de 5 ans",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQACHILDSEXLABEL",
+    "message": "Sexe des enfants",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQACLUSTERNUMBERLABEL",
+    "message": "Numéro de cluster",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAFINGERMARKEDLABEL",
+    "message": "Doigt marqué",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQALOTNUMBERLABEL",
+    "message": "Numéro de lot",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAOPVDOSESLABEL",
+    "message": "Doses de VPO",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAOTHERABSENCEREASONLABEL",
+    "message": "Autre motif d'absence",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAOTHERREASONSPECIFYLABEL",
+    "message": "Autre raison (préciser)",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAOTHERREFUSALREASONLABEL",
+    "message": "Autre motif de refus",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAREASONNOTMARKEDLABEL",
+    "message": "Raison non marquée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQAREFUSALREASONLABEL",
+    "message": "Motif du refus",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
+    "message": "Zone de règlement",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQASURVEYDATELABEL",
+    "message": "Date de l'enquête",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQASURVEYORNAMELABEL",
+    "message": "Nom de l'arpenteur",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
+    "message": "Paire d'étiquettes Lqa Raison d'absence",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
+    "message": "Paire d'étiquettes Lqa Afp Sensibilisation",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
+    "message": "Paire d'étiquettes Lqa Afp Nombre de cas",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
+    "message": "Paire d'étiquettes Sensibilisation Lqa Autre",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
+    "message": "Sensibilisation à la campagne Lqa de la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
+    "message": "Paire d'étiquettes Lqa Soignant informé",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
+    "message": "Paire d'étiquettes Lqa Enfants de moins de 5 ans",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
+    "message": "Paire d'étiquettes Lqa Âge de l'enfant Mois",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
+    "message": "Étiquette Paire Lqa Sexe Enfant",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
+    "message": "Numéro de cluster Lqa de la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
+    "message": "Paire d'étiquettes Lqa marquées au doigt",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
+    "message": "Paire d'étiquettes Numéro de lot Lqa",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
+    "message": "Paire d'étiquettes Doses Lqa Opv",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
+    "message": "Libellé Paire Lqa Autre Raison Absence",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
+    "message": "Paire d'étiquettes Lqa Autre raison à préciser",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
+    "message": "Paire d'étiquettes Lqa Autre motif de refus",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
+    "message": "Paire d'étiquettes Raison Lqa non marquée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
+    "message": "Raison du refus de la paire d'étiquettes Lqa",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
+    "message": "Paire d'étiquettes Zone de règlement Lqa",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
+    "message": "Paire d'étiquettes Lqa Nom de l'arpenteur",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
+    "message": "Date de l'enquête Lqa pour la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MEMBERCOUNT",
+    "message": "Nombre de membres",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MEMBER_COUNT",
+    "message": "Nombre de membres de la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MOBILENUMBER",
+    "message": "Numéro de portable",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MOBILE_NUMBER",
+    "message": "Numéro de portable de la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MRNNUMBER",
+    "message": "Numéro MRN",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_MRN_NUMBER",
+    "message": "Numéro Mrn de la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
+    "message": "Paire d'étiquettes Nom de l'individu",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_QUANTITYRECEIVED",
+    "message": "Quantité reçue",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_QUANTITY_RECEIVED",
+    "message": "Quantité de paires d'étiquettes reçue",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_RECEIVER",
+    "message": "Récepteur",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRALNAME",
+    "message": "Nom de la référence",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRALSTATUS",
+    "message": "Statut de référence",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_NAME",
+    "message": "Nom de la boîte de réception de référence de la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
+    "message": "Statut de référence de la boîte de réception de référence de paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
+    "message": "Symptôme de référence de la boîte de réception de référence de paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_REFRRALSYMPTOM",
+    "message": "Symptôme de référence",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_RESOURCE",
+    "message": "Ressource de paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_SKU",
+    "message": "Ressource",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_STOCKEXPIRY",
+    "message": "Expiration des stocks",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_STOCK_EXPIRY",
+    "message": "Expiration du stock de la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_TRANSACTIONTYPE",
+    "message": "Type de transaction",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_VIEWCOMPLAINANTCONTACT",
+    "message": "Personne-ressource du plaignant",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
+    "message": "Zone de réclamation",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_VIEWCOMPLAINTESCRIPTION",
+    "message": "Description",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_VIEWCOMPLAINTSTATUS",
+    "message": "Statut de la plainte",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_VIEWCOMPLAINTTYPE",
+    "message": "Type de plainte",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_WAYBILLNUMBER",
+    "message": "Numéro de lettre de transport",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_WAYBILL_NUMBER",
+    "message": "Numéro de lettre de transport de la paire d'étiquettes",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+    "message": "Paire d'étiquettes {{fn:getsecondpagepartylabel(item.additionalfields.fields)}}",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MALE",
+    "message": "Mâle",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "Métal",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOT_ADMINISTERED",
+    "message": "Non administré",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOT_REGISTERED",
+    "message": "Non enregistré",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO_FACILITIES_FOUND",
+    "message": "Aucune installation trouvée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO_PRODUCTS_FOUND",
+    "message": "Aucun produit trouvé",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Autre",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Autre",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Autre",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "PROBLEME DE PERFORMANCE",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Roseaux",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SELECT_PRODUCT",
+    "message": "Sélectionnez une variante de produit",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SELECT_WAREHOUSE",
+    "message": "Sélectionnez un entrepôt",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Malade",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SKIN_REACTION",
+    "message": "Réaction cutanée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
+    "message": "Sélectionnez un produit",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
+    "message": "Sélectionnez l'établissement",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_BACK_BUTTON_LABEL",
+    "message": "Dos",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_DESCRIPTION",
+    "message": "Rapports de réconciliation",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_HEADING",
+    "message": "Rapprochement des stocks",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Veuillez sélectionner l'un des entrepôts et des produits pour afficher le rapport.",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "Informations",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
+    "message": "Aucun enregistrement trouvé pour les filtres sélectionnés",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+    "message": "Aucun enregistrement trouvé pour les filtres sélectionnés",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
+    "message": "Retour à la maison",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
+    "message": "Sélectionnez l'établissement",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_1_LABEL",
+    "message": "Date de rapprochement",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_2_LABEL",
+    "message": "Compter",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_EXCESS_LABEL",
+    "message": "Excès",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_LESS_LABEL",
+    "message": "Pénurie",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_INFO_NO_RESULTS_TITLE",
+    "message": "Aucun résultat trouvé",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_INFO_REPORTS_TITLE",
+    "message": "Informations",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_CALCULATED_COUNT",
+    "message": "Nombre calculé",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_DATE_OF_RECONCILIATION",
+    "message": "Date de rapprochement",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_PHYSICAL_COUNT",
+    "message": "Nombre physique",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_DAMAGED",
+    "message": "Crosse endommagée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_EXCESS",
+    "message": "Excédent de stock",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_ISSUED",
+    "message": "Actions émises",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_LESS",
+    "message": "Stocker moins",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_LOST",
+    "message": "Stock perdu",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_RECEIVED",
+    "message": "Stock reçu",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_RETURNED",
+    "message": "Stock retourné",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_BACK_BUTTON_LABEL",
+    "message": "Dos",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_HEADING",
+    "message": "Rapports",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "Veuillez sélectionner à la fois l'entrepôt et le produit pour afficher le rapport",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+    "message": "Aucun enregistrement trouvé pour les filtres sélectionnés",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
+    "message": "Retour à la maison",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
+    "message": "Produit",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
+    "message": "Sélectionnez un entrepôt",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_1_LABEL",
+    "message": "Date",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_2_LABEL",
+    "message": "MRN",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
+    "message": "Numéro de lettre de transport",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_PRODUCT_LABEL",
+    "message": "Produit",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_TABLE_HEADER_DATE_OF_ENTRY",
+    "message": "Date d'entrée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_TABLE_HEADER_MRN_NUMBER",
+    "message": "Numéro MRN",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_TABLE_HEADER_PRODUCT",
+    "message": "Produit",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_TABLE_HEADER_QUANTITY",
+    "message": "Quantité",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_REPORT_TABLE_HEADER_WAYBILL_NUMBER",
+    "message": "Numéro de lettre de transport",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_ADDITIONAL_FIELDS",
+    "message": "Détails supplémentaires",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_CALCULATED_COUNT",
+    "message": "Nombre calculé",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_DATE_OF_ENTRY",
+    "message": "Date d'entrée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_DATE_OF_RECONCILIATION",
+    "message": "Date de rapprochement",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_PHYSICAL_COUNT",
+    "message": "Nombre physique",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_QUANTITY",
+    "message": "Quantité",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_DAMAGED",
+    "message": "Endommagé",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_ISSUED",
+    "message": "Émis",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_LOST",
+    "message": "Perdu",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_RECEIVED",
+    "message": "Reçu",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_STOCK_RETURNED",
+    "message": "Retourné",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_TABLE_HEADER_WAYBILL_NUMBER",
+    "message": "Numéro de lettre de transport",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_BACK_BUTTON_LABEL",
+    "message": "Dos",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_HEADING",
+    "message": "Afficher les rapports",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_DAMAGED_DESCRIPTION",
+    "message": "Afficher les rapports sur les stocks endommagés",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_DAMAGED_HEADING",
+    "message": "Crosse endommagée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_EXCESS_DESCRIPTION",
+    "message": "Consulter les rapports des excédents de stocks enregistrés",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_EXCESS_HEADING",
+    "message": "Afficher les rapports sur les excédents de stock",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_ISSUED_DESCRIPTION",
+    "message": "Afficher les rapports sur les actions émises",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_ISSUED_HEADING",
+    "message": "Actions émises",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LESS_DESCRIPTION",
+    "message": "Afficher les rapports des stocks moins enregistrés",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LESS_HEADING",
+    "message": "Afficher les rapports sur les stocks réduits",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_DESCRIPTION",
+    "message": "Afficher les rapports de perte de stock",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LOSS_HEADING",
+    "message": "Perte de stock",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECIEVE_DESCRIPTION",
+    "message": "Afficher les rapports sur les stocks reçus",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECIEVE_HEADING",
+    "message": "Stock reçu",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECON_DESCRIPTION",
+    "message": "Afficher les rapports de rapprochement des stocks",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RECON_HEADING",
+    "message": "Rapprochement des stocks",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RETURNED_DESCRIPTION",
+    "message": "Afficher les rapports sur les retours de stock",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_RETURNED_HEADING",
+    "message": "Stock retourné",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_QUANTITY",
+    "message": "Quantité en stock",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_DATE",
+    "message": "Date",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
+    "message": "Stock disponible = (Stock reçu + stock retourné) − (stock sorti + stock perdu + stock endommagé)",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_TITLE",
+    "message": "Informations",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
+    "message": "Crosse endommagée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
+    "message": "Actions émises",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_LOST",
+    "message": "Stock perdu",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ON_HAND",
+    "message": "Stock en main",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
+    "message": "Stock reçu",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
+    "message": "Stock retourné",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Veuillez sélectionner l'entrepôt et la variante de produit pour afficher le rapport",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Veuillez sélectionner un entrepôt et un produit pour afficher le rapport",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "Informations",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_DESCRIPTION",
+    "message": "Aucun enregistrement trouvé pour les filtres sélectionnés",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_DETAILS_NO_RECORD_FOUND_INFO",
+    "message": "Aucun résultat trouvé",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_INFO_NO_RESULTS_TITLE",
+    "message": "Aucun résultat",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REPORT_INFO_REPORTS_TITLE",
+    "message": "Informations sur les rapports",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Livraison réussie",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Security Issues",
+    "message": "Problèmes de sécurité",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "QUESTIONS DE SÉCURITÉ",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_1",
+    "message": "Type de transport 1",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_2",
+    "message": "Type de transport 2",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Technical Issues",
+    "message": "Problèmes techniques",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "QUESTIONS TECHNIQUES",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UNIQUE_BENEFICIARY_ID",
+    "message": "Identifiant unique du bénéficiaire",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "User Account Issues",
+    "message": "Problèmes de compte utilisateur",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "UTILISATEURCOMTEPROBLÈMES",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "VOMITTING",
+    "message": "Vomissements",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WEAKNESS",
+    "message": "Faiblesse",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "additionalFields",
+    "message": "Champs supplémentaires",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "card",
+    "message": " ",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "clientCreatedBy",
+    "message": "Client créé par",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "facilities",
+    "message": "Installations",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "facilityId",
+    "message": "ID de l'établissement",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "infoCardLabel",
+    "message": "Informations",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "productVariantId",
+    "message": "ID de variante de produit",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "productVariants",
+    "message": "Variantes de produits",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "projectId",
+    "message": "ID du projet",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reckonReportDetailsButton",
+    "message": "Retour à la maison",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reckonReportDetailsCard",
+    "message": "Carte de détails du rapport de calcul",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reckonReportDetailsInfoCard",
+    "message": "Informations",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reckonReportDetails_table",
+    "message": "Détails du rapport de calcul_table",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "recordFoundInfo",
+    "message": "Aucun résultat trouvé",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reportDetailsButton",
+    "message": "Retour à la maison",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reportDetailsCard",
+    "message": "Carte de détails du rapport",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reportDetailsInfoCard",
+    "message": "Carte d'informations sur les détails du rapport",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reportDetails_table",
+    "message": "Détails du rapport_table",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "reportType",
+    "message": "Type de rapport",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "secondaryActionLabel",
+    "message": "Retour à la maison",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "selectProductLabel",
+    "message": "Produit",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "selectWarehouseLabel",
+    "message": "Sélectionnez un entrepôt",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "selectedFacility",
+    "message": "Installation sélectionnée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "selectedProduct",
+    "message": "Produit sélectionné",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "selectedReckonProduct",
+    "message": "Produit sélectionné",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "selectedReconFacility",
+    "message": "Installation sélectionnée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockDamagedHeading",
+    "message": "Crosse endommagée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockExcessHeading",
+    "message": "Rapports sur les excédents de stock",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockIssuedHeading",
+    "message": "Actions émises",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockLessHeading",
+    "message": "Rapports de rupture de stock",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockLossHeading",
+    "message": "Perte de stock",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockRecieveHeading",
+    "message": "Stock reçu",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockReconHeading",
+    "message": "Rapprochement des stocks",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockReconTable",
+    "message": "Tableau de rapprochement des stocks",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockReturnedHeading",
+    "message": "Stock retourné",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockTable",
+    "message": "Tableau des stocks",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockDamaged",
+    "message": "Crosse endommagée",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockExcess",
+    "message": "Afficher les rapports sur les excédents de stock",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockIssued",
+    "message": "Actions émises",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockLess",
+    "message": "Afficher les rapports sur les stocks réduits",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockLoss",
+    "message": "Perte de stock",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockRecieve",
+    "message": "Stock reçu",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockRecon",
+    "message": "Rapprochement des stocks",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "stockreportsViewReportsStockReturned",
+    "message": "Stock retourné",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "table",
+    "message": "Tableau",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "tenantId",
+    "message": "ID du locataire",
+    "module": "hcm-base-stockreports-co-delivery",
+    "locale": "fr_DEMO"
+  }
+]
