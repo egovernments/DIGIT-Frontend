@@ -501,7 +501,7 @@ const CommodityDashboard = () => {
                   {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_PROGRESS_LABEL, { current: batchStatus.currentBatch, total: batchStatus.total })}
                 </span>
               </div>
-              <div style={{ width: "100%", backgroundColor: "#E0E0E0", borderRadius: "4px", height: "8px", marginBottom: "0.75rem" }}>
+              <div style={{ width: "100%", backgroundColor: "#D6D5D4", borderRadius: "4px", height: "8px", marginBottom: "0.75rem" }}>
                 <div
                   style={{
                     width: `${batchStatus.total > 0 ? (batchStatus.completed / batchStatus.total) * 100 : 0}%`,

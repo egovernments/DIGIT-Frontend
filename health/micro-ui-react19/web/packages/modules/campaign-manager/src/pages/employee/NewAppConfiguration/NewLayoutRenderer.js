@@ -93,7 +93,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
               position: "sticky",
               bottom: 0,
               backgroundColor: "#fff",
-              borderTop: "1px solid #e0e0e0",
+              borderTop: "1px solid #D6D5D4",
               padding: "12px 16px",
               display: "flex",
               flexDirection: "column",
