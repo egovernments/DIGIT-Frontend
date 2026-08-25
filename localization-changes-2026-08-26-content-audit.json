@@ -580,5 +580,179 @@
   "message": "Set campaign boundary",
   "module": "hcm-campaignmanager",
   "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-inventory-co-delivery",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-hfreferral-co-delivery",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-hfreferral-CMP-2026-08-21-004251",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-inventory-mr-dn",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-closehousehold-CMP-2026-08-21-004251",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-closehousehold-co-delivery",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-inventory-oncho",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-complaints-CMP-2026-08-21-004251",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-complaints-co-delivery",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-inventory-CMP-2026-08-21-004251",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-hfreferral-co-delivery",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-hfreferral-CMP-2026-08-21-004251",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-closehousehold-CMP-2026-08-21-004251",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-inventory-mr-dn",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-inventory-CMP-2026-08-21-004251",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-registration-mr-dn",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-inventory-oncho",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-closehousehold-co-delivery",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-registration-oncho",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-registration-CMP-2026-08-21-004251",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-inventory-co-delivery",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-complaints-CMP-2026-08-21-004251",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-complaints-co-delivery",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PERMISSIONHANDLER",
+  "message": "Permission Handler",
+  "module": "hcm-base-registration-co-delivery",
+  "locale": "en_DEMO"
  }
 ]
