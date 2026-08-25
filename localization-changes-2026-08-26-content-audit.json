@@ -994,5 +994,29 @@
   "message": "Privacy controls",
   "module": "hcm-appconfiguration",
   "locale": "en_DEMO"
+ },
+ {
+  "code": "PAGE_HEADING",
+  "message": "Page heading",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PAGE_DESCRIPTION",
+  "message": "Page description",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PAGE_HEADING",
+  "message": "Page heading",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "PAGE_DESCRIPTION",
+  "message": "Page description",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
  }
 ]
