@@ -793,7 +793,7 @@
  },
  {
   "code": "MAP_ATTENDEES",
-  "message": "Create register workers",
+  "message": "Map attendees",
   "module": "hcm-campaignmanager",
   "locale": "en_DEMO"
  },
@@ -842,6 +842,18 @@
  {
   "code": "HCM_COMMODITY_CAMPAIGNS",
   "message": "Commodity campaigns",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CREATE_CHECKLIST",
+  "message": "Create checklist",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ACTION_LABEL_VIEW_TIMELINE",
+  "message": "View Timeline",
   "module": "hcm-campaignmanager",
   "locale": "en_DEMO"
  }
