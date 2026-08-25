@@ -1018,5 +1018,17 @@
   "message": "Page description",
   "module": "hcm-appconfiguration",
   "locale": "en_DEMO"
+ },
+ {
+  "code": "INFO_CARD_TEXT",
+  "message": "Info card",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "advanced.infoCard",
+  "message": "Info card",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
  }
 ]
