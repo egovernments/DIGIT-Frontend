@@ -1495,6 +1495,17 @@ tbody {
 }
 .zoom-content {
   height: 100%;
+
+  /* The mobile preview is a narrow scaled container inside a desktop viewport,
+     so the popup's mobile media queries never fire; force the mobile layout here */
+  .digit-popup-footer-buttons {
+    margin-left: 0;
+    width: 100%;
+
+    button {
+      flex: 1;
+    }
+  }
 }
 
 .onhover-tooltip-text {
