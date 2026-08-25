@@ -988,5 +988,11 @@
   "message": "Campaign ID not found. Check the campaign and try again.",
   "module": "hcm-campaignmanager",
   "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_PRIVACY_CONTROLS",
+  "message": "Privacy controls",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
  }
 ]
