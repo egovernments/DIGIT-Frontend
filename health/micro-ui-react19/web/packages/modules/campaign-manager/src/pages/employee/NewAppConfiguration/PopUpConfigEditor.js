@@ -89,6 +89,20 @@ const PopupConfigEditor = ({ selectedField, viewMode }) => {
           </>
         )}
 
+        {/* Popup Description */}
+        {popupConfig.description !== undefined && (
+          <>
+          <PopupLabelField
+            label="POPUP_DESCRIPTION"
+            path="description"
+            value={popupConfig.description}
+            selectedField={selectedField}
+            viewMode={viewMode}
+          />
+          <Divider/>
+          </>
+        )}
+
         {/* Body Fields - Show section if there are items with labels OR configurable items */}
         {(hasBodyLabels || hasConfigurableBodyItems) && (
           <>
@@ -183,7 +197,7 @@ const PopupConfigEditor = ({ selectedField, viewMode }) => {
         )}
 
         {/* Show message if no configurable properties found */}
-        {!popupConfig.title && !hasBodyLabels && !hasConfigurableBodyItems && !hasFooterLabels && (
+        {!popupConfig.title && !popupConfig.description && !hasBodyLabels && !hasConfigurableBodyItems && !hasFooterLabels && (
           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
             <Tag showIcon={true} label={t(I18N_KEYS.APP_CONFIGURATION.CMP_DRAWER_NO_CONFIG_ERROR_CONTENT)} type="error" />
           </div>
