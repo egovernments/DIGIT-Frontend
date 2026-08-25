@@ -1057,7 +1057,7 @@
  },
  {
   "code": "APPCONFIG_VERSION",
-  "message": "Current version",
+  "message": "Version",
   "module": "hcm-appconfiguration",
   "locale": "en_DEMO"
  },
@@ -1087,7 +1087,7 @@
  },
  {
   "code": "APPCONFIG_VERSION",
-  "message": "Current version",
+  "message": "Version",
   "module": "hcm-campaignmanager",
   "locale": "en_DEMO"
  }
