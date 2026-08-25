@@ -1233,7 +1233,7 @@ const SetupCampaign = () => {
   return (
     <CampaignSubmitContext.Provider value={submitStatus}>
     <React.Fragment>
-      {(loader || isUpdating) && <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />}
+      {(loader || isUpdating) && <Loader page={true} variant={"OverlayLoader"} loaderText={currentKey == 6 ? t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_ADDING_BOUNDARIES) : t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />}
       {/* {noAction !== "false" && (
         <Stepper
           customSteps={["HCM_CAMPAIGN_SETUP_DETAILS", "HCM_BOUNDARY_DETAILS", "HCM_DELIVERY_DETAILS", "HCM_UPLOAD_DATA", "HCM_REVIEW_DETAILS"]}
