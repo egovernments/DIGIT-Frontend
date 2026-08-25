@@ -511,13 +511,13 @@
  },
  {
   "code": "HCM_UPLOAD_LOCALIZATIONS_DATA_BUTTON",
-  "message": "Upload translations",
+  "message": "Upload Translations",
   "module": "hcm-appconfiguration",
   "locale": "en_DEMO"
  },
  {
   "code": "HCM_UPLOAD_LOCALIZATIONS_DATA_BUTTON",
-  "message": "Upload translations",
+  "message": "Upload Translations",
   "module": "hcm-campaignmanager",
   "locale": "en_DEMO"
  },
