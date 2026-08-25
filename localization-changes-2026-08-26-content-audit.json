@@ -1,0 +1,584 @@
+[
+ {
+  "code": "ACTION_UPLOAD_SCREEN",
+  "message": "Upload data",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_TITLE",
+  "message": "Data recorded successfully",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_TITLE",
+  "message": "Data recorded successfully",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "BOUNDARY_LOCALISATION_ERROR",
+  "message": "Boundary creation failed. Localisation Error.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_CREATION_TAKES_SOME_TIME_PLEASE_WAIT",
+  "message": "Campaign creation takes some time. Please wait",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_CYCLE_CONFIGURE_HEADING_NEW-PT",
+  "message": "Configuration for NEW-PT Campaign",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_CYCLE_CONFIGURE_HEADING_ONCHO",
+  "message": "Configuring cycles and deliveries for Onchocerciasis type campaign.",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_DELIVERY_TAB_SUB_TEXT_ONCHO",
+  "message": "Configuring delivery conditions for Onchocerciasis type campaign.",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_DELIVERY_TAB_SUB_TEXT_ONCHO",
+  "message": "Configuring delivery conditions for NTD type campaign.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_END_DATE_ERROR",
+  "message": "Mandatory field",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_END_DATE_SAME_ERROR",
+  "message": "The start and end date for a campaign cannot be same",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_FIELD_ERROR_MANDATORY",
+  "message": "Mandatory field",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_FIELD_MANDATORY",
+  "message": "Mandatory field",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_NAME_FIELD_ERROR",
+  "message": "Mandatory field",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_NAME_FIELD_ERROR ",
+  "message": "Mandatory field",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_NAME_MISSING_TYPE_ERROR",
+  "message": "Please enter a campaign name",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_PROJECT_ONCHO",
+  "message": "NTD Campaign",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_PROJECT_ONCHO",
+  "message": "Onchocerciasis Campaign",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CONFIGURATION_UPDATED_SUCCESSFULLY",
+  "message": "Configuration Updated Successfully",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CONFIGURATION_UPDATED_SUCCESSFULLY",
+  "message": "Configuration Updated Successfully",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE",
+  "message": "Your campaign setup is done",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ES_CAMPAIGN_DATE_CHANGE_WITH_BOUNDARY_SUCCESS",
+  "message": "Date changed successfully for the selected boundaries",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ES_PRODUCT_CREATE_SUCCESS_RESPONSE",
+  "message": "Resource created successfully",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ES_REQUIRED",
+  "message": "Required",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "FEATURE_CONFIG_SUCCESS_DESCRIPTION",
+  "message": "Now you know what the HCM Console can do. You can plan campaigns, manage your team, organize locations, and use templates efficiently. Dive in and start managing your health campaigns with confidence",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_CAMPAIGN_DATE_MISSING",
+  "message": "Please enter start and end date for the campaign",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "NAME_OF_MICROPLAN",
+  "message": "Microplan Name",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "Oncho",
+  "message": "NTD Campaign",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "QUANTITY_RECEIVED",
+  "message": "Quantity received",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "RESOURCE_CREATION_ERROR",
+  "message": "Some error occurred during resource creation",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "RESOURCE_MAPPING_ERROR",
+  "message": "Some error occurred during mapping.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "SCHEMA_DEFINITION_NOT_FOUND_ERR",
+  "message": "Schema not found",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "SOME_ERROR_OCCURED_IN_FETCH_RETRYING",
+  "message": "Error while fetching, Retrying",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "StockModel.QUANTITY_RECEIVED",
+  "message": "Quantity received",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "StockModel.RECEIVED_FROM",
+  "message": "Received from",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "StockModel.RECEIVED_FROM",
+  "message": "Received from",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "TEMPLATE_GENERATION_TIMEOUT",
+  "message": "Template generation Failed. Time Out Error",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "WBH_BOUNDARY_CREATION_TIMEOUT",
+  "message": "Boundary data creation failed. Time Out Error",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "complaintSuccess",
+  "message": "Complaint created successfully",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ACTION_CREATE_CHECKLIST",
+  "message": "Create Checklist",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ACTION_LABEL_CONFIGURE_APP",
+  "message": "Configure App",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS",
+  "message": "Update Campaign",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ACTION_LABEL_UPDATE_DATES",
+  "message": "Update Dates",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ACTION_TEST_CREATE_NEW_HIERARCHY",
+  "message": "Manage Boundaries",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ACTION_TEST_SETUP_CAMPAIGN",
+  "message": "Create a New Campaign",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN",
+  "message": "Setup Campaign from Microplan",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APP_CCONFIG_ACTION_BUTTON2",
+  "message": "Save Configuration",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CS_ACTION_CONFIGURE_APP",
+  "message": "Configure App",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CS_ACTION_HCM_CONFIGURE_APP",
+  "message": "Configure App",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CS_ACTION_HCM_UPDATE_CAMPAIGN",
+  "message": "Update Campaign",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CS_ACTION_HCM_UPDATE_DATES",
+  "message": "Update Dates",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CS_ACTION_UPDATE_DATES",
+  "message": "Change Campaign Dates",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "DOWNLOAD_EXCEL_TEMPLATE_FOR_BOUNDARY",
+  "message": "Download Excel Template for Boundary",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ES_PRODUCT_RESPONSE_ACTION",
+  "message": "Go Back",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ES_CAMPAIGN_CHANGE_DATE_CONFIRM",
+  "message": "Are you sure you want to change the dates?",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "DOWNLOAD_THE_USER_TEMPLATE",
+  "message": "Downloading the user template",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ACTION_TEST_SETUP_CAMPAIGN",
+  "message": "Create a New Campaign",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ACTION_TEST_1CAMPAIGN",
+  "message": "My campaigns",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ACTION_TEST_CREATECAMPAIGN",
+  "message": "My campaigns",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ACTION_TEST_MY_CAMPAIGN",
+  "message": "My campaigns",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ACTION_UNIFIED_UPLOAD_SCREEN",
+  "message": "Upload microplan data",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ACTION_UNIFIED_UPLOAD_SCREEN",
+  "message": "Upload microplan data",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_POPUP_PROPERTIES",
+  "message": "Popup properties",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_POPUP_PROPERTIES",
+  "message": "Popup properties",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_SUBHEAD_FIELDS",
+  "message": "Form fields",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_SUBHEAD_FIELDS",
+  "message": "Form fields",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_SUBHEAD_FIELDS_TEMPLATE",
+  "message": "Template elements",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_SUBHEAD_FIELDS_TEMPLATE",
+  "message": "Template elements",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_SEARCH_TITLE",
+  "message": "My campaigns",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "DIGIT_LOC_BULK_UPLOAD_XLS",
+  "message": "Upload translations",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "FIELD_CONFIGURATION",
+  "message": "Page properties",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_CAMPAIGN_DETAILS_SUMMARY",
+  "message": "Campaign detail summary",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA",
+  "message": "Upload microplan data",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA",
+  "message": "Upload microplan data",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_CHECKLIST_HEADING",
+  "message": "Configure supervisor checklists",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_CHECKLIST_HEADING",
+  "message": "Configure supervisor checklists",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_CREATE_NEW_CAMPAIGN_FROM_SCRATCH",
+  "message": "Create a new campaign from scratch",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_CREATE_NEW_CAMPAIGN_FROM_SCRATCH",
+  "message": "Create a new campaign from scratch",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_DELIVERY_HEADING",
+  "message": "Configure delivery strategy",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_IMPORT_EXISTING_CAMPAIGN",
+  "message": "Clone an existing campaign",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_IMPORT_EXISTING_CAMPAIGN",
+  "message": "Clone an existing campaign",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_MOBILE_APP_HEADING",
+  "message": "Configure mobile app",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_START_WITH_CAMPAIGN_TEMPLATE",
+  "message": "Start with a campaign template",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_START_WITH_CAMPAIGN_TEMPLATE",
+  "message": "Start with a campaign template",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_UPLOAD_DATA_HEADING",
+  "message": "Upload microplan data",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_UPLOAD_LOCALIZATIONS_DATA_BUTTON",
+  "message": "Upload translations",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_UPLOAD_LOCALIZATIONS_DATA_BUTTON",
+  "message": "Upload translations",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_UPLOAD_LOCALIZATION_DATA_HEADING",
+  "message": "Upload translations",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_UPLOAD_UNIFIED_DATA_HEADING",
+  "message": "Upload microplan data",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_UPLOAD_UNIFIED_DATA_HEADING",
+  "message": "Upload microplan data",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "MY_CAMPAIGN",
+  "message": "My campaigns",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "MY_CAMPAIGNS",
+  "message": "My campaigns",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE",
+  "message": "Template elements",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE",
+  "message": "Template elements",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "WBH_UPLOAD_UNIFIED_DATA",
+  "message": "Upload microplan data",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "WBH_UPLOAD_UNIFIED_DATA",
+  "message": "Upload microplan data",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_BOUNDARY_SELECT_HEADING",
+  "message": "Set campaign boundary",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ }
+]
