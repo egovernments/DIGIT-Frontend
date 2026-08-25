@@ -76,12 +76,6 @@ const CampaignCard = () => {
       roles: ROLES.BOUNDARY_MANAGER,
     },
     {
-      label: t(I18N_KEYS.COMPONENTS.NATIONAL_DASHBOARD),
-      link: "/digit-ui/employee",
-      roles: ROLES.NATIONAL_SUPERVISOR,
-      // count: isLoading?"-":data
-    },
-    {
       label: t(I18N_KEYS.COMPONENTS.BOUNDARY_MANAGEMENT),
       link: `/${window?.contextPath}/employee/workbench/boundary/home`,
       id:`admin-console-home-screen-boundary-management-link`,
