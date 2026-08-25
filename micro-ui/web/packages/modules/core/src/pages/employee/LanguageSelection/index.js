@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import { Navigate, useNavigate } from "react-router-dom";
 import Background from "../../../components/Background";
 import ImageComponent from "../../../components/ImageComponent";
+import { loginConfig as defaultLoginConfig } from "../Login/config";
+import { useLoginConfig } from "../../../hooks/useLoginConfig";
 
 const DEFAULT_LOCALE=Digit?.Utils?.getDefaultLanguage?.();
 
@@ -15,6 +17,9 @@ const LanguageSelection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { languages, stateInfo } = storeData || {};
+  // Same LoginConfig (MDMS override, else local default) the Login screen uses for showTenant.
+  const { data: loginMdmsData } = useLoginConfig(Digit.ULBService.getStateId());
+  const loginScreenConfig = loginMdmsData?.config?.[0] || defaultLoginConfig?.[0];
   let defaultLanguages = languages;
   if (!defaultLanguages || defaultLanguages?.length == 0) {
     defaultLanguages = [defaultLanguage];
@@ -48,7 +53,7 @@ const LanguageSelection = () => {
         <div className="bannerHeader language-selector">
           <ImageComponent className="bannerLogo" src={stateInfo?.logoUrl} alt="Digit Banner Image" />
 
-          <p>{t(`TENANT_TENANTS_${stateInfo?.code?.toUpperCase()}`)}</p>
+          {loginScreenConfig?.showTenant !== false && <p>{t(`TENANT_TENANTS_${stateInfo?.code?.toUpperCase()}`)}</p>}
         </div>
         <div className="language-selector-header">{t("CS_COMMON_CHOOSE_LANGUAGE_HEADER")}</div>
         <div className="language-selector" style={{ justifyContent: "space-around", padding: "0 5%" }}>
