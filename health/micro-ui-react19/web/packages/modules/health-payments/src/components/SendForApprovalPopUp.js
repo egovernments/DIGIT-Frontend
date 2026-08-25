@@ -2,8 +2,8 @@ import React, { useState,Fragment, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-components";
 import BulkUpload from "./BulkUpload";
+import SignatureCapture from "./SignatureCapture";
 import { downloadFileWithName } from "../utils";
-import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const sanitizeComment = (value) =>
   value
@@ -18,6 +18,10 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
   const [comment, setComment] = useState("");
   const [uploadedFile, setUploadedFile] = useState([]);
   const [showToast, setShowToast] = useState(null);
+  const [signatureState, setSignatureState] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSignatureStateChange = useCallback((state) => setSignatureState(state), []);
 
   const handleUpload = useCallback(
     async (filesArray) => {
@@ -29,11 +33,11 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
         if (fileStoreId) {
           setUploadedFile([{ filestoreId: fileStoreId, filename: file.name }]);
         } else {
-          setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_FILE_UPLOAD_FAILED) });
+          setShowToast({ key: "error", label: t("HCM_AM_FILE_UPLOAD_FAILED") });
         }
       } catch (err) {
         console.error("Upload Error:", err);
-        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_FILE_UPLOAD_FAILED) });
+        setShowToast({ key: "error", label: t("HCM_AM_FILE_UPLOAD_FAILED") });
       }
     },
     [tenantId, t]
@@ -56,17 +60,51 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
     onClose();
   }, [onClose]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (isSubmitting) return;
     setShowToast(null);
     const trimmedComment = comment.trim();
     if (!uploadedFile?.length || !trimmedComment) {
-      setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS) });
+      setShowToast({ key: "error", label: t("HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS") });
       return;
     }
-    onSubmit({
-      comment: trimmedComment,
-      supportingDocs: uploadedFile,
-    });
+    const printedName = signatureState?.printedName?.trim() || "";
+    if (!printedName) {
+      setShowToast({ key: "error", label: t("HCM_AM_SIGNATURE_PRINTED_NAME_REQUIRED") });
+      return;
+    }
+    if (!signatureState?.hasSignature) {
+      setShowToast({
+        key: "error",
+        label: t(signatureState?.method === "UPLOAD" ? "HCM_AM_SIGNATURE_UPLOAD_REQUIRED" : "HCM_AM_SIGNATURE_DRAW_REQUIRED"),
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const signatureFile = await signatureState.getSignatureFile();
+      if (!signatureFile) {
+        setShowToast({ key: "error", label: t("HCM_AM_SIGNATURE_DRAW_REQUIRED") });
+        return;
+      }
+      const response = await Digit.UploadServices.Filestorage("health-payments", signatureFile, tenantId);
+      const signatureFileStoreId = response?.data?.files?.[0]?.fileStoreId;
+      if (!signatureFileStoreId) {
+        setShowToast({ key: "error", label: t("HCM_AM_FILE_UPLOAD_FAILED") });
+        return;
+      }
+      onSubmit({
+        comment: trimmedComment,
+        supportingDocs: uploadedFile,
+        signature: { printedName, fileStoreId: signatureFileStoreId },
+      });
+    } catch (err) {
+      console.error("Signature upload error:", err);
+      setShowToast({ key: "error", label: t("HCM_AM_FILE_UPLOAD_FAILED") });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -74,16 +112,16 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
       <PopUp
         style={{ width: "700px" }}
         onClose={handleCancel}
-        heading={t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_ADD_JUSTIFICATION_AND_COMMENTS)}
+        heading={t("HCM_AM_ADD_JUSTIFICATION_AND_COMMENTS")}
         onOverlayClick={handleCancel}
         equalWidthButtons={true}
         children={[
           <div key="upload-section">
             {/* <div className="comment-label">
-              {t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_UPLOAD_JUSTIFICATION)}
+              {t("HCM_AM_UPLOAD_JUSTIFICATION")}
             </div> */}
             <div className="comment-label">
-              {t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_UPLOAD_BILL_OR_DOC)}
+              {t("HCM_AM_UPLOAD_BILL_OR_DOC")}
               <span style={{ color: "red", marginLeft: "4px" }}>*</span>
             </div>
             <BulkUpload
@@ -95,7 +133,7 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
           </div>,
           <div key="comment-section" style={{ marginTop: "1rem" }}>
             <div className="comment-label">
-              {t(I18N_KEYS.COMPONENTS_APPROVAL_POPUPS.HCM_AM_COMMENTS)}
+              {t("HCM_AM_COMMENTS")}
               <span style={{ color: "red", marginLeft: "4px" }}>*</span>
             </div>
             <TextArea
@@ -103,6 +141,9 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
               value={comment}
               onChange={(e) => setComment(sanitizeComment(e.target.value))}
             />
+          </div>,
+          <div key="signature-section" style={{ marginTop: "1rem" }}>
+            <SignatureCapture onStateChange={handleSignatureStateChange} />
           </div>,
         ]}
         footerChildren={[
@@ -113,8 +154,8 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
             size="large"
             style={{ minWidth: "270px" }}
             variation="secondary"
-            label={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
-            title={t(I18N_KEYS.COMMON.HCM_AM_CANCEL)}
+            label={t("HCM_AM_CANCEL")}
+            title={t("HCM_AM_CANCEL")}
             onClick={handleCancel}
           />,
           <Button
@@ -124,10 +165,10 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
             size="large"
             variation="primary"
             style={{ minWidth: "270px" }}
-            label={t(I18N_KEYS.COMMON.HCM_AM_SEND_FOR_APPROVAL)}
-            title={t(I18N_KEYS.COMMON.HCM_AM_SEND_FOR_APPROVAL)}
+            label={t("HCM_AM_SEND_FOR_APPROVAL")}
+            title={t("HCM_AM_SEND_FOR_APPROVAL")}
             onClick={handleSave}
-            //isDisabled={!uploadedFile?.length || !comment.trim()}
+            isDisabled={isSubmitting}
           />,
         ]}
       />

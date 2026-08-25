@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, Fragment } from "react";
-import { useLocation, useHistory, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {Header, LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
 import { Loader,Divider, Button, PopUp, AlertCard as InfoCard, Card, Link, ViewCardFieldPair, Toast, Tab, NoResultsFound, TooltipWrapper } from "@egovernments/digit-ui-components";
@@ -92,7 +92,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const activeTabCode = location.state?.activeTabCode;
   const advisoryReportFromNav = location.state?.advisoryReport;
   const { t } = useTranslation();
-  const history = useHistory();
+  const history = useNavigate();
   const { role } = useParams(); // "reviewer" | "approver"
 
   const workflowSuccessNavConfig = {

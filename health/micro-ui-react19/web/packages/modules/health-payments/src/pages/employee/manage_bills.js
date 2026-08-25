@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useParams } from "react-router-dom";
+// import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import MyBillsSearch from "../../components/MyBillsSearch";
 import ManageBillsTable from "../../components/ManageBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
@@ -18,7 +19,7 @@ import SignaturePopUp from "../../components/SignaturePopUp";
 
 const ManageBills = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const history = useNavigate();
   const { role } = useParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [showToast, setShowToast] = useState(null);
