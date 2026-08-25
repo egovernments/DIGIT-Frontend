@@ -396,7 +396,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               handleToggleSidePanel("formelements");
             }}
           >
-            {activeSidePanel === "formelements" ? <CustomSVG.VariableAddFilled fill={"#0B4B66"} width={"24px"} height={"24px"} /> : <CustomSVG.VariableAdd fill={currentPageType === "template" || viewMode ? "#B1B4B6" : "#0B4B66"} width={"24px"} height={"24px"}/>}
+            {activeSidePanel === "formelements" ? <CustomSVG.VariableAddFilled fill={"#0B4B66"} width={"24px"} height={"24px"} /> : <CustomSVG.VariableAdd fill={currentPageType === "template" || viewMode ? "#C5C5C5" : "#0B4B66"} width={"24px"} height={"24px"}/>}
             <span>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FORMELEMENTS)}</span>
           </div>
           <div
@@ -404,7 +404,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               activeSidePanel === "roles" ? "full-config-wrapper__sidebar-menu-item--active" : ""
             }`}
           >
-            {activeSidePanel === "roles" ? <SVG.Person fill="#B1B4B6" /> : <SVG.PersonOutline fill="#B1B4B6" />}
+            {activeSidePanel === "roles" ? <SVG.Person fill="#C5C5C5" /> : <SVG.PersonOutline fill="#C5C5C5" />}
 
             <span>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ROLES)}</span>
           </div>
@@ -751,7 +751,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                           textAlign: "right",
                         }
                       : {
-                          color: "#1C00BD",
+                          color: "#0057BD",
                           fontFamily: "Roboto",
                           fontWeight: 600,
                           fontStyle: "SemiBold",
@@ -761,8 +761,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                   }
                   style={
                     currentPageType === "template"
-                      ? { backgroundColor: "#FFFCC0", borderRadius: "6px", top: "6px", position: "absolute" }
-                      : { backgroundColor: "#EBECFE", borderRadius: "6px", top: "6px", position: "absolute" }
+                      ? { backgroundColor: "#FFF7D6", borderRadius: "6px", top: "6px", position: "absolute" }
+                      : { backgroundColor: "#DEEFFF", borderRadius: "6px", top: "6px", position: "absolute" }
                   }
                 />
               )}

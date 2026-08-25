@@ -34,7 +34,8 @@
     margin-top: -1.5rem;
     margin-left: -1.5rem;
     margin-right: -1.5rem;
-    background-color: #929292;
+    /* Primary 2 token; #929292 failed WCAG AA contrast with the white text */
+    background-color: #0B4B66;
     padding: 0.75rem;
     display: flex;
     align-items: center;
@@ -62,7 +63,7 @@
     min-width: 13.75rem;
     height: 100%;
     background-color: #ffffff;
-    border-right: 0.063rem solid #d6d5d5;
+    border-right: 0.063rem solid #d6d5d4;
     border-radius: 0 1rem 1rem 0;
     overflow: hidden;
     padding: 1rem;
@@ -85,12 +86,12 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    border-bottom: 0.063rem solid #d6d5d5;
+    border-bottom: 0.063rem solid #d6d5d4;
     transition: background-color 0.2s;
     background-color: transparent;
 
     &--active {
-      background-color: #e6edf0;
+      background-color: #DEEFFF;
       border-radius: 0.5rem;
     }
 
@@ -151,7 +152,7 @@
     min-width: 17.5rem;
     height: 100%;
     background-color: #ffffff;
-    border-right: 0.063rem solid #d6d5d5;
+    border-right: 0.063rem solid #d6d5d4;
     border-radius: 0 1rem 1rem 0;
     padding: 1rem;
     display: flex;
@@ -252,17 +253,17 @@
       }
 
       &:hover {
-        background-color: #EFF8FF;
+        background-color: #DEEFFF;
         color: #0B4B66;
       }
 
       &--active {
-        background-color: #E6EDF0;
+        background-color: #DEEFFF;
         color: #0b4b66;
         font-weight: var(--digitv2-fontWeight-bold);
 
         &:hover {
-          background-color: #E6EDF0;
+          background-color: #DEEFFF;
           color: #0b4b66;
           font-weight: var(--digitv2-fontWeight-bold);
         }
@@ -280,7 +281,7 @@
     left: 0;
     right: 0;
     height: 0.063rem;
-    background-color: #d6d4d5;
+    background-color: #d6d5d4;
   }
 
   &__flow-search {
@@ -295,7 +296,7 @@
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    border: 0.063rem solid #d6d5d5;
+    border: 0.063rem solid #d6d5d4;
     border-radius: 0.5rem;
     padding: 0.5rem;
     background-color: #ffffff;
@@ -336,7 +337,7 @@
   }
 
   &__category-group {
-    border-bottom: 0.063rem solid #d6d4d5;
+    border-bottom: 0.063rem solid #d6d5d4;
 
     &:last-child {
       border-bottom: none;
@@ -353,7 +354,7 @@
     transition: background-color 0.2s;
 
     &:hover {
-      background-color: #EFF8FF;
+      background-color: #DEEFFF;
     }
   }
 
@@ -393,7 +394,7 @@
 
   &__category-flows {
     margin: 0 1rem 0.75rem;
-    border: 0.063rem solid #d6d5d5;
+    border: 0.063rem solid #d6d5d4;
     border-radius: 0.5rem;
     overflow: hidden;
     background-color: #ffffff;
@@ -404,7 +405,7 @@
       border-radius: 0;
 
       &:not(:last-child) {
-        border-bottom: 0.063rem solid #d6d4d5;
+        border-bottom: 0.063rem solid #d6d5d4;
       }
     }
 
@@ -468,7 +469,7 @@
     display: flex;
     align-items: flex-end;
     overflow-x: auto;
-    border-bottom: 0.063rem solid #d6d5d5;
+    border-bottom: 0.063rem solid #d6d5d4;
     position: fixed;
     right: 370px;
     left: 548px;
@@ -479,7 +480,7 @@
     display: flex;
     align-items: flex-end;
     overflow-x: auto;
-    border-bottom: 0.063rem solid #d6d5d5;
+    border-bottom: 0.063rem solid #d6d5d4;
     position: unset;
   }
 
@@ -490,7 +491,7 @@
     font-weight: 400;
     white-space: nowrap;
     transition: all 0.2s;
-    border:0.063rem solid #d6d5d5;
+    border:0.063rem solid #d6d5d4;
     border-bottom: none;
     border-radius: 0.5rem 0.5rem 0 0;
     background-color: #ffffff;
@@ -568,7 +569,7 @@
     right: 0;
     height: 4.5rem;
     background-color: #fafafa;
-    border-top:0.063rem solid #d6d5d5;
+    border-top:0.063rem solid #d6d5d4;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -809,7 +810,7 @@
   }
 
   &__rule-tag {
-    background: #EFF8FF;
+    background: #DEEFFF;
     height: fit-content;
   }
 
@@ -1523,13 +1524,13 @@
 
   &.final {
     border-radius: 6px;
-    background-color: #EFF8FF;
+    background-color: #DEEFFF;
   }
 }
 
 .text-template {
   font-size: 0.875rem;
-  color: #333;
+  color: #363636;
 
   &--title {
     color: #0B4B66;
@@ -1571,16 +1572,16 @@
 
       &.final{
         border-radius: 6px;
-        background-color: #EFF8FF;
+        background-color: #DEEFFF;
       }
 
     }
 
     &.rule-summary__joiner {
-      background: #FFFDE7;
+      background: #FFF7D6;
 
       .digit-tag-text {
-        color: #9E5F00;
+        color: #5C450A;
         font-family: "Roboto";
         font-weight: 400;
         font-style: Regular;
@@ -1629,7 +1630,7 @@
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    border: 0.063rem solid #d6d5d5;
+    border: 0.063rem solid #d6d5d4;
     border-radius: 0.5rem;
     padding: 0.5rem;
     background-color: #ffffff;
@@ -1699,7 +1700,7 @@
     transition: background-color 0.2s, border-color 0.2s;
 
     &:hover .form-elements__type-card-icon {
-      background-color: #E6EDF0;
+      background-color: #DEEFFF;
     }
   }
 
@@ -1713,7 +1714,7 @@
     background: #F6FBFE;
     transition: background-color 0.2s;
     &:hover{
-      background-color: #E6EDF0;
+      background-color: #DEEFFF;
 
     }
 
@@ -1769,7 +1770,65 @@
   &__no-results {
     padding: 2rem 1rem;
     text-align: center;
-    color: #b1b4b6;
+    color: #C5C5C5;
     font-size: 0.875rem;
   }
+}
+/* Design-system input border token (#505A5F); the library ships a low-contrast
+   #E0E0E0 that fails the 3:1 non-text contrast guideline. Scoped to app config. */
+.full-config-wrapper .digit-text-input-field {
+  border-color: #505A5F;
+}
+
+/* Preview templates inherit the library's low-contrast #E0E0E0 input border;
+   align with the design-system input border token (#505A5F). !important needed
+   to beat the library's own rule. */
+.zoom-content .digit-text-input-field,
+.template-field-wrapper .digit-text-input-field {
+  border-color: #505A5F !important;
+}
+
+/* react-data-table ships a #CCCCCC default border; use the divider token */
+.template-field-wrapper [class*="rdt_"] {
+  border-color: #D6D5D4 !important;
+}
+
+/* Library switch track ships #BFBFBF; align with the disabled/affordance token.
+   Unscoped on purpose: the checked state is painted by a separate element, so
+   this only recolors the off-track. */
+.digit-switch {
+  background-color: #C5C5C5;
+}
+
+/* Library card ships an #E0E0E0 border on these panel cards; use the divider token */
+.digit-card-component.override-padding {
+  border-color: #D6D5D4;
+}
+
+/* Library disabled header labels ship #9E9E9E; use the disabled-text token.
+   !important: the library rule sits behind a higher-specificity media query. */
+.digit-header-content.label.disabled {
+  color: #C5C5C5 !important;
+  border-color: #C5C5C5 !important;
+}
+
+.digit-text-input-field.disabled {
+  color: #C5C5C5 !important;
+}
+
+.digit-dropdown-employee-select-wrap--elipses.disabled {
+  color: #C5C5C5 !important;
+  border-color: #C5C5C5 !important;
+}
+
+/* Library Button applies an inline #9E9E9E when disabled; align with the
+   disabled token (stylesheet !important outranks non-important inline styles) */
+button.digit-button-secondary:disabled,
+button.digit-button-secondary.disabled,
+button.digit-button-primary:disabled,
+button.digit-button-primary.disabled,
+button.digit-button-tertiary:disabled,
+button.digit-button-tertiary.disabled {
+  color: #C5C5C5 !important;
+  border-color: #C5C5C5 !important;
 }
