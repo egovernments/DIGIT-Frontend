@@ -1030,5 +1030,65 @@
   "message": "Info card",
   "module": "hcm-appconfiguration",
   "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_ERRORMESSAGE",
+  "message": "Error message",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_CUSTOM_PATTERN",
+  "message": "Custom logic",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_HEAD_FIELDS",
+  "message": "Page header",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_NAVIGATION_LOGIC",
+  "message": "Navigation logic",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_VERSION",
+  "message": "Current version",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_ERRORMESSAGE",
+  "message": "Error message",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_CUSTOM_PATTERN",
+  "message": "Custom logic",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_HEAD_FIELDS",
+  "message": "Page header",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_NAVIGATION_LOGIC",
+  "message": "Navigation logic",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "APPCONFIG_VERSION",
+  "message": "Current version",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
  }
 ]
