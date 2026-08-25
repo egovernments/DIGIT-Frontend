@@ -155,15 +155,19 @@ const NewShipmentPopup = ({
   // Extract product variants — prefer campaign-specific delivery rules resources over MDMS defaults
   const campaignProjectType = campaignData?.projectType;
   const productVariants = useMemo(() => {
-    const seen = new Set();
+    const seenIds = new Set();
+    const seenNames = new Set();
     const variants = [];
 
-    const campaignResources = (campaignData?.deliveryRules || []).flatMap((rule) => rule?.resources || []);
+    const deliveryRules = Array.isArray(campaignData?.deliveryRules) ? campaignData.deliveryRules : [];
+    const campaignResources = deliveryRules.flatMap((rule) => rule?.resources || []);
     if (campaignResources.length > 0) {
       campaignResources.forEach((r) => {
-        if (r?.productVariantId && !seen.has(r.productVariantId)) {
-          seen.add(r.productVariantId);
-          variants.push({ productVariantId: r.productVariantId, name: r.name || r.productVariantId });
+        const displayName = r.name || r.productVariantId;
+        if (r?.productVariantId && !seenIds.has(r.productVariantId) && !seenNames.has(displayName)) {
+          seenIds.add(r.productVariantId);
+          seenNames.add(displayName);
+          variants.push({ productVariantId: r.productVariantId, name: displayName });
         }
       });
       return variants;
@@ -884,10 +888,10 @@ const NewShipmentPopup = ({
       // --- Stock Data sheet ---
       const ws = wb.addWorksheet("Stock Data");
       // Set column widths before adding data (ExcelJS handles this more reliably)
-      ws.columns = stockHeaders.map((header) => ({ header, width: 30, style: { font: { bold: false, size: 12 } } }));
-      // Style header row: bold, larger font, green background, locked
+      ws.columns = stockHeaders.map((header) => ({ header, width: 30, style: { font: { bold: false, size: 10 } } }));
+      // Style header row: bold, larger font, green background, locked — matches the console unified template's convention
       const headerRow = ws.getRow(1);
-      headerRow.font = { bold: true, size: 14, color: { argb: 'FF000000' } };
+      headerRow.font = { bold: true, size: 11, color: { argb: 'FF000000' } };
       headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF93C47D' } };
       headerRow.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
       headerRow.height = 30;

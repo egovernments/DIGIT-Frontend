@@ -574,8 +574,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                   const FIELD_TYPE_ICON_MAP = {
                     // Basic
                     checkbox: "CheckboxSVG",
-                    date: "Calendar",
-                    dob: "Calendar",
+                    date: "DateRange",
+                    dob: "Event",
                     dropdown: "EventList",
                     mobileNumber: "Call",
                     number: "Numeric123",
@@ -585,10 +585,13 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                     textarea: "TextAd",
                     // Advanced
                     idPopulator: "Badge",
-                    latLng: "GpsFixed",
+                    latLng: "LocateIcon",
                     locality: "LocationCity",
-                    qrScanner: "QrCodeScanner",
-                    selectionTag: "Dashboard",
+                    qrScanner: "QrCode",
+                    selectionCard: "GridView",
+                    referralCycle: "AutoRenew",
+                    scanner: "QrCodeScanner",
+                    select: "GridView",
                   };
 
                   // Same filter as the "Add Field" popup in AppConfigurationWrapper

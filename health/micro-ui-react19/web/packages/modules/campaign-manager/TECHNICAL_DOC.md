@@ -264,6 +264,72 @@ The shipment bulk upload Excel template now has locked headers, a green backgrou
 | Fixed all locale values | [#3800](https://github.com/egovernments/DIGIT-Frontend/pull/3800) |
 | Resolve edit button navigation issue | [#3793](https://github.com/egovernments/DIGIT-Frontend/pull/3793) |
 
+| Bulk stock session keys scoped per campaign — BulkStockUpload recovery banner no longer shows across campaigns | [#4230](https://github.com/egovernments/DIGIT-Frontend/pull/4230) |
+| Dashboard shows only reports configured for that specific campaign (not all reports for the project type); attendance card hidden before campaign creation completes; gap between label and field in delivery rules fixed; chip hover effect fixed | [#4232](https://github.com/egovernments/DIGIT-Frontend/pull/4232) |
+| Setup loader shown during setup steps; delivery step navigation guards added; globalConfigs demo values removed from host index.html | [#4234](https://github.com/egovernments/DIGIT-Frontend/pull/4234) |
+| Date range selection issue fixed in Commodity Management (`DateRangePicker.js`); "Rejected" column removed from Transaction Summary (`TransactionSummaryTab.js`); sheet issue fixed in upcoming campaign edit flow (`CampaignDetails.js`, `UpdateCampaign.js`); loader text trailing ellipsis removed from all route definitions in `index.js`; version bump | [#4244](https://github.com/egovernments/DIGIT-Frontend/pull/4244) |
+| Loader messages updated to proper i18n key format; delivery details summary campaign name tag fixed; icon color and attendance card display fixed | [#4251](https://github.com/egovernments/DIGIT-Frontend/pull/4251) |
+| Localization search call fixed — `Module.js` locale module list trimmed to only needed modules (`schema` and `dummy-module` removed); `searchLocalisationService.js` now correctly resolves array-valued locale to a single string; ship commodity action button removed from Stock Summary tab in completed view (`StockSummaryTab.js`); version bumps | [#4263](https://github.com/egovernments/DIGIT-Frontend/pull/4263) |
+| AppConfig v2 — field type dropdown now restricted to compatible types driven by `compatibleTypes` array in `HCM-ADMIN-CONSOLE.FieldTypeMappingConfig` MDMS master | [#4267](https://github.com/egovernments/DIGIT-Frontend/pull/4267) |
+| AppConfig v2 — app preview row sizing fix; tertiary button alignment corrected | [#4268](https://github.com/egovernments/DIGIT-Frontend/pull/4268) |
+| AppConfig — toggle-hide now supported for `labelPairList` format fields | [#4280](https://github.com/egovernments/DIGIT-Frontend/pull/4280) |
+| Hierarchy type name in `SelectingBoundariesDuplicate.js` tag label now translated via `t()` — previously displayed the raw hierarchy type code; core library version upgraded | [#4281](https://github.com/egovernments/DIGIT-Frontend/pull/4281) |
+| Shipment Excel template header color corrected from `4CAF50` to `93C47D` to match microplan sheets; boundary column headers in `NewShipmentPopup.js` now show translated labels; `NewShipmentPopup` now loads its own boundary localizations; AppConfig panel card screens — heading and description removed | [#4275](https://github.com/egovernments/DIGIT-Frontend/pull/4275) |
+| AppConfig v2 — field type fallback tiers for missing MDMS master entries; mandatory asterisk now uses the persisted `mandatory` flag instead of computed state | [#4290](https://github.com/egovernments/DIGIT-Frontend/pull/4290) |
+| Clone campaign date fix — `FieldV1` fields with `newDateFormat: true` onChange now converts the display string to an IST-offset ISO timestamp (`+19800000` ms added); workbench version bump; AppConfig default value fix; AppConfig drawer styling fix | [#4298](https://github.com/egovernments/DIGIT-Frontend/pull/4298) |
+| Attendance registers (`MapUsersToRegistersScreen`) now fetch when `campaignNumber` is present and resource loading is complete — removed `isRegisterCreationCompleted` gate that previously blocked register display; unified template download filename now uses localized `HCM_MICROPLAN_TEMPLATE` key | [#4304](https://github.com/egovernments/DIGIT-Frontend/pull/4304) |
+| AppConfig — checklist preview renders question labels at 16px bold with dividers between questions; table field drawer shows column sub-group cards | [#4305](https://github.com/egovernments/DIGIT-Frontend/pull/4305) |
+| AppConfig — configurable info card shown on closed household screen via `infoCardText` page condition | [#4308](https://github.com/egovernments/DIGIT-Frontend/pull/4308) |
+
+---
+
+## App Configuration — v2 Enhancements (Post-v2.1)
+
+### Field Type Compatibility Restriction
+
+**PR:** [#4267](https://github.com/egovernments/DIGIT-Frontend/pull/4267)
+
+The field type dropdown in AppConfig v2 now only shows types that are compatible with the current field configuration. Compatibility is driven by the `compatibleTypes` array in the `HCM-ADMIN-CONSOLE.FieldTypeMappingConfig` MDMS master — if a type is not listed as compatible for the current field, it does not appear as an option.
+
+**Before:** All field types were always shown, allowing invalid combinations to be saved.
+
+**After:** The dropdown is filtered at render time using `compatibleTypes`. Invalid type combinations cannot be selected.
+
+---
+
+### Mandatory Asterisk — Uses Persisted Flag
+
+**PR:** [#4290](https://github.com/egovernments/DIGIT-Frontend/pull/4290)
+
+**Before:** The mandatory asterisk in AppConfig screens was computed from UI state on each render, causing it to appear or disappear incorrectly when navigating back to a saved field.
+
+**After:** The asterisk now reads from the persisted `mandatory` flag stored on the field definition, ensuring it reflects the saved state correctly.
+
+---
+
+### Toggle-Hide for `labelPairList` Fields
+
+**PR:** [#4280](https://github.com/egovernments/DIGIT-Frontend/pull/4280)
+
+`labelPairList` format fields in AppConfig now support the toggle-hide feature (same as other field formats). A toggle control appears in the field editor, and the corresponding field is hidden in the mobile preview when toggled off.
+
+---
+
+### Checklist Preview and Table Drawer Improvements
+
+**PR:** [#4305](https://github.com/egovernments/DIGIT-Frontend/pull/4305)
+
+- **Checklist preview:** Question labels are now rendered at 16px bold with dividers between questions, matching the Figma spec.
+- **Table field drawer:** Column sub-group cards are now shown inside the table field drawer, making column configuration more structured.
+
+---
+
+### Info Card on Closed Household Screen
+
+**PR:** [#4308](https://github.com/egovernments/DIGIT-Frontend/pull/4308)
+
+A configurable info card can now be shown on the closed household screen in the mobile app. The card text is set via the `infoCardText` key in the screen's page condition in AppConfig.
+
 ---
 
 ## Configuration Required Before Deploying
