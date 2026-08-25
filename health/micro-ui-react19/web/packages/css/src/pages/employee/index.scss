@@ -1493,6 +1493,23 @@ tbody {
   color: #0b4b66;
   font-weight: 700;
 }
+/* Core topbar only passes showArrow to the profile dropdown, so the tenant and
+   language dropdowns render as bare labels; give them the same caret affordance */
+.digit-header-action-fields .header-dropdown-label label.cp {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
+  &::after {
+    content: "";
+    display: inline-block;
+    margin-left: 0.375rem;
+    border-left: 0.3125rem solid transparent;
+    border-right: 0.3125rem solid transparent;
+    border-top: 0.375rem solid currentColor;
+  }
+}
+
 .zoom-content {
   height: 100%;
 
