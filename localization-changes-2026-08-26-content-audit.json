@@ -856,5 +856,137 @@
   "message": "View Timeline",
   "module": "hcm-campaignmanager",
   "locale": "en_DEMO"
+ },
+ {
+  "code": "ATTENDANCE_REGISTER_README_ERROR_3",
+  "message": "Boundary code not recognised \u2014 the boundary value entered is not part of this campaign. Use only the boundary codes available in the column dropdowns.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "ATTENDEE_README_ERROR_5",
+  "message": "Date format not accepted \u2014 a date cell contains an unrecognised format or extra characters. Use DD-MM-YYYY or DD/MM/YYYY only.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "BOUNDARY_NO_VALID_ROWS",
+  "message": "The sheet has no usable rows. Download the template and add the data.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "BOUNDARY_SHEET_HEADER_ERROR",
+  "message": "The boundary sheet headers don't match the template. Use the headers from the downloaded template.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "BOUNDARY_TARGET_ERROR",
+  "message": "Target is missing or not a number. Enter a target for each boundary.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "DIGIT_LOC_EMPTY_OR_INVALID_FILE",
+  "message": "The uploaded file is empty or unreadable. Upload the filled template.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "DIGIT_LOC_EMPTY_OR_INVALID_FILE",
+  "message": "The uploaded file is empty or unreadable. Upload the filled template.",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "DIGIT_LOC_FILE_VALIDATION_ERROR",
+  "message": "The uploaded file doesn't match the expected format. Download the template and try again.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "DIGIT_LOC_FILE_VALIDATION_ERROR",
+  "message": "The uploaded file doesn't match the expected format. Download the template and try again.",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_IS_INVALID",
+  "message": "needs to be corrected.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "INVALID_COLUMNS",
+  "message": "The file's columns don't match the template. Use the downloaded template without changing the columns.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "INVALID_FILE",
+  "message": "We couldn't read this file. Upload the file in the correct format.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "INVALID_FILE_CONTENT",
+  "message": "The file content doesn't match the expected format. Download the template and fill it without changing the structure.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "INVALID_FILE_FORMAT",
+  "message": "This file type is not supported. Upload an .xlsx or .xls file.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "INVALID_LOGIN_CREDENTIALS",
+  "message": "Username or password is incorrect. Try again.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "INVALID_README_CONFIG",
+  "message": "The ReadMe configuration is missing or unreadable.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "INVALID_RESOURCE_DISTRIBUTION_STRATEGY",
+  "message": "The resource distribution strategy is not recognised. Choose a strategy from the list.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "INVALID_SHEETNAME",
+  "message": "The sheet name doesn't match the template. Keep the sheet names from the downloaded template.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "INVALID_TEMPLATE",
+  "message": "This template is missing campaign details. Upload the generated template only.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "INVALID_TEMPLATE_NAME",
+  "message": "Enter a valid template name.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "INVALID_TEMPLATE_NAME",
+  "message": "Enter a valid template name.",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "VALIDATION_ERROR_CAMPAIGN_ID",
+  "message": "Campaign ID not found. Check the campaign and try again.",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
  }
 ]
