@@ -1839,5 +1839,7 @@ button.digit-button-tertiary.disabled {
    Search anchors the right edge. */
 .digit-inbox-search-wrapper .digit-search-button-wrapper {
   flex-direction: row-reverse;
-  justify-content: flex-start;
+  /* in row-reverse, flex-start packs to the right edge; !important beats the
+     library's flex-end which would leave a gap after the Search button */
+  justify-content: flex-start !important;
 }
