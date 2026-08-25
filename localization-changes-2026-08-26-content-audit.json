@@ -760,5 +760,89 @@
   "message": "Campaign home page",
   "module": "hcm-campaignmanager",
   "locale": "en_DEMO"
+ },
+ {
+  "code": "CAMPAIGN_TEMPLATES",
+  "message": "Campaign templates",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CREATE_CAMPAIGN_HOME",
+  "message": "Create campaign",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CREATE_CAMPAIGN",
+  "message": "Create a new campaign",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "CREATE_REGISTERS",
+  "message": "Create registers",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_COMMODITY_DASHBOARD",
+  "message": "Commodity management dashboard",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "MAP_ATTENDEES",
+  "message": "Create register workers",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "MAP_USERS_TO_REGISTERS",
+  "message": "Map users to registers",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "REGISTER_DETAILS",
+  "message": "Register details",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "REPORTS_CONFIGURATION",
+  "message": "Reports configuration",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "SETUP_ATTENDANCE",
+  "message": "Setup attendance",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "UPDATE_CHECKLIST",
+  "message": "Update checklist",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "UPDATE_DATE_CHANGE",
+  "message": "Change campaign dates",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_BULK_STOCK_UPLOAD",
+  "message": "Bulk stock upload",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "HCM_COMMODITY_CAMPAIGNS",
+  "message": "Commodity campaigns",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
  }
 ]
