@@ -754,5 +754,11 @@
   "message": "Permission Handler",
   "module": "hcm-base-registration-co-delivery",
   "locale": "en_DEMO"
+ },
+ {
+  "code": "VIEW_DETAILS",
+  "message": "Campaign home page",
+  "module": "hcm-campaignmanager",
+  "locale": "en_DEMO"
  }
 ]
