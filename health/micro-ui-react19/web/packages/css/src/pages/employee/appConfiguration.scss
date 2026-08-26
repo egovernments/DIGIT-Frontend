@@ -26,7 +26,7 @@
     flex-direction: column;
 
     h2 {
-      color: #d32f2f;
+      color: #B91900;
     }
   }
 
@@ -1816,7 +1816,8 @@
   color: #C5C5C5 !important;
 }
 
-.digit-dropdown-employee-select-wrap--elipses.disabled {
+.digit-dropdown-employee-select-wrap--elipses.disabled,
+.digit-employeeCard-inputError.disabled {
   color: #C5C5C5 !important;
   border-color: #C5C5C5 !important;
 }
@@ -1831,4 +1832,14 @@ button.digit-button-tertiary:disabled,
 button.digit-button-tertiary.disabled {
   color: #C5C5C5 !important;
   border-color: #C5C5C5 !important;
+}
+
+/* DS convention: the primary action sits right-most (as in footers/popups).
+   The library search bar renders [Search][Clear][Sort]; reverse the row so
+   Search anchors the right edge. */
+.digit-inbox-search-wrapper .digit-search-button-wrapper {
+  flex-direction: row-reverse;
+  /* in row-reverse, flex-start packs to the right edge; !important beats the
+     library's flex-end which would leave a gap after the Search button */
+  justify-content: flex-start !important;
 }

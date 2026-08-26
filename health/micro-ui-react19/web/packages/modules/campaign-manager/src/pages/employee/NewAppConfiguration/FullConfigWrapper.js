@@ -368,7 +368,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         />
         <div className="full-config-wrapper__flow-name-header">
           {campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flowModule}`))}
-          <span style={{fontSize: "0.75rem", marginTop: "0.375rem"}}> ({`${t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_VERSION)} - ${version}`})</span>
+          <span style={{fontSize: "0.75rem", marginTop: "0.375rem"}}> ({`${t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_VERSION)} ${version}`})</span>
         </div>
         <AppHelpTutorial appPath={path} location={propsLocation} buttonLabel="CAMP_HELP_TEXT" />
       </div>
@@ -477,26 +477,9 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                 </div>
                 {groupedFlows.map((group) => {
                   const isExpanded = flowSearchQuery ? true : !collapsedCategories[group.category];
-                  const isSingleFlow = group.flows.length === 1;
 
-                  // Single-flow category: render as flat flow item without category header (only when not searching)
-                  if (isSingleFlow && !flowSearchQuery) {
-                    const flow = group.flows[0];
-                    return (
-                      <div key={group.category} className="full-config-wrapper__category-group">
-                        <div
-                          className={`full-config-wrapper__flow-item ${
-                            selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
-                          }`}
-                          onClick={() => handleFlowClick(flow)}
-                        >
-                          {campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  // Multi-flow category: render with collapsible header
+                  // Every category renders with its collapsible header so single-flow
+                  // categories (e.g. Revisit) still appear as their own group
                   return (
                     <div key={group.category} className="full-config-wrapper__category-group">
                       <div

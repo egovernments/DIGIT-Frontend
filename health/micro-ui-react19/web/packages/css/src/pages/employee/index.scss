@@ -1508,6 +1508,12 @@ tbody {
     border-right: 0.3125rem solid transparent;
     border-top: 0.375rem solid currentColor;
   }
+
+  /* Newer core versions render their own arrow (span.header-dropdown-arrow) after
+     the label; suppress this fallback caret there or the header shows two arrows */
+  &:has(+ .header-dropdown-arrow)::after {
+    display: none;
+  }
 }
 
 .zoom-content {

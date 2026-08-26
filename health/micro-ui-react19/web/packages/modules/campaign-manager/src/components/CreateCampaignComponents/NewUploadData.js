@@ -1617,7 +1617,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           <Card>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <TagComponent campaignName={campaignName} />
-             <div style={{ display: "flex", gap: "0.75rem" }}>
+             <div style={{ display: "flex", gap: "0.75rem", marginLeft: "auto" }}>
                 {type === "attendanceRegisterAttendee" && props?.props?.resourceDetails?.[0]?.processedFileStoreId && (
                   <Button
                     label={t(I18N_KEYS.COMPONENTS.HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE)}
