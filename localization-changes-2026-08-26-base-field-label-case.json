@@ -1686,18 +1686,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "clearFilter",
-  "message": "Clear filter",
-  "module": "hcm-base-closehousehold-co-delivery",
-  "locale": "en_DEMO"
- },
- {
-  "code": "clearFilter2",
-  "message": "Clear filter",
-  "module": "hcm-base-closehousehold-co-delivery",
-  "locale": "en_DEMO"
- },
- {
   "code": "complaintAcknowledgement",
   "message": "Complaint success",
   "module": "hcm-base-closehousehold-co-delivery",
@@ -1926,12 +1914,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "openMemberCard",
-  "message": "Open member card",
-  "module": "hcm-base-closehousehold-co-delivery",
-  "locale": "en_DEMO"
- },
- {
   "code": "overviewLabelPairCard",
   "message": "Overview details",
   "module": "hcm-base-closehousehold-co-delivery",
@@ -2024,18 +2006,6 @@
  {
   "code": "resourceCard",
   "message": "Resource card",
-  "module": "hcm-base-closehousehold-co-delivery",
-  "locale": "en_DEMO"
- },
- {
-  "code": "saveFilter",
-  "message": "Save filter",
-  "module": "hcm-base-closehousehold-co-delivery",
-  "locale": "en_DEMO"
- },
- {
-  "code": "saveFilter2",
-  "message": "Save filter",
   "module": "hcm-base-closehousehold-co-delivery",
   "locale": "en_DEMO"
  },
@@ -5022,18 +4992,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "clearFilter",
-  "message": "Clear filter",
-  "module": "hcm-base-complaints-co-delivery",
-  "locale": "en_DEMO"
- },
- {
-  "code": "clearFilter2",
-  "message": "Clear filter",
-  "module": "hcm-base-complaints-co-delivery",
-  "locale": "en_DEMO"
- },
- {
   "code": "clientReferenceId",
   "message": "Client reference ID",
   "module": "hcm-base-complaints-co-delivery",
@@ -5328,12 +5286,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "openMemberCard",
-  "message": "Open member card",
-  "module": "hcm-base-complaints-co-delivery",
-  "locale": "en_DEMO"
- },
- {
   "code": "oroductdetail",
   "message": "Product details",
   "module": "hcm-base-complaints-co-delivery",
@@ -5444,18 +5396,6 @@
  {
   "code": "row",
   "message": "Complaint row",
-  "module": "hcm-base-complaints-co-delivery",
-  "locale": "en_DEMO"
- },
- {
-  "code": "saveFilter",
-  "message": "Save filter",
-  "module": "hcm-base-complaints-co-delivery",
-  "locale": "en_DEMO"
- },
- {
-  "code": "saveFilter2",
-  "message": "Save filter",
   "module": "hcm-base-complaints-co-delivery",
   "locale": "en_DEMO"
  },
@@ -8346,18 +8286,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "clearFilter",
-  "message": "Clear filter",
-  "module": "hcm-base-hfreferral-co-delivery",
-  "locale": "en_DEMO"
- },
- {
-  "code": "clearFilter2",
-  "message": "Clear filter",
-  "module": "hcm-base-hfreferral-co-delivery",
-  "locale": "en_DEMO"
- },
- {
   "code": "clientReferenceId",
   "message": "Client reference ID",
   "module": "hcm-base-hfreferral-co-delivery",
@@ -8658,12 +8586,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "openMemberCard",
-  "message": "Open member card",
-  "module": "hcm-base-hfreferral-co-delivery",
-  "locale": "en_DEMO"
- },
- {
   "code": "overviewLabelPairCard",
   "message": "Overview details",
   "module": "hcm-base-hfreferral-co-delivery",
@@ -8786,18 +8708,6 @@
  {
   "code": "rowVersion",
   "message": "Row version",
-  "module": "hcm-base-hfreferral-co-delivery",
-  "locale": "en_DEMO"
- },
- {
-  "code": "saveFilter",
-  "message": "Save filter",
-  "module": "hcm-base-hfreferral-co-delivery",
-  "locale": "en_DEMO"
- },
- {
-  "code": "saveFilter2",
-  "message": "Save filter",
   "module": "hcm-base-hfreferral-co-delivery",
   "locale": "en_DEMO"
  },
@@ -9260,12 +9170,6 @@
  {
   "code": "IHM_CHILDREN_VACCINATED_LABEL",
   "message": "Children vaccinated",
-  "module": "hcm-base-insidemonitoring-polio",
-  "locale": "en_DEMO"
- },
- {
-  "code": "IHM_CLOSEOUT_LABEL",
-  "message": "Close out",
   "module": "hcm-base-insidemonitoring-polio",
   "locale": "en_DEMO"
  },
@@ -10482,12 +10386,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode",
-  "message": "Delivery team code",
-  "module": "hcm-base-inventory-bednet",
-  "locale": "en_DEMO"
- },
- {
   "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode_HELPTEXT",
   "message": "Scan team code",
   "module": "hcm-base-inventory-bednet",
@@ -11456,12 +11354,6 @@
  {
   "code": "APPONE_INVENTORY_TRANSPORT_LABEL",
   "message": "Transport type",
-  "module": "hcm-base-inventory-co-delivery",
-  "locale": "en_DEMO"
- },
- {
-  "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode",
-  "message": "Delivery team code",
   "module": "hcm-base-inventory-co-delivery",
   "locale": "en_DEMO"
  },
@@ -13194,18 +13086,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "clearFilter",
-  "message": "Clear filter",
-  "module": "hcm-base-inventory-co-delivery",
-  "locale": "en_DEMO"
- },
- {
-  "code": "clearFilter2",
-  "message": "Clear filter",
-  "module": "hcm-base-inventory-co-delivery",
-  "locale": "en_DEMO"
- },
- {
   "code": "clientCreatedBy",
   "message": "Created by",
   "module": "hcm-base-inventory-co-delivery",
@@ -13566,12 +13446,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "openMemberCard",
-  "message": "Open member card",
-  "module": "hcm-base-inventory-co-delivery",
-  "locale": "en_DEMO"
- },
- {
   "code": "overviewLabelPairCard",
   "message": "Overview details",
   "module": "hcm-base-inventory-co-delivery",
@@ -13766,18 +13640,6 @@
  {
   "code": "resourceCard",
   "message": "Product card",
-  "module": "hcm-base-inventory-co-delivery",
-  "locale": "en_DEMO"
- },
- {
-  "code": "saveFilter",
-  "message": "Save filter",
-  "module": "hcm-base-inventory-co-delivery",
-  "locale": "en_DEMO"
- },
- {
-  "code": "saveFilter2",
-  "message": "Save filter",
   "module": "hcm-base-inventory-co-delivery",
   "locale": "en_DEMO"
  },
@@ -14034,12 +13896,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "APP_CONFIG_INVENTORY_stockDetails_deliveryTeamCode_LABEL",
-  "message": "Delivery team code",
-  "module": "hcm-base-inventory-default",
-  "locale": "en_DEMO"
- },
- {
   "code": "APP_CONFIG_INVENTORY_stockDetails_facilityFromWhich_LABEL",
   "message": "Health facility",
   "module": "hcm-base-inventory-default",
@@ -14100,6 +13956,12 @@
   "locale": "en_DEMO"
  },
  {
+  "code": "INVENTORY_CREATE_NEW_TRANSACTION_LABEL",
+  "message": "Create a New Transaction",
+  "module": "hcm-base-inventory-default",
+  "locale": "en_DEMO"
+ },
+ {
   "code": "INVENTORY_STOCK_SUCCESS_LABEL",
   "message": "Stock transaction recorded successfully",
   "module": "hcm-base-inventory-default",
@@ -14156,12 +14018,6 @@
  {
   "code": "APPONE_INVENTORY_TRANSPORT_LABEL",
   "message": "Transport type",
-  "module": "hcm-base-inventory-mr-dn",
-  "locale": "en_DEMO"
- },
- {
-  "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode",
-  "message": "Delivery team code",
   "module": "hcm-base-inventory-mr-dn",
   "locale": "en_DEMO"
  },
@@ -15900,18 +15756,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "clearFilter",
-  "message": "Clear filter",
-  "module": "hcm-base-inventory-mr-dn",
-  "locale": "en_DEMO"
- },
- {
-  "code": "clearFilter2",
-  "message": "Clear filter",
-  "module": "hcm-base-inventory-mr-dn",
-  "locale": "en_DEMO"
- },
- {
   "code": "clientCreatedBy",
   "message": "Created by",
   "module": "hcm-base-inventory-mr-dn",
@@ -16272,12 +16116,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "openMemberCard",
-  "message": "Open member card",
-  "module": "hcm-base-inventory-mr-dn",
-  "locale": "en_DEMO"
- },
- {
   "code": "overviewLabelPairCard",
   "message": "Overview details",
   "module": "hcm-base-inventory-mr-dn",
@@ -16472,18 +16310,6 @@
  {
   "code": "resourceCard",
   "message": "Product card",
-  "module": "hcm-base-inventory-mr-dn",
-  "locale": "en_DEMO"
- },
- {
-  "code": "saveFilter",
-  "message": "Save filter",
-  "module": "hcm-base-inventory-mr-dn",
-  "locale": "en_DEMO"
- },
- {
-  "code": "saveFilter2",
-  "message": "Save filter",
   "module": "hcm-base-inventory-mr-dn",
   "locale": "en_DEMO"
  },
@@ -16736,12 +16562,6 @@
  {
   "code": "APPONE_INVENTORY_TRANSPORT_LABEL",
   "message": "Transport type",
-  "module": "hcm-base-inventory-oncho",
-  "locale": "en_DEMO"
- },
- {
-  "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode",
-  "message": "Delivery team code",
   "module": "hcm-base-inventory-oncho",
   "locale": "en_DEMO"
  },
@@ -18468,18 +18288,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "clearFilter",
-  "message": "Clear filter",
-  "module": "hcm-base-inventory-oncho",
-  "locale": "en_DEMO"
- },
- {
-  "code": "clearFilter2",
-  "message": "Clear filter",
-  "module": "hcm-base-inventory-oncho",
-  "locale": "en_DEMO"
- },
- {
   "code": "clientCreatedBy",
   "message": "Created by",
   "module": "hcm-base-inventory-oncho",
@@ -18840,12 +18648,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "openMemberCard",
-  "message": "Open member card",
-  "module": "hcm-base-inventory-oncho",
-  "locale": "en_DEMO"
- },
- {
   "code": "overviewLabelPairCard",
   "message": "Overview details",
   "module": "hcm-base-inventory-oncho",
@@ -19040,18 +18842,6 @@
  {
   "code": "resourceCard",
   "message": "Product card",
-  "module": "hcm-base-inventory-oncho",
-  "locale": "en_DEMO"
- },
- {
-  "code": "saveFilter",
-  "message": "Save filter",
-  "module": "hcm-base-inventory-oncho",
-  "locale": "en_DEMO"
- },
- {
-  "code": "saveFilter2",
-  "message": "Save filter",
   "module": "hcm-base-inventory-oncho",
   "locale": "en_DEMO"
  },
@@ -25286,12 +25076,6 @@
  {
   "code": "cameraStatusTag",
   "message": "Camera status",
-  "module": "hcm-base-permissionhandler-polio",
-  "locale": "en_DEMO"
- },
- {
-  "code": "clearFilter2",
-  "message": "Skip & continue",
   "module": "hcm-base-permissionhandler-polio",
   "locale": "en_DEMO"
  },
@@ -32832,12 +32616,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "HCM_DELIVERY_SCAN_LABEL",
-  "message": "Scan code",
-  "module": "hcm-base-registration-polio",
-  "locale": "en_DEMO"
- },
- {
   "code": "HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
   "message": "Head of household",
   "module": "hcm-base-registration-polio",
@@ -32870,12 +32648,6 @@
  {
   "code": "HCM_REDOSE_RECEIVED_OPV_BEFORE_LABEL",
   "message": "Received OPV before",
-  "module": "hcm-base-registration-polio",
-  "locale": "en_DEMO"
- },
- {
-  "code": "HCM_REDOSE_SCAN_LABEL",
-  "message": "Scan code",
   "module": "hcm-base-registration-polio",
   "locale": "en_DEMO"
  },
@@ -32966,12 +32738,6 @@
  {
   "code": "HCM_REGISTRATION_MEMBER_COUNT_LABEL",
   "message": "Member count",
-  "module": "hcm-base-registration-polio",
-  "locale": "en_DEMO"
- },
- {
-  "code": "HCM_REGISTRATION_QR_SCAN_LABEL",
-  "message": "Scan code",
   "module": "hcm-base-registration-polio",
   "locale": "en_DEMO"
  },
@@ -33888,26 +33654,8 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_CLEAR_LABEL",
-  "message": "Clear filter",
-  "module": "hcm-base-registration-polio",
-  "locale": "en_DEMO"
- },
- {
-  "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_FILTER_LABEL",
-  "message": "Apply filter",
-  "module": "hcm-base-registration-polio",
-  "locale": "en_DEMO"
- },
- {
   "code": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_TITLE_LABEL",
   "message": "Filter children",
-  "module": "hcm-base-registration-polio",
-  "locale": "en_DEMO"
- },
- {
-  "code": "REGISTRATION_SEARCH_BENEFICIARY_SKIP_CONTINUE_LABEL",
-  "message": "Skip & continue",
   "module": "hcm-base-registration-polio",
   "locale": "en_DEMO"
  },
@@ -34010,12 +33758,6 @@
  {
   "code": "childrenCount",
   "message": "Children count",
-  "module": "hcm-base-registration-polio",
-  "locale": "en_DEMO"
- },
- {
-  "code": "clearFilter2",
-  "message": "Skip & continue",
   "module": "hcm-base-registration-polio",
   "locale": "en_DEMO"
  },
@@ -34298,12 +34040,6 @@
  {
   "code": "proximitySearch",
   "message": "Search nearby households",
-  "module": "hcm-base-registration-polio",
-  "locale": "en_DEMO"
- },
- {
-  "code": "qrScanner",
-  "message": "Scan child",
   "module": "hcm-base-registration-polio",
   "locale": "en_DEMO"
  },
@@ -35640,6 +35376,12 @@
   "locale": "en_DEMO"
  },
  {
+  "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_PRIMARY_ACTION_LABEL",
+  "message": "Back to Home",
+  "module": "hcm-base-stockreconciliation-bednet",
+  "locale": "en_DEMO"
+ },
+ {
   "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_LABEL",
   "message": "Facility and product selection",
   "module": "hcm-base-stockreconciliation-bednet",
@@ -36204,6 +35946,12 @@
   "locale": "en_DEMO"
  },
  {
+  "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_PRIMARY_ACTION_LABEL",
+  "message": "Back to Home",
+  "module": "hcm-base-stockreconciliation-co-delivery",
+  "locale": "en_DEMO"
+ },
+ {
   "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_LABEL",
   "message": "Facility and product selection",
   "module": "hcm-base-stockreconciliation-co-delivery",
@@ -36242,6 +35990,12 @@
  {
   "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
   "message": "Transaction type",
+  "module": "hcm-base-stockreconciliation-default",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_PRIMARY_ACTION_LABEL",
+  "message": "Back to Home",
   "module": "hcm-base-stockreconciliation-default",
   "locale": "en_DEMO"
  },
@@ -36678,6 +36432,12 @@
   "locale": "en_DEMO"
  },
  {
+  "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_PRIMARY_ACTION_LABEL",
+  "message": "Back to Home",
+  "module": "hcm-base-stockreconciliation-mr-dn",
+  "locale": "en_DEMO"
+ },
+ {
   "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_LABEL",
   "message": "Facility and product selection",
   "module": "hcm-base-stockreconciliation-mr-dn",
@@ -36716,6 +36476,12 @@
  {
   "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
   "message": "Transaction type",
+  "module": "hcm-base-stockreconciliation-oncho",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_PRIMARY_ACTION_LABEL",
+  "message": "Back to Home",
   "module": "hcm-base-stockreconciliation-oncho",
   "locale": "en_DEMO"
  },
@@ -37220,6 +36986,12 @@
  {
   "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
   "message": "Select facility",
+  "module": "hcm-base-stockreports-bednet",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "STOCKRECON_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
+  "message": "Back to Home",
   "module": "hcm-base-stockreports-bednet",
   "locale": "en_DEMO"
  },
@@ -38226,6 +37998,12 @@
   "locale": "en_DEMO"
  },
  {
+  "code": "STOCKRECON_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
+  "message": "Back to Home",
+  "module": "hcm-base-stockreports-co-delivery",
+  "locale": "en_DEMO"
+ },
+ {
   "code": "STOCKRECON_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
   "message": "Select facility",
   "module": "hcm-base-stockreports-co-delivery",
@@ -38352,20 +38130,8 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "stockreportsViewReportsStockExcess",
-  "message": "View stock excess reports",
-  "module": "hcm-base-stockreports-co-delivery",
-  "locale": "en_DEMO"
- },
- {
   "code": "stockreportsViewReportsStockIssued",
   "message": "Stock issued",
-  "module": "hcm-base-stockreports-co-delivery",
-  "locale": "en_DEMO"
- },
- {
-  "code": "stockreportsViewReportsStockLess",
-  "message": "View stock less reports",
   "module": "hcm-base-stockreports-co-delivery",
   "locale": "en_DEMO"
  },
@@ -38408,6 +38174,12 @@
  {
   "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
   "message": "Select facility",
+  "module": "hcm-base-stockreports-default",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "STOCKRECON_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
+  "message": "Back to Home",
   "module": "hcm-base-stockreports-default",
   "locale": "en_DEMO"
  },
@@ -39336,6 +39108,12 @@
   "locale": "en_DEMO"
  },
  {
+  "code": "STOCKRECON_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
+  "message": "Back to Home",
+  "module": "hcm-base-stockreports-mr-dn",
+  "locale": "en_DEMO"
+ },
+ {
   "code": "STOCKRECON_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
   "message": "Select facility",
   "module": "hcm-base-stockreports-mr-dn",
@@ -39510,20 +39288,8 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "stockreportsViewReportsStockExcess",
-  "message": "Stock excess",
-  "module": "hcm-base-stockreports-mr-dn",
-  "locale": "en_DEMO"
- },
- {
   "code": "stockreportsViewReportsStockIssued",
   "message": "Stock issued",
-  "module": "hcm-base-stockreports-mr-dn",
-  "locale": "en_DEMO"
- },
- {
-  "code": "stockreportsViewReportsStockLess",
-  "message": "Stock less",
   "module": "hcm-base-stockreports-mr-dn",
   "locale": "en_DEMO"
  },
@@ -39572,6 +39338,12 @@
  {
   "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
   "message": "Select facility",
+  "module": "hcm-base-stockreports-oncho",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "STOCKRECON_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
+  "message": "Back to Home",
   "module": "hcm-base-stockreports-oncho",
   "locale": "en_DEMO"
  },
@@ -39744,20 +39516,8 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "stockreportsViewReportsStockExcess",
-  "message": "Stock excess",
-  "module": "hcm-base-stockreports-oncho",
-  "locale": "en_DEMO"
- },
- {
   "code": "stockreportsViewReportsStockIssued",
   "message": "Stock issued",
-  "module": "hcm-base-stockreports-oncho",
-  "locale": "en_DEMO"
- },
- {
-  "code": "stockreportsViewReportsStockLess",
-  "message": "Stock less",
   "module": "hcm-base-stockreports-oncho",
   "locale": "en_DEMO"
  },

@@ -2928,12 +2928,6 @@
   "locale": "en_DEMO"
  },
  {
-  "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode",
-  "message": "Delivery team code",
-  "module": "hcm-inventory-CMP-2026-08-25-004322",
-  "locale": "en_DEMO"
- },
- {
   "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode_HELPTEXT",
   "message": "Scan team code",
   "module": "hcm-inventory-CMP-2026-08-25-004322",
