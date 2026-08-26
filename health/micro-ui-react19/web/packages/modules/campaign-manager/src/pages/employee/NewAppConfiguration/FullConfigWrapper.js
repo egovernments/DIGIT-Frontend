@@ -478,7 +478,26 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                 {groupedFlows.map((group) => {
                   const isExpanded = flowSearchQuery ? true : !collapsedCategories[group.category];
 
-                  // Every category renders with its collapsible header so single-flow
+                  // Flows without a category in config have no group to name — render them flat
+                  if (group.category === "UNCATEGORIZED" && !flowSearchQuery) {
+                    return (
+                      <div key={group.category} className="full-config-wrapper__category-group">
+                        {group.flows.map((flow) => (
+                          <div
+                            key={flow.id}
+                            className={`full-config-wrapper__flow-item ${
+                              selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
+                            }`}
+                            onClick={() => handleFlowClick(flow)}
+                          >
+                            {campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  }
+
+                  // Every real category renders with its collapsible header so single-flow
                   // categories (e.g. Revisit) still appear as their own group
                   return (
                     <div key={group.category} className="full-config-wrapper__category-group">
