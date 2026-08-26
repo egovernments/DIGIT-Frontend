@@ -2030,9 +2030,47 @@ const downloadOptions = [
           onClose={() => setOpenSendForApprovalPopUp(false)}
           onSubmit={({ comment, supportingDocs, signature }) => {
             setOpenSendForApprovalPopUp(false);
+            const printedName = signature?.printedName?.trim?.() || "";
+            const fileStoreId = signature?.fileStoreId;
+            if (!printedName || !fileStoreId) {
+              setShowToast({
+                key: "error",
+                label: t("HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS"),
+                transitionTime: 3000,
+              });
+              return;
+            }
+
+            const loggedInUser = Digit.UserService.getUser()?.info;
+            const reviewerUuid = loggedInUser?.uuid;
+            if (!reviewerUuid) {
+              setShowToast({
+                key: "error",
+                label: t("HCM_AM_SOMETHING_WENT_WRONG"),
+                transitionTime: 3000,
+              });
+              return;
+            }
+
+            const sessionRole =
+              activeRole ||
+              loggedInUser?.roles
+                ?.map((roleData) => roleData?.code)
+                ?.find((code) => code?.startsWith("PAYMENT_"));
+
+            const reviewerSignature = {
+              ...signature,
+              printedName,
+              fileStoreId,
+              action: "SEND_FOR_APPROVAL",
+              role: sessionRole === MANAGE_BILLS_ROLES.PAYMENT_REVIEWER ? sessionRole : MANAGE_BILLS_ROLES.PAYMENT_REVIEWER,
+              signedBy: reviewerUuid,
+              signedTime: Date.now(),
+            };
+
             const updatedBill = {
               ...billData,
-              signatures: [...(billData?.signatures || []), signature],
+              signatures: [...(billData?.signatures || []), reviewerSignature],
               additionalDetails: {
                 ...(billData?.additionalDetails || {}),
                 justificationDetails: {

@@ -8,6 +8,7 @@ import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues } from "../utils/constants";
 import SendForApprovalPopUp from "./SendForApprovalPopUp"; 
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import { MANAGE_BILLS_ROLES } from "../config/manageBillsRoleConfig";
 /**
  * Column builder registry.
  * Each key maps to a function: (t, navigate, props, setShowToast) => react-data-table column definition.
@@ -457,12 +458,46 @@ const ManageBillsTable = ({ ...props }) => {
         
           const triggerSendForApproval = async (bill, data) => {
             try {
+                            const printedName = data?.signature?.printedName?.trim?.() || "";
+                            const fileStoreId = data?.signature?.fileStoreId;
+                            if (!printedName || !fileStoreId) {
+                                setShowToast({
+                                    key: "error",
+                                    label: t("HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS"),
+                                    transitionTime: 3000,
+                                });
+                                return;
+                            }
+
+                            const loggedInUser = Digit.UserService.getUser()?.info;
+                            const reviewerUuid = loggedInUser?.uuid;
+                            if (!reviewerUuid) {
+                                setShowToast({
+                                    key: "error",
+                                    label: t(I18N_KEYS.COMMON.HCM_AM_SOMETHING_WENT_WRONG),
+                                    transitionTime: 3000,
+                                });
+                                return;
+                            }
+
+                            const reviewerSignature = {
+                                ...data?.signature,
+                                printedName,
+                                fileStoreId,
+                                action: "SEND_FOR_APPROVAL",
+                                role: MANAGE_BILLS_ROLES.PAYMENT_REVIEWER,
+                                signedBy: reviewerUuid,
+                                signedTime: Date.now(),
+                            };
+
               const updatedBill = {
                 ...bill,
+                                signatures: [...(bill?.signatures || []), reviewerSignature],
           
                 // merge into additionalDetails
                 additionalDetails: {
                   ...(bill?.additionalDetails || {}),
+                                    signatures: [...(bill?.additionalDetails?.signatures || []), reviewerSignature],
                   justificationDetails: {
                     comment: data?.comment || null,
                     justificationDoc: data?.supportingDocs || [],
