@@ -39544,5 +39544,23 @@
   "message": "Stock returned",
   "module": "hcm-base-stockreports-oncho",
   "locale": "en_DEMO"
+ },
+ {
+  "code": "WAREHOUSE_MANAGER",
+  "message": "Warehouse Manager",
+  "module": "hcm-base-inventory-default",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "WAREHOUSE_MANAGER",
+  "message": "Warehouse Manager",
+  "module": "hcm-inventory-CMP-2026-08-26-004324",
+  "locale": "en_DEMO"
+ },
+ {
+  "code": "WAREHOUSE_MANAGER",
+  "message": "Warehouse Manager",
+  "module": "hcm-appconfiguration",
+  "locale": "en_DEMO"
  }
 ]
