@@ -145,7 +145,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_LQA",
-    "message": "Assurance qualité",
+    "message": "LQA",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -1141,7 +1141,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -1405,7 +1405,7 @@
   },
   {
     "code": "HCM_REGISTRATION_PINCODE_HELPTEXT",
-    "message": "Entrez le code postal de la région (Code PIN)",
+    "message": "Entrez le code postal de la région (code PIN)",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -1645,7 +1645,7 @@
   },
   {
     "code": "IHM_ENUM_LPHCDA",
-    "message": "En LPHC",
+    "message": "LPHCDA",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -1669,7 +1669,7 @@
   },
   {
     "code": "IHM_ENUM_NPHCDA",
-    "message": "Dans le NPHC",
+    "message": "NPHCDA",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -1693,7 +1693,7 @@
   },
   {
     "code": "IHM_ENUM_SPHCDA",
-    "message": "au SPHC",
+    "message": "SPHCDA",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -2215,7 +2215,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTREVISITED",
-    "message": "Manqué - Pas revisité",
+    "message": "Manqué - Non revisité",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -2263,13 +2263,13 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYPOORLYCOVERED",
-    "message": "Zones mal couvertes",
+    "message": "Des zones mal couvertes",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -2311,7 +2311,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Manqué - Pas revisité",
+    "message": "Manqué - Non revisité",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -2365,7 +2365,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -2455,13 +2455,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Raison de la transaction",
+    "message": "Motif de la transaction",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -2509,7 +2509,7 @@
   },
   {
     "code": "LABEL_PAIR_LQACAMPAIGNAWARENESSLABEL",
-    "message": "Source de notoriété de la campagne",
+    "message": "Source de sensibilisation à la campagne",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -2581,7 +2581,7 @@
   },
   {
     "code": "LABEL_PAIR_LQAREASONNOTMARKEDLABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -2593,7 +2593,7 @@
   },
   {
     "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -2635,13 +2635,13 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Source de notoriété de la campagne",
+    "message": "Source de sensibilisation à la campagne",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Le soignant informé",
+    "message": "Soignant informé",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -2707,7 +2707,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -2719,7 +2719,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -2869,13 +2869,13 @@
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONREASON",
-    "message": "Raison de la transaction",
+    "message": "Motif de la transaction",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONTYPE",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -2935,7 +2935,7 @@
   },
   {
     "code": "LPHCDA",
-    "message": "En LPHC",
+    "message": "LPHCDA",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -3049,7 +3049,7 @@
   },
   {
     "code": "LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Source de notoriété de la campagne",
+    "message": "Source de sensibilisation",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -3073,7 +3073,7 @@
   },
   {
     "code": "LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Âge de l'enfant (mois)",
+    "message": "Âge en mois",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -3499,7 +3499,7 @@
   },
   {
     "code": "LQA_FINAL_COMMENTS_LABEL",
-    "message": "Commentaires finaux / Observations",
+    "message": "Commentaires / observations finales",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -3529,13 +3529,13 @@
   },
   {
     "code": "LQA_GPS_START_LABEL",
-    "message": "Emplacement de départ détecté",
+    "message": "Lieu de départ détecté",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LQA_HEALTH_FACILITY_AREA_LABEL",
-    "message": "Zone des établissements de santé",
+    "message": "Zone d'établissement de santé",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -3643,7 +3643,7 @@
   },
   {
     "code": "LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -3655,7 +3655,7 @@
   },
   {
     "code": "LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -3673,7 +3673,7 @@
   },
   {
     "code": "LQA_STARTING_VILLAGE_LABEL",
-    "message": "Village/colonie de départ",
+    "message": "Village / colonie de départ",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -3949,7 +3949,7 @@
   },
   {
     "code": "NPHCDA",
-    "message": "Dans le NPHC",
+    "message": "NPHCDA",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -4213,7 +4213,7 @@
   },
   {
     "code": "SPHCDA",
-    "message": "au SPHC",
+    "message": "SPHCDA",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -4345,7 +4345,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Identifiant unique du bénéficiaire",
+    "message": "Identifiant du bénéficiaire",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -4507,19 +4507,19 @@
   },
   {
     "code": "campaignAwareness",
-    "message": "Source de notoriété de la campagne",
+    "message": "Source de sensibilisation à la campagne",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "caregiverInformed",
-    "message": "Le soignant informé ?",
+    "message": "Soignant informé",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "childAgeMonths",
-    "message": "Âge de l'enfant (mois)",
+    "message": "Âge en mois",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -4597,7 +4597,7 @@
   },
   {
     "code": "dropdownTemplate",
-    "message": "Modèle déroulant",
+    "message": "Modèle de liste déroulante",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -4615,7 +4615,7 @@
   },
   {
     "code": "fingerMarked",
-    "message": "Un doigt marqué ?",
+    "message": "Doigt marqué",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -4717,7 +4717,7 @@
   },
   {
     "code": "panelCard",
-    "message": "Carte de panneau",
+    "message": "Carte panneau",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -4741,7 +4741,7 @@
   },
   {
     "code": "reasonNotMarked",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -4801,13 +4801,13 @@
   },
   {
     "code": "settlementArea",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "settlementSmall",
-    "message": "Petite colonie",
+    "message": "Petit règlement",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -4843,7 +4843,7 @@
   },
   {
     "code": "surveyorPhone",
-    "message": "Numéro de téléphone de l'arpenteur",
+    "message": "Téléphone de l'arpenteur",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -4904,6 +4904,30 @@
   {
     "code": "whereWasChild",
     "message": "Où était l'enfant",
+    "module": "hcm-base-lqa-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DataIssues",
+    "message": "Problèmes de données",
+    "module": "hcm-base-lqa-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
+    "message": "Action de l'utilisateur",
+    "module": "hcm-base-lqa-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+    "message": "Source d'informations sur la campagne",
+    "module": "hcm-base-lqa-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "Ressource",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   }

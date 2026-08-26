@@ -61,13 +61,13 @@
   },
   {
     "code": "ASSIGN_TO_ALL",
-    "message": "Attribuer à tous",
+    "message": "Attribué à tous",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "fr_DEMO"
   },
   {
     "code": "ASSIGN_TO_ME",
-    "message": "Attribuez-moi",
+    "message": "M'a été attribué",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -313,7 +313,7 @@
   },
   {
     "code": "COMPLAINT_DETAILS_supervisorContactNumber_LABEL",
-    "message": "Numéro de contact du superviseur",
+    "message": "Numéro de téléphone du superviseur",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -620,6 +620,12 @@
   {
     "code": "FILTER_BUTTON_ACTIONPOPUP",
     "message": "Filtre",
+    "module": "hcm-base-complaints-mr-dn",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_cancel2_LABEL",
+    "message": "Effacer l'étiquette",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -997,7 +1003,7 @@
   },
   {
     "code": "clientReferenceId",
-    "message": "ID de référence client",
+    "message": "Identifiant de référence client",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -1021,7 +1027,7 @@
   },
   {
     "code": "complaintClientReferenceId",
-    "message": "ID de référence de la plainte",
+    "message": "Numéro de référence de la plainte",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -1232,6 +1238,24 @@
   {
     "code": "viewDetails",
     "message": "Ouvrir",
+    "module": "hcm-base-complaints-mr-dn",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Étiquette",
+    "module": "hcm-base-complaints-mr-dn",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND",
+    "message": "Plainte introuvable",
+    "module": "hcm-base-complaints-mr-dn",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND_DESC",
+    "message": "Nous n'avons trouvé aucune plainte dans les dossiers. Vous pouvez déposer une nouvelle plainte.",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "fr_DEMO"
   }

@@ -259,7 +259,7 @@
   },
   {
     "code": "HFREFERRAL_FACILITY_DETAILS_evaluationFacility_LABEL",
-    "message": "Unidade de Saúde",
+    "message": "Unidade de saúde",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "pt_DEMO"
   },
@@ -1345,7 +1345,7 @@
   },
   {
     "code": "evaluationFacility",
-    "message": "Unidade de Saúde",
+    "message": "Unidade de saúde",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "pt_DEMO"
   },
@@ -1423,7 +1423,7 @@
   },
   {
     "code": "minSearchChars",
-    "message": "Caracteres Mínimos",
+    "message": "Caracteres mínimos",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "pt_DEMO"
   },
@@ -1562,6 +1562,12 @@
   {
     "code": "templateCard",
     "message": "Resumo de referência",
+    "module": "hcm-base-hfreferral-oncho",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Rótulo",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "pt_DEMO"
   }

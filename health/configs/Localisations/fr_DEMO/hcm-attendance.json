@@ -145,7 +145,7 @@
   },
   {
     "code": "CONFIRMATION_DESCRIPTION_NOTE",
-    "message": "Remarque : Vous ne pouvez pas modifier les détails de la participation après avoir soumis",
+    "message": "Remarque : Vous ne pouvez pas modifier les détails de participation après avoir soumis",
     "module": "hcm-attendance",
     "locale": "fr_DEMO"
   },

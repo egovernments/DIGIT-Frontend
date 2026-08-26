@@ -1,5 +1,11 @@
 [
   {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Label",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "ADMINISTRATION_FAILED",
     "message": "Administration Failed",
     "module": "hcm-base-closehousehold-oncho",

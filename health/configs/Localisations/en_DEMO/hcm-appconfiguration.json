@@ -79,13 +79,13 @@
   },
   {
     "code": "ACTION_TEST_SETUP_CAMPAIGN",
-    "message": "Create a New campaign",
+    "message": "Create a New Campaign",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "ACTION_UNIFIED_UPLOAD_SCREEN",
-    "message": "Upload Microplan Data",
+    "message": "Upload microplan data",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -121,7 +121,7 @@
   },
   {
     "code": "ADD_HEADER_LOCALIZATION",
-    "message": "Add Label",
+    "message": "Label",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -241,7 +241,7 @@
   },
   {
     "code": "APPCONFIG_CUSTOM_PATTERN",
-    "message": "Custom Logic",
+    "message": "Custom logic",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -253,13 +253,13 @@
   },
   {
     "code": "APPCONFIG_ERRORMESSAGE",
-    "message": "Error Message",
+    "message": "Error message",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "APPCONFIG_HEAD_FIELDS",
-    "message": "Page Header",
+    "message": "Page header",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -307,7 +307,7 @@
   },
   {
     "code": "APPCONFIG_NAVIGATION_LOGIC",
-    "message": "Navigation Logic",
+    "message": "Navigation logic",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -325,13 +325,13 @@
   },
   {
     "code": "APPCONFIG_POPUP_PROPERTIES",
-    "message": "Popup Properties",
+    "message": "Popup properties",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "APPCONFIG_PRIVACY_CONTROLS",
-    "message": "Privacy Controls",
+    "message": "Privacy controls",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -379,19 +379,19 @@
   },
   {
     "code": "APPCONFIG_SUBHEAD_FIELDS",
-    "message": "Form Fields",
+    "message": "Form fields",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "APPCONFIG_SUBHEAD_FIELDS_TEMPLATE",
-    "message": "Template Elements",
+    "message": "Template elements",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "APPCONFIG_VERSION",
-    "message": "Current Version",
+    "message": "Version",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -463,7 +463,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_DESCRIPTION",
-    "message": "Check if the child currently feels unusually hot to the touch or if the caregiver has measured a high temperature in the last 24 hours. If possible, measure the child\u2019s temperature with a thermometer.",
+    "message": "Check if the child currently feels unusually hot to the touch or if the caregiver has measured a high temperature in the last 24 hours. If possible, measure the child’s temperature with a thermometer.",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -973,7 +973,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_TITLE",
-    "message": "Data recorded successfully!",
+    "message": "Data recorded successfully",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -2353,7 +2353,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
-    "message": "Permission handler",
+    "message": "Permission Handler",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -2389,6 +2389,12 @@
   },
   {
     "code": "APP_CONFIG_PAGE_REDOSEDETAILS",
+    "message": "Redose Details",
+    "module": "hcm-appconfiguration",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_REDOSE_REDOSEDETAILS",
     "message": "Redose Details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
@@ -2484,6 +2490,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "APP_CONFIG_PAGE_SCANSTOCKRECEIPT",
+    "message": "Stock Receipt Details",
+    "module": "hcm-appconfiguration",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "APP_CONFIG_PAGE_SEARCHBENEFICIARY",
     "message": "Search Beneficiary",
     "module": "hcm-appconfiguration",
@@ -2527,6 +2539,12 @@
   },
   {
     "code": "APP_CONFIG_PAGE_STOCKRECEIPTDETAILS",
+    "message": "Stock Receipt Details",
+    "module": "hcm-appconfiguration",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_STOCKRECEIPTDETAILS_STOCKRECEIPTDETAILS",
     "message": "Stock Receipt Details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
@@ -2833,13 +2851,13 @@
   },
   {
     "code": "BODY_ITEM_complaintNumber_LABEL",
-    "message": "Campaign Number Labels",
+    "message": "Campaign number labels",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "BODY_ITEM_complaintType_LABEL",
-    "message": "Complaint Type Label",
+    "message": "Complaint type label",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -2851,13 +2869,13 @@
   },
   {
     "code": "BODY_ITEM_locality_LABEL",
-    "message": "Village Label",
+    "message": "Village label",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "BODY_ITEM_mobileNumber_LABEL",
-    "message": "Mobile Number Labels",
+    "message": "Mobile number labels",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -2923,7 +2941,7 @@
   },
   {
     "code": "CAMPAIGN_CYCLE_CONFIGURE_HEADING_ONCHO",
-    "message": "Configuring cycles and deliveries for Onchocerciasis  type campaign.",
+    "message": "Configuring cycles and deliveries for Onchocerciasis type campaign.",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -2953,7 +2971,7 @@
   },
   {
     "code": "CAMPAIGN_DELIVERY_TAB_SUB_TEXT_ONCHO",
-    "message": "Configuring delivery conditions for Onchocerciasis  type campaign.",
+    "message": "Configuring delivery conditions for Onchocerciasis type campaign.",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -2982,6 +3000,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "CAMPAIGN_OBSERVATION_STRATEGY_HEADING",
+    "message": "Select the observation strategy for the campaign",
+    "module": "hcm-appconfiguration",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "CAMPAIGN_PROJECT_BEDNETS",
     "message": "Bednets type campaign",
     "module": "hcm-appconfiguration",
@@ -2995,7 +3019,7 @@
   },
   {
     "code": "CAMPAIGN_PROJECT_ONCHO",
-    "message": "Onchocerciasis  Campaign",
+    "message": "Onchocerciasis Campaign",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -3174,7 +3198,7 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "CMP_DRAWER_NO_CONFIG_ERROR_L\u00d3GICA",
+    "code": "CMP_DRAWER_NO_CONFIG_ERROR_LÓGICA",
     "message": "No field rules set",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
@@ -3234,7 +3258,7 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "CMP_DRAWER_WHAT_IS_L\u00d3GICA",
+    "code": "CMP_DRAWER_WHAT_IS_LÓGICA",
     "message": "In Logic, you can modify the validations and logic associated with the selected attribute",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
@@ -3463,7 +3487,7 @@
   },
   {
     "code": "CONFIGURATION_UPDATED_SUCCESSFULLY",
-    "message": "Configuration Updated Successfully!",
+    "message": "Configuration Updated Successfully",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -3714,6 +3738,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "Configure options forSelect Status",
+    "message": "Configure options for Filters",
+    "module": "hcm-appconfiguration",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "Counter",
     "message": "Counter",
     "module": "hcm-appconfiguration",
@@ -3907,13 +3937,13 @@
   },
   {
     "code": "DIGIT_LOC_EMPTY_OR_INVALID_FILE",
-    "message": "Uploaded file is empty or invalid.",
+    "message": "The uploaded file is empty or unreadable. Upload the filled template.",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "DIGIT_LOC_FILE_VALIDATION_ERROR",
-    "message": "The uploaded file format or content is invalid.",
+    "message": "The uploaded file doesn't match the expected format. Download the template and try again.",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4003,7 +4033,7 @@
   },
   {
     "code": "DIGIT_LOC_SELECT_MODULE_LABEL",
-    "message": "Select Module",
+    "message": "Select module",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4159,7 +4189,7 @@
   },
   {
     "code": "ENTER_FIELD_LABEL",
-    "message": "Enter Field Label",
+    "message": "Enter field label",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4219,7 +4249,7 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_HEADER",
-    "message": "Do you want to download unified file",
+    "message": "Do you want to download microplan file",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4363,13 +4393,13 @@
   },
   {
     "code": "FIELD_CONFIGURATION",
-    "message": "Page Properties",
+    "message": "Page properties",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_AGERANGE",
-    "message": "Age Range",
+    "message": "Age range",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4381,7 +4411,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_APPCONFIG_CUSTOM_PREFIX",
-    "message": "Add Prefix",
+    "message": "Add prefix",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4405,7 +4435,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_COUNTRYPREFIX",
-    "message": "Country Prefix",
+    "message": "Country prefix",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4423,7 +4453,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_ENDDATE",
-    "message": "End Date",
+    "message": "End date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4441,7 +4471,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_HELPTEXT",
-    "message": "Help Text",
+    "message": "Help text",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4459,13 +4489,13 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_INFOTEXT",
-    "message": "Info Text",
+    "message": "Info text",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_INNERLABEL",
-    "message": "Inner Label",
+    "message": "Inner label",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4495,7 +4525,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_LENGTHRANGE",
-    "message": "Length Range",
+    "message": "Length range",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4507,7 +4537,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MAX",
-    "message": "Maximum Value",
+    "message": "Maximum value",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4549,7 +4579,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MIN",
-    "message": "Minimum Value",
+    "message": "Minimum value",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4597,7 +4627,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_NUMBERLENGTH",
-    "message": "Number Length",
+    "message": "Number length",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4681,7 +4711,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_STARTDATE",
-    "message": "Start Date",
+    "message": "Start date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -4717,7 +4747,7 @@
   },
   {
     "code": "FIELD_LABEL",
-    "message": "Field Label",
+    "message": "Field label",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -5227,7 +5257,7 @@
   },
   {
     "code": "HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
-    "message": "Registration Date",
+    "message": "Registration date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -5251,13 +5281,13 @@
   },
   {
     "code": "HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA",
-    "message": "Upload Microplan Data",
+    "message": "Upload microplan data",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "HCM_CHECKLIST_HEADING",
-    "message": "Configure Supervisor Checklists",
+    "message": "Configure supervisor checklists",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -5449,13 +5479,13 @@
   },
   {
     "code": "HCM_CREATE_NEW_CAMPAIGN_FROM_SCRATCH",
-    "message": "Create a New Campaign from Scratch",
+    "message": "Create a new campaign from scratch",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "HCM_CREATE_NEW_CAMPAIGN_FROM_SCRATCH_DES",
-    "message": "Full flexibility \u2014 more setup effort",
+    "message": "Full flexibility — more setup effort",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -5539,7 +5569,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -5551,7 +5581,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-    "message": "Total Members",
+    "message": "Total members",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -5563,7 +5593,7 @@
   },
   {
     "code": "HCM_IMPORT_EXISTING_CAMPAIGN",
-    "message": "Clone an Existing Campaign",
+    "message": "Clone an existing campaign",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -5814,6 +5844,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "HCM_SEARCH_FILTER_BENEFICIARY_REFUSED",
+    "message": "Beneficiary Refused",
+    "module": "hcm-appconfiguration",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "HCM_SEARCH_FILTER_MISSED_CHILDREN",
     "message": "Missed Children",
     "module": "hcm-appconfiguration",
@@ -5917,7 +5953,7 @@
   },
   {
     "code": "HCM_START_WITH_CAMPAIGN_TEMPLATE",
-    "message": "Start with a Campaign Template",
+    "message": "Start with a campaign template",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -6007,7 +6043,7 @@
   },
   {
     "code": "HCM_UPLOAD_UNIFIED_DATA_HEADING",
-    "message": "Upload Microplan Data",
+    "message": "Upload microplan data",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -6229,7 +6265,7 @@
   },
   {
     "code": "IHM_CAMPAIGN_INFO_SOURCE_LABEL",
-    "message": "Campaign Info Source",
+    "message": "Campaign info source",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -6726,6 +6762,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "INFO_CARD_TEXT",
+    "message": "Info card",
+    "module": "hcm-appconfiguration",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "INSUFFICIENT_RESOURCES",
     "message": "Insufficient Resources",
     "module": "hcm-appconfiguration",
@@ -6757,19 +6799,19 @@
   },
   {
     "code": "INVALID_TEMPLATE_NAME",
-    "message": "Invalid template name",
+    "message": "Enter a valid template name.",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "INVENTORY_BATCH_LABEL",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "INVENTORY_BATCH_NUMBER_LABEL",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -6781,13 +6823,13 @@
   },
   {
     "code": "INVENTORY_EXPIRY_LABEL",
-    "message": "Expiry Date",
+    "message": "Expiry date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "INVENTORY_MRN_NUMBER_LABEL",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -6829,25 +6871,25 @@
   },
   {
     "code": "INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Transaction Reason",
+    "message": "Transaction reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "INVENTORY_WAYBILL_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "INVENTORY_WAYBILL_NUMBER_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7033,19 +7075,19 @@
   },
   {
     "code": "LABEL_PAIR_BATCHNUMBER",
-    "message": "Inventory Batch Number",
+    "message": "Inventory batch number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_BATCH_NUMBER",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CAMPAIGNINFOSOURCE",
-    "message": "Campaign Info Source",
+    "message": "Campaign info source",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7057,7 +7099,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "HF Referral",
+    "message": "HF referral",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7075,13 +7117,19 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Inside Monitoring",
+    "message": "Label",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_ITEMMODEL",
     "message": "Item",
+    "module": "hcm-appconfiguration",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_LQA",
+    "message": "Label",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7099,7 +7147,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Project Beneficiary",
+    "message": "Project beneficiary",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7111,7 +7159,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
-    "message": "User Action",
+    "message": "User action",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7123,7 +7171,7 @@
   },
   {
     "code": "LABEL_PAIR_CLF_MEMBER_COUNT",
-    "message": "Member Count",
+    "message": "Member count",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7135,7 +7183,7 @@
   },
   {
     "code": "LABEL_PAIR_CODE",
-    "message": "Household Overview Settlement",
+    "message": "Household overview settlement",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7147,31 +7195,31 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Complaint Area",
+    "message": "Complaint area",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINTDATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINTNUMBER",
-    "message": "Complaints Number",
+    "message": "Complaints number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINTSTATUS",
-    "message": "Complaint Status",
+    "message": "Complaint status",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7183,13 +7231,13 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7201,13 +7249,13 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7219,19 +7267,19 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7249,25 +7297,25 @@
   },
   {
     "code": "LABEL_PAIR_DATEOFBIRTH",
-    "message": "Beneficiary Age",
+    "message": "Beneficiary age",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATEOFREGISTRATION",
-    "message": "Beneficiary Registration Date",
+    "message": "Beneficiary registration date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Date of Registration",
+    "message": "Date of registration",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_EXPIRYDATE",
-    "message": "Inventory Expiry",
+    "message": "Inventory expiry",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7279,7 +7327,7 @@
   },
   {
     "code": "LABEL_PAIR_GIVENNAME",
-    "message": "Name Of Individual",
+    "message": "Name of individual",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7291,37 +7339,37 @@
   },
   {
     "code": "LABEL_PAIR_HCMTOTALMEMBERS",
-    "message": "Household Overview Total Members",
+    "message": "Household overview total members",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
-    "message": "Beneficiary Age",
+    "message": "Beneficiary age",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
-    "message": "Beneficiary Gender",
+    "message": "Beneficiary gender",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
-    "message": "Beneficiary Name",
+    "message": "Beneficiary name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
-    "message": "Registration Date",
+    "message": "Registration date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7333,19 +7381,19 @@
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-    "message": "Total Members",
+    "message": "Total members",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HEADNAME",
-    "message": "Household Head Name",
+    "message": "Household head name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7357,43 +7405,43 @@
   },
   {
     "code": "LABEL_PAIR_IDNUMBER",
-    "message": "Id Number",
+    "message": "ID number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IDTYPE",
-    "message": "Id Type",
+    "message": "ID type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "ID Number",
+    "message": "ID number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_ID_TYPE",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYCHILDRENPRESENT",
-    "message": "Children Present",
+    "message": "Children present",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYCHILDRENVACCINATED",
-    "message": "Children Vaccinated",
+    "message": "Children vaccinated",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYFINALCOMMENTS",
-    "message": "Final Comments",
+    "message": "Final comments",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7411,13 +7459,13 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTREVISITED",
-    "message": "Missed - Not Revisited",
+    "message": "Missed - Not revisited",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTVISITED",
-    "message": "Missed - Not Visited",
+    "message": "Missed - Not visited",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7441,61 +7489,61 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMONITORDESIGNATION",
-    "message": "Monitor Designation",
+    "message": "Monitor designation",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMONITORINGDATE",
-    "message": "Monitoring Date",
+    "message": "Monitoring date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMONITORNAME",
-    "message": "Monitor Name",
+    "message": "Monitor name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYPOORLYCOVERED",
-    "message": "Poorly Covered Areas",
+    "message": "Poorly covered areas",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTTYPE",
-    "message": "Settlement Type",
+    "message": "Settlement type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
-    "message": "Campaign Info Source",
+    "message": "Campaign info source",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Children Present",
+    "message": "Children present",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Children Vaccinated",
+    "message": "Children vaccinated",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Final Comments",
+    "message": "Final comments",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7513,13 +7561,13 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Missed - Not Revisited",
+    "message": "Missed - Not revisited",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Missed - Not Visited",
+    "message": "Missed - Not visited",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7543,61 +7591,61 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Monitoring Date",
+    "message": "Monitoring date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Monitor Designation",
+    "message": "Monitor designation",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Monitor Name",
+    "message": "Monitor name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Poorly Covered",
+    "message": "Poorly covered",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Settlement Type",
+    "message": "Settlement type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINANTCONTACT",
-    "message": "Complainant Contact",
+    "message": "Complainant contact",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINANTTCONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINTNUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINTTYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7609,7 +7657,7 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7621,13 +7669,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
-    "message": "Expiry Date",
+    "message": "Expiry date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7669,13 +7717,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Transaction Reason",
+    "message": "Transaction reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7687,301 +7735,301 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LOCALITY",
-    "message": "Household Locality",
+    "message": "Household locality",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAABSENCEREASONLABEL",
-    "message": "Reason for Absence",
+    "message": "Reason for absence",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAFPAWARENESSLABEL",
-    "message": "AFP Awareness?",
+    "message": "AFP awareness?",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAFPCASECOUNTLABEL",
-    "message": "AFP Cases Known",
+    "message": "AFP cases known",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAWARENESSOTHERLABEL",
-    "message": "Other Source (Specify)",
+    "message": "Other source (specify)",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACAMPAIGNAWARENESSLABEL",
-    "message": "Campaign Awareness Source",
+    "message": "Campaign awareness source",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACAREGIVERINFORMEDLABEL",
-    "message": "Caregiver Informed?",
+    "message": "Caregiver informed?",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACHILDAGEMONTHSLABEL",
-    "message": "Age of Child (Months)",
+    "message": "Age of child (months)",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACHILDRENUNDER5LABEL",
-    "message": "Children Under 5",
+    "message": "Children under 5",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACHILDSEXLABEL",
-    "message": "Sex of Child",
+    "message": "Sex of child",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACLUSTERNUMBERLABEL",
-    "message": "Cluster Number",
+    "message": "Cluster number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAFINGERMARKEDLABEL",
-    "message": "Finger Marked?",
+    "message": "Finger marked?",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQALOTNUMBERLABEL",
-    "message": "Lot Number",
+    "message": "Lot number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAOPVDOSESLABEL",
-    "message": "OPV Doses From Birth",
+    "message": "OPV doses from birth",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAOTHERABSENCEREASONLABEL",
-    "message": "Other Absence Reason",
+    "message": "Other absence reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAOTHERREASONSPECIFYLABEL",
-    "message": "Other Reason (Specify)",
+    "message": "Other reason (specify)",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAOTHERREFUSALREASONLABEL",
-    "message": "Other Refusal Reason",
+    "message": "Other refusal reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAREASONNOTMARKEDLABEL",
-    "message": "Reason Not Marked",
+    "message": "Reason not marked",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAREFUSALREASONLABEL",
-    "message": "Refusal Reason",
+    "message": "Refusal reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQASURVEYDATELABEL",
-    "message": "Survey Date",
+    "message": "Survey date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQASURVEYORNAMELABEL",
-    "message": "Surveyor Name",
+    "message": "Surveyor name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Absence Reason",
+    "message": "Absence reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "AFP Awareness",
+    "message": "AFP awareness",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "AFP Case Count",
+    "message": "AFP case count",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Other Awareness Source",
+    "message": "Other awareness source",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Campaign Awareness",
+    "message": "Campaign awareness",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Caregiver Informed",
+    "message": "Caregiver informed",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Children Under 5",
+    "message": "Children under 5",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Child Age (Months)",
+    "message": "Child age (months)",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Child Sex",
+    "message": "Child sex",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Cluster Number",
+    "message": "Cluster number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Finger Marked",
+    "message": "Finger marked",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Lot Number",
+    "message": "Lot number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "OPV Doses",
+    "message": "OPV doses",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Other Absence Reason",
+    "message": "Other absence reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Other Reason (Specify)",
+    "message": "Other reason (specify)",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Other Refusal Reason",
+    "message": "Other refusal reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Reason Not Marked",
+    "message": "Reason not marked",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Refusal Reason",
+    "message": "Refusal reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Surveyor Name",
+    "message": "Surveyor name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Survey Date",
+    "message": "Survey date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MEMBERCOUNT",
-    "message": "Member Count",
+    "message": "Member count",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MEMBER_COUNT",
-    "message": "Member Count",
+    "message": "Member count",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MOBILENUMBER",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MOBILE_NUMBER",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRNNUMBER",
-    "message": "Inventory Mrn Number",
+    "message": "Inventory MRN number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -7999,19 +8047,19 @@
   },
   {
     "code": "LABEL_PAIR_QUANTITY",
-    "message": "Inventory Quantity",
+    "message": "Inventory quantity",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_QUANTITYRECEIVED",
-    "message": "Quantity Received",
+    "message": "Quantity received",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_QUANTITY_RECEIVED",
-    "message": "Quantity Received",
+    "message": "Quantity received",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -8023,19 +8071,19 @@
   },
   {
     "code": "LABEL_PAIR_RECEIVERID",
-    "message": "Received From",
+    "message": "Received from",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRALNAME",
-    "message": "Referral Inbox Name",
+    "message": "Referral inbox name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRALSTATUS",
-    "message": "Referral Inbox Referral Status",
+    "message": "Referral inbox referral status",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -8047,7 +8095,7 @@
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
-    "message": "Referral Status",
+    "message": "Referral status",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -8059,7 +8107,7 @@
   },
   {
     "code": "LABEL_PAIR_REFRRALSYMPTOM",
-    "message": "Referral Inbox Referral Symptom",
+    "message": "Referral inbox referral symptom",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -8071,25 +8119,25 @@
   },
   {
     "code": "LABEL_PAIR_SENDERID",
-    "message": "Inventory Sender",
+    "message": "Inventory sender",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_SKU",
-    "message": "Inventory Resource",
+    "message": "Inventory resource",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_STOCKEXPIRY",
-    "message": "Stock Expiry",
+    "message": "Stock expiry",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Expiry Date",
+    "message": "Expiry date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -8101,31 +8149,31 @@
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONREASON",
-    "message": "Inventory Transaction Reason",
+    "message": "Inventory transaction reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONTYPE",
-    "message": "Inventory Transaction Type",
+    "message": "Inventory transaction type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINANTCONTACT",
-    "message": "Complainant Contact",
+    "message": "Complainant contact",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINANTTCONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
-    "message": "Complaints Area",
+    "message": "Complaints area",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -8137,25 +8185,25 @@
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTSTATUS",
-    "message": "Complaint Status",
+    "message": "Complaint status",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTTYPE",
-    "message": "Complaints Type",
+    "message": "Complaints type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_WAYBILLNUMBER",
-    "message": "Inventory Waybill Number",
+    "message": "Inventory waybill number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_WAYBILL_NUMBER",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -8221,61 +8269,61 @@
   },
   {
     "code": "LQA_ABSENCE_REASON_LABEL",
-    "message": "Reason for Absence",
+    "message": "Reason for absence",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_AFP_AWARENESS_LABEL",
-    "message": "AFP Awareness",
+    "message": "AFP awareness",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_AFP_CASE_COUNT_LABEL",
-    "message": "AFP Cases Known",
+    "message": "AFP cases known",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_AWARENESS_OTHER_LABEL",
-    "message": "Other Source (Specify)",
+    "message": "Other source (specify)",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Awareness Source",
+    "message": "Awareness source",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Caregiver Informed?",
+    "message": "Caregiver informed?",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Children Under 5",
+    "message": "Children under 5",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Age in Months",
+    "message": "Age in months",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CHILD_SEX_LABEL",
-    "message": "Sex of Child",
+    "message": "Sex of child",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Cluster Number",
+    "message": "Cluster number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -8611,67 +8659,67 @@
   },
   {
     "code": "LQA_FINGER_MARKED_LABEL",
-    "message": "Finger Marked?",
+    "message": "Finger marked?",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_LOT_NUMBER_LABEL",
-    "message": "Lot Number",
+    "message": "Lot number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_OPV_DOSES_LABEL",
-    "message": "OPV Doses From Birth",
+    "message": "OPV doses from birth",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Other Absence Reason",
+    "message": "Other absence reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Other Reason (Specify)",
+    "message": "Other reason (specify)",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Other Refusal Reason",
+    "message": "Other refusal reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Reason Not Marked",
+    "message": "Reason not marked",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_REFUSAL_REASON_LABEL",
-    "message": "Refusal Reason",
+    "message": "Refusal reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_SURVEYOR_NAME_LABEL",
-    "message": "Surveyor Name",
+    "message": "Surveyor name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_SURVEY_DATE_LABEL",
-    "message": "Survey Date",
+    "message": "Survey date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -8809,7 +8857,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_COMPLAINTS",
-    "message": "Let field workers log issues raised by caregivers or the community during distribution\u2014such as concerns about medicines, missed households, or service quality\u2014to support timely follow-up and resolution.",
+    "message": "Let field workers log issues raised by caregivers or the community during distribution—such as concerns about medicines, missed households, or service quality—to support timely follow-up and resolution.",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -8821,7 +8869,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_HFREFERRAL",
-    "message": "Record and manage referrals for children who require further assessment or treatment. Capture referral reasons\u2014such as contraindications, adverse reactions, or danger signs\u2014and track completion at the designated health facility.",
+    "message": "Record and manage referrals for children who require further assessment or treatment. Capture referral reasons—such as contraindications, adverse reactions, or danger signs—and track completion at the designated health facility.",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -9097,13 +9145,13 @@
   },
   {
     "code": "PAGE_DESCRIPTION",
-    "message": "Page Description",
+    "message": "Page description",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "PAGE_HEADING",
-    "message": "Page Heading",
+    "message": "Page heading",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -9139,7 +9187,7 @@
   },
   {
     "code": "PERMISSIONHANDLER",
-    "message": "Permission handler",
+    "message": "Permission Handler",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -9187,7 +9235,7 @@
   },
   {
     "code": "POPUP_BODY_LABELS",
-    "message": "Popup Body Labels",
+    "message": "Popup body labels",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -9259,7 +9307,7 @@
   },
   {
     "code": "QUANTITY_RECEIVED",
-    "message": "Quantity recieved",
+    "message": "Quantity received",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -9499,7 +9547,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_REFERRED_TO",
-    "message": "Health Facility",
+    "message": "Health facility",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -10093,13 +10141,13 @@
   },
   {
     "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_EXCESS_LABEL",
-    "message": "Stock Excess",
+    "message": "Stock excess",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_LESS_LABEL",
-    "message": "Stock Shortage",
+    "message": "Stock shortage",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -10189,7 +10237,7 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -10405,13 +10453,13 @@
   },
   {
     "code": "StockModel.QUANTITY_RECEIVED",
-    "message": "Quantity recieved",
+    "message": "Quantity received",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "StockModel.RECEIVED_FROM",
-    "message": "Recieved from",
+    "message": "Received from",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -10543,7 +10591,7 @@
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE",
-    "message": "Template Elements",
+    "message": "Template elements",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11172,6 +11220,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "WAREHOUSE_MANAGER",
+    "message": "Warehouse Manager",
+    "module": "hcm-appconfiguration",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "WAYBILL_NUMBER",
     "message": "Waybill Number",
     "module": "hcm-appconfiguration",
@@ -11191,7 +11245,7 @@
   },
   {
     "code": "WBH_UPLOAD_UNIFIED_DATA",
-    "message": "Upload Microplan Data",
+    "message": "Upload microplan data",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11245,13 +11299,13 @@
   },
   {
     "code": "absenceReason",
-    "message": "Absence Reason",
+    "message": "Absence reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "absenceReasonOther",
-    "message": "Other Absence Reason",
+    "message": "Other absence reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11311,37 +11365,37 @@
   },
   {
     "code": "additionalFields",
-    "message": "Additional Details",
+    "message": "Additional details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "addressLine1",
-    "message": "Address Line 1",
+    "message": "Address line 1",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "addressLine2",
-    "message": "Address Line 2",
+    "message": "Address line 2",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "administrationFailed",
-    "message": "Vaccination Failed",
+    "message": "Vaccination failed",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "administrationSuccess",
-    "message": "Administered Successfully",
+    "message": "Administered successfully",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "administrativeArea",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11365,13 +11419,13 @@
   },
   {
     "code": "advanced.UndrawPeopleSearch",
-    "message": "Beneficiary Not Found",
+    "message": "Beneficiary not found",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.actionPopup",
-    "message": "Action Popup",
+    "message": "Action popup",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11401,13 +11455,13 @@
   },
   {
     "code": "advanced.dropdownTemplate",
-    "message": "Dropdown Template",
+    "message": "Dropdown template",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.evaluationFacility",
-    "message": "Evaluation Facility",
+    "message": "Evaluation facility",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11419,19 +11473,19 @@
   },
   {
     "code": "advanced.facilityFromWhich",
-    "message": "Facility From",
+    "message": "Facility from",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.facilityToWhich",
-    "message": "Facility To",
+    "message": "Facility to",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.healthFacility",
-    "message": "Health Facility",
+    "message": "Health facility",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11443,19 +11497,19 @@
   },
   {
     "code": "advanced.idPopulator",
-    "message": "ID Populator",
+    "message": "ID populator",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.infoCard",
-    "message": "Info Card",
+    "message": "Info card",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.labelPairList",
-    "message": "Label Pair List",
+    "message": "Label pair list",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11479,7 +11533,7 @@
   },
   {
     "code": "advanced.menu_card",
-    "message": "Menu Card",
+    "message": "Menu card",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11491,7 +11545,7 @@
   },
   {
     "code": "advanced.panelCard",
-    "message": "Panel Card",
+    "message": "Panel card",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11503,31 +11557,31 @@
   },
   {
     "code": "advanced.proximitySearch",
-    "message": "Proximity Search",
+    "message": "Proximity search",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.qrScanner",
-    "message": "QR Scanner",
+    "message": "QR scanner",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.radioList",
-    "message": "Radio List",
+    "message": "Radio list",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.referralCycle",
-    "message": "Referral Cycle",
+    "message": "Referral cycle",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.resourceCard",
-    "message": "Resource Card",
+    "message": "Resource card",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11539,37 +11593,37 @@
   },
   {
     "code": "advanced.scanner",
-    "message": "QR Scanner",
+    "message": "QR scanner",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.searchBar",
-    "message": "Search Bar",
+    "message": "Search bar",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.searchByID",
-    "message": "Search By ID",
+    "message": "Search by ID",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.searchByProximity",
-    "message": "Search By Proximity",
+    "message": "Search by proximity",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.select",
-    "message": "Selection Field",
+    "message": "Selection field",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.selectionCard",
-    "message": "Selection Field",
+    "message": "Selection field",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11593,43 +11647,43 @@
   },
   {
     "code": "advanced.textInput",
-    "message": "Text Input",
+    "message": "Text input",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.textTemplate",
-    "message": "Text Template",
+    "message": "Text template",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "afpAwareness",
-    "message": "AFP Awareness",
+    "message": "AFP awareness",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "afpCaseCount",
-    "message": "AFP Cases Known",
+    "message": "AFP cases known",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "afpLimbWeakness",
-    "message": "AFP Limb Weakness",
+    "message": "AFP limb weakness",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "afpSuddenWeakness",
-    "message": "AFP Sudden Weakness",
+    "message": "AFP sudden weakness",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "ageInMonths",
-    "message": "Age in Months",
+    "message": "Age in months",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11641,13 +11695,13 @@
   },
   {
     "code": "assignTo",
-    "message": "Assign To",
+    "message": "Assign to",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "awarenessOther",
-    "message": "Other Source (Specify)",
+    "message": "Other source (specify)",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11719,7 +11773,7 @@
   },
   {
     "code": "basic.dob",
-    "message": "Date of Birth",
+    "message": "Date of birth",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11731,7 +11785,7 @@
   },
   {
     "code": "basic.mobileNumber",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11743,13 +11797,13 @@
   },
   {
     "code": "basic.numeric",
-    "message": "Numeric Counter",
+    "message": "Numeric counter",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "basic.radio",
-    "message": "Radio Button",
+    "message": "Radio button",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11761,25 +11815,25 @@
   },
   {
     "code": "basic.textarea",
-    "message": "Text Area",
+    "message": "Text area",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "batchLotNumber",
-    "message": "Batch Lot Number",
+    "message": "Batch lot number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "batchNumber",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "batteryCard",
-    "message": "Battery Optimization",
+    "message": "Battery optimization",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11797,49 +11851,49 @@
   },
   {
     "code": "batteryIconTextRow",
-    "message": "Battery Permission Details",
+    "message": "Battery permission details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "batteryRow",
-    "message": "Battery Permission",
+    "message": "Battery permission",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "batteryStatus",
-    "message": "Battery Status",
+    "message": "Battery status",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "batteryStatusTag",
-    "message": "Battery Optimization Status",
+    "message": "Battery optimization status",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "batteryText",
-    "message": "Battery Optimization",
+    "message": "Battery optimization",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "batteryTextColumn",
-    "message": "Battery Details",
+    "message": "Battery details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "beneficiaryDetails",
-    "message": "Beneficiary Details",
+    "message": "Beneficiary details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "beneficiaryDetailsCard",
-    "message": "Beneficiary Details",
+    "message": "Beneficiary details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11863,31 +11917,31 @@
   },
   {
     "code": "beneficiaryLocation",
-    "message": "Beneficiary Location",
+    "message": "Beneficiary location",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "beneficiaryNotFound",
-    "message": "Beneficiary Not Found",
+    "message": "Beneficiary not found",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "beneficiaryReferred",
-    "message": "Beneficiary Referred",
+    "message": "Beneficiary referred",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "beneficiaryTag",
-    "message": "Beneficiary Tag",
+    "message": "Beneficiary tag",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "blueToothPermissionStatus",
-    "message": "Bluetooth Status",
+    "message": "Bluetooth status",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11911,19 +11965,19 @@
   },
   {
     "code": "bluetoothIconTextRow",
-    "message": "Bluetooth Permission Details",
+    "message": "Bluetooth permission details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "bluetoothRow",
-    "message": "Bluetooth Permission",
+    "message": "Bluetooth permission",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "bluetoothStatusTag",
-    "message": "Bluetooth Status",
+    "message": "Bluetooth status",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11935,7 +11989,7 @@
   },
   {
     "code": "bluetoothTextColumn",
-    "message": "Bluetooth Details",
+    "message": "Bluetooth details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -11977,19 +12031,19 @@
   },
   {
     "code": "cameraPermissionStatus",
-    "message": "Camera Status",
+    "message": "Camera status",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "campaignAwareness",
-    "message": "Campaign Awareness Source",
+    "message": "Campaign awareness source",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "campaignInfoSource",
-    "message": "Campaign Info Source",
+    "message": "Campaign info source",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12019,13 +12073,13 @@
   },
   {
     "code": "card",
-    "message": "Report Details",
+    "message": "Report details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "card2",
-    "message": "Past Cycle Details",
+    "message": "Past cycle details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12055,19 +12109,19 @@
   },
   {
     "code": "caregiverInformed",
-    "message": "Caregiver Informed",
+    "message": "Caregiver informed",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "caregiverName",
-    "message": "Caregiver Name",
+    "message": "Caregiver name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "caregiverPhone",
-    "message": "Caregiver Phone",
+    "message": "Caregiver phone",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12079,49 +12133,49 @@
   },
   {
     "code": "childAgeMonths",
-    "message": "Age in Months",
+    "message": "Age in months",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "childCard",
-    "message": "Child Summary",
+    "message": "Child summary",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "childDetails",
-    "message": "Child Details",
+    "message": "Child details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "childSex",
-    "message": "Sex of Child",
+    "message": "Sex of child",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "childrenCount",
-    "message": "Number of Children",
+    "message": "Number of children",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "childrenPresent",
-    "message": "Children Present",
+    "message": "Children present",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "childrenUnder5",
-    "message": "Children Under 5",
+    "message": "Children under 5",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "childrenVaccinated",
-    "message": "Children Vaccinated",
+    "message": "Children vaccinated",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12193,19 +12247,19 @@
   },
   {
     "code": "clusterCard",
-    "message": "Cluster Summary",
+    "message": "Cluster summary",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "clusterDetails",
-    "message": "Cluster Details",
+    "message": "Cluster details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "clusterNumber",
-    "message": "Cluster Number",
+    "message": "Cluster number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12265,7 +12319,7 @@
   },
   {
     "code": "complaintAcknowledgement",
-    "message": "Complaint Success",
+    "message": "Complaint success",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12277,7 +12331,7 @@
   },
   {
     "code": "complaintDescription",
-    "message": "Complaint Description",
+    "message": "Complaint description",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12289,7 +12343,7 @@
   },
   {
     "code": "complaintInbox",
-    "message": "Complaint Inbox",
+    "message": "Complaint inbox",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12301,7 +12355,7 @@
   },
   {
     "code": "complaintNumber",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12313,7 +12367,7 @@
   },
   {
     "code": "complaintSuccess",
-    "message": "Complaint created successfully!",
+    "message": "Complaint created successfully",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12325,7 +12379,7 @@
   },
   {
     "code": "complaintView",
-    "message": "Complaint View",
+    "message": "Complaint view",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12337,7 +12391,7 @@
   },
   {
     "code": "complaintsLabelPair",
-    "message": "Complaint Details",
+    "message": "Complaint details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12349,7 +12403,7 @@
   },
   {
     "code": "contactNumber",
-    "message": "Complainant's Contact Number",
+    "message": "Complainant's contact number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12391,7 +12445,7 @@
   },
   {
     "code": "coreCommonPermissionIgnorebatteryoptimizations",
-    "message": "Ignore Battery Optimization",
+    "message": "Ignore battery optimization",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12409,7 +12463,7 @@
   },
   {
     "code": "coreCommonPermissionNearbywifidevices",
-    "message": "Nearby Share",
+    "message": "Nearby share",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12451,49 +12505,49 @@
   },
   {
     "code": "cycleIndex",
-    "message": "Delivery Cycle",
+    "message": "Delivery cycle",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "cycleNumber",
-    "message": "Cycle Number",
+    "message": "Cycle number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "dateOfBirth",
-    "message": "Date of Birth",
+    "message": "Date of birth",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "dateOfEntry",
-    "message": "Date of Entry",
+    "message": "Date of entry",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "dateOfEvaluation",
-    "message": "Date of Evaluation",
+    "message": "Date of evaluation",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "dateOfRedose",
-    "message": "Date of Redose",
+    "message": "Date of redose",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "dateOfRegistration",
-    "message": "Date of Registration",
+    "message": "Date of registration",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "datePicker",
-    "message": "Date Picker",
+    "message": "Date picker",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12517,7 +12571,7 @@
   },
   {
     "code": "deliveryComment",
-    "message": "Delivery Comments",
+    "message": "Delivery comments",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12547,31 +12601,31 @@
   },
   {
     "code": "deliveryStatusTable",
-    "message": "Delivery Status",
+    "message": "Delivery status",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "deliverySuccess",
-    "message": "Deliver Success",
+    "message": "Deliver success",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "deliverySuccessPanelCard",
-    "message": "Delivery Successful",
+    "message": "Delivery successful",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "deliveryTable",
-    "message": "Delivery Details",
+    "message": "Delivery details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "deliveryTeam",
-    "message": "Delivery Team Code",
+    "message": "Delivery team code",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12583,7 +12637,7 @@
   },
   {
     "code": "designationOther",
-    "message": "Other Designation",
+    "message": "Other designation",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12607,7 +12661,7 @@
   },
   {
     "code": "dobPicker",
-    "message": "Date of Birth",
+    "message": "Date of birth",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12631,7 +12685,7 @@
   },
   {
     "code": "dropdownTemplate",
-    "message": "Dropdown Template",
+    "message": "Dropdown template",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12691,13 +12745,13 @@
   },
   {
     "code": "eligibilityChecklist",
-    "message": "Eligibility Checklist",
+    "message": "Eligibility checklist",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "evaluationFacility",
-    "message": "Health Facility",
+    "message": "Health facility",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12709,13 +12763,13 @@
   },
   {
     "code": "expandable",
-    "message": "Past Cycles",
+    "message": "Past cycles",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "expiryDate",
-    "message": "Expiry Date",
+    "message": "Expiry date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12727,19 +12781,19 @@
   },
   {
     "code": "facilityFromWhich",
-    "message": "Received From",
+    "message": "Received from",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "facilityToWhich",
-    "message": "Facility To",
+    "message": "Facility to",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "familyname",
-    "message": "Family Name",
+    "message": "Family name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12751,7 +12805,7 @@
   },
   {
     "code": "feverQ2",
-    "message": "Malaria Diagnostic Test Result",
+    "message": "Malaria diagnostic test result",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12775,7 +12829,7 @@
   },
   {
     "code": "feverQ6",
-    "message": "Add Reason",
+    "message": "Add reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12805,13 +12859,13 @@
   },
   {
     "code": "finalComments",
-    "message": "Final Comments",
+    "message": "Final comments",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "fingerMarked",
-    "message": "Finger Marked",
+    "message": "Finger marked",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12889,31 +12943,31 @@
   },
   {
     "code": "gpsFinal",
-    "message": "Final Location",
+    "message": "Final location",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "gpsFirstHousehold",
-    "message": "GPS First Household",
+    "message": "GPS first household",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "gpsLastHousehold",
-    "message": "GPS Last Household",
+    "message": "GPS last household",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "gpsStart",
-    "message": "Start Location",
+    "message": "Start location",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "groupedItems",
-    "message": "Stock Items",
+    "message": "Stock items",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12925,13 +12979,13 @@
   },
   {
     "code": "headName",
-    "message": "Household Head Name",
+    "message": "Household head name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "headOfHousehold",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12943,7 +12997,7 @@
   },
   {
     "code": "headOfHouseholdTag",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12955,7 +13009,7 @@
   },
   {
     "code": "healthFacility",
-    "message": "Health Facility",
+    "message": "Health facility",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12967,19 +13021,19 @@
   },
   {
     "code": "hfCoordinator",
-    "message": "Referred By (CDD Team Code)",
+    "message": "Referred by (CDD team code)",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "houseMarked",
-    "message": "House Marked",
+    "message": "House marked",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "householdDetails",
-    "message": "Household Details",
+    "message": "Household details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -12997,7 +13051,7 @@
   },
   {
     "code": "householdOverview",
-    "message": "Household Overview",
+    "message": "Household overview",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13069,7 +13123,7 @@
   },
   {
     "code": "identifierType",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13081,7 +13135,7 @@
   },
   {
     "code": "incomingList",
-    "message": "Incoming Transactions",
+    "message": "Incoming transactions",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13099,7 +13153,7 @@
   },
   {
     "code": "individualRow",
-    "message": "Member Details",
+    "message": "Member details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13111,13 +13165,13 @@
   },
   {
     "code": "infoCardLabel",
-    "message": "Report Filters",
+    "message": "Report filters",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "infoSourceOther",
-    "message": "Other Info Source",
+    "message": "Other info source",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13135,7 +13189,7 @@
   },
   {
     "code": "insufficientStockPopUp",
-    "message": "Insufficient Stock",
+    "message": "Insufficient stock",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13153,7 +13207,7 @@
   },
   {
     "code": "inventorySelectTransactionLabel",
-    "message": "Select Transaction",
+    "message": "Select transaction",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13177,19 +13231,19 @@
   },
   {
     "code": "isGuestMember",
-    "message": "Guest Member",
+    "message": "Guest member",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "isHeadOfFamily",
-    "message": "Head of Family",
+    "message": "Head of family",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "isPregnant",
-    "message": "Is Pregnant",
+    "message": "Is pregnant",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13219,7 +13273,7 @@
   },
   {
     "code": "labelPairList",
-    "message": "Transaction Details",
+    "message": "Transaction details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13231,13 +13285,13 @@
   },
   {
     "code": "latLng",
-    "message": "GPS Coordinate Accuracy",
+    "message": "GPS coordinate accuracy",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "lessExcessHeading",
-    "message": "Record Stock Less/Excess",
+    "message": "Record stock less/excess",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13249,7 +13303,7 @@
   },
   {
     "code": "listView",
-    "message": "Transaction List",
+    "message": "Transaction list",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13261,7 +13315,7 @@
   },
   {
     "code": "listViewMembers",
-    "message": "Household Members",
+    "message": "Household members",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13279,37 +13333,37 @@
   },
   {
     "code": "locationPermissionStatus",
-    "message": "Location Status",
+    "message": "Location status",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "lotNumber",
-    "message": "Lot Number",
+    "message": "Lot number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "lqaSuccessHeading",
-    "message": "LQA Data Collected Successfully",
+    "message": "LQA data collected successfully",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "lqasCoordinatorName",
-    "message": "LQAS Coordinator Name",
+    "message": "LQAS coordinator name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "manageStock",
-    "message": "Manage Stock",
+    "message": "Manage stock",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "manualCount",
-    "message": "Manual Count",
+    "message": "Manual count",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13321,19 +13375,19 @@
   },
   {
     "code": "materialIssueNumber",
-    "message": "Material Issue Number",
+    "message": "Material issue number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "maxReturnable",
-    "message": "Available to Return",
+    "message": "Available to return",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "meberDetails",
-    "message": "Member Details",
+    "message": "Member details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13345,13 +13399,13 @@
   },
   {
     "code": "memberCount",
-    "message": "Total Members",
+    "message": "Total members",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "memberTable",
-    "message": "Member Details",
+    "message": "Member details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13375,13 +13429,13 @@
   },
   {
     "code": "missedNotRevisited",
-    "message": "Missed - Not Revisited",
+    "message": "Missed - Not revisited",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "missedNotVisited",
-    "message": "Missed - Not Visited",
+    "message": "Missed - Not visited",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13405,37 +13459,37 @@
   },
   {
     "code": "mobileNumber",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "monitorDesignation",
-    "message": "Monitor Designation",
+    "message": "Monitor designation",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "monitorName",
-    "message": "Monitor Name",
+    "message": "Monitor name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "monitorPhone",
-    "message": "Monitor Phone",
+    "message": "Monitor phone",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "monitoringDate",
-    "message": "Monitoring Date",
+    "message": "Monitoring date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "monitoringType",
-    "message": "Monitoring Type",
+    "message": "Monitoring type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13447,31 +13501,31 @@
   },
   {
     "code": "name",
-    "message": "Complainant's Name",
+    "message": "Complainant's name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "nameOfChild",
-    "message": "Name of Child",
+    "message": "Name of child",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "nameOfIndividual",
-    "message": "First Name",
+    "message": "First name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "nameOfIndividualClfMemberClf",
-    "message": "Search Member",
+    "message": "Search member",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "nearByDevicesStatus",
-    "message": "Nearby Devices Status",
+    "message": "Nearby devices status",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13489,13 +13543,13 @@
   },
   {
     "code": "notEligible",
-    "message": "Not Eligible",
+    "message": "Not eligible",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "notVisited",
-    "message": "Not Administered",
+    "message": "Not administered",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13507,7 +13561,7 @@
   },
   {
     "code": "notificationPermissionStatus",
-    "message": "Notification Status",
+    "message": "Notification status",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13531,13 +13585,13 @@
   },
   {
     "code": "openedVialsReturned",
-    "message": "Opened Vials Returned",
+    "message": "Opened vials returned",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "opvDosesFromBirth",
-    "message": "OPV Doses From Birth",
+    "message": "OPV doses from birth",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13549,13 +13603,13 @@
   },
   {
     "code": "otherReason",
-    "message": "Reason For Complaint",
+    "message": "Reason for complaint",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "overviewLabelPairCard",
-    "message": "Household Overview",
+    "message": "Household overview",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13567,13 +13621,13 @@
   },
   {
     "code": "pastCycleTable",
-    "message": "Past Cycle Details",
+    "message": "Past cycle details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "pastCyclesList",
-    "message": "Past Cycles",
+    "message": "Past cycles",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13603,7 +13657,7 @@
   },
   {
     "code": "phone",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13615,31 +13669,31 @@
   },
   {
     "code": "poorlyCoveredAreas",
-    "message": "Poorly Covered Areas",
+    "message": "Poorly covered areas",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "pregnantWomenCount",
-    "message": "Pregnant Women",
+    "message": "Pregnant women",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "primaryWarehouse",
-    "message": "Primary Warehouse",
+    "message": "Primary warehouse",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "productVariant",
-    "message": "Select Product",
+    "message": "Select product",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "productdetail",
-    "message": "Select Product",
+    "message": "Select product",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13651,13 +13705,13 @@
   },
   {
     "code": "proximitySearch",
-    "message": "Nearby Households",
+    "message": "Nearby households",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "proximitySearchRegistration",
-    "message": "Nearby Households",
+    "message": "Nearby households",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13669,13 +13723,13 @@
   },
   {
     "code": "qr_view",
-    "message": "QR Code",
+    "message": "QR code",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "qrscanner",
-    "message": "QR Scanner",
+    "message": "QR scanner",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13687,43 +13741,43 @@
   },
   {
     "code": "quantityDamaged",
-    "message": "Quantity Damaged",
+    "message": "Quantity damaged",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "quantityLost",
-    "message": "Quantity Lost",
+    "message": "Quantity lost",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "quantityPartialUsed",
-    "message": "Partially Used Quantity",
+    "message": "Partially used quantity",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "quantityReceived",
-    "message": "Quantity Received",
+    "message": "Quantity received",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "quantityReturned",
-    "message": "Quantity Returned",
+    "message": "Quantity returned",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "quantitySent",
-    "message": "Quantity Sent",
+    "message": "Quantity sent",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "quantityWastage",
-    "message": "Wastage Quantity",
+    "message": "Wastage quantity",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13741,49 +13795,49 @@
   },
   {
     "code": "reasonForLessExcess",
-    "message": "Reason for Less/Excess",
+    "message": "Reason for less/excess",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "reasonForRedose",
-    "message": "Reason for Redose",
+    "message": "Reason for redose",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "reasonForRefusal",
-    "message": "Reason for Refusal",
+    "message": "Reason for refusal",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "reasonNotMarked",
-    "message": "Reason Not Marked",
+    "message": "Reason not marked",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "reasonNotMarkedOther",
-    "message": "Other Reason (Specify)",
+    "message": "Other reason (specify)",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "reasonNotVaccinated",
-    "message": "Reason Not Vaccinated",
+    "message": "Reason not vaccinated",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "receivedFrom",
-    "message": "Received From",
+    "message": "Received from",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "receivedOPVBefore",
-    "message": "Received OPV Before",
+    "message": "Received OPV before",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13831,7 +13885,7 @@
   },
   {
     "code": "redoseCompleted",
-    "message": "Redose Completed",
+    "message": "Redose completed",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13849,19 +13903,19 @@
   },
   {
     "code": "referralCode",
-    "message": "Referral Code",
+    "message": "Referral code",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "referralComments",
-    "message": "Reason for Referral",
+    "message": "Reason for referral",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "referralCycle",
-    "message": "Select Cycle",
+    "message": "Select cycle",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13879,7 +13933,7 @@
   },
   {
     "code": "referralName",
-    "message": "Referral Name",
+    "message": "Referral name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13891,7 +13945,7 @@
   },
   {
     "code": "referralReason",
-    "message": "Referral Reason",
+    "message": "Referral reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13903,19 +13957,19 @@
   },
   {
     "code": "referredBy",
-    "message": "Referred By",
+    "message": "Referred by",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "refusalReason",
-    "message": "Refusal Reason",
+    "message": "Refusal reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "refusalReasonOther",
-    "message": "Other Refusal Reason",
+    "message": "Other refusal reason",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -13939,7 +13993,7 @@
   },
   {
     "code": "rejectComment",
-    "message": "Reject Comment",
+    "message": "Reject comment",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14095,7 +14149,7 @@
   },
   {
     "code": "scannedQrPayload",
-    "message": "Scanned QR Payload",
+    "message": "Scanned QR payload",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14113,19 +14167,19 @@
   },
   {
     "code": "searchBar",
-    "message": "Search by Name",
+    "message": "Search by name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "searchBarClfDescriptionClf",
-    "message": "Search by Name or ID",
+    "message": "Search by name or ID",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "searchBeneficiary",
-    "message": "Search Beneficiary",
+    "message": "Search beneficiary",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14137,7 +14191,7 @@
   },
   {
     "code": "searchByName",
-    "message": "Search by Name",
+    "message": "Search by name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14149,7 +14203,7 @@
   },
   {
     "code": "searchClfProximityClf",
-    "message": "Proximity Search",
+    "message": "Proximity search",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14161,13 +14215,13 @@
   },
   {
     "code": "searchName",
-    "message": "Search Name",
+    "message": "Search name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "searchNearbyHouseholdS",
-    "message": "Search Nearby Households",
+    "message": "Search nearby households",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14185,19 +14239,19 @@
   },
   {
     "code": "secondaryWarehouse",
-    "message": "Secondary Warehouse",
+    "message": "Secondary warehouse",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "selectProductLabel",
-    "message": "Select Product",
+    "message": "Select product",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "selectWarehouseLabel",
-    "message": "Select Warehouse",
+    "message": "Select warehouse",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14215,31 +14269,31 @@
   },
   {
     "code": "sessionSummary",
-    "message": "Session Summary",
+    "message": "Session summary",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "settlementArea",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "settlementName",
-    "message": "Settlement Name",
+    "message": "Settlement name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "settlementSmall",
-    "message": "Small Settlement",
+    "message": "Small settlement",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "settlementType",
-    "message": "Settlement Type",
+    "message": "Settlement type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14335,7 +14389,7 @@
   },
   {
     "code": "siteName",
-    "message": "Site Name",
+    "message": "Site name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14353,7 +14407,7 @@
   },
   {
     "code": "sortBy",
-    "message": "Sort By",
+    "message": "Sort by",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14365,7 +14419,7 @@
   },
   {
     "code": "spoiledDiluentsReturned",
-    "message": "Spoiled Diluents Returned",
+    "message": "Spoiled diluents returned",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14377,7 +14431,7 @@
   },
   {
     "code": "statusTag",
-    "message": "Delivery Status",
+    "message": "Delivery status",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14395,73 +14449,73 @@
   },
   {
     "code": "stockDamagedHeading",
-    "message": "Stock Damaged",
+    "message": "Stock damaged",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "stockExcessHeading",
-    "message": "Stock Excess",
+    "message": "Stock excess",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "stockFieldPair",
-    "message": "Stock Details",
+    "message": "Stock details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "stockInHand",
-    "message": "Stock in Hand",
+    "message": "Stock in hand",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "stockIssuedHeading",
-    "message": "Stock Issued",
+    "message": "Stock issued",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "stockItems",
-    "message": "Stock Items",
+    "message": "Stock items",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "stockLessHeading",
-    "message": "Stock Shortage",
+    "message": "Stock shortage",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "stockLossHeading",
-    "message": "Stock Loss",
+    "message": "Stock loss",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "stockReceiptHeading",
-    "message": "Record Stock Receipt",
+    "message": "Record stock receipt",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "stockRecieveHeading",
-    "message": "Stock Received",
+    "message": "Stock received",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "stockReconHeading",
-    "message": "Stock Reconciliation",
+    "message": "Stock reconciliation",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "stockReconciliationCard",
-    "message": "Facility and Product Selection",
+    "message": "Facility and product selection",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14473,19 +14527,19 @@
   },
   {
     "code": "stockReturnedHeading",
-    "message": "Stock Returned",
+    "message": "Stock returned",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "stockSuccess",
-    "message": "Stock Success",
+    "message": "Stock success",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "stockTable",
-    "message": "Stock Table",
+    "message": "Stock table",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14527,37 +14581,37 @@
   },
   {
     "code": "supervisorContactNumber",
-    "message": "Supervisor's Contact Number",
+    "message": "Supervisor's contact number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "supervisorName",
-    "message": "Supervisor's Name",
+    "message": "Supervisor's name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "surveyDate",
-    "message": "Survey Date",
+    "message": "Survey date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "surveyorName",
-    "message": "Surveyor Name",
+    "message": "Surveyor name",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "surveyorPhone",
-    "message": "Surveyor Phone",
+    "message": "Surveyor phone",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "table",
-    "message": "Stock Report",
+    "message": "Stock report",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14581,25 +14635,25 @@
   },
   {
     "code": "teamVisited",
-    "message": "Team Visited",
+    "message": "Team visited",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "templateCard",
-    "message": "Referral Details",
+    "message": "Referral details",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "textArea",
-    "message": "Text Area",
+    "message": "Text area",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "textInput",
-    "message": "Text Input",
+    "message": "Text input",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14677,13 +14731,13 @@
   },
   {
     "code": "textTemplatetext",
-    "message": "Referral Date",
+    "message": "Referral date",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "textarea",
-    "message": "Text Area",
+    "message": "Text area",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14695,49 +14749,49 @@
   },
   {
     "code": "totalDiluentsIssued",
-    "message": "Diluents Issued",
+    "message": "Diluents issued",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "totalMixingSyringes",
-    "message": "Mixing Syringes",
+    "message": "Mixing syringes",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "totalReturned",
-    "message": "Total Returned",
+    "message": "Total returned",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "totalVialsReceivedForDay",
-    "message": "Total Vials Received",
+    "message": "Total vials received",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "transactionType",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "transactionType2",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "transportType",
-    "message": "Transport Type",
+    "message": "Transport type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "typeOfAddress",
-    "message": "Address Type",
+    "message": "Address type",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14761,25 +14815,25 @@
   },
   {
     "code": "unopenedSpoiltVialsReturned",
-    "message": "Spoilt Vials Returned",
+    "message": "Spoilt vials returned",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "unopenedUsableVialsRetrieved",
-    "message": "Unopened Usable Retrieved",
+    "message": "Unopened usable retrieved",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "unopenedUsableVialsReturned",
-    "message": "Usable Vials Returned",
+    "message": "Usable vials returned",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "unusedDiluentsReturned",
-    "message": "Unused Diluents Returned",
+    "message": "Unused diluents returned",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14797,13 +14851,13 @@
   },
   {
     "code": "vaccinationLocation",
-    "message": "Vaccination Location",
+    "message": "Vaccination location",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
   {
     "code": "vehicleNumber",
-    "message": "Vehicle Number",
+    "message": "Vehicle number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14845,7 +14899,7 @@
   },
   {
     "code": "wayBillNumber",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },
@@ -14857,7 +14911,7 @@
   },
   {
     "code": "whereWasChild",
-    "message": "Where Was the Child",
+    "message": "Where was the child",
     "module": "hcm-appconfiguration",
     "locale": "en_DEMO"
   },

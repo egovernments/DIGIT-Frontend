@@ -121,7 +121,7 @@
   },
   {
     "code": "ADD_HEADER_LOCALIZATION",
-    "message": "Add Label",
+    "message": "Label",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -517,7 +517,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_DESCRIPTION",
-    "message": "Check if the child currently feels unusually hot to the touch or if the caregiver has measured a high temperature in the last 24 hours. If possible, measure the child\u2019s temperature with a thermometer.",
+    "message": "Check if the child currently feels unusually hot to the touch or if the caregiver has measured a high temperature in the last 24 hours. If possible, measure the child’s temperature with a thermometer.",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -553,7 +553,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_DESCRIPTION",
-    "message": "Confirm whether the child has been given any medication in the last 28 days, either for prevention or treatment of illnesses.",
+    "message": "Confirm whether the child has been given any medication containing Sulfadoxine-Pyrimethamine (SP) or Cotrimoxazole (CTX) in the last 28 days, either for prevention or treatment of illnesses.",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -571,7 +571,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_5_LABEL",
-    "message": "Child has taken drugs in the past 28 days?",
+    "message": "Child has taken SP or CTX containing drugs in the past 28 days?",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -697,7 +697,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_deliveryComments",
-    "message": "Delivery Comments",
+    "message": "Delivery comments",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -1015,7 +1015,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual",
-    "message": "Surname of the Individual",
+    "message": "Surname of the individual",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -1153,13 +1153,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong",
-    "message": "GPS accuracy",
+    "message": "Lat/Long",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_helpText",
-    "message": "Provide the GPS accuracy of the address, if available.",
+    "message": "Provide latitude and longitude of the address, if available.",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -1177,7 +1177,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode_helpText",
-    "message": "Enter the area postal code (PIN Code)",
+    "message": "Enter the area postal code (PIN code)",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -1255,25 +1255,25 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1",
-    "message": "Address Line 1",
+    "message": "Address line 1",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
-    "message": "Address Line 1",
+    "message": "Address line 1",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2",
-    "message": "Address Line 2",
+    "message": "Address line 2",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
-    "message": "Address Line 2",
+    "message": "Address line 2",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -1459,7 +1459,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_weight",
-    "message": "Weight (in Kgs)",
+    "message": "Weight (in kgs)",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -2713,13 +2713,13 @@
   },
   {
     "code": "BODY_ITEM_complaintNumber_LABEL",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "BODY_ITEM_complaintType_LABEL",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -2731,7 +2731,7 @@
   },
   {
     "code": "BODY_ITEM_mobileNumber_LABEL",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -2988,7 +2988,7 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "CMP_DRAWER_NO_CONFIG_ERROR_L\u00d3GICA",
+    "code": "CMP_DRAWER_NO_CONFIG_ERROR_LÓGICA",
     "message": "No field rules set",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
@@ -3048,7 +3048,7 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "CMP_DRAWER_WHAT_IS_L\u00d3GICA",
+    "code": "CMP_DRAWER_WHAT_IS_LÓGICA",
     "message": "In Logic, you can modify the validations and logic associated with the selected attribute.",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
@@ -3307,7 +3307,7 @@
   },
   {
     "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-    "message": "We couldn\u2019t find this beneficiary in the records. You can add them as a new beneficiary.",
+    "message": "We couldn’t find this beneficiary in the records. You can add them as a new beneficiary.",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -3811,7 +3811,7 @@
   },
   {
     "code": "DIGIT_LOC_SELECT_MODULE_LABEL",
-    "message": "Select Module",
+    "message": "Select module",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -3949,7 +3949,7 @@
   },
   {
     "code": "ENTER_FIELD_LABEL",
-    "message": "Enter Field Label",
+    "message": "Enter field label",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4069,7 +4069,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_AGERANGE",
-    "message": "Age Range",
+    "message": "Age range",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4081,7 +4081,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_APPCONFIG_CUSTOM_PREFIX",
-    "message": "Add Prefix",
+    "message": "Add prefix",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4105,7 +4105,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_COUNTRYPREFIX",
-    "message": "Country Prefix",
+    "message": "Country prefix",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4123,7 +4123,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_ENDDATE",
-    "message": "End Date",
+    "message": "End date",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4141,7 +4141,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_HELPTEXT",
-    "message": "Help Text",
+    "message": "Help text",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4159,13 +4159,13 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_INFOTEXT",
-    "message": "Info Text",
+    "message": "Info text",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_INNERLABEL",
-    "message": "Inner Label",
+    "message": "Inner label",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4195,7 +4195,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_LENGTHRANGE",
-    "message": "Length Range",
+    "message": "Length range",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4207,7 +4207,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MAX",
-    "message": "Maximum Value",
+    "message": "Maximum value",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4219,7 +4219,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MAXIMUMAGE",
-    "message": "Maximum Range",
+    "message": "Maximum range",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4243,7 +4243,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MIN",
-    "message": "Minimum Value",
+    "message": "Minimum value",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4255,7 +4255,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MINIMUMAGE",
-    "message": "Minimum Range",
+    "message": "Minimum range",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4273,7 +4273,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_NUMBERLENGTH",
-    "message": "Number Length",
+    "message": "Number length",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4351,7 +4351,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_STARTDATE",
-    "message": "Start Date",
+    "message": "Start date",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4387,7 +4387,7 @@
   },
   {
     "code": "FIELD_LABEL",
-    "message": "Field Label",
+    "message": "Field label",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4423,7 +4423,7 @@
   },
   {
     "code": "FOOTER_ACTION_beneficiaryIdMinCheck_LABEL",
-    "message": "Add Members",
+    "message": "Download Beneficiary ID's",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4789,7 +4789,7 @@
   },
   {
     "code": "HCM_CREATE_NEW_CAMPAIGN_FROM_SCRATCH_DES",
-    "message": "Full flexibility \u2014 more setup effort",
+    "message": "Full flexibility — more setup effort",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -4843,7 +4843,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-    "message": "Total Members",
+    "message": "Total members",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -5066,6 +5066,54 @@
   {
     "code": "HCM_SEARCH_BY_REGISTER_NUMBER",
     "message": "Search by Register Number",
+    "module": "hcm-base-registration-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_ADMINISTRATION_FAILED",
+    "message": "Administration Failed",
+    "module": "hcm-base-registration-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_ADMINISTRATION_SUCCESS",
+    "message": "Administration Success",
+    "module": "hcm-base-registration-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_APPLY_BUTTON",
+    "message": "Apply",
+    "module": "hcm-base-registration-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_CLEAR_ALL_BUTTON",
+    "message": "Clear",
+    "module": "hcm-base-registration-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_LABEL",
+    "message": "Filter",
+    "module": "hcm-base-registration-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_MISSED_CHILDREN",
+    "message": "Missed Children",
+    "module": "hcm-base-registration-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_NOT_ADMINISTERED",
+    "message": "Not Administered",
+    "module": "hcm-base-registration-oncho",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_REVISITED",
+    "message": "Revisited",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -5580,6 +5628,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "INFO_CARD_TEXT",
+    "message": "Info Card",
+    "module": "hcm-base-registration-oncho",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "INSUFFICIENT_RESOURCES",
     "message": "Insufficient Resources",
     "module": "hcm-base-registration-oncho",
@@ -5635,7 +5689,7 @@
   },
   {
     "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -5791,13 +5845,13 @@
   },
   {
     "code": "LABEL_PAIR_BATCHNUMBER",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_BATCH_NUMBER",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -5809,7 +5863,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "HF Referral",
+    "message": "HF referral",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -5827,7 +5881,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Inside Monitoring",
+    "message": "Inside monitoring",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -5839,19 +5893,19 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
-    "message": "LQA Model",
+    "message": "LQA model",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_NAVIGATIONMODEL",
-    "message": "Navigation Model",
+    "message": "Navigation model",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Label Pair Category Projectbeneficiarymodel",
+    "message": "Label pair category projectbeneficiarymodel",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -5863,7 +5917,7 @@
   },
   {
     "code": "LABEL_PAIR_CODE",
-    "message": "Household Overview Settlement",
+    "message": "Household overview settlement",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -5875,127 +5929,127 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Complaint Area",
+    "message": "Complaint area",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINTDATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINTNUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINTSTATUS",
-    "message": "Complaint Status",
+    "message": "Complaint status",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
-    "message": "Complainant Contact",
+    "message": "Complainant contact",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Complaint Area",
+    "message": "Complaint area",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
-    "message": "Complaint Status",
+    "message": "Complaint status",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Complainant Contact",
+    "message": "Complainant contact",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
-    "message": "Complaint Area",
+    "message": "Complaint area",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Complaint Description",
+    "message": "Complaint description",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "Complaint Status",
+    "message": "Complaint status",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATEOFBIRTH",
-    "message": "Beneficiary Age",
+    "message": "Beneficiary age",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATEOFREGISTRATION",
-    "message": "Date of Registration",
+    "message": "Date of registration",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Date of Registration",
+    "message": "Date of registration",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_EXPIRYDATE",
-    "message": "Expiry Date",
+    "message": "Expiry date",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6007,67 +6061,67 @@
   },
   {
     "code": "LABEL_PAIR_GIVENNAME",
-    "message": "Name of Individual",
+    "message": "Name of individual",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCMTOTALMEMBERS",
-    "message": "Total Members",
+    "message": "Total members",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
-    "message": "Beneficiary Age",
+    "message": "Beneficiary age",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
-    "message": "Beneficiary Gender",
+    "message": "Beneficiary gender",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
-    "message": "Beneficiary Name",
+    "message": "Beneficiary name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
-    "message": "Beneficiary Registration Date",
+    "message": "Beneficiary registration date",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
-    "message": "Household Overview Head",
+    "message": "Household overview head",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
-    "message": "Household Overview Settlement",
+    "message": "Household overview settlement",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-    "message": "Total Members",
+    "message": "Total members",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HEADNAME",
-    "message": "Household Head Name",
+    "message": "Household head name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6079,43 +6133,43 @@
   },
   {
     "code": "LABEL_PAIR_IDNUMBER",
-    "message": "ID Number",
+    "message": "ID number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IDTYPE",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "ID Number",
+    "message": "ID number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_ID_TYPE",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYCHILDRENPRESENT",
-    "message": "Children Present",
+    "message": "Children present",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYCHILDRENVACCINATED",
-    "message": "Children Vaccinated",
+    "message": "Children vaccinated",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYFINALCOMMENTS",
-    "message": "Final Comments",
+    "message": "Final comments",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6133,13 +6187,13 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTREVISITED",
-    "message": "Missed - Not Revisited",
+    "message": "Missed - Not revisited",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTVISITED",
-    "message": "Missed - Not Visited",
+    "message": "Missed - Not visited",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6163,61 +6217,61 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMONITORDESIGNATION",
-    "message": "Monitor Designation",
+    "message": "Monitor designation",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMONITORINGDATE",
-    "message": "Monitoring Date",
+    "message": "Monitoring date",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMONITORNAME",
-    "message": "Monitor Name",
+    "message": "Monitor name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYPOORLYCOVERED",
-    "message": "Poorly Covered",
+    "message": "Poorly covered",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTTYPE",
-    "message": "Settlement Type",
+    "message": "Settlement type",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Children Present",
+    "message": "Children present",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Children Vaccinated",
+    "message": "Children vaccinated",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Final Comments",
+    "message": "Final comments",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
-    "message": "Missed (Absent)",
+    "message": "Missed (absent)",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6229,13 +6283,13 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Not Revisited",
+    "message": "Not revisited",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Not Visited",
+    "message": "Not visited",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6247,7 +6301,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Missed (Refusal)",
+    "message": "Missed (refusal)",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6259,61 +6313,61 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Monitoring Date",
+    "message": "Monitoring date",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Monitor Designation",
+    "message": "Monitor designation",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Monitor Name",
+    "message": "Monitor name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Poorly Covered",
+    "message": "Poorly covered",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Settlement Type",
+    "message": "Settlement type",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINANTCONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINANTTCONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINTNUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINTTYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6325,7 +6379,7 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6337,13 +6391,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
-    "message": "Expiry Date",
+    "message": "Expiry date",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6355,7 +6409,7 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_RESOURCE_LABEL",
-    "message": "Inventory Resource",
+    "message": "Inventory resource",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6373,13 +6427,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Transaction Reason",
+    "message": "Transaction reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6391,301 +6445,301 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LOCALITY",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAABSENCEREASONLABEL",
-    "message": "Absence Reason",
+    "message": "Absence reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAFPAWARENESSLABEL",
-    "message": "AFP Awareness",
+    "message": "AFP awareness",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAFPCASECOUNTLABEL",
-    "message": "AFP Case Count",
+    "message": "AFP case count",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAWARENESSOTHERLABEL",
-    "message": "Other Awareness Source",
+    "message": "Other awareness source",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACAMPAIGNAWARENESSLABEL",
-    "message": "Campaign Awareness",
+    "message": "Campaign awareness",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACAREGIVERINFORMEDLABEL",
-    "message": "Caregiver Informed",
+    "message": "Caregiver informed",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACHILDAGEMONTHSLABEL",
-    "message": "Child Age (Months)",
+    "message": "Child age (months)",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACHILDRENUNDER5LABEL",
-    "message": "Children Under 5",
+    "message": "Children under 5",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACHILDSEXLABEL",
-    "message": "Child Sex",
+    "message": "Child sex",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACLUSTERNUMBERLABEL",
-    "message": "Cluster Number",
+    "message": "Cluster number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAFINGERMARKEDLABEL",
-    "message": "Finger Marked",
+    "message": "Finger marked",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQALOTNUMBERLABEL",
-    "message": "Lot Number",
+    "message": "Lot number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAOPVDOSESLABEL",
-    "message": "OPV Doses",
+    "message": "OPV doses",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAOTHERABSENCEREASONLABEL",
-    "message": "Other Absence Reason",
+    "message": "Other absence reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAOTHERREASONSPECIFYLABEL",
-    "message": "Other Reason (Specify)",
+    "message": "Other reason (specify)",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAOTHERREFUSALREASONLABEL",
-    "message": "Other Refusal Reason",
+    "message": "Other refusal reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAREASONNOTMARKEDLABEL",
-    "message": "Reason Not Marked",
+    "message": "Reason not marked",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAREFUSALREASONLABEL",
-    "message": "Refusal Reason",
+    "message": "Refusal reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQASURVEYDATELABEL",
-    "message": "Survey Date",
+    "message": "Survey date",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQASURVEYORNAMELABEL",
-    "message": "Surveyor Name",
+    "message": "Surveyor name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Absence Reason",
+    "message": "Absence reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "AFP Awareness",
+    "message": "AFP awareness",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "AFP Case Count",
+    "message": "AFP case count",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Other Awareness Source",
+    "message": "Other awareness source",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Campaign Awareness",
+    "message": "Campaign awareness",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Caregiver Informed",
+    "message": "Caregiver informed",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Children Under 5",
+    "message": "Children under 5",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Child Age (Months)",
+    "message": "Child age (months)",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Child Sex",
+    "message": "Child sex",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Cluster Number",
+    "message": "Cluster number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Finger Marked",
+    "message": "Finger marked",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Lot Number",
+    "message": "Lot number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "OPV Doses",
+    "message": "OPV doses",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Other Absence Reason",
+    "message": "Other absence reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Other Reason (Specify)",
+    "message": "Other reason (specify)",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Other Refusal Reason",
+    "message": "Other refusal reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Reason Not Marked",
+    "message": "Reason not marked",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Refusal Reason",
+    "message": "Refusal reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Surveyor Name",
+    "message": "Surveyor name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Survey Date",
+    "message": "Survey date",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MEMBERCOUNT",
-    "message": "Member Count",
+    "message": "Member count",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MEMBER_COUNT",
-    "message": "Member Count",
+    "message": "Member count",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MOBILENUMBER",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MOBILE_NUMBER",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRNNUMBER",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6703,13 +6757,13 @@
   },
   {
     "code": "LABEL_PAIR_QUANTITYRECEIVED",
-    "message": "Quantity Received",
+    "message": "Quantity received",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_QUANTITY_RECEIVED",
-    "message": "Quantity Received",
+    "message": "Quantity received",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6721,13 +6775,13 @@
   },
   {
     "code": "LABEL_PAIR_RECEIVERID",
-    "message": "Received From",
+    "message": "Received from",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRALNAME",
-    "message": "Referral Name",
+    "message": "Referral name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6745,19 +6799,19 @@
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
-    "message": "Referral Status",
+    "message": "Referral status",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
-    "message": "Referral Symptom",
+    "message": "Referral symptom",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFRRALSYMPTOM",
-    "message": "Referral Symptom",
+    "message": "Referral symptom",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6781,13 +6835,13 @@
   },
   {
     "code": "LABEL_PAIR_STOCKEXPIRY",
-    "message": "Stock Expiry",
+    "message": "Stock expiry",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Expiry Date",
+    "message": "Expiry date",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6799,61 +6853,61 @@
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONREASON",
-    "message": "Transaction Reason",
+    "message": "Transaction reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONTYPE",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINANTCONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINANTTCONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
-    "message": "Complaint Area",
+    "message": "Complaint area",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTESCRIPTION",
-    "message": "Complaint Description",
+    "message": "Complaint description",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTSTATUS",
-    "message": "Complaint Status",
+    "message": "Complaint status",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTTYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_WAYBILLNUMBER",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_WAYBILL_NUMBER",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -6901,127 +6955,127 @@
   },
   {
     "code": "LQA_ABSENCE_REASON_LABEL",
-    "message": "Absence Reason",
+    "message": "Absence reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_AFP_AWARENESS_LABEL",
-    "message": "AFP Awareness",
+    "message": "AFP awareness",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_AFP_CASE_COUNT_LABEL",
-    "message": "AFP Case Count",
+    "message": "AFP case count",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_AWARENESS_OTHER_LABEL",
-    "message": "Other Awareness Source",
+    "message": "Other awareness source",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Campaign Awareness",
+    "message": "Campaign awareness",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Caregiver Informed",
+    "message": "Caregiver informed",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Children Under 5",
+    "message": "Children under 5",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Child Age (Months)",
+    "message": "Child age (months)",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CHILD_SEX_LABEL",
-    "message": "Child Sex",
+    "message": "Child sex",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Cluster Number",
+    "message": "Cluster number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_FINGER_MARKED_LABEL",
-    "message": "Finger Marked",
+    "message": "Finger marked",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_LOT_NUMBER_LABEL",
-    "message": "Lot Number",
+    "message": "Lot number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_OPV_DOSES_LABEL",
-    "message": "OPV Doses",
+    "message": "OPV doses",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Other Absence Reason",
+    "message": "Other absence reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Other Reason (Specify)",
+    "message": "Other reason (specify)",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Other Refusal Reason",
+    "message": "Other refusal reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Reason Not Marked",
+    "message": "Reason not marked",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_REFUSAL_REASON_LABEL",
-    "message": "Refusal Reason",
+    "message": "Refusal reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_SURVEYOR_NAME_LABEL",
-    "message": "Surveyor Name",
+    "message": "Surveyor name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_SURVEY_DATE_LABEL",
-    "message": "Survey Date",
+    "message": "Survey date",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -7147,7 +7201,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_COMPLAINTS",
-    "message": "Let field workers log issues raised by caregivers or the community during distribution\u2014such as concerns about medicines, missed households, or service quality\u2014to support timely follow-up and resolution.",
+    "message": "Let field workers log issues raised by caregivers or the community during distribution—such as concerns about medicines, missed households, or service quality—to support timely follow-up and resolution.",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -7159,7 +7213,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_HFREFERRAL",
-    "message": "Record and manage referrals for children who require further assessment or treatment. Capture referral reasons\u2014such as contraindications, adverse reactions, or danger signs\u2014and track completion at the designated health facility.",
+    "message": "Record and manage referrals for children who require further assessment or treatment. Capture referral reasons—such as contraindications, adverse reactions, or danger signs—and track completion at the designated health facility.",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -7417,7 +7471,7 @@
   },
   {
     "code": "PERMISSIONHANDLER",
-    "message": "Permission handler",
+    "message": "Permission Handler",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -7477,7 +7531,7 @@
   },
   {
     "code": "POPUP_BODY_LABELS",
-    "message": "Field Labels",
+    "message": "Field labels",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -7819,7 +7873,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
-    "message": "Administrative Unit",
+    "message": "Administrative unit",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -7843,7 +7897,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_REFERRED_TO",
-    "message": "Health Facility",
+    "message": "Health facility",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -8821,7 +8875,7 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9643,25 +9697,25 @@
   },
   {
     "code": "addressLine1",
-    "message": "Address Line 1",
+    "message": "Address line 1",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "addressLine2",
-    "message": "Address Line 2",
+    "message": "Address line 2",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "administrationSuccess",
-    "message": "Administered Successfully",
+    "message": "Administered successfully",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "administrativeArea",
-    "message": "Administrative Area",
+    "message": "Administrative area",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9685,7 +9739,7 @@
   },
   {
     "code": "advanced.actionPopup",
-    "message": "Action Popup",
+    "message": "Action popup",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9715,13 +9769,13 @@
   },
   {
     "code": "advanced.dropdownTemplate",
-    "message": "Dropdown Template",
+    "message": "Dropdown template",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.evaluationFacility",
-    "message": "Evaluation Facility",
+    "message": "Evaluation facility",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9733,13 +9787,13 @@
   },
   {
     "code": "advanced.facilityFromWhich",
-    "message": "Facility From",
+    "message": "Facility from",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.facilityToWhich",
-    "message": "Facility To",
+    "message": "Facility to",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9751,19 +9805,19 @@
   },
   {
     "code": "advanced.idPopulator",
-    "message": "ID Populator",
+    "message": "ID populator",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.infoCard",
-    "message": "Info Card",
+    "message": "Info card",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.labelPairList",
-    "message": "Label Pair List",
+    "message": "Label pair list",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9787,13 +9841,13 @@
   },
   {
     "code": "advanced.menu_card",
-    "message": "Menu Card",
+    "message": "Menu card",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.panelCard",
-    "message": "Panel Card",
+    "message": "Panel card",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9805,25 +9859,25 @@
   },
   {
     "code": "advanced.proximitySearch",
-    "message": "Proximity Search",
+    "message": "Proximity search",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.qrScanner",
-    "message": "QR Scanner",
+    "message": "QR scanner",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.radioList",
-    "message": "Radio List",
+    "message": "Radio list",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.resourceCard",
-    "message": "Resource Card",
+    "message": "Resource card",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9835,37 +9889,37 @@
   },
   {
     "code": "advanced.scanner",
-    "message": "QR Scanner",
+    "message": "QR scanner",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.searchBar",
-    "message": "Search Bar",
+    "message": "Search bar",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.searchByID",
-    "message": "Search By ID",
+    "message": "Search by ID",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.searchByProximity",
-    "message": "Search By Proximity",
+    "message": "Search by proximity",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.select",
-    "message": "Selection Field",
+    "message": "Selection field",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.selectionCard",
-    "message": "Selection Field",
+    "message": "Selection field",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9889,19 +9943,19 @@
   },
   {
     "code": "advanced.textInput",
-    "message": "Text Input",
+    "message": "Text input",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.textTemplate",
-    "message": "Text Template",
+    "message": "Text template",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "ageInMonths",
-    "message": "Age in Months",
+    "message": "Age in months",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9925,7 +9979,7 @@
   },
   {
     "code": "basic.dob",
-    "message": "Date of Birth",
+    "message": "Date of birth",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9937,7 +9991,7 @@
   },
   {
     "code": "basic.mobileNumber",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9949,13 +10003,13 @@
   },
   {
     "code": "basic.numeric",
-    "message": "Numeric Counter",
+    "message": "Numeric counter",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "basic.radio",
-    "message": "Radio Button",
+    "message": "Radio button",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9967,7 +10021,7 @@
   },
   {
     "code": "basic.textarea",
-    "message": "Text Area",
+    "message": "Text area",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9979,13 +10033,13 @@
   },
   {
     "code": "beneficiaryDetails",
-    "message": "Beneficiary Details",
+    "message": "Beneficiary details",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "beneficiaryDetailsCard",
-    "message": "Beneficiary Details",
+    "message": "Beneficiary details",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -9997,25 +10051,25 @@
   },
   {
     "code": "beneficiaryLocation",
-    "message": "Beneficiary Location",
+    "message": "Beneficiary location",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "beneficiaryNotFound",
-    "message": "Beneficiary Not Found",
+    "message": "Beneficiary not found",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "beneficiaryReferred",
-    "message": "Beneficiary Referred",
+    "message": "Beneficiary referred",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "beneficiaryTag",
-    "message": "Beneficiary Tag",
+    "message": "Beneficiary tag",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10051,7 +10105,7 @@
   },
   {
     "code": "card2",
-    "message": "Past Cycle Details",
+    "message": "Past cycle details",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10063,13 +10117,13 @@
   },
   {
     "code": "childName",
-    "message": "Child Name",
+    "message": "Child name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "childrenCount",
-    "message": "Number of Children",
+    "message": "Number of children",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10087,7 +10141,7 @@
   },
   {
     "code": "clientReferenceId",
-    "message": "Client Reference ID",
+    "message": "Client reference ID",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10117,7 +10171,7 @@
   },
   {
     "code": "complaintAcknowledgement",
-    "message": "Complaint Success",
+    "message": "Complaint success",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10129,7 +10183,7 @@
   },
   {
     "code": "complaintInbox",
-    "message": "Complaint Inbox",
+    "message": "Complaint inbox",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10141,7 +10195,7 @@
   },
   {
     "code": "complaintView",
-    "message": "Complaint View",
+    "message": "Complaint view",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10159,37 +10213,37 @@
   },
   {
     "code": "cycleIndex",
-    "message": "Delivery Cycle",
+    "message": "Delivery cycle",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "cycleNumber",
-    "message": "Cycle Number",
+    "message": "Cycle number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "dateOfBirth",
-    "message": "Date of Birth",
+    "message": "Date of birth",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "dateOfRedose",
-    "message": "Date of Redose",
+    "message": "Date of redose",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "dateOfRegistration",
-    "message": "Date of Registration",
+    "message": "Date of registration",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "datePicker",
-    "message": "Date Picker",
+    "message": "Date picker",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10207,7 +10261,7 @@
   },
   {
     "code": "deliveryComment",
-    "message": "Delivery Comments",
+    "message": "Delivery comments",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10219,13 +10273,13 @@
   },
   {
     "code": "deliveryConditiondialog",
-    "message": "Delivery Conditions",
+    "message": "Delivery conditions",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "deliveryDetails",
-    "message": "Member Details",
+    "message": "Member details",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10237,19 +10291,19 @@
   },
   {
     "code": "deliveryStrategy",
-    "message": "Delivery Strategy",
+    "message": "Delivery strategy",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "deliverySuccess",
-    "message": "Deliver Success",
+    "message": "Deliver success",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "deliveryTable",
-    "message": "Delivery Details",
+    "message": "Delivery details",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10273,7 +10327,7 @@
   },
   {
     "code": "dobPicker",
-    "message": "Date of Birth",
+    "message": "Date of birth",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10297,7 +10351,7 @@
   },
   {
     "code": "dropdownTemplate",
-    "message": "Dropdown Template",
+    "message": "Dropdown template",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10345,7 +10399,7 @@
   },
   {
     "code": "eligibilityChecklist",
-    "message": "Eligibility Checklist",
+    "message": "Eligibility checklist",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10357,7 +10411,7 @@
   },
   {
     "code": "evaluationFacility",
-    "message": "Evaluation Facility",
+    "message": "Evaluation facility",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10369,7 +10423,7 @@
   },
   {
     "code": "expandable",
-    "message": "Past Cycles",
+    "message": "Past cycles",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10381,7 +10435,7 @@
   },
   {
     "code": "facilityFromWhich",
-    "message": "Facility From",
+    "message": "Facility from",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10393,7 +10447,7 @@
   },
   {
     "code": "familyname",
-    "message": "Family Name",
+    "message": "Family name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10405,7 +10459,7 @@
   },
   {
     "code": "futureDoses",
-    "message": "Future Doses",
+    "message": "Future doses",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10447,7 +10501,7 @@
   },
   {
     "code": "givenName",
-    "message": "Given Name",
+    "message": "Given name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10459,13 +10513,13 @@
   },
   {
     "code": "headMobileNumber",
-    "message": "Head of Household Mobile Number",
+    "message": "Head of household mobile number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "headOfHousehold",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10477,7 +10531,7 @@
   },
   {
     "code": "healthFacility",
-    "message": "Health Facility",
+    "message": "Health facility",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10489,7 +10543,7 @@
   },
   {
     "code": "householdDetails",
-    "message": "Household Details",
+    "message": "Household details",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10507,13 +10561,13 @@
   },
   {
     "code": "householdOverview",
-    "message": "Household Overview",
+    "message": "Household overview",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "householdOverviewCard",
-    "message": "Household Overview",
+    "message": "Household overview",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10537,13 +10591,13 @@
   },
   {
     "code": "identifierId",
-    "message": "ID Number",
+    "message": "ID number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "identifierType",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10555,7 +10609,7 @@
   },
   {
     "code": "individualClientReferenceId",
-    "message": "Individual Client Reference ID",
+    "message": "Individual client reference ID",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10567,7 +10621,7 @@
   },
   {
     "code": "individualRow",
-    "message": "Member Details",
+    "message": "Member details",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10585,7 +10639,7 @@
   },
   {
     "code": "infocard",
-    "message": "Info Card",
+    "message": "Info card",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10597,31 +10651,31 @@
   },
   {
     "code": "insufficientStockPopUp",
-    "message": "Insufficient Stock",
+    "message": "Insufficient stock",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "isClosedHousehold",
-    "message": "Closed Household",
+    "message": "Closed household",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "isEdit",
-    "message": "Edit Mode",
+    "message": "Edit mode",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "isHeadOfFamily",
-    "message": "Head of Family",
+    "message": "Head of family",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "isPregnant",
-    "message": "Is Pregnant",
+    "message": "Is pregnant",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10639,13 +10693,13 @@
   },
   {
     "code": "lastDeliveredTaskClientReferenceId",
-    "message": "Last Delivery Reference ID",
+    "message": "Last delivery reference ID",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "latLng",
-    "message": "GPS Coordinates",
+    "message": "GPS coordinates",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10657,7 +10711,7 @@
   },
   {
     "code": "listViewMembers",
-    "message": "Household Members",
+    "message": "Household members",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10669,7 +10723,7 @@
   },
   {
     "code": "localityBoundaryCode",
-    "message": "Locality Code",
+    "message": "Locality code",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10687,13 +10741,13 @@
   },
   {
     "code": "manageStock",
-    "message": "Manage Stock",
+    "message": "Manage stock",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "meberDetails",
-    "message": "Member Details",
+    "message": "Member details",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10705,25 +10759,25 @@
   },
   {
     "code": "memberCount",
-    "message": "Total Members",
+    "message": "Total members",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "memberTable",
-    "message": "Member Details",
+    "message": "Member details",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "menu_card",
-    "message": "Menu Card",
+    "message": "Menu card",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "mobileNumber",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10735,7 +10789,7 @@
   },
   {
     "code": "nameOfIndividual",
-    "message": "First Name",
+    "message": "First name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10747,13 +10801,13 @@
   },
   {
     "code": "notEligible",
-    "message": "Not Eligible",
+    "message": "Not eligible",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "notVisited",
-    "message": "Not Administered",
+    "message": "Not administered",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10771,13 +10825,13 @@
   },
   {
     "code": "oroductdetail",
-    "message": "Product Detail",
+    "message": "Product detail",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "overviewLabelPairCard",
-    "message": "Overview Details",
+    "message": "Overview details",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10789,19 +10843,19 @@
   },
   {
     "code": "pastCycleTable",
-    "message": "Past Cycle Details",
+    "message": "Past cycle details",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "pastCyclesList",
-    "message": "Past Cycles",
+    "message": "Past cycles",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "phone",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10813,13 +10867,13 @@
   },
   {
     "code": "pregnantWomenCount",
-    "message": "Pregnant Women",
+    "message": "Pregnant women",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "productdetail",
-    "message": "Product Detail",
+    "message": "Product detail",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10831,7 +10885,7 @@
   },
   {
     "code": "proximityRadius",
-    "message": "Proximity Radius",
+    "message": "Proximity radius",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10843,25 +10897,25 @@
   },
   {
     "code": "proximitySearch",
-    "message": "Proximity Search",
+    "message": "Proximity search",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "proximitySearchRegistration",
-    "message": "Nearby Households",
+    "message": "Nearby households",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "qrScanner",
-    "message": "QR Scanner",
+    "message": "QR scanner",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "qrscanner",
-    "message": "QR Scanner",
+    "message": "QR scanner",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10873,7 +10927,7 @@
   },
   {
     "code": "reasonForRedose",
-    "message": "Reason for Redose",
+    "message": "Reason for redose",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10903,7 +10957,7 @@
   },
   {
     "code": "redoseCompleted",
-    "message": "Redose Completed",
+    "message": "Redose completed",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10927,13 +10981,13 @@
   },
   {
     "code": "referralReason",
-    "message": "Referral Reason",
+    "message": "Referral reason",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "referredBy",
-    "message": "Referred By",
+    "message": "Referred by",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10987,7 +11041,7 @@
   },
   {
     "code": "searchBeneficiary",
-    "message": "Search Beneficiary",
+    "message": "Search beneficiary",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -10999,7 +11053,7 @@
   },
   {
     "code": "searchByName",
-    "message": "Search by Name",
+    "message": "Search by name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -11017,19 +11071,19 @@
   },
   {
     "code": "selectedIndividualAgeInMonths",
-    "message": "Age (Months)",
+    "message": "Age (months)",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "selectedIndividualClientReferenceId",
-    "message": "Selected Individual ID",
+    "message": "Selected individual ID",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "selectedIndividualGender",
-    "message": "Individual Gender",
+    "message": "Individual gender",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -11041,13 +11095,13 @@
   },
   {
     "code": "selectedIndividualIdentifierId",
-    "message": "Individual Identifier ID",
+    "message": "Individual identifier ID",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "selectedIndividualName",
-    "message": "Individual Name",
+    "message": "Individual name",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -11101,13 +11155,13 @@
   },
   {
     "code": "statusTag",
-    "message": "Delivery Status",
+    "message": "Delivery status",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "stockFieldPair",
-    "message": "Stock Details",
+    "message": "Stock details",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -11119,13 +11173,13 @@
   },
   {
     "code": "stockSuccess",
-    "message": "Stock Success",
+    "message": "Stock success",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "stockTable",
-    "message": "Stock Table",
+    "message": "Stock table",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -11155,25 +11209,25 @@
   },
   {
     "code": "textArea",
-    "message": "Text Area",
+    "message": "Text area",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "textInput",
-    "message": "Text Input",
+    "message": "Text input",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "textTemplate",
-    "message": "Text Template",
+    "message": "Text template",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "textarea",
-    "message": "Text Area",
+    "message": "Text area",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -11185,13 +11239,13 @@
   },
   {
     "code": "totalDosesInCycle",
-    "message": "Total Doses in Cycle",
+    "message": "Total doses in cycle",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "typeOfAddress",
-    "message": "Type of Address",
+    "message": "Type of address",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },
@@ -11203,7 +11257,7 @@
   },
   {
     "code": "uniqueBeneficiaryIdModel",
-    "message": "Unique Beneficiary ID",
+    "message": "Unique beneficiary ID",
     "module": "hcm-base-registration-oncho",
     "locale": "en_DEMO"
   },

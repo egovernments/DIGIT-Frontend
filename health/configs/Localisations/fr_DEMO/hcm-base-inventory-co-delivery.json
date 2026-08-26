@@ -43,7 +43,7 @@
   },
   {
     "code": "ACTION_UNIFIED_UPLOAD_SCREEN",
-    "message": "Télécharger un fichier unifié",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -79,7 +79,7 @@
   },
   {
     "code": "ADD_HEADER_LOCALIZATION",
-    "message": "Ajouter une étiquette",
+    "message": "Étiquette",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -241,7 +241,7 @@
   },
   {
     "code": "APPCONFIG_MIN_LESS_EQUAL_MAX.COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -331,7 +331,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_ALERT_DESCRIPTION",
-    "message": "En fonction des réponses, vous allez à « {value} ». Êtes-vous sûr de vouloir continuer ?",
+    "message": "En fonction des réponses, vous allez vers '{value}'. Êtes-vous sûr de vouloir continuer ?",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -421,7 +421,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_DESCRIPTION",
-    "message": "Confirmez si l'enfant a reçu un médicament contenant de la sulfadoxine-pyriméthamine (SP) ou du cotrimoxazole (CTX) au cours des 28 derniers jours, que ce soit pour la prévention ou le traitement de maladies.",
+    "message": "Confirmez si l'enfant a reçu des médicaments contenant de la sulfadoxine-pyriméthamine (SP) ou du cotrimoxazole (CTX) au cours des 28 derniers jours, que ce soit pour la prévention ou le traitement de maladies.",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -523,7 +523,7 @@
   },
   {
     "code": "APPONE_INVENTORY_PRODUCTDETAILS_LABEL",
-    "message": "Sélectionnez un produit",
+    "message": "Sélectionner un produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -727,7 +727,7 @@
   },
   {
     "code": "APPONE_INVENTORY_WAYBILL_LABEL_HELPTEXT",
-    "message": "Entrez le numéro de la lettre de transport",
+    "message": "Entrez le numéro de la feuille de route",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -865,7 +865,7 @@
   },
   {
     "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_facilityToWhich",
-    "message": "Installation à",
+    "message": "Facilité de",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -901,7 +901,7 @@
   },
   {
     "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_scanResource",
-    "message": "Ressource d'analyse",
+    "message": "Scanner le produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1201,7 +1201,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual",
-    "message": "Nom de famille de la personne",
+    "message": "Nom de la personne",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1321,7 +1321,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode_helpText",
-    "message": "Entrez le code postal de la région (Code PIN)",
+    "message": "Entrez le code postal de la région (code PIN)",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1495,7 +1495,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_DELIVERYDETAILS_label_resource",
-    "message": "Ressource",
+    "message": "Produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1549,7 +1549,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_weight",
-    "message": "Poids (en Kgs)",
+    "message": "Poids (en kg)",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1807,7 +1807,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_REDOSE",
-    "message": "Redose",
+    "message": "Redoser",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -2029,7 +2029,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_REDOSE",
-    "message": "Redose",
+    "message": "Redoser",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -2263,13 +2263,13 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_DAMAGED_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
-    "message": "Enregistrer la liste des ressources endommagées lors des opérations de campagne",
+    "message": "Enregistrer la liste des produits endommagés lors des opérations de campagne",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_LOST_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
-    "message": "Enregistrer la liste des ressources perdues lors des opérations de campagne",
+    "message": "Enregistrer la liste des produits perdus lors des opérations de campagne",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -2467,7 +2467,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_WAYBILL_NUMBER_HELP_TEXT",
-    "message": "Entrez le numéro de la lettre de transport",
+    "message": "Entrez le numéro de la feuille de route",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -2545,13 +2545,13 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCAN_RESOURCE_HELP_TEXT",
-    "message": "Scannez le code QR de la ressource",
+    "message": "Scannez le code QR du produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCAN_RESOURCE_LABEL",
-    "message": "Ressource d'analyse",
+    "message": "Scanner le produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3271,7 +3271,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "Bénéficiaire",
+    "message": "Nom du bénéficiaire",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4027,13 +4027,13 @@
   },
   {
     "code": "ComplaintModel. COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "ComplaintModel.COMPLAINT_INBOX_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4069,7 +4069,7 @@
   },
   {
     "code": "ComplaintModel.COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4411,7 +4411,7 @@
   },
   {
     "code": "DIGIT_LOC_SELECT_MODULE_LABEL",
-    "message": "Sélectionner un module",
+    "message": "Sélectionnez le module",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4555,7 +4555,7 @@
   },
   {
     "code": "ENTER_FIELD_LABEL",
-    "message": "Entrez l'étiquette du champ",
+    "message": "Entrez le libellé du champ",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4579,7 +4579,7 @@
   },
   {
     "code": "ENTER_VALID_FILE",
-    "message": "Veuillez saisir un fichier valide",
+    "message": "Veuillez entrer un fichier valide",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4627,7 +4627,7 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT",
-    "message": "Le fichier unifié comprendra toutes les fiches des installations, des utilisateurs et des cibles.",
+    "message": "Le fichier unifié comprendra toutes les fiches d'installation, d'utilisateur et de cible.",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4789,7 +4789,7 @@
   },
   {
     "code": "FAC_F-2026-03-17-000165",
-    "message": "Installation de droite pour les cadavres",
+    "message": "Installation de Gawasu Damana",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4939,7 +4939,7 @@
   },
   {
     "code": "FAC_F-2026-03-17-000190",
-    "message": "Installation de droite pour les cadavres",
+    "message": "Installation de Gawasu Damana",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5113,7 +5113,7 @@
   },
   {
     "code": "FAC_F-2026-03-17-000219",
-    "message": "Installation de droite pour les cadavres",
+    "message": "Installation de Gawasu Damana",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5371,7 +5371,7 @@
   },
   {
     "code": "FAC_F-2026-03-17-000262",
-    "message": "Installation de droite pour les cadavres",
+    "message": "Installation de Gawasu Damana",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5569,7 +5569,7 @@
   },
   {
     "code": "FAC_F-2026-03-23-000295",
-    "message": "Installation de droite pour les cadavres",
+    "message": "Installation de Gawasu Damana",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5701,7 +5701,7 @@
   },
   {
     "code": "FAC_F-2026-03-24-000317",
-    "message": "Installation de droite pour les cadavres",
+    "message": "Installation de Gawasu Damana",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5833,7 +5833,7 @@
   },
   {
     "code": "FAC_F-2026-03-24-000339",
-    "message": "Installation de droite Gawasu 1",
+    "message": "Installation de Gawasu Damana 1",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5875,7 +5875,7 @@
   },
   {
     "code": "FAC_F-2026-03-24-000346",
-    "message": "Centre de Birnin Kebbi 1",
+    "message": "Installation de Birnin kebbi 1",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6049,13 +6049,13 @@
   },
   {
     "code": "FAC_F-2026-03-24-000375",
-    "message": "Installation de droite Gawasu 1",
+    "message": "Installation de Gawasu Damana 1",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-03-24-000376",
-    "message": "Centre de Birnin Kebbi 1",
+    "message": "Installation de Birnin kebbi 1",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6169,7 +6169,7 @@
   },
   {
     "code": "FAC_F-2026-03-24-000395",
-    "message": "Centre de Birnin Kebbi 1",
+    "message": "Installation de Birnin kebbi 1",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6211,7 +6211,7 @@
   },
   {
     "code": "FAC_F-2026-03-24-000402",
-    "message": "Installation de droite Gawasu 1",
+    "message": "Installation de Gawasu Damana 1",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6337,7 +6337,7 @@
   },
   {
     "code": "FAC_F-2026-03-24-000423",
-    "message": "Installation de droite Gawasu 1",
+    "message": "Installation de Gawasu Damana 1",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6355,7 +6355,7 @@
   },
   {
     "code": "FAC_F-2026-03-24-000426",
-    "message": "Centre de Birnin Kebbi 1",
+    "message": "Installation de Birnin kebbi 1",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6523,7 +6523,7 @@
   },
   {
     "code": "FAC_F-2026-03-25-000454",
-    "message": "Installation de droite Gawasu 2",
+    "message": "Installation de Gawasu Damana 2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6553,7 +6553,7 @@
   },
   {
     "code": "FAC_F-2026-03-25-000459",
-    "message": "Centre de Birnin Kebbi 2",
+    "message": "Installation de Birnin kebbi 2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6565,7 +6565,7 @@
   },
   {
     "code": "FAC_F-2026-03-25-000461",
-    "message": "Balare l installation 2",
+    "message": "Installation Balare l 2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6655,7 +6655,7 @@
   },
   {
     "code": "FAC_F-2026-03-25-000476",
-    "message": "Balare l installation 2",
+    "message": "Installation Balare l 2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6697,7 +6697,7 @@
   },
   {
     "code": "FAC_F-2026-03-25-000483",
-    "message": "Installation de droite Gawasu 2",
+    "message": "Installation de Gawasu Damana 2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6745,7 +6745,7 @@
   },
   {
     "code": "FAC_F-2026-03-25-000491",
-    "message": "Centre de Birnin Kebbi 2",
+    "message": "Installation de Birnin kebbi 2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6769,7 +6769,7 @@
   },
   {
     "code": "FAC_F-2026-03-31-000503",
-    "message": "Quartier général de Chibuto Fac1",
+    "message": "Chibuto Siège Fac1",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6793,7 +6793,7 @@
   },
   {
     "code": "FAC_F-2026-03-31-000507",
-    "message": "Centre de Birnin Kebbi 3",
+    "message": "Installation de Birnin kebbi 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6829,7 +6829,7 @@
   },
   {
     "code": "FAC_F-2026-03-31-000513",
-    "message": "Installation de droite de Gawasu 3",
+    "message": "Installation de Gawasu Damana 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6895,7 +6895,7 @@
   },
   {
     "code": "FAC_F-2026-03-31-000524",
-    "message": "Établissement PHCC 1 de Yowere",
+    "message": "Centre PHCC de Yowere 1",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6955,7 +6955,7 @@
   },
   {
     "code": "FAC_F-2026-03-31-000534",
-    "message": "Installation 1 du PHCC d'Okeso",
+    "message": "Installation 1 du PHCC d’Okeso",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6973,7 +6973,7 @@
   },
   {
     "code": "FAC_F-2026-03-31-000537",
-    "message": "Couronne de guerre",
+    "message": "Adé Ogun",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7099,7 +7099,7 @@
   },
   {
     "code": "FAC_F-2026-03-31-000558",
-    "message": "Établissement PHCC 1 de Yowere",
+    "message": "Centre PHCC de Yowere 1",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7135,7 +7135,7 @@
   },
   {
     "code": "FAC_F-2026-03-31-000564",
-    "message": "Installation 1 du PHCC d'Okeso",
+    "message": "Installation 1 du PHCC d’Okeso",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7213,7 +7213,7 @@
   },
   {
     "code": "FAC_F-2026-04-01-000577",
-    "message": "Couronne de guerre",
+    "message": "Adé Ogun",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7267,7 +7267,7 @@
   },
   {
     "code": "FAC_F-2026-04-01-000586",
-    "message": "Installation 1 du PHCC d'Okeso",
+    "message": "Installation 1 du PHCC d’Okeso",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7279,7 +7279,7 @@
   },
   {
     "code": "FAC_F-2026-04-01-000588",
-    "message": "Établissement PHCC 1 de Yowere",
+    "message": "Centre PHCC de Yowere 1",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7543,13 +7543,13 @@
   },
   {
     "code": "FAC_F-2026-04-02-000632",
-    "message": "Installation PHCC de Yowere 5",
+    "message": "Établissement PHCC de Yowere 5",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-02-000633",
-    "message": "Installation 1 du PHCC d'Okeso",
+    "message": "Installation 1 du PHCC d’Okeso",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7699,7 +7699,7 @@
   },
   {
     "code": "FAC_F-2026-04-02-000658",
-    "message": "Établissement PHCC 1 de Yowere",
+    "message": "Centre PHCC de Yowere 1",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7729,31 +7729,31 @@
   },
   {
     "code": "FAC_F-2026-04-06-000668",
-    "message": "Kwara Faire 2",
+    "message": "Kwara Fac2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000669",
-    "message": "Adé ogun Do 2",
+    "message": "Ade Ogun Fac 2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000670",
-    "message": "Sosoki-do 2",
+    "message": "Sosoki Fac2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000671",
-    "message": "Laver le visage 2",
+    "message": "Nig Fac 2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000672",
-    "message": "C'est comme ça que je fais 2",
+    "message": "Asa Fac 2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7771,13 +7771,13 @@
   },
   {
     "code": "FAC_F-2026-04-06-000675",
-    "message": "Laver le visage 2",
+    "message": "Nig Fac 2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000676",
-    "message": "Adé ogun Do 2",
+    "message": "Ade Ogun Fac 2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7789,37 +7789,37 @@
   },
   {
     "code": "FAC_F-2026-04-06-000678",
-    "message": "Sosoki-do 2",
+    "message": "Sosoki Fac2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000679",
-    "message": "C'est comme ça que je fais 2",
+    "message": "Asa Fac 2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000680",
-    "message": "Kwara Faire 2",
+    "message": "Kwara Fac2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000681",
-    "message": "Laver le visage 3",
+    "message": "Nig Fac 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000682",
-    "message": "Adé ogun Do 3",
+    "message": "Ade Ogun Fac 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000683",
-    "message": "Kwara-do 3",
+    "message": "Kwara Fac 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7831,7 +7831,7 @@
   },
   {
     "code": "FAC_F-2026-04-06-000685",
-    "message": "Sosoki-do 3",
+    "message": "Sosoki Fac 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7843,13 +7843,13 @@
   },
   {
     "code": "FAC_F-2026-04-06-000687",
-    "message": "C'est comme ça que je fais 3",
+    "message": "Asa Fac 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000688",
-    "message": "Sosoki-do 3",
+    "message": "Sosoki Fac 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7861,7 +7861,7 @@
   },
   {
     "code": "FAC_F-2026-04-06-000690",
-    "message": "Adé ogun Do 3",
+    "message": "Ade Ogun Fac 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7873,13 +7873,13 @@
   },
   {
     "code": "FAC_F-2026-04-06-000692",
-    "message": "Kwara-do 3",
+    "message": "Kwara Fac 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000693",
-    "message": "C'est comme ça que je fais 3",
+    "message": "Asa Fac 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7897,25 +7897,25 @@
   },
   {
     "code": "FAC_F-2026-04-06-000696",
-    "message": "Adé ogun Do 3",
+    "message": "Ade Ogun Fac 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000697",
-    "message": "Kwara-do 3",
+    "message": "Kwara Fac 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000698",
-    "message": "C'est comme ça que je fais 3",
+    "message": "Asa Fac 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-06-000699",
-    "message": "Sosoki-do 3",
+    "message": "Sosoki Fac 3",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8401,7 +8401,7 @@
   },
   {
     "code": "FAC_F-2026-04-12-000780",
-    "message": "Service bilingue 31",
+    "message": "Établissement du quartier 31 de Bilingwi",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8461,7 +8461,7 @@
   },
   {
     "code": "FAC_F-2026-04-12-000790",
-    "message": "Établissement du service 32 de Bolori I",
+    "message": "Bolori I Service 32",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8569,7 +8569,7 @@
   },
   {
     "code": "FAC_F-2026-04-12-000808",
-    "message": "Bo Kwaya près du centre de santé primaire 26",
+    "message": "Bo Kwaya Kusar Centre de santé primaire Établissement 26",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8953,7 +8953,7 @@
   },
   {
     "code": "FAC_F-2026-04-12-000872",
-    "message": "Hôpital général de Kwaya-Kusar, établissement 25",
+    "message": "Bo Kwaya-Kusar Hôpital général 25",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9025,7 +9025,7 @@
   },
   {
     "code": "FAC_F-2026-04-12-000884",
-    "message": "Service 27 du quartier Gwange III",
+    "message": "Établissement du quartier 27 de Gwange III",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9271,7 +9271,7 @@
   },
   {
     "code": "FAC_F-2026-04-12-000925",
-    "message": "À proximité du service 24",
+    "message": "Établissement 24 du quartier Kwaya-kusar",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9649,7 +9649,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-000988",
-    "message": "Service bilingue 31",
+    "message": "Établissement du quartier 31 de Bilingwi",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9793,7 +9793,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001012",
-    "message": "Bo Kwaya près du centre de santé primaire 26",
+    "message": "Bo Kwaya Kusar Centre de santé primaire Établissement 26",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -10015,7 +10015,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001049",
-    "message": "Hôpital général de Kwaya-Kusar, établissement 25",
+    "message": "Bo Kwaya-Kusar Hôpital général 25",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -10111,7 +10111,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001065",
-    "message": "Service 27 du quartier Gwange III",
+    "message": "Établissement du quartier 27 de Gwange III",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -10273,7 +10273,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001092",
-    "message": "Établissement du service 32 de Bolori I",
+    "message": "Bolori I Service 32",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -10321,7 +10321,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001100",
-    "message": "À proximité du service 24",
+    "message": "Établissement 24 du quartier Kwaya-kusar",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -10819,7 +10819,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001196",
-    "message": "Bo Kwaya près du centre de santé primaire 26",
+    "message": "Bo Kwaya Kusar Centre de santé primaire Établissement 26",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -10873,7 +10873,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001205",
-    "message": "Hôpital général de Kwaya-Kusar, établissement 25",
+    "message": "Bo Kwaya-Kusar Hôpital général 25",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -11269,7 +11269,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001271",
-    "message": "Établissement du service 32 de Bolori I",
+    "message": "Bolori I Service 32",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -11287,7 +11287,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001274",
-    "message": "Service 27 du quartier Gwange III",
+    "message": "Établissement du quartier 27 de Gwange III",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -11437,7 +11437,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001299",
-    "message": "À proximité du service 24",
+    "message": "Établissement 24 du quartier Kwaya-kusar",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -11503,7 +11503,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001310",
-    "message": "Service bilingue 31",
+    "message": "Établissement du quartier 31 de Bilingwi",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -11965,7 +11965,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001387",
-    "message": "Service bilingue 31",
+    "message": "Établissement du quartier 31 de Bilingwi",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -12025,7 +12025,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001397",
-    "message": "Service 27 du quartier Gwange III",
+    "message": "Établissement du quartier 27 de Gwange III",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -12049,7 +12049,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001401",
-    "message": "À proximité du service 24",
+    "message": "Établissement 24 du quartier Kwaya-kusar",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -12265,7 +12265,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001437",
-    "message": "Hôpital général de Kwaya-Kusar, établissement 25",
+    "message": "Bo Kwaya-Kusar Hôpital général 25",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -12517,7 +12517,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001479",
-    "message": "Établissement du service 32 de Bolori I",
+    "message": "Bolori I Service 32",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -12607,7 +12607,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001494",
-    "message": "Bo Kwaya près du centre de santé primaire 26",
+    "message": "Bo Kwaya Kusar Centre de santé primaire Établissement 26",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -13351,7 +13351,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001618",
-    "message": "À proximité du service 24",
+    "message": "Établissement 24 du quartier Kwaya-kusar",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -13603,7 +13603,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001660",
-    "message": "Hôpital général de Kwaya-Kusar, établissement 25",
+    "message": "Bo Kwaya-Kusar Hôpital général 25",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -13627,7 +13627,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001664",
-    "message": "Service 27 du quartier Gwange III",
+    "message": "Établissement du quartier 27 de Gwange III",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -13747,7 +13747,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001684",
-    "message": "Service bilingue 31",
+    "message": "Établissement du quartier 31 de Bilingwi",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -13963,7 +13963,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001720",
-    "message": "Bo Kwaya près du centre de santé primaire 26",
+    "message": "Bo Kwaya Kusar Centre de santé primaire Établissement 26",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -14155,7 +14155,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001752",
-    "message": "Établissement du service 32 de Bolori I",
+    "message": "Bolori I Service 32",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -14215,7 +14215,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001762",
-    "message": "Facilité de recherche 21",
+    "message": "Installation Zarawuyaku 21",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -14419,7 +14419,7 @@
   },
   {
     "code": "FAC_F-2026-04-13-001796",
-    "message": "Facilité de recherche 21",
+    "message": "Installation Zarawuyaku 21",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -14503,7 +14503,7 @@
   },
   {
     "code": "FAC_F-2026-04-14-001815",
-    "message": "Centre de recherche 23",
+    "message": "Installation Zarawuyaku 23",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -14599,7 +14599,7 @@
   },
   {
     "code": "FAC_F-2026-04-15-001831",
-    "message": "Modèle d'oeil PHC Store",
+    "message": "Oko Modèle PHC Magasin",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -15931,19 +15931,19 @@
   },
   {
     "code": "FAC_F-2026-04-15-002053",
-    "message": "Sourate LGA Store",
+    "message": "Surelere LGA Store",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-15-002054",
-    "message": "Autour du marché PHC Store",
+    "message": "Magasin PHC du marché d’Oko",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-15-002055",
-    "message": "Oui MPHC",
+    "message": "Oko MPHC",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -16363,7 +16363,7 @@
   },
   {
     "code": "FAC_F-2026-04-27-002125",
-    "message": "Bo Kwaya près du centre de santé primaire 26",
+    "message": "Bo Kwaya Kusar Centre de santé primaire Établissement 26",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -16375,7 +16375,7 @@
   },
   {
     "code": "FAC_F-2026-04-27-002127",
-    "message": "Service bilingue 50",
+    "message": "Établissement du quartier Bilingwi 50",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -16471,7 +16471,7 @@
   },
   {
     "code": "FAC_F-2026-04-27-002143",
-    "message": "Centre de santé primaire Bo Mala Kachallah Établissement 50",
+    "message": "Bo Mala Kachallah Centre de santé primaire Établissement 50",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -16657,7 +16657,7 @@
   },
   {
     "code": "FAC_F-2026-04-27-002174",
-    "message": "Bo Kwaya près du centre de santé primaire 50",
+    "message": "Centre de santé primaire de Bo Kwaya Kusar 50",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -16753,7 +16753,7 @@
   },
   {
     "code": "FAC_F-2026-04-27-002190",
-    "message": "Hôpital général de Kwaya-Kusar, établissement 25",
+    "message": "Bo Kwaya-Kusar Hôpital général 25",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -17041,7 +17041,7 @@
   },
   {
     "code": "FAC_F-2026-04-27-002238",
-    "message": "Service bilingue 31",
+    "message": "Établissement du quartier 31 de Bilingwi",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -17065,7 +17065,7 @@
   },
   {
     "code": "FAC_F-2026-04-27-002242",
-    "message": "Établissement 50 du quartier de Guwal",
+    "message": "Établissement du quartier Guwal 50",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -17203,7 +17203,7 @@
   },
   {
     "code": "FAC_F-2026-04-27-002265",
-    "message": "Établissement du service 32 de Bolori I",
+    "message": "Bolori I Service 32",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -18097,7 +18097,7 @@
   },
   {
     "code": "FAC_F-2026-04-27-002414",
-    "message": "Bo Bulabulin Ngarannam Centre de santé primaire Établissement 50",
+    "message": "Bo Bulabulin Ngarannam Centre de santé primaire 50",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -18223,13 +18223,13 @@
   },
   {
     "code": "FAC_F-2026-04-27-002435",
-    "message": "Service 50 de Kida",
+    "message": "Service Kida, établissement 50",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "FAC_F-2026-04-27-002436",
-    "message": "À proximité du service 50",
+    "message": "Installation 50 du quartier Kwaya-kusar",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -18271,7 +18271,7 @@
   },
   {
     "code": "FAC_F-2026-04-27-002443",
-    "message": "Service 27 du quartier Gwange III",
+    "message": "Établissement du quartier 27 de Gwange III",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -18301,7 +18301,7 @@
   },
   {
     "code": "FAC_F-2026-04-27-002448",
-    "message": "À proximité du service 24",
+    "message": "Établissement 24 du quartier Kwaya-kusar",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -19249,7 +19249,7 @@
   },
   {
     "code": "HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA",
-    "message": "Télécharger des données unifiées",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -19393,7 +19393,7 @@
   },
   {
     "code": "HCM_MAP_USERS_TO_REGISTERS_DESC",
-    "message": "Affectez les utilisateurs de la campagne aux registres de présence pour activer le suivi des présences.",
+    "message": "Affectez les utilisateurs de la campagne aux registres de présence pour permettre le suivi des présences.",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -19669,7 +19669,7 @@
   },
   {
     "code": "HCM_UNIFIED_DATA_MESSAGE",
-    "message": "Le fichier unifié comprendra toutes les fiches des installations, des utilisateurs et des cibles.",
+    "message": "Le fichier unifié comprendra toutes les fiches d'installation, d'utilisateur et de cible.",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -19693,7 +19693,7 @@
   },
   {
     "code": "HCM_UPLOAD_DATA_HEADING",
-    "message": "Télécharger les données du microplan",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -19723,7 +19723,7 @@
   },
   {
     "code": "HCM_UPLOAD_UNIFIED_DATA_HEADING",
-    "message": "Télécharger des données unifiées",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -20035,7 +20035,7 @@
   },
   {
     "code": "INSUFFICIENT_RESOURCES",
-    "message": "Ressources insuffisantes",
+    "message": "Produits insuffisants",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -20371,13 +20371,13 @@
   },
   {
     "code": "INVENTORY_MRN_TAG_LABEL",
-    "message": "MRN Non",
+    "message": "MRN non",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "INVENTORY_MRN_TAG_LABEL ",
-    "message": "MRN Non",
+    "message": "MRN non",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -20635,7 +20635,7 @@
   },
   {
     "code": "INVENTORY_REASON_FOR_LESS_EXCESS_LABEL",
-    "message": "Raison pour moins/excédent",
+    "message": "Raison du moins/de l’excès",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -20887,7 +20887,7 @@
   },
   {
     "code": "INVENTORY_RECORDSTOCK_quantityReceived_ERROR",
-    "message": "Veuillez entrer une quantité reçue valide",
+    "message": "Veuillez saisir une quantité reçue valide",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -20911,7 +20911,7 @@
   },
   {
     "code": "INVENTORY_RECORDSTOCK_scanResource_ERROR",
-    "message": "Veuillez scanner une ressource valide",
+    "message": "Veuillez scanner un produit valide",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -20923,7 +20923,7 @@
   },
   {
     "code": "INVENTORY_RECORDSTOCK_scanResource_IS_G_S1_ERROR",
-    "message": "Veuillez scanner une ressource valide",
+    "message": "Veuillez scanner un produit valide",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -20941,7 +20941,7 @@
   },
   {
     "code": "INVENTORY_RECORDSTOCK_wayBillNumber_ERROR",
-    "message": "Veuillez saisir un numéro de lettre de transport valide",
+    "message": "Veuillez entrer un numéro de lettre de transport valide",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -20989,7 +20989,7 @@
   },
   {
     "code": "INVENTORY_REJECT_COMMENT_LABEL",
-    "message": "Motif du rejet",
+    "message": "Motif du refus",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -21013,7 +21013,7 @@
   },
   {
     "code": "INVENTORY_RESOURCE_LABEL",
-    "message": "Ressource",
+    "message": "Produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -21073,19 +21073,19 @@
   },
   {
     "code": "INVENTORY_SCAN_RESOURCE_HELPTEXT",
-    "message": "Ressource d'analyse",
+    "message": "Scanner le produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "INVENTORY_SCAN_RESOURCE_HELP_TEXT",
-    "message": "Scannez le code-barres de la ressource",
+    "message": "Scannez le code barre du produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "INVENTORY_SCAN_RESOURCE_INFOTEXT",
-    "message": "Scannez le code-barres de la ressource",
+    "message": "Scannez le code barre du produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -21307,13 +21307,13 @@
   },
   {
     "code": "INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Raison de la transaction",
+    "message": "Motif de la transaction",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -21379,7 +21379,7 @@
   },
   {
     "code": "INVENTORY_WAYBILL_NUMBER_HELPTEXT",
-    "message": "Entrez le numéro de la lettre de transport",
+    "message": "Entrez le numéro de la feuille de route",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -21409,7 +21409,7 @@
   },
   {
     "code": "INVENTORY_WAY_BILL_NUMBER_HELP_TEXT",
-    "message": "Entrez le numéro de la lettre de transport",
+    "message": "Entrez le numéro de la feuille de route",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -21571,7 +21571,7 @@
   },
   {
     "code": "Inventory_no_transactions_description",
-    "message": "Aucune nouvelle transaction n'est créée.",
+    "message": "Aucune nouvelle transaction n’est créée.",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -21613,31 +21613,31 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
-    "message": "Modèle de plainte de catégorie de paire d'étiquettes",
+    "message": "Modèle de réclamation de catégorie de paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "Catégorie de paire d'étiquettes Hfreferralmodel",
+    "message": "Catégorie de paire d'étiquettes hfreferralmodel",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
-    "message": "Catégorie de paire d'étiquettes Modèle de ménage",
+    "message": "Modèle de ménage de catégorie de paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
-    "message": "Catégorie de paire d'étiquettes Modèle individuel",
+    "message": "Modèle individuel de catégorie de paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Catégorie de paire d'étiquettesModèle de surveillance intérieur",
+    "message": "Catégorie de paire d'étiquettes à l'intérieur du modèle de surveillance",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -21649,7 +21649,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
-    "message": "Catégorie de paire d'étiquettes Lqamodel",
+    "message": "Catégorie de paire d'étiquettes lqamodel",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -21667,7 +21667,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
-    "message": "Catégorie de paire d'étiquettes Modèle de stock",
+    "message": "Modèle de stock de catégorie de paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -21685,7 +21685,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Zone de réclamation",
+    "message": "Espace réclamation",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -21715,73 +21715,73 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Zone de réclamation de la boîte de réception des plaintes concernant les paires d'étiquettes",
+    "message": "Zone de réclamation de la boîte de réception des réclamations pour les paires d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Paire d'étiquettes Boîte de réception de la plainte Date de la plainte",
+    "message": "Date de la réclamation dans la boîte de réception de la réclamation pour la paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Paire d'étiquettes Boîte de réception de la plainte Numéro de plainte",
+    "message": "Numéro de réclamation de la boîte de réception de la réclamation de la paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
-    "message": "Statut de la plainte dans la boîte de réception des plaintes concernant les paires d'étiquettes",
+    "message": "État de la réclamation dans la boîte de réception des réclamations pour les paires d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Type de plainte de la boîte de réception de la plainte relative aux paires d'étiquettes",
+    "message": "Type de réclamation de la boîte de réception des réclamations pour les paires d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Paire d'étiquettes Voir la plainte Contact du plaignant",
+    "message": "Vue de la réclamation de la paire d'étiquettes Contact du plaignant",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
-    "message": "Plainte sur les paires d'étiquettes Voir la zone des plaintes",
+    "message": "Zone de réclamation de la vue des réclamations de la paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Paire d'étiquettes Plainte Afficher la date des plaintes",
+    "message": "Réclamation de paire d'étiquettes Afficher la date des réclamations",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Paire d'étiquettes Plainte Afficher le numéro de plainte",
+    "message": "Paire d'étiquettes Voir la réclamation Numéro de réclamation",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Paire d'étiquettes Voir la plainte Type de plainte",
+    "message": "Type de réclamation de vue de réclamation de paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Plainte sur les paires d'étiquettes Voir la plainte",
+    "message": "Réclamation de paire d'étiquettes Afficher la réclamation",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "Réclamation relative à une paire d'étiquettes Afficher l'état de la réclamation",
+    "message": "Réclamation de paire d'étiquettes Afficher l'état de la réclamation",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -21877,13 +21877,13 @@
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
-    "message": "Paire d'étiquettes Nom du chef de ménage",
+    "message": "Nom du chef de famille de la paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
-    "message": "Paire d'étiquettes Localité du ménage",
+    "message": "Localité du foyer de la paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -21943,7 +21943,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTREVISITED",
-    "message": "Manqué - Pas revisité",
+    "message": "Manqué - Non revisité",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -21997,7 +21997,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22009,97 +22009,97 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Paire d'étiquettes Ihm Résumé Enfants présents",
+    "message": "Paire d'étiquettes résumé ihm enfants présents",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Paire d'étiquettes Ihm Résumé Enfants vaccinés",
+    "message": "Paire d'étiquettes résumé ihm enfants vaccinés",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Paire d'étiquettes Résumé Ihm Commentaires finaux",
+    "message": "Paire d'étiquettes Résumé ihm Commentaires finaux",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
-    "message": "Paire d'étiquettes Résumé Ihm Manqué Absent",
+    "message": "Paire d'étiquettes Résumé IHM manqué absent",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
-    "message": "Paire d'étiquettes Ihm Résumé Missed Endormi",
+    "message": "Paire d'étiquettes Résumé IHM manqué de sommeil",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Paire d'étiquettes Résumé Ihm Manqué Non Revisité",
+    "message": "Paire d'étiquettes Résumé IHM manqué non revisité",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Paire d'étiquettes Résumé Ihm Manqué Non visité",
+    "message": "Paire d'étiquettes Résumé IHM manqué non visité",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Paire d'étiquettes Résumé Ihm Manqué Autre",
+    "message": "Paire d'étiquettes Résumé IHM manqué Autre",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Paire d'étiquettes Ihm Résumé Refus manqué",
+    "message": "Paire d'étiquettes résumé ihm refus manqué",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
-    "message": "Paire d'étiquettes Résumé Ihm Routine manquée",
+    "message": "Paire d'étiquettes Résumé ihm Routine manquée",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Paire d'étiquettes Ihm Résumé Date de surveillance",
+    "message": "Paire d'étiquettes date de surveillance récapitulative ihm",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Paire d'étiquettes Résumé Ihm Désignation du moniteur",
+    "message": "Paire d'étiquettes Désignation récapitulative du moniteur ihm",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Paire d'étiquettes Résumé Ihm Nom du moniteur",
+    "message": "Paire d'étiquettes Résumé IHM Nom du moniteur",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Paire d'étiquettes Résumé Ihm mal couvert",
+    "message": "Résumé de la paire d'étiquettes ihm mal couvert",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Paire d'étiquettes Ihm Sommaire Zone de règlement",
+    "message": "Paire d'étiquettes zone de peuplement récapitulative ihm",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Paire d'étiquettes Ihm Résumé Type de règlement",
+    "message": "Paire d'étiquettes Type de règlement récapitulatif ihm",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22165,7 +22165,7 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_RESOURCE_LABEL",
-    "message": "Ressource",
+    "message": "Produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22183,13 +22183,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Raison de la transaction",
+    "message": "Motif de la transaction",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22207,7 +22207,7 @@
   },
   {
     "code": "LABEL_PAIR_LOCALITY",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22243,7 +22243,7 @@
   },
   {
     "code": "LABEL_PAIR_LQACAREGIVERINFORMEDLABEL",
-    "message": "Le soignant informé",
+    "message": "Soignant informé",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22309,7 +22309,7 @@
   },
   {
     "code": "LABEL_PAIR_LQAREASONNOTMARKEDLABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22321,7 +22321,7 @@
   },
   {
     "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22339,127 +22339,127 @@
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Paire d'étiquettes Lqa Raison d'absence",
+    "message": "Paire d'étiquettes motif d'absence lqa",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "Paire d'étiquettes Lqa Afp Sensibilisation",
+    "message": "Paire d'étiquettes sensibilisation à lqa et afp",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "Paire d'étiquettes Lqa Afp Nombre de cas",
+    "message": "Nombre de cas lqa afp pour la paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Paire d'étiquettes Sensibilisation Lqa Autre",
+    "message": "Paire d'étiquettes sensibilisation à la lqa autre",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Sensibilisation à la campagne Lqa de la paire d'étiquettes",
+    "message": "Sensibilisation à la campagne LQA pour la paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Paire d'étiquettes Lqa Soignant informé",
+    "message": "Paire d'étiquettes lqa soignant informé",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Paire d'étiquettes Lqa Enfants de moins de 5 ans",
+    "message": "Paire d'étiquettes lqa enfants de moins de 5 ans",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Paire d'étiquettes Lqa Âge de l'enfant Mois",
+    "message": "Paire d'étiquettes lqa âge enfant mois",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Étiquette Paire Lqa Sexe Enfant",
+    "message": "Paire d'étiquettes sexe d'enfant lqa",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Numéro de cluster Lqa de la paire d'étiquettes",
+    "message": "Numéro de cluster LQA de la paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Paire d'étiquettes Lqa marquées au doigt",
+    "message": "Paire d'étiquettes marquées au doigt LQA",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Paire d'étiquettes Numéro de lot Lqa",
+    "message": "Paire d'étiquettes numéro de lot lqa",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "Paire d'étiquettes Doses Lqa Opv",
+    "message": "Paire d'étiquettes doses lqa opv",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Libellé Paire Lqa Autre Raison Absence",
+    "message": "Paire d'étiquettes lqa autre motif d'absence",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Paire d'étiquettes Lqa Autre raison à préciser",
+    "message": "Paire d'étiquettes lqa, autre raison à préciser",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Paire d'étiquettes Lqa Autre motif de refus",
+    "message": "Paire d'étiquettes lqa autre motif de refus",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Paire d'étiquettes Raison Lqa non marquée",
+    "message": "La raison de la paire d'étiquettes LQA n'est pas marquée",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Raison du refus de la paire d'étiquettes Lqa",
+    "message": "Raison du refus de la paire d'étiquettes LQA",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Paire d'étiquettes Zone de règlement Lqa",
+    "message": "Paire d'étiquettes zone de peuplement lqa",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Paire d'étiquettes Lqa Nom de l'arpenteur",
+    "message": "Paire d'étiquettes Nom de l'arpenteur LQA",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Date de l'enquête Lqa pour la paire d'étiquettes",
+    "message": "Date de l'enquête LQA de la paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22495,13 +22495,13 @@
   },
   {
     "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "Numéro Mrn de la paire d'étiquettes",
+    "message": "Numéro MRN de la paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
-    "message": "Paire d'étiquettes Nom de l'individu",
+    "message": "Nom de la paire d'étiquettes de l'individu",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22537,7 +22537,7 @@
   },
   {
     "code": "LABEL_PAIR_REFERRALNAME",
-    "message": "Nom de la référence",
+    "message": "Nom de référence",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22555,7 +22555,7 @@
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
-    "message": "Statut de référence de la boîte de réception de référence de paire d'étiquettes",
+    "message": "Statut de référencement de la boîte de réception de référence de paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22573,7 +22573,7 @@
   },
   {
     "code": "LABEL_PAIR_RESOURCE",
-    "message": "Ressource de paire d'étiquettes",
+    "message": "Produit de paire d'étiquettes",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22585,7 +22585,7 @@
   },
   {
     "code": "LABEL_PAIR_SKU",
-    "message": "Ressource",
+    "message": "Produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22609,13 +22609,13 @@
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONREASON",
-    "message": "Raison de la transaction",
+    "message": "Motif de la transaction",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONTYPE",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22633,7 +22633,7 @@
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
-    "message": "Zone de réclamation",
+    "message": "Espace réclamation",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22705,7 +22705,7 @@
   },
   {
     "code": "LOADING_MODULE",
-    "message": "Chargement du module",
+    "message": "Module de chargement",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22747,7 +22747,7 @@
   },
   {
     "code": "LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Le soignant informé",
+    "message": "Soignant informé",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22813,7 +22813,7 @@
   },
   {
     "code": "LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22825,7 +22825,7 @@
   },
   {
     "code": "LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -22981,7 +22981,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_INVENTORY",
-    "message": "Suivez et mettez à jour les niveaux de stock de ressources à chaque point de distribution. Enregistrez les réceptions, les problèmes, la consommation et les pertes pour maintenir une visibilité précise des médicaments tout au long de la campagne.",
+    "message": "Suivez et mettez à jour les niveaux de stock des produits à chaque point de distribution. Enregistrez les réceptions, les sorties, la consommation et les pertes pour maintenir une visibilité précise des médicaments tout au long de la campagne.",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -23005,7 +23005,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_STOCKRECONCILIATION",
-    "message": "Comparez le stock déclaré avec les soldes attendus à la fin de chaque journée ou tour. Identifiez les écarts et validez les données d’inventaire pour maintenir une comptabilité précise des ressources.",
+    "message": "Comparez le stock déclaré avec les soldes attendus à la fin de chaque journée ou tour. Identifiez les écarts et validez les données d’inventaire pour maintenir une comptabilité précise des produits.",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -23521,7 +23521,7 @@
   },
   {
     "code": "QUANTITY_SENT_IS_REQUIRED",
-    "message": "Veuillez remplir le champ requis.",
+    "message": "Veuillez remplir le champ obligatoire.",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -23947,7 +23947,7 @@
   },
   {
     "code": "RESOURCE",
-    "message": "Ressource",
+    "message": "Produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -23959,13 +23959,13 @@
   },
   {
     "code": "RESOURCE2",
-    "message": "Filet de lit grade 2",
+    "message": "Moustiquaire grade 2",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "RESOURCES_ALREADY_SCANNED",
-    "message": "Cette ressource a déjà été analysée",
+    "message": "Ce produit a déjà été scanné",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -24487,7 +24487,7 @@
   },
   {
     "code": "StockModel.RESOURCE",
-    "message": "Ressource",
+    "message": "Produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -24757,7 +24757,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Identifiant unique du bénéficiaire",
+    "message": "Identifiant du bénéficiaire",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -24823,7 +24823,7 @@
   },
   {
     "code": "VALIDATION_CONDITIONAL_FIELD_LOCALIZED_EMPTY",
-    "message": "La localisation de {{fieldName}} est vide pour {{toggleName}}",
+    "message": "La localisation {{fieldName}} est vide pour {{toggleName}}",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -24835,7 +24835,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTIONS_REQUIRED",
-    "message": "Les options de la liste déroulante sont requises pour le champ {{fieldName}}",
+    "message": "Les options de liste déroulante sont obligatoires pour le champ {{fieldName}}",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -24847,7 +24847,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY",
-    "message": "L'étiquette de l'option de la liste déroulante est vide pour le champ {{fieldName}}",
+    "message": "Le libellé de l'option déroulante est vide pour le champ {{fieldName}}",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -24859,7 +24859,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTION_NAME_REQUIRED",
-    "message": "Le nom de l'option de la liste déroulante est requis pour le champ {{fieldName}}",
+    "message": "Le nom de l'option déroulante est obligatoire pour le champ {{fieldName}}",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -24895,19 +24895,19 @@
   },
   {
     "code": "VALIDATION_MANDATORY_FIELD_LOCALIZED_EMPTY",
-    "message": "La localisation de {{propertyName}} est vide pour le champ {{fieldName}}",
+    "message": "La localisation {{propertyName}} est vide pour le champ {{fieldName}}",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_BODY_LABEL_EMPTY",
-    "message": "L'étiquette du corps de la fenêtre contextuelle est vide pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Le libellé du corps de la fenêtre contextuelle est vide pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_DROPDOWN_OPTIONS_REQUIRED",
-    "message": "Les options de la liste déroulante sont requises pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Les options de liste déroulante sont requises pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -24919,7 +24919,7 @@
   },
   {
     "code": "VALIDATION_POPUP_FOOTER_LABEL_EMPTY",
-    "message": "L'étiquette de pied de page de la fenêtre contextuelle {{index}} est vide pour le champ {{fieldName}}",
+    "message": "Le libellé du pied de page contextuel {{index}} est vide pour le champ {{fieldName}}",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -24931,13 +24931,13 @@
   },
   {
     "code": "VALIDATION_POPUP_OPTION_LOCALIZED_VALUE_EMPTY",
-    "message": "L'étiquette de l'option est vide pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Le libellé de l'option est vide pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_RADIO_OPTIONS_REQUIRED",
-    "message": "Les options du bouton radio sont requises pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Les options radio sont obligatoires pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -24949,19 +24949,19 @@
   },
   {
     "code": "VALIDATION_POPUP_TABLE_COLUMNS_REQUIRED",
-    "message": "Les colonnes du tableau sont requises pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Les colonnes du tableau sont obligatoires pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_TABLE_COLUMN_HEADER_EMPTY",
-    "message": "L'en-tête de la colonne du tableau est vide pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "L'en-tête de colonne du tableau est vide pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_TITLE_EMPTY",
-    "message": "Le titre de la fenêtre contextuelle est vide pour le champ {{fieldName}}",
+    "message": "Le titre de la popup est vide pour le champ {{fieldName}}",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -24985,19 +24985,19 @@
   },
   {
     "code": "VALIDATION_TABLE_COLUMN_HEADER_EMPTY",
-    "message": "L'en-tête de la colonne du tableau est vide pour le champ {{fieldName}}",
+    "message": "L'en-tête de colonne du tableau est vide pour le champ {{fieldName}}",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_TOGGLE_LOCALIZED_VALUE_EMPTY",
-    "message": "La localisation de {{fieldName}} est vide",
+    "message": "La localisation {{fieldName}} est vide",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_TOGGLE_VALUE_REQUIRED",
-    "message": "La valeur de {{fieldName}} est requise",
+    "message": "La valeur {{fieldName}} est requise",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -25117,7 +25117,7 @@
   },
   {
     "code": "administrativeArea",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -25171,7 +25171,7 @@
   },
   {
     "code": "advanced.dropdownTemplate",
-    "message": "Modèle déroulant",
+    "message": "Modèle de liste déroulante",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -25189,13 +25189,13 @@
   },
   {
     "code": "advanced.facilityFromWhich",
-    "message": "Établissement à partir de",
+    "message": "Installation à partir de",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "advanced.facilityToWhich",
-    "message": "Installation à",
+    "message": "Facilité de",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -25207,7 +25207,7 @@
   },
   {
     "code": "advanced.idPopulator",
-    "message": "Populateur d'identifiants",
+    "message": "remplisseur d'identifiants",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -25249,7 +25249,7 @@
   },
   {
     "code": "advanced.panelCard",
-    "message": "Carte de panneau",
+    "message": "Carte panneau",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -25279,7 +25279,7 @@
   },
   {
     "code": "advanced.resourceCard",
-    "message": "Carte de ressources",
+    "message": "Fiche produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -25303,7 +25303,7 @@
   },
   {
     "code": "advanced.searchByID",
-    "message": "Rechercher par pièce d'identité",
+    "message": "Rechercher par identifiant",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -25489,7 +25489,7 @@
   },
   {
     "code": "card",
-    "message": "Carte",
+    "message": " ",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -25537,7 +25537,7 @@
   },
   {
     "code": "clientReferenceId",
-    "message": "ID de référence client",
+    "message": "Identifiant de référence client",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -25555,7 +25555,7 @@
   },
   {
     "code": "column",
-    "message": "Colonne",
+    "message": " ",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -25855,7 +25855,7 @@
   },
   {
     "code": "facilityToWhich",
-    "message": "Installation à",
+    "message": "Facilité de",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -25987,13 +25987,13 @@
   },
   {
     "code": "idPopulator",
-    "message": "Populateur d'identifiants",
+    "message": "remplisseur d'identifiants",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "idSearch",
-    "message": "Recherche d'identité",
+    "message": "recherche d'identité",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26143,7 +26143,7 @@
   },
   {
     "code": "listViewMembers",
-    "message": "Afficher les membres",
+    "message": "Voir les membres",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26221,7 +26221,7 @@
   },
   {
     "code": "mrnTag",
-    "message": "Journée MRN",
+    "message": "Étiquette MRN",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26299,13 +26299,13 @@
   },
   {
     "code": "overviewLabelPairCard",
-    "message": "Aperçu Détails",
+    "message": "Détails de l'aperçu",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "panelCard",
-    "message": "Carte de panneau",
+    "message": "Carte panneau",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26335,7 +26335,7 @@
   },
   {
     "code": "prefillFromScan",
-    "message": "Préremplir à partir de la numérisation",
+    "message": "Préremplir à partir de l'analyse",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26359,7 +26359,7 @@
   },
   {
     "code": "productVariant",
-    "message": "Sélectionnez un produit",
+    "message": "Sélectionner un produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26371,7 +26371,7 @@
   },
   {
     "code": "productdetail",
-    "message": "Sélectionnez un produit",
+    "message": "Sélectionner un produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26467,7 +26467,7 @@
   },
   {
     "code": "reasonForLessExcess",
-    "message": "Raison pour moins/excédent",
+    "message": "Raison du moins/de l’excès",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26557,13 +26557,13 @@
   },
   {
     "code": "redoseButton",
-    "message": "Redose",
+    "message": "Redoser",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "redoseComments",
-    "message": "Commentaires sur Redose",
+    "message": "Redoser les commentaires",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26593,7 +26593,7 @@
   },
   {
     "code": "referralReason",
-    "message": "Raison de la référence",
+    "message": "Motif de référence",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26617,13 +26617,13 @@
   },
   {
     "code": "resource",
-    "message": "Ressource",
+    "message": "Produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "resourceCard",
-    "message": "Carte de ressources",
+    "message": "Fiche produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26665,7 +26665,7 @@
   },
   {
     "code": "scanResource",
-    "message": "Ressource d'analyse",
+    "message": "Scanner le produit",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26755,7 +26755,7 @@
   },
   {
     "code": "senderFacilityId",
-    "message": "ID de l'installation de l'expéditeur",
+    "message": "ID de l'établissement expéditeur",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26863,7 +26863,7 @@
   },
   {
     "code": "stockItems",
-    "message": " ",
+    "message": "Articles en stock",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26875,7 +26875,7 @@
   },
   {
     "code": "stockProductDetails",
-    "message": "Détails du produit",
+    "message": "détails du produit en stock",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -26917,7 +26917,7 @@
   },
   {
     "code": "stocksuccess_secondaryAction",
-    "message": "Nouvelle transaction",
+    "message": "Nouvelle opération",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -27013,31 +27013,31 @@
   },
   {
     "code": "transactionType",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "transactionType2",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "transactionTypeCard",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "transactionType_1",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "transactionType_2",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -27152,6 +27152,72 @@
   {
     "code": "{{fn:getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
     "message": "Expéditeur",
+    "module": "hcm-base-inventory-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVENTORY_QUANTITY",
+    "message": "Quantité",
+    "module": "hcm-base-inventory-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVENTORY_SECOND_PAGE_PARTY",
+    "message": "Émetteur/destinataire",
+    "module": "hcm-base-inventory-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCK_ACCEPT_SUCCESS_DESCRIPTION",
+    "message": "La réception de stock a été enregistrée avec succès.",
+    "module": "hcm-base-inventory-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCK_ACCEPT_SUCCESS_GO_BACK_BUTTON",
+    "message": "Retour à Gérer le stock",
+    "module": "hcm-base-inventory-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCK_ACCEPT_SUCCESS_HEADING",
+    "message": "Actions acceptées",
+    "module": "hcm-base-inventory-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
+    "message": "Action de l'utilisateur",
+    "module": "hcm-base-inventory-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+    "message": "Source",
+    "module": "hcm-base-inventory-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_QUANTITY",
+    "message": "Quantité",
+    "module": "hcm-base-inventory-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_SECOND_PAGE_PARTY",
+    "message": "Émetteur/destinataire",
+    "module": "hcm-base-inventory-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "Quantité",
+    "module": "hcm-base-inventory-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_IN_HAND",
+    "message": "Stock en main",
     "module": "hcm-base-inventory-co-delivery",
     "locale": "fr_DEMO"
   }

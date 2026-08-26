@@ -205,7 +205,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "Modelo de referência de HF",
+    "message": "Modelo de referência de IC",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -223,7 +223,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Monitoramento Interno",
+    "message": "Monitoramento interno",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -247,7 +247,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Beneficiário do Projeto",
+    "message": "Beneficiário do projeto",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -271,7 +271,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Área de Reclamações",
+    "message": "Área de reclamação",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -301,7 +301,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Área de Reclamações",
+    "message": "Área de reclamação",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -337,7 +337,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
-    "message": "Área de Reclamações",
+    "message": "Área de reclamação",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -385,7 +385,7 @@
   },
   {
     "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Data de Registro",
+    "message": "Data de registro",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -415,19 +415,19 @@
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
-    "message": "Idade do Beneficiário",
+    "message": "Idade do beneficiário",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
-    "message": "Gênero do Beneficiário",
+    "message": "Gênero do beneficiário",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
-    "message": "Nome do Beneficiário",
+    "message": "Nome do beneficiário",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -511,7 +511,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYFINALCOMMENTS",
-    "message": "Comentários Finais",
+    "message": "Comentários finais",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -541,7 +541,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDOTHER",
-    "message": "Perdido (Outro)",
+    "message": "Perdeu (outro)",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -583,7 +583,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -607,7 +607,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Comentários Finais",
+    "message": "Comentários finais",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -637,7 +637,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Perdido (Outro)",
+    "message": "Perdeu (outro)",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -679,7 +679,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -793,25 +793,25 @@
   },
   {
     "code": "LABEL_PAIR_LQAABSENCEREASONLABEL",
-    "message": "Motivo de Ausência",
+    "message": "Motivo da ausência",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAFPAWARENESSLABEL",
-    "message": "Conscientização AFP",
+    "message": "Conscientização da AFP",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAFPCASECOUNTLABEL",
-    "message": "Contagem de casos AFP",
+    "message": "Contagem de casos de AFP",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAWARENESSOTHERLABEL",
-    "message": "Outra Consciência",
+    "message": "Outra consciência",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -841,7 +841,7 @@
   },
   {
     "code": "LABEL_PAIR_LQACHILDSEXLABEL",
-    "message": "Sexo Infantil",
+    "message": "Sexo infantil",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -901,7 +901,7 @@
   },
   {
     "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -913,25 +913,25 @@
   },
   {
     "code": "LABEL_PAIR_LQASURVEYORNAMELABEL",
-    "message": "Nome do pesquisador",
+    "message": "Nome do topógrafo",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Motivo de Ausência",
+    "message": "Motivo da ausência",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "Conscientização AFP",
+    "message": "Conscientização da AFP",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "Contagem de casos AFP",
+    "message": "Contagem de casos de AFP",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -967,7 +967,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Sexo Infantil",
+    "message": "Sexo infantil",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1027,13 +1027,13 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Nome do pesquisador",
+    "message": "Nome do topógrafo",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1165,13 +1165,13 @@
   },
   {
     "code": "LABEL_PAIR_STOCKEXPIRY",
-    "message": "Expiração de estoque",
+    "message": "Expiração do estoque",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Expiração de estoque",
+    "message": "Expiração do estoque",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1195,7 +1195,7 @@
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
-    "message": "Área de Reclamações",
+    "message": "Área de reclamação",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1543,7 +1543,7 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
-    "message": "Selecione Armazém",
+    "message": "Selecione o armazém",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1945,7 +1945,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "ID exclusivo do beneficiário",
+    "message": "ID do beneficiário",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1975,7 +1975,7 @@
   },
   {
     "code": "additionalFields",
-    "message": "Campos Adicionais",
+    "message": "Campos adicionais",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -2017,7 +2017,7 @@
   },
   {
     "code": "productVariants",
-    "message": "Variantes de produto",
+    "message": "Variantes do produto",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -2101,7 +2101,7 @@
   },
   {
     "code": "selectWarehouseLabel",
-    "message": "Selecione Armazém",
+    "message": "Selecione o armazém",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -2246,6 +2246,30 @@
   {
     "code": "tenantId",
     "message": "ID do locatário",
+    "module": "hcm-base-stockreports-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DataIssues",
+    "message": "Problemas de dados",
+    "module": "hcm-base-stockreports-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
+    "message": "Ação do usuário",
+    "module": "hcm-base-stockreports-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+    "message": "Fonte de informações da campanha",
+    "module": "hcm-base-stockreports-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "Quantidade",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   }

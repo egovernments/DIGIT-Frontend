@@ -1428,7 +1428,7 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "HE_NEW_EMPLOYEE_CITY_LABEL\u2009",
+    "code": "HE_NEW_EMPLOYEE_CITY_LABEL ",
     "message": "New Employee ULB",
     "module": "hcm-hr",
     "locale": "en_DEMO"
@@ -1459,7 +1459,7 @@
   },
   {
     "code": "HRMS_CAMPAIGN_ASSIGNED_INFO",
-    "message": "Campaigns has been assigned successfully. Click on \u2018Create a new user\u2019 button if you want to create a user. Click on \u2018Back to Home\u2019 button to go back to the home screen.",
+    "message": "Campaigns has been assigned successfully. Click on ‘Create a new user’ button if you want to create a user. Click on ‘Back to Home’ button to go back to the home screen.",
     "module": "hcm-hr",
     "locale": "en_DEMO"
   },
@@ -1471,7 +1471,7 @@
   },
   {
     "code": "HRMS_CREATE_EMPLOYEE_INFO",
-    "message": "The employee has been created successfully. Click on \u2018Proceed For Campaign Assignment\u2019 button if you want to assign a campaign to the user. Click on \u2018Back to Home\u2019 button to go back to the home screen.",
+    "message": "The employee has been created successfully. Click on ‘Proceed For Campaign Assignment’ button if you want to assign a campaign to the user. Click on ‘Back to Home’ button to go back to the home screen.",
     "module": "hcm-hr",
     "locale": "en_DEMO"
   },
@@ -1734,7 +1734,7 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "HR_CITY_SELECT_LABEL\u2009",
+    "code": "HR_CITY_SELECT_LABEL ",
     "message": "Select",
     "module": "hcm-hr",
     "locale": "en_DEMO"
@@ -2604,7 +2604,7 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "HR_SELECT_CITY_PLACEHOLDER\u2009",
+    "code": "HR_SELECT_CITY_PLACEHOLDER ",
     "message": "Select ULB",
     "module": "hcm-hr",
     "locale": "en_DEMO"
@@ -2869,7 +2869,7 @@
   },
   {
     "code": "MSG",
-    "message": "Add your boundary hierarchy levels by clicking on rhe \u201cAdd New Boundary Hierarchy Level\u201d button. If you want to remove a level, click on the delete icon next to level you want to delete.",
+    "message": "Add your boundary hierarchy levels by clicking on rhe “Add New Boundary Hierarchy Level” button. If you want to remove a level, click on the delete icon next to level you want to delete.",
     "module": "hcm-hr",
     "locale": "en_DEMO"
   },

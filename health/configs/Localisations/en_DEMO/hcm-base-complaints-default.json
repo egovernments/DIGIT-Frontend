@@ -1,5 +1,11 @@
 [
   {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Label",
+    "module": "hcm-base-complaints-default",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "ADMINISTRATION_FAILED",
     "message": "Administration Failed",
     "module": "hcm-base-complaints-default",
@@ -295,7 +301,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_SEARCH_COMPLAINT_NUMBER_LABEL",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-complaints-default",
     "locale": "en_DEMO"
   },
@@ -307,7 +313,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_SEARCH_MOBILE_NUMBER_LABEL",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-complaints-default",
     "locale": "en_DEMO"
   },
@@ -343,7 +349,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_SORT_POPUP_LABEL",
-    "message": "Sort By:",
+    "message": "Sort by:",
     "module": "hcm-base-complaints-default",
     "locale": "en_DEMO"
   },
@@ -715,31 +721,31 @@
   },
   {
     "code": "complaintAcknowledgement",
-    "message": "Complaint Success",
+    "message": "Complaint success",
     "module": "hcm-base-complaints-default",
     "locale": "en_DEMO"
   },
   {
     "code": "complaintInbox",
-    "message": "Complaint Inbox",
+    "message": "Complaint inbox",
     "module": "hcm-base-complaints-default",
     "locale": "en_DEMO"
   },
   {
     "code": "complaintView",
-    "message": "Complaint View",
+    "message": "Complaint view",
     "module": "hcm-base-complaints-default",
     "locale": "en_DEMO"
   },
   {
     "code": "complaintsLabelPair",
-    "message": "Complaint Details",
+    "message": "Complaint details",
     "module": "hcm-base-complaints-default",
     "locale": "en_DEMO"
   },
   {
     "code": "labelPairComplaint",
-    "message": "Complaint Details",
+    "message": "Complaint details",
     "module": "hcm-base-complaints-default",
     "locale": "en_DEMO"
   }

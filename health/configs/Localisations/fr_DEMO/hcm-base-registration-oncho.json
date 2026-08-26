@@ -55,13 +55,13 @@
   },
   {
     "code": "ACTION2",
-    "message": "Avez-vous inscrit l'ID- {ID} de l'enfant {NAME} dans la carte de l'enfant (à utiliser au prochain cycle)",
+    "message": "Avez-vous inscrit l'ID- {ID} de l'enfant {NAME} dans la carte enfant (A utiliser au cycle suivant)",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "ACTION3",
-    "message": "Compte tenu de la santé, discutez de l'utilisation du comprimé au jour 2 et au jour 3",
+    "message": "Compte tenu de l'entretien de santé sur l'utilisation du comprimé au jour 2 et au jour 3",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -85,7 +85,7 @@
   },
   {
     "code": "ACTION_UNIFIED_UPLOAD_SCREEN",
-    "message": "Télécharger un fichier unifié",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -121,7 +121,7 @@
   },
   {
     "code": "ADD_HEADER_LOCALIZATION",
-    "message": "Ajouter une étiquette",
+    "message": "Étiquette",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -283,7 +283,7 @@
   },
   {
     "code": "APPCONFIG_MIN_LESS_EQUAL_MAX.COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -433,13 +433,13 @@
   },
   {
     "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_SPAQ",
-    "message": "Compte tenu de la santé, discutez de l'utilisation du comprimé au jour 2 et au jour 3",
+    "message": "Compte tenu de l'entretien de santé sur l'utilisation du comprimé au jour 2 et au jour 3",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_WRITE_CODE",
-    "message": "Avez-vous inscrit l'ID- {ID} de l'enfant {NAME} dans la carte de l'enfant (à utiliser au prochain cycle)",
+    "message": "Avez-vous inscrit l'ID- {ID} de l'enfant {NAME} dans la carte enfant (A utiliser au cycle suivant)",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -451,7 +451,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_ALERT_DESCRIPTION",
-    "message": "En fonction des réponses, vous allez à « {value} ». Êtes-vous sûr de vouloir continuer ?",
+    "message": "En fonction des réponses, vous allez vers '{value}'. Êtes-vous sûr de vouloir continuer ?",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -487,7 +487,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_INELIGIBLE_ALERT_DESCRIPTION",
-    "message": "L'utilisateur sera redirigé vers le parcours des personnes non éligibles",
+    "message": "L'utilisateur accèdera au flux non éligible",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -553,7 +553,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_DESCRIPTION",
-    "message": "Confirmez si l'enfant a reçu un médicament contenant de la sulfadoxine-pyriméthamine (SP) ou du cotrimoxazole (CTX) au cours des 28 derniers jours, que ce soit pour la prévention ou le traitement de maladies.",
+    "message": "Confirmez si l'enfant a reçu des médicaments contenant de la sulfadoxine-pyriméthamine (SP) ou du cotrimoxazole (CTX) au cours des 28 derniers jours, que ce soit pour la prévention ou le traitement de maladies.",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -583,7 +583,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_REFERRAL_ALERT_DESCRIPTION",
-    "message": "L'utilisateur sera redirigé vers le parcours d'orientation",
+    "message": "L'utilisateur accédera au flux de référence",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -595,7 +595,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_DESCRIPTION",
-    "message": "L'utilisateur sera redirigé vers le parcours d'administration",
+    "message": "L'utilisateur accédera au flux d'administration",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -631,7 +631,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_ADD_MEMBER_label_isPregnant_addmember",
-    "message": "Est-ce que tu es enceinte ?",
+    "message": "La bénéficiaire est-elle enceinte ?",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -655,25 +655,25 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_1",
-    "message": "Continuer",
+    "message": "Procéder",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_addmember",
-    "message": "Continuer",
+    "message": "Procéder",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION",
-    "message": "Entrez les détails de chaque individu du ménage.",
+    "message": "Saisissez les informations de base du bénéficiaire.",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember",
-    "message": "Assurez-vous de lire tous les détails avant de cliquer sur le bouton Soumettre. Cliquez sur le bouton Annuler pour revenir à la page précédente.",
+    "message": "Saisissez les informations de base du bénéficiaire.",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -685,7 +685,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING_addmember",
-    "message": "Détails du membre",
+    "message": "Détails du bénéficiaire",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -769,7 +769,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message_addmember",
-    "message": "Ceci est un champ obligatoire",
+    "message": "Ce champ est obligatoire",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -781,7 +781,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message_addmember",
-    "message": "La longueur doit être supérieure à 2 caractères.",
+    "message": "La longueur doit être comprise entre 2 et 200 caractères",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -859,13 +859,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isPregnant",
-    "message": "est enceinte",
+    "message": "La bénéficiaire est-elle enceinte ?",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isPregnant_addmember",
-    "message": "est enceinte",
+    "message": "La bénéficiaire est-elle enceinte ?",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -985,19 +985,19 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner",
-    "message": "Analyse QR",
+    "message": "Scanner le bon",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner_addmember",
-    "message": "Analyse QR",
+    "message": "Scanner le bon",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual",
-    "message": "Nom de famille de la personne",
+    "message": "Nom de la personne",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -1135,13 +1135,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong",
-    "message": "Précision GPS",
+    "message": "Latitude/Longueur",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_helpText",
-    "message": "Veuillez indiquer la précision GPS de l'adresse, si elle est disponible.",
+    "message": "Indiquez la latitude et la longitude de l'adresse, si disponible.",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -1159,7 +1159,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode_helpText",
-    "message": "Entrez le code postal de la région (Code PIN)",
+    "message": "Entrez le code postal de la région (code PIN)",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -1219,7 +1219,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1",
-    "message": "Continuer",
+    "message": "Procéder",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -1441,7 +1441,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_weight",
-    "message": "Poids (en Kgs)",
+    "message": "Poids (en kg)",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -1453,13 +1453,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_ACTION_BUTTON_LABEL_1",
-    "message": "Continuer",
+    "message": "Procéder",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION",
-    "message": "Entrez la taille de la famille, la date d'inscription et les données démographiques.",
+    "message": "Entrez les informations sur les membres du ménage, le cas échéant.",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -1735,7 +1735,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_REDOSE",
-    "message": "Redose",
+    "message": "Redoser",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -2581,7 +2581,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "Bénéficiaire",
+    "message": "Nom du bénéficiaire",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -2623,13 +2623,13 @@
   },
   {
     "code": "BENEFICIARY_DETAILS_DESC",
-    "message": "Aperçu de la livraison du bénéficiaire",
+    "message": "Examinez le bénéficiaire et les ressources à fournir.",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_DETAILS_HEADING",
-    "message": "Détails du bénéficiaire",
+    "message": "Détails de livraison",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -3391,13 +3391,13 @@
   },
   {
     "code": "ComplaintModel. COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "ComplaintModel.COMPLAINT_INBOX_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -3433,7 +3433,7 @@
   },
   {
     "code": "ComplaintModel.COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -3793,7 +3793,7 @@
   },
   {
     "code": "DIGIT_LOC_SELECT_MODULE_LABEL",
-    "message": "Sélectionner un module",
+    "message": "Sélectionnez le module",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -3931,7 +3931,7 @@
   },
   {
     "code": "ENTER_FIELD_LABEL",
-    "message": "Entrez l'étiquette du champ",
+    "message": "Entrez le libellé du champ",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -3949,7 +3949,7 @@
   },
   {
     "code": "ENTER_VALID_FILE",
-    "message": "Veuillez saisir un fichier valide",
+    "message": "Veuillez entrer un fichier valide",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -3997,7 +3997,7 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT",
-    "message": "Le fichier unifié comprendra toutes les fiches des installations, des utilisateurs et des cibles.",
+    "message": "Le fichier unifié comprendra toutes les fiches d'installation, d'utilisateur et de cible.",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -4405,7 +4405,7 @@
   },
   {
     "code": "FOOTER_ACTION_beneficiaryIdMinCheck_LABEL",
-    "message": "Ajouter des membres",
+    "message": "Télécharger les identifiants des bénéficiaires",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -4729,7 +4729,7 @@
   },
   {
     "code": "HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA",
-    "message": "Télécharger des données unifiées",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -4873,7 +4873,7 @@
   },
   {
     "code": "HCM_MAP_USERS_TO_REGISTERS_DESC",
-    "message": "Affectez les utilisateurs de la campagne aux registres de présence pour activer le suivi des présences.",
+    "message": "Affectez les utilisateurs de la campagne aux registres de présence pour permettre le suivi des présences.",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -5065,7 +5065,7 @@
   },
   {
     "code": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
-    "message": "Enregistrer le bénéficiaire",
+    "message": "Inscrire le bénéficiaire",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -5155,7 +5155,7 @@
   },
   {
     "code": "HCM_UNIFIED_DATA_MESSAGE",
-    "message": "Le fichier unifié comprendra toutes les fiches des installations, des utilisateurs et des cibles.",
+    "message": "Le fichier unifié comprendra toutes les fiches d'installation, d'utilisateur et de cible.",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -5179,7 +5179,7 @@
   },
   {
     "code": "HCM_UPLOAD_DATA_HEADING",
-    "message": "Télécharger les données du microplan",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -5209,7 +5209,7 @@
   },
   {
     "code": "HCM_UPLOAD_UNIFIED_DATA_HEADING",
-    "message": "Télécharger des données unifiées",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -5293,7 +5293,7 @@
   },
   {
     "code": "HOUSEHOLD_BACK",
-    "message": "Retour au Ménage",
+    "message": "Dos",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -5413,13 +5413,13 @@
   },
   {
     "code": "ID_OF_INDIVIDUAL",
-    "message": "Rechercher parID",
+    "message": "Rechercher par ID",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "ID_SEARCH_REGISTRATION",
-    "message": "Rechercher par ID",
+    "message": "Rechercher par identifiant",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -5557,7 +5557,13 @@
   },
   {
     "code": "INELIGIBLE",
-    "message": "Inéligible",
+    "message": "Non éligible",
+    "module": "hcm-base-registration-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INFO_CARD_TEXT",
+    "message": "Carte d'information",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -5611,7 +5617,7 @@
   },
   {
     "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -5827,7 +5833,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Catégorie de paire d'étiquettes Projetbénéficiairemodèle",
+    "message": "Modèle de projet de catégorie de paire d'étiquettes",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -5839,7 +5845,7 @@
   },
   {
     "code": "LABEL_PAIR_CODE",
-    "message": "Règlement sur l’aperçu du ménage",
+    "message": "Règlement de l'aperçu des ménages",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -5851,7 +5857,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Zone de réclamation",
+    "message": "Espace réclamation",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -5881,7 +5887,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Zone de réclamation",
+    "message": "Espace réclamation",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -5917,7 +5923,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
-    "message": "Zone de réclamation",
+    "message": "Espace réclamation",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6019,13 +6025,13 @@
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
-    "message": "Chef d’aperçu du ménage",
+    "message": "Chef de ménage",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
-    "message": "Règlement sur l’aperçu du ménage",
+    "message": "Règlement de l'aperçu des ménages",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6109,7 +6115,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTREVISITED",
-    "message": "Manqué - Pas revisité",
+    "message": "Manqué - Non revisité",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6163,7 +6169,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6223,7 +6229,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Manqué (Refus)",
+    "message": "Manqué (refus)",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6259,7 +6265,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6349,13 +6355,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Raison de la transaction",
+    "message": "Motif de la transaction",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6373,7 +6379,7 @@
   },
   {
     "code": "LABEL_PAIR_LOCALITY",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6409,7 +6415,7 @@
   },
   {
     "code": "LABEL_PAIR_LQACAREGIVERINFORMEDLABEL",
-    "message": "Le soignant informé",
+    "message": "Soignant informé",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6475,7 +6481,7 @@
   },
   {
     "code": "LABEL_PAIR_LQAREASONNOTMARKEDLABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6487,7 +6493,7 @@
   },
   {
     "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6535,7 +6541,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Le soignant informé",
+    "message": "Soignant informé",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6601,7 +6607,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6613,7 +6619,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6703,7 +6709,7 @@
   },
   {
     "code": "LABEL_PAIR_REFERRALNAME",
-    "message": "Nom de la référence",
+    "message": "Nom de référence",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6775,13 +6781,13 @@
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONREASON",
-    "message": "Raison de la transaction",
+    "message": "Motif de la transaction",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONTYPE",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6799,7 +6805,7 @@
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
-    "message": "Zone de réclamation",
+    "message": "Espace réclamation",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6865,7 +6871,7 @@
   },
   {
     "code": "LOADING_MODULE",
-    "message": "Chargement du module",
+    "message": "Module de chargement",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6907,7 +6913,7 @@
   },
   {
     "code": "LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Le soignant informé",
+    "message": "Soignant informé",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6973,7 +6979,7 @@
   },
   {
     "code": "LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -6985,7 +6991,7 @@
   },
   {
     "code": "LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -7123,7 +7129,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_COMPLAINTS",
-    "message": "Laissez les agents de terrain consigner les problèmes soulevés par les soignants ou la communauté lors de la distribution, tels que les préoccupations concernant les médicaments, les ménages manqués ou la qualité du service, afin de permettre un suivi et une résolution en temps opportun.",
+    "message": "Laissez les agents de terrain consigner les problèmes soulevés par les soignants ou la communauté lors de la distribution, tels que les inquiétudes concernant les médicaments, les ménages manqués ou la qualité du service, afin de permettre un suivi et une résolution en temps opportun.",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -7141,7 +7147,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_INVENTORY",
-    "message": "Suivez et mettez à jour les niveaux de stock de ressources à chaque point de distribution. Enregistrez les réceptions, les problèmes, la consommation et les pertes pour maintenir une visibilité précise des médicaments tout au long de la campagne.",
+    "message": "Suivez et mettez à jour les niveaux de stock de ressources à chaque point de distribution. Enregistrez les réceptions, les sorties, la consommation et les pertes pour maintenir une visibilité précise des médicaments tout au long de la campagne.",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -7453,7 +7459,7 @@
   },
   {
     "code": "POPUP_BODY_LABELS",
-    "message": "Étiquettes de champ",
+    "message": "Libellés des champs",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -7645,7 +7651,7 @@
   },
   {
     "code": "REDOSE_ADMINISTRATION",
-    "message": "Redose",
+    "message": "Redoser",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -7771,7 +7777,7 @@
   },
   {
     "code": "REFERRAL_SUCCESSFUL_PANEL_CARD_HEADING",
-    "message": "Parrainage enregistré avec succès",
+    "message": "Référence enregistrée avec succès",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -7849,7 +7855,7 @@
   },
   {
     "code": "REGISTER_BENEFICIARY",
-    "message": "Inscrire le bénéficiaire",
+    "message": "Enregistrer un nouveau bénéficiaire",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -8125,7 +8131,7 @@
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_OVERVIEW_DESC",
-    "message": "Aperçu du ménage",
+    "message": "Aperçu du ménage, de ses membres et détails associés",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -8251,7 +8257,7 @@
   },
   {
     "code": "REGISTRATION_ID_DESCRIPTION",
-    "message": "Le bénéficiaire avec ID- {ID} a été parrainé avec succès",
+    "message": "Le bénéficiaire avec l'ID- {ID} a été référé avec succès",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -8335,7 +8341,7 @@
   },
   {
     "code": "REGISTRATION_REDOSE_MESSAGE",
-    "message": "Redose",
+    "message": "Redoser",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -8455,7 +8461,7 @@
   },
   {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_DESCRIPTION",
-    "message": "Veuillez télécharger les identifiants des bénéficiaires pour enregistrer un nouveau foyer",
+    "message": "Veuillez noter qu’il ne vous reste que quelques identifiants de bénéficiaire. Téléchargez d'autres identifiants de bénéficiaire pour continuer, ou vous pouvez ignorer et continuer pour le moment.",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -8521,7 +8527,7 @@
   },
   {
     "code": "RESOURCE2",
-    "message": "Filet de lit grade 2",
+    "message": "Moustiquaire grade 2",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -8569,7 +8575,7 @@
   },
   {
     "code": "SCAN_BENEFICIARY",
-    "message": "Scanner le bénéficiaire",
+    "message": "Scanner le bon de bénéficiaire",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -8719,7 +8725,7 @@
   },
   {
     "code": "STOCKRECON_REPORT_TABLE_HEADER_PHYSICAL_COUNT",
-    "message": "Compte physique",
+    "message": "Nombre physique",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9247,7 +9253,7 @@
   },
   {
     "code": "UNABLETODELIVER_FLOWT_ALERT_DESCRIPTION",
-    "message": "En fonction de votre réponse, le bénéficiaire sera signalé comme « {value} ». Cette action ne peut pas être modifiée ultérieurement. Voulez-vous continuer ?",
+    "message": "En fonction de votre réponse, le bénéficiaire sera signalé comme « {value} ». Cette action ne peut pas être modifiée ultérieurement. Voulez-vous continuer ?",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9367,7 +9373,7 @@
   },
   {
     "code": "VALIDATION_CONDITIONAL_FIELD_LOCALIZED_EMPTY",
-    "message": "La localisation de {{fieldName}} est vide pour {{toggleName}}",
+    "message": "La localisation {{fieldName}} est vide pour {{toggleName}}",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9379,7 +9385,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTIONS_REQUIRED",
-    "message": "Les options de la liste déroulante sont requises pour le champ {{fieldName}}",
+    "message": "Les options de liste déroulante sont obligatoires pour le champ {{fieldName}}",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9391,7 +9397,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY",
-    "message": "L'étiquette de l'option de la liste déroulante est vide pour le champ {{fieldName}}",
+    "message": "Le libellé de l'option déroulante est vide pour le champ {{fieldName}}",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9403,7 +9409,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTION_NAME_REQUIRED",
-    "message": "Le nom de l'option de la liste déroulante est requis pour le champ {{fieldName}}",
+    "message": "Le nom de l'option déroulante est obligatoire pour le champ {{fieldName}}",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9439,19 +9445,19 @@
   },
   {
     "code": "VALIDATION_MANDATORY_FIELD_LOCALIZED_EMPTY",
-    "message": "La localisation de {{propertyName}} est vide pour le champ {{fieldName}}",
+    "message": "La localisation {{propertyName}} est vide pour le champ {{fieldName}}",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_BODY_LABEL_EMPTY",
-    "message": "L'étiquette du corps de la fenêtre contextuelle est vide pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Le libellé du corps de la fenêtre contextuelle est vide pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_DROPDOWN_OPTIONS_REQUIRED",
-    "message": "Les options de la liste déroulante sont requises pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Les options de liste déroulante sont requises pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9463,7 +9469,7 @@
   },
   {
     "code": "VALIDATION_POPUP_FOOTER_LABEL_EMPTY",
-    "message": "L'étiquette de pied de page de la fenêtre contextuelle {{index}} est vide pour le champ {{fieldName}}",
+    "message": "Le libellé du pied de page contextuel {{index}} est vide pour le champ {{fieldName}}",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9475,13 +9481,13 @@
   },
   {
     "code": "VALIDATION_POPUP_OPTION_LOCALIZED_VALUE_EMPTY",
-    "message": "L'étiquette de l'option est vide pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Le libellé de l'option est vide pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_RADIO_OPTIONS_REQUIRED",
-    "message": "Les options du bouton radio sont requises pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Les options radio sont obligatoires pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9493,19 +9499,19 @@
   },
   {
     "code": "VALIDATION_POPUP_TABLE_COLUMNS_REQUIRED",
-    "message": "Les colonnes du tableau sont requises pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Les colonnes du tableau sont obligatoires pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_TABLE_COLUMN_HEADER_EMPTY",
-    "message": "L'en-tête de la colonne du tableau est vide pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "L'en-tête de colonne du tableau est vide pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_TITLE_EMPTY",
-    "message": "Le titre de la fenêtre contextuelle est vide pour le champ {{fieldName}}",
+    "message": "Le titre de la popup est vide pour le champ {{fieldName}}",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9529,19 +9535,19 @@
   },
   {
     "code": "VALIDATION_TABLE_COLUMN_HEADER_EMPTY",
-    "message": "L'en-tête de la colonne du tableau est vide pour le champ {{fieldName}}",
+    "message": "L'en-tête de colonne du tableau est vide pour le champ {{fieldName}}",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_TOGGLE_LOCALIZED_VALUE_EMPTY",
-    "message": "La localisation de {{fieldName}} est vide",
+    "message": "La localisation {{fieldName}} est vide",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_TOGGLE_VALUE_REQUIRED",
-    "message": "La valeur de {{fieldName}} est requise",
+    "message": "La valeur {{fieldName}} est requise",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9685,7 +9691,7 @@
   },
   {
     "code": "advanced.dropdownTemplate",
-    "message": "Modèle déroulant",
+    "message": "Modèle de liste déroulante",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9703,13 +9709,13 @@
   },
   {
     "code": "advanced.facilityFromWhich",
-    "message": "Établissement à partir de",
+    "message": "Installation à partir de",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "advanced.facilityToWhich",
-    "message": "Installation à",
+    "message": "Facilité de",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9721,7 +9727,7 @@
   },
   {
     "code": "advanced.idPopulator",
-    "message": "Populateur d'identifiants",
+    "message": "remplisseur d'identifiants",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9763,7 +9769,7 @@
   },
   {
     "code": "advanced.panelCard",
-    "message": "Carte de panneau",
+    "message": "Carte panneau",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9793,7 +9799,7 @@
   },
   {
     "code": "advanced.resourceCard",
-    "message": "Carte de ressources",
+    "message": "Carte ressource",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -9817,7 +9823,7 @@
   },
   {
     "code": "advanced.searchByID",
-    "message": "Rechercher par pièce d'identité",
+    "message": "Rechercher par identifiant",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -10057,7 +10063,7 @@
   },
   {
     "code": "clientReferenceId",
-    "message": "ID de référence client",
+    "message": "Identifiant de référence client",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -10267,7 +10273,7 @@
   },
   {
     "code": "dropdownTemplate",
-    "message": "Modèle déroulant",
+    "message": "Modèle de liste déroulante",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -10351,7 +10357,7 @@
   },
   {
     "code": "facilityFromWhich",
-    "message": "Établissement à partir de",
+    "message": "Installation à partir de",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -10429,7 +10435,7 @@
   },
   {
     "code": "headMobileNumber",
-    "message": "Numéro de portable du chef de famille",
+    "message": "Numéro de portable du chef de ménage",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -10525,7 +10531,7 @@
   },
   {
     "code": "individualClientReferenceId",
-    "message": "ID de référence client individuel",
+    "message": "Identifiant de référence client individuel",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -10591,7 +10597,7 @@
   },
   {
     "code": "isPregnant",
-    "message": "est enceinte",
+    "message": "Est enceinte",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -10747,7 +10753,7 @@
   },
   {
     "code": "overviewLabelPairCard",
-    "message": "Aperçu Détails",
+    "message": "Détails de l'aperçu",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -10861,7 +10867,7 @@
   },
   {
     "code": "redoseButton",
-    "message": "Redose",
+    "message": "Redoser",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -10897,7 +10903,7 @@
   },
   {
     "code": "referralReason",
-    "message": "Raison de la référence",
+    "message": "Motif de référence",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -11011,13 +11017,13 @@
   },
   {
     "code": "selectedIndividualIdentifierId",
-    "message": "Identifiant individuel",
+    "message": "Identifiant individuel ID",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "selectedIndividualName",
-    "message": "Nom de la personne",
+    "message": "Nom individuel",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   },
@@ -11234,6 +11240,84 @@
   {
     "code": "{{fn:getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
     "message": "Expéditeur",
+    "module": "hcm-base-registration-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ALPHABETS_ONLY_MESSAGE",
+    "message": "Veuillez saisir votre nom complet.",
+    "module": "hcm-base-registration-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_pattern_message",
+    "message": "Le nom ne doit contenir que des lettres.",
+    "module": "hcm-base-registration-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_pattern_message_addmember",
+    "message": "Le nom ne doit contenir que des lettres.",
+    "module": "hcm-base-registration-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_ADMINISTRATION_FAILED",
+    "message": "Échec de l'administration",
+    "module": "hcm-base-registration-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_ADMINISTRATION_SUCCESS",
+    "message": "Succès administratif",
+    "module": "hcm-base-registration-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_APPLY_BUTTON",
+    "message": "Appliquer",
+    "module": "hcm-base-registration-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_CLEAR_ALL_BUTTON",
+    "message": "Clair",
+    "module": "hcm-base-registration-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_LABEL",
+    "message": "Filtre",
+    "module": "hcm-base-registration-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_MISSED_CHILDREN",
+    "message": "Enfants manqués",
+    "module": "hcm-base-registration-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_NOT_ADMINISTERED",
+    "message": "Non administré",
+    "module": "hcm-base-registration-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_REVISITED",
+    "message": "Revisité",
+    "module": "hcm-base-registration-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_STOCK_DESC",
+    "message": "La ressource **{RESOURCE}** que vous essayez de livrer n'est pas disponible en stock.",
+    "module": "hcm-base-registration-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REGISTRATION_INDIVIDUAL_SEARCH_BENEFICIARY_NAME_HINT",
+    "message": "Rechercher par nom",
     "module": "hcm-base-registration-oncho",
     "locale": "fr_DEMO"
   }

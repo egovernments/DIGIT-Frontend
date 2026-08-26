@@ -43,7 +43,7 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
-    "message": "Anote os detalhes da residência que você está marcando como fechada.",
+    "message": "Capture os detalhes da família que você está marcando como fechada.",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "pt_DEMO"
   },
@@ -67,7 +67,7 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
-    "message": "Fechar área administrativa da família é obrigatório",
+    "message": "Fechar a área administrativa da família é obrigatório",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "pt_DEMO"
   },
@@ -205,7 +205,7 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_INFO_CARD_TEXT",
-    "message": "Confirme que você está na residência correta na vila selecionada. Sua localização GPS será registrada como parte do fechamento da residência.",
+    "message": "Confirme se você está na residência correta na aldeia selecionada. A sua localização GPS será registada como parte do encerramento do agregado familiar.",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "pt_DEMO"
   },
@@ -362,6 +362,12 @@
   {
     "code": "scanner",
     "message": "Digitalizar comprovante",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Rótulo",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "pt_DEMO"
   }

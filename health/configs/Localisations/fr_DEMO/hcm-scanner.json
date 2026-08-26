@@ -154,5 +154,11 @@
     "message": "Scanner le code QR",
     "module": "hcm-scanner",
     "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCANNER_MANUAL_CODE_DESCRIPTION",
+    "message": "Veuillez saisir le code ressource présent sur le colis.",
+    "module": "hcm-scanner",
+    "locale": "fr_DEMO"
   }
 ]

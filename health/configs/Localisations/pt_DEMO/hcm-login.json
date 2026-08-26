@@ -127,7 +127,7 @@
   },
   {
     "code": "SWITCH_MOBILE_DIALOG_BACK",
-    "message": "Voltar ao login",
+    "message": "Voltar ao Login",
     "module": "hcm-login",
     "locale": "pt_DEMO"
   },

@@ -379,13 +379,13 @@
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_1_DESC_1",
-    "message": "Go to the district\u2019s sheet you want to set targets for and add total and target population data for each village.",
+    "message": "Go to the district’s sheet you want to set targets for and add total and target population data for each village.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
   {
     "code": "BOUNDARY_MICROPLAN_README_HEADER_1_DESC_2",
-    "message": "Enter target and total population for each village in each district\u2019s sheet. If any village does not have targets set, the sheet will have errors.",
+    "message": "Enter target and total population for each village in each district’s sheet. If any village does not have targets set, the sheet will have errors.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -433,13 +433,13 @@
   },
   {
     "code": "BOUNDARY_README_HEADER_1_DESC_1",
-    "message": "Download the excel template by clicking on the \u201cDownload Template\u201d button.",
+    "message": "Download the excel template by clicking on the “Download Template” button.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_1_DESC_2",
-    "message": "Open the excel template that was downloaded in the previous step and the first sheet you will see is a \u201cRead Me\u201d sheet. The remaining sheets will be named after the name of the districts selected in the \u201cBoundary Selection\u201d step with each district Sheets having a list of all the villages mapped to that district.",
+    "message": "Open the excel template that was downloaded in the previous step and the first sheet you will see is a “Read Me” sheet. The remaining sheets will be named after the name of the districts selected in the “Boundary Selection” step with each district Sheets having a list of all the villages mapped to that district.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -451,13 +451,13 @@
   },
   {
     "code": "BOUNDARY_README_HEADER_2_DESC_1",
-    "message": "Go to the district\u2019s sheet you want to set targets for and add numbers in the \u201cTargets\u201d Column for each Village. ",
+    "message": "Go to the district’s sheet you want to set targets for and add numbers in the “Targets” Column for each Village. ",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
   {
     "code": "BOUNDARY_README_HEADER_2_DESC_2",
-    "message": "Enter targets for each village in each district\u2019s sheet under the \u201cTarget at the Selected Boundary level\u201d Column. If any village does not have targets set, the sheet will have errors.",
+    "message": "Enter targets for each village in each district’s sheet under the “Target at the Selected Boundary level” Column. If any village does not have targets set, the sheet will have errors.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -469,7 +469,7 @@
   },
   {
     "code": "BOUNDARY_README_HEADER_2_DESC_4",
-    "message": "Press the \u201cBrowse In My Files\u201d button on the \u201cUpload Target\u201d screen and select the saved file with all targets from the system.",
+    "message": "Press the “Browse In My Files” button on the “Upload Target” screen and select the saved file with all targets from the system.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -685,13 +685,13 @@
   },
   {
     "code": "FACILITIES_EXCEL_README_POINTS_1",
-    "message": "If there are no Facilities available for selection, the \u201cList of Available Facilities\u201c tab in the template will be empty. To create new facility data, add the name of the Facility Name, Facility Type, Facility Status, Capacity. The \u201cFacility Code\u201d column needs to be left empty if this is a new facility. If it is a facility being reused (which is available in the template after downloading) the user only needs to do step 2.",
+    "message": "If there are no Facilities available for selection, the “List of Available Facilities“ tab in the template will be empty. To create new facility data, add the name of the Facility Name, Facility Type, Facility Status, Capacity. The “Facility Code” column needs to be left empty if this is a new facility. If it is a facility being reused (which is available in the template after downloading) the user only needs to do step 2.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
   {
     "code": "FACILITIES_EXCEL_README_POINTS_2",
-    "message": "To map the facility to the correct boundary, the user needs to copy the correct boundary code of the boundary from the \u201cList of Campaign Boundaries\u201c sheet that the facility needs to be mapped to. If there is a facility that is mapped to multiple boundaries, the System Admin will have to add the boundary codes of all the boundaries that facility is mapped to by separating them by commas in the cell to add Boundary Codes for that Facility.",
+    "message": "To map the facility to the correct boundary, the user needs to copy the correct boundary code of the boundary from the “List of Campaign Boundaries“ sheet that the facility needs to be mapped to. If there is a facility that is mapped to multiple boundaries, the System Admin will have to add the boundary codes of all the boundaries that facility is mapped to by separating them by commas in the cell to add Boundary Codes for that Facility.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -703,13 +703,13 @@
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_1",
-    "message": "If there are no Facilities available for selection, the \u201cList of Available Facilities\u201c tab in the template will be empty. To create new facility data, add the name of the Facility Name, Facility Type, Facility Status, Capacity and Facility usage.",
+    "message": "If there are no Facilities available for selection, the “List of Available Facilities“ tab in the template will be empty. To create new facility data, add the name of the Facility Name, Facility Type, Facility Status, Capacity and Facility usage.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_2",
-    "message": "To map the facility to the correct boundary, the user needs to copy the correct boundary code of the boundary from the \u201cBoundary Data\u201c sheet that the facility needs to be mapped to.",
+    "message": "To map the facility to the correct boundary, the user needs to copy the correct boundary code of the boundary from the “Boundary Data“ sheet that the facility needs to be mapped to.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -721,7 +721,7 @@
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_1_DESC_4",
-    "message": "Press the \u201cBrowse In My Files\u201d button on the \u201cUpload Facility Data\u201d screen and select the saved file with all facility data from the system.",
+    "message": "Press the “Browse In My Files” button on the “Upload Facility Data” screen and select the saved file with all facility data from the system.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -757,7 +757,7 @@
   },
   {
     "code": "FACILITYWITHBOUNDARY_MICROPLAN_README_HEADER_3_DESC_2",
-    "message": "If the user deletes any columns from the \u201cList of Available Facilities\u201d from the sheet and uploads the sheet, the system will throw an error and the user will have to download the template again and reupload the correct sheet with the correct data.",
+    "message": "If the user deletes any columns from the “List of Available Facilities” from the sheet and uploads the sheet, the system will throw an error and the user will have to download the template again and reupload the correct sheet with the correct data.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -775,13 +775,13 @@
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_1_DESC_1",
-    "message": "Download the excel template by clicking on the \u201cDownload Template\u201d button.",
+    "message": "Download the excel template by clicking on the “Download Template” button.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_1_DESC_2",
-    "message": "Open the Template that was downloaded in the previous step will have 3 sheets and the first sheet you will see is a \u201cRead Me\u201d sheet. The second Sheet named \u201cList of Available Facilities\u201c will have a list of all the available facilities that can be used in the campaign. If there is no facility available, this sheet will be empty. The third sheet will be named \u201cList of Campaign Boundaries\u201c which will have all the boundaries with their respective Boundary Codes.",
+    "message": "Open the Template that was downloaded in the previous step will have 3 sheets and the first sheet you will see is a “Read Me” sheet. The second Sheet named “List of Available Facilities“ will have a list of all the available facilities that can be used in the campaign. If there is no facility available, this sheet will be empty. The third sheet will be named “List of Campaign Boundaries“ which will have all the boundaries with their respective Boundary Codes.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -793,13 +793,13 @@
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_1",
-    "message": "If there are no Facilities available for selection, the \u201cList of Available Facilities\u201c tab in the template will be empty. To create new facility data, add the name of the Facility Name, Facility Type, Facility Status, Capacity. The \u201cFacility Code\u201d column needs to be left empty if this is a new facility. If it is a facility being reused (which is available in the template after downloading) the user only needs to do step 2.",
+    "message": "If there are no Facilities available for selection, the “List of Available Facilities“ tab in the template will be empty. To create new facility data, add the name of the Facility Name, Facility Type, Facility Status, Capacity. The “Facility Code” column needs to be left empty if this is a new facility. If it is a facility being reused (which is available in the template after downloading) the user only needs to do step 2.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_2",
-    "message": "To map the facility to the correct boundary, the user needs to copy the correct boundary code of the boundary from the \u201cList of Campaign Boundaries\u201c sheet that the facility needs to be mapped to. If there is a facility that is mapped to multiple boundaries, the System Admin will have to add the boundary codes of all the boundaries that facility is mapped to by separating them by commas in the cell to add Boundary Codes for that Facility.",
+    "message": "To map the facility to the correct boundary, the user needs to copy the correct boundary code of the boundary from the “List of Campaign Boundaries“ sheet that the facility needs to be mapped to. If there is a facility that is mapped to multiple boundaries, the System Admin will have to add the boundary codes of all the boundaries that facility is mapped to by separating them by commas in the cell to add Boundary Codes for that Facility.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -811,7 +811,7 @@
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_DESC_4",
-    "message": "Press the \u201cBrowse In My Files\u201d button on the \u201cUpload Facility Data\u201d screen and select the saved file with all targets from the system.",
+    "message": "Press the “Browse In My Files” button on the “Upload Facility Data” screen and select the saved file with all targets from the system.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -841,25 +841,25 @@
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_1_DESC_1",
-    "message": "Step 1: When there is no facility data in the system, the \u201cList of available facility\u201d template will be empty. For every facility added the user needs to input the Facility Name (must be unique), Facility Type (Warehouse/Health Facility), Facility Status (Temporary/Permanent), Capacity (Number input)",
+    "message": "Step 1: When there is no facility data in the system, the “List of available facility” template will be empty. For every facility added the user needs to input the Facility Name (must be unique), Facility Type (Warehouse/Health Facility), Facility Status (Temporary/Permanent), Capacity (Number input)",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_1_DESC_2",
-    "message": "Step 2: To map the facilities to a given boundary the user needs to copy the correct Boundary Code from the \u201cBoundary Data\u201d sheet. If there are more than one boundaries that a facility needs to be mapped to, the user can add all the boundary codes separated by commas",
+    "message": "Step 2: To map the facilities to a given boundary the user needs to copy the correct Boundary Code from the “Boundary Data” sheet. If there are more than one boundaries that a facility needs to be mapped to, the user can add all the boundary codes separated by commas",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_1_DESC_3",
-    "message": "Step 3: For every facility, the user needs to add Active or Inactive for all facilities under the \u201cFacility Usage\u201d column. All the Facilities marked as \u201cActive\u201d will be used in the campaign being created the ones marked \u201cInactive\u201d will not be used in the campaign being created.",
+    "message": "Step 3: For every facility, the user needs to add Active or Inactive for all facilities under the “Facility Usage” column. All the Facilities marked as “Active” will be used in the campaign being created the ones marked “Inactive” will not be used in the campaign being created.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_1_DESC_4",
-    "message": "Step 4: Once all the facilities are added the user needs to save the file on their system and upload the file by pressing \u201cBrowse in My Files\u201d option.",
+    "message": "Step 4: Once all the facilities are added the user needs to save the file on their system and upload the file by pressing “Browse in My Files” option.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -889,7 +889,7 @@
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_2_DESC_4",
-    "message": "Step 4: Once all the facilities are added the user needs to save the file on their system and upload the file by pressing \u201cBrowse in My Files\u201d option.",
+    "message": "Step 4: Once all the facilities are added the user needs to save the file on their system and upload the file by pressing “Browse in My Files” option.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -907,7 +907,7 @@
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_3_DESC_2",
-    "message": "If the user deletes any columns from the \u201cList of Available Facilities\u201d from the sheet and uploads the sheet, the system will throw an error and the user will have to download the template again and reupload the correct sheet with the correct data.",
+    "message": "If the user deletes any columns from the “List of Available Facilities” from the sheet and uploads the sheet, the system will throw an error and the user will have to download the template again and reupload the correct sheet with the correct data.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -1099,7 +1099,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY",
-    "message": "Capacity (Units: Bales for Bednets/ SPAQ Blister for SMC)",
+    "message": "Capacity (Unit varies by commodity)",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -1268,6 +1268,12 @@
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_CO-DELIVERY_AGE_6_TO_59",
     "message": "Target for (Vitamin A Supplement) Dosage",
+    "module": "hcm-admin-schemas",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_TARGET_CO-DELIVERY_AGE_GREATER_THAN_6",
+    "message": "Target for (Azithromycin) Tablet",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -2197,7 +2203,7 @@
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_1",
-    "message": "If there are no Facilities available for selection, the \u201cList of Available Facilities\u201c tab in the template will be empty. To create new facility data, add the name of the Facility Name, Facility Type, Facility Status, Capacity. The \u201cFacility Code\u201d column needs to be left empty if this is a new facility. If it is a facility being reused (which is available in the template after downloading) the user only needs to do step 2.",
+    "message": "If there are no Facilities available for selection, the “List of Available Facilities“ tab in the template will be empty. To create new facility data, add the name of the Facility Name, Facility Type, Facility Status, Capacity. The “Facility Code” column needs to be left empty if this is a new facility. If it is a facility being reused (which is available in the template after downloading) the user only needs to do step 2.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -2209,7 +2215,7 @@
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_2",
-    "message": "To map the facility to the correct boundary, the user needs to copy the correct boundary code of the boundary from the \u201cList of Campaign Boundaries\u201c sheet that the facility needs to be mapped to. If there is a Facility that is mapped to multiple boundaries, the System Admin will have to add the boundary codes of all the boundaries that Facility is mapped to by separating them by commas in the cell to add Boundary Codes for that Facility.",
+    "message": "To map the facility to the correct boundary, the user needs to copy the correct boundary code of the boundary from the “List of Campaign Boundaries“ sheet that the facility needs to be mapped to. If there is a Facility that is mapped to multiple boundaries, the System Admin will have to add the boundary codes of all the boundaries that Facility is mapped to by separating them by commas in the cell to add Boundary Codes for that Facility.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -2221,7 +2227,7 @@
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_4",
-    "message": "Press the \u201cBrowse In My Files\u201d button on the \u201cUpload Facility Data\u201d screen and select the saved file with all targets from the system.",
+    "message": "Press the “Browse In My Files” button on the “Upload Facility Data” screen and select the saved file with all targets from the system.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -2251,7 +2257,7 @@
   },
   {
     "code": "LLIN_MZ_FACILITIES_EXCEL_README_POINTS_9",
-    "message": "If the user deletes any columns from the \u201cList of Available Facilities\u201d from the sheet and uploads the sheet, the system will throw an error and the user will have to download the template again and reupload the correct sheet with the correct data.",
+    "message": "If the user deletes any columns from the “List of Available Facilities” from the sheet and uploads the sheet, the system will throw an error and the user will have to download the template again and reupload the correct sheet with the correct data.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -2299,13 +2305,13 @@
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_1",
-    "message": "Go to the district\u2019s sheet you want to set targets for and add numbers in the \u201cTargets\u201d Column for each Village.",
+    "message": "Go to the district’s sheet you want to set targets for and add numbers in the “Targets” Column for each Village.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
   {
     "code": "LLIN_MZ_POPULATION_EXCEL_README_POINTS_2",
-    "message": "Enter targets for each village in each district\u2019s sheet under the \u201cTarget at the Selected Boundary level\u201d Column. If any village does not have targets set, the sheet will have errors.",
+    "message": "Enter targets for each village in each district’s sheet under the “Target at the Selected Boundary level” Column. If any village does not have targets set, the sheet will have errors.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -2533,7 +2539,7 @@
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_1",
-    "message": "If there are no Facilities available for selection, the \u201cList of Available Facilities\u201c tab in the template will be empty. To create new facility data, add the name of the Facility Name, Facility Type, Facility Status, Capacity. The \u201cFacility Code\u201d column needs to be left empty if this is a new facility. If it is a facility being reused (which is available in the template after downloading) the user only needs to do step 2.",
+    "message": "If there are no Facilities available for selection, the “List of Available Facilities“ tab in the template will be empty. To create new facility data, add the name of the Facility Name, Facility Type, Facility Status, Capacity. The “Facility Code” column needs to be left empty if this is a new facility. If it is a facility being reused (which is available in the template after downloading) the user only needs to do step 2.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -2545,7 +2551,7 @@
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_2",
-    "message": "To map the facility to the correct boundary, the user needs to copy the correct boundary code of the boundary from the \u201cList of Campaign Boundaries\u201c sheet that the facility needs to be mapped to. If there is a Facility that is mapped to multiple boundaries, the System Admin will have to add the boundary codes of all the boundaries that Facility is mapped to by separating them by commas in the cell to add Boundary Codes for that Facility.",
+    "message": "To map the facility to the correct boundary, the user needs to copy the correct boundary code of the boundary from the “List of Campaign Boundaries“ sheet that the facility needs to be mapped to. If there is a Facility that is mapped to multiple boundaries, the System Admin will have to add the boundary codes of all the boundaries that Facility is mapped to by separating them by commas in the cell to add Boundary Codes for that Facility.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -2557,7 +2563,7 @@
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_4",
-    "message": "Press the \u201cBrowse In My Files\u201d button on the \u201cUpload Facility Data\u201d screen and select the saved file with all targets from the system.",
+    "message": "Press the “Browse In My Files” button on the “Upload Facility Data” screen and select the saved file with all targets from the system.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -2587,7 +2593,7 @@
   },
   {
     "code": "MR_DN_FACILITIES_EXCEL_README_POINTS_9",
-    "message": "If the user deletes any columns from the \u201cList of Available Facilities\u201d from the sheet and uploads the sheet, the system will throw an error and the user will have to download the template again and reupload the correct sheet with the correct data.",
+    "message": "If the user deletes any columns from the “List of Available Facilities” from the sheet and uploads the sheet, the system will throw an error and the user will have to download the template again and reupload the correct sheet with the correct data.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -2629,13 +2635,13 @@
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_1",
-    "message": "Go to the district\u2019s sheet you want to set targets for and add numbers in the \u201cTargets\u201d Column for each Village.",
+    "message": "Go to the district’s sheet you want to set targets for and add numbers in the “Targets” Column for each Village.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_2",
-    "message": "Enter targets for each village in each district\u2019s sheet under the \u201cTargets\u201d Column. If any village does not have targets set the sheet will have errors.",
+    "message": "Enter targets for each village in each district’s sheet under the “Targets” Column. If any village does not have targets set the sheet will have errors.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -2647,7 +2653,7 @@
   },
   {
     "code": "MR_DN_POPULATION_EXCEL_README_POINTS_4",
-    "message": "Press the \u201cBrowse In My Files\u201d button on the \u201cUpload Target\u201d screen and select the saved file with all targets from the system.",
+    "message": "Press the “Browse In My Files” button on the “Upload Target” screen and select the saved file with all targets from the system.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -40693,13 +40699,13 @@
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_1_DESC_1",
-    "message": "Download the excel template by clicking on the \u201cDownload Template\u201d button.",
+    "message": "Download the excel template by clicking on the “Download Template” button.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_1_DESC_2",
-    "message": "Open the excel template that was downloaded in the previous step will have 3 sheets and the first sheet you will see is a \u201cRead Me\u201d sheet. The second Sheet named \u201cCreate List of Users\u201c that will be an empty sheet where the user needs to enter data to create users for the campaign. The third sheet will be named \u201cList of Campaign Boundaries\u201c which will have all the boundaries selected in the \u201cBoundary Details\u201c step with their respective boundary codes.",
+    "message": "Open the excel template that was downloaded in the previous step will have 3 sheets and the first sheet you will see is a “Read Me” sheet. The second Sheet named “Create List of Users“ that will be an empty sheet where the user needs to enter data to create users for the campaign. The third sheet will be named “List of Campaign Boundaries“ which will have all the boundaries selected in the “Boundary Details“ step with their respective boundary codes.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -40717,7 +40723,7 @@
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_2_DESC_2",
-    "message": "Each user being created needs to be assigned to a boundary using the Boundary Code of the required boundary which can be found in the \u201cList of Campaign Boundaries\u201c. If there is a user who is mapped to multiple boundaries, the System Admin will have to add the boundary codes of all the boundaries that user is mapped to by separating them by commas in the cell to add Boundary Codes for that user.",
+    "message": "Each user being created needs to be assigned to a boundary using the Boundary Code of the required boundary which can be found in the “List of Campaign Boundaries“. If there is a user who is mapped to multiple boundaries, the System Admin will have to add the boundary codes of all the boundaries that user is mapped to by separating them by commas in the cell to add Boundary Codes for that user.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },
@@ -40729,7 +40735,7 @@
   },
   {
     "code": "USERWITHBOUNDARY_README_HEADER_2_DESC_4",
-    "message": "Press the \u201cBrowse In My Files\u201d button on the \u201cUpload Target\u201d screen and select the saved file with all targets from the system.",
+    "message": "Press the “Browse In My Files” button on the “Upload Target” screen and select the saved file with all targets from the system.",
     "module": "hcm-admin-schemas",
     "locale": "en_DEMO"
   },

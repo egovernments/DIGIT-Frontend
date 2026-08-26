@@ -43,7 +43,7 @@
   },
   {
     "code": "ACTION_UNIFIED_UPLOAD_SCREEN",
-    "message": "Carregar arquivo unificado",
+    "message": "Carregar dados do microplano",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -79,7 +79,7 @@
   },
   {
     "code": "ADD_HEADER_LOCALIZATION",
-    "message": "Adicionar rótulo",
+    "message": "Rótulo",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -175,7 +175,7 @@
   },
   {
     "code": "ALPHANUMERICONLY",
-    "message": "Somente alfanumérico",
+    "message": "Apenas alfanumérico",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -367,7 +367,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_DESCRIPTION",
-    "message": "Pergunte ao cuidador se a criança está apresentando alguma doença ou desconforto geral, como fraqueza, diarreia, vômito, dificuldade para respirar ou outros problemas de saúde.",
+    "message": "Pergunte ao cuidador se a criança está apresentando alguma doença ou desconforto geral, como fraqueza, diarréia, vômito, dificuldade para respirar ou outros problemas de saúde.",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -745,7 +745,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual",
-    "message": "Sobrenome do Indivíduo",
+    "message": "Sobrenome do indivíduo",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -1093,7 +1093,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_weight",
-    "message": "Peso (em Kgs)",
+    "message": "Peso (em kg)",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -2185,7 +2185,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "Beneficiário",
+    "message": "Nome do Beneficiário",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -2485,7 +2485,7 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
-    "message": "Anote os detalhes da residência que você está marcando como fechada.",
+    "message": "Capture os detalhes da família que você está marcando como fechada.",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -2575,25 +2575,25 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
-    "message": "Os dados foram registrados com sucesso",
+    "message": "A família foi marcada como fechada com sucesso. Você pode fechar outra casa ou voltar.",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION1",
-    "message": "Os dados foram registrados com sucesso",
+    "message": "A família foi marcada como fechada com sucesso. Você pode fechar outra casa ou voltar.",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
-    "message": "Dados registrados com sucesso",
+    "message": "Família fechada com sucesso",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING1",
-    "message": "Dados registrados com sucesso",
+    "message": "Família fechada com sucesso",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -2605,13 +2605,13 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL",
-    "message": "Volte",
+    "message": "Fechar outra família",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL1",
-    "message": "Volte",
+    "message": "Fechar outra família",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -3253,7 +3253,7 @@
   },
   {
     "code": "DIGIT_HCM_DELIVERY_MODULE",
-    "message": "Módulo de Entrega",
+    "message": "Módulo de entrega",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -3427,7 +3427,7 @@
   },
   {
     "code": "DIGIT_LOC_SELECT_MODULE_LABEL",
-    "message": "Selecione Módulo",
+    "message": "Selecione o módulo",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -3613,7 +3613,7 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_TEXT",
-    "message": "Baixe o modelo Excel para criar registros de presença para sua campanha. Preencha os detalhes do limite, revise os IDs de registro gerados automaticamente e carregue o arquivo concluído para gerar registros.",
+    "message": "Baixe o modelo Excel para criar registros de presença para sua campanha. Preencha os detalhes dos limites, revise os IDs de registro gerados automaticamente e carregue o arquivo concluído para gerar registros.",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -3817,7 +3817,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MAX",
-    "message": "Valor Máximo",
+    "message": "Valor máximo",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -3829,7 +3829,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MAXIMUMAGE",
-    "message": "Alcance Máximo",
+    "message": "Alcance máximo",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -3853,7 +3853,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MIN",
-    "message": "Valor Mínimo",
+    "message": "Valor mínimo",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -3865,7 +3865,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MINIMUMAGE",
-    "message": "Faixa Mínima",
+    "message": "Alcance mínimo",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -4123,7 +4123,7 @@
   },
   {
     "code": "GO_TO_MY_CAMPAIGNS",
-    "message": "Acesse Minhas Campanhas",
+    "message": "Ir para Minhas Campanhas",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -4219,7 +4219,7 @@
   },
   {
     "code": "HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA",
-    "message": "Carregar dados unificados",
+    "message": "Carregar dados do microplano",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -4237,7 +4237,7 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_INFO_CARD_TEXT",
-    "message": "Confirme que você está na residência correta na vila selecionada. Sua localização GPS será registrada como parte do fechamento da residência.",
+    "message": "Confirme se você está na residência correta na aldeia selecionada. A sua localização GPS será registada como parte do encerramento do agregado familiar.",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -4249,7 +4249,7 @@
   },
   {
     "code": "HCM_CREATE_CAMPAIGN_DESCRIPTION",
-    "message": "Você pode criar uma nova campanha do zero, reutilizar configurações de uma existente ou começar com um modelo de campanha. Clonar ou usar um modelo ajuda a transferir configurações importantes como limites, módulos, formulários e regras de entrega para reduzir o tempo de configuração.",
+    "message": "Você pode criar uma nova campanha do zero, reutilizar configurações de uma campanha existente ou começar com um modelo de campanha. Clonar ou usar um modelo ajuda a transferir configurações importantes como limites, módulos, formulários e regras de entrega para reduzir o tempo de configuração.",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -4399,7 +4399,7 @@
   },
   {
     "code": "HCM_MODULE_DESCRIPTION_MR-DN_HFREFERALFLOW",
-    "message": "Referência é o processo de direcionar uma pessoa, cliente ou caso a outro indivíduo, profissional ou organização para obter mais assistência, serviços ou experiência.",
+    "message": "Referência é o processo de direcionar uma pessoa, cliente ou caso a outro indivíduo, profissional ou organização para obter assistência, serviços ou experiência adicional.",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -4699,7 +4699,7 @@
   },
   {
     "code": "HCM_UPLOAD_UNIFIED_DATA_HEADING",
-    "message": "Carregar dados unificados",
+    "message": "Carregar dados do microplano",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5215,13 +5215,13 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "Categoria de par de rótulos Hfreferralmodel",
+    "message": "Categoria de par de rótulos hfreferralmodel",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
-    "message": "Categoria de par de rótulos Modelo doméstico",
+    "message": "Modelo doméstico de categoria de par de rótulos",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5239,7 +5239,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
-    "message": "Categoria de par de rótulos Lqamodel",
+    "message": "Categoria de par de rótulos lqamodel",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5251,13 +5251,13 @@
   },
   {
     "code": "LABEL_PAIR_COMMENTS",
-    "message": "Comentários sobre pares de rótulos",
+    "message": "Comentários do par de rótulos",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Área de Reclamações",
+    "message": "Área de reclamação",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5287,55 +5287,55 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Área de reclamação da caixa de entrada de reclamação de par de rótulos",
+    "message": "Área de reclamação da caixa de entrada de reclamações do par de rótulos",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Data da reclamação na caixa de entrada da reclamação do par de rótulos",
+    "message": "Marcar a data da reclamação na caixa de entrada da reclamação do par",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Número da reclamação na caixa de entrada da reclamação do par de rótulos",
+    "message": "Rotule o número da reclamação na caixa de entrada da reclamação do par",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
-    "message": "Status da reclamação na caixa de entrada da reclamação do par de rótulos",
+    "message": "Rotular o status da reclamação na caixa de entrada da reclamação do par",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Tipo de reclamação na caixa de entrada de reclamação de par de rótulos",
+    "message": "Tipo de reclamação da caixa de entrada de reclamação do par de rótulos",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Etiqueta Par Reclamação Visualizar Contato do Reclamante",
+    "message": "Par de rótulos de reclamação visualizar contato do reclamante",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
-    "message": "Área de Reclamações de Par de Etiquetas Visualizar Reclamações",
+    "message": "Área de reclamações de visualização de reclamações de pares de rótulos",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Etiqueta Par Reclamação Visualizar Data das Reclamações",
+    "message": "Reclamação do par de rótulos visualizar data das reclamações",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Etiqueta Par Reclamação Visualizar Número de Reclamações",
+    "message": "Número de reclamação de exibição de reclamação de par de rótulos",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5347,19 +5347,19 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Reclamação de par de etiquetas Ver reclamação",
+    "message": "Reclamação de par de rótulos visualizar reclamação",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "Reclamação de pares de rótulos Visualizar status da reclamação",
+    "message": "Reclamação do par de rótulos visualizar status da reclamação",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATEOFREGISTRATION",
-    "message": "Data de Registro",
+    "message": "Data de registro",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5377,13 +5377,13 @@
   },
   {
     "code": "LABEL_PAIR_GIVENNAME",
-    "message": "Nome do Indivíduo",
+    "message": "Nome do indivíduo",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-    "message": "Par de rótulos Hcm Visão geral da família Total de membros",
+    "message": "Par de etiquetas Hcm Visão geral da família Total de membros",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5395,13 +5395,13 @@
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
-    "message": "Nome do chefe da família do par de rótulos",
+    "message": "Nome do chefe da família do par de etiquetas",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
-    "message": "Localidade do domicílio do par de rótulos",
+    "message": "Identifique a localidade do domicílio do par",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5419,7 +5419,7 @@
   },
   {
     "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "Número de identificação do par de etiquetas",
+    "message": "Número de identificação do par de rótulos",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5431,97 +5431,97 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Par de Etiquetas Ihm Resumo Crianças Presentes",
+    "message": "Par de etiquetas resumo ihm crianças presentes",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Par de rótulos Resumo Ihm Crianças vacinadas",
+    "message": "Par de rótulos resumo ihm crianças vacinadas",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Comentários finais do resumo do par de rótulos Ihm",
+    "message": "Par de rótulos comentários finais resumidos do ihm",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
-    "message": "Par de Etiquetas Ihm Resumo Perdido Ausente",
+    "message": "Par de rótulos resumo ihm perdido ausente",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
-    "message": "Par de etiquetas Resumo Ihm Missed Asleep",
+    "message": "Par de rótulos resumo ihm perdido no sono",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Resumo do par de rótulos Ihm perdido, não revisitado",
+    "message": "Par de rótulos resumo ihm perdido, não revisitado",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Resumo do par de rótulos Ihm perdido, não visitado",
+    "message": "Par de rótulos resumo ihm perdido, não visitado",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Par de rótulos Ihm Resumo perdido outro",
+    "message": "Par de rótulos resumo ihm perdeu outro",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Par de rótulos Resumo Ihm Recusa perdida",
+    "message": "Par de rótulos resumo ihm recusa perdida",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
-    "message": "Par de rótulos Resumo Ihm Rotina perdida",
+    "message": "Par de rótulos resumo ihm rotina perdida",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Data de monitoramento resumido do par de rótulos Ihm",
+    "message": "Data de monitoramento resumido do par de rótulos ihm",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Designação do monitor de resumo Ihm do par de rótulos",
+    "message": "Designação do monitor de resumo ihm do par de rótulos",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Nome do monitor de resumo do par de rótulos Ihm",
+    "message": "Par de rótulos nome do monitor de resumo ihm",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Resumo do par de etiquetas Ihm mal coberto",
+    "message": "Resumo do par de rótulos ihm mal coberto",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Área de liquidação de resumo de pares de rótulos Ihm",
+    "message": "Par de rótulos ihm área de liquidação resumida",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Tipo de liquidação resumida do par de rótulos Ihm",
+    "message": "Par de rótulos ihm tipo de liquidação resumida",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5551,139 +5551,139 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Tipo de transação de inventário de pares de rótulos",
+    "message": "Tipo de transação de inventário de par de rótulos",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LOCALITY",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Motivo da ausência do Lqa do par de rótulos",
+    "message": "Par de rótulos motivo de ausência lqa",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "Conscientização do par de rótulos Lqa Afp",
+    "message": "Par de rótulos reconhecimento lqa afp",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "Contagem de casos Lqa Afp de par de rótulos",
+    "message": "Par de rótulos lqa afp case count",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Par de rótulos Conscientização Lqa Outro",
+    "message": "Par de rótulos reconhecimento de lqa outro",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Conscientização da campanha Lqa do par de rótulos",
+    "message": "Par de rótulos de conscientização da campanha lqa",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Label Pair Lqa Cuidador informado",
+    "message": "Par de etiquetas cuidador lqa informado",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Par de etiquetas Lqa crianças menores de 5 anos",
+    "message": "Par de etiquetas lqa crianças menores de 5 anos",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Par de Etiquetas Lqa Criança Idade Meses",
+    "message": "Par de etiquetas lqa criança idade meses",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Par de rótulos Lqa Sexo infantil",
+    "message": "Par de etiquetas lqa sexo infantil",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Número do cluster Lqa do par de rótulos",
+    "message": "Par de rótulos número do cluster lqa",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Par de etiquetas Lqa marcada com dedo",
+    "message": "Par de etiquetas lqa marcada com o dedo",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Número de lote Lqa do par de etiquetas",
+    "message": "Par de etiquetas lqa número de lote",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "Par de rótulos Lqa Opv Doses",
+    "message": "Rotular pares de doses de lqa opv",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Par de Etiquetas Lqa Outro Motivo de Ausência",
+    "message": "Par de rótulos lqa outro motivo de ausência",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Par de rótulos Lqa Outro motivo Especificar",
+    "message": "Par de rótulos lqa outro motivo especificado",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Par de rótulos Lqa Outro motivo de recusa",
+    "message": "Par de rótulos lqa outro motivo de recusa",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Par de etiquetas Razão Lqa não marcada",
+    "message": "Par de rótulos lqa motivo não marcado",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Motivo de recusa do par de rótulos Lqa",
+    "message": "Razão de recusa do par de rótulos lqa",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Etiqueta Par Área de Liquidação Lqa",
+    "message": "Área de liquidação do par de rótulos lqa",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Par de rótulos Nome do topógrafo Lqa",
+    "message": "Par de rótulos nome do topógrafo lqa",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Data da pesquisa Lqa do par de rótulos",
+    "message": "Data da pesquisa LQA do par de rótulos",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5713,7 +5713,7 @@
   },
   {
     "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "Número do par de rótulos Mrn",
+    "message": "Número MRN do par de etiquetas",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5767,7 +5767,7 @@
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
-    "message": "Status de referência da caixa de entrada de referência de par de rótulos",
+    "message": "Status de referência da caixa de entrada de referência do par de rótulos",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5797,7 +5797,7 @@
   },
   {
     "code": "LABEL_PAIR_STOCKEXPIRY",
-    "message": "Expiração de estoque",
+    "message": "Expiração do estoque",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5833,7 +5833,7 @@
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
-    "message": "Área de Reclamações",
+    "message": "Área de reclamação",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5863,7 +5863,7 @@
   },
   {
     "code": "LABEL_PAIR_WAYBILL_NUMBER",
-    "message": "Número da guia de remessa do par de etiquetas",
+    "message": "Número do conhecimento de embarque do par de etiquetas",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5911,19 +5911,19 @@
   },
   {
     "code": "LQA_ABSENCE_REASON_LABEL",
-    "message": "Motivo de Ausência",
+    "message": "Motivo da ausência",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LQA_AFP_AWARENESS_LABEL",
-    "message": "Conscientização AFP",
+    "message": "Conscientização da AFP",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LQA_AFP_CASE_COUNT_LABEL",
-    "message": "Contagem de casos AFP",
+    "message": "Contagem de casos de AFP",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5959,7 +5959,7 @@
   },
   {
     "code": "LQA_CHILD_SEX_LABEL",
-    "message": "Sexo Infantil",
+    "message": "Sexo infantil",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -6019,13 +6019,13 @@
   },
   {
     "code": "LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "LQA_SURVEYOR_NAME_LABEL",
-    "message": "Nome do pesquisador",
+    "message": "Nome do topógrafo",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -6145,7 +6145,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_COMPLAINTS",
-    "message": "Deixe que os trabalhadores de campo registem as questões levantadas pelos prestadores de cuidados ou pela comunidade durante a distribuição – tais como preocupações sobre medicamentos, famílias perdidas ou qualidade do serviço – para apoiar o acompanhamento e a resolução atempados.",
+    "message": "Deixe que os trabalhadores de campo registem as questões levantadas pelos cuidadores ou pela comunidade durante a distribuição – tais como preocupações sobre medicamentos, famílias perdidas ou qualidade do serviço – para apoiar o acompanhamento e a resolução atempados.",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -6433,7 +6433,7 @@
   },
   {
     "code": "POPUP_BODY_LABELS",
-    "message": "Etiquetas de corpo pop-up",
+    "message": "Rótulos de corpo pop-up",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -6667,7 +6667,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
-    "message": "Unidade Administrativa",
+    "message": "Unidade administrativa",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -6691,7 +6691,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_REFERRED_TO",
-    "message": "Unidade de Saúde",
+    "message": "Unidade de saúde",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -7045,7 +7045,7 @@
   },
   {
     "code": "SP2",
-    "message": "PE 2",
+    "message": "SP 2",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -7561,7 +7561,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "ID exclusivo do beneficiário",
+    "message": "ID do beneficiário",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -7627,19 +7627,19 @@
   },
   {
     "code": "VALIDATION_CONDITIONAL_FIELD_LOCALIZED_EMPTY",
-    "message": "A localização de {{fieldName}} está vazia para {{toggleName}}",
+    "message": "A localização {{fieldName}} está vazia para {{toggleName}}",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "VALIDATION_CONDITIONAL_FIELD_REQUIRED",
-    "message": "{{fieldName}} é obrigatório quando {{toggleName}} está ativado",
+    "message": "{{fieldName}} é necessário quando {{toggleName}} está ativado",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTIONS_REQUIRED",
-    "message": "As opções do menu suspenso são obrigatórias para o campo {{fieldName}}",
+    "message": "As opções suspensas são obrigatórias para o campo {{fieldName}}",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -7651,7 +7651,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY",
-    "message": "O rótulo da opção do menu suspenso está vazio para o campo {{fieldName}}",
+    "message": "O rótulo da opção suspensa está vazio para o campo {{fieldName}}",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -7663,7 +7663,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTION_NAME_REQUIRED",
-    "message": "O nome da opção do menu suspenso é obrigatório para o campo {{fieldName}}",
+    "message": "O nome da opção suspensa é obrigatório para o campo {{fieldName}}",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -7699,7 +7699,7 @@
   },
   {
     "code": "VALIDATION_MANDATORY_FIELD_LOCALIZED_EMPTY",
-    "message": "A localização de {{propertyName}} está vazia para o campo {{fieldName}}",
+    "message": "A localização {{propertyName}} está vazia para o campo {{fieldName}}",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -7711,7 +7711,7 @@
   },
   {
     "code": "VALIDATION_POPUP_DROPDOWN_OPTIONS_REQUIRED",
-    "message": "As opções do menu suspenso são obrigatórias para {{popupField}} no campo {{fieldName}}",
+    "message": "As opções suspensas são obrigatórias para {{popupField}} no campo {{fieldName}}",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -7723,7 +7723,7 @@
   },
   {
     "code": "VALIDATION_POPUP_FOOTER_LABEL_EMPTY",
-    "message": "O rótulo do rodapé do pop-up {{index}} está vazio para o campo {{fieldName}}",
+    "message": "O rótulo do rodapé pop-up {{index}} está vazio para o campo {{fieldName}}",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -7741,7 +7741,7 @@
   },
   {
     "code": "VALIDATION_POPUP_RADIO_OPTIONS_REQUIRED",
-    "message": "As opções de botão de opção são obrigatórias para {{popupField}} no campo {{fieldName}}",
+    "message": "As opções de rádio são obrigatórias para {{popupField}} no campo {{fieldName}}",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -7795,13 +7795,13 @@
   },
   {
     "code": "VALIDATION_TOGGLE_LOCALIZED_VALUE_EMPTY",
-    "message": "A localização de {{fieldName}} está vazia",
+    "message": "{{fieldName}} localização está vazia",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "VALIDATION_TOGGLE_VALUE_REQUIRED",
-    "message": "O valor de {{fieldName}} é obrigatório",
+    "message": "O valor {{fieldName}} é obrigatório",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -7885,7 +7885,7 @@
   },
   {
     "code": "administrativeArea",
-    "message": "Nome da Aldeia",
+    "message": "Nome da aldeia",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8029,13 +8029,13 @@
   },
   {
     "code": "advanced.proximitySearch",
-    "message": "Pesquisa por proximidade",
+    "message": "Pesquisa de proximidade",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "advanced.qrScanner",
-    "message": "Scanner QR",
+    "message": "Leitor QR",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8059,7 +8059,7 @@
   },
   {
     "code": "advanced.scanner",
-    "message": "Scanner QR",
+    "message": "Leitor QR",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8167,13 +8167,13 @@
   },
   {
     "code": "basic.numeric",
-    "message": "Contador Numérico",
+    "message": "Contador numérico",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "basic.radio",
-    "message": "Botão de rádio",
+    "message": "Botão de opção",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8209,7 +8209,7 @@
   },
   {
     "code": "beneficiaryLocation",
-    "message": "Localização do Beneficiário",
+    "message": "Localização do beneficiário",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8293,7 +8293,7 @@
   },
   {
     "code": "complaintAcknowledgement",
-    "message": "Sucesso da reclamação",
+    "message": "Sucesso na reclamação",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8317,7 +8317,7 @@
   },
   {
     "code": "complaintView",
-    "message": "Visualização de reclamações",
+    "message": "Visualização da reclamação",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8341,7 +8341,7 @@
   },
   {
     "code": "cycleNumber",
-    "message": "Número do Ciclo",
+    "message": "Número do ciclo",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8353,13 +8353,13 @@
   },
   {
     "code": "dateOfRedose",
-    "message": "Data da Redose",
+    "message": "Data da nova dose",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "dateOfRegistration",
-    "message": "Data de Registro",
+    "message": "Data de registro",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8407,7 +8407,7 @@
   },
   {
     "code": "deliverySuccess",
-    "message": "Entregue o sucesso",
+    "message": "Entregue sucesso",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8569,7 +8569,7 @@
   },
   {
     "code": "genderAge",
-    "message": "Gênero e Idade",
+    "message": "Gênero e idade",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8623,7 +8623,7 @@
   },
   {
     "code": "healthFacility",
-    "message": "Unidade de Saúde",
+    "message": "Unidade de saúde",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8695,7 +8695,7 @@
   },
   {
     "code": "individualRow",
-    "message": "Linha de membros",
+    "message": "Linha de membro",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8809,7 +8809,7 @@
   },
   {
     "code": "nameOfIndividual",
-    "message": "Nome do Indivíduo",
+    "message": "Nome do indivíduo",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8863,13 +8863,13 @@
   },
   {
     "code": "pastCycleTable",
-    "message": "Ciclos Passados",
+    "message": "Ciclos anteriores",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "pastCyclesList",
-    "message": "Ciclos Passados",
+    "message": "Ciclos anteriores",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8893,31 +8893,31 @@
   },
   {
     "code": "productdetail",
-    "message": "Detalhes do produto",
+    "message": "Detalhe do produto",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "proximitySeach",
-    "message": "Pesquisa por proximidade",
+    "message": "Pesquisar por proximidade",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "proximitySearch",
-    "message": "Pesquisa por proximidade",
+    "message": "Pesquisa de proximidade",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "qrScanner",
-    "message": "Scanner QR",
+    "message": "Leitor QR",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "qrscanner",
-    "message": "Scanner QR",
+    "message": "Leitor QR",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8929,7 +8929,7 @@
   },
   {
     "code": "reasonForRedose",
-    "message": "Motivo para Redose",
+    "message": "Motivo para refazer",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -8983,7 +8983,7 @@
   },
   {
     "code": "referralReason",
-    "message": "Motivo da indicação",
+    "message": "Motivo da referência",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -9037,7 +9037,7 @@
   },
   {
     "code": "searchBeneficiary",
-    "message": "Pesquisar Beneficiário",
+    "message": "Pesquisar beneficiário",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -9242,6 +9242,156 @@
   {
     "code": "{{fn:getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
     "message": "Remetente",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_SECONDARY_ACTION_LABEL",
+    "message": "Vá para casa",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_ITEMMODEL",
+    "message": "Item",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_NAVIGATIONMODEL",
+    "message": "Navegação",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
+    "message": "Beneficiário do projeto",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
+    "message": "Ação do usuário",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
+    "message": "Idade do beneficiário",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
+    "message": "Gênero do beneficiário",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
+    "message": "Nome do beneficiário",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
+    "message": "Data de registro",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
+    "message": "Chefe de família",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
+    "message": "Povoado",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+    "message": "Fonte",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_BATCH_LABEL",
+    "message": "Lote",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
+    "message": "Número do lote",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_COMMENTS_LABEL",
+    "message": "Comentários",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
+    "message": "Data de validade",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
+    "message": "Número MRN",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_QUANTITY_LABEL",
+    "message": "Quantidade",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_RESOURCE_LABEL",
+    "message": "Recurso",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_SENDER_LABEL",
+    "message": "Remetente",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_SKU_LABEL",
+    "message": "SKU",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
+    "message": "Motivo da transação",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
+    "message": "Conhecimento de embarque",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
+    "message": "Número da carta de porte",
+    "module": "hcm-base-closehousehold-co-delivery",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "pt_DEMO"
   }

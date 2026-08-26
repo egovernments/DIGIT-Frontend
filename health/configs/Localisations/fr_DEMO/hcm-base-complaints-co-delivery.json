@@ -43,7 +43,7 @@
   },
   {
     "code": "ACTION_UNIFIED_UPLOAD_SCREEN",
-    "message": "Télécharger un fichier unifié",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -79,7 +79,7 @@
   },
   {
     "code": "ADD_HEADER_LOCALIZATION",
-    "message": "Ajouter une étiquette",
+    "message": "Étiquette",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -337,7 +337,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_ALERT_DESCRIPTION",
-    "message": "En fonction des réponses, vous allez à « {value} ». Êtes-vous sûr de vouloir continuer ?",
+    "message": "En fonction des réponses, vous allez vers '{value}'. Êtes-vous sûr de vouloir continuer ?",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -427,7 +427,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_DESCRIPTION",
-    "message": "Confirmez si l'enfant a reçu un médicament contenant de la sulfadoxine-pyriméthamine (SP) ou du cotrimoxazole (CTX) au cours des 28 derniers jours, que ce soit pour la prévention ou le traitement de maladies.",
+    "message": "Confirmez si l'enfant a reçu des médicaments contenant de la sulfadoxine-pyriméthamine (SP) ou du cotrimoxazole (CTX) au cours des 28 derniers jours, que ce soit pour la prévention ou le traitement de maladies.",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -751,7 +751,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual",
-    "message": "Nom de famille de la personne",
+    "message": "Nom de la personne",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -871,7 +871,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode_helpText",
-    "message": "Entrez le code postal de la région (Code PIN)",
+    "message": "Entrez le code postal de la région (code PIN)",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1099,7 +1099,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_weight",
-    "message": "Poids (en Kgs)",
+    "message": "Poids (en kg)",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1357,7 +1357,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_REDOSE",
-    "message": "Redose",
+    "message": "Redoser",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1567,7 +1567,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_REDOSE",
-    "message": "Redose",
+    "message": "Redoser",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -2137,13 +2137,13 @@
   },
   {
     "code": "ASSIGN_TO_ALL",
-    "message": "Attribuer à tous",
+    "message": "Attribué à tous",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "ASSIGN_TO_ME",
-    "message": "Attribuez-moi",
+    "message": "M'a été attribué",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -2215,7 +2215,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "Bénéficiaire",
+    "message": "Nom du bénéficiaire",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -2887,7 +2887,7 @@
   },
   {
     "code": "COMPLAINT_DETAILS_supervisorContactNumber_LABEL",
-    "message": "Numéro de contact du superviseur",
+    "message": "Numéro de téléphone du superviseur",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -2917,7 +2917,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Date de la plainte",
+    "message": "Date",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3103,7 +3103,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Contact",
+    "message": "Numéro de contact",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3115,7 +3115,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Date",
+    "message": "Date de la plainte",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3127,7 +3127,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Taper",
+    "message": "Type de plainte",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3301,13 +3301,13 @@
   },
   {
     "code": "ComplaintModel. COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "ComplaintModel.COMPLAINT_INBOX_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3343,7 +3343,7 @@
   },
   {
     "code": "ComplaintModel.COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3679,7 +3679,7 @@
   },
   {
     "code": "DIGIT_LOC_SELECT_MODULE_LABEL",
-    "message": "Sélectionner un module",
+    "message": "Sélectionnez le module",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3811,7 +3811,7 @@
   },
   {
     "code": "ENTER_FIELD_LABEL",
-    "message": "Entrez l'étiquette du champ",
+    "message": "Entrez le libellé du champ",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3829,7 +3829,7 @@
   },
   {
     "code": "ENTER_VALID_FILE",
-    "message": "Veuillez saisir un fichier valide",
+    "message": "Veuillez entrer un fichier valide",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3877,7 +3877,7 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT",
-    "message": "Le fichier unifié comprendra toutes les fiches des installations, des utilisateurs et des cibles.",
+    "message": "Le fichier unifié comprendra toutes les fiches d'installation, d'utilisateur et de cible.",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4141,7 +4141,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_NUMBERRANGE",
-    "message": "Plage de numéros",
+    "message": "Tranche de numéros",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4159,7 +4159,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_POPUPTITLE",
-    "message": "Titre de la fenêtre contextuelle",
+    "message": "Titre du pop-up",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4171,7 +4171,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_PRIMARYACTION",
-    "message": "Étiquette d’action principale",
+    "message": "Étiquette d'action principale",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4225,7 +4225,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_SYSTEMDATE",
-    "message": "Date de génération du système",
+    "message": "Date générée par le système",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4286,6 +4286,12 @@
   {
     "code": "FOOTER_ACTION_2_LABEL",
     "message": "Libellé du bouton d'action secondaire",
+    "module": "hcm-base-complaints-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_cancel2_LABEL",
+    "message": "Effacer l'étiquette",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4483,7 +4489,7 @@
   },
   {
     "code": "HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA",
-    "message": "Télécharger des données unifiées",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4627,7 +4633,7 @@
   },
   {
     "code": "HCM_MAP_USERS_TO_REGISTERS_DESC",
-    "message": "Affectez les utilisateurs de la campagne aux registres de présence pour activer le suivi des présences.",
+    "message": "Affectez les utilisateurs de la campagne aux registres de présence pour permettre le suivi des présences.",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4903,7 +4909,7 @@
   },
   {
     "code": "HCM_UNIFIED_DATA_MESSAGE",
-    "message": "Le fichier unifié comprendra toutes les fiches des installations, des utilisateurs et des cibles.",
+    "message": "Le fichier unifié comprendra toutes les fiches d'installation, d'utilisateur et de cible.",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4927,7 +4933,7 @@
   },
   {
     "code": "HCM_UPLOAD_DATA_HEADING",
-    "message": "Télécharger les données du microplan",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4957,7 +4963,7 @@
   },
   {
     "code": "HCM_UPLOAD_UNIFIED_DATA_HEADING",
-    "message": "Télécharger des données unifiées",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5305,7 +5311,7 @@
   },
   {
     "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5533,7 +5539,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Zone de réclamation",
+    "message": "Espace réclamation",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5773,7 +5779,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Manqué - Pas revisité",
+    "message": "Manqué - Non revisité",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5827,7 +5833,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5917,13 +5923,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Raison de la transaction",
+    "message": "Motif de la transaction",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5941,7 +5947,7 @@
   },
   {
     "code": "LABEL_PAIR_LOCALITY",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5965,7 +5971,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Autre sensibilisation",
+    "message": "Autre prise de conscience",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5977,7 +5983,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Le soignant informé",
+    "message": "Soignant informé",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6043,7 +6049,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6055,7 +6061,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6133,7 +6139,7 @@
   },
   {
     "code": "LABEL_PAIR_REFERRALNAME",
-    "message": "Nom de la référence",
+    "message": "Nom de référence",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6199,7 +6205,7 @@
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONTYPE",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6217,7 +6223,7 @@
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
-    "message": "Zone de réclamation",
+    "message": "Espace réclamation",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6295,7 +6301,7 @@
   },
   {
     "code": "LOADING_MODULE",
-    "message": "Chargement du module",
+    "message": "Module de chargement",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6385,7 +6391,7 @@
   },
   {
     "code": "LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Le soignant informé",
+    "message": "Soignant informé",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6451,7 +6457,7 @@
   },
   {
     "code": "LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6463,7 +6469,7 @@
   },
   {
     "code": "LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6619,7 +6625,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_INVENTORY",
-    "message": "Suivez et mettez à jour les niveaux de stock de ressources à chaque point de distribution. Enregistrez les réceptions, les problèmes, la consommation et les pertes pour maintenir une visibilité précise des médicaments tout au long de la campagne.",
+    "message": "Suivez et mettez à jour les niveaux de stock de ressources à chaque point de distribution. Enregistrez les réceptions, les sorties, la consommation et les pertes pour maintenir une visibilité précise des médicaments tout au long de la campagne.",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7123,7 +7129,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED",
-    "message": "Une unité administrative est requise",
+    "message": "L'unité administrative est requise",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7375,7 +7381,7 @@
   },
   {
     "code": "RESOURCE2",
-    "message": "Filet de lit grade 2",
+    "message": "Moustiquaire grade 2",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8047,7 +8053,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Identifiant unique du bénéficiaire",
+    "message": "Identifiant du bénéficiaire",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8113,7 +8119,7 @@
   },
   {
     "code": "VALIDATION_CONDITIONAL_FIELD_LOCALIZED_EMPTY",
-    "message": "La localisation de {{fieldName}} est vide pour {{toggleName}}",
+    "message": "La localisation {{fieldName}} est vide pour {{toggleName}}",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8125,7 +8131,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTIONS_REQUIRED",
-    "message": "Les options de la liste déroulante sont requises pour le champ {{fieldName}}",
+    "message": "Les options de liste déroulante sont obligatoires pour le champ {{fieldName}}",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8137,7 +8143,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY",
-    "message": "L'étiquette de l'option de la liste déroulante est vide pour le champ {{fieldName}}",
+    "message": "Le libellé de l'option déroulante est vide pour le champ {{fieldName}}",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8149,7 +8155,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTION_NAME_REQUIRED",
-    "message": "Le nom de l'option de la liste déroulante est requis pour le champ {{fieldName}}",
+    "message": "Le nom de l'option déroulante est obligatoire pour le champ {{fieldName}}",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8185,19 +8191,19 @@
   },
   {
     "code": "VALIDATION_MANDATORY_FIELD_LOCALIZED_EMPTY",
-    "message": "La localisation de {{propertyName}} est vide pour le champ {{fieldName}}",
+    "message": "La localisation {{propertyName}} est vide pour le champ {{fieldName}}",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_BODY_LABEL_EMPTY",
-    "message": "L'étiquette du corps de la fenêtre contextuelle est vide pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Le libellé du corps de la fenêtre contextuelle est vide pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_DROPDOWN_OPTIONS_REQUIRED",
-    "message": "Les options de la liste déroulante sont requises pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Les options de liste déroulante sont requises pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8209,7 +8215,7 @@
   },
   {
     "code": "VALIDATION_POPUP_FOOTER_LABEL_EMPTY",
-    "message": "L'étiquette de pied de page de la fenêtre contextuelle {{index}} est vide pour le champ {{fieldName}}",
+    "message": "Le libellé du pied de page contextuel {{index}} est vide pour le champ {{fieldName}}",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8221,13 +8227,13 @@
   },
   {
     "code": "VALIDATION_POPUP_OPTION_LOCALIZED_VALUE_EMPTY",
-    "message": "L'étiquette de l'option est vide pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Le libellé de l'option est vide pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_RADIO_OPTIONS_REQUIRED",
-    "message": "Les options du bouton radio sont requises pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Les options radio sont obligatoires pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8239,19 +8245,19 @@
   },
   {
     "code": "VALIDATION_POPUP_TABLE_COLUMNS_REQUIRED",
-    "message": "Les colonnes du tableau sont requises pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Les colonnes du tableau sont obligatoires pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_TABLE_COLUMN_HEADER_EMPTY",
-    "message": "L'en-tête de la colonne du tableau est vide pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "L'en-tête de colonne du tableau est vide pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_TITLE_EMPTY",
-    "message": "Le titre de la fenêtre contextuelle est vide pour le champ {{fieldName}}",
+    "message": "Le titre de la popup est vide pour le champ {{fieldName}}",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8275,19 +8281,19 @@
   },
   {
     "code": "VALIDATION_TABLE_COLUMN_HEADER_EMPTY",
-    "message": "L'en-tête de la colonne du tableau est vide pour le champ {{fieldName}}",
+    "message": "L'en-tête de colonne du tableau est vide pour le champ {{fieldName}}",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_TOGGLE_LOCALIZED_VALUE_EMPTY",
-    "message": "La localisation de {{fieldName}} est vide",
+    "message": "La localisation {{fieldName}} est vide",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_TOGGLE_VALUE_REQUIRED",
-    "message": "La valeur de {{fieldName}} est requise",
+    "message": "La valeur {{fieldName}} est requise",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8425,7 +8431,7 @@
   },
   {
     "code": "advanced.dropdownTemplate",
-    "message": "Modèle déroulant",
+    "message": "Modèle de liste déroulante",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8443,13 +8449,13 @@
   },
   {
     "code": "advanced.facilityFromWhich",
-    "message": "Établissement à partir de",
+    "message": "Installation à partir de",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "advanced.facilityToWhich",
-    "message": "Installation à",
+    "message": "Facilité de",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8461,7 +8467,7 @@
   },
   {
     "code": "advanced.idPopulator",
-    "message": "Populateur d'identifiants",
+    "message": "remplisseur d'identifiants",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8503,7 +8509,7 @@
   },
   {
     "code": "advanced.panelCard",
-    "message": "Carte de panneau",
+    "message": "Carte panneau",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8533,7 +8539,7 @@
   },
   {
     "code": "advanced.resourceCard",
-    "message": "Carte de ressources",
+    "message": "Carte ressource",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8557,7 +8563,7 @@
   },
   {
     "code": "advanced.searchByID",
-    "message": "Rechercher par pièce d'identité",
+    "message": "Rechercher par identifiant",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8791,7 +8797,7 @@
   },
   {
     "code": "clientReferenceId",
-    "message": "ID de référence client",
+    "message": "Identifiant de référence client",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8827,13 +8833,13 @@
   },
   {
     "code": "complaintCard",
-    "message": " ",
+    "message": "Plainte",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "complaintClientReferenceId",
-    "message": "ID de référence de la plainte",
+    "message": "Numéro de référence de la plainte",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8899,7 +8905,7 @@
   },
   {
     "code": "complaintsLabelPair",
-    "message": " ",
+    "message": "Détails de la plainte",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9049,7 +9055,7 @@
   },
   {
     "code": "dropdownTemplate",
-    "message": "Modèle déroulant",
+    "message": "Modèle de liste déroulante",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9127,7 +9133,7 @@
   },
   {
     "code": "facilityFromWhich",
-    "message": "Établissement à partir de",
+    "message": "Installation à partir de",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9253,13 +9259,13 @@
   },
   {
     "code": "idPopulator",
-    "message": "Populateur d'identifiants",
+    "message": "remplisseur d'identifiants",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "idSearch",
-    "message": "Recherche d'identité",
+    "message": "recherche d'identité",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9349,7 +9355,7 @@
   },
   {
     "code": "listViewMembers",
-    "message": "Afficher les membres",
+    "message": "Voir les membres",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9469,13 +9475,13 @@
   },
   {
     "code": "overviewLabelPairCard",
-    "message": "Aperçu Détails",
+    "message": "Détails de l'aperçu",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "panelCard",
-    "message": "Carte de panneau",
+    "message": "Carte panneau",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9565,13 +9571,13 @@
   },
   {
     "code": "redoseButton",
-    "message": "Redose",
+    "message": "Redoser",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "redoseComments",
-    "message": "Commentaires sur Redose",
+    "message": "Redoser les commentaires",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9601,7 +9607,7 @@
   },
   {
     "code": "referralReason",
-    "message": "Raison de la référence",
+    "message": "Motif de référence",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9865,7 +9871,7 @@
   },
   {
     "code": "viewDetails",
-    "message": "Ouvrir",
+    "message": "Afficher les détails",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9908,6 +9914,36 @@
   {
     "code": "{{fn:getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
     "message": "Expéditeur",
+    "module": "hcm-base-complaints-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND",
+    "message": "Plainte introuvable",
+    "module": "hcm-base-complaints-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND_DESC",
+    "message": "Nous n'avons trouvé aucune plainte dans les dossiers. Vous pouvez déposer une nouvelle plainte.",
+    "module": "hcm-base-complaints-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
+    "message": "Action de l'utilisateur",
+    "module": "hcm-base-complaints-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+    "message": "Source",
+    "module": "hcm-base-complaints-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "Quantité",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "fr_DEMO"
   }

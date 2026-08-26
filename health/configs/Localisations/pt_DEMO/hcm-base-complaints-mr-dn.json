@@ -61,13 +61,13 @@
   },
   {
     "code": "ASSIGN_TO_ALL",
-    "message": "Atribuir a todos",
+    "message": "Atribuído a todos",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "ASSIGN_TO_ME",
-    "message": "Atribuir para mim",
+    "message": "Atribuído a mim",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -624,6 +624,12 @@
     "locale": "pt_DEMO"
   },
   {
+    "code": "FOOTER_ACTION_cancel2_LABEL",
+    "message": "Limpar etiqueta",
+    "module": "hcm-base-complaints-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
     "code": "FOOTER_ACTION_close_LABEL",
     "message": "Fechar",
     "module": "hcm-base-complaints-mr-dn",
@@ -961,7 +967,7 @@
   },
   {
     "code": "administrativeArea",
-    "message": "Área Administrativa",
+    "message": "Área administrativa",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1009,7 +1015,7 @@
   },
   {
     "code": "complaintAcknowledgement",
-    "message": "Reconhecimento de reclamação",
+    "message": "Reconhecimento da reclamação",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1069,7 +1075,7 @@
   },
   {
     "code": "complaintView",
-    "message": "Visualização de reclamações",
+    "message": "Visualização da reclamação",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1213,7 +1219,7 @@
   },
   {
     "code": "supervisorName",
-    "message": "Nome do Supervisor",
+    "message": "Nome do supervisor",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1232,6 +1238,24 @@
   {
     "code": "viewDetails",
     "message": "Abrir",
+    "module": "hcm-base-complaints-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Rótulo",
+    "module": "hcm-base-complaints-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND",
+    "message": "Reclamação não encontrada",
+    "module": "hcm-base-complaints-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND_DESC",
+    "message": "Não encontramos nenhuma reclamação nos autos. Você pode registrar uma nova reclamação.",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   }

@@ -1,0 +1,62 @@
+[
+  {
+    "code": "HCM_Bednet_POST_DISTRIBUTION_3DAY_SMS",
+    "message": "Olá {HouseholdHeadName} , Seu mosquiteiro foi entregue com sucesso em {DistributedDate} para a campanha de mosquiteiros {CampaignName} Obrigado",
+    "module": "health-notification",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_MR-DN_POST_DISTRIBUTION_14DAY_SMS",
+    "message": "Olá {HouseholdHeadName}, seu filho smc segunda dose hoje para a campanha de mosquiteiros {CampaignName} Obrigado",
+    "module": "health-notification",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_MR-DN_POST_DISTRIBUTION_3DAY_SMS",
+    "message": "Olá {HouseholdHeadName}, seu filho smc segunda dose hoje para a campanha de mosquiteiros {CampaignName} Obrigado",
+    "module": "health-notification",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HF_REFERRAL_PUSH_NOTIFICATION",
+    "message": "Você recebeu uma nova indicação. Revise e tome as medidas necessárias.",
+    "module": "health-notification",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_ISSUE_PUSH_NOTIFICATION",
+    "message": "O estoque foi emitido de {Sending_Facility_Name} para suas instalações.\n{quantity_of_sku}\nReferência da transação: {Transaction_ID}. Sincronize e registre o recibo.",
+    "module": "health-notification",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_ISSUE_REJECT_PUSH_NOTIFICATION",
+    "message": "Seu estoque emitido foi rejeitado por {Receiving_Facility_Name}.\nQuantidade: {quantity_of_sku}\nReferência da transação: {Transaction_ID}.",
+    "module": "health-notification",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_RECEIVE_PUSH_NOTIFICATION",
+    "message": "Seu estoque emitido foi recebido com sucesso por {Receiving_Facility_Name}.\nRecebido: {quantity_of_sku}\nReferência da transação: {Transaction_ID}. Nenhuma ação adicional é necessária.",
+    "module": "health-notification",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_REVERSE_ACCEPT_PUSH_NOTIFICATION",
+    "message": "Sua devolução foi aceita por {Receiving_Facility_Name}.\n{quantity_of_sku}\nReferência da transação: {Transaction_ID}. Saldo de estoque atualizado com sucesso.",
+    "module": "health-notification",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_REVERSE_ISSUE_PUSH_NOTIFICATION",
+    "message": "Um retorno de ações foi iniciado por {Sending_Facility_Name}.\n{quantity_of_sku}\nReferência da transação: {Transaction_ID}. Por favor, registre o recibo para concluir a devolução.",
+    "module": "health-notification",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_REVERSE_REJECT_PUSH_NOTIFICATION",
+    "message": "Sua solicitação de devolução foi rejeitada por {Receiving_Facility_Name}.\n{quantity_of_sku}\nReferência da transação: {Transaction_ID}. O estoque foi restaurado para seu saldo.",
+    "module": "health-notification",
+    "locale": "pt_DEMO"
+  }
+]

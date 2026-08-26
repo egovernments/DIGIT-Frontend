@@ -163,7 +163,7 @@
   },
   {
     "code": "APPONE_INVENTORY_QUANTITY_PARTIAL_USED_LABEL",
-    "message": "Quantidade parcialmente usada",
+    "message": "Quantidade parcialmente utilizada",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -397,7 +397,7 @@
   },
   {
     "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_deliveryTeamCode_HELPTEXT",
-    "message": "Digitalizar código da equipe",
+    "message": "Digitalize o código da equipe",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -469,7 +469,7 @@
   },
   {
     "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_scanResource",
-    "message": "Recurso de verificação",
+    "message": "Digitalizar produto",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -625,13 +625,13 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_DAMAGED_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
-    "message": "Registre a lista de recursos danificados durante as operações da campanha",
+    "message": "Registre a lista de produtos danificados durante as operações da campanha",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_LOST_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
-    "message": "Registre a lista de recursos perdidos durante as operações da campanha",
+    "message": "Registre a lista de produtos perdidos durante as operações da campanha",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -751,7 +751,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockDetails_facilityFromWhich_LABEL",
-    "message": "Unidade de Saúde",
+    "message": "Unidade de saúde",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -907,13 +907,13 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCAN_RESOURCE_HELP_TEXT",
-    "message": "Digitalize o código QR do recurso",
+    "message": "Digitalize o código QR do produto",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCAN_RESOURCE_LABEL",
-    "message": "Recurso de verificação",
+    "message": "Digitalizar produto",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -1063,7 +1063,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_warehouseDetails_administrativeArea_LABEL",
-    "message": "Área Administrativa",
+    "message": "Área administrativa",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -1087,7 +1087,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_warehouseDetails_facilityToWhich_LABEL",
-    "message": "Unidade de Saúde",
+    "message": "Unidade de saúde",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -1357,7 +1357,7 @@
   },
   {
     "code": "INSUFFICIENT_RESOURCES",
-    "message": "Recursos insuficientes",
+    "message": "Produtos insuficientes",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -1549,13 +1549,13 @@
   },
   {
     "code": "INVENTORY_MRN_TAG_LABEL",
-    "message": "NRM Não",
+    "message": "NRM não",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "INVENTORY_MRN_TAG_LABEL ",
-    "message": "NRM Não",
+    "message": "NRM não",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -1657,7 +1657,7 @@
   },
   {
     "code": "INVENTORY_QUANTITY_SENT_BY_WAREHOUSE_LABEL",
-    "message": "Quantidade Enviada por Armazém",
+    "message": "Quantidade enviada por armazém",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -1687,7 +1687,7 @@
   },
   {
     "code": "INVENTORY_REASON_FOR_LESS_EXCESS_LABEL",
-    "message": "Razão para Menos/Excesso",
+    "message": "Razão para menos/excesso",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -1909,13 +1909,13 @@
   },
   {
     "code": "INVENTORY_RECORDSTOCK_scanResource_ERROR",
-    "message": "Verifique um recurso válido",
+    "message": "Digitalize um produto válido",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "INVENTORY_RECORDSTOCK_scanResource_IS_G_S1_ERROR",
-    "message": "Leia um código de barras de recurso válido",
+    "message": "Leia um código de barras de produto válido",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -1987,7 +1987,7 @@
   },
   {
     "code": "INVENTORY_RESOURCE_LABEL",
-    "message": "Recurso",
+    "message": "Produto",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2035,7 +2035,7 @@
   },
   {
     "code": "INVENTORY_SCAN_INVALID_QR",
-    "message": "Código QR inválido digitalizado. Por favor, digitalize um código QR válido.",
+    "message": "Código QR inválido verificado. Por favor, digitalize um código QR válido.",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2059,7 +2059,7 @@
   },
   {
     "code": "INVENTORY_SCAN_RESOURCE_HELP_TEXT",
-    "message": "Digitalize o código de barras do recurso",
+    "message": "Digitalize o código de barras do produto",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2095,7 +2095,7 @@
   },
   {
     "code": "INVENTORY_SELECT_TRANSACTION_LABEL",
-    "message": "Selecione Transação",
+    "message": "Selecione a transação",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2203,7 +2203,7 @@
   },
   {
     "code": "INVENTORY_TRANSACTING_PARTY_LABEL",
-    "message": "Parte da Transação",
+    "message": "Parte da transação",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2353,7 +2353,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "Referência de IC",
+    "message": "Encaminhamento de IC",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2395,7 +2395,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Beneficiário do Projeto",
+    "message": "Beneficiário do projeto",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2491,7 +2491,7 @@
   },
   {
     "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Data de Registro",
+    "message": "Data de registro",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2503,19 +2503,19 @@
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
-    "message": "Idade do Beneficiário",
+    "message": "Idade do beneficiário",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
-    "message": "Gênero do Beneficiário",
+    "message": "Gênero do beneficiário",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
-    "message": "Nome do Beneficiário",
+    "message": "Nome do beneficiário",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2581,7 +2581,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Comentários Finais",
+    "message": "Comentários finais",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2611,7 +2611,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Perdido (Outro)",
+    "message": "Perdeu (outro)",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2653,7 +2653,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2701,7 +2701,7 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_RESOURCE_LABEL",
-    "message": "Recurso",
+    "message": "Produto",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2743,25 +2743,25 @@
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Motivo de Ausência",
+    "message": "Motivo da ausência",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "Conscientização AFP",
+    "message": "Conscientização da AFP",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "Contagem de casos AFP",
+    "message": "Contagem de casos de AFP",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Conscientização (Outro)",
+    "message": "Conscientização (outro)",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2791,7 +2791,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Sexo Infantil",
+    "message": "Sexo infantil",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2851,13 +2851,13 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Nome do pesquisador",
+    "message": "Nome do topógrafo",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2917,13 +2917,13 @@
   },
   {
     "code": "LABEL_PAIR_RESOURCE",
-    "message": "Recurso",
+    "message": "Produto",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Expiração de estoque",
+    "message": "Expiração do estoque",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3163,7 +3163,7 @@
   },
   {
     "code": "QUANTITY_CANNOT_EXCEED_STOCK_IN_HAND_VALUE",
-    "message": "A quantidade não pode exceder o estoque disponível {maxValue}",
+    "message": "A quantidade não pode exceder o estoque em mãos {maxValue}",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3277,13 +3277,13 @@
   },
   {
     "code": "RESOURCE",
-    "message": "Recurso",
+    "message": "Produto",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "RESOURCES_ALREADY_SCANNED",
-    "message": "Este recurso já foi verificado",
+    "message": "Este produto já foi digitalizado",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3499,7 +3499,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "ID exclusivo do beneficiário",
+    "message": "ID do beneficiário",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3541,13 +3541,13 @@
   },
   {
     "code": "additionalFields",
-    "message": "Detalhes Adicionais",
+    "message": "Detalhes adicionais",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "administrativeArea",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3721,7 +3721,7 @@
   },
   {
     "code": "inventorySelectTransactionLabel",
-    "message": "Selecione Transação",
+    "message": "Selecione a transação",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3745,7 +3745,7 @@
   },
   {
     "code": "isDistributor",
-    "message": "É Distribuidor",
+    "message": "É distribuidor",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3799,7 +3799,7 @@
   },
   {
     "code": "mrnTag",
-    "message": "Dia MRN",
+    "message": "Etiqueta MRN",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3871,7 +3871,7 @@
   },
   {
     "code": "quantityPartialUsed",
-    "message": "Quantidade parcialmente usada",
+    "message": "Quantidade parcialmente utilizada",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3901,7 +3901,7 @@
   },
   {
     "code": "reasonForLessExcess",
-    "message": "Razão para Menos/Excesso",
+    "message": "Razão para menos/excesso",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3913,7 +3913,7 @@
   },
   {
     "code": "receiverFacilityId",
-    "message": "Instalação do receptor",
+    "message": "Instalação receptora",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3943,7 +3943,7 @@
   },
   {
     "code": "resource",
-    "message": "Recurso",
+    "message": "Produto",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3961,7 +3961,7 @@
   },
   {
     "code": "scanResource",
-    "message": "Recurso de verificação",
+    "message": "Digitalizar produto",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3973,13 +3973,13 @@
   },
   {
     "code": "secondaryRole",
-    "message": "Papel Secundário",
+    "message": "Função secundária",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "secondaryType",
-    "message": "Tipo Secundário",
+    "message": "Tipo secundário",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3997,7 +3997,7 @@
   },
   {
     "code": "senderFacilityId",
-    "message": "Recurso de remetente",
+    "message": "Facilidade do remetente",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -4196,6 +4196,66 @@
   {
     "code": "{{fn:getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
     "message": "Remetente",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Rótulo",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_QUANTITY",
+    "message": "Quantidade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_SECOND_PAGE_PARTY",
+    "message": "Remetente/Receptor",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCK_ACCEPT_SUCCESS_DESCRIPTION",
+    "message": "O recebimento de estoque foi registrado com sucesso.",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCK_ACCEPT_SUCCESS_GO_BACK_BUTTON",
+    "message": "Voltar para gerenciar estoque",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVENTORY_STOCK_ACCEPT_SUCCESS_HEADING",
+    "message": "Estoque aceito",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_QUANTITY",
+    "message": "Quantidade",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_SECOND_PAGE_PARTY",
+    "message": "Remetente/Receptor",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "module": "hcm-base-inventory-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "STOCK_IN_HAND",
+    "message": "Estoque em mãos",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   }

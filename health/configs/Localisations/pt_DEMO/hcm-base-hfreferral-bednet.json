@@ -217,7 +217,7 @@
   },
   {
     "code": "HFREFERRAL_FACILITY_DETAILS_evaluationFacility_LABEL",
-    "message": "Unidade de Saúde",
+    "message": "Unidade de saúde",
     "module": "hcm-base-hfreferral-bednet",
     "locale": "pt_DEMO"
   },
@@ -1022,6 +1022,12 @@
   {
     "code": "referralName",
     "message": "Nome de referência",
+    "module": "hcm-base-hfreferral-bednet",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Rótulo",
     "module": "hcm-base-hfreferral-bednet",
     "locale": "pt_DEMO"
   }

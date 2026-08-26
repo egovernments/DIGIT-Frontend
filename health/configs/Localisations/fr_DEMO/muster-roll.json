@@ -19,7 +19,7 @@
   },
   {
     "code": "ATTENDANCE_REPORT_HEADER_DE_ENROLLMENT_DATE",
-    "message": "De-enrollment Date",
+    "message": "Date de désinscription",
     "module": "muster-roll",
     "locale": "fr_DEMO"
   },
@@ -170,6 +170,12 @@
   {
     "code": "PDF_STATIC_LABEL_BILL_TABLE_WAGE",
     "message": "Taux de salaire",
+    "module": "muster-roll",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_MANAGER",
+    "message": "Responsable d'entrepôt",
     "module": "muster-roll",
     "locale": "fr_DEMO"
   }

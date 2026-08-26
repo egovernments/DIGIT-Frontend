@@ -85,7 +85,7 @@
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_PAYMENT_APPROVER",
-    "message": "Aprovador de pagamentos",
+    "message": "Aprovador de pagamento",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -559,7 +559,7 @@
   },
   {
     "code": "CORE_COMMON_NA",
-    "message": "QUE",
+    "message": "N / D",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -1471,7 +1471,7 @@
   },
   {
     "code": "HRMS_CREATE_EMPLOYEE_INFO",
-    "message": "O funcionário foi criado com sucesso. Clique no botão ‘Prosseguir para atribuição de campanha’ se desejar atribuir uma campanha ao usuário. Clique no botão ‘Voltar à página inicial’ para voltar à tela inicial.",
+    "message": "O funcionário foi criado com sucesso. Clique no botão ‘Continuar para atribuição de campanha’ se desejar atribuir uma campanha ao usuário. Clique no botão ‘Voltar à página inicial’ para voltar à tela inicial.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2707,7 +2707,7 @@
   },
   {
     "code": "HR_SUMMARY_PROFESSIONAL_DEATILS_SUBHEADER",
-    "message": "Detalhes profissionais",
+    "message": "Detalhes Profissionais",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2869,7 +2869,7 @@
   },
   {
     "code": "MSG",
-    "message": "Adicione seus níveis de hierarquia de limite clicando no botão “Adicionar novo nível de hierarquia de limite”. Se você quiser remover um nível, clique no ícone de exclusão próximo ao nível que deseja excluir.",
+    "message": "Adicione seus níveis de hierarquia de limite clicando no botão “Adicionar novo nível de hierarquia de limite”. Se quiser remover um nível, clique no ícone de exclusão próximo ao nível que deseja excluir.",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },
@@ -2941,7 +2941,7 @@
   },
   {
     "code": "PREVIEW_ON_MAP",
-    "message": "Visualizar no mapa",
+    "message": "Pré-visualização no mapa",
     "module": "hcm-hr",
     "locale": "pt_DEMO"
   },

@@ -73,13 +73,13 @@
   },
   {
     "code": "ASSIGN_TO_ALL",
-    "message": "Attribuer à tous",
+    "message": "Attribué à tous",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "ASSIGN_TO_ME",
-    "message": "Attribuez-moi",
+    "message": "M'a été attribué",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -337,7 +337,7 @@
   },
   {
     "code": "COMPLAINT_DETAILS_supervisorContactNumber_LABEL",
-    "message": "Numéro de contact du superviseur",
+    "message": "Numéro de téléphone du superviseur",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -553,7 +553,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Contact",
+    "message": "Numéro de contact",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -565,7 +565,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Date",
+    "message": "Date de la plainte",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -577,7 +577,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Taper",
+    "message": "Type de plainte",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -662,6 +662,12 @@
   {
     "code": "FILTER_BUTTON_ACTIONPOPUP",
     "message": "Filtre",
+    "module": "hcm-base-complaints-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_cancel2_LABEL",
+    "message": "Effacer l'étiquette",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -985,19 +991,19 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Manqué (Autre)",
+    "message": "Manqué (autre)",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Manqué (Refus)",
+    "message": "Manqué (refus)",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
-    "message": "Manqué (Routine)",
+    "message": "Manqué (routine)",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -1027,7 +1033,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -1093,13 +1099,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Raison de la transaction",
+    "message": "Motif de la transaction",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -1135,7 +1141,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Autre sensibilisation",
+    "message": "Autre prise de conscience",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -1147,7 +1153,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Le soignant informé",
+    "message": "Soignant informé",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -1213,7 +1219,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -1225,7 +1231,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -1573,7 +1579,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Identifiant unique du bénéficiaire",
+    "message": "Identifiant du bénéficiaire",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -1657,7 +1663,7 @@
   },
   {
     "code": "clientReferenceId",
-    "message": "ID de référence client",
+    "message": "Identifiant de référence client",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -1675,13 +1681,13 @@
   },
   {
     "code": "complaintCard",
-    "message": " ",
+    "message": "Plainte",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "complaintClientReferenceId",
-    "message": "ID de référence de la plainte",
+    "message": "Numéro de référence de la plainte",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -1741,7 +1747,7 @@
   },
   {
     "code": "complaintsLabelPair",
-    "message": " ",
+    "message": "Détails de la plainte",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   },
@@ -1892,6 +1898,30 @@
   {
     "code": "viewDetails",
     "message": "Ouvrir",
+    "module": "hcm-base-complaints-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Étiquette",
+    "module": "hcm-base-complaints-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND",
+    "message": "Plainte introuvable",
+    "module": "hcm-base-complaints-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND_DESC",
+    "message": "Nous n'avons trouvé aucune plainte dans les dossiers. Vous pouvez déposer une nouvelle plainte.",
+    "module": "hcm-base-complaints-bednet",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
     "module": "hcm-base-complaints-bednet",
     "locale": "fr_DEMO"
   }

@@ -1039,7 +1039,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -1297,7 +1297,7 @@
   },
   {
     "code": "HCM_REGISTRATION_PINCODE_HELPTEXT",
-    "message": "Entrez le code postal de la région (Code PIN)",
+    "message": "Entrez le code postal de la région (code PIN)",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -1531,7 +1531,7 @@
   },
   {
     "code": "IHM_CAREGIVER_INFORMED_LABEL",
-    "message": "Le soignant informé",
+    "message": "Soignant informé",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -1669,7 +1669,7 @@
   },
   {
     "code": "IHM_ENUM_LPHCDA",
-    "message": "En LPHC",
+    "message": "LPHCDA",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -1729,7 +1729,7 @@
   },
   {
     "code": "IHM_ENUM_NPHCDA",
-    "message": "Dans le NPHC",
+    "message": "NPHCDA",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -1837,7 +1837,7 @@
   },
   {
     "code": "IHM_ENUM_SPHCDA",
-    "message": "au SPHC",
+    "message": "SPHCDA",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -1975,19 +1975,19 @@
   },
   {
     "code": "IHM_FIRST_HOUSEHOLD_LOCATION_LABEL",
-    "message": "Emplacement du premier ménage",
+    "message": "Emplacement du premier foyer",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "IHM_GPS_FIRST_HOUSEHOLD_LABEL",
-    "message": "GPS premier foyer",
+    "message": "GPS premier ménage",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "IHM_GPS_LAST_HOUSEHOLD_LABEL",
-    "message": "GPS Dernier ménage",
+    "message": "GPS dernier ménage",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -2017,7 +2017,7 @@
   },
   {
     "code": "IHM_MISSED_NOT_REVISITED_LABEL",
-    "message": "Manqué - Pas revisité",
+    "message": "Manqué - Non revisité",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -2059,7 +2059,7 @@
   },
   {
     "code": "IHM_MONITORING_DETAILS_LABEL",
-    "message": "Détails de surveillance",
+    "message": "Détails de la surveillance",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -2107,13 +2107,13 @@
   },
   {
     "code": "IHM_POORLY_COVERED_AREAS_LABEL",
-    "message": "Zones mal couvertes",
+    "message": "Des zones mal couvertes",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "IHM_SETTLEMENT_AREA_LABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -2533,7 +2533,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Surveillance interne",
+    "message": "Étiquette",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -2707,7 +2707,7 @@
   },
   {
     "code": "LABEL_PAIR_GIVENNAME",
-    "message": "Nom de la personne",
+    "message": "Nom individuel",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -2833,7 +2833,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTREVISITED",
-    "message": "Manqué - Pas revisité",
+    "message": "Manqué - Non revisité",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -2881,13 +2881,13 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYPOORLYCOVERED",
-    "message": "Zones mal couvertes",
+    "message": "Des zones mal couvertes",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -2935,7 +2935,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Manqué - Pas revisité",
+    "message": "Manqué - Non revisité",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -2983,13 +2983,13 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Zones mal couvertes",
+    "message": "Des zones mal couvertes",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -3073,13 +3073,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Raison de la transaction",
+    "message": "Motif de la transaction",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -3127,7 +3127,7 @@
   },
   {
     "code": "LABEL_PAIR_LQACAMPAIGNAWARENESSLABEL",
-    "message": "Source de notoriété de la campagne",
+    "message": "Source de sensibilisation à la campagne",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -3199,7 +3199,7 @@
   },
   {
     "code": "LABEL_PAIR_LQAREASONNOTMARKEDLABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -3211,7 +3211,7 @@
   },
   {
     "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -3259,7 +3259,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Le soignant informé",
+    "message": "Soignant informé",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -3325,7 +3325,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -3337,7 +3337,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -3475,7 +3475,7 @@
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONTYPE",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -3535,7 +3535,7 @@
   },
   {
     "code": "LPHCDA",
-    "message": "En LPHC",
+    "message": "LPHCDA",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -3715,7 +3715,7 @@
   },
   {
     "code": "NPHCDA",
-    "message": "Dans le NPHC",
+    "message": "NPHCDA",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -3955,7 +3955,7 @@
   },
   {
     "code": "SPHCDA",
-    "message": "au SPHC",
+    "message": "SPHCDA",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -4087,7 +4087,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Identifiant unique du bénéficiaire",
+    "message": "Identifiant du bénéficiaire",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -4195,7 +4195,7 @@
   },
   {
     "code": "afpSuddenWeakness",
-    "message": "Faiblesse soudaine de l’AFP",
+    "message": "Faiblesse soudaine de l'AFP",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -4213,7 +4213,7 @@
   },
   {
     "code": "caregiverInformed",
-    "message": "Le soignant informé",
+    "message": "Soignant informé",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -4279,7 +4279,7 @@
   },
   {
     "code": "dropdownTemplate",
-    "message": "Modèle déroulant",
+    "message": "Modèle de liste déroulante",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -4297,13 +4297,13 @@
   },
   {
     "code": "gpsFirstHousehold",
-    "message": "GPS premier foyer",
+    "message": "GPS premier ménage",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "gpsLastHousehold",
-    "message": "GPS Dernier ménage",
+    "message": "GPS dernier ménage",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -4363,7 +4363,7 @@
   },
   {
     "code": "missedNotRevisited",
-    "message": "Manqué - Pas revisité",
+    "message": "Manqué - Non revisité",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -4429,13 +4429,13 @@
   },
   {
     "code": "panelCard",
-    "message": "Carte de panneau",
+    "message": "Carte panneau",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "poorlyCoveredAreas",
-    "message": "Zones mal couvertes",
+    "message": "Des zones mal couvertes",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -4465,7 +4465,7 @@
   },
   {
     "code": "row2",
-    "message": "Détails de surveillance",
+    "message": "Détails de la surveillance",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -4489,7 +4489,7 @@
   },
   {
     "code": "settlementArea",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   },
@@ -4526,6 +4526,24 @@
   {
     "code": "whereWasChild",
     "message": "Où était l'enfant",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Étiquette",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
+    "message": "Action de l'utilisateur",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "Quantité",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "fr_DEMO"
   }

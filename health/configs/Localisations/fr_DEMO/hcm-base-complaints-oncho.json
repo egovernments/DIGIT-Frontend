@@ -73,13 +73,13 @@
   },
   {
     "code": "ASSIGN_TO_ALL",
-    "message": "Attribuer à tous",
+    "message": "Attribué à tous",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "ASSIGN_TO_ME",
-    "message": "Attribuez-moi",
+    "message": "M'a été attribué",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   },
@@ -337,7 +337,7 @@
   },
   {
     "code": "COMPLAINT_DETAILS_supervisorContactNumber_LABEL",
-    "message": "Numéro de contact du superviseur",
+    "message": "Numéro de téléphone du superviseur",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   },
@@ -666,6 +666,12 @@
     "locale": "fr_DEMO"
   },
   {
+    "code": "FOOTER_ACTION_cancel2_LABEL",
+    "message": "Effacer l'étiquette",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
     "code": "FOOTER_ACTION_close_LABEL",
     "message": "Fermer",
     "module": "hcm-base-complaints-oncho",
@@ -973,7 +979,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Manqué - Pas revisité",
+    "message": "Manqué - Non revisité",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   },
@@ -1027,7 +1033,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   },
@@ -1093,13 +1099,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Raison de la transaction",
+    "message": "Motif de la transaction",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   },
@@ -1135,7 +1141,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Autre sensibilisation",
+    "message": "Autre prise de conscience",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   },
@@ -1147,7 +1153,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Le soignant informé",
+    "message": "Soignant informé",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   },
@@ -1213,7 +1219,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   },
@@ -1225,7 +1231,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   },
@@ -1573,7 +1579,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Identifiant unique du bénéficiaire",
+    "message": "Identifiant du bénéficiaire",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   },
@@ -1657,7 +1663,7 @@
   },
   {
     "code": "clientReferenceId",
-    "message": "ID de référence client",
+    "message": "Identifiant de référence client",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   },
@@ -1681,7 +1687,7 @@
   },
   {
     "code": "complaintClientReferenceId",
-    "message": "ID de référence de la plainte",
+    "message": "Numéro de référence de la plainte",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   },
@@ -1892,6 +1898,24 @@
   {
     "code": "viewDetails",
     "message": "Ouvrir",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Étiquette",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND",
+    "message": "Plainte introuvable",
+    "module": "hcm-base-complaints-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND_DESC",
+    "message": "Nous n'avons trouvé aucune plainte dans les dossiers. Vous pouvez déposer une nouvelle plainte.",
     "module": "hcm-base-complaints-oncho",
     "locale": "fr_DEMO"
   }

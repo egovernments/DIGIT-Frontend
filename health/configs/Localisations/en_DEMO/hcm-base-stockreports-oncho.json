@@ -217,7 +217,7 @@
   },
   {
     "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -343,13 +343,13 @@
   },
   {
     "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
-    "message": "Select Product",
+    "message": "Select product",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
-    "message": "Select Facility",
+    "message": "Select facility",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -397,13 +397,13 @@
   },
   {
     "code": "STOCKRECON_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
-    "message": "Back to home",
+    "message": "Back to Home",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "STOCKRECON_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
-    "message": "Select Facility",
+    "message": "Select facility",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -421,13 +421,13 @@
   },
   {
     "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_EXCESS_LABEL",
-    "message": "Stock Excess",
+    "message": "Stock excess",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "STOCKRECON_REPORT_DETAILS_TABLE_HEADER_LESS_LABEL",
-    "message": "Stock Less",
+    "message": "Stock less",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -541,13 +541,13 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
-    "message": "Select Product",
+    "message": "Select product",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
-    "message": "Select Warehouse",
+    "message": "Select warehouse",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -565,7 +565,7 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -805,7 +805,7 @@
   },
   {
     "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
-    "message": "Stock on hand = (Stock received + stock returned) \u2212 (stock issued + stock lost + stock damaged)",
+    "message": "Stock on hand = (Stock received + stock returned) − (stock issued + stock lost + stock damaged)",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -865,7 +865,7 @@
   },
   {
     "code": "STOCK_REPORT_DETAILS_INFO_CARD_LABEL",
-    "message": "Stock Report Info",
+    "message": "Stock report info",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -931,7 +931,7 @@
   },
   {
     "code": "additionalFields",
-    "message": "Additional Fields",
+    "message": "Additional fields",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -955,7 +955,7 @@
   },
   {
     "code": "clientCreatedBy",
-    "message": "Created By",
+    "message": "Created by",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -973,7 +973,7 @@
   },
   {
     "code": "infoCardLabel",
-    "message": "Stock Report Information",
+    "message": "Stock report information",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -985,13 +985,13 @@
   },
   {
     "code": "productVariantId",
-    "message": "Product Variant ID",
+    "message": "Product variant ID",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "productVariants",
-    "message": "Product Variants",
+    "message": "Product variants",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -1009,19 +1009,19 @@
   },
   {
     "code": "reckonReportDetailsCard",
-    "message": "Reconciliation Details",
+    "message": "Reconciliation details",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "reckonReportDetailsInfoCard",
-    "message": "Reconciliation Information",
+    "message": "Reconciliation information",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "reckonReportDetails_table",
-    "message": "Reconciliation Details",
+    "message": "Reconciliation details",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -1039,25 +1039,25 @@
   },
   {
     "code": "reportDetailsCard",
-    "message": "Report Details",
+    "message": "Report details",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "reportDetailsInfoCard",
-    "message": "Report Information",
+    "message": "Report information",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "reportDetails_table",
-    "message": "Report Details",
+    "message": "Report details",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "reportType",
-    "message": "Report Type",
+    "message": "Report type",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -1069,37 +1069,37 @@
   },
   {
     "code": "selectProductLabel",
-    "message": "Select Product",
+    "message": "Select product",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "selectWarehouseLabel",
-    "message": "Select Warehouse",
+    "message": "Select warehouse",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "selectedFacility",
-    "message": "Select Facility",
+    "message": "Select facility",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "selectedProduct",
-    "message": "Select Product",
+    "message": "Select product",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "selectedReckonProduct",
-    "message": "Select Product",
+    "message": "Select product",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "selectedReconFacility",
-    "message": "Select Facility",
+    "message": "Select facility",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -1147,7 +1147,7 @@
   },
   {
     "code": "stockReconTable",
-    "message": "Stock Reconciliation Report",
+    "message": "Stock reconciliation report",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -1159,13 +1159,13 @@
   },
   {
     "code": "stockTable",
-    "message": "Stock Report",
+    "message": "Stock report",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "stockreportsViewReportsStockDamaged",
-    "message": "Stock Damaged",
+    "message": "Stock damaged",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -1177,7 +1177,7 @@
   },
   {
     "code": "stockreportsViewReportsStockIssued",
-    "message": "Stock Issued",
+    "message": "Stock issued",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
@@ -1189,25 +1189,25 @@
   },
   {
     "code": "stockreportsViewReportsStockLoss",
-    "message": "Stock Loss",
+    "message": "Stock loss",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "stockreportsViewReportsStockRecieve",
-    "message": "Stock Received",
+    "message": "Stock received",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "stockreportsViewReportsStockRecon",
-    "message": "Stock Reconciliation",
+    "message": "Stock reconciliation",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "stockreportsViewReportsStockReturned",
-    "message": "Stock Returned",
+    "message": "Stock returned",
     "module": "hcm-base-stockreports-oncho",
     "locale": "en_DEMO"
   },

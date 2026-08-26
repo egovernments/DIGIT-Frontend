@@ -247,7 +247,7 @@
   },
   {
     "code": "BOUNDARY_HIERARCHY_INFO_MSG",
-    "message": "Add your boundary hierarchy levels by clicking the \u201cAdd New Boundary Hierarchy Level\u201d button. If you want to remove a level, click on the delete icon next to the level you want to delete.",
+    "message": "Add your boundary hierarchy levels by clicking the “Add New Boundary Hierarchy Level” button. If you want to remove a level, click on the delete icon next to the level you want to delete.",
     "module": "hcm-workbench",
     "locale": "en_DEMO"
   },
@@ -674,6 +674,12 @@
   {
     "code": "INFO",
     "message": "Info",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INFO_CARD_TEXT",
+    "message": "Info Card Text",
     "module": "hcm-workbench",
     "locale": "en_DEMO"
   },

@@ -49,7 +49,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily",
-    "message": "Head of Family",
+    "message": "Head of family",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -289,13 +289,13 @@
   },
   {
     "code": "BODY_ITEM_complaintNumber_LABEL",
-    "message": "Campaign Number",
+    "message": "Campaign number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "BODY_ITEM_complaintType_LABEL",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -307,7 +307,7 @@
   },
   {
     "code": "BODY_ITEM_mobileNumber_LABEL",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -391,7 +391,7 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_LABEL",
-    "message": "GPS Coordinates",
+    "message": "GPS coordinates",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -655,7 +655,7 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_GPS_LABEL",
-    "message": "Detected Location",
+    "message": "Detected location",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -667,7 +667,7 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_MISSED_CHILDREN_LABEL",
-    "message": "Missed Children Details",
+    "message": "Missed children details",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -775,7 +775,7 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_SETTLEMENT_NAME_LABEL",
-    "message": "Settlement Name",
+    "message": "Settlement name",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -799,7 +799,7 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_VILLAGE_NAME_LABEL",
-    "message": "Settlement Name",
+    "message": "Settlement name",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -865,7 +865,7 @@
   },
   {
     "code": "HCM_DELIVERY_COMMENTS_LABEL",
-    "message": "Delivery Comments",
+    "message": "Delivery comments",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1057,7 +1057,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1093,7 +1093,7 @@
   },
   {
     "code": "HCM_REFER_ADMINISTRATIVE_UNIT_LABEL",
-    "message": "Administrative Unit",
+    "message": "Administrative unit",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1111,7 +1111,7 @@
   },
   {
     "code": "HCM_REFER_HEALTH_FACILITY_LABEL",
-    "message": "Health Facility",
+    "message": "Health facility",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1237,7 +1237,7 @@
   },
   {
     "code": "HCM_REGISTRATION_FIRST_NAME_LABEL",
-    "message": "First Name",
+    "message": "First name",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1315,7 +1315,7 @@
   },
   {
     "code": "HCM_REGISTRATION_PINCODE_HELPTEXT",
-    "message": "Enter the area postal code (PIN Code)",
+    "message": "Enter the area postal code (PIN code)",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1333,7 +1333,7 @@
   },
   {
     "code": "HCM_REGISTRATION_QR_SCAN_LABEL",
-    "message": "QR Scan",
+    "message": "QR scan",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1417,7 +1417,7 @@
   },
   {
     "code": "HCM_SEARCH_NEARBY_HOUSEHOLDS_LABEL",
-    "message": "Nearby Households",
+    "message": "Nearby households",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1591,7 +1591,7 @@
   },
   {
     "code": "LABEL",
-    "message": "Field Label",
+    "message": "Field label",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1603,7 +1603,7 @@
   },
   {
     "code": "LABEL_PAIR_BATCH_NUMBER",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1615,7 +1615,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "HF Referral Model",
+    "message": "HF referral model",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1633,7 +1633,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Inside Monitoring",
+    "message": "Inside monitoring",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1645,7 +1645,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
-    "message": "LQA Model",
+    "message": "LQA model",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1657,7 +1657,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Project Beneficiary",
+    "message": "Project beneficiary",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1669,7 +1669,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
-    "message": "User Action",
+    "message": "User action",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1681,7 +1681,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
-    "message": "Complainant Contact",
+    "message": "Complainant contact",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1693,13 +1693,13 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1711,13 +1711,13 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Complainant Contact",
+    "message": "Complainant contact",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1729,37 +1729,37 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Complaint Description",
+    "message": "Complaint description",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "Complaint Status",
+    "message": "Complaint status",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Date of Registration",
+    "message": "Date of registration",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1789,13 +1789,13 @@
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
-    "message": "Registration Date",
+    "message": "Registration date",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1807,13 +1807,13 @@
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-    "message": "Total Members",
+    "message": "Total members",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1825,13 +1825,13 @@
   },
   {
     "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "ID Number",
+    "message": "ID number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_ID_TYPE",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1843,19 +1843,19 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Children Present",
+    "message": "Children present",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Children Vaccinated",
+    "message": "Children vaccinated",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Final Comments",
+    "message": "Final comments",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1873,13 +1873,13 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Missed - Not Revisited",
+    "message": "Missed - Not revisited",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Missed - Not Visited",
+    "message": "Missed - Not visited",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1903,37 +1903,37 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Monitoring Date",
+    "message": "Monitoring date",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Monitor Designation",
+    "message": "Monitor designation",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Monitor Name",
+    "message": "Monitor name",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Poorly Covered",
+    "message": "Poorly covered",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Settlement Type",
+    "message": "Settlement type",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1945,7 +1945,7 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1957,13 +1957,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
-    "message": "Expiry Date",
+    "message": "Expiry date",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -1993,169 +1993,169 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Transaction Reason",
+    "message": "Transaction reason",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Absence Reason",
+    "message": "Absence reason",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "AFP Awareness",
+    "message": "AFP awareness",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "AFP Case Count",
+    "message": "AFP case count",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Other Awareness Source",
+    "message": "Other awareness source",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Campaign Awareness",
+    "message": "Campaign awareness",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Caregiver Informed",
+    "message": "Caregiver informed",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Children Under 5",
+    "message": "Children under 5",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Child Age (Months)",
+    "message": "Child age (months)",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Child Sex",
+    "message": "Child sex",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Cluster Number",
+    "message": "Cluster number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Finger Marked",
+    "message": "Finger marked",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Lot Number",
+    "message": "Lot number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "OPV Doses",
+    "message": "OPV doses",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Other Absence Reason",
+    "message": "Other absence reason",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Other Reason (Specify)",
+    "message": "Other reason (specify)",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Other Refusal Reason",
+    "message": "Other refusal reason",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Reason Not Marked",
+    "message": "Reason not marked",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Refusal Reason",
+    "message": "Refusal reason",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Surveyor Name",
+    "message": "Surveyor name",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Survey Date",
+    "message": "Survey date",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MEMBER_COUNT",
-    "message": "Member Count",
+    "message": "Member count",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MOBILE_NUMBER",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2167,7 +2167,7 @@
   },
   {
     "code": "LABEL_PAIR_QUANTITY_RECEIVED",
-    "message": "Quantity Received",
+    "message": "Quantity received",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2179,13 +2179,13 @@
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
-    "message": "Referral Status",
+    "message": "Referral status",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
-    "message": "Referral Symptom",
+    "message": "Referral symptom",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2197,13 +2197,13 @@
   },
   {
     "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Stock Expiry",
+    "message": "Stock expiry",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_WAYBILL_NUMBER",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2215,7 +2215,7 @@
   },
   {
     "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
-    "message": "Secondary Party",
+    "message": "Secondary party",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2413,7 +2413,7 @@
   },
   {
     "code": "POLIO_STOCK_AVAILABLE_TO_RETURN_LABEL",
-    "message": "Available to Return",
+    "message": "Available to return",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2443,13 +2443,13 @@
   },
   {
     "code": "POLIO_STOCK_BATCH_LOT_NUMBER_LABEL",
-    "message": "Batch Lot Number",
+    "message": "Batch lot number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "POLIO_STOCK_DETECTED_LOCATION_LABEL",
-    "message": "GPS Coordinates",
+    "message": "GPS coordinates",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2509,7 +2509,7 @@
   },
   {
     "code": "POLIO_STOCK_OPENED_VIALS_RETURNED_LABEL",
-    "message": "Opened Vials Returned",
+    "message": "Opened vials returned",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2581,7 +2581,7 @@
   },
   {
     "code": "POLIO_STOCK_TOTAL_RETURNED_LABEL",
-    "message": "Total Returned",
+    "message": "Total returned",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2599,7 +2599,7 @@
   },
   {
     "code": "POLIO_STOCK_TOTAL_VIALS_RECEIVED_FOR_DAY_LABEL",
-    "message": "Total Vials Received",
+    "message": "Total vials received",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2617,7 +2617,7 @@
   },
   {
     "code": "POLIO_STOCK_UNOPENED_SPOILT_VIALS_RETURNED_LABEL",
-    "message": "Unopened Spoilt Returned",
+    "message": "Unopened spoilt returned",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2629,7 +2629,7 @@
   },
   {
     "code": "POLIO_STOCK_UNOPENED_USABLE_VIALS_RETRIEVED_LABEL",
-    "message": "Unopened Usable Retrieved",
+    "message": "Unopened usable retrieved",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2641,7 +2641,7 @@
   },
   {
     "code": "POLIO_STOCK_UNOPENED_USABLE_VIALS_RETURNED_LABEL",
-    "message": "Unopened Usable Returned",
+    "message": "Unopened usable returned",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2701,7 +2701,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
-    "message": "Administrative Unit",
+    "message": "Administrative unit",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2959,7 +2959,7 @@
   },
   {
     "code": "administrativeArea",
-    "message": "Village Name",
+    "message": "Village name",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2977,7 +2977,7 @@
   },
   {
     "code": "batchLotNumber",
-    "message": "Batch Lot Number",
+    "message": "Batch lot number",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -2989,25 +2989,25 @@
   },
   {
     "code": "complaintType",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "deliveryConditionDialog",
-    "message": "Delivery Condition",
+    "message": "Delivery condition",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "deliveryConditiondialog",
-    "message": "Delivery Condition",
+    "message": "Delivery condition",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "deliverySuccess",
-    "message": "Delivery Recorded Successfully",
+    "message": "Delivery recorded successfully",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -3025,13 +3025,13 @@
   },
   {
     "code": "dropdownTemplate",
-    "message": "Dropdown Template",
+    "message": "Dropdown template",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "headName",
-    "message": "Household Head Name",
+    "message": "Household head name",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -3049,7 +3049,7 @@
   },
   {
     "code": "infocard",
-    "message": "Info Card",
+    "message": "Info card",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -3073,49 +3073,49 @@
   },
   {
     "code": "labelPairList",
-    "message": "Summary Details",
+    "message": "Summary details",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "latLng",
-    "message": "GPS Coordinates",
+    "message": "GPS coordinates",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "maxReturnable",
-    "message": "Available to Return",
+    "message": "Available to return",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "meberDetails",
-    "message": "Member Details",
+    "message": "Member details",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "menu_card",
-    "message": "Menu Card",
+    "message": "Menu card",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "openedVialsReturned",
-    "message": "Opened Vials Returned",
+    "message": "Opened vials returned",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "oroductdetail",
-    "message": "Product Details",
+    "message": "Product details",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "panelCard",
-    "message": "Panel Card",
+    "message": "Panel card",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -3127,25 +3127,25 @@
   },
   {
     "code": "proximitySeach",
-    "message": "Proximity Search",
+    "message": "Proximity search",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "qr_view",
-    "message": "QR View",
+    "message": "QR view",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "reasonForRefusal",
-    "message": "Reason for Refusal",
+    "message": "Reason for refusal",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "reasonNotVaccinated",
-    "message": "Reason Not Vaccinated",
+    "message": "Reason not vaccinated",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -3193,13 +3193,13 @@
   },
   {
     "code": "successCard",
-    "message": "Vials Recorded Successfully!",
+    "message": "Vials recorded successfully!",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "templateCard",
-    "message": "Vial Details Menu",
+    "message": "Vial details menu",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -3259,37 +3259,37 @@
   },
   {
     "code": "totalReturned",
-    "message": "Total Returned",
+    "message": "Total returned",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "totalVialsReceivedForDay",
-    "message": "Total Vials Received",
+    "message": "Total vials received",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "transactionType2",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "unopenedSpoiltVialsReturned",
-    "message": "Unopened Spoilt Returned",
+    "message": "Unopened spoilt returned",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "unopenedUsableVialsRetrieved",
-    "message": "Unopened Usable Retrieved",
+    "message": "Unopened usable retrieved",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "unopenedUsableVialsReturned",
-    "message": "Unopened Usable Returned",
+    "message": "Unopened usable returned",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   },
@@ -3301,7 +3301,7 @@
   },
   {
     "code": "whereWasChild",
-    "message": "Where Was the Child",
+    "message": "Where was the child",
     "module": "hcm-base-stock-polio",
     "locale": "en_DEMO"
   }

@@ -154,5 +154,11 @@
     "message": "Digitalize o código QR",
     "module": "hcm-scanner",
     "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCANNER_MANUAL_CODE_DESCRIPTION",
+    "message": "Por favor, insira o código de recurso presente no pacote.",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
   }
 ]

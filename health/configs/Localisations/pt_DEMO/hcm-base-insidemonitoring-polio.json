@@ -61,7 +61,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
-    "message": "Detalhes adicionais do endereço, como nome do quarteirão ou do apartamento",
+    "message": "Detalhes adicionais de endereço, como nome do bloco ou apartamento",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -649,7 +649,7 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_MISSED_CHILDREN_LABEL",
-    "message": "Detalhes de crianças perdidas",
+    "message": "Detalhes de crianças desaparecidas",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -1039,7 +1039,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -1075,7 +1075,7 @@
   },
   {
     "code": "HCM_REFER_ADMINISTRATIVE_UNIT_LABEL",
-    "message": "Unidade Administrativa",
+    "message": "Unidade administrativa",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -1093,7 +1093,7 @@
   },
   {
     "code": "HCM_REFER_HEALTH_FACILITY_LABEL",
-    "message": "Unidade de Saúde",
+    "message": "Unidade de saúde",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -1507,7 +1507,7 @@
   },
   {
     "code": "IHM_AFP_CASE_COUNT_LABEL",
-    "message": "Contagem de casos AFP",
+    "message": "Contagem de casos de AFP",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -1573,7 +1573,7 @@
   },
   {
     "code": "IHM_DESIGNATION_OTHER_LABEL",
-    "message": "Outra Designação",
+    "message": "Outra designação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -1663,13 +1663,13 @@
   },
   {
     "code": "IHM_ENUM_IN_PROCESS",
-    "message": "Em processo",
+    "message": "Em andamento",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "IHM_ENUM_LPHCDA",
-    "message": "Em LPHC",
+    "message": "LPHCDA",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -1729,7 +1729,7 @@
   },
   {
     "code": "IHM_ENUM_NPHCDA",
-    "message": "Em NPHC",
+    "message": "NPHCDA",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -1837,7 +1837,7 @@
   },
   {
     "code": "IHM_ENUM_SPHCDA",
-    "message": "na SPHC",
+    "message": "SPHCDA",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -1963,7 +1963,7 @@
   },
   {
     "code": "IHM_FINAL_COMMENTS_LABEL",
-    "message": "Comentários Finais",
+    "message": "Comentários finais",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -1975,31 +1975,31 @@
   },
   {
     "code": "IHM_FIRST_HOUSEHOLD_LOCATION_LABEL",
-    "message": "Localização da primeira residência",
+    "message": "Primeira localização domiciliar",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "IHM_GPS_FIRST_HOUSEHOLD_LABEL",
-    "message": "GPS Primeira Família",
+    "message": "GPS primeira casa",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "IHM_GPS_LAST_HOUSEHOLD_LABEL",
-    "message": "GPS Última Família",
+    "message": "GPS última residência",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "IHM_HOUSE_MARKED_LABEL",
-    "message": "Casa Marcada",
+    "message": "Casa marcada",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "IHM_INFO_SOURCE_OTHER_LABEL",
-    "message": "Outra fonte de informações",
+    "message": "Outra fonte de informação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -2113,7 +2113,7 @@
   },
   {
     "code": "IHM_SETTLEMENT_AREA_LABEL",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -2515,7 +2515,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "Modelo de referência de HF",
+    "message": "Modelo de referência de IC",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -2533,7 +2533,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Monitoramento Interno",
+    "message": "Rótulo",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -2557,7 +2557,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Beneficiário do Projeto",
+    "message": "Beneficiário do projeto",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -2569,7 +2569,7 @@
   },
   {
     "code": "LABEL_PAIR_CODE",
-    "message": "Código de Liquidação",
+    "message": "Código de liquidação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -2695,7 +2695,7 @@
   },
   {
     "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Data de Registro",
+    "message": "Data de registro",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -2731,7 +2731,7 @@
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
-    "message": "Nome do Beneficiário",
+    "message": "Nome do beneficiário",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -2815,7 +2815,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYFINALCOMMENTS",
-    "message": "Comentários Finais",
+    "message": "Comentários finais",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -2887,7 +2887,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -2917,7 +2917,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Comentários Finais",
+    "message": "Comentários finais",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -2989,7 +2989,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -3103,7 +3103,7 @@
   },
   {
     "code": "LABEL_PAIR_LQAABSENCEREASONLABEL",
-    "message": "Motivo da Ausência",
+    "message": "Motivo da ausência",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -3121,7 +3121,7 @@
   },
   {
     "code": "LABEL_PAIR_LQAAWARENESSOTHERLABEL",
-    "message": "Outra fonte (especifique)",
+    "message": "Outra fonte (especificar)",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -3211,7 +3211,7 @@
   },
   {
     "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -3223,25 +3223,25 @@
   },
   {
     "code": "LABEL_PAIR_LQASURVEYORNAMELABEL",
-    "message": "Nome do pesquisador",
+    "message": "Nome do topógrafo",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Motivo de Ausência",
+    "message": "Motivo da ausência",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "Conscientização AFP",
+    "message": "Conscientização da AFP",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "Contagem de casos AFP",
+    "message": "Contagem de casos de AFP",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -3277,7 +3277,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Sexo Infantil",
+    "message": "Sexo infantil",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -3337,13 +3337,13 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Nome do pesquisador",
+    "message": "Nome do topógrafo",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -3463,13 +3463,13 @@
   },
   {
     "code": "LABEL_PAIR_STOCKEXPIRY",
-    "message": "Expiração de estoque",
+    "message": "Expiração do estoque",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Expiração de estoque",
+    "message": "Expiração do estoque",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -3523,7 +3523,7 @@
   },
   {
     "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
-    "message": "Parte Secundária",
+    "message": "Parte secundária",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -3535,7 +3535,7 @@
   },
   {
     "code": "LPHCDA",
-    "message": "Em LPHC",
+    "message": "LPHCDA",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -3697,7 +3697,7 @@
   },
   {
     "code": "NOT_DECISION_MAKER",
-    "message": "Não é tomador de decisões",
+    "message": "Não é tomador de decisão",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -3715,7 +3715,7 @@
   },
   {
     "code": "NPHCDA",
-    "message": "Em NPHC",
+    "message": "NPHCDA",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -3811,7 +3811,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
-    "message": "Unidade Administrativa",
+    "message": "Unidade administrativa",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -3955,7 +3955,7 @@
   },
   {
     "code": "SPHCDA",
-    "message": "na SPHC",
+    "message": "SPHCDA",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -4087,7 +4087,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "ID exclusivo do beneficiário",
+    "message": "ID do beneficiário",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -4183,7 +4183,7 @@
   },
   {
     "code": "administrativeArea",
-    "message": "Nome da Aldeia",
+    "message": "Nome da aldeia",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -4261,7 +4261,7 @@
   },
   {
     "code": "designationOther",
-    "message": "Outra Designação",
+    "message": "Outra designação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -4291,19 +4291,19 @@
   },
   {
     "code": "finalComments",
-    "message": "Comentários Finais",
+    "message": "Comentários finais",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "gpsFirstHousehold",
-    "message": "GPS Primeira Família",
+    "message": "GPS primeira casa",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "gpsLastHousehold",
-    "message": "GPS Última Família",
+    "message": "GPS última residência",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -4315,13 +4315,13 @@
   },
   {
     "code": "houseMarked",
-    "message": "Casa Marcada",
+    "message": "Casa marcada",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "infoSourceOther",
-    "message": "Outra fonte de informações",
+    "message": "Outra fonte de informação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -4441,7 +4441,7 @@
   },
   {
     "code": "proximitySeach",
-    "message": "Pesquisa por proximidade",
+    "message": "Pesquisa de proximidade",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -4489,7 +4489,7 @@
   },
   {
     "code": "settlementArea",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -4526,6 +4526,24 @@
   {
     "code": "whereWasChild",
     "message": "Onde estava a criança",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Rótulo",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
+    "message": "Ação do usuário",
+    "module": "hcm-base-insidemonitoring-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "Quantidade",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   }

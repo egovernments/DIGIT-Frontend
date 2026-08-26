@@ -1,13 +1,13 @@
 [
   {
     "code": "ADMINISTRATION_FAILED",
-    "message": "L'administration a échoué",
+    "message": "Échec de l'administration",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
-    "message": "La longueur doit être comprise entre 2 et 200 caractères.",
+    "message": "La longueur doit être comprise entre 2 et 200 caractères",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
@@ -19,7 +19,7 @@
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "Refus du bénéficiaire",
+    "message": "Bénéficiaire refusé",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
@@ -43,7 +43,7 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
-    "message": "Vérifiez que le nom du village corresponde à celui où vous vous trouvez actuellement. Sinon, cliquez sur le menu déroulant du village en haut à droite pour le modifier.",
+    "message": "Capturez les détails du ménage que vous marquez comme fermé.",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
@@ -67,7 +67,7 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
-    "message": "Nom de chef de famille",
+    "message": "Nom du chef de ménage",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
@@ -91,25 +91,25 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_name_REQUIRED_ERROR",
-    "message": "Ce champ est obligatoire.",
+    "message": "C'est un champ obligatoire.",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_scanner_LABEL",
-    "message": "Scannez le bon",
+    "message": "Scanner le bon",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
-    "message": "Les données ont été enregistrées avec succès.",
+    "message": "Les données ont été enregistrées avec succès",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION1",
-    "message": "Les données ont été enregistrées avec succès.",
+    "message": "Les données ont été enregistrées avec succès",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
@@ -127,19 +127,19 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL",
-    "message": "Retour",
+    "message": "Retourner",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL1",
-    "message": "Retour",
+    "message": "Retourner",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "DRUG_SE_CC",
-    "message": "Effet secondaire du médicament du cycle actuel",
+    "message": "Effet secondaire du médicament du cycle en cours",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
@@ -187,13 +187,13 @@
   },
   {
     "code": "NOTENOUGHSTOCK",
-    "message": "Stock insuffisant",
+    "message": "Pas assez de stock",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "NotEnoughStock",
-    "message": "Stock insuffisant",
+    "message": "Pas assez de stock",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
@@ -217,7 +217,7 @@
   },
   {
     "code": "PerformanceIssue",
-    "message": "PROBLÈME DE PERFORMANCE",
+    "message": "PROBLEME DE PERFORMANCE",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
@@ -247,7 +247,7 @@
   },
   {
     "code": "SecurityIssues",
-    "message": "PROBLÈMES DE SÉCURITÉ",
+    "message": "QUESTIONS DE SÉCURITÉ",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
@@ -259,13 +259,25 @@
   },
   {
     "code": "TechnicalIssues",
-    "message": "PROBLÈMES TECHNIQUES",
+    "message": "QUESTIONS TECHNIQUES",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "UserAccountIssues",
-    "message": "PROBLÈMES DE COMPTE UTILISATEUR",
+    "message": "UTILISATEURCOMTEPROBLÈMES",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Étiquette",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+    "message": " ",
     "module": "hcm-base-closehousehold-default",
     "locale": "fr_DEMO"
   }

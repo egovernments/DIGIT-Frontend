@@ -19,7 +19,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_STOCKDETAILS_SCREEN_DESCRIPTION",
-    "message": "Saisissez les détails de la transaction boursière",
+    "message": "Saisir les détails des transactions boursières",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -31,19 +31,19 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RECEIVED_AT_THE_WAREHOUSE_DESCRIPTION",
-    "message": "Créer des enregistrements pour les stocks reçus à l'entrepôt",
+    "message": "Créer des enregistrements pour le stock reçu à l'entrepôt",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RETURNED_TO_THE_WAREHOUSE_DESCRIPTION",
-    "message": "Créer des enregistrements pour les stocks retournés à l'entrepôt",
+    "message": "Créer des enregistrements pour le stock retourné à l'entrepôt",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_SENT_OUT_FROM_THE_WAREHOUSE_DESCRIPTION",
-    "message": "Créer des enregistrements pour les stocks expédiés de l'entrepôt",
+    "message": "Créer des enregistrements pour le stock envoyé depuis l'entrepôt",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -55,25 +55,25 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_DAMAGED_HEADING",
-    "message": "Stock de disques endommagé",
+    "message": "Stock record endommagé",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
-    "message": "Émission record d'actions",
+    "message": "Stock record émis",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_LOSS_HEADING",
-    "message": "Perte boursière record",
+    "message": "Perte de stock record",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RECEIPT_HEADING",
-    "message": "Enregistrement de la réception des stocks",
+    "message": "Enregistrer la réception des stocks",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -85,19 +85,19 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_DAMAGED_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
-    "message": "Consignez la liste des ressources endommagées lors des opérations de campagne.",
+    "message": "Enregistrer la liste des produits endommagés lors des opérations de campagne",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_LOST_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION",
-    "message": "Consignez la liste des ressources perdues lors des opérations de campagne",
+    "message": "Enregistrer la liste des produits perdus lors des opérations de campagne",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_VIEW_TRANSACTIONS_FOOTER_BUTTON_LABEL",
-    "message": "Consulter les transactions",
+    "message": "Afficher les transactions",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -109,7 +109,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_productDetails_PRODUCT_SELECTION_IS_REQUIRED_MESSAGE",
-    "message": "La sélection du produit est requise",
+    "message": "La sélection du produit est obligatoire",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -121,25 +121,25 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockDetails_ENTER_THE_VEHICLE_NUMBER_HELP_TEXT",
-    "message": "Saisissez le numéro du véhicule",
+    "message": "Entrez le numéro du véhicule",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockDetails_SCAN_TEAM_CODE_HELP_TEXT",
-    "message": "Code de l'équipe de scan",
+    "message": "Scanner le code de l'équipe",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockDetails_SCREEN_HEADING",
-    "message": "Détails du stock",
+    "message": "Détails des stocks",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockDetails_SELECT_THE_FACILITY_FROM_WHICH_THE_STOCK_IS_BEING_RECEIVED_HELP_TEXT",
-    "message": "Sélectionnez l'établissement d'où proviennent les stocks.",
+    "message": "Sélectionnez l'établissement d'où le stock est reçu",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -157,13 +157,13 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockDetails_VEHICLE_NUMBER_IS_REQUIRED_MESSAGE",
-    "message": "Le numéro d'immatriculation du véhicule est requis.",
+    "message": "Le numéro du véhicule est requis",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockDetails_deliveryTeamCode_IS_REQUIRED_MESSAGE",
-    "message": "Le code de l'équipe de livraison est requis.",
+    "message": "Le code de l’équipe de livraison est requis",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -175,7 +175,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockDetails_facilityFromWhich_IS_REQUIRED_MESSAGE",
-    "message": "Installation dont il faut",
+    "message": "Installation à partir de laquelle est requis",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -205,7 +205,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_ADD_COMMENTS_IF_QUANTITIES_DIFFER_HELP_TEXT",
-    "message": "Ajoutez des commentaires si les quantités diffèrent.",
+    "message": "Ajoutez des commentaires si les quantités diffèrent",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -223,31 +223,31 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_ACTUAL_QUANTITY_RECEIVED_HELP_TEXT",
-    "message": "Saisissez la quantité réelle reçue",
+    "message": "Entrez la quantité réelle reçue",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_BATCH_NUMBER_HELP_TEXT",
-    "message": "Saisissez le numéro de lot",
+    "message": "Entrez le numéro de lot",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_DAMAGED_BY_THE_WAREHOUSE_HELP_TEXT",
-    "message": "Indiquez la quantité réelle endommagée",
+    "message": "Entrez la quantité réelle endommagée",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_LOST_BY_THE_WAREHOUSE_HELP_TEXT",
-    "message": "Indiquez la quantité réelle perdue",
+    "message": "Entrez la quantité réelle perdue",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_RETURNED_BY_THE_WAREHOUSE_HELP_TEXT",
-    "message": "Saisissez la quantité réelle retournée",
+    "message": "Entrez la quantité réelle retournée",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -259,13 +259,13 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_WAYBILL_NUMBER_HELP_TEXT",
-    "message": "Saisissez le numéro de bordereau d'expédition",
+    "message": "Entrez le numéro de la feuille de route",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_EXPIRY_DATE_IS_REQUIRED_MESSAGE",
-    "message": "Une date d'expiration est requise.",
+    "message": "La date d'expiration est requise",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -337,19 +337,19 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCAN_RESOURCE_HELP_TEXT",
-    "message": "Scannez le code QR de la ressource",
+    "message": "Scannez le code QR du produit",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCAN_RESOURCE_LABEL",
-    "message": "Ressources de numérisation",
+    "message": "Scanner le produit",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_SCREEN_DESCRIPTION",
-    "message": "Saisissez les détails du produit pour la transaction sur stock",
+    "message": "Saisir les détails du produit pour la transaction de stock",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -367,7 +367,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_WAYBILL_LABEL",
-    "message": "Numéro de bordereau d'expédition",
+    "message": "Numéro de lettre de transport",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -379,7 +379,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockSuccess_MATERIAL_RECEIPT_CREATED_SUCCESSFULLY",
-    "message": "Réception de matériel créée avec succès",
+    "message": "Réception d'articles créée avec succès",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -433,7 +433,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_viewTransaction_SELECT_TRANSACTION",
-    "message": "Sélectionner la transaction",
+    "message": "Sélectionnez une transaction",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -451,19 +451,19 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_warehouseDetails_ENTER_THE_DATE_ON_WHICH_THE_STOCK_WAS_RECEIVED_HELP_TEXT",
-    "message": "Veuillez indiquer la date de réception des stocks.",
+    "message": "Saisissez la date à laquelle le stock a été reçu",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_warehouseDetails_SCAN_TEAM_CODE_HELP_TEXT",
-    "message": "Code de l'équipe de scan",
+    "message": "Scanner le code de l'équipe",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_warehouseDetails_SCREEN_DESCRIPTION",
-    "message": "Saisissez les détails de l'entrepôt et de l'installation",
+    "message": "Entrez les détails de l'entrepôt et de l'installation",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -475,7 +475,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_warehouseDetails_SELECT_THE_FACILITY_TO_WHICH_THE_STOCK_IS_BEING_SENT_HELP_TEXT",
-    "message": "Sélectionnez le centre de distribution auquel le stock est envoyé.",
+    "message": "Sélectionnez l'établissement vers lequel le stock est envoyé",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -487,7 +487,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_warehouseDetails_administrativeArea_IS_REQUIRED_MESSAGE",
-    "message": "Un espace administratif est requis.",
+    "message": "Une zone administrative est requise",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -499,7 +499,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_warehouseDetails_dateOfReceipt_IS_REQUIRED_MESSAGE",
-    "message": "La date de réception est requise.",
+    "message": "La date de réception est requise",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -511,7 +511,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_warehouseDetails_facilityToWhich_IS_REQUIRED_MESSAGE",
-    "message": "Installation à laquelle il faut",
+    "message": "Installation à laquelle est requis",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -523,7 +523,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_IS_REQUIRED_MESSAGE",
-    "message": "Le code d'équipe est requis.",
+    "message": "Le code de l'équipe est requis",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -553,7 +553,7 @@
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "Refus du bénéficiaire",
+    "message": "Bénéficiaire refusé",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -583,13 +583,13 @@
   },
   {
     "code": "CORE_COMMON_VALIDATION_ERROR",
-    "message": "Il s'agit d'un champ obligatoire",
+    "message": "Ceci est un champ obligatoire",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "DRUG_SE_CC",
-    "message": "Effet secondaire du médicament du cycle actuel",
+    "message": "Effet secondaire du médicament du cycle en cours",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -613,7 +613,7 @@
   },
   {
     "code": "Facility_from_and_to_must_be_different",
-    "message": "L'installation de départ et d'arrivée doivent être différentes.",
+    "message": "Les installations de et vers doivent être différentes.",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -625,7 +625,7 @@
   },
   {
     "code": "INSUFFICIENT_RESOURCES",
-    "message": "Ressources insuffisantes",
+    "message": "Produits insuffisants",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -637,7 +637,7 @@
   },
   {
     "code": "INVENTORY_QR_CODE_TITLE",
-    "message": "Scannez le code QR",
+    "message": "Scanner le QR",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -661,13 +661,13 @@
   },
   {
     "code": "INVENTORY_STOCK_SUCCESS_MRN_DESCRIPTION",
-    "message": "Les données ont été enregistrées avec succès.",
+    "message": "Les données ont été enregistrées avec succès",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -679,7 +679,7 @@
   },
   {
     "code": "INVENTORY_VIEW_TRANSACTION_LABEL",
-    "message": "Consulter les transactions",
+    "message": "Afficher les transactions",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -733,13 +733,13 @@
   },
   {
     "code": "NotEnoughStock",
-    "message": "Stock insuffisant",
+    "message": "Pas assez de stock",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "Not_found",
-    "message": "Introuvable",
+    "message": "Pas trouvé",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -763,19 +763,19 @@
   },
   {
     "code": "PerformanceIssue",
-    "message": "Problèmes de performance",
+    "message": "Problèmes de performances",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "QR_ATTENDANCE",
-    "message": "QR code de présence",
+    "message": "QR de présence",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "QR_INVENTORY",
-    "message": "Inventaire QR",
+    "message": "QR d'inventaire",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -877,19 +877,19 @@
   },
   {
     "code": "RESOURCE",
-    "message": "Ressource",
+    "message": "Produit",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "SELECT_PRODUCT",
-    "message": "Sélectionnez la variante du produit",
+    "message": "Sélectionnez une variante de produit",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "SELECT_WAREHOUSE",
-    "message": "Sélectionner l'entrepôt",
+    "message": "Sélectionnez un entrepôt",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -901,19 +901,19 @@
   },
   {
     "code": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
-    "message": "Info",
+    "message": "Informations",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCK_EXPIRY",
-    "message": "date de péremption",
+    "message": "Expiration des stocks",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCK_METRICS",
-    "message": "Indicateurs boursiers",
+    "message": "Mesures boursières",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -925,19 +925,19 @@
   },
   {
     "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
-    "message": "Stock disponible = (Stock reçu + stock retourné) − (stock émis + stock perdu + stock endommagé)",
+    "message": "Stock disponible = (Stock reçu + stock retourné) − (stock sorti + stock perdu + stock endommagé)",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCK_RECONCILIATION_INFO_CARD_TITLE",
-    "message": "Info",
+    "message": "Informations",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
-    "message": "Stock endommagé",
+    "message": "Crosse endommagée",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -967,13 +967,13 @@
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
-    "message": "Retours de stock",
+    "message": "Stock retourné",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
-    "message": "Veuillez sélectionner l'entrepôt et la variante de produit pour consulter le rapport.",
+    "message": "Veuillez sélectionner l'entrepôt et la variante de produit pour afficher le rapport",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -1009,13 +1009,13 @@
   },
   {
     "code": "UserAccountIssues",
-    "message": "Problèmes liés aux comptes utilisateurs",
+    "message": "Problèmes de compte utilisateur",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "WAYBILL_NUMBER",
-    "message": "Numéro de bordereau d'expédition",
+    "message": "Numéro de lettre de transport",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -1063,7 +1063,7 @@
   },
   {
     "code": "productVariant",
-    "message": "variante de produit",
+    "message": "Variante de produit",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -1087,13 +1087,13 @@
   },
   {
     "code": "stockDetails",
-    "message": "Détails du stock",
+    "message": "Détails des stocks",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
   {
     "code": "stockFieldPair",
-    "message": "Détails du stock",
+    "message": "Détails des stocks",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -1105,7 +1105,7 @@
   },
   {
     "code": "stockProductDetails",
-    "message": "Détails du produit en stock",
+    "message": "détails du produit en stock",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -1142,6 +1142,36 @@
   {
     "code": "{{fn:getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
     "message": "Expéditeur",
+    "module": "hcm-base-inventory-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Étiquette",
+    "module": "hcm-base-inventory-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "Échec de l'administration",
+    "module": "hcm-base-inventory-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-inventory-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-inventory-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_MANAGER",
+    "message": "Responsable d'entrepôt",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   }
