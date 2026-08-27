@@ -28,8 +28,9 @@ const renderSection = (section, sectionName, fieldTypeMasterData, selectedField,
 
           const rendered = renderTemplateComponent(fieldWithId, fieldTypeMasterData, selectedField, t, onFieldClick, data, sectionName, index);
 
-          // The app shows dependent fields inside a grey container - mirror that in the preview
-          const isDependent = field?.visibilityCondition?.expression?.length > 0 || field?.conditions?.wrapInCard === true;
+          // The app wraps a field in a grey card only when conditions.wrapInCard is set
+          // (visibilityCondition alone renders flat in the app) - mirror exactly that
+          const isDependent = field?.conditions?.wrapInCard === true;
           if (isDependent) {
             return (
               <div

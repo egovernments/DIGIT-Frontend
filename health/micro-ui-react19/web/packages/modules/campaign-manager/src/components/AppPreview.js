@@ -165,8 +165,9 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
                       ((selectedField.fieldName && selectedField.fieldName === field.fieldName) ||
                         (selectedField.id && selectedField.id === field.id));
 
-                    // The app shows dependent fields inside a grey container - mirror that here
-                    const isDependent = field?.visibilityCondition?.expression?.length > 0 || field?.conditions?.wrapInCard === true;
+                    // The app wraps a field in a grey card only when conditions.wrapInCard is set
+                    // (visibilityCondition alone renders flat in the app) - mirror exactly that
+                    const isDependent = field?.conditions?.wrapInCard === true;
 
                     return (
                       <div
