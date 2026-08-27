@@ -33,6 +33,7 @@ const AssignCampaignInbox = () => {
     }));
 
     if (jurisdictions.length && configFromMDMS?.apiDetails?.requestBody) {
+      const effectiveTenantId = jurisdictions[0]?.tenantId || tenantId;
       configFromMDMS.apiDetails.requestBody.Projects = jurisdictions.map((jurisdiction) => ({
         tenantId: jurisdiction.tenantId || tenantId,
         address: {
@@ -45,6 +46,10 @@ const AssignCampaignInbox = () => {
           boundary: jurisdiction.boundary,
         },
       }));
+      configFromMDMS.apiDetails.requestBody.tenantId = effectiveTenantId;
+      if (configFromMDMS.apiDetails.requestParam) {
+        configFromMDMS.apiDetails.requestParam.tenantId = effectiveTenantId;
+      }
     }
 
     return Digit.Utils.preProcessMDMSConfigInboxSearch(t, configFromMDMS, "sections.search.uiConfig.fields", {
