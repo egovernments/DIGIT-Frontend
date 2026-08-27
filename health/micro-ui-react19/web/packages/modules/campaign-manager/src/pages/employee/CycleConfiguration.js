@@ -320,6 +320,18 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     dispatch({ type: "SELECT_FROM_DATE", index, payload: isoString });
   };
 
+  // Bednet (ITN) is a single-round campaign: cycle dates are not asked, they
+  // mirror the campaign dates (the date pickers are hidden below)
+  const isBednet = /bednet/i.test(selectedProjectType || "");
+  useEffect(() => {
+    if (!isBednet || !dateRange?.startDate || !dateRange?.endDate) return;
+    for (let index = 1; index <= (cycleConfgureDate?.cycle || 1); index++) {
+      const existing = cycleData?.find((j) => j.key === index);
+      if (!existing?.fromDate) selectFromDate(index, dateRange.startDate);
+      if (!existing?.toDate) selectToDate(index, dateRange.endDate);
+    }
+  }, [isBednet, dateRange?.startDate, dateRange?.endDate, cycleConfgureDate?.cycle]);
+
   useEffect(() => {
     setKey(currentKey);
     setCurrentStep(currentKey);
@@ -420,6 +432,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               </LabelFieldPair>
             </Card>
           </div>
+          {!isBednet && (
           <Card className="campaign-counter-container">
             <HeaderComponent className="cycle-configuration-heading" style={{ marginBottom: "1.5rem" }}>
               {t(I18N_KEYS.PAGES.CAMPAIGN_ADD_START_END_DATE_TEXT)}
@@ -492,6 +505,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               </LabelFieldPair>
             ))}
           </Card>
+          )}
         </div>
       </div>
     </>
