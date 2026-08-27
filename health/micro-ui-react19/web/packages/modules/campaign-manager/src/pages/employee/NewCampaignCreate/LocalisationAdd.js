@@ -347,9 +347,19 @@ const LocalisationBulkUpload = () => {
         return;
       }
 
+      // The localization service rejects a request containing the same code twice
+      // (DUPLICATE_RECORDS), so a single repeated row in the sheet failed the whole
+      // upload; dedupe by code+module+locale keeping the bottom-most sheet row
+      const dedupedMessages = Object.values(
+        allMessages.reduce((acc, msg) => {
+          acc[`${msg.code}__${msg.module}__${msg.locale}`] = msg;
+          return acc;
+        }, {})
+      );
+
       // Group messages by module and locale for separate API calls
       const groupedMessages = {};
-      allMessages.forEach((msg) => {
+      dedupedMessages.forEach((msg) => {
         const key = `${msg.module}__${msg.locale}`;
         if (!groupedMessages[key]) {
           groupedMessages[key] = [];
@@ -369,34 +379,35 @@ const LocalisationBulkUpload = () => {
       const CHUNK_SIZE = 500;
 
       // Make separate API calls for each module-locale combination, chunking if needed
-      const upsertPromises = Object.entries(groupedMessages).flatMap(([, messages]) => {
-        // If messages exceed chunk size, split into chunks
-        if (messages.length > CHUNK_SIZE) {
-          const chunks = chunkArray(messages, CHUNK_SIZE);
-          return chunks.map((chunk) =>
-            Digit.CustomService.getResponse({
-              url: `/localization/messages/v1/_upsert`,
-              body: {
-                tenantId: stateId,
-                messages: chunk,
-              },
-            })
-          );
-        }
-        // Otherwise, single API call
-        return Digit.CustomService.getResponse({
-          url: `/localization/messages/v1/_upsert`,
-          body: {
-            tenantId: stateId,
-            messages: messages,
-          },
-        });
+      const upsertPromises = Object.entries(groupedMessages).flatMap(([groupKey, messages]) => {
+        const chunks = messages.length > CHUNK_SIZE ? chunkArray(messages, CHUNK_SIZE) : [messages];
+        return chunks.map((chunk) =>
+          Digit.CustomService.getResponse({
+            url: `/localization/messages/v1/_upsert`,
+            body: {
+              tenantId: stateId,
+              messages: chunk,
+            },
+          }).then(
+            (res) => ({ groupKey, res }),
+            // Tag the failure with its module so one bad group doesn't hide the rest
+            (err) => Promise.reject({ groupKey, err })
+          )
+        );
       });
 
-      await Promise.all(upsertPromises);
+      // One failing module used to reject the whole upload with a generic error;
+      // settle all groups and report exactly which modules failed
+      const results = await Promise.allSettled(upsertPromises);
+      const failedGroups = [...new Set(results.filter((r) => r.status === "rejected").map((r) => r.reason?.groupKey?.split("__")[0]))];
+      if (failedGroups.length === results.length && results.length > 0) {
+        throw new Error(`All uploads failed: ${failedGroups.join(", ")}`);
+      }
 
-      // Show warning if some messages were empty, otherwise show success
-      if (emptyMessageCount > 0) {
+      // Show failures/warnings first, otherwise success
+      if (failedGroups.length > 0) {
+        setShowToast({ label: `${t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_UPSERT_FAILED)}: ${failedGroups.join(", ")}`, type: "error" });
+      } else if (emptyMessageCount > 0) {
         setShowToast({ label: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_MESSAGES_EMPTY_WARNING), type: "warning" });
       } else {
         setShowToast({ label: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_UPSERT_SUCCESS), type: "success" });
