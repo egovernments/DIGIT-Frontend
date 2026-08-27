@@ -72,7 +72,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.baseTimeout` }
   );
   const [readMeInfo, setReadMeInfo] = useState({});
-  const [showPopUp, setShowPopUp] = useState(true);
+  // Start closed: the type-effect below decides; defaulting open flashed the
+  // download-template popup on microplan "edit data" entry before hydration
+  const [showPopUp, setShowPopUp] = useState(false);
   const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
@@ -438,21 +440,21 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         const { uploadedFile, isSuccess } = getUploadedData("HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA", "boundary");
         setUploadedFile(uploadedFile);
         setIsSuccess(isSuccess);
-        setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        setShowPopUp(!parentId && !downloadedTemplates[type] && !uploadedFile.length);
         break;
       }
       case "facility": {
         const { uploadedFile, isSuccess } = getUploadedData("HCM_CAMPAIGN_UPLOAD_FACILITY_DATA", "facility");
         setUploadedFile(uploadedFile);
         setIsSuccess(isSuccess);
-        setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        setShowPopUp(!parentId && !downloadedTemplates[type] && !uploadedFile.length);
         break;
       }
       case "unified-console": {
         const { uploadedFile, isSuccess } = getUploadedData("HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA", "unified-console-resources");
         setUploadedFile(uploadedFile);
         setIsSuccess(isSuccess);
-        setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        setShowPopUp(!parentId && !downloadedTemplates[type] && !uploadedFile.length);
         break;
       }
       case "attendanceRegister": {
@@ -460,10 +462,10 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         // const { uploadedFile, isSuccess } = getUploadedData("HCM_ATTENDANCE_REGISTER_DATA", "attendanceRegister");
         // setUploadedFile(uploadedFile);
         // setIsSuccess(isSuccess);
-        // setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        // setShowPopUp(!parentId && !downloadedTemplates[type] && !uploadedFile.length);
         setUploadedFile([]);
         setIsSuccess(null);
-        setShowPopUp(!downloadedTemplates[type]);
+        setShowPopUp(!parentId && !downloadedTemplates[type]);
         break;
       }
       case "attendanceRegisterAttendee": {
@@ -471,17 +473,17 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         // const { uploadedFile, isSuccess } = getUploadedData("HCM_ATTENDANCE_ATTENDEE_DATA", "attendanceRegisterAttendee");
         // setUploadedFile(uploadedFile);
         // setIsSuccess(isSuccess);
-        // setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        // setShowPopUp(!parentId && !downloadedTemplates[type] && !uploadedFile.length);
         setUploadedFile([]);
         setIsSuccess(null);
-        setShowPopUp(!downloadedTemplates[type]);
+        setShowPopUp(!parentId && !downloadedTemplates[type]);
         break;
       }  
       default: {
         const { uploadedFile, isSuccess } = getUploadedData("HCM_CAMPAIGN_UPLOAD_USER_DATA", "user");
         setUploadedFile(uploadedFile);
         setIsSuccess(isSuccess);
-        setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        setShowPopUp(!parentId && !downloadedTemplates[type] && !uploadedFile.length);
         break;
       }
     }

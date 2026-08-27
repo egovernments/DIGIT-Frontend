@@ -236,6 +236,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
             cardIndex={0}
             fieldKey="description"
             viewMode={viewMode}
+            maxLength={64}
           />
           {/* Info card message (page-level conditions.infoCardText) */}
           {currentCard?.conditions?.infoCardText && (
