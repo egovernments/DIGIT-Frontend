@@ -26,7 +26,27 @@ const renderSection = (section, sectionName, fieldTypeMasterData, selectedField,
             id: field.id || field.fieldName || `${sectionName}-${field.format}-${index}`,
           };
 
-          return renderTemplateComponent(fieldWithId, fieldTypeMasterData, selectedField, t, onFieldClick, data, sectionName, index);
+          const rendered = renderTemplateComponent(fieldWithId, fieldTypeMasterData, selectedField, t, onFieldClick, data, sectionName, index);
+
+          // The app shows dependent fields inside a grey container - mirror that in the preview
+          const isDependent = field?.visibilityCondition?.expression?.length > 0 || field?.conditions?.wrapInCard === true;
+          if (isDependent) {
+            return (
+              <div
+                key={`dependent-${fieldWithId.id}`}
+                className="app-preview-dependent-field"
+                style={{
+                  backgroundColor: "#fafafa",
+                  border: "1px solid #d6d5d4",
+                  borderRadius: "0.5rem",
+                  padding: "0.75rem",
+                }}
+              >
+                {rendered}
+              </div>
+            );
+          }
+          return rendered;
         })}
     </>
   );
