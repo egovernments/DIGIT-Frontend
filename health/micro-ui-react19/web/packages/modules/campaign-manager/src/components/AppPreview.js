@@ -165,17 +165,23 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
                       ((selectedField.fieldName && selectedField.fieldName === field.fieldName) ||
                         (selectedField.id && selectedField.id === field.id));
 
+                    // The app wraps a field in a grey card only when conditions.wrapInCard is set
+                    // (visibilityCondition alone renders flat in the app) - mirror exactly that
+                    const isDependent = field?.conditions?.wrapInCard === true;
+
                     return (
                       <div
                         key={field.id || field.fieldName || originalFieldIndex}
+                        className={isDependent ? "app-preview-dependent-field" : undefined}
                         onClick={() => onFieldClick && onFieldClick(field, data, card, cardIndex, originalFieldIndex)}
                         style={{
                           cursor: "pointer",
-                          // border: isSelected ? "2px solid #C84C0E" : "2px solid transparent",
-                          // borderRadius: "4px",
-                          // padding: "8px",
-                          // margin: "4px 0",
-                          // backgroundColor: isSelected ? "#C84C0E08" : "transparent",
+                          ...(isDependent && {
+                            backgroundColor: "#fafafa",
+                            border: "1px solid #d6d5d4",
+                            borderRadius: "0.5rem",
+                            padding: "0.75rem",
+                          }),
                         }}
                       >
                         <ComponentToRender field={field} t={t} selectedField={selectedField} isSelected={isSelected} />
