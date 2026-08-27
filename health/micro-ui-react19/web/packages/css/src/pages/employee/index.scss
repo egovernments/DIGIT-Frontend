@@ -1223,6 +1223,12 @@ tbody {
   .digit-header-content.label {
     width: 100%;
     .label-container {
+      // The required "*" is a flex sibling of the label text, so a wrapped label
+      // leaves it floating at the right edge — flow both inline instead
+      display: inline;
+      > div {
+        display: inline;
+      }
       label {
         white-space: pre-wrap;
       }
