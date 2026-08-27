@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Toast, Card, Button, HeaderComponent, Loader, Footer } from "@egovernments/digit-ui-components";
+import { Toast, Card, Button, HeaderComponent, Loader, Footer, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
@@ -25,6 +25,8 @@ const LocalisationBulkUpload = () => {
   const [showToast, setShowToast] = useState(null);
   const [uploadedFile, setUploadedFile] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [showTemplatePopup, setShowTemplatePopup] = useState(false);
+  const templatePopupShownRef = useRef(false);
   const inputRef = useRef(null);
 
   // Campaign from URL
@@ -147,6 +149,15 @@ const LocalisationBulkUpload = () => {
               : null,
           },
         ];
+
+  // Offer the translation template for download on first visit, same as the
+  // other upload screens - only before any file has been uploaded
+  useEffect(() => {
+    if (isTemplateReady && uploadedFile.length === 0 && !templatePopupShownRef.current) {
+      templatePopupShownRef.current = true;
+      setShowTemplatePopup(true);
+    }
+  }, [isTemplateReady, uploadedFile.length]);
 
   // Fetch localizations for allowed modules only
   useEffect(() => {
@@ -465,6 +476,45 @@ const LocalisationBulkUpload = () => {
 
       <Card>
         {(isDownloadLoading || isUploading || isCampaignLoading) && <Loader variant="OverlayLoader" />}
+
+        {showTemplatePopup && (
+          <PopUp
+            type={"default"}
+            showIcon={true}
+            className={"popUpClass"}
+            footerclassName={"popUpFooter"}
+            heading={t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_DOWNLOAD_TEMPLATE_MODAL_HEADER)}
+            children={[<div key="loc-template-text">{t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_DOWNLOAD_TEMPLATE_MODAL_TEXT)}</div>]}
+            onOverlayClick={() => setShowTemplatePopup(false)}
+            footerChildren={[
+              <Button
+                key="loc-template-cancel"
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_UPLOAD_CANCEL)}
+                title={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_UPLOAD_CANCEL)}
+                onClick={() => setShowTemplatePopup(false)}
+              />,
+              <Button
+                key="loc-template-download"
+                type={"button"}
+                size={"large"}
+                variation={"primary"}
+                icon={"FileDownload"}
+                label={t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_DOWNLOAD_TEMPLATE)}
+                title={t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_DOWNLOAD_TEMPLATE)}
+                onClick={() => {
+                  inputRef.current?.click();
+                  setShowTemplatePopup(false);
+                }}
+                id={"file-download-template-localization-popup"}
+              />,
+            ]}
+            sortFooterChildren={true}
+            onClose={() => setShowTemplatePopup(false)}
+          ></PopUp>
+        )}
 
         {/* Download Template Button */}
         <div style={{ display: "flex", justifyContent: "space-between"}}>

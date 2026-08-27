@@ -1843,3 +1843,9 @@ button.digit-button-tertiary.disabled {
      library's flex-end which would leave a gap after the Search button */
   justify-content: flex-start !important;
 }
+
+/* The editor toast slides up from the bottom edge, where the sticky footer
+   (Save Configuration bar) covers most of it - rest it above the footer */
+.full-config-wrapper__container .digit-toast-success {
+  bottom: 6rem !important;
+}
