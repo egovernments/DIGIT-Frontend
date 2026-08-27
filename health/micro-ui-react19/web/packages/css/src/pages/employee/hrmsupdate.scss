@@ -25,3 +25,14 @@
     margin-bottom: 1.5rem;
   }
 }
+
+.assign-button-popup{
+  padding: 0rem !important;
+}
+
+.assign-button-toast-wrapper {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10001;
+}
