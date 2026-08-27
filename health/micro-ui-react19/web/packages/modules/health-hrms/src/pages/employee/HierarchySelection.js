@@ -36,16 +36,16 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
     },
   });
 
-  const moduleCode = selectedHierarchy
-    ? [`boundary-${selectedHierarchy?.hierarchyType?.toLowerCase()}`]
-    : [];
+  const boundaryModuleCode = selectedHierarchy && selectedHierarchy.hierarchyType
+    ? [`boundary-${selectedHierarchy.hierarchyType.toLowerCase()}`]
+    : null;
 
   const { isLoading: isStoreLoading } = Digit.Services.useStore({
     stateCode: tenantId,
-    moduleCode,
+    moduleCode: boundaryModuleCode || [],
     language,
     modulePrefix: "hcm",
-    config: { enabled: !!selectedHierarchy },
+    config: { enabled: !!boundaryModuleCode },
   });
 
   // auto close toast after 3 seconds
@@ -78,6 +78,10 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
       return;
     }
 
+    if (isBoundaryLoading) {
+      return;
+    }
+
     if (
       !boundaryData ||
       boundaryData.length === 0 ||
@@ -91,12 +95,9 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
       });
       return;
     }
-    else {
 
-      Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", selectedHierarchy);
-
-      onHierarchyChosen(selectedHierarchy);
-    }
+    Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", selectedHierarchy);
+    onHierarchyChosen(selectedHierarchy);
   };
 
   useEffect(() => {
@@ -116,8 +117,7 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
     }
   }, [boundaryData, selectedHierarchy]);
 
-  if (isHierarchyLoading || isStoreLoading || isBoundaryLoading) {
-
+  if (isHierarchyLoading || isBoundaryLoading) {
     return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
   }
 
@@ -161,6 +161,7 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
             onClick={onNextClick}
             icon={"ArrowForward"}
             isSuffix
+            isDisabled={isBoundaryLoading}
           />
         ]}
         setactionFieldsToRight={true}
