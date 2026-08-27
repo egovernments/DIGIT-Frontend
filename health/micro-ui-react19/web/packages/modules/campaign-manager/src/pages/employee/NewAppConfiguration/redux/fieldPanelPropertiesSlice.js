@@ -417,7 +417,7 @@ const supplementalContentProperties = [
     label: "noResultCardDescription",
     order: 34,
     bindTo: "description",
-    fieldType: "text",
+    fieldType: "textarea",
     maxLength: 150,
     defaultValue: "",
     isLocalisable: true,
