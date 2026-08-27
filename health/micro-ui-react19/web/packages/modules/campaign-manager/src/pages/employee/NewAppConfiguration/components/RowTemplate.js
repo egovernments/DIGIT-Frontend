@@ -41,13 +41,13 @@ const RowTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFieldClic
             ? "flex-end"
             : "flex-start",
         alignItems:
-          properties.crossAxisAlignment === "start"
-            ? "flex-start"
+          properties.crossAxisAlignment === "center"
+            ? "center"
             : properties.crossAxisAlignment === "end"
             ? "flex-end"
             : properties.crossAxisAlignment === "stretch"
             ? "stretch"
-            : "center",
+            : "flex-start",
         flexWrap: properties.wrap ? "wrap" : "nowrap",
       }}
     >
