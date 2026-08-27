@@ -333,11 +333,15 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   const facilityStockSummaryRows = useMemo(() => {
     if (!finalStockData?.length) return [];
 
-    // Build name fallback from stock records (each record embeds facilityName + transactingFacilityName)
+    // Build name fallback from stock records (each record embeds facilityName + transactingFacilityName).
+    // Skip entries where facilityName === facilityId — the API returning the raw ID as name means no
+    // real name is available; falling through to userNameMap gives the correct user display name.
     const namesFromData = {};
     finalStockData.forEach((stock) => {
-      if (stock.facilityId && stock.facilityName) namesFromData[stock.facilityId] = stock.facilityName;
-      if (stock.transactingFacilityId && stock.transactingFacilityName) namesFromData[stock.transactingFacilityId] = stock.transactingFacilityName;
+      if (stock.facilityId && stock.facilityName && stock.facilityName !== stock.facilityId)
+        namesFromData[stock.facilityId] = stock.facilityName;
+      if (stock.transactingFacilityId && stock.transactingFacilityName && stock.transactingFacilityName !== stock.transactingFacilityId)
+        namesFromData[stock.transactingFacilityId] = stock.transactingFacilityName;
     });
     const resolveName = (fId) => facilityNameMap[fId] || namesFromData[fId] || userNameMap[fId] || fId;
 
@@ -436,6 +440,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         rows.push({
           facilityId,
           facilityName: resolveName(facilityId),
+          staffName: !facilityNameMap[facilityId] ? (userNameMap[facilityId] || null) : null,
           facilityType: facilityUsageMap[facilityId] || (!facilityNameMap[facilityId] ? t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STAFF) : "—"),
           boundary: getBoundaryDisplay(facilityId),
           boundaryHierarchy: getBoundaryHierarchyDisplay(facilityId),
@@ -606,19 +611,38 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   const exportTableToXlsx = useCallback((data, exportColumns, sheetName, fileName) => {
     if (!data?.length) return;
     try {
-      const XLSX = require("xlsx");
+      const XLSXStyle = require("xlsx-js-style");
       const timestamp = new Date().toISOString().split("T")[0];
-      const rows = data.map((row) => {
-        const out = {};
-        exportColumns.forEach((col) => {
-          out[col.label] = row[col.key] !== undefined && row[col.key] !== null ? String(row[col.key]) : "N/A";
-        });
-        return out;
-      });
-      const ws = XLSX.utils.json_to_sheet(rows);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, sheetName);
-      XLSX.writeFile(wb, `${fileName}_${timestamp}.xlsx`);
+
+      const headerStyle = {
+        font: { bold: true, color: { rgb: "000000" }, sz: 11 },
+        fill: { fgColor: { rgb: "93C47D" } },
+        alignment: { horizontal: "center", vertical: "center", wrapText: true },
+        border: {
+          top: { style: "thin", color: { rgb: "000000" } },
+          bottom: { style: "thin", color: { rgb: "000000" } },
+          left: { style: "thin", color: { rgb: "000000" } },
+          right: { style: "thin", color: { rgb: "000000" } },
+        },
+      };
+
+      const headerRow = exportColumns.map((col) => ({ v: col.label, t: "s", s: headerStyle }));
+
+      const dataRows = data.map((row) =>
+        exportColumns.map((col) => ({
+          v: row[col.key] !== undefined && row[col.key] !== null ? String(row[col.key]) : "N/A",
+          t: "s",
+          s: { alignment: { wrapText: true, vertical: "top" } },
+        }))
+      );
+
+      const ws = XLSXStyle.utils.aoa_to_sheet([headerRow, ...dataRows]);
+      ws["!cols"] = exportColumns.map(() => ({ wch: 22 }));
+      ws["!freeze"] = { xSplit: 0, ySplit: 1 };
+
+      const wb = XLSXStyle.utils.book_new();
+      XLSXStyle.utils.book_append_sheet(wb, ws, sheetName);
+      XLSXStyle.writeFile(wb, `${fileName}_${timestamp}.xlsx`);
     } catch (err) {
       console.error("XLSX export error:", err);
     }
