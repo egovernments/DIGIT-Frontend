@@ -165,17 +165,22 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
                       ((selectedField.fieldName && selectedField.fieldName === field.fieldName) ||
                         (selectedField.id && selectedField.id === field.id));
 
+                    // The app shows dependent fields inside a grey container - mirror that here
+                    const isDependent = field?.visibilityCondition?.expression?.length > 0 || field?.conditions?.wrapInCard === true;
+
                     return (
                       <div
                         key={field.id || field.fieldName || originalFieldIndex}
+                        className={isDependent ? "app-preview-dependent-field" : undefined}
                         onClick={() => onFieldClick && onFieldClick(field, data, card, cardIndex, originalFieldIndex)}
                         style={{
                           cursor: "pointer",
-                          // border: isSelected ? "2px solid #C84C0E" : "2px solid transparent",
-                          // borderRadius: "4px",
-                          // padding: "8px",
-                          // margin: "4px 0",
-                          // backgroundColor: isSelected ? "#C84C0E08" : "transparent",
+                          ...(isDependent && {
+                            backgroundColor: "#fafafa",
+                            border: "1px solid #d6d5d4",
+                            borderRadius: "0.5rem",
+                            padding: "0.75rem",
+                          }),
                         }}
                       >
                         <ComponentToRender field={field} t={t} selectedField={selectedField} isSelected={isSelected} />
