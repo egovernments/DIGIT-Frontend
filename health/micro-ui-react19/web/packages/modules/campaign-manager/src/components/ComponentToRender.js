@@ -89,6 +89,22 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
     }
   );
 
+  // The library's country-code dropdown renders nothing when the CountryCodes
+  // master has no data (making the Show country code toggle look broken) -
+  // fall back to a static +91 prefix in the preview in that case
+  const { data: countryCodes } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getStateId(),
+    "common-masters",
+    [{ name: "CountryCodes" }],
+    {
+      enabled: field?.showCountryCodeDropdown === true,
+      select: (data) => data?.["common-masters"]?.CountryCodes || [],
+    },
+    { schemaCode: "common-masters.CountryCodes" }
+  );
+  const countryCodeFallbackPrefix =
+    field?.showCountryCodeDropdown === true && (!countryCodes || countryCodes.length === 0) ? "+91" : null;
+
   // Memoize options - use MDMS data if available, otherwise use dropDownOptions
   const options = useMemo(() => {
     if (field?.isMdms && isValidSchema && mdmsData) {
@@ -141,7 +157,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
         placeholder={shouldCustomTranslate ? field?.innerLabel : customT(field?.innerLabel) || ""}
         populators={{
           title: field?.label,
-          prefix: field?.prefixText || null,
+          prefix: field?.prefixText || countryCodeFallbackPrefix,
           suffix: field?.suffixText || null,
           t: shouldCustomTranslate ? customT : null,
           fieldPairClassName: `app-preview-field-pair ${isFieldSelected ? `app-preview-selected` : ``}`,
