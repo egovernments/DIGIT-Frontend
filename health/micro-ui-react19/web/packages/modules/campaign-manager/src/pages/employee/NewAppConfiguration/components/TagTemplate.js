@@ -18,7 +18,14 @@ const TagTemplate = ({ field, t, fieldTypeMasterData, }) => {
   };
 
   // Allow empty labels - only use defaults if undefined/null
-  const tagLabel = field?.label !== undefined && field?.label !== null ? t(field?.label) : (field?.fieldName ? t(field?.fieldName) : "");
+  let tagLabel = field?.label !== undefined && field?.label !== null ? t(field?.label) : (field?.fieldName ? t(field?.fieldName) : "");
+
+  // Runtime expressions ({{fn:...}} / {{item...}}) only resolve in the app -
+  // fall back to the element's name (as shown in the panel), else mask like
+  // other dynamic preview values, instead of rendering an empty pill
+  if (typeof field?.label === "string" && field.label.includes("{{")) {
+    tagLabel = (field?.fieldName && t(field.fieldName)?.trim()) || "*****";
+  }
 
   // Render as a real tag pill (variant background + stroke); a white background
   // made delivery statuses read as plain text in the preview
