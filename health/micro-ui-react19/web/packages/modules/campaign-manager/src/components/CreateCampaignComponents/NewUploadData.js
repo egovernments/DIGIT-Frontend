@@ -397,6 +397,10 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   useEffect(() => {
     const totalFormData = props?.props?.sessionData;
+    // A cloned campaign's pre-filled sheet only becomes visible once the campaign
+    // fetch resolves - deciding the popup before that shows "download template"
+    // over an already-filled sheet. Wait for campaignData when one is expected.
+    if (searchParams.get("campaignNumber") && !props?.props?.campaignData) return;
     const campaignResources = props?.props?.campaignData?.resources || [];
     const resourceDetailsFromSearch = props?.props?.resourceDetails || [];
 
