@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader, Button, Toast } from "@egovernments/digit-ui-components";
+import { Loader, Button, Toast, Tag } from "@egovernments/digit-ui-components";
 import DataSyncCard from "./DataSyncCard";
 import SummaryCard from "./SummaryCard";
 import ReusableTableWrapper from "./ReusableTableWrapper";
@@ -773,14 +773,13 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     [tenantId, t, handleExcelDownload],
   );
 
-  // Helper to map status to CSS class
-  const getStatusClass = (status) => {
-    const classMap = {
-      Completed: "cm-status-badge--completed",
-      "In-Transit": "cm-status-badge--in-transit",
-      Rejected: "cm-status-badge--rejected",
+  const getStatusTagType = (status) => {
+    const typeMap = {
+      Completed: "success",
+      "In-Transit": "warning",
+      Rejected: "error",
     };
-    return classMap[status] || "cm-status-badge--default";
+    return typeMap[status] || "monochrome";
   };
 
   const customCellRenderer = {
@@ -802,9 +801,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       </span>
     ),
     displayStatus: (row) => (
-      <span className={`cm-status-badge ${getStatusClass(row.displayStatus)}`}>
-        {row.displayStatus}
-      </span>
+      <Tag label={row.displayStatus} type={getStatusTagType(row.displayStatus)} showIcon={false} stroke={false} />
     ),
   };
 
