@@ -832,7 +832,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           <AttendanceManagementTable
             data={attendanceSummary}
             setAttendanceSummary={setAttendanceSummary}
-            duration={parseInt(periodDurationInDays ? periodDurationInDays : "0", 10) || 0}
+            duration={attendanceDuration || parseInt(periodDurationInDays || "0", 10) || 0}
             editAttendance={editAttendance}
             onAttendeeClick={(row) => setSelectedAttendee(row)}
             className="attendance-management-table"

@@ -80,15 +80,15 @@ const NewShipmentPopup = ({
   const stateCode = Digit.ULBService.getStateId();
   const language = Digit.StoreData.getCurrentLanguage();
   const boundaryModuleCode = useMemo(
-    () => (BOUNDARY_HIERARCHY_TYPE ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] : []),
+    () => (BOUNDARY_HIERARCHY_TYPE ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] : null),
     [BOUNDARY_HIERARCHY_TYPE]
   );
   Digit.Services.useStore({
     stateCode,
-    moduleCode: boundaryModuleCode,
+    moduleCode: boundaryModuleCode || [],
     language,
     modulePrefix: "hcm",
-    enabled: boundaryModuleCode.length > 0,
+    config: { enabled: !!boundaryModuleCode },
   });
 
   const hierarchyDefinitionReqCriteria = useMemo(
@@ -122,6 +122,7 @@ const NewShipmentPopup = ({
       includeChildren: true,
     },
     body: {},
+    changeQueryName: `boundaryRel_${tenantId}_${BOUNDARY_HIERARCHY_TYPE}`,
     config: {
       enabled: !!BOUNDARY_HIERARCHY_TYPE,
       cacheTime: 1000000,
@@ -224,8 +225,8 @@ const NewShipmentPopup = ({
     data: projectData,
     isLoading: projectsLoading,
   } = Digit.Hooks.useCustomAPIHook(projectSearchCriteria);
-  const initialProjectIds = projectData?.ids || [];
-  const initialBoundaryMap = projectData?.boundaryMap || {};
+  const initialProjectIds = useMemo(() => projectData?.ids || [], [projectData]);
+  const initialBoundaryMap = useMemo(() => projectData?.boundaryMap || {}, [projectData]);
 
   const sortedHierarchy = useMemo(() => {
     const boundaryHierarchy =
@@ -265,12 +266,6 @@ const NewShipmentPopup = ({
       });
     }
   }, [userBoundary, effectiveHierarchy]);
-
-  // Auto-select the first from facility when the facility list changes (new boundary → new list)
-  useEffect(() => {
-    if (!fromFacilityList?.length) return;
-    setFromFacilityId(fromFacilityList[0].id);
-  }, [fromFacilityList]);
 
   // Build hierarchy filter options from boundary tree
   const hierarchyFilterOptions = useMemo(() => {
@@ -523,6 +518,13 @@ const NewShipmentPopup = ({
     data: fromFacilityList,
     isLoading: fromFacilitiesLoading,
   } = usePaginatedSearch(fromFacilityReqCriteria);
+
+  // Auto-select the first from facility when the facility list changes (new boundary → new list)
+  // Must be declared AFTER fromFacilityList to avoid temporal dead zone in deps array
+  useEffect(() => {
+    if (!fromFacilityList?.length) return;
+    setFromFacilityId(fromFacilityList[0].id);
+  }, [fromFacilityList]);
 
   // Fetch "To" facilities using filtered project IDs
   const toFacilityReqCriteria = useMemo(
@@ -1350,11 +1352,15 @@ const NewShipmentPopup = ({
     facilityNameMap,
   ]);
 
+  // Only count hierarchy/boundary loading when the queries are actually enabled.
+  // In TQ v4, a disabled query with no cache reports isLoading:true indefinitely;
+  // if BOUNDARY_HIERARCHY_TYPE is null (e.g. campaign has no hierarchyType), those
+  // queries would never enable and the spinner would be stuck forever.
   const isLoadingInitialData =
     campaignLoading ||
-    hierarchyLoading ||
-    boundaryRelLoading ||
-    projectsLoading ||
+    (!!BOUNDARY_HIERARCHY_TYPE && hierarchyLoading) ||
+    (!!BOUNDARY_HIERARCHY_TYPE && boundaryRelLoading) ||
+    (!!projectId && projectsLoading) ||
     projectTypeLoading;
   const allVisibleSelected =
     filteredFacilities.length > 0 &&
