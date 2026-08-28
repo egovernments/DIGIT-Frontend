@@ -163,7 +163,11 @@ const AttendanceManagementTable = ({ ...props }) => {
     }
 
     if (value > props.duration) {
-      setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_ATTENDANCE_CAN_NOT_EXCEED_EVENT_DURATION_ERROR), transitionTime: 3000 });
+      setShowToast({
+        key: "error",
+        label: `${t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_ATTENDANCE_CAN_NOT_EXCEED_EVENT_DURATION_ERROR)}: ${props.duration}`,
+        transitionTime: 3000,
+      });
       return;
     }
 
