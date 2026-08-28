@@ -99,7 +99,9 @@ const dummyPanelConfig = {
           label: "APPCONFIG_CUSTOM_PREFIX",
           bindTo: "prefixText",
           isLocalisable: false,
-          condition: false,
+          // Prefix belongs with the country code being shown - surfacing it when
+          // the toggle is OFF read as reversed behaviour
+          condition: true,
         },
       ],
       showFieldOnToggle: true,
