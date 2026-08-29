@@ -81,7 +81,15 @@ config:
         build-args:
           BUILD_VARIANT: dashboard-ui
 
- # Others       
+  - name: builds/Digit-Frontend/health/hcm-digit-ui
+    build:
+      - work-dir: health/micro-ui-react19/
+        dockerfile: health/micro-ui-react19/web/docker/Dockerfile
+        image-name: hcm-digit-ui
+        build-args:
+          BUILD_VARIANT: hcm-digit-ui
+
+ # Others
   - name: builds/Digit-Frontend/storybook-svg
     build:
     - work-dir: micro-ui/web/micro-ui-internals/packages/svg-components/
