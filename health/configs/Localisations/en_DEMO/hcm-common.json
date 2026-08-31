@@ -1,0 +1,5072 @@
+[
+  {
+    "code": "   BEDNET_MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL",
+    "message": "Update Delivery",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "   Bednet_MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL",
+    "message": "Update Delivery",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "   Bednets_MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL",
+    "message": "Update Delivery",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": " STOCK_RECONCILIATION_COUNT_EXPECTS_NUMBER",
+    "message": "Count should be numeric",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_PAYMENT_APPROVER",
+    "message": "Payment Approver",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_PAYMENT_EDITOR",
+    "message": "Payment Editor",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACCESSCONTROL_ROLES_ROLES_PAYMENT_REVIEWER",
+    "message": "Payment Reviewer",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT",
+    "message": "Go Back",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT",
+    "message": " ",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT",
+    "message": "Checklist configured successfully",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_",
+    "message": "Action Test",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_APP_CONFIGURATION",
+    "message": "App Configuration",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_CREATE_CAMPAIGN",
+    "message": "Create Campaign",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ADMINISTERED_SUCCESS",
+    "message": "Vaccinated Successfully",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "Administration failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ADMINISTRATION_SUCCESS",
+    "message": "Administration success",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ADMINISTRATIVEPOST",
+    "message": "Administrative post",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "AGE_IN_MONTHS_LABEL",
+    "message": "Age in months",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "AGE_LABEL_TEXT",
+    "message": "Age",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_ADMINSTRATIVEPOST",
+    "message": "Administrative post",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_ERROR",
+    "message": "Failed to fetch attendance",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "AVAILABLE",
+    "message": "available",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Aldeia",
+    "message": "Village",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BACK_TO_BOUNDARY_SELECTION",
+    "message": "Back to boundary selection",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_BATCH_NO_REQUIRED",
+    "message": "This is required field.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_BATCH_NUMBER",
+    "message": "Barcode batch number",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_EXPIRY_DATE",
+    "message": "Barcode expiry date",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_GTIN",
+    "message": "Barcode GTIN",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_GTIN_MUST_BE_14_DIGITS",
+    "message": "Barcode GTIN must be 14 digits",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_GTIN_REQUIRED",
+    "message": "This is required field.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_SERIAL_NO_REQUIRED",
+    "message": "This is required field.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_SERIAL_NUMBER",
+    "message": "Barcode serial number",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNETS_ADMINISTRATION_FAILED",
+    "message": "Administration failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNETS_ADMINISTRATION_SUCCESS",
+    "message": "Administration success",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNETS_BENEFICIARY_REFERRED",
+    "message": "Beneficiary referred",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNETS_BENEFICIARY_REFUSED",
+    "message": "Beneficiary refused",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNETS_CLOSED_HOUSEHOLD",
+    "message": "Closed household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNETS_MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL",
+    "message": "Update Delivery",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNETS_NOT_ADMINISTERED",
+    "message": "Not administered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNETS_NOT_REGISTERED",
+    "message": "Not registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNETS_REGISTERED",
+    "message": "Registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNET_ADMINISTRATION_FAILED",
+    "message": "Administration failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNET_ADMINISTRATION_SUCCESS",
+    "message": "Administration success",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNET_BENEFICIARY_REFERRED",
+    "message": "Beneficiary referred",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNET_BENEFICIARY_REFUSED",
+    "message": "Beneficiary refused",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNET_CLOSED_HOUSEHOLD",
+    "message": "Closed household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNET_MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL",
+    "message": "Update Delivery",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNET_NOT_ADMINISTERED",
+    "message": "Not administered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNET_NOT_REGISTERED",
+    "message": "Not registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BEDNET_REGISTERED",
+    "message": "Registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_DELIVERY_CONDITION_LABEL",
+    "message": "Delivery Condition",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_HOUSEHOLD_MEMBER",
+    "message": "Household member",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_HOUSEHOLD_MEMBERS",
+    "message": "Household members",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ID",
+    "message": "E-Token",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ID_POOL_EMPTY_ERROR",
+    "message": "Low Beneficiary IDs",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_MIN_MAX_DELIVERY_CONDITION",
+    "message": "{membersPerNet} members per resource, and a maximum of {maxBednets} resources can be given.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFERRED",
+    "message": "Beneficiary Referred",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Beneficiary Refused",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY",
+    "message": "Boundary",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_ERROR",
+    "message": "Failed to fetch boundaries!",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BOUNDARY_MANAGEMENT",
+    "message": "Boundary Management",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BULK_STOCK_UPLOAD",
+    "message": "Bulk Stock Upload",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BUS",
+    "message": "Bus",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednet_ADMINISTRATION_FAILED",
+    "message": "Administration failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednet_ADMINISTRATION_SUCCESS",
+    "message": "Administration success",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednet_BENEFICIARY_REFERRED",
+    "message": "Beneficiary referred",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednet_BENEFICIARY_REFUSED",
+    "message": "Beneficiary refused",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednet_CLOSED_HOUSEHOLD",
+    "message": "Closed household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednet_MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL",
+    "message": "Update Delivery",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednet_NOT_ADMINISTERED",
+    "message": "Not administered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednet_NOT_REGISTERED",
+    "message": "Not registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednet_REGISTERED",
+    "message": "Registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednets_ADMINISTRATION_FAILED",
+    "message": "Administration failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednets_ADMINISTRATION_SUCCESS",
+    "message": "Administration success",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednets_BENEFICIARY_REFERRED",
+    "message": "Beneficiary referred",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednets_BENEFICIARY_REFUSED",
+    "message": "Beneficiary refused",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednets_CLOSED_HOUSEHOLD",
+    "message": "Closed household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednets_MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL",
+    "message": "Update Delivery",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednets_NOT_ADMINISTERED",
+    "message": "Not administered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Bednets_REGISTERED",
+    "message": "Registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CAMERA_PERMISSION_DENIED_DESC",
+    "message": "Camera access has been denied. Please allow camera permission from settings.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CAMERA_PERMISSION_DENIED_TITLE",
+    "message": "Camera Permission Denied",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CAPTURING_LOCATION",
+    "message": "Capturing Location",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHANGE_BOUNDARIES",
+    "message": "Change Boundaries",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHECKLIST",
+    "message": "Checklist",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHECKLIST_CREATE_ACTION_LABEL",
+    "message": "Answer Checklist",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHECKLIST_DATA_SHOWCASE_ADMINISTRATIVE_UNIT",
+    "message": "System captures the administrative boundary and is non-editable",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHECKLIST_DATA_SHOWCASE_DATE",
+    "message": "Displays current date by default and is non-editable",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHECKLIST_DETAILS_LABEL",
+    "message": "Checklist Details",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHECKLIST_DIALOG_DESCRITPTION",
+    "message": "Make sure the details entered are correct.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHECKLIST_DIALOG_LABEL",
+    "message": "Ready to submit checklist?",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHECKLIST_DIALOG_PRIMARY_ACTION",
+    "message": "Submit",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHECKLIST_DIALOG_SECONDARY_ACTION",
+    "message": "Go Back",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHECKLIST_LIST_SHOWCASE_OPEN",
+    "message": "Click on this button to open a filled checklist",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHECKLIST_REASON_REQUIRED_ERROR",
+    "message": "Reason cannot be empty",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHECKLIST_VIEW_ACTION_LABEL",
+    "message": "View Submitted Checklists",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHW",
+    "message": "Community Health Worker",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSED_HOUSEHOLD",
+    "message": "Closed household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMMON_MASTERS_DEPARTMENT_EGOV",
+    "message": "eGov",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_ACKNOWLEDGEMENT_ACTION",
+    "message": "Back to Complaints",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_ACKNOWLEDGEMENT_DESCRIPTION",
+    "message": "The complaint has been registered successfully and sent to the concerned person.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_ACKNOWLEDGEMENT_LABEL",
+    "message": "Complaint Submitted",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_MAIN",
+    "message": "Complaint No.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_SUB",
+    "message": "(Please sync the data to generate)",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_ASSIGNED_TO_ALL",
+    "message": "Assigned to all",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_ASSIGNED_TO_SELF",
+    "message": "Assigned to me",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_BACK_TO_INBOX",
+    "message": "Back to Inbox",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINANT_CONTACT_NUMBER",
+    "message": "Complainant's contact number",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINANT_NAME",
+    "message": "Complainant's name",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINANT_TYPE_QUESTION",
+    "message": "Are you raising a complaint for yourself or another user?",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_DATE",
+    "message": "Date of complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_DESCRIPTION",
+    "message": "Complaint description",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_DETAILS_LABEL",
+    "message": "Complaint Details",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_DIALOG_MESSAGE",
+    "message": "Make sure you review all details before clicking on the Submit button. Click on the Cancel button to go back to the previous page",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_DIALOG_TITLE",
+    "message": "Ready to Submit?",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_FILE_COMPLAINT_ACTION",
+    "message": "File Complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_FILTER_CLEAR_ALL",
+    "message": "Clear All",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_AREA_LABEL",
+    "message": "Area",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_DATE_LABEL",
+    "message": "Complaint date",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_FILTER_CTA",
+    "message": "Filter",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_FILTER_HEADING",
+    "message": "Filters",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_HEADING",
+    "message": "Complaints Inbox",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_NOT_GENERATED_LABEL",
+    "message": "Not generated",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_NUMBER_LABEL",
+    "message": "Complaint number",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_SEARCH_CTA",
+    "message": "Search",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_SEARCH_HEADING",
+    "message": "Search By:",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_SORT_CTA",
+    "message": "Sort",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_SORT_HEADING",
+    "message": "Sort By:",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_STATUS_LABEL",
+    "message": "Status",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_SYNC_REQUIRED_LABEL",
+    "message": "(Sync required)",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_TYPE_LABEL",
+    "message": "Complaint type",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_LOCALITY",
+    "message": "Locality",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_LOCATION_LABEL",
+    "message": "Location Details",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_NO_COMPLAINTS_EXIST",
+    "message": "No complaints exist",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_RAISED_FOR_ANOTHER_USER",
+    "message": "Another user",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_RAISED_FOR_MYSELF",
+    "message": "Myself",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_STATUS_CANCELLED",
+    "message": "Cancelled",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_STATUS_CREATED",
+    "message": "Created",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_STATUS_PENDING_ASSIGNMENT",
+    "message": "Pending Assignment",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_STATUS_REJECTED",
+    "message": "Rejected",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_STATUS_RESOLVED",
+    "message": "Resolved",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_SUPERVISOR_CONTACT_NUMBER",
+    "message": "Supervisor's contact number",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_SUPERVISOR_NAME",
+    "message": "Supervisor's name",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_TYPE_HEADING",
+    "message": "Complaint type",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_TYPE_LABEL",
+    "message": "Select your complaint type",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_VALIDATION_MINLENGTH_ERROR",
+    "message": "Input cannot be less than minimum limit",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_VALIDATION_RADIO_REQUIRED_ERROR",
+    "message": "Please select one option",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_VALIDATION_REQUIRED_ERROR",
+    "message": "Field cannot be empty",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_SHOWCASE_CONTACT",
+    "message": "Provide contact details of the complainant",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_SHOWCASE_DATE",
+    "message": "Displays current date by default and is non-editable",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_SHOWCASE_DESCRIPTION",
+    "message": "Provide description of the complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_SHOWCASE_NAME",
+    "message": "Enter name of the complainant",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_SHOWCASE_ORGANIZATION_UNIT",
+    "message": "System captures the administrative boundary and is non-editable",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_SHOWCASE_SELF_OR_OTHER",
+    "message": "You can raise the complaint on behalf of other user",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_SHOWCASE_SUBMIT",
+    "message": "Click on this button to submit the complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_SHOWCASE_SUPERVISOR_CONTACT",
+    "message": "Enter supervisor's contact details",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_SHOWCASE_SUPERVISOR_NAME",
+    "message": "Enter supervisor's name",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_VIEW_CONTACT",
+    "message": "Displays the contact details of the complainant",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_VIEW_SHOWCASE_AREA",
+    "message": "Displays the administrative area for the complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_VIEW_SHOWCASE_CLOSE",
+    "message": "Click on this button to close the complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_VIEW_SHOWCASE_DATE",
+    "message": "Displays date on which the complaint was filed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_VIEW_SHOWCASE_DESCRIPTION",
+    "message": "Displays the description provided",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_VIEW_SHOWCASE_NAME",
+    "message": "Displays the name of the complainant",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_VIEW_SHOWCASE_NUMBER",
+    "message": "Displays the system generated complaint id",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_VIEW_SHOWCASE_STATUS",
+    "message": "Displays the status of complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_DETAILS_VIEW_SHOWCASE_TYPE",
+    "message": "Displays the type of complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SHOWCASE_AREA",
+    "message": "Displays the administrative area for the complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SHOWCASE_CREATE",
+    "message": "Click on this button to file a new complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SHOWCASE_DATE",
+    "message": "Displays date on which the complaint was filed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SHOWCASE_FILTER",
+    "message": "Click on this button to filter complaints",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SHOWCASE_NUMBER",
+    "message": "Displays the system generated complaint id",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SHOWCASE_OPEN",
+    "message": "Click on this button to view complaint details",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SHOWCASE_SEARCH",
+    "message": "Click on this button to search a complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SHOWCASE_SORT",
+    "message": "Click on this button to sort complaints",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SHOWCASE_STATUS",
+    "message": "Displays the status of complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_INBOX_SHOWCASE_TYPE",
+    "message": "Displays the type of complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_RAISED_FOR_ANOTHER_USER",
+    "message": "Another User",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_RAISED_FOR_MYSELF",
+    "message": "Myself",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_SORT_DATE_ASC",
+    "message": "Complaint Date (Latest Last)",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_SORT_DATE_DESC",
+    "message": "Complaint Date (Latest First)",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_TYPE_SHOWCASE_COMPLAINT_TYPE",
+    "message": "Select complaint type from the list",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINT_TYPE_SHOWCASE_COMPLAINT_TYPE_NEXT",
+    "message": "Select complaint type from the list",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLETED",
+    "message": "Complete",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CONTACT_SYS_ADMIN",
+    "message": "Please contact the system administrator",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CONTINUE_WITHOUT_DOWNLOADING",
+    "message": "Continue Without Download",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ PROCEED_WITHOUT_DOWNLOAD",
+    "message": "Proceed Without Download",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ACCESS_PERMISSION_DIALOG_DESC",
+    "message": "The HCM app requires access to some phone features to function properly. Please allow access to proceed.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ACCESS_REQUIRED",
+    "message": "Access Required",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ADD_RESOURCE",
+    "message": "Add Resource",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_AGE",
+    "message": "Age",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ALLOW_ACCESS",
+    "message": "Allow Access",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ALLOW_BACKGROUND_ACTIVITY",
+    "message": "Run the app in the background.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ALLOW_PERMISSIONS",
+    "message": "Allow Permissions",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ATTENTION",
+    "message": "Attention",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_BACK",
+    "message": "Back",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
+    "message": "Beneficiary not found!",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
+    "message": "We couldn’t find this beneficiary in the records. You can add them as a new beneficiary.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_CANCEL",
+    "message": "Cancel",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_CHOOSE_ANOTHER_BOUNDARY",
+    "message": "Choose Another Village",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_CHOOSE_BOUNDARIES",
+    "message": "Choose your boundaries",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_CHOOSE_LANGUAGE",
+    "message": "Choose your Language",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_CITY",
+    "message": "Country/State/City",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_CLOSE",
+    "message": "Close",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_CONNECTION_CONTENT",
+    "message": "No internet. Please connect to internet.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_CONNECTION_LABEL",
+    "message": "Connection Alert",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_CONTINUE",
+    "message": "Continue",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_DATA_DOWNLOAD_SUCCESS",
+    "message": "Data Downloaded Successfully",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_DATA_SYNCED",
+    "message": "Data Synced",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_DATA_SYNC_FAILED",
+    "message": "Sync Failed!",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_DATA_SYNC_RETRY",
+    "message": "Retry",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_DELETE",
+    "message": "Delete",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_DELETE_RESOURCE",
+    "message": "Delete Resource",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_DELETE_RESOURCE_CONFIRMATION",
+    "message": "Are you sure you want to delete this resource?",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_DONT_ALLOW",
+    "message": "Don’t Allow",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_DOWNLOAD",
+    "message": "Download",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_DOWNLOADING",
+    "message": "Download in progress",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_DOWNLOAD_FAILED",
+    "message": "Download failed !",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_DUPLICATE_RESOURCE_ERROR",
+    "message": "Duplicate resource selected.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_EMAIL_ID",
+    "message": "Email ID",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ERROR",
+    "message": "Error",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_FAILED_TO_CHECK_DATA",
+    "message": "Failed to Check Data",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_FAILED_TO_CHECK_DATA_DESC",
+    "message": "We couldn't fetch the latest data from the server. You can retry or continue without downloading data.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_FAILED_TO_FETCH",
+    "message": "Failed To Fetch",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_FEMALE",
+    "message": "Female",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_FETCHING_DATA",
+    "message": "Fetching Data",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_GENDER",
+    "message": "Gender",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_GO_BACK",
+    "message": "Go Back",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_HELP",
+    "message": "Help",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_HOME",
+    "message": "Home",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_INFO",
+    "message": "Info",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_INFO_DESC_INTERNET_CONNECTION",
+    "message": "A stable internet connection is required to download the records. Keep the app open and do not minimize it while the download is in progress.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_LANGUAGE",
+    "message": "Language",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_LOADING_TEXT",
+    "message": "Loading",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_LOADING_TEXT'",
+    "message": "Loading",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_LOGOUT",
+    "message": "Logout",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_LOW_RAM_WARNING_DESC",
+    "message": "Your device has low available memory. Performance of the app maybe affected.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_LOW_RAM_WARNING_TITLE",
+    "message": "Low Memory Warning",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_MALE",
+    "message": "Male",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_MAX_BOUNDARY_SELECTION_REACHED",
+    "message": "Village selection limit reached.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_METER",
+    "message": "meters",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_METERS",
+    "message": "meters",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_MIN_ERROR",
+    "message": "Quantity is required.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_MOBILE_NUMBER",
+    "message": "Mobile Number",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NA",
+    "message": "NA",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NAME",
+    "message": "Name",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NEGATIVE",
+    "message": "Negative",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NEXT",
+    "message": "Next",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NO",
+    "message": "No",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NO_INTERNET",
+    "message": "No Internet Connection",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NO_MATCH_FOUN",
+    "message": "No Matches found",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NO_MATCH_FOUND",
+    "message": "No Matches found",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NO_VALUE",
+    "message": "No Value",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NULL",
+    "message": "Retry",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_OK",
+    "message": "Ok",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_OTHER",
+    "message": "Other",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSIONS_ALERT",
+    "message": "Allow required permissions ",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_ACCESS_PAGE_DESC",
+    "message": "Allow access to required phone features to continue using the DIGIT HCM app.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_BLUETOOTHSCAN",
+    "message": "NearBy Share",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_CAMERA",
+    "message": "Camera",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_CAMERA_DESC",
+    "message": "Use your device camera.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_GRANTED",
+    "message": "Permission granted",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_IGNOREBATTERYOPTIMIZATIONS",
+    "message": "Run the app in the background",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_IGNOREBATTERYOPTIMIZATIONS_WARNING",
+    "message": "Allow background activity in battery -> settings",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_LOCATION",
+    "message": "Location",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_LOCATION_DESC",
+    "message": "Access your device location.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES",
+    "message": "NearBy Share",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES_DESC",
+    "message": "Share data with nearby devices.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_NOTIFICATION",
+    "message": "Notifications",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_NOTIFICATION_DESC",
+    "message": "Get alerts and updates from the app.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_NOT_GRANTED",
+    "message": "Permission not granted",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_POSITIVE",
+    "message": "Positive",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PROCEED_WITHOUT_DOWNLOAD",
+    "message": "Proceed without download",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PROFILE",
+    "message": "Edit Profile",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_QUANTITY_DISTRIBUTED",
+    "message": "Quantity Distributed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_REASON_REQUIRED",
+    "message": "This is a required field",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_REQUIRED",
+    "message": "Please enter the mandatory field.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_REQUIRED_ITEMS",
+    "message": "Atleast one item need to be selected",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_REQUIRED_RESOURCE",
+    "message": "Please select resource.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_RESOURCE",
+    "message": "Resource",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_RETRY",
+    "message": "Retry",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_SAVE",
+    "message": "Save",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_SEARCH",
+    "message": "Search",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_SEARCH_BY_NAME",
+    "message": "Search by name",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_SEARCH_COMPLAINT",
+    "message": "Search Complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_SELECT_CURRENT_BOUNDARY",
+    "message": "Select Your Village",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_SKIP",
+    "message": "Skip",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_SKIP_CONTINUE",
+    "message": "Skip and Continue",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_SUBMIT",
+    "message": "Submit",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_SUMMARY_DETAILS",
+    "message": "Summary Details",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_SYNC_IN_PROGRESS",
+    "message": "Sync in Progress",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_SYNC_PROGRESS",
+    "message": "Sync in progress",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_TENANT",
+    "message": "Select Tenants",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_UNKNOWN_ERROR_DESCRIPTION",
+    "message": "Please contact your administrator for further details",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_UNKNOWN_ERROR_OCCURED",
+    "message": "An Unknown Error Occurred",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_UNKNOWN_ERROR_OCCURRED",
+    "message": "An Unknown Error Occurred",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_VALIDATION_ERROR",
+    "message": "Fill the required fields",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_VIEW_DOWNLOADED_DATA",
+    "message": "View Downloaded Data",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_WANT_TO_CHOOSE_ANOTHER_BOUNDARY",
+    "message": "Want to choose another Village?",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_WARNING",
+    "message": "Notice",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_YES",
+    "message": "Yes",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COUNTRY",
+    "message": "Country",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CREATED",
+    "message": "Created",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CREATE_EMPLOYEE",
+    "message": "Create User",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_CHOOSE_LANGUAGE_HEADER",
+    "message": "Choose your Language",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CYCLE",
+    "message": "Cycle",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Country",
+    "message": "Country",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DAMAGED_IN_STORAGE",
+    "message": "Damaged in storage",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DAMAGED_IN_TRANSIT",
+    "message": "Damaged in transit",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DASHBOARD_CHECKLISTS_FILL",
+    "message": "Checkelist submitted",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DASHBOARD_DELIVERY_SUCCESSFUL",
+    "message": "Successful delivery",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_DOWNLOADED_SUCCESS_DESC",
+    "message": "The records have been downloaded successfully. You can now view downloaded data in the app.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_DOWNLOADED_SUCCESS_LABEL",
+    "message": "Data Downloaded Successfully",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_DOWNLOAD_IN_PROGRESS",
+    "message": "Data is being downloaded",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_DOWNLOAD_REPORT",
+    "message": "Data Download Report",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_FOUND",
+    "message": "Data Found",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_FOUND_BENEFICIARY_IDS",
+    "message": "Beneficiary IDs Downloaded Successfully",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_FOUND_BENEFICIARY_IDS_CONTENT",
+    "message": "The beneficiary IDs have been downloaded successfully and are now available to use for registration.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_FOUND_CONTENT",
+    "message": "Beneficiary records are available for the selected boundaries and are ready to download.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_ISSUES",
+    "message": "Data issue",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_NOT_FOUND_BENEFICIARY_IDS",
+    "message": "Unable to Fetch Beneficiary IDs",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_NOT_FOUND_BENEFICIARY_IDS_CONTENT",
+    "message": "We couldn't fetch the beneficiary IDs at the moment. Try again or go back and try later.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_SYNCED_SUCCESS_DESCRIPTION",
+    "message": "Your records have been synced to the server successfully.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_SYNCED_SUCCESS_TITLE",
+    "message": "You're All Synced!",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_SYNC_INFO_CONTENT",
+    "message": "There are {} transactions yet to be synced.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_SYNC_INFO_LABEL",
+    "message": "Data unsynced",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_TRANSFER_INCOMPLETE_TITLE",
+    "message": "Transfer incomplete",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_TRANSFER_INTERRUPTED",
+    "message": "Connection lost. Please check Bluetooth and try again.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_TRANSFER_RETRY",
+    "message": "Retry",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_TRANSFER_SUMMARY",
+    "message": "Sent {sent} · Saved {saved} · Skipped {skipped}",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATE",
+    "message": "Date",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DEFAULT",
+    "message": "Default",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DEFAULT_ADMINISTRATION_SUCCESS",
+    "message": "Administration success",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DELIVERED",
+    "message": "Administered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DIARRHOEA",
+    "message": "Diarrhoea",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DIGIT_HCM_COMPLAINTS_MODULE",
+    "message": "Complaints",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DIGIT_HCM_HFREFERRAL_MODULE",
+    "message": "Referral",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DISTRIBUTOR_HOME_SHOWCASE_BENEFICIARIES",
+    "message": "Click on this button to perform registration and distribution",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DISTRIBUTOR_HOME_SHOWCASE_FILE_COMPLAINT",
+    "message": "Click on this button to file a complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DISTRIBUTOR_HOME_SHOWCASE_PROGRESS_BAR",
+    "message": "Displays progress of the user against the assigned target",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DISTRIBUTOR_HOME_SHOWCASE_SYNC_DATA",
+    "message": "Click on this button to sync records manually",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DISTRICT",
+    "message": "District",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DOWNLOAD_BENEFICIARY_DATA",
+    "message": "Download Beneficiary Data",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DOWNLOAD_COMPLETED",
+    "message": "Completed!",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DOWNLOAD_MORE_DATA",
+    "message": "Download More Data",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DOWNLOAD_TIME",
+    "message": "Download time",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DSS_HEALTH_CUSTOM_CHART",
+    "message": "Custom chart",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Distrito",
+    "message": "District",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ENABLE_PERMISSION_CHECKBOX",
+    "message": "Enable permission checkbox",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ENTER_MANUAL_CODE",
+    "message": "Enter Code Manually",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ES_COMMON_ALL",
+    "message": "All",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "F-2026-04-13-001767",
+    "message": "Wuyo Facility 21",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "F-2026-08-11-215550",
+    "message": "State facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "F-2026-08-11-215551",
+    "message": "Health facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "F-2026-08-11-215552",
+    "message": "National facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "F-2026-08-11-215554",
+    "message": "District facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "F-2026-08-11-215557",
+    "message": "Makama Facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "F-2026-08-11-215558",
+    "message": "Melekuray Town Facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "F-2026-08-11-215559",
+    "message": "Malekuray Phu Facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "F-2026-08-11-215560",
+    "message": "Port Loko Facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "F-2026-08-11-215561",
+    "message": "NW Facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "F-2026-08-11-215562",
+    "message": "SL Facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "F-2026-08-11-215563",
+    "message": "Melekuray Facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "F-2026-08-11-215564",
+    "message": "Port Loko Dis Facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ACTIVE_SESSION",
+    "message": "Active Session",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_DOWN",
+    "message": "Look slightly down",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_LEFT",
+    "message": "Turn slightly to the left",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_RIGHT",
+    "message": "Turn slightly to the right",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_STRAIGHT",
+    "message": "Look straight at the camera",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ANGLE_UP",
+    "message": "Look slightly up",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_BACK",
+    "message": "Back",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_BEFORE_WE_BEGIN",
+    "message": "Before We Begin",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_CAPTURE_FAILED",
+    "message": "Capture failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_CAPTURING_GPS",
+    "message": "Please wait while we capture your GPS coordinates.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_CONTINUE_ANYWAY",
+    "message": "Continue Anyway",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_COPY",
+    "message": "Copy",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_COWORKER_VERIFICATION",
+    "message": "Co-worker Face Verification",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_DELETE_FAILED",
+    "message": "Failed to delete face registration",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_DEVICE_CAPACITY_MESSAGE",
+    "message": "This device has reached its maximum number of enrolled users. Please contact your supervisor.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_DEVICE_CAPACITY_REACHED",
+    "message": "Device capacity reached",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_DONE",
+    "message": "Done",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_FOR",
+    "message": "Face enrolled for",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_MESSAGE",
+    "message": "Face enrolled successfully.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLED_TITLE",
+    "message": "Face Enrolled",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_ANGLE_INSTRUCTION",
+    "message": "Follow the on-screen instructions for each angle",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_COMPLETE",
+    "message": "Enrollment complete",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_DESCRIPTION",
+    "message": "We need to capture your face from 5 angles and verify liveness to set up secure Face verification. A backup PIN will also be generated for you.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_DUPLICATE_DETECTED",
+    "message": "This face is already enrolled for another user",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_FAILED",
+    "message": "Enrollment failed. Please try again.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_LIVENESS_CHECK",
+    "message": "Liveness check",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_MAX_USERS",
+    "message": "This device has reached its maximum number of enrolled users. Please contact your supervisor.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_OFFLINE_NOTE",
+    "message": "The enrollment is saved on this device and will sync to the worker registry automatically when internet returns.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_PIN_ASSIGNED",
+    "message": "Your backup PIN",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_PIN_NOTE",
+    "message": "Please note this PIN. It can be used as a backup for face verification.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_QUALITY_LOW",
+    "message": "Image quality too low",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_START",
+    "message": "Start enrollment",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_SUCCESSFUL",
+    "message": "Enrollment Successful",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENROLLMENT_TITLE",
+    "message": "Face Enrollment",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_ENTER_YOUR_PIN",
+    "message": "Enter Your PIN",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_CHECK_IN",
+    "message": "Check-in",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_ENROLLMENT",
+    "message": "Face Enrollment",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_LOGIN_VERIFICATION",
+    "message": "Login Verification",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_EVENT_REVERIFICATION",
+    "message": "Re-verification",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_FACE_MATCH",
+    "message": "Face match",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_GATE_ATTEMPT_COUNTER",
+    "message": "Attempt",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_GATE_FALLBACK_REQUIRED",
+    "message": "Maximum attempts reached. Use your PIN to continue.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_GATE_MATCH_LABEL",
+    "message": "Face matched percentage",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_GATE_REJECTED",
+    "message": "Face not recognised",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_GATE_SCANNING",
+    "message": "Scanning",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_GATE_TITLE",
+    "message": "Face Verification",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_GATE_VERIFIED",
+    "message": "Face Verified",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_GOT_IT",
+    "message": "Got it",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_GOT_IT_CONTINUE",
+    "message": "Got it! Continue",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_GO_BACK",
+    "message": "Go Back",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_EMPTY",
+    "message": "No verification events yet",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_LABEL",
+    "message": "History",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TAB_ENROLLMENT",
+    "message": "Enrollment",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TAB_VERIFICATION",
+    "message": "Verification",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_HISTORY_TITLE",
+    "message": "Verification History",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STEADY",
+    "message": "Hold steady",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STILL",
+    "message": "Hold still",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_HOLD_STILL_CAPTURING",
+    "message": "Hold still, capturing",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_INFO",
+    "message": "Info",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_INITIALIZING",
+    "message": "Initializing face recognition",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_INIT_FAILED",
+    "message": "Failed to initialise face recognition",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_INSTRUCTIONS_SUBTITLE",
+    "message": "Follow these instructions for smooth capture",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_INTERNET_REQUIRED",
+    "message": "Internet Required",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_JUST_NOW",
+    "message": "Just now",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_LATER",
+    "message": "Later",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_GOOD",
+    "message": "Good lighting",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_TOO_BRIGHT",
+    "message": "Avoid direct bright light",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_TOO_LOW",
+    "message": "Move to a brighter area",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_LIGHTING_UNKNOWN",
+    "message": "Unable to assess lighting",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_BLINK",
+    "message": "Please blink your eyes",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_FAILED",
+    "message": "Liveness check failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_PASSED",
+    "message": "Liveness check passed!",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TIMEOUT",
+    "message": "Challenge timed out",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TURN_LEFT",
+    "message": "Turn your head to the left",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_LIVENESS_TURN_RIGHT",
+    "message": "Turn your head to the right",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_LOGOUT",
+    "message": "Logout",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_LOGOUT_CONFIRM",
+    "message": "Are you sure you want to logout?",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_MAX_USERS_TITLE",
+    "message": "Device capacity reached",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_ENROLLMENT_PIN",
+    "message": "Enrollment Pin Verification",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_FACE_SHORT",
+    "message": "Face",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_FACIAL_RECOGNITION",
+    "message": "Facial Recognition",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_METHOD_PIN_SHORT",
+    "message": "PIN",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_MOVE_BACK",
+    "message": "Move back",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_MOVE_CLOSER",
+    "message": "Move closer",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_NO_GPS_AVAILABLE",
+    "message": "GPS not available",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_NO_REGISTERED_FACE",
+    "message": "No registered face found. Please register first.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_FAILED",
+    "message": "Failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_HCM_FALLBACK",
+    "message": "HCM Fallback",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_MISSED",
+    "message": "Missed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_PIN_USED",
+    "message": "PIN Used",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_OUTCOME_VERIFIED",
+    "message": "Verified",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_BRIGHTNESS",
+    "message": "Brightness — move to a well-lit area and face the light source. Avoid sitting with a bright window behind you.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_CLARITY",
+    "message": "Clarity — remove glasses, hats, masks, or anything covering your face. Keep your eyes open and face centred.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_DISTANCE",
+    "message": "Distance — hold the phone 30–40 cm from your face. Too close or too far reduces quality.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PHOTO_TIP_STAY_STILL",
+    "message": "Stay still — hold the phone steady and keep your face within the oval guide.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PIN_COPIED",
+    "message": "PIN copied to clipboard",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PIN_ENTER",
+    "message": "Enter your PIN",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PIN_FALLBACK_ENTER",
+    "message": "Enter your fallback PIN",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PIN_INVALID",
+    "message": "Invalid PIN. Please try again.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PIN_SELECT_PROFILE",
+    "message": "Please select a profile",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PIN_SUBTITLE",
+    "message": "Enter the 4-digit backup PIN",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PIN_TITLE",
+    "message": "Enter Your PIN",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFICATION_TITLE",
+    "message": "PIN Verification",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFIED",
+    "message": "PIN verified",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PIN_VERIFY",
+    "message": "Verify PIN",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_POSITION_FACE",
+    "message": "Position your face to verify identity",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_PROCESSING",
+    "message": "Processing face",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_REGISTRATION_FAILED",
+    "message": "Registration failed. Please try again.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_REJECTED_MESSAGE",
+    "message": "Face does not match. Please try again.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_REMIND_ME_LATER",
+    "message": "Remind me later",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_MISSED",
+    "message": "Re-verification missed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_PROMPT",
+    "message": "Please verify your identity to continue",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_TITLE",
+    "message": "Identity Re-verification",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_USE_PIN",
+    "message": "Use PIN Instead",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_REVERIFICATION_VERIFIED",
+    "message": "Identity verified",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_SCANNING",
+    "message": "Scanning",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_SCANNING_HOLD_STEADY",
+    "message": "Scanning — hold steady",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_SCAN_EACH_FACE",
+    "message": "Scan Each Face Now",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_SCAN_TO_PROCEED",
+    "message": "Scan your face to Proceed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_SEARCH_HINT",
+    "message": "Search",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_SELECT_PROFILE_LABEL",
+    "message": "Select Profile",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_SETTING_UP_PROFILE",
+    "message": "Setting up your profile",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_SOMETHING_WENT_WRONG",
+    "message": "Something Went Wrong",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_STATUS_ENROLLED",
+    "message": "Enrolled",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_STATUS_NOT_ENROLLED",
+    "message": "Not Enrolled",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_STEP_LIVENESS",
+    "message": "Complete liveness check",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_SYSTEM_USER_VERIFY_FIRST",
+    "message": "System user must verify their face first before co-workers can proceed.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TAP_CAPTURE",
+    "message": "Face detected — tap capture",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TILT_DOWN",
+    "message": "Tilt your head slightly down",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TILT_UP",
+    "message": "Tilt your head slightly up",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TIPS_TITLE",
+    "message": "Tips for best photo",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CLEAR_FACE",
+    "message": "Clear Face Visibility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CLEAR_FACE_BODY",
+    "message": "Remove glasses, masks, or anything covering your face.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CORRECT_DISTANCE",
+    "message": "Correct Distance",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TIP_CORRECT_DISTANCE_BODY",
+    "message": "Keep your face 30–40 cm from the camera.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TIP_FOLLOW_GUIDANCE",
+    "message": "Follow Onscreen Guidance",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TIP_FOLLOW_GUIDANCE_BODY",
+    "message": "Turn left or right as prompted during capture.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TIP_GOOD_LIGHTING",
+    "message": "Good Lighting",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TIP_GOOD_LIGHTING_BODY",
+    "message": "Avoid sitting near a bright window or light source.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TIP_STEADY_PHONE",
+    "message": "Keep Your Phone Steady",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TIP_STEADY_PHONE_BODY",
+    "message": "Hold your phone steady while the scan is in progress.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TRY_AGAIN",
+    "message": "Try Again",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_TRY_AGAIN_LOOK_CAMERA",
+    "message": "Try again — look at the camera",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_UNKNOWN",
+    "message": "Unknown",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_VERIFICATION_FAILED",
+    "message": "Face Verification Failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_VERIFICATION_FAILED_TITLE",
+    "message": "Verification Failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_VERIFIED_MESSAGE",
+    "message": "Face verified",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY",
+    "message": "Verify",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_VERIFYING",
+    "message": "Verifying face",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_IDENTITY",
+    "message": "Verify Identity",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_NOW",
+    "message": "Verify Now",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_TO_CONTINUE",
+    "message": "Verify your identity to continue",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_VERIFY_TO_CONTINUE_WORKING",
+    "message": "Please verify your identity to continue working",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_VIEW_ALL",
+    "message": "View All",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_WORKER_NOT_FOUND",
+    "message": "Worker Not Found",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_WORKER_NOT_FOUND_MESSAGE",
+    "message": "Your worker record was not found in the registry. Please contact your supervisor.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FACILITY_SEARCH_HEADER_LABEL",
+    "message": "Facility Search",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FAC_F-2026-08-11-215550",
+    "message": "State facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FAC_F-2026-08-11-215551",
+    "message": "Health facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FAC_F-2026-08-11-215552",
+    "message": "National facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FAC_F-2026-08-11-215554",
+    "message": "District facility",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FAILED_TO_CHECK_DATA_IN_SERVER",
+    "message": "Failed to check data in server",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FAILED_TO_REGISTER_BENEFICIARY",
+    "message": "Failed to register beneficiary",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FAILED_TO_REGISTER_BENEFICIARY_DESCRIPTION",
+    "message": "There is some issue in your app customization in console. Please fix and try again.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FETCHING_BENEFICIARY_IDS",
+    "message": "Fetching Beneficiary IDs",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Fever",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FIELD_VALIDATION_ERROR",
+    "message": "Validation failed.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FLASH_OFF",
+    "message": "Flash off",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FLASH_ON",
+    "message": "Flash on",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GENDER_LABEL_TEXT",
+    "message": "Gender",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GENDER_MANDATORY_MESSAGE_HEIGHT",
+    "message": "Required field",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GENDER_MANDATORY_MESSAGE_HEIGHT_addmember",
+    "message": "Required field",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GENDER_MANDATORY_MESSAGE_WEIGHT",
+    "message": "Required field",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GENDER_MANDATORY_MESSAGE_WEIGHT_addmember",
+    "message": "Required field",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GO_BACK_HOME_SCREEN",
+    "message": "Go Back Home",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GO_TO_HOME_SCREEN",
+    "message": "Go To Home Screen",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION",
+    "message": "Grant",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_CAMERA",
+    "message": "Grant",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_LOCATION",
+    "message": "Grant",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_NEARBY",
+    "message": "Grant",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_CAMPAIGN_STOCK",
+    "message": "Stock",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_CAMPAIGN_STOCK_DESC",
+    "message": "Upload stock transactions for this campaign by selecting source and destination facilities, downloading the template, filling in quantities, and uploading it back.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_LOGOUT_CONFIRMATION_DESCRIPTION",
+    "message": "Logging out will end this session. Are you sure you want to logout?",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_LOGOUT_CONFIRMATION_HEADING",
+    "message": "Are you sure you want to logout?",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_STOCK_BALANCE_LABEL",
+    "message": "Stock Balance",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_UPLOAD_STOCK_DATA_BUTTON",
+    "message": "Button",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HF_HOME_SHOWCASE_BENEFICIARY_LABEL",
+    "message": "Click on this button to view beneficiary referral data",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HF_HOME_SHOWCASE_MANAGE_ATTENDANCE",
+    "message": "Click on this button to record attendance of the users",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOKKAIDO12",
+    "message": "Hokkaido",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_BENEFICIARY_ID_LABEL",
+    "message": "Beneficiary IDs",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_BENEFICIARY_LABEL",
+    "message": "Registration & Delivery",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_BENEFICIARY_REFERRAL",
+    "message": "Beneficiary Referral",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_BENEFICIARY_REFERRAL_LABEL",
+    "message": "Beneficiary Referral",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_CLOSE_HOUSEHOLD",
+    "message": "Mark Closed Household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_CLOSE_HOUSEHOLD_LABEL",
+    "message": "Mark Closed Household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_COMMUNAL_LIVING_FACILITIES_LABEL",
+    "message": "Institution",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_DASHBOARD_LABEL",
+    "message": "Dashboard",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_DATA_SHARE_LABEL",
+    "message": "Share Data",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_DATA_SHARING_LABEL",
+    "message": "Share Data",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_DB_LABEL",
+    "message": "DB",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_DISTRIBUTION_LABEL",
+    "message": "ITN Distribution",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_FILE_COMPLAINT",
+    "message": "File Complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_MANAGE_ATTENDANCE_LABEL",
+    "message": "Manage Attendance",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_MANAGE_STOCK",
+    "message": "Manage Stock",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_MANAGE_STOCK_LABEL",
+    "message": "Manage Stock",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_MARK_CLOSE_HOUSEHOLD_LABEL",
+    "message": "Mark Closed Households",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_MY_PROGRESS",
+    "message": "My Progress",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_POLIO_INSIDE_MONITORING_LABEL",
+    "message": "Independent Monitoring",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_POLIO_LQA_DATA_COLLECTION_LABEL",
+    "message": "LQAS",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_POLIO_LQA_DATA_COLLECTION__LABEL",
+    "message": "LQAS",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_POLIO_MISSED_CHILDREN_LABEL",
+    "message": "Missed Children",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_POLIO_REGISTRATION_LABEL",
+    "message": "Enumeration & Immunisation",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_REGISTRATION_DELIVERY_LABEL",
+    "message": "Registration & Delivery",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_STOCK_BALANCE_LABEL",
+    "message": "Stock Balance",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_STOCK_RECONCILIATION",
+    "message": "Stock Reconciliation",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_STOCK_RECONCILIATION_LABEL",
+    "message": "Stock Reconciliation",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_STOCK_SYNC_DATA_LABEL",
+    "message": "Sync Stock Data",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_SUMMARY_REPORT_LABEL",
+    "message": "Summary Report",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_SYNC_DATA_LABEL",
+    "message": "Sync Data",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_TRANSIT_POST_LABEL",
+    "message": "Transit post",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_VIEW_REPORTS_LABEL",
+    "message": "View Reports",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD_BACK",
+    "message": "Back",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD_DETAILS_SHOWCASE_DATE_OF_REGISTRATION",
+    "message": "Displays current date by default and is non-editable",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD_DETAILS_SHOWCASE_NUMBER_OF_MEMBERS_LIVING_IN_HOUSEHOLD",
+    "message": "Captures the number of members living in the household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD_LOCATION_SHOWCASE_ADDRESS",
+    "message": "Captures address details for the household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD_LOCATION_SHOWCASE_ADMINISTRATIVE_AREA",
+    "message": "System captures the administrative boundary and is non-editable",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD_LOCATION_SHOWCASE_LANDMARK",
+    "message": "Captures landmark to help identify household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD_LOCATION_SHOWCASE_POSTAL_CODE",
+    "message": "Captures postal code of the household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL",
+    "message": "visited",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HRMS_BOUNDARY_LABEL",
+    "message": "Area",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HR_EMPLOYMENT_DESIGNATION_LABEL",
+    "message": "Designation",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ICON_LABEL",
+    "message": "Open",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ID_SEARCH_REGISTRATION",
+    "message": "Search by ID",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INDIVIDUAL_DETAILS_INVALID_MOBILE_NUMBER",
+    "message": "Mobile number should be max of 10 digits",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INDIVIDUAL_DETAILS_MOBILE_NUMBER_LENGTH",
+    "message": "Mobile number must be 9 or 10 digits",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INDIVIDUAL_DETAILS_SHOWCASE_FIRST_NAME_OF_INDIVIDUAL",
+    "message": "Captures first name of the individual",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INELIGIBLE",
+    "message": "Ineligible",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_STOCK",
+    "message": "Insufficient stocks",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_STOCK_TITLE",
+    "message": "Insufficient stocks",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVALID_QR_CODE",
+    "message": "Invalid QR code",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVALID_RESOURCE_CODE",
+    "message": "Invalid Barcode",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "IN_COMPLETE",
+    "message": "In complete",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "IN_COMPLETED",
+    "message": "Incomplete",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LLIN-mz",
+    "message": "Bednet",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LOADING_DASHBOARD_CONFIGURATION",
+    "message": "Loading dashboard",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LOCALITY",
+    "message": "Locality",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LOCATION_CAPTURED",
+    "message": "Location captured",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LOGIN_ACTION_LABEL",
+    "message": "Login",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LOGIN_LABEL_TEXT",
+    "message": "Login",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LOG_OUT_WARNING_MESSAGE",
+    "message": "Are you sure you want to end the session?",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LOST_IN_STORAGE",
+    "message": "Lost in storage",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LOST_IN_TRANSIT",
+    "message": "Lost in transit",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Localidade",
+    "message": "Locality",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MANUAL_SCAN",
+    "message": "Couldn't Scan The QR Code?",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MAX_CHARS_ALLOWED",
+    "message": "Maximum {} characters are allowed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MAX_VALUE_ALLOWED",
+    "message": "Max age can be {} months",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MIN_2_CHARS_REQUIRED",
+    "message": "Minimum 2 characters are required",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MIN_VALUE_ALLOWED",
+    "message": "Min age can be {} months",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MOBILE_NUMBER_LABEL_TEXT",
+    "message": "Mobile Number",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MONTHS_HINT_TEXT",
+    "message": "Month(s)",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MY_CHECKLIST_LABEL",
+    "message": "My Checklist",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MY_CHECK_LIST_LABEL",
+    "message": "My Checklist",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MZ_ADMIN_LLIN Bednet",
+    "message": "LLIN Bednet",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MZ_ADMIN_SMC Campaign",
+    "message": "SMC Campaign",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NON_MOBILE_USER_LABEL",
+    "message": "Non mobile users",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NON_MOBILE_USER_QR_BTN_LABEL",
+    "message": "Scan QR",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NON_MOBILE_USER_QR_LABEL",
+    "message": "Non mobile users",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOT_ADMINISTERED",
+    "message": "Not administered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOT_ENOUGH_STOCK",
+    "message": "Not Enough Stock",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOT_REGISTERED",
+    "message": "Not registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOT_VISITED",
+    "message": "Not Administered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_CHECKLISTS_FOUND",
+    "message": "No checklist found",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_COLLECTED_DATA_TO_SHARE",
+    "message": "You have no collected data to share",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_DATA_FOUND",
+    "message": "No Beneficiary Data Found",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_DATA_FOUND_CONTENT",
+    "message": "There are no pre-existing records found for the boundaries you have selected.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_OPTIONS_AVAILABLE",
+    "message": "No options available",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_PROJECTS_ASSIGNED",
+    "message": "No Projects Assigned",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_RESULTS_FOUND",
+    "message": "No results found",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_WATER",
+    "message": "No water",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NTD1_ADMINISTRATION_FAILED",
+    "message": "Administration failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NTD1_ADMINISTRATION_SUCCESS",
+    "message": "Administration success",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NTD1_BENEFICIARY_REFERRED",
+    "message": "Beneficiary referred",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NTD1_BENEFICIARY_REFUSED",
+    "message": "Beneficiary refused",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NTD1_CLOSED_HOUSEHOLD",
+    "message": "Closed household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NTD1_MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL",
+    "message": "Update Delivery",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NTD1_NOT_ADMINISTERED",
+    "message": "Not administered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NTD1_NOT_REGISTERED",
+    "message": "Not registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NTD1_REGISTERED",
+    "message": "Registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Not Delivered",
+    "message": "Not Visited",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "OPEN_SETTINGS",
+    "message": "Settings",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Other",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Others",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Oncho_ADMINISTRATION_FAILED",
+    "message": "Administration failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Oncho_ADMINISTRATION_SUCCESS",
+    "message": "Administration success",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Oncho_BENEFICIARY_REFERRED",
+    "message": "Beneficiary referred",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Oncho_BENEFICIARY_REFUSED",
+    "message": "Beneficiary refused",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Oncho_CLOSED_HOUSEHOLD",
+    "message": "Closed household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Oncho_MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL",
+    "message": "Update Delivery",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Oncho_NOT_ADMINISTERED",
+    "message": "Not administered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Oncho_NOT_REGISTERED",
+    "message": "Not registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Oncho_REGISTERED",
+    "message": "Registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PAYMENTS_LINK_PAYMENTS_ATTENDANCE_SETUP_PAYMENT_ATTRIBUTES",
+    "message": "Setup Payment Attributes",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PENDING_ASSIGNMENT",
+    "message": "Pending",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PENDING_SYNC_CONTENT",
+    "message": "There are pending records for sync in your device. Please sync up your device and then proceed with the Downloading of data.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PENDING_SYNC_LABEL",
+    "message": "Pending Records",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PENDING_SYNC_LOGOUT_DESCRIPTION",
+    "message": "You have unsynced records. Please sync before signing out.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PERFORMANCE_ISSUE",
+    "message": "Performance issue",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PERMISSIONS_ALERT",
+    "message": "Allow required permissions",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PERMISSION_ALERT",
+    "message": "Allow required permissions",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PERMISSION_CONTINUE",
+    "message": "Continue",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PERMISSION_DENIED_OPEN_SETTINGS",
+    "message": "Enable permission in Settings.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY",
+    "message": "Run the app in the background",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PERSON_UNKNOWN_TO_THE_HOUSEHOLD",
+    "message": "Person unknown to the household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PHONE_BATTERY_DIED",
+    "message": "Phone battery died",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PHONE_LOST_OR_STOLEN",
+    "message": "Phone lost or stolen",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PHONE_PERMANENTLY_DAMAGED",
+    "message": "Phone permanently damaged",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PHONE_STORAGE_FULL",
+    "message": "Phone memory or storage full",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PHONE_TECHNICAL_ISSUE",
+    "message": "Phone facing technical issue",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PJ_FAC_PF-2024-04-19-000100",
+    "message": "Project Facility 100",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PJ_FAC_PF-2024-04-19-000102",
+    "message": "Project Facility 102",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PJ_FAC_PF-2024-05-30-000957",
+    "message": "Project Facility 57",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PJ_FAC_PF-2024-05-30-000958",
+    "message": "Project Facility 58",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PJ_FAC_PF-2024-05-30-000959",
+    "message": "Project Facility 59",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PJ_FAC_PF-2024-05-30-000960",
+    "message": "Project Facility 60",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PJ_FAC_PF-2024-05-30-000961",
+    "message": "Project Facility 61",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PJ_FAC_PF-2024-05-30-000962",
+    "message": "Project Facility 62",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PLEASE_ENTER_VALID_FACILITY",
+    "message": "Please enter a valid ID",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROCEED",
+    "message": "Proceed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROCEED_WITHOUT_DOWNLOADING",
+    "message": "Proceed without downloading",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PRODUCTVARIANTS_ERROR",
+    "message": "Failed to fetch product varients!",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PRODUCT_VARIANTS_ERROR",
+    "message": "Failed to fetch product varients!",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROFILE_UPDATE_SUCCESS",
+    "message": "Profile updated succesfully",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROGRESS_INDICATOR_PREFIX_LABEL",
+    "message": "completed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROGRESS_INDICATOR_PREFIX_LABEL_HFREFERRAL",
+    "message": "referral completed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROGRESS_INDICATOR_TITLE",
+    "message": "more to reach target",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROJECT_DETAILS_LABEL",
+    "message": "Projects",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROJECT_ERROR",
+    "message": "Failed to fetch project!",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROJECT_FACILITIES_ERROR",
+    "message": "Failed to fetch facilities!",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROJECT_FACILITY_SEARCH_HEADER_LABEL",
+    "message": "Health Facility Search",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROJECT_STAFF_ERROR",
+    "message": "Failed to fetch project staff!",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Posto Administrativo",
+    "message": "Administrative post",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Provincia",
+    "message": "Province",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QR_LOGIN",
+    "message": "QR Login",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REFERRAL_DOWNLOAD_COMPLETED",
+    "message": "Health facility data download completed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTERED",
+    "message": "Registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_ADMINISTRATION_FAILED",
+    "message": "Vaccination Failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_CURRENT_DOSE_STATUS_ADMINISTERED",
+    "message": "Vaccinated",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_FILTER_NOT_VACCINATED",
+    "message": "Not Vaccinated",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_FILTER_VACCINATED",
+    "message": "Vaccinated",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_PAST_DOSE_STATUS_ADMINISTERED",
+    "message": "Vaccinated",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_PAST_DOSE_STATUS_TOBE_ADMINISTERED",
+    "message": "To be vaccinated",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTRATION_SEARCH_BENEFICIARY_DOWNLOAD_IDS_LABEL",
+    "message": "Download",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RELAY_SEND_ACTION",
+    "message": "Send collected data",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RELAY_SEND_ACTION_DESCRIPTION",
+    "message": "Share the data you collected with a nearby device that will sync it to the server",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REQUIRED",
+    "message": "required",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RESOURCES_ALREADY_SCANNED",
+    "message": "Resource already scanned",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RESOURCE_ALREADY_SCANNED",
+    "message": "Resource already scanned",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RESOURCE_CODE",
+    "message": "Resource code",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RESOURCE_SCANNED",
+    "message": "Resources Scanned",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RESOURCE_SCAN_FAILED",
+    "message": "Resource scan failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RETRY",
+    "message": "Try Again",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNED_QTY_EXCEED_THAN_REQUIRED",
+    "message": "Already 1 QR has been scanned",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_CONTENT",
+    "message": "The number of scanned resources is less than the minimum quantity of {quantity}.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_PRIMARY_ACTION",
+    "message": "Back",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_PRIMARY_BUTTON",
+    "message": "Keep Scanning",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_SECONDARY_ACTION",
+    "message": "Confirm",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_SECONDARY_BUTTON",
+    "message": "Save And Close",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_TITLE",
+    "message": "Scanner",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_TITTLE",
+    "message": "Are You Sure You Want To Go Back?",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_LABEL",
+    "message": "Scan QR Code",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCAN_TO_CONNECT_ACTION",
+    "message": "Scan QR to connect",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCAN_TO_CONNECT_TITLE",
+    "message": "Scan to connect",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SEARCHING_FOR_DEVICE",
+    "message": "Searching for the device…",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SEARCH_EMPLOYEE",
+    "message": "Search User",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SECURITY_ISSUES",
+    "message": "Security issue",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SECURITY_ISSUEs",
+    "message": "Security issue",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SELECT_ALL",
+    "message": "Select all",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SELECT_CHECKLIST_SHOWCASE_SELECT_CHECKLIST",
+    "message": "Click on the checklist which you want to fill",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SELECT_STOCK_SHOWCASE_RECORD_STOCK_ISSUED",
+    "message": "Click on this button to record stock issued",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SELECT_STOCK_SHOWCASE_RECORD_STOCK_RECEIPT",
+    "message": "Click on this button to record stock received",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SELECT_STOCK_SHOWCASE_RECORD_STOCK_RETURNED",
+    "message": "Click on this button to record stock returned",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SEPARATOR_LABEL_TEXT",
+    "message": "(or)",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFINITIONS_ERROR",
+    "message": "Failed to fetch checklist!",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SMC Campaign.HF_RF_FEVER.HEALTH_FACILITY_WORKER.HF...",
+    "message": "Any additional symptoms",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SMC Campaign.HF_RF_FEVER.HEALTH_FACILITY_WORKER.HF_REASON_FEVER_Q1.YES.F1.POSITIVE.FQ2.YES.Q1",
+    "message": "Any additional symptoms",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SMC-Campaign.HF_RF_FEVER.HEALTH_FACILITY_WORKER.HF_REASON_FEVER_Q1.YES.F1.POSITIVE.FQ2.YES.Q1",
+    "message": "Any additional symptoms",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STATUS",
+    "message": "Status",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_DATA_FOUND",
+    "message": "Stock Data Found",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_DATA_FOUND_CONTENT",
+    "message": "Stock records are available and ready to be synced to the application. Sync the records to ensure the latest stock information is available for use.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_DETAILS_NO_PRODUCTS_FOUND",
+    "message": "No products found for this stock.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_DETAILS_QUANTITY_RECEIVED_MAX_ERROR",
+    "message": "Quantity can be from 0 to 10000 only.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_DETAILS_RECEIPT_SHOWCASE_COMMENTS",
+    "message": "You can provide comments if needed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_DETAILS_RECEIPT_SHOWCASE_DRIVER_NAME",
+    "message": "Enter driver's name in this field",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_DETAILS_RECEIPT_SHOWCASE_NUMBER_OF_BEDNETS_RECEIVED",
+    "message": "Enter the quantity of bednets received",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_DETAILS_RECEIPT_SHOWCASE_NUMBER_OF_NETS_INDICATED_ON_PACKING_SLIP",
+    "message": "Enter the quantity of nets indicated on the packaging",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_DETAILS_RECEIPT_SHOWCASE_PACKING_SLIP_ID",
+    "message": "Enter the packaging slip id",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_DETAILS_RECEIPT_SHOWCASE_RECEIVED_FROM",
+    "message": "Select the warehouse from where you have received the stock",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_DETAILS_RECEIPT_SHOWCASE_TYPE_OF_TRANSPORT",
+    "message": "Select type of transport from the dropdown",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_DETAILS_RECEIPT_SHOWCASE_VEHICLE_NUMBER",
+    "message": "Enter vehicle number",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_DETAILS_TRANSPORT_TYPE",
+    "message": "Transport type",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_NO_DATA_FOUND",
+    "message": "No Data Found",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_NO_DATA_FOUND_CONTENT",
+    "message": "There are no new transactions created.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_COUNT_BELOW_MIN",
+    "message": "Count is below minimum",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_COUNT_EXCEEDED_MAX",
+    "message": "Count is above the maximum limit",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_COUNT_EXPECTS_NUMBER",
+    "message": "Count should be numeric",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_COUNT_IS_REQUIRED",
+    "message": "Count is required",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUBMIT_LABEL_TEXT",
+    "message": "Submit",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUMMARY_REPORT_BACK_TO_HOME",
+    "message": "Back To Home",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUMMARY_REPORT_CHILDREN_TREATED",
+    "message": "Children Treated",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUMMARY_REPORT_CHILDREN_TREATED_PERCENT",
+    "message": "Children Treated (%)",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUMMARY_REPORT_DATE",
+    "message": "Date",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUMMARY_REPORT_DESCRIPTION",
+    "message": "This is the report for summary of your activity.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUMMARY_REPORT_HEADING",
+    "message": "Summary Report",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUMMARY_REPORT_HOUSEHOLDS_REGISTERED",
+    "message": "Households Registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUMMARY_REPORT_INFO_DESCRIPTION",
+    "message": "Displays a daily summary of households registered, children treated, activity details, and stock balance to track CDDs progress.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUMMARY_REPORT_INFO_TITLE",
+    "message": "Info",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUMMARY_REPORT_STOCK_BALANCE",
+    "message": "Balance",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUMMARY_REPORT_STOCK_CONSUMED",
+    "message": "Consumed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUMMARY_REPORT_STOCK_RECEIVED",
+    "message": "Received",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUMMARY_REPORT_STOCK_RETURNED",
+    "message": "Returned",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUPERVISOR_HOME_SHOWCASE_COMPLAINTS",
+    "message": "Click on this button to file a complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUPERVISOR_HOME_SHOWCASE_MY_CHECKLIST",
+    "message": "Click on this button to fill the assigned checklists",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUPERVISOR_HOME_SHOWCASE_PROGRESS_BAR",
+    "message": " ",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUPERVISOR_HOME_SHOWCASE_SYNC_DATA",
+    "message": "Click on this button to sync records manually",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_COMPLETE",
+    "message": "Sync completed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_DIALOG_ALL_SYNCED_DESCRIPTION",
+    "message": "You're already using the latest available data.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_DIALOG_CLOSE_BUTTON_LABEL",
+    "message": "Close",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_DIALOG_CONNECTION_TIMED_OUT",
+    "message": "Connection Timed Out",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_DIALOG_DATA_SYNCED_TITLE",
+    "message": "Data Synced Successfully",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_DIALOG_DOWN_SYNC_FAILED_TITLE",
+    "message": "Sync Down Failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_DIALOG_NETWORK_ERROR",
+    "message": "Network Error",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_DIALOG_NO_DATA_TO_SYNC_TITLE",
+    "message": "You're All Synced!",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_DIALOG_NO_INTERNET_CONNECTION",
+    "message": "No Internet Connection",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_DIALOG_RETRY_BUTTON_LABEL",
+    "message": "Retry",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_DIALOG_SERVER_ERROR",
+    "message": "Server Error",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_DIALOG_SESSION_EXPIRED",
+    "message": "Your session has expired. Please verify again.",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_DIALOG_SYNC_FAILED_TITLE",
+    "message": "Sync failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_DIALOG_SYNC_IN_PROGRESS_TITLE",
+    "message": "Sync in progress",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_DIALOG_UP_SYNC_FAILED_TITLE",
+    "message": "Sync Up Failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_FAILED",
+    "message": "Sync failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_IN_PROGRESS",
+    "message": "Data Sync in Progress",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNC_NOT_WORKING",
+    "message": "Sync Not Working",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Schisto_ADMINISTRATION_FAILED",
+    "message": "Administration failed",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Schisto_ADMINISTRATION_SUCCESS",
+    "message": "Administration success",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Schisto_BENEFICIARY_REFERRED",
+    "message": "Beneficiary referred",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Schisto_BENEFICIARY_REFUSED",
+    "message": "Beneficiary refused",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Schisto_CLOSED_HOUSEHOLD",
+    "message": "Closed household",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Schisto_MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL",
+    "message": "Update Delivery",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Schisto_NOT_ADMINISTERED",
+    "message": "Not administered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Schisto_NOT_REGISTERED",
+    "message": "Not registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Schisto_REGISTERED",
+    "message": "Registered",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TECHNICAL_ISSUES",
+    "message": "Technical issue",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TOTAL_RECORD_DOWNLOAD",
+    "message": "Total record downloaded",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TO_ADMINISTER",
+    "message": "To administer",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TO_ADMINISTRATION_FLOW",
+    "message": "**Vaccinate**",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRAIN",
+    "message": "Train",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSACTION_DETAILS_LABEL",
+    "message": "Transaction details",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSPORT_TYPE_3",
+    "message": "Ship",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UNIQUE_BENEFICIARY_ID",
+    "message": "Token ID",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "USER_ACCOUNT_ISSUES",
+    "message": "User account issue",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "VIEW_ATTENDANCE",
+    "message": "View Attendance",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "VILLAGE",
+    "message": "Village",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "VISITED",
+    "message": "Visited",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "VOMITTING",
+    "message": "Vomitting",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_DETAILS_SHOWCASE_ADMINISTRATIVE_UNIT",
+    "message": "System captures the administrative boundary and is non-editable",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_DETAILS_SHOWCASE_DATE_OF_RECEIPT",
+    "message": "Select the date when the stock transaction is taking place",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_DETAILS_SHOWCASE_WAREHOUSE_NAME",
+    "message": "Select the warehouse where the stock transaction is taking place",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_MANAGER_HOME_SHOWCASE_CHECKLIST",
+    "message": "Click on this button to fill the assigned checklists",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_MANAGER_HOME_SHOWCASE_DELETE_ALL",
+    "message": "Click on this button to delete all the data available in the device",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_MANAGER_HOME_SHOWCASE_FILE_COMPLAINT",
+    "message": "Click on this button to file a complaint",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_MANAGER_HOME_SHOWCASE_INVENTORY_REPORT",
+    "message": "Click on this button to view stock transaction reports",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_MANAGER_HOME_SHOWCASE_MANAGE_STOCK",
+    "message": "Click on this button to record stock transaction data",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_MANAGER_HOME_SHOWCASE_STOCK_RECONCILIATION",
+    "message": "Click on this button to reconcile the available stock in the warehouse",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WAREHOUSE_MANAGER_HOME_SHOWCASE_SYNC_DATA",
+    "message": "Click on this button to sync records manually",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "YEARS_HINT_TEXT",
+    "message": "Year(s)",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "administrationSuccess",
+    "message": "Vaccinated Successfully",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "coreCommonOk",
+    "message": "Ok",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "delivered",
+    "message": "Visited",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "householdOverViewDeliveredIconLabel",
+    "message": "visited",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "householdOverViewNotDeliveredIconLabel",
+    "message": "Not Visited",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "notVisited",
+    "message": "Not Vaccinated",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "status",
+    "message": "Vaccination status",
+    "module": "hcm-common",
+    "locale": "en_DEMO"
+  }
+]

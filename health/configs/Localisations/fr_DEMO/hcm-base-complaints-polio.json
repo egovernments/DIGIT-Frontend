@@ -739,7 +739,7 @@
   },
   {
     "code": "DELIVERY",
-    "message": "Détails de livraison",
+    "message": "Détails de la vaccination",
     "module": "hcm-base-complaints-polio",
     "locale": "fr_DEMO"
   },
@@ -895,7 +895,7 @@
   },
   {
     "code": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
-    "message": "Commentaires de livraison",
+    "message": "Commentaires sur la vaccination",
     "module": "hcm-base-complaints-polio",
     "locale": "fr_DEMO"
   },
@@ -1807,7 +1807,7 @@
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Livraison réussie",
+    "message": "Vaccination réussie",
     "module": "hcm-base-complaints-polio",
     "locale": "fr_DEMO"
   },

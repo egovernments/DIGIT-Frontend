@@ -349,7 +349,7 @@
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
-    "message": "Crosse endommagée",
+    "message": "Stock endommagé",
     "module": "hcm-base-stockreconciliation-mr-dn",
     "locale": "fr_DEMO"
   },

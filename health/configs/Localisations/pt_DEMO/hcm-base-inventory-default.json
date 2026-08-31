@@ -415,7 +415,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_viewTransaction_NO_TRANSACTIONS_FOUND_INFOCARD_DESCRIPTION",
-    "message": "Não há transações disponíveis no momento.",
+    "message": "Não encontramos nenhuma transação de ações para exibir. Assim que uma transação for registrada, ela aparecerá aqui.",
     "module": "hcm-base-inventory-default",
     "locale": "pt_DEMO"
   },
@@ -547,7 +547,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-inventory-default",
     "locale": "pt_DEMO"
   },

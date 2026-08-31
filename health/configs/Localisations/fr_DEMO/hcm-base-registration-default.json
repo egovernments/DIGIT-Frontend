@@ -247,7 +247,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-default",
     "locale": "fr_DEMO"
   },
@@ -1207,7 +1207,7 @@
   },
   {
     "code": "BENEFICIARY_DETAILS_HEADING",
-    "message": "Détails de livraison",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-default",
     "locale": "fr_DEMO"
   },
@@ -1231,7 +1231,7 @@
   },
   {
     "code": "Beneficiary details",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-default",
     "locale": "fr_DEMO"
   },
@@ -1333,7 +1333,7 @@
   },
   {
     "code": "DOSE",
-    "message": "Numéro de livraison",
+    "message": "Numéro de livraison.",
     "module": "hcm-base-registration-default",
     "locale": "fr_DEMO"
   },
@@ -1471,7 +1471,7 @@
   },
   {
     "code": "HOUSEHOLD_LOCALITY",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-registration-default",
     "locale": "fr_DEMO"
   },

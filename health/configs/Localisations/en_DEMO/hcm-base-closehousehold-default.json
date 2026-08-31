@@ -19,13 +19,13 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiary Absent",
+    "message": "Beneficiary absent",
     "module": "hcm-base-closehousehold-default",
     "locale": "en_DEMO"
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "Beneficiary Refused",
+    "message": "Beneficiary refused",
     "module": "hcm-base-closehousehold-default",
     "locale": "en_DEMO"
   },
@@ -199,13 +199,13 @@
   },
   {
     "code": "NOTENOUGHSTOCK",
-    "message": "Not Enough Stock",
+    "message": "Not enough stock",
     "module": "hcm-base-closehousehold-default",
     "locale": "en_DEMO"
   },
   {
     "code": "NotEnoughStock",
-    "message": "Not Enough Stock",
+    "message": "Not enough stock",
     "module": "hcm-base-closehousehold-default",
     "locale": "en_DEMO"
   },
@@ -247,7 +247,7 @@
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Delivery Successful",
+    "message": "Delivery successful",
     "module": "hcm-base-closehousehold-default",
     "locale": "en_DEMO"
   },
@@ -265,7 +265,7 @@
   },
   {
     "code": "SyncNotWorking",
-    "message": "Sync Not Working",
+    "message": "Sync not working",
     "module": "hcm-base-closehousehold-default",
     "locale": "en_DEMO"
   },

@@ -19,7 +19,7 @@
   },
   {
     "code": "ADMINISTRATION_FAILED",
-    "message": "Vaccination Failed",
+    "message": "Vaccination failed",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -121,19 +121,19 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiary Absent",
+    "message": "Beneficiary absent",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiary Referred",
+    "message": "Beneficiary referred",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "Beneficiary Refused",
+    "message": "Beneficiary refused",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -187,7 +187,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Closed Household",
+    "message": "Closed household",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -409,13 +409,13 @@
   },
   {
     "code": "Data Issues",
-    "message": "Data Issues",
+    "message": "Data issues",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "DataIssues",
-    "message": "Data Issues",
+    "message": "Data issues",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -457,7 +457,7 @@
   },
   {
     "code": "HCM.ID_TYPE_OPTIONS_POPULATOR",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -541,7 +541,7 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_REASON_NOT_VISITED",
-    "message": "Not Visited",
+    "message": "Not visited",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -703,13 +703,13 @@
   },
   {
     "code": "HCM_DELIVERY_COMMENTS_LABEL",
-    "message": "Delivery comments",
+    "message": "Vaccination comments",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "HCM_DELIVERY_COMMENT_ABSENT",
-    "message": "Beneficiary Absent",
+    "message": "Beneficiary absent",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -721,37 +721,37 @@
   },
   {
     "code": "HCM_DELIVERY_COMMENT_REFUSED",
-    "message": "Beneficiary Refused",
+    "message": "Beneficiary refused",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "HCM_DELIVERY_COMMENT_SUCCESSFUL",
-    "message": "Delivery Successful",
+    "message": "Vaccination successful",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "HCM_DELIVERY_DATE_LABEL",
-    "message": "Date of delivery",
+    "message": "Date of vaccination",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "HCM_DELIVERY_DETAILS_DESCRIPTION",
-    "message": "Capture details of the resources to be delivered",
+    "message": "Capture the vaccination details",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "HCM_DELIVERY_DETAILS_HEADING",
-    "message": "Delivery Details",
+    "message": "Vaccination Details",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "HCM_DELIVERY_RECORD_DELIVERY_BUTTON",
-    "message": "Record Delivery",
+    "message": "Record Vaccination",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -769,13 +769,13 @@
   },
   {
     "code": "HCM_DELIVERY_SAVE_BUTTON",
-    "message": "Save Delivery",
+    "message": "Save Vaccination",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "HCM_DELIVERY_SCAN_LABEL",
-    "message": "Scan Delivery",
+    "message": "Scan Vaccination",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -823,13 +823,13 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTERED_SUCCESS_TAG",
-    "message": "Vaccinated Successfully",
+    "message": "Vaccinated successfully",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_BENEFICIARY_REFERRED_TAG",
-    "message": "Beneficiary Referred",
+    "message": "Beneficiary referred",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -841,7 +841,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_DELIVER_INTERVENTION_BUTTON",
-    "message": "Deliver Intervention",
+    "message": "Vaccinate",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -877,19 +877,19 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_HEAD_TAG",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_NOT_ELIGIBLE_TAG",
-    "message": "Not Eligible",
+    "message": "Not eligible",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_NOT_VISITED_TAG",
-    "message": "Not Visited",
+    "message": "Not visited",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -2047,7 +2047,7 @@
   },
   {
     "code": "NOTENOUGHSTOCK",
-    "message": "Not Enough Stock",
+    "message": "Not enough stock",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -2071,13 +2071,13 @@
   },
   {
     "code": "NOT_VISITED",
-    "message": "Not Visited",
+    "message": "Not visited",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "NotEnoughStock",
-    "message": "Not Enough Stock",
+    "message": "Not enough stock",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -2113,25 +2113,25 @@
   },
   {
     "code": "PROXIMITY_SEARCH",
-    "message": "Nearby Households",
+    "message": "Nearby households",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "PROXIMITY_SEARCH_REGISTRATION",
-    "message": "Nearby Households",
+    "message": "Nearby households",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "PerformanceIssue",
-    "message": "Performance Issue",
+    "message": "Performance issue",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "QUANTITY_RECEIVED",
-    "message": "Quantity Received",
+    "message": "Quantity received",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -2197,7 +2197,7 @@
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Delivery Successful",
+    "message": "Vaccination successful",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -2209,13 +2209,13 @@
   },
   {
     "code": "Security Issues",
-    "message": "Security Issues",
+    "message": "Security issues",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "SecurityIssues",
-    "message": "Security Issues",
+    "message": "Security issues",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -2233,7 +2233,7 @@
   },
   {
     "code": "SyncNotWorking",
-    "message": "Sync Not Working",
+    "message": "Sync not working",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -2263,13 +2263,13 @@
   },
   {
     "code": "Technical Issues",
-    "message": "Technical Issues",
+    "message": "Technical issues",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "TechnicalIssues",
-    "message": "Technical Issues",
+    "message": "Technical issues",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
@@ -2281,13 +2281,13 @@
   },
   {
     "code": "User Account Issues",
-    "message": "User Account Issues",
+    "message": "User account issues",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "UserAccountIssues",
-    "message": "User Account Issues",
+    "message": "User account issues",
     "module": "hcm-base-closehousehold-polio",
     "locale": "en_DEMO"
   },

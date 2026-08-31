@@ -577,7 +577,7 @@
   },
   {
     "code": "ADD_LOCALISATION_BREADCRUMB",
-    "message": "Ajouter des localisations",
+    "message": "Télécharger des traductions",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -751,7 +751,7 @@
   },
   {
     "code": "APPCONFIG_MIN_LESS_EQUAL_MAX",
-    "message": "La plage minimale doit être inférieure à la plage maximale",
+    "message": "La valeur minimale doit être inférieure à la valeur maximale.",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -979,7 +979,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -1861,7 +1861,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_REDOSE",
-    "message": "Catégorie Redose",
+    "message": "Revisiter",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -1939,7 +1939,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_BENEFICIARYDETAILS",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -2095,7 +2095,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
-    "message": "Gestionnaire d'autorisations",
+    "message": "Autorisations des applications",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -2209,7 +2209,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_STOCK",
-    "message": "Stocks de vaccins au niveau des équipes",
+    "message": "Détails des stocks au niveau de l'équipe",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -2275,7 +2275,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_VIEWTRANSACTIONDETAILS",
-    "message": "Afficher les détails de la transaction",
+    "message": "Détails de la transaction",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -2305,13 +2305,13 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_SENT_OUT_FROM_THE_WAREHOUSE_DESCRIPTION",
-    "message": "Créer des enregistrements pour le stock envoyé depuis l'entrepôt",
+    "message": "Enregistrez les articles en stock sortis ou retournés à l’entrepôt.",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
-    "message": "Enregistrer le stock envoyé",
+    "message": "Enregistrer une transaction boursière",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -2551,7 +2551,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
-    "message": "Gestionnaire d'autorisations",
+    "message": "Autorisations des applications",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -2767,7 +2767,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_VIEWTRANSACTIONDETAILS",
-    "message": "Afficher les détails de la transaction",
+    "message": "Détails de la transaction",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -3163,7 +3163,7 @@
   },
   {
     "code": "BENEFICIARY_DETAILS_HEADING",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -3517,7 +3517,7 @@
   },
   {
     "code": "Beneficiary details",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -3529,7 +3529,7 @@
   },
   {
     "code": "BeneficiaryDetails",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -3571,7 +3571,7 @@
   },
   {
     "code": "CAMPAIGN_ADD_MORE_PRODUCT_BUTTON",
-    "message": "Ajouter des ressources",
+    "message": "Ajouter une ressource",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -3757,7 +3757,7 @@
   },
   {
     "code": "CAMPAIGN_CYCLE",
-    "message": "Distribution",
+    "message": "Faire du vélo",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -3769,7 +3769,7 @@
   },
   {
     "code": "CAMPAIGN_CYCLE_CONFIGURE_HEADING_BEDNET",
-    "message": "Configurer les cycles et livraisons pour les campagnes de type Bednet.",
+    "message": "Configurez les cycles et les livraisons pour Bednet Distribution.",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -3949,7 +3949,7 @@
   },
   {
     "code": "CAMPAIGN_DELIVERY_TAB_SUB_TEXT_BEDNET",
-    "message": "Configurez les règles de livraison pour les campagnes de type Bednet.",
+    "message": "Configurez les règles de livraison pour Bednet Distribution.",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -4069,7 +4069,7 @@
   },
   {
     "code": "CAMPAIGN_DOWNLOADING_TEMPLATE",
-    "message": "Veuillez patienter, téléchargement du modèle",
+    "message": "Préparation de votre modèle pour le téléchargement",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -4321,13 +4321,13 @@
   },
   {
     "code": "CAMPAIGN_PRODUCTS_MODAL_HEADER_TEXT",
-    "message": "Configurer les ressources",
+    "message": "Ajouter une ressource à livrer",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
   {
     "code": "CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION",
-    "message": "Ajouter des ressources",
+    "message": "Ajouter une ressource",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -4363,7 +4363,7 @@
   },
   {
     "code": "CAMPAIGN_PROJECT_BEDNET",
-    "message": "Campagne de type moustiquaire",
+    "message": "Distribution de moustiquaires",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -4807,7 +4807,7 @@
   },
   {
     "code": "CAMPAIGN_UPLOADING_FILE",
-    "message": "Téléchargement du fichier",
+    "message": "Préparer les choses pour votre téléchargement...",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -5455,7 +5455,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Date",
+    "message": "Date de la plainte",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -5467,7 +5467,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Taper",
+    "message": "Type de plainte",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -6655,7 +6655,7 @@
   },
   {
     "code": "DOSE",
-    "message": "Numéro de livraison",
+    "message": "Numéro de livraison.",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -7243,13 +7243,13 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_HEADER",
-    "message": "Voulez-vous télécharger le fichier microplan",
+    "message": "Voulez-vous télécharger le modèle de microplan ?",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT",
-    "message": "Téléchargez un fichier unique contenant les données sur les installations, les utilisateurs et les cibles requises pour la configuration et la planification de votre campagne.",
+    "message": "Téléchargez un modèle pour ajouter les données d'installation, d'utilisateur et de cible requises pour la configuration et la planification de votre campagne.",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -9523,7 +9523,7 @@
   },
   {
     "code": "HCM_CHOOSE_MODULE",
-    "message": "Configurez les modules nécessaires à votre campagne",
+    "message": "Modules d'applications mobiles",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -12703,7 +12703,7 @@
   },
   {
     "code": "HOUSEHOLD_LOCALITY",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -13039,13 +13039,13 @@
   },
   {
     "code": "INVENTORY_RECORD_LESS_EXCESS_DESCRIPTION",
-    "message": "Créer des registres de stock pour les pertes/excédents",
+    "message": "Déclarez les quantités en stock inférieures ou supérieures à la quantité attendue.",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
   {
     "code": "INVENTORY_RECORD_LESS_EXCESS_HEADING",
-    "message": "Enregistrer le stock en moins/en excès",
+    "message": "Signaler un écart de stock",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -14743,7 +14743,7 @@
   },
   {
     "code": "PLEASE_WAIT_WHILE_ADDING_BOUNDARIES",
-    "message": "Veuillez patienter pendant que nous ajoutons des limites",
+    "message": "Veuillez patienter pendant que nous ajoutons vos limites",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -14785,7 +14785,7 @@
   },
   {
     "code": "POPUP_TITLE",
-    "message": "Titre de la fenêtre contextuelle",
+    "message": "Titre du pop-up",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -15739,7 +15739,7 @@
   },
   {
     "code": "SEARCH_CHECKLIST",
-    "message": "Liste de contrôle de recherche",
+    "message": "Configurer la liste de contrôle",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -15985,7 +15985,7 @@
   },
   {
     "code": "STOCK",
-    "message": "Stocks de vaccins au niveau des équipes",
+    "message": "Détails des stocks au niveau de l'équipe",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -16345,19 +16345,19 @@
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_BUTTONS",
-    "message": "Configurer les boutons d'action qui apparaîtront dans la section de sous-en-tête",
+    "message": "Les boutons sont les actions disponibles pour les utilisateurs sur l'écran.",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_FIELDS",
-    "message": "Ajoutez des champs qui seront affichés dans la section de sous-en-tête sous l'en-tête principal",
+    "message": "Les champs de formulaire sont les champs que les utilisateurs peuvent remplir ou afficher dans l'application.",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE",
-    "message": "Éléments du modèle",
+    "message": "Les éléments du modèle sont les champs et les sections inclus dans le modèle.",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -17515,7 +17515,7 @@
   },
   {
     "code": "complaintView",
-    "message": "Vue des plaintes",
+    "message": "Résumé de la plainte",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },
@@ -18175,7 +18175,7 @@
   },
   {
     "code": "viewTransactionDetails",
-    "message": "Afficher les détails de la transaction",
+    "message": "Détails de la transaction",
     "module": "hcm-campaignmanager",
     "locale": "fr_DEMO"
   },

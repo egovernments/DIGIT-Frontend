@@ -37,7 +37,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-closehousehold-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -385,13 +385,13 @@
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiário Indicado",
+    "message": "Beneficiário indicado",
     "module": "hcm-base-closehousehold-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Domicílio Fechado",
+    "message": "Domicílio fechado",
     "module": "hcm-base-closehousehold-mr-dn",
     "locale": "pt_DEMO"
   },

@@ -19,7 +19,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_PERMISSIONHANDLER",
-    "message": "Autorisation de l'application",
+    "message": "Autorisations des applications",
     "module": "hcm-base-permissionhandler-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -1681,7 +1681,7 @@
   },
   {
     "code": "coreCommonPermissionBluetoothscanDesc",
-    "message": "Recherchez les appareils Bluetooth à proximité.",
+    "message": "Scannez et connectez-vous aux appareils à proximité.",
     "module": "hcm-base-permissionhandler-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -1939,7 +1939,7 @@
   },
   {
     "code": "textTemplate4",
-    "message": "Désactivez l'optimisation de la batterie pour que l'application continue de fonctionner pendant le travail sur le terrain.",
+    "message": "Exécutez l'application en arrière-plan.",
     "module": "hcm-base-permissionhandler-mr-dn",
     "locale": "fr_DEMO"
   },

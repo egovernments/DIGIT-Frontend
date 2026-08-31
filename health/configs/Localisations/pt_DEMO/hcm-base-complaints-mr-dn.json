@@ -31,7 +31,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_COMPLAINTVIEW",
-    "message": "Visualização de reclamações",
+    "message": "Resumo da reclamação",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -73,7 +73,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -193,7 +193,7 @@
   },
   {
     "code": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_ACTION_LABEL",
-    "message": "Voltar para reclamações",
+    "message": "Voltar para a caixa de entrada de reclamações",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -523,7 +523,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_ACTION_LABEL",
-    "message": "Voltar para reclamações",
+    "message": "Voltar para a caixa de entrada de reclamações",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -541,7 +541,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Data",
+    "message": "Data da reclamação",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -553,7 +553,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Tipo",
+    "message": "Tipo de reclamação",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -979,7 +979,7 @@
   },
   {
     "code": "backToComplaints",
-    "message": "Voltar para reclamações",
+    "message": "Voltar para a caixa de entrada de reclamações",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1009,7 +1009,7 @@
   },
   {
     "code": "close",
-    "message": "Voltar para reclamações",
+    "message": "Voltar para a caixa de entrada de reclamações",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1075,7 +1075,7 @@
   },
   {
     "code": "complaintView",
-    "message": "Visualização da reclamação",
+    "message": "Resumo da reclamação",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1111,7 +1111,7 @@
   },
   {
     "code": "labelPairComplaint",
-    "message": " ",
+    "message": "Detalhes da reclamação",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "pt_DEMO"
   },

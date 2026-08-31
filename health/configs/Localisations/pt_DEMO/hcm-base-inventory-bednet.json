@@ -985,7 +985,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_viewTransaction_NO_TRANSACTIONS_FOUND_INFOCARD_DESCRIPTION",
-    "message": "Não há transações disponíveis no momento.",
+    "message": "Não encontramos nenhuma transação de ações para exibir. Assim que uma transação for registrada, ela aparecerá aqui.",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -1147,13 +1147,13 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiário Indicado",
+    "message": "Beneficiário indicado",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -1189,7 +1189,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Domicílio Fechado",
+    "message": "Domicílio fechado",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -1573,7 +1573,7 @@
   },
   {
     "code": "INVENTORY_NO_TRANSACTIONS_DESCRIPTION",
-    "message": "Nenhuma transação de ações encontrada",
+    "message": "Não encontramos nenhuma transação de ações para exibir. Assim que uma transação for registrada, ela aparecerá aqui.",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2095,7 +2095,7 @@
   },
   {
     "code": "INVENTORY_SELECT_TRANSACTION_LABEL",
-    "message": "Selecione a transação",
+    "message": "Selecione Transação",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -2317,7 +2317,7 @@
   },
   {
     "code": "Inventory_no_transactions_description",
-    "message": "Não há novas transações criadas.",
+    "message": "Não encontramos nenhuma transação de ações para exibir. Assim que uma transação for registrada, ela aparecerá aqui.",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3721,7 +3721,7 @@
   },
   {
     "code": "inventorySelectTransactionLabel",
-    "message": "Selecione a transação",
+    "message": "Selecione Transação",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },
@@ -3763,7 +3763,7 @@
   },
   {
     "code": "labelPairList",
-    "message": " ",
+    "message": "Detalhes do recebimento de estoque",
     "module": "hcm-base-inventory-bednet",
     "locale": "pt_DEMO"
   },

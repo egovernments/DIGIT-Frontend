@@ -13,7 +13,7 @@
   },
   {
     "code": "ADMINISTRATION_FAILED",
-    "message": "Falha na vacinação",
+    "message": "A vacinação falhou",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -217,13 +217,13 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiário Indicado",
+    "message": "Beneficiário indicado",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -301,7 +301,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Domicílio Fechado",
+    "message": "Domicílio fechado",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -847,13 +847,13 @@
   },
   {
     "code": "HCM_DELIVERY_COMMENTS_LABEL",
-    "message": "Comentários de entrega",
+    "message": "Comentários sobre vacinação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_DELIVERY_COMMENT_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -871,31 +871,31 @@
   },
   {
     "code": "HCM_DELIVERY_COMMENT_SUCCESSFUL",
-    "message": "Entrega bem-sucedida",
+    "message": "Vacinação bem sucedida",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_DELIVERY_DATE_LABEL",
-    "message": "Data de entrega",
+    "message": "Data da vacinação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_DELIVERY_DETAILS_DESCRIPTION",
-    "message": "Capture detalhes dos recursos a serem entregues",
+    "message": "Capture os detalhes da vacinação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_DELIVERY_DETAILS_HEADING",
-    "message": "Detalhes da entrega",
+    "message": "Detalhes da vacinação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_DELIVERY_RECORD_DELIVERY_BUTTON",
-    "message": "Entrega de registro",
+    "message": "Registrar vacinação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -913,13 +913,13 @@
   },
   {
     "code": "HCM_DELIVERY_SAVE_BUTTON",
-    "message": "Salvar entrega",
+    "message": "Salvar vacinação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_DELIVERY_SCAN_LABEL",
-    "message": "Entrega de digitalização",
+    "message": "Digitalizar vacinação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -973,7 +973,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_BENEFICIARY_REFERRED_TAG",
-    "message": "Beneficiário Indicado",
+    "message": "Beneficiário indicado",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -985,7 +985,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_DELIVER_INTERVENTION_BUTTON",
-    "message": "Entregar intervenção",
+    "message": "Vacinar",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -1471,7 +1471,7 @@
   },
   {
     "code": "HEALTH_FACILITY",
-    "message": "Unidade de Saúde",
+    "message": "Unidade de saúde",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -1633,7 +1633,7 @@
   },
   {
     "code": "IHM_ENUM_HEALTH_FACILITY",
-    "message": "Unidade de Saúde",
+    "message": "Unidade de saúde",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -2155,7 +2155,7 @@
   },
   {
     "code": "IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Comentários Finais",
+    "message": "Comentários finais",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -2233,7 +2233,7 @@
   },
   {
     "code": "IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },
@@ -3967,7 +3967,7 @@
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Entrega bem-sucedida",
+    "message": "Vacinação bem sucedida",
     "module": "hcm-base-insidemonitoring-polio",
     "locale": "pt_DEMO"
   },

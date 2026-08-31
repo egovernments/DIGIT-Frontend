@@ -684,6 +684,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "LOCALISATION_SEARCH",
+    "message": "Localization Search",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "MANAGE_MASTER_DATA",
     "message": "Manage Master data",
     "module": "hcm-workbench",
@@ -798,6 +804,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "WBH_ADD_LOCALISATION",
+    "message": "Add Localization",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "WBH_BOUNDARY_CREATION_FAIL",
     "message": "Boundary creation has failed",
     "module": "hcm-workbench",
@@ -888,8 +900,32 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "WBH_LOCALISATION_SEARCH_HEADER",
+    "message": "Search Localization",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "WBH_LOC_BULK_UPLOAD_XLS",
     "message": "Bulk Upload Boundaries",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_LOC_CODE",
+    "message": "Code",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_LOC_LANG",
+    "message": "Language",
+    "module": "hcm-workbench",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_LOC_MODULE",
+    "message": "Module",
     "module": "hcm-workbench",
     "locale": "en_DEMO"
   },

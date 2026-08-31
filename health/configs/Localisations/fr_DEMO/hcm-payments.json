@@ -1075,7 +1075,7 @@
   },
   {
     "code": "HCM_AM_BREADCRUMBS_PAYMENT_SETUP_SUCCESS",
-    "message": "Configuration du paiement",
+    "message": "Réussite de la configuration du paiement",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -1489,7 +1489,7 @@
   },
   {
     "code": "HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE",
-    "message": "Rapport pas encore disponible. Il ne sera disponible qu’une fois l’inscription approuvée.",
+    "message": "Rapport pas encore disponible. Il ne sera disponible qu'après l'approbation des registres.",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },

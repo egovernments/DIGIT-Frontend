@@ -1345,13 +1345,13 @@
   },
   {
     "code": "STOCKRECON_REPORT_TABLE_HEADER_PHYSICAL_COUNT",
-    "message": "Nombre physique",
+    "message": "Comptage physique",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_DAMAGED",
-    "message": "Crosse endommagée",
+    "message": "Stock endommagé",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1519,7 +1519,7 @@
   },
   {
     "code": "STOCKREPORTS_TABLE_HEADER_PHYSICAL_COUNT",
-    "message": "Nombre physique",
+    "message": "Comptage physique",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1705,7 +1705,7 @@
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
-    "message": "Crosse endommagée",
+    "message": "Stock endommagé",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -2023,7 +2023,7 @@
   },
   {
     "code": "stockDamagedHeading",
-    "message": "Crosse endommagée",
+    "message": "Stock endommagé",
     "module": "hcm-base-stockreports-co-delivery",
     "locale": "fr_DEMO"
   },

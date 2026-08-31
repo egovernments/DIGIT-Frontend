@@ -415,7 +415,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_viewTransaction_NO_TRANSACTIONS_FOUND_INFOCARD_DESCRIPTION",
-    "message": "Aucune transaction n'est disponible pour le moment.",
+    "message": "Nous n'avons trouvé aucune transaction boursière à afficher. Une fois qu'une transaction est enregistrée, elle apparaîtra ici.",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },
@@ -937,7 +937,7 @@
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
-    "message": "Crosse endommagée",
+    "message": "Stock endommagé",
     "module": "hcm-base-inventory-default",
     "locale": "fr_DEMO"
   },

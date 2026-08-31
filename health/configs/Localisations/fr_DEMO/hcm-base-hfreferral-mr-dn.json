@@ -37,7 +37,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_HFREFERRAL",
-    "message": "Référence HF",
+    "message": "Référence",
     "module": "hcm-base-hfreferral-mr-dn",
     "locale": "fr_DEMO"
   },

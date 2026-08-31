@@ -1,5 +1,11 @@
 [
   {
+    "code": "APP_CONFIG_CATEGORY_PERMISSIONHANDLER",
+    "message": "App Permissions",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "CORE_COMMON_ALLOW_BACKGROUND_ACTIVITY",
     "message": "Please check if background activiry is enabled from settings",
     "module": "hcm-base-permissionhandler-default",

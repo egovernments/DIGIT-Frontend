@@ -277,7 +277,7 @@
   },
   {
     "code": "APPCONFIG_MIN_LESS_EQUAL_MAX",
-    "message": "La plage minimale doit être inférieure à la plage maximale",
+    "message": "La valeur minimale doit être inférieure à la valeur maximale.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -661,7 +661,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -1171,7 +1171,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_DETAILS_SCREEN_HEADING",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -1675,7 +1675,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_HFREFERRAL",
-    "message": "Référence HF",
+    "message": "Référence",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -1777,7 +1777,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_BENEFICIARYDETAILS",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -1825,7 +1825,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_COMPLAINTVIEW",
-    "message": "Vue des plaintes",
+    "message": "Résumé de la plainte",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -2017,7 +2017,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_VIEWTRANSACTIONDETAILS",
-    "message": "Afficher les détails de la transaction",
+    "message": "Détails de la transaction",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -2071,7 +2071,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_BENEFICIARYDETAILS",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -2113,7 +2113,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_COMPLAINTVIEW",
-    "message": "Vue des plaintes",
+    "message": "Résumé de la plainte",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -2407,7 +2407,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_VIEWTRANSACTIONDETAILS",
-    "message": "Afficher les détails de la transaction",
+    "message": "Détails de la transaction",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -2587,13 +2587,13 @@
   },
   {
     "code": "BENEFICIARY_DETAILS_HEADING",
-    "message": "Détails de livraison",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_DIED",
-    "message": "Bénéficiaire décédé",
+    "message": "Le bénéficiaire est décédé",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -2683,7 +2683,7 @@
   },
   {
     "code": "Beneficiary details",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -3757,7 +3757,7 @@
   },
   {
     "code": "DIGIT_LOC_SELECT_MODULE_PLACEHOLDER",
-    "message": "Sélectionner un module",
+    "message": "Sélectionnez le module",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -3805,7 +3805,7 @@
   },
   {
     "code": "DOSE",
-    "message": "Numéro de livraison",
+    "message": "Numéro de livraison.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -3949,13 +3949,13 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_HEADER",
-    "message": "Voulez-vous télécharger le fichier unifié",
+    "message": "Voulez-vous télécharger le modèle de microplan ?",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT",
-    "message": "Le fichier unifié comprendra toutes les fiches d'installation, d'utilisateur et de cible.",
+    "message": "Téléchargez un modèle pour ajouter les données d'installation, d'utilisateur et de cible requises pour la configuration et la planification de votre campagne.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -5257,7 +5257,7 @@
   },
   {
     "code": "HOUSEHOLD_LOCALITY",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -5419,7 +5419,7 @@
   },
   {
     "code": "IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Manqué - Pas revisité",
+    "message": "Manqué - Non revisité",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -5473,7 +5473,7 @@
   },
   {
     "code": "IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -7909,7 +7909,7 @@
   },
   {
     "code": "REGISTRATION_BENEFICIARYDETAILS_MESSAGE",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -8551,7 +8551,7 @@
   },
   {
     "code": "SEARCH_CHECKLIST",
-    "message": "Liste de contrôle de recherche",
+    "message": "Configurer la liste de contrôle",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -8671,13 +8671,13 @@
   },
   {
     "code": "STOCKRECON_REPORT_TABLE_HEADER_PHYSICAL_COUNT",
-    "message": "Nombre physique",
+    "message": "Comptage physique",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_DAMAGED",
-    "message": "Crosse endommagée",
+    "message": "Stock endommagé",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -8989,25 +8989,25 @@
   },
   {
     "code": "TIP_APPCONFIG_PROPERTIES",
-    "message": "Personnalisez le comportement des champs en définissant les règles de champ, les valeurs par défaut et les options d'affichage.",
+    "message": "Les propriétés du champ définissent la manière dont un champ apparaît et se comporte dans le formulaire.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_BUTTONS",
-    "message": "Configurer les boutons d'action qui apparaîtront dans la section de sous-en-tête",
+    "message": "Les boutons sont les actions disponibles pour les utilisateurs sur l'écran.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_FIELDS",
-    "message": "Ajoutez des champs qui seront affichés dans la section de sous-en-tête sous l'en-tête principal",
+    "message": "Les champs de formulaire sont les champs que les utilisateurs peuvent remplir ou afficher dans l'application.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE",
-    "message": "Éléments du modèle",
+    "message": "Les éléments du modèle sont les champs et les sections inclus dans le modèle.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -9229,7 +9229,7 @@
   },
   {
     "code": "UNABLE_TO_DELIVER_BENEFICIARY_DIED",
-    "message": "Bénéficiaire décédé",
+    "message": "Le bénéficiaire est décédé",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -10063,7 +10063,7 @@
   },
   {
     "code": "complaintView",
-    "message": "Vue des plaintes",
+    "message": "Résumé de la plainte",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -11155,7 +11155,7 @@
   },
   {
     "code": "viewTransactionDetails",
-    "message": "Afficher les détails de la transaction",
+    "message": "Détails de la transaction",
     "module": "hcm-base-registration-mr-dn",
     "locale": "fr_DEMO"
   },

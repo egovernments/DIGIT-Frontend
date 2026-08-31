@@ -49,7 +49,7 @@
   },
   {
     "code": "ADMINISTRATION_FAILED",
-    "message": "Échec de la vaccination",
+    "message": "La vaccination a échoué",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -235,7 +235,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé des vaccinations",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -763,7 +763,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_DELIVERY",
-    "message": "Livraison",
+    "message": "Vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -787,7 +787,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_BENEFICIARYDETAILS",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé des vaccinations",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -799,13 +799,13 @@
   },
   {
     "code": "APP_CONFIG_FLOW_DELIVERY",
-    "message": "Détails de livraison",
+    "message": "Détails de la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_FLOW_DELIVERYSUCCESS",
-    "message": "Livraison réussie",
+    "message": "Vaccination réussie",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -853,7 +853,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_UNABLETODELIVER",
-    "message": "Impossible de livrer",
+    "message": "Impossible de vacciner",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -865,7 +865,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_BENEFICIARYDETAILS",
-    "message": "Ajouter un membre",
+    "message": "Résumé des vaccinations",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -883,7 +883,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_DELIVERYDETAILS",
-    "message": "Détails de livraison",
+    "message": "Détails de la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -919,7 +919,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_UNABLETODELIVER",
-    "message": "Impossible de livrer",
+    "message": "Impossible de vacciner",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1003,7 +1003,7 @@
   },
   {
     "code": "BENEFICIARY_DETAILS_HEADING",
-    "message": "Détails des enfants",
+    "message": "Résumé des vaccinations",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -1387,7 +1387,7 @@
   },
   {
     "code": "DELIVERY",
-    "message": "Détails de livraison",
+    "message": "Détails de la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2023,19 +2023,19 @@
   },
   {
     "code": "HCM_DELIVERY_BENEFICIARY_DETAILS_DESCRIPTION",
-    "message": "Consultez les détails du bénéficiaire et l’historique des livraisons.",
+    "message": "Consultez les détails du bénéficiaire et l’historique des vaccinations.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_BENEFICIARY_DETAILS_HEADING",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé des vaccinations",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_COMMENTS_LABEL",
-    "message": "Commentaire de livraison",
+    "message": "Commentaire sur la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2059,7 +2059,7 @@
   },
   {
     "code": "HCM_DELIVERY_COMMENT_SUCCESSFUL",
-    "message": "Livré avec succès",
+    "message": "Vacciné avec succès",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2071,13 +2071,13 @@
   },
   {
     "code": "HCM_DELIVERY_DETAILS_DESCRIPTION",
-    "message": "Saisissez les détails de livraison pour ce bénéficiaire.",
+    "message": "Saisissez les détails de la vaccination de ce bénéficiaire.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_DETAILS_HEADING",
-    "message": "Détails de livraison",
+    "message": "Détails de la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2149,7 +2149,7 @@
   },
   {
     "code": "HCM_DELIVERY_SUCCESS_DESCRIPTION",
-    "message": "La livraison a été enregistrée avec succès.",
+    "message": "La vaccination a été enregistrée avec succès.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2161,7 +2161,7 @@
   },
   {
     "code": "HCM_DELIVERY_SUCCESS_HEADING",
-    "message": "Livraison réussie",
+    "message": "Vaccination réussie",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2179,7 +2179,7 @@
   },
   {
     "code": "HCM_DELIVERY_TABLE_DELIVERY_NO_HEADER",
-    "message": "Numéro de livraison",
+    "message": "Numéro de vaccination.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2215,7 +2215,7 @@
   },
   {
     "code": "HCM_ERROR_FETCH_BULK_DELIVERY_CONFIG",
-    "message": "Échec du chargement de la configuration de la livraison groupée. Veuillez réessayer.",
+    "message": "Échec du chargement de la configuration de vaccination groupée. Veuillez réessayer.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2263,7 +2263,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTRATION_FAILED_TAG",
-    "message": "Échec de la vaccination",
+    "message": "La vaccination a échoué",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2305,7 +2305,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_GO_FOR_VACCINATE_LABEL",
-    "message": "Livrer",
+    "message": "Vacciner",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2377,7 +2377,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_UNABLE_TO_DELIVER_LABEL",
-    "message": "Impossible de livrer",
+    "message": "Impossible de vacciner",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -2911,7 +2911,7 @@
   },
   {
     "code": "HCM_SEARCH_FILTER_ADMINISTRATION_FAILED",
-    "message": "Échec de la vaccination",
+    "message": "La vaccination a échoué",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -3199,7 +3199,7 @@
   },
   {
     "code": "ID_SEARCH_REGISTRATION",
-    "message": "Recherche d'identité",
+    "message": "recherche d'identité",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -4897,7 +4897,7 @@
   },
   {
     "code": "REGISTRATION_BENEFICIARYDETAILS_MESSAGE",
-    "message": "Échec de l'enregistrement des détails du membre.",
+    "message": "Résumé des vaccinations",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5203,7 +5203,7 @@
   },
   {
     "code": "REGISTRATION_UNABLETODELIVER_MESSAGE",
-    "message": "Impossible de livrer",
+    "message": "Impossible de vacciner",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5527,7 +5527,7 @@
   },
   {
     "code": "UNABLETODELIVERY_FLOW_DESCRIPTION",
-    "message": "Enregistrez la raison pour laquelle vous ne pouvez pas livrer.",
+    "message": "Enregistrez la raison pour laquelle vous ne pouvez pas vacciner.",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5539,13 +5539,13 @@
   },
   {
     "code": "UNABLETODELIVERY_FLOW_LABEL",
-    "message": "Impossible de livrer",
+    "message": "Impossible de vacciner",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "UNABLETODELIVERY_FLOW_SCREEN_HEADING",
-    "message": "Impossible de livrer",
+    "message": "Impossible de vacciner",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5677,7 +5677,7 @@
   },
   {
     "code": "UNABLETODELIVER_FLOWT_ALERT_DESCRIPTION",
-    "message": "Etes-vous sûr de vouloir enregistrer ce bénéficiaire comme incapable de livrer ?",
+    "message": "Etes-vous sûr de vouloir enregistrer ce bénéficiaire comme incapable de vacciner ?",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -5695,7 +5695,7 @@
   },
   {
     "code": "UNABLETODELIVER_FLOW_ALERT_TITLE",
-    "message": "Confirmer Impossible de livrer",
+    "message": "Confirmer l'impossibilité de vacciner",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6079,13 +6079,13 @@
   },
   {
     "code": "deliveryComment",
-    "message": "Commentaire de livraison",
+    "message": "Commentaire sur la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "deliveryNo",
-    "message": "Numéro de livraison",
+    "message": "Numéro de vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6097,13 +6097,13 @@
   },
   {
     "code": "deliveryStrategy",
-    "message": "Stratégie de livraison",
+    "message": "Stratégie vaccinale",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "deliverySuccess",
-    "message": "Succès de la livraison",
+    "message": "Succès vaccinal",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6121,7 +6121,7 @@
   },
   {
     "code": "deliveryTable",
-    "message": "Détails de livraison",
+    "message": "Détails de la vaccination",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6247,7 +6247,7 @@
   },
   {
     "code": "goForVaccinateButton",
-    "message": "Livrer",
+    "message": "Vacciner",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6745,7 +6745,7 @@
   },
   {
     "code": "successCard",
-    "message": "Livraison réussie",
+    "message": "Vaccination réussie",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },
@@ -6769,7 +6769,7 @@
   },
   {
     "code": "unableToDeliverButton",
-    "message": "Impossible de livrer",
+    "message": "Impossible de vacciner",
     "module": "hcm-base-registration-polio",
     "locale": "fr_DEMO"
   },

@@ -307,7 +307,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
-    "message": "Detalhes do beneficiário",
+    "message": "Resumo de entrega",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -1159,7 +1159,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_HEADING",
-    "message": "Pesquisar Beneficiário",
+    "message": "Pesquisar famílias",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -1201,13 +1201,13 @@
   },
   {
     "code": "APP_CONFIG_FLOW_SEARCHBENEFICIARY",
-    "message": "Pesquisar Beneficiário",
+    "message": "Pesquisar famílias",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "APP_CONFIG_PAGE_SEARCHBENEFICIARY",
-    "message": "Pesquisar Beneficiário",
+    "message": "Pesquisar famílias",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -1231,7 +1231,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "Nome do Beneficiário",
+    "message": "Nome do beneficiário",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -1255,7 +1255,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -1273,7 +1273,7 @@
   },
   {
     "code": "BENEFICIARY_DETAILS_HEADING",
-    "message": "Detalhes da entrega",
+    "message": "Resumo de entrega",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -1291,7 +1291,7 @@
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiário Indicado",
+    "message": "Beneficiário indicado",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -1309,7 +1309,7 @@
   },
   {
     "code": "Beneficiary details",
-    "message": "Detalhes do beneficiário",
+    "message": "Resumo de entrega",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -1453,7 +1453,7 @@
   },
   {
     "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-    "message": "Não conseguimos encontrar esse beneficiário nos registros. Você pode adicioná-los como um novo beneficiário.",
+    "message": "Não conseguimos encontrar esta família nos registros. Você pode adicioná-los como uma nova família.",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -1477,7 +1477,7 @@
   },
   {
     "code": "DATE_OF_REGISTRATION",
-    "message": "Data de Registro",
+    "message": "Data de registro",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -1693,7 +1693,7 @@
   },
   {
     "code": "HOUSEHOLD_LOCALITY",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -1891,7 +1891,7 @@
   },
   {
     "code": "NAME_OF_INDIVIDUAL",
-    "message": "Nome do Indivíduo",
+    "message": "Nome do indivíduo",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -2281,7 +2281,7 @@
   },
   {
     "code": "REGISTRATION_BENEFICIARYDETAILS_MESSAGE",
-    "message": "Não foi possível carregar os detalhes do beneficiário. Por favor, tente novamente.",
+    "message": "Resumo de entrega",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -2293,13 +2293,13 @@
   },
   {
     "code": "REGISTRATION_BENEFICIARY_REFERRED",
-    "message": "Beneficiário Indicado",
+    "message": "Beneficiário indicado",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "REGISTRATION_CLOSED_HOUSEHOLD",
-    "message": "Domicílio Fechado",
+    "message": "Domicílio fechado",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -2539,7 +2539,7 @@
   },
   {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_DESC",
-    "message": "Pesquisar beneficiários cadastrados na campanha atual",
+    "message": "Pesquisar domicílios cadastrados na campanha atual",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -2587,7 +2587,7 @@
   },
   {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_HEADING",
-    "message": "Pesquisar Beneficiário",
+    "message": "Pesquisar famílias",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -3013,7 +3013,7 @@
   },
   {
     "code": "searchBeneficiary",
-    "message": "Pesquisar beneficiário",
+    "message": "Pesquisar famílias",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -3079,7 +3079,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_BENEFICIARYDETAILS",
-    "message": "Detalhes do beneficiário",
+    "message": "Resumo de entrega",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -3109,7 +3109,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_BENEFICIARYDETAILS",
-    "message": "Detalhes do beneficiário",
+    "message": "Resumo de entrega",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -3139,7 +3139,7 @@
   },
   {
     "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
-    "message": "Beneficiário não encontrado",
+    "message": "Família não encontrada",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -3193,7 +3193,7 @@
   },
   {
     "code": "FOOTER_ACTION_insufficientStockPopUp_LABEL",
-    "message": "Estoque insuficiente",
+    "message": "Pop-up de estoque insuficiente",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },
@@ -4093,7 +4093,7 @@
   },
   {
     "code": "insufficientStockPopUp",
-    "message": "Estoque insuficiente",
+    "message": "Pop-up de estoque insuficiente",
     "module": "hcm-base-registration-bednet",
     "locale": "pt_DEMO"
   },

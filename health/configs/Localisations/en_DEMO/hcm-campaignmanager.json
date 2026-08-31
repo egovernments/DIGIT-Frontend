@@ -415,7 +415,7 @@
   },
   {
     "code": "ACTION_TEST_SETUP_CAMPAIGN",
-    "message": "Create a New Campaign",
+    "message": "Create a new campaign",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -559,7 +559,7 @@
   },
   {
     "code": "ADD_LOCALISATION_BREADCRUMB",
-    "message": "Add localisations",
+    "message": "Upload translations",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -739,7 +739,7 @@
   },
   {
     "code": "APPCONFIG_MIN_LESS_EQUAL_MAX",
-    "message": "Min range must be less than Max range",
+    "message": "Min value must be less than Max value.",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -967,7 +967,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
-    "message": "Beneficiary Details",
+    "message": "Delivery Summary",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -1849,7 +1849,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_REDOSE",
-    "message": "Redose Category",
+    "message": "Revisit",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -1927,7 +1927,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_BENEFICIARYDETAILS",
-    "message": "Beneficiary Details",
+    "message": "Delivery Summary",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -2083,7 +2083,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
-    "message": "Permission Handler",
+    "message": "App Permissions",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -2197,7 +2197,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_STOCK",
-    "message": "Team Level Vaccination Stocks",
+    "message": "Team Level Stock Details",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -2263,7 +2263,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_VIEWTRANSACTIONDETAILS",
-    "message": "View Transaction Details",
+    "message": "Transaction Details",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -2293,13 +2293,13 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_SENT_OUT_FROM_THE_WAREHOUSE_DESCRIPTION",
-    "message": "Create records for stock sent out from the warehouse",
+    "message": "Record stock items issued from or returned to the warehouse.",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
-    "message": "Record Stock Sent",
+    "message": "Record Stock Transaction",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -2539,7 +2539,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
-    "message": "Permission Handler",
+    "message": "App Permissions",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -2761,7 +2761,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_VIEWTRANSACTIONDETAILS",
-    "message": "View Transaction Details",
+    "message": "Transaction Details",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -3115,7 +3115,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "Beneficiary Name",
+    "message": "Beneficiary name",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -3139,7 +3139,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiary Absent",
+    "message": "Beneficiary absent",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -3157,7 +3157,7 @@
   },
   {
     "code": "BENEFICIARY_DETAILS_HEADING",
-    "message": "Beneficiary Details",
+    "message": "Delivery Summary",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -3169,7 +3169,7 @@
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "Beneficiary Refused",
+    "message": "Beneficiary refused",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -3511,7 +3511,7 @@
   },
   {
     "code": "Beneficiary details",
-    "message": "Beneficiary Details",
+    "message": "Delivery Summary",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -3523,7 +3523,7 @@
   },
   {
     "code": "BeneficiaryDetails",
-    "message": "Beneficiary Details",
+    "message": "Delivery Summary",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -3565,7 +3565,7 @@
   },
   {
     "code": "CAMPAIGN_ADD_MORE_PRODUCT_BUTTON",
-    "message": "Add Resources",
+    "message": "Add Resource",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -3763,7 +3763,7 @@
   },
   {
     "code": "CAMPAIGN_CYCLE",
-    "message": "Distribution",
+    "message": "Cycle",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -3775,7 +3775,7 @@
   },
   {
     "code": "CAMPAIGN_CYCLE_CONFIGURE_HEADING_BEDNET",
-    "message": "Configure cycles and deliveries for Bednet type campaign.",
+    "message": "Configure cycles and deliveries for Bednet Distribution.",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -3955,7 +3955,7 @@
   },
   {
     "code": "CAMPAIGN_DELIVERY_TAB_SUB_TEXT_BEDNET",
-    "message": "Configure delivery rules for Bednet type campaign.",
+    "message": "Configure delivery rules for Bednet Distribution.",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -4075,7 +4075,7 @@
   },
   {
     "code": "CAMPAIGN_DOWNLOADING_TEMPLATE",
-    "message": "Please wait, downloading template",
+    "message": "Preparing your template for download",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -4327,13 +4327,13 @@
   },
   {
     "code": "CAMPAIGN_PRODUCTS_MODAL_HEADER_TEXT",
-    "message": "Configure resources",
+    "message": "Add Resource to Deliver",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
   {
     "code": "CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION",
-    "message": "Add Resources",
+    "message": "Add Resource",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -4369,7 +4369,7 @@
   },
   {
     "code": "CAMPAIGN_PROJECT_BEDNET",
-    "message": "Bednet type campaign",
+    "message": "Bednet Distribution",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -4813,7 +4813,7 @@
   },
   {
     "code": "CAMPAIGN_UPLOADING_FILE",
-    "message": "Uploading file",
+    "message": "Getting things ready for your upload...",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -5407,13 +5407,13 @@
   },
   {
     "code": "COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
   {
     "code": "COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -5425,7 +5425,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -5455,7 +5455,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Date",
+    "message": "Complaint date",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -5467,7 +5467,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Type",
+    "message": "Complaint type",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -5611,7 +5611,7 @@
   },
   {
     "code": "CORE_COMMON_MOBILE_NUMBER",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -6048,8 +6048,14 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "Create New Campaig",
+    "message": "Create a new Campaign",
+    "module": "hcm-campaignmanager",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "Create New Campaign",
-    "message": "Create a New Campaign",
+    "message": "Create a new campaign",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -6414,6 +6420,18 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "DIGIT_LOC_DOWNLOAD_TEMPLATE_MODAL_HEADER",
+    "message": "Do you want to download the translation template?",
+    "module": "hcm-campaignmanager",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DIGIT_LOC_DOWNLOAD_TEMPLATE_MODAL_TEXT",
+    "message": "Download a template to add translations for the campaign app screens in each selected language.",
+    "module": "hcm-campaignmanager",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "DIGIT_LOC_EMPTY_OR_INVALID_FILE",
     "message": "The uploaded file is empty or unreadable. Upload the filled template.",
     "module": "hcm-campaignmanager",
@@ -6493,6 +6511,12 @@
   },
   {
     "code": "DIGIT_LOC_MESSAGE_HEADER_Portugues",
+    "message": "Portuguese Messages",
+    "module": "hcm-campaignmanager",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DIGIT_LOC_MESSAGE_HEADER_Portuguese",
     "message": "Portuguese Messages",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
@@ -6655,7 +6679,7 @@
   },
   {
     "code": "DOSE",
-    "message": "Delivery No.",
+    "message": "Delivery no.",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -6775,7 +6799,7 @@
   },
   {
     "code": "DataIssues",
-    "message": "Data Issues",
+    "message": "Data issues",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -7195,7 +7219,7 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_ATTENDEE__MODAL_HEADER",
-    "message": "Download Template to Map Users",
+    "message": "Download template to map users",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -7243,13 +7267,13 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_HEADER",
-    "message": "Do you want to download microplan file",
+    "message": "Do you want to download the microplan template?",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT",
-    "message": "Upload a single file containing facility, user, and target data required for your campaign setup and planning.",
+    "message": "Download a template to add facility, user, and target data required for your campaign setup and planning.",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -9433,7 +9457,7 @@
   },
   {
     "code": "HCM_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_DATA",
-    "message": "Upload Attendance Register Data",
+    "message": "Upload attendance register data",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -9667,7 +9691,7 @@
   },
   {
     "code": "HCM_CHOOSE_MODULE",
-    "message": "Set up the modules needed for your campaign",
+    "message": "Mobile app modules",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -10051,7 +10075,7 @@
   },
   {
     "code": "HCM_CREATE_NEW_CAMPAIGN",
-    "message": "Create a New Campaign",
+    "message": "Create a new campaign",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -10081,7 +10105,7 @@
   },
   {
     "code": "HCM_CREATE_REGISTERS_UPLOAD_HEADING",
-    "message": "Upload Attendance Register Data",
+    "message": "Upload attendance register data",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -11257,7 +11281,7 @@
   },
   {
     "code": "HCM_MR-HCM_SEARCH_BY_HIERARCHY_NAME",
-    "message": "Search by Hierarchy Name",
+    "message": "Search by hierarchy name",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -11575,7 +11599,7 @@
   },
   {
     "code": "HCM_REPORTS_CONFIGURATION_HEADING",
-    "message": "Configure Reports",
+    "message": "Configure reports",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -11749,7 +11773,7 @@
   },
   {
     "code": "HCM_SEARCH_BY_HIERARCHY_NAME",
-    "message": "Search by Hierarchy Name",
+    "message": "Search by hierarchy name",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -12613,7 +12637,7 @@
   },
   {
     "code": "HCM_WAYBILL_NUMBER",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -12841,7 +12865,7 @@
   },
   {
     "code": "HOUSEHOLD_LOCALITY",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -13177,13 +13201,13 @@
   },
   {
     "code": "INVENTORY_RECORD_LESS_EXCESS_DESCRIPTION",
-    "message": "Create stock records for loss/excess",
+    "message": "Report stock quantities that are less than or in excess of the expected quantity.",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
   {
     "code": "INVENTORY_RECORD_LESS_EXCESS_HEADING",
-    "message": "Record Stock Less/Excess",
+    "message": "Report Stock Discrepancy",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -13933,7 +13957,7 @@
   },
   {
     "code": "MEMBER_COUNT",
-    "message": "Member Count",
+    "message": "Member count",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -14197,7 +14221,7 @@
   },
   {
     "code": "MOBILE_NUMBER",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -14671,7 +14695,7 @@
   },
   {
     "code": "NotEnoughStock",
-    "message": "Not Enough Stock",
+    "message": "Not enough stock",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -14887,7 +14911,7 @@
   },
   {
     "code": "PLEASE_WAIT_WHILE_ADDING_BOUNDARIES",
-    "message": "Please wait while we are adding boundaries",
+    "message": "Please wait while we add your Boundaries",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -14911,7 +14935,7 @@
   },
   {
     "code": "POPUP_BODY_FIELDS",
-    "message": "Popup Fields",
+    "message": "Popup fields",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -14922,14 +14946,20 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "POPUP_DESCRIPTION",
+    "message": "Popup description",
+    "module": "hcm-campaignmanager",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "POPUP_FOOTER_ACTIONS_LABELS",
-    "message": "Popup Footer Labels",
+    "message": "Popup footer labels",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
   {
     "code": "POPUP_TITLE",
-    "message": "Popup Title",
+    "message": "Popup title",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -15415,7 +15445,7 @@
   },
   {
     "code": "REGISTER_MOBILE_NUMBER",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -15877,7 +15907,7 @@
   },
   {
     "code": "SEARCH_CHECKLIST",
-    "message": "Search checklist",
+    "message": "Configure checklist",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -16123,7 +16153,7 @@
   },
   {
     "code": "STOCK",
-    "message": "Team Level Vaccination Stocks",
+    "message": "Team Level Stock Details",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -16153,7 +16183,7 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -16261,7 +16291,7 @@
   },
   {
     "code": "SecurityIssues",
-    "message": "Security Issues",
+    "message": "Security issues",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -16315,7 +16345,7 @@
   },
   {
     "code": "StockModel.WAYBILL_NUMBER",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -16339,7 +16369,7 @@
   },
   {
     "code": "SyncNotWorking",
-    "message": "Sync Not Working",
+    "message": "Sync not working",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -16440,6 +16470,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "TENANT_TENANTS_DEMO",
+    "message": "eGov",
+    "module": "hcm-campaignmanager",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "TENANT_TENANTS_IN",
     "message": "IN",
     "module": "hcm-campaignmanager",
@@ -16477,19 +16513,19 @@
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_BUTTONS",
-    "message": "Configure action buttons that will appear in the sub-header section",
+    "message": "Buttons are the actions available to users on the screen.",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_FIELDS",
-    "message": "Add fields that will be displayed in the sub-header section below the main header",
+    "message": "Form fields are the fields users can fill in or view in the application.",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE",
-    "message": "Template elements",
+    "message": "Template elements are the fields and sections included in the template.",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -16639,7 +16675,7 @@
   },
   {
     "code": "TechnicalIssues",
-    "message": "Technical Issues",
+    "message": "Technical issues",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -16873,7 +16909,7 @@
   },
   {
     "code": "UserAccountIssues",
-    "message": "User Account Issues",
+    "message": "User account issues",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -17431,13 +17467,13 @@
   },
   {
     "code": "WBH_UPLOAD_ATTENDANCE_REGISTER",
-    "message": "Upload Template to Generate Attendance Registers",
+    "message": "Upload template to generate attendance registers",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
   {
     "code": "WBH_UPLOAD_ATTENDANCE_REGISTER_ATTENDEE",
-    "message": "Upload Template to Map Users",
+    "message": "Upload template to map users",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -17635,7 +17671,7 @@
   },
   {
     "code": "complaintView",
-    "message": "Complaint View",
+    "message": "Complaint Summary",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -17923,7 +17959,7 @@
   },
   {
     "code": "identifierType",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -18001,7 +18037,7 @@
   },
   {
     "code": "mobileNumber",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },
@@ -18295,7 +18331,7 @@
   },
   {
     "code": "viewTransactionDetails",
-    "message": "View Transaction Details",
+    "message": "Transaction Details",
     "module": "hcm-campaignmanager",
     "locale": "en_DEMO"
   },

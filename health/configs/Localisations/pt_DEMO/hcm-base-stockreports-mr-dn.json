@@ -43,13 +43,13 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiário Indicado",
+    "message": "Beneficiário indicado",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -73,7 +73,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Domicílio Fechado",
+    "message": "Domicílio fechado",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1447,13 +1447,13 @@
   },
   {
     "code": "STOCKRECON_REPORT_TABLE_HEADER_DATE_OF_RECONCILIATION",
-    "message": "Data da Reconciliação",
+    "message": "Data da reconciliação",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "STOCKRECON_REPORT_TABLE_HEADER_PHYSICAL_COUNT",
-    "message": "Contagem Física",
+    "message": "Contagem física",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1603,7 +1603,7 @@
   },
   {
     "code": "STOCKREPORTS_TABLE_HEADER_ADDITIONAL_FIELDS",
-    "message": "Detalhes Adicionais",
+    "message": "Detalhes adicionais",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1621,13 +1621,13 @@
   },
   {
     "code": "STOCKREPORTS_TABLE_HEADER_DATE_OF_RECONCILIATION",
-    "message": "Data da Reconciliação",
+    "message": "Data da reconciliação",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "STOCKREPORTS_TABLE_HEADER_PHYSICAL_COUNT",
-    "message": "Contagem Física",
+    "message": "Contagem física",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -2143,7 +2143,7 @@
   },
   {
     "code": "stockIssuedHeading",
-    "message": "Ações emitidas",
+    "message": "Transação de estoque recorde",
     "module": "hcm-base-stockreports-mr-dn",
     "locale": "pt_DEMO"
   },

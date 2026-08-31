@@ -121,7 +121,7 @@
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiário Indicado",
+    "message": "Beneficiário indicado",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "pt_DEMO"
   },
@@ -175,7 +175,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Domicílio Fechado",
+    "message": "Domicílio fechado",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "pt_DEMO"
   },
@@ -361,13 +361,13 @@
   },
   {
     "code": "DELIVERY",
-    "message": "Detalhes da entrega",
+    "message": "Detalhes da vacinação",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "DELIVERY_SUCCESSFUL_PANEL_CARD_DESC",
-    "message": "Os recursos foram entregues com sucesso.",
+    "message": "Vacinação concluída com sucesso.",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "pt_DEMO"
   },
@@ -415,7 +415,7 @@
   },
   {
     "code": "DeliveryDetails",
-    "message": "Detalhes da entrega",
+    "message": "Detalhes da vacinação",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "pt_DEMO"
   },
@@ -1891,7 +1891,7 @@
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Entrega bem sucedida",
+    "message": "Vacinação bem sucedida",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "pt_DEMO"
   },

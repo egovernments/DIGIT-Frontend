@@ -307,7 +307,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1159,7 +1159,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_HEADING",
-    "message": "Rechercher un bénéficiaire",
+    "message": "Rechercher des ménages",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1201,13 +1201,13 @@
   },
   {
     "code": "APP_CONFIG_FLOW_SEARCHBENEFICIARY",
-    "message": "Rechercher un bénéficiaire",
+    "message": "Rechercher des ménages",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
   {
     "code": "APP_CONFIG_PAGE_SEARCHBENEFICIARY",
-    "message": "Rechercher un bénéficiaire",
+    "message": "Rechercher des ménages",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1273,7 +1273,7 @@
   },
   {
     "code": "BENEFICIARY_DETAILS_HEADING",
-    "message": "Détails de livraison",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1309,7 +1309,7 @@
   },
   {
     "code": "Beneficiary details",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1351,7 +1351,7 @@
   },
   {
     "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-    "message": "Nous n’avons pas pu retrouver ce bénéficiaire dans les dossiers. Vous pouvez l'ajouter en tant que nouveau bénéficiaire.",
+    "message": "Nous n'avons pas pu trouver ce ménage dans les archives. Vous pouvez les ajouter en tant que nouveau foyer.",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -1591,7 +1591,7 @@
   },
   {
     "code": "HOUSEHOLD_LOCALITY",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2179,7 +2179,7 @@
   },
   {
     "code": "REGISTRATION_BENEFICIARYDETAILS_MESSAGE",
-    "message": "Impossible de charger les détails du bénéficiaire. Veuillez réessayer.",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2437,7 +2437,7 @@
   },
   {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_DESC",
-    "message": "Rechercher des bénéficiaires inscrits à la campagne en cours",
+    "message": "Rechercher des foyers inscrits à la campagne en cours",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2485,7 +2485,7 @@
   },
   {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_HEADING",
-    "message": "Rechercher un bénéficiaire",
+    "message": "Rechercher des ménages",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2911,7 +2911,7 @@
   },
   {
     "code": "searchBeneficiary",
-    "message": "Rechercher un bénéficiaire",
+    "message": "Rechercher des ménages",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -2977,7 +2977,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_BENEFICIARYDETAILS",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -3007,7 +3007,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_BENEFICIARYDETAILS",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -3037,7 +3037,7 @@
   },
   {
     "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
-    "message": "Bénéficiaire introuvable",
+    "message": "Ménage introuvable",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -3091,7 +3091,7 @@
   },
   {
     "code": "FOOTER_ACTION_insufficientStockPopUp_LABEL",
-    "message": "Stock insuffisant",
+    "message": "Popup de stock insuffisant",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },
@@ -3991,7 +3991,7 @@
   },
   {
     "code": "insufficientStockPopUp",
-    "message": "Stock insuffisant",
+    "message": "Popup de stock insuffisant",
     "module": "hcm-base-registration-bednet",
     "locale": "fr_DEMO"
   },

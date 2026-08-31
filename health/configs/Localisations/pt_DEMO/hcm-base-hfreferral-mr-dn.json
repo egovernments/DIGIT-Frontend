@@ -37,7 +37,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_HFREFERRAL",
-    "message": "Referência de IC",
+    "message": "Referência",
     "module": "hcm-base-hfreferral-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -103,7 +103,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-hfreferral-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -127,7 +127,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Domicílio Fechado",
+    "message": "Domicílio fechado",
     "module": "hcm-base-hfreferral-mr-dn",
     "locale": "pt_DEMO"
   },

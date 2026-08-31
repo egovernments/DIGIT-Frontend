@@ -37,19 +37,19 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiary Absent",
+    "message": "Beneficiary absent",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiary Referred",
+    "message": "Beneficiary referred",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "Beneficiary Refused",
+    "message": "Beneficiary refused",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -67,7 +67,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Closed Household",
+    "message": "Closed household",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -97,7 +97,7 @@
   },
   {
     "code": "DataIssues",
-    "message": "Data Issues",
+    "message": "Data issues",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -781,13 +781,13 @@
   },
   {
     "code": "NOTENOUGHSTOCK",
-    "message": "Not Enough Stock",
+    "message": "Not enough stock",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "NOT_ADMINISTERED",
-    "message": "Not Administered",
+    "message": "Not administered",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -811,7 +811,7 @@
   },
   {
     "code": "NotEnoughStock",
-    "message": "Not Enough Stock",
+    "message": "Not enough stock",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -835,7 +835,7 @@
   },
   {
     "code": "PerformanceIssue",
-    "message": "Performance Issue",
+    "message": "Performance issue",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -949,7 +949,7 @@
   },
   {
     "code": "STOCKRECON_REPORT_INFO_REPORTS_TITLE",
-    "message": "Report Information",
+    "message": "Report information",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -1027,31 +1027,31 @@
   },
   {
     "code": "STOCKREPORTS_TABLE_HEADER_ADDITIONAL_FIELDS",
-    "message": "Additional Details",
+    "message": "Additional details",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "STOCKREPORTS_TABLE_HEADER_CALCULATED_COUNT",
-    "message": "Calculated Count",
+    "message": "Calculated count",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "STOCKREPORTS_TABLE_HEADER_DATE_OF_ENTRY",
-    "message": "Date of Entry",
+    "message": "Date of entry",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "STOCKREPORTS_TABLE_HEADER_DATE_OF_RECONCILIATION",
-    "message": "Date of Reconciliation",
+    "message": "Date of reconciliation",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "STOCKREPORTS_TABLE_HEADER_PHYSICAL_COUNT",
-    "message": "Physical Count",
+    "message": "Physical count",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -1093,7 +1093,7 @@
   },
   {
     "code": "STOCKREPORTS_TABLE_HEADER_WAYBILL_NUMBER",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -1141,7 +1141,7 @@
   },
   {
     "code": "STOCKREPORTS_VIEW_REPORTS_STOCK_LESS_DESCRIPTION",
-    "message": "Stock Shortage",
+    "message": "Stock shortage",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -1225,19 +1225,19 @@
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
-    "message": "Stock Damaged",
+    "message": "Stock damaged",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
-    "message": "Stock Issued",
+    "message": "Stock issued",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_LOST",
-    "message": "Stock Lost",
+    "message": "Stock lost",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -1249,13 +1249,13 @@
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
-    "message": "Stock Received",
+    "message": "Stock received",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
-    "message": "Stock Returned",
+    "message": "Stock returned",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -1303,7 +1303,7 @@
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Delivery Successful",
+    "message": "Delivery successful",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -1315,19 +1315,19 @@
   },
   {
     "code": "SecurityIssues",
-    "message": "Security Issues",
+    "message": "Security issues",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "SyncNotWorking",
-    "message": "Sync Not Working",
+    "message": "Sync not working",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "TechnicalIssues",
-    "message": "Technical Issues",
+    "message": "Technical issues",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -1339,7 +1339,7 @@
   },
   {
     "code": "UserAccountIssues",
-    "message": "User Account Issues",
+    "message": "User account issues",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -1453,13 +1453,13 @@
   },
   {
     "code": "stockDamagedHeading",
-    "message": "Stock Damaged",
+    "message": "Stock damaged",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "stockIssuedHeading",
-    "message": "Stock Issued",
+    "message": "Stock issued",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -1477,7 +1477,7 @@
   },
   {
     "code": "stockRecieveHeading",
-    "message": "Stock Received",
+    "message": "Stock received",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },
@@ -1495,7 +1495,7 @@
   },
   {
     "code": "stockReturnedHeading",
-    "message": "Stock Returned",
+    "message": "Stock returned",
     "module": "hcm-base-stockreports-bednet",
     "locale": "en_DEMO"
   },

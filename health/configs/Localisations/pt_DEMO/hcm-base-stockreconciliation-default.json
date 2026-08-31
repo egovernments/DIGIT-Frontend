@@ -7,7 +7,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-stockreconciliation-default",
     "locale": "pt_DEMO"
   },

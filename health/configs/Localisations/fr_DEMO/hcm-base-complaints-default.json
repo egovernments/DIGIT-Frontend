@@ -397,7 +397,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Date",
+    "message": "Date de la plainte",
     "module": "hcm-base-complaints-default",
     "locale": "fr_DEMO"
   },
@@ -409,7 +409,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Taper",
+    "message": "Type de plainte",
     "module": "hcm-base-complaints-default",
     "locale": "fr_DEMO"
   },

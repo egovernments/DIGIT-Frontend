@@ -91,19 +91,19 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiary Absent",
+    "message": "Beneficiary absent",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiary Referred",
+    "message": "Beneficiary referred",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "Beneficiary Refused",
+    "message": "Beneficiary refused",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
@@ -127,7 +127,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Closed Household",
+    "message": "Closed household",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
@@ -373,13 +373,13 @@
   },
   {
     "code": "COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
@@ -391,7 +391,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
@@ -559,7 +559,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
@@ -571,19 +571,19 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
@@ -607,7 +607,7 @@
   },
   {
     "code": "CORE_COMMON_NOT_FOUND",
-    "message": "Complaint Not Found",
+    "message": "Complaint not found",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
@@ -655,13 +655,13 @@
   },
   {
     "code": "Data Issues",
-    "message": "Data Issues",
+    "message": "Data issues",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "DataIssues",
-    "message": "Data Issues",
+    "message": "Data issues",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
@@ -1429,13 +1429,13 @@
   },
   {
     "code": "NOTENOUGHSTOCK",
-    "message": "Not Enough Stock",
+    "message": "Not enough stock",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "NOT_ADMINISTERED",
-    "message": "Not Administered",
+    "message": "Not administered",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
@@ -1453,7 +1453,7 @@
   },
   {
     "code": "NotEnoughStock",
-    "message": "Not Enough Stock",
+    "message": "Not enough stock",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
@@ -1507,7 +1507,7 @@
   },
   {
     "code": "SECURITYISSUES",
-    "message": "Security Issues",
+    "message": "Security issues",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
@@ -1531,7 +1531,7 @@
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Delivery Successful",
+    "message": "Delivery successful",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
@@ -1549,31 +1549,31 @@
   },
   {
     "code": "SYNCNOTWORKING",
-    "message": "Sync Not Working",
+    "message": "Sync not working",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "Security Issues",
-    "message": "Security Issues",
+    "message": "Security issues",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "SecurityIssues",
-    "message": "Security Issues",
+    "message": "Security issues",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "SyncNotWorking",
-    "message": "Sync Not Working",
+    "message": "Sync not working",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "TECHNICALISSUES",
-    "message": "Technical Issues",
+    "message": "Technical issues",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
@@ -1591,13 +1591,13 @@
   },
   {
     "code": "Technical Issues",
-    "message": "Technical Issues",
+    "message": "Technical issues",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "TechnicalIssues",
-    "message": "Technical Issues",
+    "message": "Technical issues",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
@@ -1609,19 +1609,19 @@
   },
   {
     "code": "USERACCOUNTISSUES",
-    "message": "User Account Issues",
+    "message": "User account issues",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "User Account Issues",
-    "message": "User Account Issues",
+    "message": "User account issues",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },
   {
     "code": "UserAccountIssues",
-    "message": "User Account Issues",
+    "message": "User account issues",
     "module": "hcm-base-complaints-bednet",
     "locale": "en_DEMO"
   },

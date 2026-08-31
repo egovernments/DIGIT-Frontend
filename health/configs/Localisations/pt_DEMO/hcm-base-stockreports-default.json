@@ -241,7 +241,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-stockreports-default",
     "locale": "pt_DEMO"
   },

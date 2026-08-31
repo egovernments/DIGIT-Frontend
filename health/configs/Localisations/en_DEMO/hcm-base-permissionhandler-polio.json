@@ -121,13 +121,13 @@
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiary Referred",
+    "message": "Beneficiary referred",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "Beneficiary Refused",
+    "message": "Beneficiary refused",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -175,7 +175,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Closed Household",
+    "message": "Closed household",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -349,7 +349,7 @@
   },
   {
     "code": "DATAISSUES",
-    "message": "Data Issues",
+    "message": "Data issues",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -361,13 +361,13 @@
   },
   {
     "code": "DELIVERY",
-    "message": "Delivery Details",
+    "message": "Vaccination details",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "DELIVERY_SUCCESSFUL_PANEL_CARD_DESC",
-    "message": "Resources have been delivered successfully.",
+    "message": "Vaccination completed successfully.",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -409,19 +409,19 @@
   },
   {
     "code": "Data Issues",
-    "message": "Data Issues",
+    "message": "Data issues",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "DataIssues",
-    "message": "Data Issues",
+    "message": "Data issues",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "DeliveryDetails",
-    "message": "Delivery Details",
+    "message": "Vaccination Details",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -571,7 +571,7 @@
   },
   {
     "code": "HCM.ID_TYPE_OPTIONS_POPULATOR",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -583,7 +583,7 @@
   },
   {
     "code": "HCM_STOCKRECONCILIATION_MODULE",
-    "message": "Stock Reconciliation",
+    "message": "Stock reconciliation",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -637,13 +637,13 @@
   },
   {
     "code": "IndividualModel.ID_NUMBER",
-    "message": "ID Number",
+    "message": "ID number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "IndividualModel.ID_TYPE",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1753,7 +1753,7 @@
   },
   {
     "code": "NEAR_BY_WIFI_DEVICES",
-    "message": "Nearby Devices",
+    "message": "Nearby devices",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1765,7 +1765,7 @@
   },
   {
     "code": "NOT_ADMINISTERED",
-    "message": "Not Administered",
+    "message": "Not administered",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1777,7 +1777,7 @@
   },
   {
     "code": "NotEnoughStock",
-    "message": "Not Enough Stock",
+    "message": "Not enough stock",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1831,25 +1831,25 @@
   },
   {
     "code": "PROXIMITY_SEARCH",
-    "message": "Nearby Households",
+    "message": "Nearby households",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "PROXIMITY_SEARCH_REGISTRATION",
-    "message": "Nearby Households",
+    "message": "Nearby households",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "PerformanceIssue",
-    "message": "Performance Issue",
+    "message": "Performance issue",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "QUANTITY_RECEIVED",
-    "message": "Quantity Received",
+    "message": "Quantity received",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1915,19 +1915,19 @@
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Successful Delivery",
+    "message": "Successful Vaccination",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "Security Issues",
-    "message": "Security Issues",
+    "message": "Security issues",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "SecurityIssues",
-    "message": "Security Issues",
+    "message": "Security issues",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1945,7 +1945,7 @@
   },
   {
     "code": "SyncNotWorking",
-    "message": "Sync Not Working",
+    "message": "Sync not working",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1963,13 +1963,13 @@
   },
   {
     "code": "Technical Issues",
-    "message": "Technical Issues",
+    "message": "Technical issues",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "TechnicalIssues",
-    "message": "Technical Issues",
+    "message": "Technical issues",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1981,13 +1981,13 @@
   },
   {
     "code": "User Account Issues",
-    "message": "User Account Issues",
+    "message": "User account issues",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "UserAccountIssues",
-    "message": "User Account Issues",
+    "message": "User account issues",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },

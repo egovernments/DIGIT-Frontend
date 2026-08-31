@@ -127,7 +127,7 @@
   },
   {
     "code": "ADD_LOCALISATION_BREADCRUMB",
-    "message": "Ajouter des localisations",
+    "message": "Télécharger des traductions",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -283,7 +283,7 @@
   },
   {
     "code": "APPCONFIG_MIN_LESS_EQUAL_MAX",
-    "message": "La plage minimale doit être inférieure à la plage maximale",
+    "message": "La valeur minimale doit être inférieure à la valeur maximale.",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -535,7 +535,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -955,7 +955,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_DETAILS_SCREEN_HEADING",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -1381,7 +1381,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_HFREFERRAL",
-    "message": "Référence HF",
+    "message": "Référence",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -1429,7 +1429,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_REDOSE",
-    "message": "Redoser",
+    "message": "Revisiter",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -1549,7 +1549,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_BENEFICIARYDETAILS",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -1639,7 +1639,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_COMPLAINTVIEW",
-    "message": "Vue des plaintes",
+    "message": "Résumé de la plainte",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -1789,7 +1789,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_REDOSE",
-    "message": "Redose Détails",
+    "message": "Revoir les détails",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -1933,7 +1933,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_STOCK_ACKNOWLEDGEMENT",
-    "message": "Reconnaissance",
+    "message": "Reconnaissance des stocks",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -2035,7 +2035,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_BENEFICIARYDETAILS",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -2137,7 +2137,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_COMPLAINTVIEW",
-    "message": "Vue des plaintes",
+    "message": "Résumé de la plainte",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -2323,7 +2323,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
-    "message": "Gestionnaire d'autorisations",
+    "message": "Autorisations des applications",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -2557,7 +2557,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_VIEWTRANSACTIONDETAILS",
-    "message": "Afficher les détails de la transaction",
+    "message": "Détails de la transaction",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -2749,13 +2749,13 @@
   },
   {
     "code": "BENEFICIARY_DETAILS_HEADING",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
   {
     "code": "BENEFICIARY_DIED",
-    "message": "Bénéficiaire décédé",
+    "message": "Le bénéficiaire est décédé",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -2839,7 +2839,7 @@
   },
   {
     "code": "Beneficiary details",
-    "message": "Détails du bénéficiaire",
+    "message": "Résumé de la livraison",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -3331,7 +3331,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Date",
+    "message": "Date de la plainte",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -4009,7 +4009,7 @@
   },
   {
     "code": "DOSE",
-    "message": "Numéro de livraison",
+    "message": "Numéro de livraison.",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -4171,13 +4171,13 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_HEADER",
-    "message": "Voulez-vous télécharger le fichier microplan",
+    "message": "Voulez-vous télécharger le modèle de microplan ?",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT",
-    "message": "Téléchargez un fichier unique contenant les données sur les installations, les utilisateurs et les cibles requises pour la configuration et la planification de votre campagne.",
+    "message": "Téléchargez un modèle pour ajouter les données d'installation, d'utilisateur et de cible requises pour la configuration et la planification de votre campagne.",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -4855,7 +4855,7 @@
   },
   {
     "code": "FOOTER_ACTION_insufficientStockPopUp_LABEL",
-    "message": "Stock insuffisant",
+    "message": "Popup de stock insuffisant",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -5203,7 +5203,7 @@
   },
   {
     "code": "HCM_CHOOSE_MODULE",
-    "message": "Configurez les modules nécessaires à votre campagne",
+    "message": "Modules d'applications mobiles",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -5455,7 +5455,7 @@
   },
   {
     "code": "HCM_DELIVERY_TABLE_DELIVERY_NO_HEADER",
-    "message": "Numéro de livraison",
+    "message": "Numéro de livraison.",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -5935,7 +5935,7 @@
   },
   {
     "code": "HCM_UPLOAD_LOCALIZATION_DATA_HEADING",
-    "message": "Téléchargement groupé de contenu linguistique",
+    "message": "Télécharger des traductions",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -6061,7 +6061,7 @@
   },
   {
     "code": "HOUSEHOLD_LOCALITY",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -6625,7 +6625,7 @@
   },
   {
     "code": "IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -7057,7 +7057,7 @@
   },
   {
     "code": "LABEL_PAIR_CODE",
-    "message": "Règlement de l'aperçu des ménages",
+    "message": "Règlement",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -7213,7 +7213,7 @@
   },
   {
     "code": "LABEL_PAIR_HCMTOTALMEMBERS",
-    "message": "Aperçu du ménage, nombre total de membres",
+    "message": "Nombre total de membres",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -8797,7 +8797,7 @@
   },
   {
     "code": "NAME_OF_INDIVIDUAL",
-    "message": "Nom de la personne",
+    "message": "Chef de famille",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -9109,7 +9109,7 @@
   },
   {
     "code": "POPUP_TITLE",
-    "message": "Titre de la fenêtre contextuelle",
+    "message": "Titre du pop-up",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -9739,7 +9739,7 @@
   },
   {
     "code": "SEARCH_CHECKLIST",
-    "message": "Liste de contrôle de recherche",
+    "message": "Configurer la liste de contrôle",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -10027,13 +10027,13 @@
   },
   {
     "code": "STOCKRECON_REPORT_TABLE_HEADER_PHYSICAL_COUNT",
-    "message": "Nombre physique",
+    "message": "Comptage physique",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_DAMAGED",
-    "message": "Crosse endommagée",
+    "message": "Stock endommagé",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -10165,7 +10165,7 @@
   },
   {
     "code": "STOCKREPORTS_TABLE_HEADER_PHYSICAL_COUNT",
-    "message": "Nombre physique",
+    "message": "Comptage physique",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -10177,7 +10177,7 @@
   },
   {
     "code": "STOCKREPORTS_TABLE_HEADER_STOCK_DAMAGED",
-    "message": "Crosse endommagée",
+    "message": "Stock endommagé",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -10423,25 +10423,25 @@
   },
   {
     "code": "TIP_APPCONFIG_PROPERTIES",
-    "message": "Personnalisez le comportement des champs en définissant les règles de champ, les valeurs par défaut et les options d'affichage.",
+    "message": "Les propriétés du champ définissent la manière dont un champ apparaît et se comporte dans le formulaire.",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_BUTTONS",
-    "message": "Configurer les boutons d'action qui apparaîtront dans la section de sous-en-tête",
+    "message": "Les boutons sont les actions disponibles pour les utilisateurs sur l'écran.",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_FIELDS",
-    "message": "Ajoutez des champs qui seront affichés dans la section de sous-en-tête sous l'en-tête principal",
+    "message": "Les champs de formulaire sont les champs que les utilisateurs peuvent remplir ou afficher dans l'application.",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE",
-    "message": "Éléments du modèle",
+    "message": "Les éléments du modèle sont les champs et les sections inclus dans le modèle.",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -11575,7 +11575,7 @@
   },
   {
     "code": "backToComplaints",
-    "message": "Retour aux plaintes",
+    "message": "Retour à la boîte de réception des plaintes",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -12067,7 +12067,7 @@
   },
   {
     "code": "close",
-    "message": "Retour aux plaintes",
+    "message": "Retour à la boîte de réception des plaintes",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -12229,7 +12229,7 @@
   },
   {
     "code": "complaintView",
-    "message": "Vue des plaintes",
+    "message": "Résumé de la plainte",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -12277,7 +12277,7 @@
   },
   {
     "code": "coreCommonPermissionBluetoothscanDesc",
-    "message": "Recherchez les appareils Bluetooth à proximité.",
+    "message": "Scannez et connectez-vous aux appareils à proximité.",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -13039,7 +13039,7 @@
   },
   {
     "code": "insufficientStockPopUp",
-    "message": "Stock insuffisant",
+    "message": "Popup de stock insuffisant",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -13117,7 +13117,7 @@
   },
   {
     "code": "labelPairComplaint",
-    "message": "Plainte",
+    "message": "Détails de la plainte",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -13141,7 +13141,7 @@
   },
   {
     "code": "lessExcessHeading",
-    "message": "Enregistrer le stock en moins/en excès",
+    "message": "Signaler un écart de stock",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -14323,7 +14323,7 @@
   },
   {
     "code": "stockIssuedHeading",
-    "message": "Actions émises",
+    "message": "Enregistrer une transaction boursière",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -14743,7 +14743,7 @@
   },
   {
     "code": "viewTransactionDetails",
-    "message": "Afficher les détails de la transaction",
+    "message": "Détails de la transaction",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },
@@ -14833,7 +14833,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_STOCK_ACKNOWLEDGEMENT",
-    "message": "Reconnaissance",
+    "message": "Reconnaissance des stocks",
     "module": "hcm-appconfiguration",
     "locale": "fr_DEMO"
   },

@@ -559,7 +559,7 @@
   },
   {
     "code": "ADD_LOCALISATION_BREADCRUMB",
-    "message": "Adicionar localizações",
+    "message": "Carregar traduções",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -733,7 +733,7 @@
   },
   {
     "code": "APPCONFIG_MIN_LESS_EQUAL_MAX",
-    "message": "O intervalo mínimo deve ser menor que o intervalo máximo",
+    "message": "O valor mínimo deve ser menor que o valor máximo.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -961,7 +961,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
-    "message": "Detalhes do beneficiário",
+    "message": "Resumo de entrega",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -1843,7 +1843,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_REDOSE",
-    "message": "Refazer categoria",
+    "message": "Revisitar",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -1921,7 +1921,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_BENEFICIARYDETAILS",
-    "message": "Detalhes do beneficiário",
+    "message": "Resumo de entrega",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2077,7 +2077,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
-    "message": "Manipulador de permissão",
+    "message": "Permissões de aplicativos",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2191,7 +2191,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_STOCK",
-    "message": "Estoques de vacinação em nível de equipe",
+    "message": "Detalhes de estoque em nível de equipe",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2257,7 +2257,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_VIEWTRANSACTIONDETAILS",
-    "message": "Ver detalhes da transação",
+    "message": "Detalhes da transação",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2287,13 +2287,13 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_SENT_OUT_FROM_THE_WAREHOUSE_DESCRIPTION",
-    "message": "Criar registros para estoque enviado do armazém",
+    "message": "Registrar itens de estoque emitidos ou devolvidos ao armazém.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
-    "message": "Registro de estoque enviado",
+    "message": "Transação de estoque recorde",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2533,7 +2533,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
-    "message": "Manipulador de permissão",
+    "message": "Permissões de aplicativos",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2749,7 +2749,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_VIEWTRANSACTIONDETAILS",
-    "message": "Ver detalhes da transação",
+    "message": "Detalhes da transação",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3103,7 +3103,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "Nome do Beneficiário",
+    "message": "Nome do beneficiário",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3127,7 +3127,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3145,7 +3145,7 @@
   },
   {
     "code": "BENEFICIARY_DETAILS_HEADING",
-    "message": "Detalhes do beneficiário",
+    "message": "Resumo de entrega",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3499,7 +3499,7 @@
   },
   {
     "code": "Beneficiary details",
-    "message": "Detalhes do beneficiário",
+    "message": "Resumo de entrega",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3511,7 +3511,7 @@
   },
   {
     "code": "BeneficiaryDetails",
-    "message": "Detalhes do beneficiário",
+    "message": "Resumo de entrega",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3553,7 +3553,7 @@
   },
   {
     "code": "CAMPAIGN_ADD_MORE_PRODUCT_BUTTON",
-    "message": "Adicionar recursos",
+    "message": "Adicionar recurso",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3739,7 +3739,7 @@
   },
   {
     "code": "CAMPAIGN_CYCLE",
-    "message": "Distribuição",
+    "message": "Ciclo",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3751,7 +3751,7 @@
   },
   {
     "code": "CAMPAIGN_CYCLE_CONFIGURE_HEADING_BEDNET",
-    "message": "Configurar ciclos e entregas para campanha tipo Bednet.",
+    "message": "Configure ciclos e entregas para Bednet Distribution.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3931,7 +3931,7 @@
   },
   {
     "code": "CAMPAIGN_DELIVERY_TAB_SUB_TEXT_BEDNET",
-    "message": "Configure regras de entrega para campanha do tipo Bednet.",
+    "message": "Configure regras de entrega para distribuição Bednet.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4051,7 +4051,7 @@
   },
   {
     "code": "CAMPAIGN_DOWNLOADING_TEMPLATE",
-    "message": "Aguarde, baixando o modelo",
+    "message": "Preparando seu modelo para download",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4303,13 +4303,13 @@
   },
   {
     "code": "CAMPAIGN_PRODUCTS_MODAL_HEADER_TEXT",
-    "message": "Configurar recursos",
+    "message": "Adicionar recurso para entregar",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION",
-    "message": "Adicionar recursos",
+    "message": "Adicionar recurso",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4345,7 +4345,7 @@
   },
   {
     "code": "CAMPAIGN_PROJECT_BEDNET",
-    "message": "Campanha tipo mosquiteiro",
+    "message": "Distribuição de mosquiteiros",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4789,7 +4789,7 @@
   },
   {
     "code": "CAMPAIGN_UPLOADING_FILE",
-    "message": "Fazendo upload do arquivo",
+    "message": "Preparando tudo para seu upload...",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -5437,7 +5437,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Data",
+    "message": "Data da reclamação",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -5449,7 +5449,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Tipo",
+    "message": "Tipo de reclamação",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -6637,7 +6637,7 @@
   },
   {
     "code": "DOSE",
-    "message": "Número de entrega",
+    "message": "Entrega não.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -7177,7 +7177,7 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_ATTENDEE__MODAL_HEADER",
-    "message": "Baixar modelo para mapear usuários",
+    "message": "Baixe modelo para mapear usuários",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -7225,13 +7225,13 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_HEADER",
-    "message": "Você deseja baixar o arquivo microplan",
+    "message": "Quer baixar o modelo de microplano?",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT",
-    "message": "Carregue um único arquivo contendo dados de instalações, usuários e alvos necessários para a configuração e planejamento de sua campanha.",
+    "message": "Baixe um modelo para adicionar dados de instalações, usuários e alvos necessários para a configuração e planejamento de sua campanha.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -9499,7 +9499,7 @@
   },
   {
     "code": "HCM_CHOOSE_MODULE",
-    "message": "Configure os módulos necessários para sua campanha",
+    "message": "Módulos de aplicativos móveis",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -12661,7 +12661,7 @@
   },
   {
     "code": "HOUSEHOLD_LOCALITY",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -12997,13 +12997,13 @@
   },
   {
     "code": "INVENTORY_RECORD_LESS_EXCESS_DESCRIPTION",
-    "message": "Crie registros de estoque para perda/excesso",
+    "message": "Relate quantidades de estoque inferiores ou superiores à quantidade esperada.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "INVENTORY_RECORD_LESS_EXCESS_HEADING",
-    "message": "Registrar estoque menor/excesso",
+    "message": "Reportar discrepância de estoque",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -14713,7 +14713,7 @@
   },
   {
     "code": "PLEASE_WAIT_WHILE_ADDING_BOUNDARIES",
-    "message": "Aguarde enquanto adicionamos limites",
+    "message": "Aguarde enquanto adicionamos seus limites",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -14749,7 +14749,7 @@
   },
   {
     "code": "POPUP_FOOTER_ACTIONS_LABELS",
-    "message": "Etiquetas de rodapé pop-up",
+    "message": "Rótulos de rodapé pop-up",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -15709,7 +15709,7 @@
   },
   {
     "code": "SEARCH_CHECKLIST",
-    "message": "Lista de verificação de pesquisa",
+    "message": "Configurar lista de verificação",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -15997,7 +15997,7 @@
   },
   {
     "code": "STOCK",
-    "message": "Estoques de vacinação em nível de equipe",
+    "message": "Detalhes de estoque em nível de equipe",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -16363,19 +16363,19 @@
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_BUTTONS",
-    "message": "Configure botões de ação que aparecerão na seção do subcabeçalho",
+    "message": "Botões são as ações disponíveis aos usuários na tela.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_FIELDS",
-    "message": "Adicione campos que serão exibidos na seção de subcabeçalho abaixo do cabeçalho principal",
+    "message": "Os campos do formulário são os campos que os usuários podem preencher ou visualizar no aplicativo.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE",
-    "message": "Elementos do modelo",
+    "message": "Os elementos do modelo são os campos e seções incluídos no modelo.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -17533,7 +17533,7 @@
   },
   {
     "code": "complaintView",
-    "message": "Visualização de reclamações",
+    "message": "Resumo da reclamação",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -18193,7 +18193,7 @@
   },
   {
     "code": "viewTransactionDetails",
-    "message": "Ver detalhes da transação",
+    "message": "Detalhes da transação",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },

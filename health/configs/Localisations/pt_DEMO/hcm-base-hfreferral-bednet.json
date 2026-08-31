@@ -37,7 +37,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-hfreferral-bednet",
     "locale": "pt_DEMO"
   },
@@ -61,7 +61,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Domicílio Fechado",
+    "message": "Domicílio fechado",
     "module": "hcm-base-hfreferral-bednet",
     "locale": "pt_DEMO"
   },

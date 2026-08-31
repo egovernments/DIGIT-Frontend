@@ -919,7 +919,7 @@
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
-    "message": "Crosse endommagée",
+    "message": "Stock endommagé",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "fr_DEMO"
   },

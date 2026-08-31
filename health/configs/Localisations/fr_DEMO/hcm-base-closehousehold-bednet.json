@@ -37,7 +37,7 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_ACTION_LABEL",
-    "message": "Suivant",
+    "message": "Soumettre",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "fr_DEMO"
   },

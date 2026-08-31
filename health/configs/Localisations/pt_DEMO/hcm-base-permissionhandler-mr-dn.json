@@ -19,7 +19,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_PERMISSIONHANDLER",
-    "message": "Permissão do aplicativo",
+    "message": "Permissões de aplicativos",
     "module": "hcm-base-permissionhandler-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -31,7 +31,7 @@
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiário Indicado",
+    "message": "Beneficiário indicado",
     "module": "hcm-base-permissionhandler-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -55,7 +55,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Domicílio Fechado",
+    "message": "Domicílio fechado",
     "module": "hcm-base-permissionhandler-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1681,7 +1681,7 @@
   },
   {
     "code": "coreCommonPermissionBluetoothscanDesc",
-    "message": "Procure dispositivos Bluetooth próximos.",
+    "message": "Digitalize e conecte-se a dispositivos próximos.",
     "module": "hcm-base-permissionhandler-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1939,7 +1939,7 @@
   },
   {
     "code": "textTemplate4",
-    "message": "Desative a otimização da bateria para manter o aplicativo funcionando durante o trabalho de campo.",
+    "message": "Execute o aplicativo em segundo plano.",
     "module": "hcm-base-permissionhandler-mr-dn",
     "locale": "pt_DEMO"
   },

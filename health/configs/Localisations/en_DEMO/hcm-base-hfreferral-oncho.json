@@ -43,7 +43,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiary Absent",
+    "message": "Beneficiary absent",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -55,7 +55,7 @@
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "Beneficiary Refused",
+    "message": "Beneficiary refused",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -73,7 +73,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Closed Household",
+    "message": "Closed household",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -289,7 +289,7 @@
   },
   {
     "code": "HFREFERRAL_REFERRALDETAILS_MESSAGE",
-    "message": "Referral Details",
+    "message": "Referral details",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -859,7 +859,7 @@
   },
   {
     "code": "HF_REFERRAL_NOT_VISITED",
-    "message": "Not Visited",
+    "message": "Not visited",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -901,13 +901,13 @@
   },
   {
     "code": "NOTENOUGHSTOCK",
-    "message": "Not Enough Stock",
+    "message": "Not enough stock",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "NOT_ADMINISTERED",
-    "message": "Not Administered",
+    "message": "Not administered",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -919,7 +919,7 @@
   },
   {
     "code": "NotEnoughStock",
-    "message": "Not Enough Stock",
+    "message": "Not enough stock",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -955,7 +955,7 @@
   },
   {
     "code": "PerformanceIssue",
-    "message": "Performance Issue",
+    "message": "Performance issue",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -1231,25 +1231,25 @@
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Delivery Successful",
+    "message": "Delivery successful",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "SYNCNOTWORKING",
-    "message": "Sync Not Working",
+    "message": "Sync not working",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "SecurityIssues",
-    "message": "Security Issues",
+    "message": "Security issues",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "SyncNotWorking",
-    "message": "Sync Not Working",
+    "message": "Sync not working",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -1261,7 +1261,7 @@
   },
   {
     "code": "TechnicalIssues",
-    "message": "Technical Issues",
+    "message": "Technical issues",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -1279,7 +1279,7 @@
   },
   {
     "code": "UserAccountIssues",
-    "message": "User Account Issues",
+    "message": "User account issues",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },

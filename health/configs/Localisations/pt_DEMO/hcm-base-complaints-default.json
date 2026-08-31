@@ -349,7 +349,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Data",
+    "message": "Data da reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -361,7 +361,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Tipo",
+    "message": "Tipo de reclamação",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },
@@ -583,7 +583,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-complaints-default",
     "locale": "pt_DEMO"
   },

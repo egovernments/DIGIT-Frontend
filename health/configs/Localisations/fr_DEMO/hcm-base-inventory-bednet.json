@@ -985,7 +985,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_viewTransaction_NO_TRANSACTIONS_FOUND_INFOCARD_DESCRIPTION",
-    "message": "Aucune transaction n'est disponible pour le moment.",
+    "message": "Nous n'avons trouvé aucune transaction boursière à afficher. Une fois qu'une transaction est enregistrée, elle apparaîtra ici.",
     "module": "hcm-base-inventory-bednet",
     "locale": "fr_DEMO"
   },
@@ -1573,7 +1573,7 @@
   },
   {
     "code": "INVENTORY_NO_TRANSACTIONS_DESCRIPTION",
-    "message": "Aucune transaction boursière trouvée",
+    "message": "Nous n'avons trouvé aucune transaction boursière à afficher. Une fois qu'une transaction est enregistrée, elle apparaîtra ici.",
     "module": "hcm-base-inventory-bednet",
     "locale": "fr_DEMO"
   },
@@ -2317,7 +2317,7 @@
   },
   {
     "code": "Inventory_no_transactions_description",
-    "message": "Aucune nouvelle transaction n’est créée.",
+    "message": "Nous n'avons trouvé aucune transaction boursière à afficher. Une fois qu'une transaction est enregistrée, elle apparaîtra ici.",
     "module": "hcm-base-inventory-bednet",
     "locale": "fr_DEMO"
   },
@@ -3397,7 +3397,7 @@
   },
   {
     "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
-    "message": "Crosse endommagée",
+    "message": "Stock endommagé",
     "module": "hcm-base-inventory-bednet",
     "locale": "fr_DEMO"
   },
@@ -3763,7 +3763,7 @@
   },
   {
     "code": "labelPairList",
-    "message": " ",
+    "message": "Détails du reçu de stock",
     "module": "hcm-base-inventory-bednet",
     "locale": "fr_DEMO"
   },

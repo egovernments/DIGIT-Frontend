@@ -36,6 +36,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "ATTENDANCE_CENTREDESANTÉ",
+    "message": "CentreDeSante level",
+    "module": "hcm-payments",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "ATTENDANCE_CHIEFDOM",
     "message": "Chiefdom Level",
     "module": "hcm-payments",
@@ -1069,7 +1075,7 @@
   },
   {
     "code": "HCM_AM_BREADCRUMBS_PAYMENT_SETUP",
-    "message": "Payment Setup",
+    "message": "Payment setup",
     "module": "hcm-payments",
     "locale": "en_DEMO"
   },
@@ -1081,7 +1087,7 @@
   },
   {
     "code": "HCM_AM_BREADCRUMBS_PAYMENT_SETUP_SUCCESS",
-    "message": "Payment Setup",
+    "message": "Payment setup success",
     "module": "hcm-payments",
     "locale": "en_DEMO"
   },
@@ -1495,7 +1501,7 @@
   },
   {
     "code": "HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE",
-    "message": "Report not available yet. It will be available only after registered are approved.",
+    "message": "Report not available yet. It will be available only after registers are approved.",
     "module": "hcm-payments",
     "locale": "en_DEMO"
   },

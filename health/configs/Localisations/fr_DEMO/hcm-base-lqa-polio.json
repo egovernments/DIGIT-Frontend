@@ -55,7 +55,7 @@
   },
   {
     "code": "ADMINISTRATION_FAILED",
-    "message": "Échec de la vaccination",
+    "message": "La vaccination a échoué",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -949,7 +949,7 @@
   },
   {
     "code": "HCM_DELIVERY_COMMENTS_LABEL",
-    "message": "Commentaires de livraison",
+    "message": "Commentaires sur la vaccination",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -973,31 +973,31 @@
   },
   {
     "code": "HCM_DELIVERY_COMMENT_SUCCESSFUL",
-    "message": "Livraison réussie",
+    "message": "Vaccination réussie",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_DATE_LABEL",
-    "message": "Date de livraison",
+    "message": "Date de vaccination",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_DETAILS_DESCRIPTION",
-    "message": "Capturez les détails des ressources à livrer",
+    "message": "Capturez les détails de la vaccination",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_DETAILS_HEADING",
-    "message": "Détails de livraison",
+    "message": "Détails de la vaccination",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_RECORD_DELIVERY_BUTTON",
-    "message": "Livraison d'enregistrement",
+    "message": "Enregistrer la vaccination",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -1015,13 +1015,13 @@
   },
   {
     "code": "HCM_DELIVERY_SAVE_BUTTON",
-    "message": "Enregistrer la livraison",
+    "message": "Enregistrer la vaccination",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_DELIVERY_SCAN_LABEL",
-    "message": "Livraison de numérisation",
+    "message": "Scanner la vaccination",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -1087,7 +1087,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_DELIVER_INTERVENTION_BUTTON",
-    "message": "Réaliser une intervention",
+    "message": "Vacciner",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },
@@ -4225,7 +4225,7 @@
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Livraison réussie",
+    "message": "Vaccination réussie",
     "module": "hcm-base-lqa-polio",
     "locale": "fr_DEMO"
   },

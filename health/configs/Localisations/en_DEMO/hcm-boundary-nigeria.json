@@ -6612,6 +6612,24 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "NIGERIA_NI_01_02_12_01_01_NEW_VILLAGE_LOCALITY_ONE",
+    "message": "New village Locality one",
+    "module": "hcm-boundary-nigeria",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NIGERIA_NI_01_02_12_01_NEW_LOCALITY_ONE",
+    "message": "New Locality one",
+    "module": "hcm-boundary-nigeria",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NIGERIA_NI_01_02_12_DUGIA",
+    "message": "Dugia",
+    "module": "hcm-boundary-nigeria",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "NIGERIA_NI_01_02_BIU",
     "message": "Biu",
     "module": "hcm-boundary-nigeria",
@@ -88544,6 +88562,12 @@
   {
     "code": "NIGERIA_NI_03_01_02_01_KO_OZURI_SCHOOL_CLINIC",
     "message": "ko Ozuri School Clinic",
+    "module": "hcm-boundary-nigeria",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NIGERIA_NI_03_01_02_02_01_IDIOVECHE",
+    "message": "Idioveche",
     "module": "hcm-boundary-nigeria",
     "locale": "en_DEMO"
   },

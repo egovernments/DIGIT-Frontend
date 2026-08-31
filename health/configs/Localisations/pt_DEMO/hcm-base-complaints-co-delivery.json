@@ -1339,7 +1339,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_HFREFERRAL",
-    "message": "Referência de IC",
+    "message": "Encaminhamento de IC",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -2215,7 +2215,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "Nome do Beneficiário",
+    "message": "Nome do beneficiário",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -2239,7 +2239,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -2263,19 +2263,19 @@
   },
   {
     "code": "BENEFICIARY_DIED",
-    "message": "Beneficiário morreu",
+    "message": "Beneficiário faleceu",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "BENEFICIARY_MIGRATED",
-    "message": "Beneficiário Migrado",
+    "message": "Beneficiário migrado",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiário Indicado",
+    "message": "Beneficiário indicado",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -2503,7 +2503,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Domicílio Fechado",
+    "message": "Domicílio fechado",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -2917,7 +2917,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Data",
+    "message": "Data da reclamação",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -3469,7 +3469,7 @@
   },
   {
     "code": "DEPENDENT_FIELD_TAG",
-    "message": "Campo Dependente",
+    "message": "Campo dependente",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -3685,7 +3685,7 @@
   },
   {
     "code": "DIGIT_LOC_SELECT_MODULE_PLACEHOLDER",
-    "message": "Selecione Módulo",
+    "message": "Selecione o módulo",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -3733,7 +3733,7 @@
   },
   {
     "code": "DOSE",
-    "message": "Número de entrega",
+    "message": "Entrega não.",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5059,7 +5059,7 @@
   },
   {
     "code": "HOUSEHOLD_LOCALITY",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5167,7 +5167,7 @@
   },
   {
     "code": "IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Comentários Finais",
+    "message": "Comentários finais",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -5239,7 +5239,7 @@
   },
   {
     "code": "IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -7249,7 +7249,7 @@
   },
   {
     "code": "REGISTRATION_CLOSED_HOUSEHOLD",
-    "message": "Domicílio Fechado",
+    "message": "Domicílio fechado",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
@@ -7555,13 +7555,13 @@
   },
   {
     "code": "STOCKRECON_REPORT_TABLE_HEADER_DATE_OF_RECONCILIATION",
-    "message": "Data da Reconciliação",
+    "message": "Data da reconciliação",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },
   {
     "code": "STOCKRECON_REPORT_TABLE_HEADER_PHYSICAL_COUNT",
-    "message": "Contagem Física",
+    "message": "Contagem física",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "pt_DEMO"
   },

@@ -13,7 +13,7 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
+    "message": "Beneficiário ausente",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "pt_DEMO"
   },
@@ -37,7 +37,7 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_ACTION_LABEL",
-    "message": "Próximo",
+    "message": "Enviar",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "pt_DEMO"
   },
@@ -349,13 +349,13 @@
   },
   {
     "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiário Indicado",
+    "message": "Beneficiário indicado",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Domicílio Fechado",
+    "message": "Domicílio fechado",
     "module": "hcm-base-closehousehold-bednet",
     "locale": "pt_DEMO"
   },

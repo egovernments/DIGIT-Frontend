@@ -2233,7 +2233,7 @@
   },
   {
     "code": "BENEFICIARY_DIED",
-    "message": "Bénéficiaire décédé",
+    "message": "Le bénéficiaire est décédé",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3433,7 +3433,7 @@
   },
   {
     "code": "DIGIT_LOC_SELECT_MODULE_PLACEHOLDER",
-    "message": "Sélectionner un module",
+    "message": "Sélectionnez le module",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3481,7 +3481,7 @@
   },
   {
     "code": "DOSE",
-    "message": "Numéro de livraison",
+    "message": "Numéro de livraison.",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4795,7 +4795,7 @@
   },
   {
     "code": "HOUSEHOLD_LOCALITY",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4921,7 +4921,7 @@
   },
   {
     "code": "IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Manqué - Pas revisité",
+    "message": "Manqué - Non revisité",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4975,7 +4975,7 @@
   },
   {
     "code": "IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6445,7 +6445,7 @@
   },
   {
     "code": "POPUP_TITLE",
-    "message": "Titre de la fenêtre contextuelle",
+    "message": "Titre du pop-up",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7081,13 +7081,13 @@
   },
   {
     "code": "STOCKRECON_REPORT_TABLE_HEADER_PHYSICAL_COUNT",
-    "message": "Nombre physique",
+    "message": "Comptage physique",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "STOCKRECON_REPORT_TABLE_HEADER_STOCK_DAMAGED",
-    "message": "Crosse endommagée",
+    "message": "Stock endommagé",
     "module": "hcm-base-closehousehold-co-delivery",
     "locale": "fr_DEMO"
   },
