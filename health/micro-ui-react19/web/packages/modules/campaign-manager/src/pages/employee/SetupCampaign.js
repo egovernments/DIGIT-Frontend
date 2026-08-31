@@ -2,6 +2,7 @@ import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { CampaignConfig } from "../../configs/CampaignConfig";
 import { Stepper, Toast, Button, Footer, Loader,SVG } from "@egovernments/digit-ui-components";
 import {
@@ -73,6 +74,7 @@ const SetupCampaign = () => {
   );
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState(0);
   const [totalFormData, setTotalFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -637,6 +639,7 @@ const SetupCampaign = () => {
                 onSuccess: async (data) => {
                   updateUrlParams({ id: data?.CampaignDetails?.id });
                   draftRefetch();
+                  queryClient.invalidateQueries({ queryKey: ["SEARCH_CAMPAIGN"] });
                   if (filteredConfig?.[0]?.form?.[0]?.isLast) {
                     setCurrentKey(currentKey + 1);
                   } else if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
@@ -717,6 +720,12 @@ const SetupCampaign = () => {
     }
 
     setIsSubmitting(true);
+    // Same resolution CycleConfiguration.js uses for its own isBednet render-guard (store first,
+    // URL projectType param as fallback) - the validator's Bednet check must match this exactly,
+    // otherwise the two can disagree about whether this is a Bednet campaign.
+    const selectedProjectTypeForValidation =
+      totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || searchParams.get("projectType");
+    const isBednetCampaign = /bednet/i.test(selectedProjectTypeForValidation || "");
     // validating the screen data on clicking next button
     const checkValid = handleValidate({
       formData,
@@ -728,6 +737,7 @@ const SetupCampaign = () => {
       setSummaryErrors,
       t,
       setShowToast,
+      isBednetCampaign,
     });
     if (checkValid === false) {
       return;
