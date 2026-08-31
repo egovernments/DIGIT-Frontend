@@ -192,7 +192,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   useEffect(() => {
     // Don't overwrite local value while user is actively editing
     if (isEditingRef.current) return;
-    if (panelItem.fieldType === "text") {
+    if (panelItem.fieldType === "text" || panelItem.fieldType === "textarea") {
       const newVal = localizedFieldValue || "";
       setLocalValue(newVal);
       localValueRef.current = newVal;
@@ -586,13 +586,18 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         );
       }
 
-      case "text": {
+      // textarea shares the text path: FieldV1 renders a TextArea for
+      // type="textarea". Without this case a textarea panel item (e.g. the
+      // noResultCard description) fell through to `default: return null`,
+      // leaving an empty property box with no way to edit the value.
+      case "text":
+      case "textarea": {
         const isMandatory = selectedField?.mandatory === true;
         const isDisabled = viewMode || (panelItem?.disableForRequired && isMandatory);
         const maxLength = panelItem.maxLength;
         return (
           <FieldV1
-            type="text"
+            type={panelItem.fieldType === "textarea" ? "textarea" : "text"}
             label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             value={localValue}
             onChange={(event) => {
