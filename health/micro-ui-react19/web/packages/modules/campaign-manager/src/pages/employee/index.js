@@ -245,6 +245,8 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.includes("app-features") ||
         pathVar.includes("update-campaign") ||
         pathVar.includes("checklist/search") ||
+        pathVar.includes("checklist/create") ||
+        pathVar.includes("checklist/view") ||
         pathVar.includes("checklist/update") ||
         pathVar.includes("upload-screen") ||
         pathVar.includes("unified-upload-screen") ||
