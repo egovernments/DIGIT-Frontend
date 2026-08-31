@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader, Button, Toast } from "@egovernments/digit-ui-components";
+import { Loader, Button, Toast, Tag } from "@egovernments/digit-ui-components";
 import DataSyncCard from "./DataSyncCard";
 import SummaryCard from "./SummaryCard";
 import ReusableTableWrapper from "./ReusableTableWrapper";
@@ -385,25 +385,22 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRANSACTION_TYPE), key: "transactionType", grow: 1, sortable: false },
 ];
 
-  // Helper to map status to CSS class
-  const getStatusClass = (status) => {
-    const classMap = {
-      Completed: "cm-status-badge--completed",
-      Received: "cm-status-badge--completed",
-      "In-Transit": "cm-status-badge--in-transit",
-      Rejected: "cm-status-badge--rejected",
-      Returned: "cm-status-badge--completed",
-      "Return Initiated": "cm-status-badge--in-transit",
-      "Return Rejected": "cm-status-badge--rejected",
+  const getStatusTagType = (status) => {
+    const typeMap = {
+      Completed: "success",
+      Received: "success",
+      Returned: "success",
+      "In-Transit": "warning",
+      "Return Initiated": "warning",
+      Rejected: "error",
+      "Return Rejected": "error",
     };
-    return classMap[status] || "cm-status-badge--default";
+    return typeMap[status] || "monochrome";
   };
 
   const customCellRenderer = {
     status: (row) => (
-      <span className={`cm-status-badge ${getStatusClass(row.status)}`}>
-        {row.status}
-      </span>
+      <Tag label={row.status} type={getStatusTagType(row.status)} showIcon={false} stroke={false} />
     ),
     sentFrom: (row) => (
       <div>
@@ -455,15 +452,12 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       return "N/A";
     },
     transactionType: (row) => (
-      <span
-        className={`cm-tx-type-badge ${
-          row.transactionType === "Reverse - Logistics"
-            ? "cm-tx-type-badge--reverse"
-            : "cm-tx-type-badge--logistics"
-        }`}
-      >
-        {row.transactionType}
-      </span>
+      <Tag
+        label={row.transactionType}
+        type={row.transactionType === "Reverse - Logistics" ? "warning" : "success"}
+        showIcon={false}
+        stroke={false}
+      />
     ),
   };
 
