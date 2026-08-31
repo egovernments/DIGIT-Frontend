@@ -1114,6 +1114,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               {selectedData.length > 0 && (
                 <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
                   {selectedData.map((item, index) => {
+                    // Computed keys ({{fn:...}} / {{...}} expressions) are resolved at app runtime;
+                    // they have no editable localisation, so skip them instead of printing the raw expression
+                    if (/\{\{.*\}\}/.test(item.key)) return null;
+
                     // Find entity name for this field
                     let entityName = "";
                     for (const entity of labelPairConfig) {
