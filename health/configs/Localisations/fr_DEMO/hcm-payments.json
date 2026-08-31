@@ -31,43 +31,43 @@
   },
   {
     "code": "ATTENDANCE_CENTRE",
-    "message": "Centre Level",
+    "message": "Niveau central",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_CHIEFDOM",
-    "message": "Chiefdom Level",
+    "message": "Niveau de chefferie",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_COMMUNITY",
-    "message": "Community Level",
+    "message": "Niveau communautaire",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_COUNCIL",
-    "message": "Council Level",
+    "message": "Niveau du Conseil",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_COUNTRY",
-    "message": "Country Level",
+    "message": "Niveau du pays",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_DISTRICT",
-    "message": "District Level",
+    "message": "Niveau du district",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_HEALTHFACILITY",
-    "message": "Health facility Level",
+    "message": "Niveau établissement de santé",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -91,13 +91,13 @@
   },
   {
     "code": "ATTENDANCE_PAYS",
-    "message": "Pays Level",
+    "message": "Niveau de paie",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_PHU",
-    "message": "PHU Level",
+    "message": "Niveau du BSP",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -109,19 +109,19 @@
   },
   {
     "code": "ATTENDANCE_PROVINCE",
-    "message": "Province Level",
+    "message": "Niveau provincial",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_REGION",
-    "message": "Region Level",
+    "message": "Niveau régional",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_SECTION",
-    "message": "Section Level",
+    "message": "Niveau de section",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -133,7 +133,7 @@
   },
   {
     "code": "ATTENDANCE_SPP/SFD",
-    "message": "SPP/SFD Level",
+    "message": "Niveau SPP/SFD",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -145,25 +145,25 @@
   },
   {
     "code": "ATTENDANCE_STATE",
-    "message": "State Level",
+    "message": "Niveau de l'État",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_TOWN",
-    "message": "Town Level",
+    "message": "Niveau de la ville",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_VILLAGE",
-    "message": "Village Level",
+    "message": "Niveau du village",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "ATTENDANCE_WARD",
-    "message": "Ward Level",
+    "message": "Niveau de quartier",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -373,7 +373,7 @@
   },
   {
     "code": "HCM_AM_ALERT_APPROVE_DESCRIPTION",
-    "message": "Une fois approuvé, vous ne pouvez apporter aucune modification à la participation. Êtes-vous sûr de vouloir approuver ?",
+    "message": "Une fois approuvé, vous ne pouvez apporter aucune modification à la participation. Etes-vous sûr de vouloir approuver ?",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -385,7 +385,7 @@
   },
   {
     "code": "HCM_AM_ALERT_BILL_EDIT_DESCRIPTION",
-    "message": "Etes-vous sûr de vouloir mettre à jour les enregistrements sélectionnés ?",
+    "message": "Êtes-vous sûr de vouloir mettre à jour les enregistrements sélectionnés ?",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -859,7 +859,7 @@
   },
   {
     "code": "HCM_AM_BILL_IS_ALREADY_GENERATED_INFO_MESSAGE",
-    "message": "Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.",
+    "message": "La facture est déjà générée pour cette limite",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -901,7 +901,7 @@
   },
   {
     "code": "HCM_AM_BILL_UPDATE_SUCCESS",
-    "message": "Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.",
+    "message": "Facture mise à jour avec succès !",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -1219,13 +1219,13 @@
   },
   {
     "code": "HCM_AM_CENTRE_LEVEL",
-    "message": "Centre Level",
+    "message": "Niveau central",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_AM_CHIEFDOM_LEVEL",
-    "message": "Chiefdom Level",
+    "message": "Niveau de chefferie",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -1303,7 +1303,7 @@
   },
   {
     "code": "HCM_AM_COMMUNITY_LEVEL",
-    "message": "Community Level",
+    "message": "Niveau communautaire",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -1375,13 +1375,13 @@
   },
   {
     "code": "HCM_AM_COUNCIL_LEVEL",
-    "message": "Council Level",
+    "message": "Niveau du Conseil",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_AM_COUNTRY_LEVEL",
-    "message": "Country Level",
+    "message": "Niveau du pays",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -1411,13 +1411,13 @@
   },
   {
     "code": "HCM_AM_DENROLLMENT_DATE",
-    "message": "De-enrollment Date",
+    "message": "Date de désinscription",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_AM_DISTRICT_LEVEL",
-    "message": "District Level",
+    "message": "Niveau du district",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -1561,13 +1561,13 @@
   },
   {
     "code": "HCM_AM_ENTER_TAG",
-    "message": "Entrez la balise",
+    "message": "Entrez le code de l'équipe",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_AM_ENTER_TEAM_CODE",
-    "message": "Entrez le code de l'étiquette",
+    "message": "Entrez le code de l'équipe",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -1645,13 +1645,13 @@
   },
   {
     "code": "HCM_AM_FOOD",
-    "message": "Salaire",
+    "message": "Allocation alimentaire",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_AM_FOOD_ALLOWANCE",
-    "message": "Indemnité alimentaire",
+    "message": "Allocation alimentaire",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -1735,7 +1735,7 @@
   },
   {
     "code": "HCM_AM_HEALTHFACILITY_LEVEL",
-    "message": "Health facility Level",
+    "message": "Niveau établissement de santé",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -1765,13 +1765,13 @@
   },
   {
     "code": "HCM_AM_INFO_TAG_CODE_MSG",
-    "message": "Voulez-vous remplir le code du tag ? Si oui, appuyez sur Enter Tag. Sinon, attribuez-le.",
+    "message": "Voulez-vous remplir le code de l'équipe? Si oui, appuyez sur Entrer le code d'équipe. Sinon, attribuez-le.",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_AM_INITIATED_INFO_MESSAGE",
-    "message": "Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.",
+    "message": "La facture est déjà générée pour cette limite",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -2227,7 +2227,7 @@
   },
   {
     "code": "HCM_AM_PAYS_LEVEL",
-    "message": "Pays Level",
+    "message": "Niveau de paie",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -2311,13 +2311,13 @@
   },
   {
     "code": "HCM_AM_PER_DAY",
-    "message": "par jour",
+    "message": "Par jour",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_AM_PHU_LEVEL",
-    "message": "PHU Level",
+    "message": "Niveau du BSP",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -2401,7 +2401,7 @@
   },
   {
     "code": "HCM_AM_PROVINCE_LEVEL",
-    "message": "Province Level",
+    "message": "Niveau provincial",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -2413,7 +2413,7 @@
   },
   {
     "code": "HCM_AM_REGION_LEVEL",
-    "message": "Region Level",
+    "message": "Niveau régional",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -2527,7 +2527,7 @@
   },
   {
     "code": "HCM_AM_SECTION_LEVEL",
-    "message": "Section Level",
+    "message": "Niveau de section",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -2641,13 +2641,13 @@
   },
   {
     "code": "HCM_AM_SPP/SFD_LEVEL",
-    "message": "SPP/SFD Level",
+    "message": "Niveau SPP/SFD",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
   {
     "code": "HCM_AM_STATE_LEVEL",
-    "message": "State Level",
+    "message": "Niveau de l'État",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -2689,7 +2689,7 @@
   },
   {
     "code": "HCM_AM_TAG_LABEL",
-    "message": "Code d'étiquette",
+    "message": "Code d'équipe",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -2743,7 +2743,7 @@
   },
   {
     "code": "HCM_AM_TOWN_LEVEL",
-    "message": "Town Level",
+    "message": "Niveau de la ville",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -2923,7 +2923,7 @@
   },
   {
     "code": "HCM_AM_VIEW_REGISTERS",
-    "message": "Afficher les registres",
+    "message": "Voir les registres",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -2953,7 +2953,7 @@
   },
   {
     "code": "HCM_AM_VILLAGE_LEVEL",
-    "message": "Village Level",
+    "message": "Niveau du village",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -2977,7 +2977,7 @@
   },
   {
     "code": "HCM_AM_WARD_LEVEL",
-    "message": "Ward Level",
+    "message": "Niveau de quartier",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -3055,7 +3055,7 @@
   },
   {
     "code": "HEALTH_FACILITY_WORKER",
-    "message": "Travailleur d'établissement de santé",
+    "message": "Agent d'établissement de santé",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -3373,7 +3373,7 @@
   },
   {
     "code": "WBH_DRAG_DROP",
-    "message": "Glisser-déposer le fichier ou",
+    "message": "Glisser et déposer un fichier ou",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   },
@@ -3422,6 +3422,42 @@
   {
     "code": "view-attendance",
     "message": "Afficher la participation",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CAMPAIGN_SUPERVISOR",
+    "message": "Superviseur de campagne",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LOADING",
+    "message": "Chargement...",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PAYMENT_APPROVER",
+    "message": "Approbateur de paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PAYMENT_EDITOR",
+    "message": "Éditeur de paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PAYMENT_REVIEWER",
+    "message": "Réviseur de paiement",
+    "module": "hcm-payments",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TEAM_SUPERVISOR",
+    "message": "Superviseur d'équipe",
     "module": "hcm-payments",
     "locale": "fr_DEMO"
   }

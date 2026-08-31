@@ -205,7 +205,7 @@
   },
   {
     "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -331,13 +331,13 @@
   },
   {
     "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
-    "message": "Select Product",
+    "message": "Select product",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
   {
     "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
-    "message": "Select Facility",
+    "message": "Select facility",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -379,7 +379,7 @@
   },
   {
     "code": "STOCKRECON_REPORT_DETAILS_SECONDARY_ACTION_LABEL",
-    "message": "Back to home",
+    "message": "Back to Home",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -451,7 +451,7 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
-    "message": "Select Warehouse",
+    "message": "Select warehouse",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -469,7 +469,7 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -583,7 +583,7 @@
   },
   {
     "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
-    "message": "Stock on hand = (Stock received + stock returned) \u2212 (stock issued + stock lost + stock damaged)",
+    "message": "Stock on hand = (Stock received + stock returned) − (stock issued + stock lost + stock damaged)",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
@@ -709,13 +709,13 @@
   },
   {
     "code": "stockReconTable",
-    "message": "Stock Reconciliation Table",
+    "message": "Stock reconciliation table",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   },
   {
     "code": "stockTable",
-    "message": "Stock Table",
+    "message": "Stock table",
     "module": "hcm-base-stockreports-default",
     "locale": "en_DEMO"
   }

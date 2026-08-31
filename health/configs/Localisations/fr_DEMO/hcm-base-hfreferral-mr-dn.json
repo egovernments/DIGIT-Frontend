@@ -343,7 +343,7 @@
   },
   {
     "code": "HFREFERRAL_FACILITY_DETAILS_hfCoordinator_LABEL",
-    "message": "Référé par (code d'équipe CDD)",
+    "message": "Référé par (code équipe CDD)",
     "module": "hcm-base-hfreferral-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -1495,7 +1495,7 @@
   },
   {
     "code": "hfCoordinator",
-    "message": "Référé par (code d'équipe CDD)",
+    "message": "Référé par (code équipe CDD)",
     "module": "hcm-base-hfreferral-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -1525,7 +1525,7 @@
   },
   {
     "code": "minSearchChars",
-    "message": "Caractères minimaux",
+    "message": "Caractères minimum",
     "module": "hcm-base-hfreferral-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -1567,7 +1567,7 @@
   },
   {
     "code": "referralName",
-    "message": "Nom de la référence",
+    "message": "Nom de référence",
     "module": "hcm-base-hfreferral-mr-dn",
     "locale": "fr_DEMO"
   },
@@ -1700,6 +1700,18 @@
   {
     "code": "textTemplatetext",
     "message": "Date de référence",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Étiquette",
+    "module": "hcm-base-hfreferral-mr-dn",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceipt",
+    "message": "Date de réception",
     "module": "hcm-base-hfreferral-mr-dn",
     "locale": "fr_DEMO"
   }

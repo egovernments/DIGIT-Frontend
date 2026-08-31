@@ -1,5 +1,11 @@
 [
   {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Label",
+    "module": "hcm-base-hfreferral-default",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "ADMINISTRATION_FAILED",
     "message": "Administration Failed",
     "module": "hcm-base-hfreferral-default",
@@ -13,7 +19,7 @@
   },
   {
     "code": "APPONE_INVENTORY_QUANTITY_SENT_LABEL",
-    "message": "Quantity Sent",
+    "message": "Quantity sent",
     "module": "hcm-base-hfreferral-default",
     "locale": "en_DEMO"
   },
@@ -199,7 +205,7 @@
   },
   {
     "code": "HFREFERRAL_FACILITY_DETAILS_evaluationFacility_LABEL",
-    "message": "Health Facility",
+    "message": "Health facility",
     "module": "hcm-base-hfreferral-default",
     "locale": "en_DEMO"
   },

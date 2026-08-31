@@ -133,13 +133,13 @@
   },
   {
     "code": "ASSIGN_TO_ALL",
-    "message": "Atribuir a todos",
+    "message": "Atribuído a todos",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "ASSIGN_TO_ME",
-    "message": "Atribuir para mim",
+    "message": "Atribuído a mim",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -673,7 +673,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Contato",
+    "message": "Número de contato",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -685,7 +685,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Data",
+    "message": "Data da reclamação",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -697,7 +697,7 @@
   },
   {
     "code": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Tipo",
+    "message": "Tipo de reclamação",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -818,6 +818,12 @@
   {
     "code": "FOOTER_ACTION_2_LABEL",
     "message": "Cancelar",
+    "module": "hcm-base-complaints-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_cancel2_LABEL",
+    "message": "Limpar etiqueta",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -985,7 +991,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "Referência de IC",
+    "message": "Encaminhamento de IC",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -1027,7 +1033,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Beneficiário do Projeto",
+    "message": "Beneficiário do projeto",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -1123,7 +1129,7 @@
   },
   {
     "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Data de Registro",
+    "message": "Data de registro",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -1147,7 +1153,7 @@
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
-    "message": "Nome do Beneficiário",
+    "message": "Nome do beneficiário",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -1213,7 +1219,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Comentários Finais",
+    "message": "Comentários finais",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -1285,7 +1291,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -1381,25 +1387,25 @@
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Motivo de Ausência",
+    "message": "Motivo da ausência",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "Conscientização AFP",
+    "message": "Conscientização da AFP",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "Contagem de casos AFP",
+    "message": "Contagem de casos de AFP",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Outra Consciência",
+    "message": "Outra consciência",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -1429,7 +1435,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Sexo Infantil",
+    "message": "Sexo infantil",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -1489,13 +1495,13 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Nome do pesquisador",
+    "message": "Nome do topógrafo",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -1765,7 +1771,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
-    "message": "Unidade Administrativa",
+    "message": "Unidade administrativa",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -1903,7 +1909,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "ID exclusivo do beneficiário",
+    "message": "ID do beneficiário",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -1957,7 +1963,7 @@
   },
   {
     "code": "administrativeArea",
-    "message": "Área Administrativa",
+    "message": "Área administrativa",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -2005,13 +2011,13 @@
   },
   {
     "code": "complaintAcknowledgement",
-    "message": "Reconhecimento de reclamação",
+    "message": "Reconhecimento da reclamação",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "complaintCard",
-    "message": "Cartão de reclamação",
+    "message": "Reclamação",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -2065,7 +2071,7 @@
   },
   {
     "code": "complaintView",
-    "message": "Visualização de reclamações",
+    "message": "Visualização da reclamação",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -2077,7 +2083,7 @@
   },
   {
     "code": "complaintsLabelPair",
-    "message": " ",
+    "message": "Detalhes da reclamação",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -2305,7 +2311,7 @@
   },
   {
     "code": "supervisorName",
-    "message": "Nome do Supervisor",
+    "message": "Nome do supervisor",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -2341,19 +2347,19 @@
   },
   {
     "code": "textTemplate",
-    "message": "Detalhes Adicionais",
+    "message": "Detalhes adicionais",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "textTemplate2",
-    "message": "Detalhes Adicionais",
+    "message": "Detalhes adicionais",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
   {
     "code": "textTemplate3",
-    "message": "Detalhes Adicionais",
+    "message": "Detalhes adicionais",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -2383,7 +2389,7 @@
   },
   {
     "code": "time",
-    "message": "Hora do Incidente",
+    "message": "Hora do incidente",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   },
@@ -2396,6 +2402,42 @@
   {
     "code": "viewDetails",
     "message": "Abrir",
+    "module": "hcm-base-complaints-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Rótulo",
+    "module": "hcm-base-complaints-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND",
+    "message": "Reclamação não encontrada",
+    "module": "hcm-base-complaints-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND_DESC",
+    "message": "Não encontramos nenhuma reclamação nos autos. Você pode registrar uma nova reclamação.",
+    "module": "hcm-base-complaints-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
+    "message": "Ação do usuário",
+    "module": "hcm-base-complaints-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+    "message": "Fonte",
+    "module": "hcm-base-complaints-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
     "module": "hcm-base-complaints-polio",
     "locale": "pt_DEMO"
   }

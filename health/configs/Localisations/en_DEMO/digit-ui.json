@@ -1375,7 +1375,7 @@
   },
   {
     "code": "ACCOUNT_HOLDER_NAME",
-    "message": "Account Holder\u2019s name",
+    "message": "Account Holder’s name",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -7603,7 +7603,7 @@
   },
   {
     "code": "CCF_ADHERENCE_TO_DATA_PRINCIPLES_INFO_LABEL",
-    "message": "We adhere to the principles of accountability, transparency, purposeful and proportional collection, usage, storage and disclosure of personally identifiable information (\u201cPII\u201d).",
+    "message": "We adhere to the principles of accountability, transparency, purposeful and proportional collection, usage, storage and disclosure of personally identifiable information (“PII”).",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -7621,7 +7621,7 @@
   },
   {
     "code": "CCF_COLLECT_AND_PROGRAM_LABEL",
-    "message": "WHAT DATA DO WE COLLECT? / WHAT IS \u2018DATA\u2019 UNDER THIS \u2018PROGRAM\u2019?",
+    "message": "WHAT DATA DO WE COLLECT? / WHAT IS ‘DATA’ UNDER THIS ‘PROGRAM’?",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -7633,7 +7633,7 @@
   },
   {
     "code": "CCF_COLLECT_INFO_IMPROVE_LABEL",
-    "message": "We collect information/data (\u201cdata\u201d) to improve and provide better services to you. We collect and process PII such as your first name, last name, parent\u2019s / guardian\u2019s name, address, email address, telephone number, age, gender, identification documents. We may collect your educational, demographic, location, device and other similar information.",
+    "message": "We collect information/data (“data”) to improve and provide better services to you. We collect and process PII such as your first name, last name, parent’s / guardian’s name, address, email address, telephone number, age, gender, identification documents. We may collect your educational, demographic, location, device and other similar information.",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -7693,7 +7693,7 @@
   },
   {
     "code": "CCF_PP_ADHERENCE_TO_DATA_INFO_LABEL",
-    "message": "We adhere to the principles of accountability, transparency, purposeful and proportional collection, usage, storage and disclosure of personally identifiable information (\u201cPII\u201d).",
+    "message": "We adhere to the principles of accountability, transparency, purposeful and proportional collection, usage, storage and disclosure of personally identifiable information (“PII”).",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -7735,7 +7735,7 @@
   },
   {
     "code": "CCF_PP_DATA_DO_WE_COLLECT_INFO_1_LABEL",
-    "message": "We collect information/data (\u201cdata\u201d) to improve and provide better services to you. We collect and process PII such as your first name, last name, parent\u2019s / guardian\u2019s name, address, email address, telephone number, age, gender, identification documents. We may collect your educational, demographic, location, device and other similar information.",
+    "message": "We collect information/data (“data”) to improve and provide better services to you. We collect and process PII such as your first name, last name, parent’s / guardian’s name, address, email address, telephone number, age, gender, identification documents. We may collect your educational, demographic, location, device and other similar information.",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -7759,7 +7759,7 @@
   },
   {
     "code": "CCF_PP_DATA_DO_WE_COLLECT_LABEL",
-    "message": "WHAT DATA DO WE COLLECT? / WHAT IS \u2018DATA\u2019 UNDER THIS \u2018PROGRAM\u2019?",
+    "message": "WHAT DATA DO WE COLLECT? / WHAT IS ‘DATA’ UNDER THIS ‘PROGRAM’?",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -7903,7 +7903,7 @@
   },
   {
     "code": "CCF_PP_HOW_DO_WE_PROCESS_INFO_6_LABEL",
-    "message": "Data processed or shared for monitoring user activity and preferences as evidence from user\u2019s activity on app to provide a better experience in future.",
+    "message": "Data processed or shared for monitoring user activity and preferences as evidence from user’s activity on app to provide a better experience in future.",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -7951,7 +7951,7 @@
   },
   {
     "code": "CCF_PP_PRIVANCY_SECURITY_LABEL",
-    "message": "[PROGRAM NAME] (\u201cwe\u201d or \u201cus\u201d or \u201cour\u201d) respects the privacy of our users (\u201cuser\u201d or \u201cyou\u201d also referred to as \u2018your\u2019). Hence, we maintain the highest standards for secure activities , user information/data privacy and security.",
+    "message": "[PROGRAM NAME] (“we” or “us” or “our”) respects the privacy of our users (“user” or “you” also referred to as ‘your’). Hence, we maintain the highest standards for secure activities , user information/data privacy and security.",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -8017,7 +8017,7 @@
   },
   {
     "code": "CCF_PROCESS_DISCLOSE_SHARE_MONITIRING_LABEL",
-    "message": "Data processed or shared for monitoring user activity and preferences as evidence from user\u2019s activity on app to provide a better experience in future.",
+    "message": "Data processed or shared for monitoring user activity and preferences as evidence from user’s activity on app to provide a better experience in future.",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -8317,7 +8317,7 @@
   },
   {
     "code": "CITIZEN_CONSENT_FORM_PP_PRIVANCY_SECURITY_LABEL",
-    "message": "{PROGRAM NAME} (\u201cwe\u201d or \u201cus\u201d or \u201cour\u201d) respects the privacy of our users (\u201cuser\u201d or \u201cyou\u201d also referred to as \u2018your\u2019). Hence, we maintain the highest standards for secure activities , user information/data privacy and security.",
+    "message": "{PROGRAM NAME} (“we” or “us” or “our”) respects the privacy of our users (“user” or “you” also referred to as ‘your’). Hence, we maintain the highest standards for secure activities , user information/data privacy and security.",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -11167,7 +11167,7 @@
   },
   {
     "code": "COMMON_MATERIAL_COST",
-    "message": "Material cost:(\u20b9) ",
+    "message": "Material cost:(₹) ",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -11221,7 +11221,7 @@
   },
   {
     "code": "COMMON_MUSTER_RUPEE",
-    "message": "\u20b9",
+    "message": "₹",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -11551,7 +11551,7 @@
   },
   {
     "code": "COMMON_RESPONSE_SUCCESS_MESSAGE_CANCEL_BILL",
-    "message": "The notification along with your application number is sent to your applicant\u2019s mobile number. Applicant can track the application status using mobile or web app.",
+    "message": "The notification along with your application number is sent to your applicant’s mobile number. Applicant can track the application status using mobile or web app.",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -12943,7 +12943,7 @@
   },
   {
     "code": "CORE_LOGIN_NO_ACCOUNT",
-    "message": "Don\u2019t have an account?",
+    "message": "Don’t have an account?",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -13123,7 +13123,7 @@
   },
   {
     "code": "CORE_OTP_NOT_RECEIVE",
-    "message": "Didn\u2019t receive OTP?",
+    "message": "Didn’t receive OTP?",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -13489,7 +13489,7 @@
   },
   {
     "code": "CS_ADDCOMPLAINT_COMPLAINT_LOCATION",
-    "message": "\u0936\u093f\u0915\u093e\u092f\u0924 \u0915\u093e \u0938\u094d\u0925\u093e\u0928",
+    "message": "शिकायत का स्थान",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -13519,7 +13519,7 @@
   },
   {
     "code": "CS_APPLICATION_DETAILS_ADV_AMOUNT_DUE",
-    "message": "Advance Amount Due (\u20b9)",
+    "message": "Advance Amount Due (₹)",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -14419,7 +14419,7 @@
   },
   {
     "code": "CS_COMMON_TRACK_COMPLAINT_TEXT",
-    "message": "The notification along with your complaint number is sent to your complainant\u2019s mobile number. Complainant can track the complaint status using mobile or web app.",
+    "message": "The notification along with your complaint number is sent to your complainant’s mobile number. Complainant can track the complaint status using mobile or web app.",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -14743,7 +14743,7 @@
   },
   {
     "code": "CS_HEADER_WHATSNEW",
-    "message": "What\u2019s New",
+    "message": "What’s New",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -15715,7 +15715,7 @@
   },
   {
     "code": "DASHBOARD_WHATS_NEW_LABEL",
-    "message": "What\u2019s New",
+    "message": "What’s New",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -19051,7 +19051,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_E921tYxw501",
-    "message": "MPENECA EXPANS\u00c3O ",
+    "message": "MPENECA EXPANSÃO ",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -19279,7 +19279,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_ESyaIEtyIUv",
-    "message": "1\u00ba DE MAIO",
+    "message": "1º DE MAIO",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },
@@ -20616,6 +20616,18 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "HCMBOUNDARY",
+    "message": "Boundary",
+    "module": "digit-ui",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCMBOUNDARY.BOUNDARY_MANAGEMENT",
+    "message": "Boundary Management",
+    "module": "digit-ui",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "HCMCONSOLE",
     "message": "HCM console",
     "module": "digit-ui",
@@ -20900,6 +20912,12 @@
   {
     "code": "PAYMENTS.ATTENDANCE_REGISTERS",
     "message": "Attendance registers",
+    "module": "digit-ui",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PAYMENTS.ATTENDANCE_SETUP_PAYMENT_ATTRIBUTES",
+    "message": "Setup Payment Attributes",
     "module": "digit-ui",
     "locale": "en_DEMO"
   },

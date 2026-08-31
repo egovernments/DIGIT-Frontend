@@ -1,25 +1,25 @@
 [
   {
     "code": "ADMINISTRATION_FAILED",
-    "message": "Administração Falhou",
+    "message": "Falha na administração",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
-    "message": "O comprimento deve ser de 2 a 200 caracteres.",
+    "message": "O comprimento deve ser de 2 a 200 caracteres",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário ausente",
+    "message": "Beneficiário Ausente",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "Beneficiário recusou",
+    "message": "Beneficiário recusado",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
@@ -43,7 +43,7 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
-    "message": "Certifique-se de que o nome da vila corresponde ao local onde você está hoje. Caso contrário, clique no menu suspenso da vila no canto superior direito para alterá-lo.",
+    "message": "Capture os detalhes da família que você está marcando como fechada.",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
@@ -67,7 +67,7 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
-    "message": "nome do chefe da família",
+    "message": "Nome do chefe da família",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
@@ -91,25 +91,25 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_name_REQUIRED_ERROR",
-    "message": "Este campo é obrigatório.",
+    "message": "Este é um campo obrigatório.",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_scanner_LABEL",
-    "message": "Escanear comprovante",
+    "message": "Digitalizar comprovante",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
-    "message": "Os dados foram registrados com sucesso.",
+    "message": "Os dados foram registrados com sucesso",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION1",
-    "message": "Os dados foram registrados com sucesso.",
+    "message": "Os dados foram registrados com sucesso",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
@@ -139,13 +139,13 @@
   },
   {
     "code": "DRUG_SE_CC",
-    "message": "Efeito colateral do medicamento do ciclo atual",
+    "message": "Efeito colateral da droga do ciclo atual",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "DRUG_SE_PC",
-    "message": "Efeito colateral do medicamento do ciclo anterior",
+    "message": "Efeito colateral da droga do ciclo anterior",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
@@ -217,7 +217,7 @@
   },
   {
     "code": "PerformanceIssue",
-    "message": "PROBLEMA DE DESEMPENHO",
+    "message": "QUESTÃO DE DESEMPENHO",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
@@ -235,13 +235,13 @@
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Entrega concluída com sucesso",
+    "message": "Entrega bem-sucedida",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "SYNCNOTWORKING",
-    "message": "A sincronização não está funcionando.",
+    "message": "A sincronização não funciona",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
@@ -253,7 +253,7 @@
   },
   {
     "code": "SyncNotWorking",
-    "message": "Sincronização não está funcionando",
+    "message": "A sincronização não funciona",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   },
@@ -265,7 +265,19 @@
   },
   {
     "code": "UserAccountIssues",
-    "message": "PROBLEMAS COM CONTAS DE USUÁRIO",
+    "message": "QUESTÕES DE CONTAS DE USUÁRIO",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Rótulo",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+    "message": " ",
     "module": "hcm-base-closehousehold-default",
     "locale": "pt_DEMO"
   }

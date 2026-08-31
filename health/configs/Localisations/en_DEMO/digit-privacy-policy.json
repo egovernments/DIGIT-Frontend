@@ -169,7 +169,7 @@
   },
   {
     "code": "PRIVACY_HEADER_2_SUB_2_DESC_6",
-    "message": "d. \u201cProgram Owner\u201d, \u201cGovernment Agency\u201d, and \u201cRelevant Government\u201d all refer to Name of Government Agency. ",
+    "message": "d. “Program Owner”, “Government Agency”, and “Relevant Government” all refer to Name of Government Agency. ",
     "module": "digit-privacy-policy",
     "locale": "en_DEMO"
   },

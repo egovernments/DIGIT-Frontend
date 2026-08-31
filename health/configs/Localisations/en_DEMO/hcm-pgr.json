@@ -504,6 +504,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "HCM_HIERARCHY_TYPE_BREADCRUMB",
+    "message": "Select hierarchy",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "HCM_HIERARCHY_TYPE_DESCRIPTION",
     "message": "Please select your hierarchy",
     "module": "hcm-pgr",

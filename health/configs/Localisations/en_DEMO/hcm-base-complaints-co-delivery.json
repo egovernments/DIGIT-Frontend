@@ -79,7 +79,7 @@
   },
   {
     "code": "ADD_HEADER_LOCALIZATION",
-    "message": "Add Label",
+    "message": "Label",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -391,7 +391,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_DESCRIPTION",
-    "message": "Check if the child currently feels unusually hot to the touch or if the caregiver has measured a high temperature in the last 24 hours. If possible, measure the child\u2019s temperature with a thermometer.",
+    "message": "Check if the child currently feels unusually hot to the touch or if the caregiver has measured a high temperature in the last 24 hours. If possible, measure the child’s temperature with a thermometer.",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -505,7 +505,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_deliveryComments",
-    "message": "Delivery Comments",
+    "message": "Delivery comments",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -589,13 +589,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
-    "message": "ID Details",
+    "message": "ID details",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers_addmember",
-    "message": "ID Details",
+    "message": "ID details",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -745,13 +745,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner_addmember",
-    "message": "QR Scan",
+    "message": "QR scan",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual",
-    "message": "Surname of the Individual",
+    "message": "Surname of the individual",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -871,7 +871,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode_helpText",
-    "message": "Enter the area postal code (PIN Code)",
+    "message": "Enter the area postal code (PIN code)",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -937,7 +937,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1",
-    "message": "Address Line 1",
+    "message": "Address line 1",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -949,7 +949,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2",
-    "message": "Address Line 2",
+    "message": "Address line 2",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1099,7 +1099,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_weight",
-    "message": "Weight (in Kgs)",
+    "message": "Weight (in kgs)",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1549,7 +1549,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
-    "message": "Permission handler",
+    "message": "Permission Handler",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -2137,13 +2137,13 @@
   },
   {
     "code": "ASSIGN_TO_ALL",
-    "message": "Assign to all",
+    "message": "Assigned to all",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "ASSIGN_TO_ME",
-    "message": "Assign to me",
+    "message": "Assigned to me",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -2287,13 +2287,13 @@
   },
   {
     "code": "BODY_ITEM_complaintNumber_LABEL",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "BODY_ITEM_complaintType_LABEL",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -2305,7 +2305,7 @@
   },
   {
     "code": "BODY_ITEM_mobileNumber_LABEL",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -2550,7 +2550,7 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "CMP_DRAWER_NO_CONFIG_ERROR_L\u00d3GICA",
+    "code": "CMP_DRAWER_NO_CONFIG_ERROR_LÓGICA",
     "message": "No field rules set",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
@@ -2610,7 +2610,7 @@
     "locale": "en_DEMO"
   },
   {
-    "code": "CMP_DRAWER_WHAT_IS_L\u00d3GICA",
+    "code": "CMP_DRAWER_WHAT_IS_LÓGICA",
     "message": "In Logic, you can modify the validations and logic associated with the selected attribute",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
@@ -2989,7 +2989,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_SEARCH_COMPLAINT_NUMBER_LABEL",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -3001,7 +3001,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_SEARCH_MOBILE_NUMBER_LABEL",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -3037,7 +3037,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_SORT_POPUP_LABEL",
-    "message": "Sort By:",
+    "message": "Sort by:",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -3212,6 +3212,18 @@
   {
     "code": "CONTAINS",
     "message": "Contains",
+    "module": "hcm-base-complaints-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND",
+    "message": "Complaint Not Found",
+    "module": "hcm-base-complaints-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND_DESC",
+    "message": "We couldn't find any complaints in the records. You can file a new complaint.",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -3679,7 +3691,7 @@
   },
   {
     "code": "DIGIT_LOC_SELECT_MODULE_LABEL",
-    "message": "Select Module",
+    "message": "Select module",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -3811,7 +3823,7 @@
   },
   {
     "code": "ENTER_FIELD_LABEL",
-    "message": "Enter Field Label",
+    "message": "Enter field label",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -3931,7 +3943,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_AGERANGE",
-    "message": "Age Range",
+    "message": "Age range",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -3943,7 +3955,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_APPCONFIG_CUSTOM_PREFIX",
-    "message": "Add Prefix",
+    "message": "Add prefix",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -3967,31 +3979,31 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_COUNTRYPREFIX",
-    "message": "Country Prefix",
+    "message": "Country prefix",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_DATERANGE",
-    "message": "Date Range",
+    "message": "Date range",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_DEPENDENCYFIELDWRAPPER",
-    "message": "Dependent Field",
+    "message": "Dependent field",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_ENDDATE",
-    "message": "End Date",
+    "message": "End date",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_FIELDTYPE",
-    "message": "Field Type",
+    "message": "Field type",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -4003,7 +4015,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_HELPTEXT",
-    "message": "Help Text",
+    "message": "Help text",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -4021,19 +4033,19 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_INFOTEXT",
-    "message": "Info Text",
+    "message": "Info text",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_INNERLABEL",
-    "message": "Inner Label",
+    "message": "Inner label",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_ISGS1BARCODE",
-    "message": "GS1 Barcode",
+    "message": "GS1 barcode",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -4051,13 +4063,13 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_LABELPAIRLIST",
-    "message": "Label Pair List",
+    "message": "Label pair list",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_LENGTHRANGE",
-    "message": "Length Range",
+    "message": "Length range",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -4069,25 +4081,25 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MAX",
-    "message": "Maximum Value",
+    "message": "Maximum value",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_MAXIMUM",
-    "message": "Maximum Range",
+    "message": "Maximum range",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_MAXIMUMAGE",
-    "message": "Maximum Range",
+    "message": "Maximum range",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_MAXLENGTH",
-    "message": "Maximum Length",
+    "message": "Maximum length",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -4105,43 +4117,43 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MIN",
-    "message": "Minimum Value",
+    "message": "Minimum value",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_MINIMUM",
-    "message": "Minimum Range",
+    "message": "Minimum range",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_MINIMUMAGE",
-    "message": "Minimum Range",
+    "message": "Minimum range",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_MINLENGTH",
-    "message": "Minimum Length",
+    "message": "Minimum length",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_MINSEARCHCHARS",
-    "message": "Min Search Characters",
+    "message": "Min search characters",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_NUMBERLENGTH",
-    "message": "Number Length",
+    "message": "Number length",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_NUMBERRANGE",
-    "message": "Number Range",
+    "message": "Number range",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -4159,7 +4171,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_POPUPTITLE",
-    "message": "Popup Title",
+    "message": "Popup title",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -4171,13 +4183,13 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_PRIMARYACTION",
-    "message": "Primary Action Label",
+    "message": "Primary action label",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_PROXIMITYRADIUS",
-    "message": "Proximity Radius (Meters)",
+    "message": "Proximity radius (meters)",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -4195,25 +4207,25 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_SCANNERREGEXPATTERN",
-    "message": "Scanner Regex Pattern",
+    "message": "Scanner regex pattern",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_SECONDARYACTION",
-    "message": "Secondary Action Label",
+    "message": "Secondary action label",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_SHOWCOUNTRYCODE",
-    "message": "Show Country Code",
+    "message": "Show country code",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "FIELD_DRAWER_LABEL_STARTDATE",
-    "message": "Start Date",
+    "message": "Start date",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -4225,7 +4237,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_SYSTEMDATE",
-    "message": "System Generated Date",
+    "message": "System generated date",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -4249,7 +4261,7 @@
   },
   {
     "code": "FIELD_LABEL",
-    "message": "Field Label",
+    "message": "Field label",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -4286,6 +4298,12 @@
   {
     "code": "FOOTER_ACTION_2_LABEL",
     "message": "Secondary action button label",
+    "module": "hcm-base-complaints-co-delivery",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FOOTER_ACTION_cancel2_LABEL",
+    "message": "Clear Label",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -4525,7 +4543,7 @@
   },
   {
     "code": "HCM_CREATE_NEW_CAMPAIGN_FROM_SCRATCH_DES",
-    "message": "Full flexibility \u2014 more setup effort",
+    "message": "Full flexibility — more setup effort",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -4579,7 +4597,7 @@
   },
   {
     "code": "HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-    "message": "Total Members",
+    "message": "Total members",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5305,7 +5323,7 @@
   },
   {
     "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5455,13 +5473,13 @@
   },
   {
     "code": "LABEL_PAIR_BATCHNUMBER",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_BATCH_NUMBER",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5473,7 +5491,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "HF Referral",
+    "message": "HF referral",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5491,7 +5509,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Monitoring Model",
+    "message": "Monitoring model",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5503,7 +5521,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
-    "message": "LQA Model",
+    "message": "LQA model",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5515,7 +5533,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Project Beneficiary",
+    "message": "Project beneficiary",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5527,7 +5545,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
-    "message": "User Action",
+    "message": "User action",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5539,31 +5557,31 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Complaint Area",
+    "message": "Complaint area",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINTDATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINTNUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINTSTATUS",
-    "message": "Complaint Status",
+    "message": "Complaint status",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
-    "message": "Complainant Contact",
+    "message": "Complainant contact",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5575,13 +5593,13 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5593,13 +5611,13 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5611,19 +5629,19 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5641,13 +5659,13 @@
   },
   {
     "code": "LABEL_PAIR_DATEOFREGISTRATION",
-    "message": "Date of Registration",
+    "message": "Date of registration",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Date of Registration",
+    "message": "Date of registration",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5659,7 +5677,7 @@
   },
   {
     "code": "LABEL_PAIR_GIVENNAME",
-    "message": "Name of Individual",
+    "message": "Name of individual",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5677,19 +5695,19 @@
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
-    "message": "Beneficiary Name",
+    "message": "Beneficiary name",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
-    "message": "Registration Date",
+    "message": "Registration date",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5701,19 +5719,19 @@
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-    "message": "Total Members",
+    "message": "Total members",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HEADNAME",
-    "message": "Household Head Name",
+    "message": "Household head name",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5725,25 +5743,25 @@
   },
   {
     "code": "LABEL_PAIR_IDNUMBER",
-    "message": "ID Number",
+    "message": "ID number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IDTYPE",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "ID Number",
+    "message": "ID number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_ID_TYPE",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5755,19 +5773,19 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Children Present",
+    "message": "Children present",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Children Vaccinated",
+    "message": "Children vaccinated",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Final Comments",
+    "message": "Final comments",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5785,13 +5803,13 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Missed - Not Revisited",
+    "message": "Missed - Not revisited",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Missed - Not Visited",
+    "message": "Missed - Not visited",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5815,61 +5833,61 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Monitoring Date",
+    "message": "Monitoring date",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Monitor Designation",
+    "message": "Monitor designation",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Monitor Name",
+    "message": "Monitor name",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Poorly Covered",
+    "message": "Poorly covered",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Settlement Type",
+    "message": "Settlement type",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINANTCONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINANTTCONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINTNUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINTTYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5881,7 +5899,7 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5893,13 +5911,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
-    "message": "Expiry Date",
+    "message": "Expiry date",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5929,13 +5947,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Transaction Reason",
+    "message": "Transaction reason",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -5947,169 +5965,169 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LOCALITY",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Absence Reason",
+    "message": "Absence reason",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "AFP Awareness",
+    "message": "AFP awareness",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "AFP Case Count",
+    "message": "AFP case count",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Other Awareness",
+    "message": "Other awareness",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Campaign Awareness",
+    "message": "Campaign awareness",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Caregiver Informed",
+    "message": "Caregiver informed",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Children Under 5",
+    "message": "Children under 5",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Child Age (Months)",
+    "message": "Child age (months)",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Child Sex",
+    "message": "Child sex",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Cluster Number",
+    "message": "Cluster number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Finger Marked",
+    "message": "Finger marked",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Lot Number",
+    "message": "Lot number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "OPV Doses",
+    "message": "OPV doses",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Other Absence Reason",
+    "message": "Other absence reason",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Other Reason (Specify)",
+    "message": "Other reason (specify)",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Other Refusal Reason",
+    "message": "Other refusal reason",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Reason Not Marked",
+    "message": "Reason not marked",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Refusal Reason",
+    "message": "Refusal reason",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Surveyor Name",
+    "message": "Surveyor name",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Survey Date",
+    "message": "Survey date",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MEMBERCOUNT",
-    "message": "Member Count",
+    "message": "Member count",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MEMBER_COUNT",
-    "message": "Member Count",
+    "message": "Member count",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MOBILE_NUMBER",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRNNUMBER",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -6121,13 +6139,13 @@
   },
   {
     "code": "LABEL_PAIR_QUANTITYRECEIVED",
-    "message": "Quantity Received",
+    "message": "Quantity received",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_QUANTITY_RECEIVED",
-    "message": "Quantity Received",
+    "message": "Quantity received",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -6139,13 +6157,13 @@
   },
   {
     "code": "LABEL_PAIR_RECEIVERID",
-    "message": "Received From",
+    "message": "Received from",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRALNAME",
-    "message": "Referral Name",
+    "message": "Referral name",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -6163,19 +6181,19 @@
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
-    "message": "Referral Status",
+    "message": "Referral status",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
-    "message": "Referral Symptom",
+    "message": "Referral symptom",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFRRALSYMPTOM",
-    "message": "Referral Symptom",
+    "message": "Referral symptom",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -6193,13 +6211,13 @@
   },
   {
     "code": "LABEL_PAIR_STOCKEXPIRY",
-    "message": "Stock Expiry",
+    "message": "Stock expiry",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Expiry Date",
+    "message": "Expiry date",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -6211,55 +6229,55 @@
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONTYPE",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINANTCONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINANTTCONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
-    "message": "Complaint Area",
+    "message": "Complaint area",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTESCRIPTION",
-    "message": "Complaint Description",
+    "message": "Complaint description",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTSTATUS",
-    "message": "Complaint Status",
+    "message": "Complaint status",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTTYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_WAYBILLNUMBER",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_WAYBILL_NUMBER",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -6373,127 +6391,127 @@
   },
   {
     "code": "LQA_ABSENCE_REASON_LABEL",
-    "message": "Absence Reason",
+    "message": "Absence reason",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_AFP_AWARENESS_LABEL",
-    "message": "AFP Awareness",
+    "message": "AFP awareness",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_AFP_CASE_COUNT_LABEL",
-    "message": "AFP Case Count",
+    "message": "AFP case count",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_AWARENESS_OTHER_LABEL",
-    "message": "Other Awareness Source",
+    "message": "Other awareness source",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Campaign Awareness",
+    "message": "Campaign awareness",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Caregiver Informed",
+    "message": "Caregiver informed",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Children Under 5",
+    "message": "Children under 5",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Child Age (Months)",
+    "message": "Child age (months)",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CHILD_SEX_LABEL",
-    "message": "Child Sex",
+    "message": "Child sex",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Cluster Number",
+    "message": "Cluster number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_FINGER_MARKED_LABEL",
-    "message": "Finger Marked",
+    "message": "Finger marked",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_LOT_NUMBER_LABEL",
-    "message": "Lot Number",
+    "message": "Lot number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_OPV_DOSES_LABEL",
-    "message": "OPV Doses",
+    "message": "OPV doses",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Other Absence Reason",
+    "message": "Other absence reason",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Other Reason (Specify)",
+    "message": "Other reason (specify)",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Other Refusal Reason",
+    "message": "Other refusal reason",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Reason Not Marked",
+    "message": "Reason not marked",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_REFUSAL_REASON_LABEL",
-    "message": "Refusal Reason",
+    "message": "Refusal reason",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_SURVEYOR_NAME_LABEL",
-    "message": "Surveyor Name",
+    "message": "Surveyor name",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LQA_SURVEY_DATE_LABEL",
-    "message": "Survey Date",
+    "message": "Survey date",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -6619,7 +6637,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_COMPLAINTS",
-    "message": "Let field workers log issues raised by caregivers or the community during distribution\u2014such as concerns about medicines, missed households, or service quality\u2014to support timely follow-up and resolution.",
+    "message": "Let field workers log issues raised by caregivers or the community during distribution—such as concerns about medicines, missed households, or service quality—to support timely follow-up and resolution.",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -6631,7 +6649,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_HFREFERRAL",
-    "message": "Record and manage referrals for children who require further assessment or treatment. Capture referral reasons\u2014such as contraindications, adverse reactions, or danger signs\u2014and track completion at the designated health facility.",
+    "message": "Record and manage referrals for children who require further assessment or treatment. Capture referral reasons—such as contraindications, adverse reactions, or danger signs—and track completion at the designated health facility.",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -6871,7 +6889,7 @@
   },
   {
     "code": "PERMISSIONHANDLER",
-    "message": "Permission handler",
+    "message": "Permission Handler",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -6913,7 +6931,7 @@
   },
   {
     "code": "POPUP_BODY_LABELS",
-    "message": "Popup Body Labels",
+    "message": "Popup body labels",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -7147,7 +7165,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
-    "message": "Administrative Unit",
+    "message": "Administrative unit",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -7171,7 +7189,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_REFERRED_TO",
-    "message": "Health Facility",
+    "message": "Health facility",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -7645,7 +7663,7 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_TABLE_HEADER_3_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8371,13 +8389,13 @@
   },
   {
     "code": "addressLine1",
-    "message": "Address Line 1",
+    "message": "Address line 1",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "addressLine2",
-    "message": "Address Line 2",
+    "message": "Address line 2",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8389,7 +8407,7 @@
   },
   {
     "code": "administrativeArea",
-    "message": "Administrative Area",
+    "message": "Administrative area",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8413,7 +8431,7 @@
   },
   {
     "code": "advanced.actionPopup",
-    "message": "Action Popup",
+    "message": "Action popup",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8443,13 +8461,13 @@
   },
   {
     "code": "advanced.dropdownTemplate",
-    "message": "Dropdown Template",
+    "message": "Dropdown template",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.evaluationFacility",
-    "message": "Evaluation Facility",
+    "message": "Evaluation facility",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8461,13 +8479,13 @@
   },
   {
     "code": "advanced.facilityFromWhich",
-    "message": "Facility From",
+    "message": "Facility from",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.facilityToWhich",
-    "message": "Facility To",
+    "message": "Facility to",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8479,19 +8497,19 @@
   },
   {
     "code": "advanced.idPopulator",
-    "message": "ID Populator",
+    "message": "ID populator",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.infoCard",
-    "message": "Info Card",
+    "message": "Info card",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.labelPairList",
-    "message": "Label Pair List",
+    "message": "Label pair list",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8515,13 +8533,13 @@
   },
   {
     "code": "advanced.menu_card",
-    "message": "Menu Card",
+    "message": "Menu card",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.panelCard",
-    "message": "Panel Card",
+    "message": "Panel card",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8533,25 +8551,25 @@
   },
   {
     "code": "advanced.proximitySearch",
-    "message": "Proximity Search",
+    "message": "Proximity search",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.qrScanner",
-    "message": "QR Scanner",
+    "message": "QR scanner",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.radioList",
-    "message": "Radio List",
+    "message": "Radio list",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.resourceCard",
-    "message": "Resource Card",
+    "message": "Resource card",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8563,37 +8581,37 @@
   },
   {
     "code": "advanced.scanner",
-    "message": "QR Scanner",
+    "message": "QR scanner",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.searchBar",
-    "message": "Search Bar",
+    "message": "Search bar",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.searchByID",
-    "message": "Search By ID",
+    "message": "Search by ID",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.searchByProximity",
-    "message": "Search By Proximity",
+    "message": "Search by proximity",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.select",
-    "message": "Selection Field",
+    "message": "Selection field",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.selectionCard",
-    "message": "Selection Field",
+    "message": "Selection field",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8617,19 +8635,19 @@
   },
   {
     "code": "advanced.textInput",
-    "message": "Text Input",
+    "message": "Text input",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "advanced.textTemplate",
-    "message": "Text Template",
+    "message": "Text template",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "assignTo",
-    "message": "Assign To",
+    "message": "Assign to",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8659,7 +8677,7 @@
   },
   {
     "code": "basic.dob",
-    "message": "Date of Birth",
+    "message": "Date of birth",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8671,7 +8689,7 @@
   },
   {
     "code": "basic.mobileNumber",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8683,13 +8701,13 @@
   },
   {
     "code": "basic.numeric",
-    "message": "Numeric Counter",
+    "message": "Numeric counter",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "basic.radio",
-    "message": "Radio Button",
+    "message": "Radio button",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8701,31 +8719,31 @@
   },
   {
     "code": "basic.textarea",
-    "message": "Text Area",
+    "message": "Text area",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "beneficiaryDetails",
-    "message": "Beneficiary Details",
+    "message": "Beneficiary details",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "beneficiaryDetailsCard",
-    "message": "Beneficiary Details",
+    "message": "Beneficiary details",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "beneficiaryIdMinCheck",
-    "message": "Min Beneficiary ID",
+    "message": "Min beneficiary ID",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "beneficiaryLocation",
-    "message": "Beneficiary Location",
+    "message": "Beneficiary location",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8737,7 +8755,7 @@
   },
   {
     "code": "beneficiaryTag",
-    "message": "Beneficiary Tag",
+    "message": "Beneficiary tag",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8791,7 +8809,7 @@
   },
   {
     "code": "childrenCount",
-    "message": "Children Count",
+    "message": "Children count",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8809,7 +8827,7 @@
   },
   {
     "code": "clientReferenceId",
-    "message": "Client Reference ID",
+    "message": "Client reference ID",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8839,7 +8857,7 @@
   },
   {
     "code": "complaintAcknowledgement",
-    "message": "Complaint Acknowledgement",
+    "message": "Complaint acknowledgement",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8851,13 +8869,13 @@
   },
   {
     "code": "complaintClientReferenceId",
-    "message": "Complaint Reference ID",
+    "message": "Complaint reference ID",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "complaintDescription",
-    "message": "Complaint Description",
+    "message": "Complaint description",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8869,7 +8887,7 @@
   },
   {
     "code": "complaintInbox",
-    "message": "Complaint Inbox",
+    "message": "Complaint inbox",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8881,7 +8899,7 @@
   },
   {
     "code": "complaintNumber",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8905,7 +8923,7 @@
   },
   {
     "code": "complaintView",
-    "message": "Complaint View",
+    "message": "Complaint view",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8917,13 +8935,13 @@
   },
   {
     "code": "complaintsLabelPair",
-    "message": "Complaint Details",
+    "message": "Complaint details",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "contactNumber",
-    "message": "Complainant's Contact Number",
+    "message": "Complainant's contact number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8941,37 +8959,37 @@
   },
   {
     "code": "cycleIndex",
-    "message": "Delivery Cycle",
+    "message": "Delivery cycle",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "cycleNumber",
-    "message": "Cycle Number",
+    "message": "Cycle number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "dateOfBirth",
-    "message": "Date of Birth",
+    "message": "Date of birth",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "dateOfRedose",
-    "message": "Date of Redose",
+    "message": "Date of redose",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "dateOfRegistration",
-    "message": "Date of Registration",
+    "message": "Date of registration",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "datePicker",
-    "message": "Date Picker",
+    "message": "Date picker",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -8989,7 +9007,7 @@
   },
   {
     "code": "deliveryComment",
-    "message": "Delivery Comment",
+    "message": "Delivery comment",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9013,7 +9031,7 @@
   },
   {
     "code": "deliverySuccess",
-    "message": "Deliver Success",
+    "message": "Deliver success",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9043,7 +9061,7 @@
   },
   {
     "code": "dobPicker",
-    "message": "Date of Birth",
+    "message": "Date of birth",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9067,7 +9085,7 @@
   },
   {
     "code": "dropdownTemplate",
-    "message": "Dropdown Template",
+    "message": "Dropdown template",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9115,13 +9133,13 @@
   },
   {
     "code": "eligibilityChecklist",
-    "message": "Eligibility Checklist",
+    "message": "Eligibility checklist",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "evaluationFacility",
-    "message": "Evaluation Facility",
+    "message": "Evaluation facility",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9145,7 +9163,7 @@
   },
   {
     "code": "facilityFromWhich",
-    "message": "Facility From",
+    "message": "Facility from",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9157,7 +9175,7 @@
   },
   {
     "code": "familyname",
-    "message": "Family Name",
+    "message": "Family name",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9187,7 +9205,7 @@
   },
   {
     "code": "genderAge",
-    "message": "Gender & Age",
+    "message": "Gender & age",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9223,7 +9241,7 @@
   },
   {
     "code": "headOfHousehold",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9235,7 +9253,7 @@
   },
   {
     "code": "healthFacility",
-    "message": "Health Facility",
+    "message": "Health facility",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9247,7 +9265,7 @@
   },
   {
     "code": "householdDetails",
-    "message": "Household Details",
+    "message": "Household details",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9259,25 +9277,25 @@
   },
   {
     "code": "householdOverview",
-    "message": "Household Overview",
+    "message": "Household overview",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "householdOverviewCard",
-    "message": "Household Overview",
+    "message": "Household overview",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "idPopulator",
-    "message": "ID Populator",
+    "message": "ID populator",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "idSearch",
-    "message": "ID Search",
+    "message": "ID search",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9289,7 +9307,7 @@
   },
   {
     "code": "identifierType",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9307,25 +9325,25 @@
   },
   {
     "code": "individualRow",
-    "message": "Member Row",
+    "message": "Member row",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "infoCard",
-    "message": "Info Card",
+    "message": "Info card",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "infocard",
-    "message": "Info Card",
+    "message": "Info card",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "isHeadOfFamily",
-    "message": "Head of Family",
+    "message": "Head of family",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9337,7 +9355,7 @@
   },
   {
     "code": "labelPairList",
-    "message": "Label Pair List",
+    "message": "Label pair list",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9349,7 +9367,7 @@
   },
   {
     "code": "latLng",
-    "message": "GPS Coordinates",
+    "message": "GPS coordinates",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9367,7 +9385,7 @@
   },
   {
     "code": "listViewMembers",
-    "message": "View Members",
+    "message": "View members",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9379,7 +9397,7 @@
   },
   {
     "code": "localityBoundaryCode",
-    "message": "Locality Code",
+    "message": "Locality code",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9391,13 +9409,13 @@
   },
   {
     "code": "manageStock",
-    "message": "Manage Stock",
+    "message": "Manage stock",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "meberDetails",
-    "message": "Member Details",
+    "message": "Member details",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9409,7 +9427,7 @@
   },
   {
     "code": "memberCount",
-    "message": "Member Count",
+    "message": "Member count",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9421,25 +9439,25 @@
   },
   {
     "code": "menu_card",
-    "message": "Menu Card",
+    "message": "Menu card",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "mobileNumber",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "name",
-    "message": "Complainant's Name",
+    "message": "Complainant's name",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "nameOfIndividual",
-    "message": "Name of Individual",
+    "message": "Name of individual",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9451,13 +9469,13 @@
   },
   {
     "code": "notEligible",
-    "message": "Not Eligible",
+    "message": "Not eligible",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "notVisited",
-    "message": "Not Visited",
+    "message": "Not visited",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9475,43 +9493,43 @@
   },
   {
     "code": "oroductdetail",
-    "message": "Product Details",
+    "message": "Product details",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "otherReason",
-    "message": "Reason For Complaint",
+    "message": "Reason for complaint",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "overviewLabelPairCard",
-    "message": "Overview Details",
+    "message": "Overview details",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "panelCard",
-    "message": "Panel Card",
+    "message": "Panel card",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "pastCycleTable",
-    "message": "Past Cycles",
+    "message": "Past cycles",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "pastCyclesList",
-    "message": "Past Cycles",
+    "message": "Past cycles",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "phone",
-    "message": "Phone Number",
+    "message": "Phone number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9523,13 +9541,13 @@
   },
   {
     "code": "pregnantWomenCount",
-    "message": "Pregnant Women Count",
+    "message": "Pregnant women count",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "productdetail",
-    "message": "Product Details",
+    "message": "Product details",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9541,19 +9559,19 @@
   },
   {
     "code": "proximitySearch",
-    "message": "Proximity Search",
+    "message": "Proximity search",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "qrScanner",
-    "message": "QR Scanner",
+    "message": "QR scanner",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "qrscanner",
-    "message": "QR Scanner",
+    "message": "QR scanner",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9565,7 +9583,7 @@
   },
   {
     "code": "reasonForRedose",
-    "message": "Reason for Redose",
+    "message": "Reason for redose",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9589,13 +9607,13 @@
   },
   {
     "code": "redoseComments",
-    "message": "Redose Comments",
+    "message": "Redose comments",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "redoseCompleted",
-    "message": "Redose Completed",
+    "message": "Redose completed",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9619,13 +9637,13 @@
   },
   {
     "code": "referralReason",
-    "message": "Referral Reason",
+    "message": "Referral reason",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "referredBy",
-    "message": "Referred By",
+    "message": "Referred by",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9637,13 +9655,13 @@
   },
   {
     "code": "resourceCard",
-    "message": "Resource Details",
+    "message": "Resource details",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "row",
-    "message": "Complaint Row",
+    "message": "Complaint row",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9679,7 +9697,7 @@
   },
   {
     "code": "searchBeneficiary",
-    "message": "Search Beneficiary",
+    "message": "Search beneficiary",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9703,19 +9721,19 @@
   },
   {
     "code": "selectedStatus",
-    "message": "Selected Status",
+    "message": "Selected status",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "serviceCode",
-    "message": "Service Code",
+    "message": "Service code",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "serviceRequestId",
-    "message": "Service Request ID",
+    "message": "Service request ID",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9751,7 +9769,7 @@
   },
   {
     "code": "sortBy",
-    "message": "Sort By",
+    "message": "Sort by",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9769,13 +9787,13 @@
   },
   {
     "code": "statusTag",
-    "message": "Delivery Status",
+    "message": "Delivery status",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "stockFieldPair",
-    "message": "Stock Details",
+    "message": "Stock details",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9787,13 +9805,13 @@
   },
   {
     "code": "stockSuccess",
-    "message": "Stock Success",
+    "message": "Stock success",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "stockTable",
-    "message": "Stock Table",
+    "message": "Stock table",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9805,25 +9823,25 @@
   },
   {
     "code": "supervisorContactNumber",
-    "message": "Supervisor's Contact Number",
+    "message": "Supervisor's contact number",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "supervisorName",
-    "message": "Supervisor's Name",
+    "message": "Supervisor's name",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "table",
-    "message": "Data Table",
+    "message": "Data table",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "tag",
-    "message": "Status Tag",
+    "message": "Status tag",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9847,13 +9865,13 @@
   },
   {
     "code": "textInput",
-    "message": "Text Input Field",
+    "message": "Text input field",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "textTemplate",
-    "message": "Text Template",
+    "message": "Text template",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },
@@ -9871,7 +9889,7 @@
   },
   {
     "code": "typeOfAddress",
-    "message": "Type Of Address",
+    "message": "Type of address",
     "module": "hcm-base-complaints-co-delivery",
     "locale": "en_DEMO"
   },

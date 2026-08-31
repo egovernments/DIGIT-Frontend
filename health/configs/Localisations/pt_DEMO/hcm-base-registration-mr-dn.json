@@ -49,13 +49,13 @@
   },
   {
     "code": "ACTION1",
-    "message": "Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.",
+    "message": "Dê 2 comprimidos de AQ ao cuidador",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "ACTION2",
-    "message": "Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.",
+    "message": "Você escreveu o ID- {ID} da criança {NAME} no cartão da criança (para ser usado no próximo ciclo)",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -85,7 +85,7 @@
   },
   {
     "code": "ACTION_UNIFIED_UPLOAD_SCREEN",
-    "message": "Carregar arquivo unificado",
+    "message": "Carregar dados do microplano",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -121,7 +121,7 @@
   },
   {
     "code": "ADD_HEADER_LOCALIZATION",
-    "message": "Adicionar rótulo",
+    "message": "Rótulo",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -199,13 +199,13 @@
   },
   {
     "code": "AGE_VALIDATION",
-    "message": "Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.",
+    "message": "A idade deve ser de 18 a 150 anos.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "AGE_VALIDATION_ADDMEMBER",
-    "message": "Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.",
+    "message": "A idade deve ser de 3 meses a 5 anos.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -217,7 +217,7 @@
   },
   {
     "code": "ALPHANUMERICONLY",
-    "message": "Somente alfanumérico",
+    "message": "Apenas alfanumérico",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -421,7 +421,7 @@
   },
   {
     "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_GIVE_TABLET",
-    "message": "Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.",
+    "message": "Dê 2 comprimidos de AQ ao cuidador",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -439,7 +439,7 @@
   },
   {
     "code": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_WRITE_CODE",
-    "message": "Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.",
+    "message": "Você escreveu o ID- {ID} da criança {NAME} no cartão da criança (para ser usado no próximo ciclo)",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -487,7 +487,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_INELIGIBLE_ALERT_DESCRIPTION",
-    "message": "O usuário será direcionado para o fluxo de inelegibilidade",
+    "message": "O usuário irá para o fluxo inelegível",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -499,7 +499,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_DESCRIPTION",
-    "message": "Pergunte ao cuidador se a criança está apresentando alguma doença ou desconforto geral, como fraqueza, diarreia, vômito, dificuldade para respirar ou outros problemas de saúde.",
+    "message": "Pergunte ao cuidador se a criança está apresentando alguma doença ou desconforto geral, como fraqueza, diarréia, vômito, dificuldade para respirar ou outros problemas de saúde.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -583,7 +583,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_REFERRAL_ALERT_DESCRIPTION",
-    "message": "O usuário será direcionado para o fluxo de encaminhamento",
+    "message": "O usuário irá para o fluxo de referência",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -595,7 +595,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_TO_ADMINISTER_ALERT_DESCRIPTION",
-    "message": "O usuário será direcionado para o fluxo de administração",
+    "message": "O usuário irá para o fluxo de administração",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -649,13 +649,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION",
-    "message": "Insira os detalhes de cada indivíduo da família.",
+    "message": "Insira as informações básicas do beneficiário.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember",
-    "message": "Certifique-se de revisar todos os detalhes antes de clicar no botão Enviar. Clique no botão Cancelar para retornar à página anterior.",
+    "message": "Insira as informações básicas do beneficiário.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -667,7 +667,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING_addmember",
-    "message": "Detalhes do membro",
+    "message": "Detalhes do beneficiário",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -751,7 +751,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message_addmember",
-    "message": "Este é um campo obrigatório",
+    "message": "Este campo é obrigatório",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -763,7 +763,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message_addmember",
-    "message": "O comprimento deve ter mais de 2 caracteres.",
+    "message": "O comprimento deve ser de 2 a 200 caracteres",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -841,13 +841,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isPregnant",
-    "message": "Está grávida",
+    "message": "A beneficiária está grávida?",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isPregnant_addmember",
-    "message": "Está grávida",
+    "message": "A beneficiária está grávida?",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -967,19 +967,19 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner",
-    "message": "Varredura QR",
+    "message": "Digitalizar comprovante",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner_addmember",
-    "message": "Varredura QR",
+    "message": "Digitalizar comprovante",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual",
-    "message": "Sobrenome do Indivíduo",
+    "message": "Sobrenome do indivíduo",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1381,7 +1381,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_height_Max_message_addmember",
-    "message": "Cadastro Detalhes do beneficiário Altura da etiqueta Adicionar membro ultrapassa o valor máximo",
+    "message": "A altura não pode ser superior a 999 cm.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1393,13 +1393,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_height_Min_message_addmember",
-    "message": "Cadastro Detalhes do beneficiário Altura da etiqueta Adicionar O membro deve atender ao valor mínimo",
+    "message": "A altura não pode ser 0 ou menos.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_weight",
-    "message": "Peso (em Kgs)",
+    "message": "Peso (em kg)",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -1417,7 +1417,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION",
-    "message": "Insira o tamanho da família, data de registro e dados demográficos.",
+    "message": "Insira as informações dos membros da família, conforme aplicável.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -2539,7 +2539,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "Beneficiário",
+    "message": "Nome do Beneficiário",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -2581,13 +2581,13 @@
   },
   {
     "code": "BENEFICIARY_DETAILS_DESC",
-    "message": "Visão geral da entrega do beneficiário",
+    "message": "Revise o beneficiário e os recursos a serem entregues.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "BENEFICIARY_DETAILS_HEADING",
-    "message": "Detalhes do beneficiário",
+    "message": "Detalhes da entrega",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -3577,7 +3577,7 @@
   },
   {
     "code": "DIGIT_HCM_DELIVERY_MODULE",
-    "message": "Módulo de Entrega",
+    "message": "Módulo de entrega",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -3637,13 +3637,13 @@
   },
   {
     "code": "DIGIT_LOC_DOWNLOAD_FAILED",
-    "message": "Falha ao gerar o arquivo de download.",
+    "message": "Falha ao gerar arquivo de download.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "DIGIT_LOC_DOWNLOAD_INITIATED",
-    "message": "Baixando dados de localização",
+    "message": "Baixando dados de localização...",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -3751,7 +3751,7 @@
   },
   {
     "code": "DIGIT_LOC_SELECT_MODULE_LABEL",
-    "message": "Selecione Módulo",
+    "message": "Selecione o módulo",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -3943,7 +3943,7 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_TEXT",
-    "message": "Baixe o modelo Excel para criar registros de presença para sua campanha. Preencha os detalhes do limite, revise os IDs de registro gerados automaticamente e carregue o arquivo concluído para gerar registros.",
+    "message": "Baixe o modelo Excel para criar registros de presença para sua campanha. Preencha os detalhes dos limites, revise os IDs de registro gerados automaticamente e carregue o arquivo concluído para gerar registros.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -4147,7 +4147,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MAX",
-    "message": "Valor Máximo",
+    "message": "Valor máximo",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -4159,7 +4159,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MAXIMUMAGE",
-    "message": "Alcance Máximo",
+    "message": "Alcance máximo",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -4183,7 +4183,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MIN",
-    "message": "Valor Mínimo",
+    "message": "Valor mínimo",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -4195,7 +4195,7 @@
   },
   {
     "code": "FIELD_DRAWER_LABEL_MINIMUMAGE",
-    "message": "Faixa Mínima",
+    "message": "Alcance mínimo",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -4531,7 +4531,7 @@
   },
   {
     "code": "GO_TO_MY_CAMPAIGNS",
-    "message": "Acesse Minhas Campanhas",
+    "message": "Ir para Minhas Campanhas",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -4675,7 +4675,7 @@
   },
   {
     "code": "HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA",
-    "message": "Carregar dados unificados",
+    "message": "Carregar dados do microplano",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -4699,7 +4699,7 @@
   },
   {
     "code": "HCM_CREATE_CAMPAIGN_DESCRIPTION",
-    "message": "Você pode criar uma nova campanha do zero, reutilizar configurações de uma existente ou começar com um modelo de campanha. Clonar ou usar um modelo ajuda a transferir configurações importantes como limites, módulos, formulários e regras de entrega para reduzir o tempo de configuração.",
+    "message": "Você pode criar uma nova campanha do zero, reutilizar configurações de uma campanha existente ou começar com um modelo de campanha. Clonar ou usar um modelo ajuda a transferir configurações importantes como limites, módulos, formulários e regras de entrega para reduzir o tempo de configuração.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -4849,7 +4849,7 @@
   },
   {
     "code": "HCM_MODULE_DESCRIPTION_MR-DN_HFREFERALFLOW",
-    "message": "Referência é o processo de direcionar uma pessoa, cliente ou caso a outro indivíduo, profissional ou organização para obter mais assistência, serviços ou experiência.",
+    "message": "Referência é o processo de direcionar uma pessoa, cliente ou caso a outro indivíduo, profissional ou organização para obter assistência, serviços ou experiência adicional.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -5011,7 +5011,7 @@
   },
   {
     "code": "HCM_SEARCH_REGISTER_BENEFICIARY_BUTTON",
-    "message": "Registrar beneficiário",
+    "message": "Cadastrar Beneficiário",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -5155,7 +5155,7 @@
   },
   {
     "code": "HCM_UPLOAD_UNIFIED_DATA_HEADING",
-    "message": "Carregar dados unificados",
+    "message": "Carregar dados do microplano",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -5239,7 +5239,7 @@
   },
   {
     "code": "HOUSEHOLD_BACK",
-    "message": "De volta à casa",
+    "message": "Voltar",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -5503,7 +5503,7 @@
   },
   {
     "code": "INELIGIBLE",
-    "message": "Inelegível",
+    "message": "Não elegível",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -5515,7 +5515,7 @@
   },
   {
     "code": "INSUFFICIENT_STOCK",
-    "message": "Stock insuficiente",
+    "message": "Estoques insuficientes",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -5731,7 +5731,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "Referência de IC",
+    "message": "Encaminhamento de IC",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -5749,7 +5749,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Monitoramento Interno",
+    "message": "Monitoramento interno",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -5773,7 +5773,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Modelo de beneficiário de projeto de categoria de par de rótulos",
+    "message": "Modelo de projeto de categoria de par de rótulos",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -5797,7 +5797,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Área de Reclamações",
+    "message": "Área de reclamação",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -5827,7 +5827,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Área de Reclamações",
+    "message": "Área de reclamação",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -5863,7 +5863,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
-    "message": "Área de Reclamações",
+    "message": "Área de reclamação",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -5899,19 +5899,19 @@
   },
   {
     "code": "LABEL_PAIR_DATEOFBIRTH",
-    "message": "Idade do Beneficiário",
+    "message": "Idade do beneficiário",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATEOFREGISTRATION",
-    "message": "Data de Registro",
+    "message": "Data de registro",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Data de Registro",
+    "message": "Data de registro",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -5929,7 +5929,7 @@
   },
   {
     "code": "LABEL_PAIR_GIVENNAME",
-    "message": "Nome do Indivíduo",
+    "message": "Nome do indivíduo",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -5941,19 +5941,19 @@
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
-    "message": "Idade do Beneficiário",
+    "message": "Idade do beneficiário",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
-    "message": "Gênero do Beneficiário",
+    "message": "Gênero do beneficiário",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
-    "message": "Nome do Beneficiário",
+    "message": "Nome do beneficiário",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6037,7 +6037,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYFINALCOMMENTS",
-    "message": "Comentários Finais",
+    "message": "Comentários finais",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6109,7 +6109,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6133,7 +6133,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Comentários Finais",
+    "message": "Comentários finais",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6205,7 +6205,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6265,7 +6265,7 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
-    "message": "Número do inventário",
+    "message": "Número MRN do inventário",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6295,7 +6295,7 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Motivo da transação de estoque",
+    "message": "Motivo da transação de inventário",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6307,37 +6307,37 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
-    "message": "Conhecimento de embarque de estoque",
+    "message": "Conhecimento de estoque",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
-    "message": "Número da guia de remessa do inventário",
+    "message": "Número da carta de porte de estoque",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LOCALITY",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAABSENCEREASONLABEL",
-    "message": "Motivo de Ausência",
+    "message": "Motivo da ausência",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAFPAWARENESSLABEL",
-    "message": "Conscientização AFP",
+    "message": "Conscientização da AFP",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAFPCASECOUNTLABEL",
-    "message": "Contagem de casos AFP",
+    "message": "Contagem de casos de AFP",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6373,7 +6373,7 @@
   },
   {
     "code": "LABEL_PAIR_LQACHILDSEXLABEL",
-    "message": "Sexo Infantil",
+    "message": "Sexo infantil",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6433,7 +6433,7 @@
   },
   {
     "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6445,25 +6445,25 @@
   },
   {
     "code": "LABEL_PAIR_LQASURVEYORNAMELABEL",
-    "message": "Nome do pesquisador",
+    "message": "Nome do topógrafo",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Motivo de Ausência",
+    "message": "Motivo da ausência",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "Conscientização AFP",
+    "message": "Conscientização da AFP",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "Contagem de casos AFP",
+    "message": "Contagem de casos de AFP",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6499,7 +6499,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Sexo Infantil",
+    "message": "Sexo infantil",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6559,13 +6559,13 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Nome do pesquisador",
+    "message": "Nome do topógrafo",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6703,7 +6703,7 @@
   },
   {
     "code": "LABEL_PAIR_STOCKEXPIRY",
-    "message": "Expiração de estoque",
+    "message": "Expiração do estoque",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6721,7 +6721,7 @@
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONREASON",
-    "message": "Motivo da transação de estoque",
+    "message": "Motivo da transação de inventário",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6745,7 +6745,7 @@
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
-    "message": "Área de Reclamações",
+    "message": "Área de reclamação",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6823,19 +6823,19 @@
   },
   {
     "code": "LQA_ABSENCE_REASON_LABEL",
-    "message": "Motivo de Ausência",
+    "message": "Motivo da ausência",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LQA_AFP_AWARENESS_LABEL",
-    "message": "Conscientização AFP",
+    "message": "Conscientização da AFP",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LQA_AFP_CASE_COUNT_LABEL",
-    "message": "Contagem de casos AFP",
+    "message": "Contagem de casos de AFP",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6871,7 +6871,7 @@
   },
   {
     "code": "LQA_CHILD_SEX_LABEL",
-    "message": "Sexo Infantil",
+    "message": "Sexo infantil",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -6931,13 +6931,13 @@
   },
   {
     "code": "LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "LQA_SURVEYOR_NAME_LABEL",
-    "message": "Nome do pesquisador",
+    "message": "Nome do topógrafo",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -7069,7 +7069,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_COMPLAINTS",
-    "message": "Deixe que os trabalhadores de campo registem as questões levantadas pelos prestadores de cuidados ou pela comunidade durante a distribuição – tais como preocupações sobre medicamentos, famílias perdidas ou qualidade do serviço – para apoiar o acompanhamento e a resolução atempados.",
+    "message": "Deixe que os trabalhadores de campo registem as questões levantadas pelos cuidadores ou pela comunidade durante a distribuição – tais como preocupações sobre medicamentos, famílias perdidas ou qualidade do serviço – para apoiar o acompanhamento e a resolução atempados.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -7399,7 +7399,7 @@
   },
   {
     "code": "POPUP_BODY_LABELS",
-    "message": "Etiquetas de campo",
+    "message": "Rótulos de campo",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -7579,7 +7579,7 @@
   },
   {
     "code": "RECORD_CYCLE_DOSE",
-    "message": "Registrar Ciclo {CYCLE} Dose {DOSE}",
+    "message": "Ciclo de registro {CYCLE} Dose {DOSE}",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -7741,7 +7741,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
-    "message": "Unidade Administrativa",
+    "message": "Unidade administrativa",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -7765,7 +7765,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_REFERRED_TO",
-    "message": "Unidade de Saúde",
+    "message": "Unidade de saúde",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -7795,7 +7795,7 @@
   },
   {
     "code": "REGISTER_BENEFICIARY",
-    "message": "Cadastrar Beneficiário",
+    "message": "Cadastrar Novo Beneficiário",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -8071,7 +8071,7 @@
   },
   {
     "code": "REGISTRATION_HOUSEHOLD_OVERVIEW_DESC",
-    "message": "Visão geral da família",
+    "message": "Visão geral da família, seus membros e detalhes associados",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -8197,7 +8197,7 @@
   },
   {
     "code": "REGISTRATION_ID_DESCRIPTION",
-    "message": "O beneficiário com ID-{ID} foi encaminhado com sucesso",
+    "message": "O beneficiário com ID- {ID} foi encaminhado com sucesso",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -8401,7 +8401,7 @@
   },
   {
     "code": "REGISTRATION_SEARCH_BENEFICIARY_MIN_BENEFICIARY_ID_LEFT_DESCRIPTION",
-    "message": "Faça download dos IDs dos beneficiários para registrar uma nova família",
+    "message": "Observe que você tem apenas alguns IDs de beneficiário restantes. Baixe mais IDs de beneficiários para continuar ou pule e continue por enquanto.",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -8515,7 +8515,7 @@
   },
   {
     "code": "SCAN_BENEFICIARY",
-    "message": "Digitalizar beneficiário",
+    "message": "Digitalizar voucher do beneficiário",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -8629,7 +8629,7 @@
   },
   {
     "code": "SP2",
-    "message": "PE 2",
+    "message": "SP 2",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9145,7 +9145,7 @@
   },
   {
     "code": "UNABLETODELIVERY_FLOW_ACTION_LABEL",
-    "message": "Proceed",
+    "message": "Prosseguir",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9193,7 +9193,7 @@
   },
   {
     "code": "UNABLETODELIVER_FLOWT_ALERT_DESCRIPTION",
-    "message": "Com base na sua resposta, o beneficiário será informado como '{value}'. Esta ação não pode ser alterada posteriormente. Você quer prosseguir?",
+    "message": "Com base na sua resposta, o beneficiário será reportado como '{value}'. Esta ação não pode ser alterada posteriormente. Você quer prosseguir?",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9313,19 +9313,19 @@
   },
   {
     "code": "VALIDATION_CONDITIONAL_FIELD_LOCALIZED_EMPTY",
-    "message": "A localização de {{fieldName}} está vazia para {{toggleName}}",
+    "message": "A localização {{fieldName}} está vazia para {{toggleName}}",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "VALIDATION_CONDITIONAL_FIELD_REQUIRED",
-    "message": "{{fieldName}} é obrigatório quando {{toggleName}} está ativado",
+    "message": "{{fieldName}} é necessário quando {{toggleName}} está ativado",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTIONS_REQUIRED",
-    "message": "As opções do menu suspenso são obrigatórias para o campo {{fieldName}}",
+    "message": "As opções suspensas são obrigatórias para o campo {{fieldName}}",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9337,7 +9337,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY",
-    "message": "O rótulo da opção do menu suspenso está vazio para o campo {{fieldName}}",
+    "message": "O rótulo da opção suspensa está vazio para o campo {{fieldName}}",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9349,7 +9349,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTION_NAME_REQUIRED",
-    "message": "O nome da opção do menu suspenso é obrigatório para o campo {{fieldName}}",
+    "message": "O nome da opção suspensa é obrigatório para o campo {{fieldName}}",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9385,7 +9385,7 @@
   },
   {
     "code": "VALIDATION_MANDATORY_FIELD_LOCALIZED_EMPTY",
-    "message": "A localização de {{propertyName}} está vazia para o campo {{fieldName}}",
+    "message": "A localização {{propertyName}} está vazia para o campo {{fieldName}}",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9397,7 +9397,7 @@
   },
   {
     "code": "VALIDATION_POPUP_DROPDOWN_OPTIONS_REQUIRED",
-    "message": "As opções do menu suspenso são obrigatórias para {{popupField}} no campo {{fieldName}}",
+    "message": "As opções suspensas são obrigatórias para {{popupField}} no campo {{fieldName}}",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9409,7 +9409,7 @@
   },
   {
     "code": "VALIDATION_POPUP_FOOTER_LABEL_EMPTY",
-    "message": "O rótulo do rodapé do pop-up {{index}} está vazio para o campo {{fieldName}}",
+    "message": "O rótulo do rodapé pop-up {{index}} está vazio para o campo {{fieldName}}",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9427,7 +9427,7 @@
   },
   {
     "code": "VALIDATION_POPUP_RADIO_OPTIONS_REQUIRED",
-    "message": "As opções de botão de opção são obrigatórias para {{popupField}} no campo {{fieldName}}",
+    "message": "As opções de rádio são obrigatórias para {{popupField}} no campo {{fieldName}}",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9481,13 +9481,13 @@
   },
   {
     "code": "VALIDATION_TOGGLE_LOCALIZED_VALUE_EMPTY",
-    "message": "A localização de {{fieldName}} está vazia",
+    "message": "{{fieldName}} localização está vazia",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "VALIDATION_TOGGLE_VALUE_REQUIRED",
-    "message": "O valor de {{fieldName}} é obrigatório",
+    "message": "O valor {{fieldName}} é obrigatório",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9553,7 +9553,7 @@
   },
   {
     "code": "addMemberButton",
-    "message": "Adicionar membros",
+    "message": "Adicionar membro",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9577,7 +9577,7 @@
   },
   {
     "code": "administrativeArea",
-    "message": "Área Administrativa",
+    "message": "Área administrativa",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9721,13 +9721,13 @@
   },
   {
     "code": "advanced.proximitySearch",
-    "message": "Pesquisa por proximidade",
+    "message": "Pesquisa de proximidade",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "advanced.qrScanner",
-    "message": "Scanner QR",
+    "message": "Leitor QR",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9751,7 +9751,7 @@
   },
   {
     "code": "advanced.scanner",
-    "message": "Scanner QR",
+    "message": "Leitor QR",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9865,13 +9865,13 @@
   },
   {
     "code": "basic.numeric",
-    "message": "Contador Numérico",
+    "message": "Contador numérico",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "basic.radio",
-    "message": "Botão de rádio",
+    "message": "Botão de opção",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9907,13 +9907,13 @@
   },
   {
     "code": "beneficiaryIdMinCheck",
-    "message": "Adicionar membros",
+    "message": "Baixar IDs de beneficiários",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "beneficiaryLocation",
-    "message": "Localização do Beneficiário",
+    "message": "Localização do beneficiário",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9925,7 +9925,7 @@
   },
   {
     "code": "beneficiaryReferred",
-    "message": "Beneficiário Indicado",
+    "message": "Beneficiário indicado",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -9985,7 +9985,7 @@
   },
   {
     "code": "childrenCount",
-    "message": "Número de crianças",
+    "message": "Número de filhos",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10033,7 +10033,7 @@
   },
   {
     "code": "complaintAcknowledgement",
-    "message": "Sucesso da reclamação",
+    "message": "Sucesso na reclamação",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10057,7 +10057,7 @@
   },
   {
     "code": "complaintView",
-    "message": "Visualização de reclamações",
+    "message": "Visualização da reclamação",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10081,7 +10081,7 @@
   },
   {
     "code": "cycleNumber",
-    "message": "Número do Ciclo",
+    "message": "Número do ciclo",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10093,13 +10093,13 @@
   },
   {
     "code": "dateOfRedose",
-    "message": "Data da Redose",
+    "message": "Data da nova dose",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "dateOfRegistration",
-    "message": "Data de Registro",
+    "message": "Data de registro",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10159,7 +10159,7 @@
   },
   {
     "code": "deliverySuccess",
-    "message": "Entregue o sucesso",
+    "message": "Entregue sucesso",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10285,7 +10285,7 @@
   },
   {
     "code": "expandable",
-    "message": "Ciclos Passados",
+    "message": "Ciclos anteriores",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10321,7 +10321,7 @@
   },
   {
     "code": "futureDoses",
-    "message": "Doses Futuras",
+    "message": "Doses futuras",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10393,7 +10393,7 @@
   },
   {
     "code": "healthFacility",
-    "message": "Unidade de Saúde",
+    "message": "Unidade de saúde",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10471,7 +10471,7 @@
   },
   {
     "code": "individualClientReferenceId",
-    "message": "ID de referência de cliente individual",
+    "message": "ID de referência do cliente individual",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10519,7 +10519,7 @@
   },
   {
     "code": "isClosedHousehold",
-    "message": "Domicílio Fechado",
+    "message": "Domicílio fechado",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10687,7 +10687,7 @@
   },
   {
     "code": "oroductdetail",
-    "message": "Detalhes do produto",
+    "message": "Detalhe do produto",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10711,7 +10711,7 @@
   },
   {
     "code": "pastCyclesList",
-    "message": "Ciclos Passados",
+    "message": "Ciclos anteriores",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10735,7 +10735,7 @@
   },
   {
     "code": "productdetail",
-    "message": "Detalhes do produto",
+    "message": "Detalhe do produto",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10759,7 +10759,7 @@
   },
   {
     "code": "proximitySearch",
-    "message": "Pesquisa por proximidade",
+    "message": "Pesquisa de proximidade",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10771,13 +10771,13 @@
   },
   {
     "code": "qrScanner",
-    "message": "Scanner QR",
+    "message": "Leitor QR",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "qrscanner",
-    "message": "Scanner QR",
+    "message": "Leitor QR",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10789,7 +10789,7 @@
   },
   {
     "code": "reasonForRedose",
-    "message": "Motivo para Redose",
+    "message": "Motivo para refazer",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10843,7 +10843,7 @@
   },
   {
     "code": "referralReason",
-    "message": "Motivo da indicação",
+    "message": "Motivo da referência",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10903,7 +10903,7 @@
   },
   {
     "code": "searchBeneficiary",
-    "message": "Pesquisar Beneficiário",
+    "message": "Pesquisar beneficiário",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10951,7 +10951,7 @@
   },
   {
     "code": "selectedIndividualHeight",
-    "message": "Selecione Edindividualheight",
+    "message": "Altura individual",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -10969,13 +10969,13 @@
   },
   {
     "code": "selectedIndividualWeight",
-    "message": "Selecione Edindividualweight",
+    "message": "Peso individual",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
   {
     "code": "selectedStatus",
-    "message": "Status selecionado",
+    "message": "Status",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -11101,7 +11101,7 @@
   },
   {
     "code": "totalDosesInCycle",
-    "message": "Doses Totais no Ciclo",
+    "message": "Doses totais no ciclo",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   },
@@ -11180,6 +11180,120 @@
   {
     "code": "{{fn:getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
     "message": "Remetente",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ALPHABETS_ONLY_MESSAGE",
+    "message": "Por favor insira o nome completo.",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_pattern_message",
+    "message": "O nome deve conter apenas letras.",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_pattern_message_addmember",
+    "message": "O nome deve conter apenas letras.",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_ENEFICIARYLOCATION_label_latlong_mandatory_message",
+    "message": "Este campo é obrigatório",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_ADMINISTRATION_FAILED",
+    "message": "Falha na administração",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_ADMINISTRATION_SUCCESS",
+    "message": "Sucesso administrativo",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_APPLY_BUTTON",
+    "message": "Aplicar",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_BENEFICIARY_REFUSED",
+    "message": "Beneficiário recusado",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_CLEAR_ALL_BUTTON",
+    "message": "Claro",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_LABEL",
+    "message": "Filtro",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_MISSED_CHILDREN",
+    "message": "Crianças desaparecidas",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_NOT_ADMINISTERED",
+    "message": "Não administrado",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_SEARCH_FILTER_REVISITED",
+    "message": "Dosado novamente",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INFO_CARD_TEXT",
+    "message": "Cartão de informações",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_STOCK_DESC",
+    "message": "O recurso **{RESOURCE}** que você está tentando entregar não está disponível em estoque.",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
+    "message": "Ação do usuário",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+    "message": "Fonte",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "Quantidade",
+    "module": "hcm-base-registration-mr-dn",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REGISTRATION_INDIVIDUAL_SEARCH_BENEFICIARY_NAME_HINT",
+    "message": "Pesquisar por nome",
     "module": "hcm-base-registration-mr-dn",
     "locale": "pt_DEMO"
   }

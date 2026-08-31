@@ -31,13 +31,13 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
-    "message": "ID Details",
+    "message": "ID details",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers_addmember",
-    "message": "ID Details",
+    "message": "ID details",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -133,13 +133,13 @@
   },
   {
     "code": "BODY_ITEM_complaintNumber_LABEL",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "BODY_ITEM_complaintType_LABEL",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -151,7 +151,7 @@
   },
   {
     "code": "BODY_ITEM_mobileNumber_LABEL",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -247,13 +247,13 @@
   },
   {
     "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-    "message": "We couldn\u2019t find this beneficiary in the records. You can add them as a new beneficiary.",
+    "message": "We couldn’t find this beneficiary in the records. You can add them as a new beneficiary.",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "CORE_COMMON_DONT_ALLOW",
-    "message": "Don\u2019t Allow",
+    "message": "Don’t Allow",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -655,7 +655,7 @@
   },
   {
     "code": "LABEL",
-    "message": "Field Label",
+    "message": "Field label",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -667,13 +667,13 @@
   },
   {
     "code": "LABEL_PAIR_BATCHNUMBER",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_BATCH_NUMBER",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -685,7 +685,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "HF Referral Model",
+    "message": "HF referral model",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -703,31 +703,31 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Inside Monitoring",
+    "message": "Inside monitoring",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_ITEMMODEL",
-    "message": "Item Model",
+    "message": "Item model",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
-    "message": "LQA Model",
+    "message": "LQA model",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_NAVIGATIONMODEL",
-    "message": "Navigation Model",
+    "message": "Navigation model",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Project Beneficiary",
+    "message": "Project beneficiary",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -739,13 +739,13 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
-    "message": "User Action",
+    "message": "User action",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CODE",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -763,13 +763,13 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINTDATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINTNUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -781,43 +781,43 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
-    "message": "Complainant Contact",
+    "message": "Complainant contact",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Complaint Area",
+    "message": "Complaint area",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
-    "message": "Complaint Status",
+    "message": "Complaint status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Complainant Contact",
+    "message": "Complainant contact",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -829,55 +829,55 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Complaint Description",
+    "message": "Complaint description",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "Complaint Status",
+    "message": "Complaint status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATEOFBIRTH",
-    "message": "Date of Birth",
+    "message": "Date of birth",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATEOFREGISTRATION",
-    "message": "Registration Date",
+    "message": "Registration date",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Date of Registration",
+    "message": "Date of registration",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_EXPIRYDATE",
-    "message": "Expiry Date",
+    "message": "Expiry date",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -895,7 +895,7 @@
   },
   {
     "code": "LABEL_PAIR_HCMTOTALMEMBERS",
-    "message": "Total Members",
+    "message": "Total members",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -919,13 +919,13 @@
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
-    "message": "Registration Date",
+    "message": "Registration date",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -937,19 +937,19 @@
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-    "message": "Total Members",
+    "message": "Total members",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HEADNAME",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -961,121 +961,121 @@
   },
   {
     "code": "LABEL_PAIR_IDNUMBER",
-    "message": "ID Number",
+    "message": "ID number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IDTYPE",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "ID Number",
+    "message": "ID number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_ID_TYPE",
-    "message": "ID Type",
+    "message": "ID type",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYCHILDRENPRESENT",
-    "message": "Children Present",
+    "message": "Children present",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYCHILDRENVACCINATED",
-    "message": "Children Vaccinated",
+    "message": "Children vaccinated",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYFINALCOMMENTS",
-    "message": "Final Comments",
+    "message": "Final comments",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDABSENT",
-    "message": "Missed (Absent)",
+    "message": "Missed (absent)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDASLEEP",
-    "message": "Missed (Asleep)",
+    "message": "Missed (asleep)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTREVISITED",
-    "message": "Missed (Not Revisited)",
+    "message": "Missed (not revisited)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTVISITED",
-    "message": "Missed (Not Visited)",
+    "message": "Missed (not visited)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDOTHER",
-    "message": "Missed (Other)",
+    "message": "Missed (other)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDREFUSAL",
-    "message": "Missed (Refusal)",
+    "message": "Missed (refusal)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDROUTINE",
-    "message": "Missed (Routine)",
+    "message": "Missed (routine)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMONITORDESIGNATION",
-    "message": "Monitor Designation",
+    "message": "Monitor designation",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMONITORINGDATE",
-    "message": "Monitoring Date",
+    "message": "Monitoring date",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMONITORNAME",
-    "message": "Monitor Name",
+    "message": "Monitor name",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYPOORLYCOVERED",
-    "message": "Poorly Covered",
+    "message": "Poorly covered",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTTYPE",
-    "message": "Settlement Type",
+    "message": "Settlement type",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1087,97 +1087,97 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Children Present",
+    "message": "Children present",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Children Vaccinated",
+    "message": "Children vaccinated",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Final Comments",
+    "message": "Final comments",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
-    "message": "Missed (Absent)",
+    "message": "Missed (absent)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
-    "message": "Missed (Asleep)",
+    "message": "Missed (asleep)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Missed (Not Revisited)",
+    "message": "Missed (not revisited)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Missed (Not Visited)",
+    "message": "Missed (not visited)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Missed (Other)",
+    "message": "Missed (other)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Missed (Refusal)",
+    "message": "Missed (refusal)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
-    "message": "Missed (Routine)",
+    "message": "Missed (routine)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Monitoring Date",
+    "message": "Monitoring date",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Monitor Designation",
+    "message": "Monitor designation",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Monitor Name",
+    "message": "Monitor name",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Poorly Covered",
+    "message": "Poorly covered",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Settlement Type",
+    "message": "Settlement type",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1189,25 +1189,25 @@
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINTNUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INBOXCOMPLAINTTYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_BATCH_LABEL",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1219,13 +1219,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
-    "message": "Expiry Date",
+    "message": "Expiry date",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1255,319 +1255,319 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Transaction Reason",
+    "message": "Transaction reason",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LOCALITY",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAABSENCEREASONLABEL",
-    "message": "Absence Reason",
+    "message": "Absence reason",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAFPAWARENESSLABEL",
-    "message": "AFP Awareness",
+    "message": "AFP awareness",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAFPCASECOUNTLABEL",
-    "message": "AFP Case Count",
+    "message": "AFP case count",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAWARENESSOTHERLABEL",
-    "message": "Awareness (Other)",
+    "message": "Awareness (other)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACAMPAIGNAWARENESSLABEL",
-    "message": "Campaign Awareness",
+    "message": "Campaign awareness",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACAREGIVERINFORMEDLABEL",
-    "message": "Caregiver Informed",
+    "message": "Caregiver informed",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACHILDAGEMONTHSLABEL",
-    "message": "Child Age (Months)",
+    "message": "Child age (months)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACHILDRENUNDER5LABEL",
-    "message": "LQA Children Under 5",
+    "message": "LQA children under 5",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACHILDSEXLABEL",
-    "message": "Child Sex",
+    "message": "Child sex",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACLUSTERNUMBERLABEL",
-    "message": "LQA Cluster Number",
+    "message": "LQA cluster number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAFINGERMARKEDLABEL",
-    "message": "Finger Marked",
+    "message": "Finger marked",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQALOTNUMBERLABEL",
-    "message": "LQA Lot Number",
+    "message": "LQA lot number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAOPVDOSESLABEL",
-    "message": "OPV Doses",
+    "message": "OPV doses",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAOTHERABSENCEREASONLABEL",
-    "message": "Other Absence Reason",
+    "message": "Other absence reason",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAOTHERREASONSPECIFYLABEL",
-    "message": "Other Reason (Specify)",
+    "message": "Other reason (specify)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAOTHERREFUSALREASONLABEL",
-    "message": "Other Refusal Reason",
+    "message": "Other refusal reason",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAREASONNOTMARKEDLABEL",
-    "message": "Reason Not Marked",
+    "message": "Reason not marked",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAREFUSALREASONLABEL",
-    "message": "Refusal Reason",
+    "message": "Refusal reason",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
-    "message": "LQA Settlement Area",
+    "message": "LQA settlement area",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQASURVEYDATELABEL",
-    "message": "LQA Survey Date",
+    "message": "LQA survey date",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQASURVEYORNAMELABEL",
-    "message": "LQA Surveyor Name",
+    "message": "LQA surveyor name",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Absence Reason",
+    "message": "Absence reason",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "AFP Awareness",
+    "message": "AFP awareness",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "AFP Case Count",
+    "message": "AFP case count",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Other Awareness",
+    "message": "Other awareness",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Campaign Awareness",
+    "message": "Campaign awareness",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Caregiver Informed",
+    "message": "Caregiver informed",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Children Under 5",
+    "message": "Children under 5",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Child Age (Months)",
+    "message": "Child age (months)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Child Sex",
+    "message": "Child sex",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Cluster Number",
+    "message": "Cluster number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Finger Marked",
+    "message": "Finger marked",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Lot Number",
+    "message": "Lot number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "OPV Doses",
+    "message": "OPV doses",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Other Absence Reason",
+    "message": "Other absence reason",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Other Reason (Specify)",
+    "message": "Other reason (specify)",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Other Refusal Reason",
+    "message": "Other refusal reason",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Reason Not Marked",
+    "message": "Reason not marked",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Refusal Reason",
+    "message": "Refusal reason",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Settlement Area",
+    "message": "Settlement area",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Surveyor Name",
+    "message": "Surveyor name",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Survey Date",
+    "message": "Survey date",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MEMBERCOUNT",
-    "message": "Member Count",
+    "message": "Member count",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MEMBER_COUNT",
-    "message": "Member Count",
+    "message": "Member count",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MOBILENUMBER",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MOBILE_NUMBER",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRNNUMBER",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1585,13 +1585,13 @@
   },
   {
     "code": "LABEL_PAIR_QUANTITYRECEIVED",
-    "message": "Quantity Received",
+    "message": "Quantity received",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_QUANTITY_RECEIVED",
-    "message": "Quantity Received",
+    "message": "Quantity received",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1621,19 +1621,19 @@
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
-    "message": "Referral Status",
+    "message": "Referral status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
-    "message": "Referral Symptom",
+    "message": "Referral symptom",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFRRALSYMPTOM",
-    "message": "Referral Symptom",
+    "message": "Referral symptom",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1657,25 +1657,25 @@
   },
   {
     "code": "LABEL_PAIR_STOCKEXPIRY",
-    "message": "Stock Expiry",
+    "message": "Stock expiry",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Stock Expiry",
+    "message": "Stock expiry",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONREASON",
-    "message": "Transaction Reason",
+    "message": "Transaction reason",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONTYPE",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1711,13 +1711,13 @@
   },
   {
     "code": "LABEL_PAIR_WAYBILLNUMBER",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_WAYBILL_NUMBER",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -1879,7 +1879,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
-    "message": "Administrative Unit",
+    "message": "Administrative unit",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2011,7 +2011,7 @@
   },
   {
     "code": "batteryCard",
-    "message": "Battery Optimization",
+    "message": "Battery optimization",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2029,7 +2029,7 @@
   },
   {
     "code": "batteryIconTextRow",
-    "message": "Battery Details",
+    "message": "Battery details",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2041,25 +2041,25 @@
   },
   {
     "code": "batteryRow",
-    "message": "Battery Permission",
+    "message": "Battery permission",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "batteryStatus",
-    "message": "Battery Status",
+    "message": "Battery status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "batteryStatusTag",
-    "message": "Battery Status",
+    "message": "Battery status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "batteryText",
-    "message": "Battery Optimization",
+    "message": "Battery optimization",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2077,7 +2077,7 @@
   },
   {
     "code": "blueToothPermissionStatus",
-    "message": "Bluetooth Status",
+    "message": "Bluetooth status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2107,19 +2107,19 @@
   },
   {
     "code": "bluetoothIconTextRow",
-    "message": "Bluetooth Details",
+    "message": "Bluetooth details",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "bluetoothRow",
-    "message": "Bluetooth Permission",
+    "message": "Bluetooth permission",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "bluetoothStatusTag",
-    "message": "Bluetooth Status",
+    "message": "Bluetooth status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2155,25 +2155,25 @@
   },
   {
     "code": "cameraIconTextRow",
-    "message": "Camera Details",
+    "message": "Camera details",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "cameraPermissionStatus",
-    "message": "Camera Status",
+    "message": "Camera status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "cameraRow",
-    "message": "Camera Permission",
+    "message": "Camera permission",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "cameraStatusTag",
-    "message": "Camera Status",
+    "message": "Camera status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2305,7 +2305,7 @@
   },
   {
     "code": "coreCommonPermissionIgnorebatteryoptimizations",
-    "message": "Ignore Battery Optimization",
+    "message": "Ignore battery optimization",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2323,7 +2323,7 @@
   },
   {
     "code": "coreCommonPermissionNearbywifidevices",
-    "message": "Nearby Share",
+    "message": "Nearby share",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2383,13 +2383,13 @@
   },
   {
     "code": "infocard",
-    "message": "Info Card",
+    "message": "Info card",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "locationCard",
-    "message": "Location Card",
+    "message": "Location card",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2401,13 +2401,13 @@
   },
   {
     "code": "locationIcon",
-    "message": "Location Icon",
+    "message": "Location icon",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "locationIconTextRow",
-    "message": "Location Info Row",
+    "message": "Location info row",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2419,37 +2419,37 @@
   },
   {
     "code": "locationPermissionStatus",
-    "message": "Location Status",
+    "message": "Location status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "locationRow",
-    "message": "Location Row",
+    "message": "Location row",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "locationStatusTag",
-    "message": "Location Status",
+    "message": "Location status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "locationText",
-    "message": "Location Info",
+    "message": "Location info",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "locationTextColumn",
-    "message": "Location Details",
+    "message": "Location details",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "meberDetails",
-    "message": "Member Details",
+    "message": "Member details",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2461,7 +2461,7 @@
   },
   {
     "code": "nearByDevicesStatus",
-    "message": "Nearby Devices Status",
+    "message": "Nearby devices status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2479,37 +2479,37 @@
   },
   {
     "code": "nearbyWifiIcon",
-    "message": "Wi-Fi Icon",
+    "message": "Wi-Fi icon",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "nearbyWifiIconTextRow",
-    "message": "Nearby Wi-Fi Info Row",
+    "message": "Nearby Wi-Fi info row",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "nearbyWifiRow",
-    "message": "Nearby Wi-Fi Row",
+    "message": "Nearby Wi-Fi row",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "nearbyWifiStatusTag",
-    "message": "Nearby Wi-Fi Status",
+    "message": "Nearby Wi-Fi status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "nearbyWifiText",
-    "message": "Nearby Wi-Fi Info",
+    "message": "Nearby Wi-Fi info",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "nearbyWifiTextColumn",
-    "message": "Nearby Wi-Fi Details",
+    "message": "Nearby Wi-Fi details",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2533,49 +2533,49 @@
   },
   {
     "code": "notificationIcon",
-    "message": "Notification Icon",
+    "message": "Notification icon",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "notificationIconTextRow",
-    "message": "Notification Info Row",
+    "message": "Notification info row",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "notificationPermissionStatus",
-    "message": "Notification Status",
+    "message": "Notification status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "notificationRow",
-    "message": "Notification Details Row",
+    "message": "Notification details row",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "notificationStatusTag",
-    "message": "Notification Status",
+    "message": "Notification status",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "notificationText",
-    "message": "Notification Info",
+    "message": "Notification info",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "notificationTextColumn",
-    "message": "Notification Details",
+    "message": "Notification details",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "oroductdetail",
-    "message": "Product Detail",
+    "message": "Product detail",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2605,19 +2605,19 @@
   },
   {
     "code": "permissionsColumn",
-    "message": "Permissions Column",
+    "message": "Permissions column",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "proximitySeach",
-    "message": "Proximity Search",
+    "message": "Proximity search",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
   {
     "code": "qr_view",
-    "message": "QR Scanner",
+    "message": "QR scanner",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2695,7 +2695,7 @@
   },
   {
     "code": "rowtemplate",
-    "message": "Permission Row",
+    "message": "Permission row",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2713,7 +2713,7 @@
   },
   {
     "code": "textTemplate11",
-    "message": "Ignore Battery Optimization",
+    "message": "Ignore battery optimization",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2731,7 +2731,7 @@
   },
   {
     "code": "textTemplate3",
-    "message": "Battery Optimization",
+    "message": "Battery optimization",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },
@@ -2743,7 +2743,7 @@
   },
   {
     "code": "textTemplate5",
-    "message": "App Permissions",
+    "message": "App permissions",
     "module": "hcm-base-permissionhandler-polio",
     "locale": "en_DEMO"
   },

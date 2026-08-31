@@ -1,5 +1,11 @@
 [
   {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Label",
+    "module": "hcm-base-hfreferral-oncho",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "ADMINISTRATION_FAILED",
     "message": "Administration Failed",
     "module": "hcm-base-hfreferral-oncho",
@@ -13,7 +19,7 @@
   },
   {
     "code": "APPONE_INVENTORY_QUANTITY_SENT_LABEL",
-    "message": "Quantity Sent",
+    "message": "Quantity sent",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -259,7 +265,7 @@
   },
   {
     "code": "HFREFERRAL_FACILITY_DETAILS_evaluationFacility_LABEL",
-    "message": "Health Facility",
+    "message": "Health facility",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -271,7 +277,7 @@
   },
   {
     "code": "HFREFERRAL_FACILITY_DETAILS_hfCoordinator_LABEL",
-    "message": "Referred By (CDD Team Code)",
+    "message": "Referred by (CDD team code)",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -505,13 +511,13 @@
   },
   {
     "code": "HFREFERRAL_REFERRAL_DETAILS_referralCode_LABEL",
-    "message": "Referral Code",
+    "message": "Referral code",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
   {
     "code": "HFREFERRAL_REFERRAL_DETAILS_referralCycle_LABEL",
-    "message": "Referral Cycle",
+    "message": "Referral cycle",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -1345,7 +1351,7 @@
   },
   {
     "code": "evaluationFacility",
-    "message": "Health Facility",
+    "message": "Health facility",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -1423,7 +1429,7 @@
   },
   {
     "code": "minSearchChars",
-    "message": "Minimum Characters",
+    "message": "Minimum characters",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   },
@@ -1561,7 +1567,7 @@
   },
   {
     "code": "templateCard",
-    "message": "Referral Summary",
+    "message": "Referral summary",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "en_DEMO"
   }

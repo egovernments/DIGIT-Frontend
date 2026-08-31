@@ -115,7 +115,7 @@
   },
   {
     "code": "CORE_COMMON_DONT_ALLOW",
-    "message": "Não permitir",
+    "message": "Não permita",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -223,13 +223,13 @@
   },
   {
     "code": "DRUG_SE_CC",
-    "message": "Camarada SE CC",
+    "message": "Droga SE CC",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "DRUG_SE_PC",
-    "message": "Camarada SE PC",
+    "message": "Droga SE PC",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -379,7 +379,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "Modelo de referência de HF",
+    "message": "Modelo de referência de IC",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -397,7 +397,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Monitoramento Interno",
+    "message": "Monitoramento interno",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -421,7 +421,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Beneficiário do Projeto",
+    "message": "Beneficiário do projeto",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -433,7 +433,7 @@
   },
   {
     "code": "LABEL_PAIR_CODE",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -475,7 +475,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Área de Reclamações",
+    "message": "Área de reclamação",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -559,7 +559,7 @@
   },
   {
     "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Data de Registro",
+    "message": "Data de registro",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -685,7 +685,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYFINALCOMMENTS",
-    "message": "Comentários Finais",
+    "message": "Comentários finais",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -715,7 +715,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYMISSEDOTHER",
-    "message": "Perdido (Outro)",
+    "message": "Perdeu (outro)",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -757,7 +757,7 @@
   },
   {
     "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -781,7 +781,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Comentários Finais",
+    "message": "Comentários finais",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -811,7 +811,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Perdido (Outro)",
+    "message": "Perdeu (outro)",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -853,7 +853,7 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -961,31 +961,31 @@
   },
   {
     "code": "LABEL_PAIR_LOCALITY",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAABSENCEREASONLABEL",
-    "message": "Motivo de Ausência",
+    "message": "Motivo da ausência",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAFPAWARENESSLABEL",
-    "message": "Conscientização AFP",
+    "message": "Conscientização da AFP",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAFPCASECOUNTLABEL",
-    "message": "Contagem de casos AFP",
+    "message": "Contagem de casos de AFP",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQAAWARENESSOTHERLABEL",
-    "message": "Conscientização (Outro)",
+    "message": "Conscientização (outro)",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -1009,13 +1009,13 @@
   },
   {
     "code": "LABEL_PAIR_LQACHILDRENUNDER5LABEL",
-    "message": "LQA Crianças menores de 5 anos",
+    "message": "Crianças LQA menores de 5 anos",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQACHILDSEXLABEL",
-    "message": "Sexo Infantil",
+    "message": "Sexo infantil",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -1075,43 +1075,43 @@
   },
   {
     "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
-    "message": "Área de Liquidação LQA",
+    "message": "Área de liquidação LQA",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQASURVEYDATELABEL",
-    "message": "Data da Pesquisa LQA",
+    "message": "Data da pesquisa LQA",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQASURVEYORNAMELABEL",
-    "message": "Nome do Inspetor LQA",
+    "message": "Nome do topógrafo LQA",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Motivo de Ausência",
+    "message": "Motivo da ausência",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "Conscientização AFP",
+    "message": "Conscientização da AFP",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "Contagem de casos AFP",
+    "message": "Contagem de casos de AFP",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Outra Consciência",
+    "message": "Outra consciência",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -1141,7 +1141,7 @@
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Sexo Infantil",
+    "message": "Sexo infantil",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -1201,13 +1201,13 @@
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Área de Liquidação",
+    "message": "Área de liquidação",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Nome do pesquisador",
+    "message": "Nome do topógrafo",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -1339,13 +1339,13 @@
   },
   {
     "code": "LABEL_PAIR_STOCKEXPIRY",
-    "message": "Expiração de estoque",
+    "message": "Expiração do estoque",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Expiração de estoque",
+    "message": "Expiração do estoque",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -1555,7 +1555,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "ID exclusivo do beneficiário",
+    "message": "ID do beneficiário",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },
@@ -1747,7 +1747,7 @@
   },
   {
     "code": "coreCommonPermissionNearbywifidevices",
-    "message": "Compartilhar nas proximidades",
+    "message": "Compartilhamento próximo",
     "module": "hcm-base-permissionhandler-bednet",
     "locale": "pt_DEMO"
   },

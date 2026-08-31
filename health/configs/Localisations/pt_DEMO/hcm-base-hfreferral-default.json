@@ -1,13 +1,13 @@
 [
   {
     "code": "ADMINISTRATION_FAILED",
-    "message": "Administração Falhou",
+    "message": "Falha na administração",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "ADMINISTRATION_SUCCESS",
-    "message": "Sucesso na Administração",
+    "message": "Sucesso administrativo",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -37,13 +37,13 @@
   },
   {
     "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário ausente",
+    "message": "Beneficiário Ausente",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "BENEFICIARY_REFUSED",
-    "message": "Beneficiário recusou",
+    "message": "Beneficiário recusado",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -61,7 +61,7 @@
   },
   {
     "code": "CLOSED_HOUSEHOLD",
-    "message": "Casa fechada",
+    "message": "Domicílio Fechado",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -73,19 +73,19 @@
   },
   {
     "code": "DRUG_SE_CC",
-    "message": "Efeito colateral do medicamento do ciclo atual",
+    "message": "Efeito colateral da droga do ciclo atual",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "DRUG_SE_PC",
-    "message": "Efeito colateral do medicamento do ciclo anterior",
+    "message": "Efeito colateral da droga do ciclo anterior",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "ENTER_VALUE_HELP_TEXT",
-    "message": "Digite um número ou texto (ou) escolha um valor entre as opções.",
+    "message": "Insira o número ou texto (ou) escolha o valor nas opções",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -181,7 +181,7 @@
   },
   {
     "code": "HFREFERRAL_FACILITY_DETAILS_HEADING",
-    "message": "Detalhes da unidade de saúde",
+    "message": "Detalhes das instalações de saúde",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -211,19 +211,19 @@
   },
   {
     "code": "HFREFERRAL_FACILITY_DETAILS_evaluationFacility_LABEL",
-    "message": "Unidade de Saúde",
+    "message": "Unidade de saúde",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "HFREFERRAL_FACILITY_DETAILS_evaluationFacility_REQUIRED_ERROR",
-    "message": "Nome da unidade de saúde",
+    "message": "Nome do estabelecimento de saúde",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "HFREFERRAL_FACILITY_DETAILS_hfCoordinator_LABEL",
-    "message": "Indicado por (código da equipe cdd)",
+    "message": "Referido por (código da equipe cdd)",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -235,7 +235,7 @@
   },
   {
     "code": "HFREFERRAL_REFERRAL_DETAILS_HEADING",
-    "message": "Detalhes da indicação",
+    "message": "Detalhes de referência",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -253,7 +253,7 @@
   },
   {
     "code": "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_VALIDATION",
-    "message": "A idade deve estar entre 3 meses e 59 meses.",
+    "message": "A idade deve ser entre 3 meses e 59 meses",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -289,7 +289,7 @@
   },
   {
     "code": "HFREFERRAL_REFERRAL_DETAILS_referralCode_LABEL",
-    "message": "Código de indicação",
+    "message": "Código de referência",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -307,7 +307,7 @@
   },
   {
     "code": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
-    "message": "Qual o motivo do encaminhamento?",
+    "message": "Qual é o motivo do encaminhamento?",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -325,13 +325,13 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_HEADING",
-    "message": "Lista de verificação de efeitos colaterais do ciclo atual",
+    "message": "Efeito colateral da lista de verificação do ciclo atual",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ1_LABEL",
-    "message": "Criança avaliada quanto a reação adversa a SP e AQ?",
+    "message": "Criança avaliada quanto a reação adversa para SP e AQ?",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -343,7 +343,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ2_LABEL",
-    "message": "O formulário nacional de farmacovigilância foi preenchido?",
+    "message": "A Farmacovigilância nacional foi preenchida?",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -355,7 +355,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ3_LABEL",
-    "message": "A criança foi internada/transferida para o hospital devido a uma doença grave?",
+    "message": "A criança foi internada/transferida para o hospital devido a doença grave?",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -373,13 +373,13 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_HEADING",
-    "message": "Lista de verificação da febre",
+    "message": "Lista de verificação de febre",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ1_LABEL",
-    "message": "A criança foi testada para malária?",
+    "message": "A criança foi testada para malária",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -391,7 +391,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ2_LABEL",
-    "message": "Resultado do teste de diagnóstico de malária",
+    "message": "Resultado do teste de diagnóstico da malária",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -403,7 +403,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ3_LABEL",
-    "message": "A criança foi internada/transferida para o hospital mais próximo devido a uma doença grave?",
+    "message": "A criança foi internada/transferida para o hospital mais próximo devido a doença grave?",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -415,7 +415,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ4_LABEL",
-    "message": "Criança com teste positivo para malária tratada com antimalárico?",
+    "message": "Criança com teste positivo de malária tratada com antimalárico?",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -427,7 +427,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ5_LABEL",
-    "message": "Criança com teste negativo para malária recebeu SPAQ neste ciclo?",
+    "message": "A criança com teste de malária negativo recebeu SPAQ neste ciclo?",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -439,7 +439,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ6_LABEL",
-    "message": "Adicione o motivo",
+    "message": "Adicionar motivo",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -457,13 +457,13 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_HEADING",
-    "message": "Efeito colateral do ciclo anterior (lista de verificação)",
+    "message": "Efeito colateral da lista de verificação do ciclo anterior",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ1_LABEL",
-    "message": "Criança avaliada quanto a reação adversa a SP e AQ?",
+    "message": "Criança avaliada quanto a reação adversa para SP e AQ?",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -475,7 +475,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ2_LABEL",
-    "message": "O formulário nacional de farmacovigilância foi preenchido?",
+    "message": "A Farmacovigilância nacional foi preenchida?",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -487,7 +487,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ3_LABEL",
-    "message": "A criança foi internada/transferida para o hospital devido a uma doença grave?",
+    "message": "A criança foi internada/transferida para o hospital devido a doença grave?",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -505,13 +505,13 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMSICK_HEADING",
-    "message": "Lista de verificação de doença",
+    "message": "Lista de verificação de doenças",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ1_LABEL",
-    "message": "Criança avaliada para determinar a causa da doença.",
+    "message": "Criança avaliada para determinar a causa da doença",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -523,7 +523,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ2_LABEL",
-    "message": "A criança recebeu tratamento?",
+    "message": "A criança foi tratada?",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -535,7 +535,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ3_LABEL",
-    "message": "A criança foi internada/transferida para o hospital mais próximo devido a uma doença grave?",
+    "message": "A criança foi internada/transferida para o hospital mais próximo devido a doença grave?",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -547,7 +547,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ4_LABEL",
-    "message": "Insira comentários para o diagnóstico.",
+    "message": "Insira comentários para diagnóstico.",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -559,7 +559,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ5_LABEL",
-    "message": "Nome e dosagem do medicamento",
+    "message": "Nome e dose do medicamento",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -661,7 +661,7 @@
   },
   {
     "code": "PerformanceIssue",
-    "message": "PROBLEMA DE DESEMPENHO",
+    "message": "QUESTÃO DE DESEMPENHO",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -703,13 +703,13 @@
   },
   {
     "code": "REFERRAL_INBOX_INFO_CARD_DESCRIPTION",
-    "message": "Clique no botão 'Criar nova indicação' para criar uma indicação.",
+    "message": "Clique no botão criar nova referência para criar uma referência",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "REFERRAL_INBOX_INFO_CARD_HEADING",
-    "message": "Não foi encontrada nenhuma correspondência.",
+    "message": "Correspondência não encontrada",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -721,7 +721,7 @@
   },
   {
     "code": "REFERRAL_INBOX_PRIMARY_ACTION_LABEL",
-    "message": "Criar nova indicação",
+    "message": "Criar nova referência",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -733,13 +733,13 @@
   },
   {
     "code": "REFERRAL_INBOX_SEARCHBAR_LABEL",
-    "message": "Digite o nome da pessoa que fez a indicação.",
+    "message": "Digite o nome da referência",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "REFERRAL_INBOX_SECONDARY_ACTION_LABEL",
-    "message": "Escaneie o código QR",
+    "message": "Digitalize o código QR",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -751,7 +751,7 @@
   },
   {
     "code": "REFERRAL_OVERVIEW_HEADING",
-    "message": "Visão geral do encaminhamento",
+    "message": "Visão geral da referência",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -787,7 +787,7 @@
   },
   {
     "code": "SCAN_BENEFICIARY",
-    "message": "Digitalizar Beneficiário",
+    "message": "Digitalizar beneficiário",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -907,13 +907,13 @@
   },
   {
     "code": "SUCCESSFUL_DELIVERY",
-    "message": "Entrega concluída com sucesso",
+    "message": "Entrega bem-sucedida",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "SYNCNOTWORKING",
-    "message": "A sincronização não está funcionando.",
+    "message": "A sincronização não funciona",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -925,7 +925,7 @@
   },
   {
     "code": "SyncNotWorking",
-    "message": "Sincronização não está funcionando",
+    "message": "A sincronização não funciona",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -949,13 +949,13 @@
   },
   {
     "code": "USE_ANOTHER_FIELD_HELP_TEXT",
-    "message": "Compare com um campo existente no formulário.",
+    "message": "Compare com um campo existente no formulário",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
   {
     "code": "UserAccountIssues",
-    "message": "PROBLEMAS COM CONTAS DE USUÁRIO",
+    "message": "QUESTÕES DE CONTAS DE USUÁRIO",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   },
@@ -974,6 +974,66 @@
   {
     "code": "referralName",
     "message": "Nome de referência",
+    "module": "hcm-base-hfreferral-default",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Rótulo",
+    "module": "hcm-base-hfreferral-default",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_FACILITY_DETAILS_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-default",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_REFERRAL_DETAILS_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-default",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-default",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-default",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-default",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMSICK_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-default",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_INBOX_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-default",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "REFERRAL_OVERVIEW_DESCRIPTION",
+    "message": " ",
+    "module": "hcm-base-hfreferral-default",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "dateOfEvaluation",
+    "message": "Data da avaliação",
     "module": "hcm-base-hfreferral-default",
     "locale": "pt_DEMO"
   }

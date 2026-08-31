@@ -1,5 +1,11 @@
 [
   {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Label",
+    "module": "hcm-base-complaints-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "ADMINISTRATION_FAILED",
     "message": "Administration Failed",
     "module": "hcm-base-complaints-mr-dn",
@@ -61,13 +67,13 @@
   },
   {
     "code": "ASSIGN_TO_ALL",
-    "message": "Assign to all",
+    "message": "Assigned to all",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "ASSIGN_TO_ME",
-    "message": "Assign to me",
+    "message": "Assigned to me",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -415,7 +421,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_SEARCH_COMPLAINT_NUMBER_LABEL",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -427,7 +433,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_SEARCH_MOBILE_NUMBER_LABEL",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -463,7 +469,7 @@
   },
   {
     "code": "COMPLAINT_INBOX_SORT_POPUP_LABEL",
-    "message": "Sort By:",
+    "message": "Sort by:",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -576,6 +582,18 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "CORE_COMMON_NOT_FOUND",
+    "message": "Complaint Not Found",
+    "module": "hcm-base-complaints-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NOT_FOUND_DESC",
+    "message": "We couldn't find any complaints in the records. You can file a new complaint.",
+    "module": "hcm-base-complaints-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "CORRESPONDENCE",
     "message": "Correspondence",
     "module": "hcm-base-complaints-mr-dn",
@@ -624,6 +642,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "FOOTER_ACTION_cancel2_LABEL",
+    "message": "Clear Label",
+    "module": "hcm-base-complaints-mr-dn",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "FOOTER_ACTION_close_LABEL",
     "message": "Close",
     "module": "hcm-base-complaints-mr-dn",
@@ -655,13 +679,13 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -673,13 +697,13 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Contact Number",
+    "message": "Contact number",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -691,19 +715,19 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Complaint Date",
+    "message": "Complaint date",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Complaint Type",
+    "message": "Complaint type",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -949,25 +973,25 @@
   },
   {
     "code": "addressLine1",
-    "message": "Address Line 1",
+    "message": "Address line 1",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "addressLine2",
-    "message": "Address Line 2",
+    "message": "Address line 2",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "administrativeArea",
-    "message": "Administrative Area",
+    "message": "Administrative area",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "assignTo",
-    "message": "Assign To",
+    "message": "Assign to",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -997,7 +1021,7 @@
   },
   {
     "code": "clientReferenceId",
-    "message": "Client Reference ID",
+    "message": "Client reference ID",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -1009,7 +1033,7 @@
   },
   {
     "code": "complaintAcknowledgement",
-    "message": "Complaint Acknowledgement",
+    "message": "Complaint acknowledgement",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -1021,19 +1045,19 @@
   },
   {
     "code": "complaintClientReferenceId",
-    "message": "Complaint Reference ID",
+    "message": "Complaint reference ID",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "complaintDescription",
-    "message": "Complaint Description",
+    "message": "Complaint description",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "complaintInbox",
-    "message": "Complaint Inbox",
+    "message": "Complaint inbox",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -1045,7 +1069,7 @@
   },
   {
     "code": "complaintNumber",
-    "message": "Complaint Number",
+    "message": "Complaint number",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -1069,7 +1093,7 @@
   },
   {
     "code": "complaintView",
-    "message": "Complaint View",
+    "message": "Complaint view",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -1087,7 +1111,7 @@
   },
   {
     "code": "contactNumber",
-    "message": "Complainant's Contact Number",
+    "message": "Complainant's contact number",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -1135,25 +1159,25 @@
   },
   {
     "code": "localityBoundaryCode",
-    "message": "Locality Code",
+    "message": "Locality code",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "mobileNumber",
-    "message": "Mobile Number",
+    "message": "Mobile number",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "name",
-    "message": "Complainant's Name",
+    "message": "Complainant's name",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "otherReason",
-    "message": "Reason For Complaint",
+    "message": "Reason for complaint",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -1177,13 +1201,13 @@
   },
   {
     "code": "serviceCode",
-    "message": "Service Code",
+    "message": "Service code",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "serviceRequestId",
-    "message": "Service Request ID",
+    "message": "Service request ID",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -1195,7 +1219,7 @@
   },
   {
     "code": "sortBy",
-    "message": "Sort By",
+    "message": "Sort by",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -1207,13 +1231,13 @@
   },
   {
     "code": "supervisorContactNumber",
-    "message": "Supervisor's Contact Number",
+    "message": "Supervisor's contact number",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
   {
     "code": "supervisorName",
-    "message": "Supervisor's Name",
+    "message": "Supervisor's name",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },
@@ -1225,7 +1249,7 @@
   },
   {
     "code": "typeOfAddress",
-    "message": "Type Of Address",
+    "message": "Type of address",
     "module": "hcm-base-complaints-mr-dn",
     "locale": "en_DEMO"
   },

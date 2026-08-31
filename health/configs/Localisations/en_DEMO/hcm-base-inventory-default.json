@@ -1,5 +1,11 @@
 [
   {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Label",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "ADMINISTRATION_FAILED",
     "message": "Administration Failed",
     "module": "hcm-base-inventory-default",
@@ -7,7 +13,7 @@
   },
   {
     "code": "APPONE_INVENTORY_QUANTITY_SENT_LABEL",
-    "message": "Quantity Sent",
+    "message": "Quantity sent",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -109,7 +115,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_productDetails_LABEL",
-    "message": "Product Details",
+    "message": "Product details",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -187,19 +193,19 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockDetails_facilityFromWhich_LABEL",
-    "message": "Health Facility",
+    "message": "Health facility",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockDetails_transportType_LABEL",
-    "message": "Transport Type",
+    "message": "Transport type",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockDetails_vehicleNumber_LABEL",
-    "message": "Vehicle Number",
+    "message": "Vehicle number",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -217,7 +223,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_BATCH_NUMBER_LABEL",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -277,7 +283,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_EXPIRY_DATE_LABEL",
-    "message": "Expiry Date",
+    "message": "Expiry date",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -373,7 +379,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_stockProductDetails_WAYBILL_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -427,7 +433,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_viewTransaction_NO_TRANSACTIONS_FOUND_INFOCARD_LABEL",
-    "message": "No Transactions Found",
+    "message": "No transactions found",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -499,7 +505,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_warehouseDetails_administrativeArea_LABEL",
-    "message": "Administrative Area",
+    "message": "Administrative area",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -511,7 +517,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_warehouseDetails_dateOfReceipt_LABEL",
-    "message": "Date of Receipt",
+    "message": "Date of receipt",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -523,7 +529,7 @@
   },
   {
     "code": "APP_CONFIG_INVENTORY_warehouseDetails_facilityToWhich_LABEL",
-    "message": "Health Facility",
+    "message": "Health facility",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -637,7 +643,7 @@
   },
   {
     "code": "INVENTORY_CREATE_NEW_TRANSACTION_LABEL",
-    "message": "Create a new transaction",
+    "message": "Create a New Transaction",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -661,7 +667,7 @@
   },
   {
     "code": "INVENTORY_STOCK_SUCCESS_LABEL",
-    "message": "Stock Transaction Recorded successfully",
+    "message": "Stock transaction recorded successfully",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -673,7 +679,7 @@
   },
   {
     "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -937,7 +943,7 @@
   },
   {
     "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
-    "message": "Stock on hand = (Stock received + stock returned) \u2212 (stock issued + stock lost + stock damaged)",
+    "message": "Stock on hand = (Stock received + stock returned) − (stock issued + stock lost + stock damaged)",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -1032,6 +1038,12 @@
     "locale": "en_DEMO"
   },
   {
+    "code": "WAREHOUSE_MANAGER",
+    "message": "Warehouse Manager",
+    "module": "hcm-base-inventory-default",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "WAYBILL_NUMBER",
     "message": "Waybill Number",
     "module": "hcm-base-inventory-default",
@@ -1105,13 +1117,13 @@
   },
   {
     "code": "stockDetails",
-    "message": "Stock Details",
+    "message": "Stock details",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
   {
     "code": "stockFieldPair",
-    "message": "Stock Details",
+    "message": "Stock details",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
@@ -1123,25 +1135,25 @@
   },
   {
     "code": "stockProductDetails",
-    "message": "stock Product Details",
+    "message": "stock product details",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
   {
     "code": "stockReconTable",
-    "message": "Stock Table",
+    "message": "Stock table",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
   {
     "code": "stockTable",
-    "message": "Stock Table",
+    "message": "Stock table",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },
   {
     "code": "warehouseDetails",
-    "message": "Warehouse Details",
+    "message": "Warehouse details",
     "module": "hcm-base-inventory-default",
     "locale": "en_DEMO"
   },

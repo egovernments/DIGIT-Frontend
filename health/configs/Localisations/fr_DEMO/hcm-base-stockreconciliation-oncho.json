@@ -91,7 +91,7 @@
   },
   {
     "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-stockreconciliation-oncho",
     "locale": "fr_DEMO"
   },

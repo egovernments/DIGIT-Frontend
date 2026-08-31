@@ -613,7 +613,7 @@
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_DHIS2_SUPERUSER",
-    "message": "Créer un superutilisateur",
+    "message": "Dhis superutilisateur",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -925,7 +925,7 @@
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_MB_CREATOR",
-    "message": "Créateur MB",
+    "message": "Créateur de MB",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -1087,7 +1087,7 @@
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_PTCEMP",
-    "message": "Employé du comptoir PT",
+    "message": "Employé au comptoir PT",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -1105,7 +1105,7 @@
   },
   {
     "code": "ACCESSCONTROL_ROLES_ROLES_PTIS_MASTER",
-    "message": "Maître PTIS",
+    "message": "Master PTIS",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -1621,7 +1621,7 @@
   },
   {
     "code": "ACTION_TEST_ACTION_TEST_OPEN_MICROPLAN",
-    "message": "Configurer Microplan",
+    "message": "Configurer le microplan",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -1633,7 +1633,7 @@
   },
   {
     "code": "ACTION_TEST_ACTION_TEST_SETUP_MICROPLAN",
-    "message": "Configurer Microplan",
+    "message": "Configurer le microplan",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -2197,7 +2197,7 @@
   },
   {
     "code": "ACTION_TEST_COA_REPORT",
-    "message": "COA Report",
+    "message": "Rapport COA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -3967,7 +3967,7 @@
   },
   {
     "code": "ACTION_TEST_SETUP_MICROPLAN",
-    "message": "Configurer Microplan",
+    "message": "Configurer le microplan",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -4027,7 +4027,7 @@
   },
   {
     "code": "ACTION_TEST_SUB_LEDGER_REPORT",
-    "message": "Rapport du grand livre auxiliaire",
+    "message": "Rapport du grand livre secondaire",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -4213,13 +4213,13 @@
   },
   {
     "code": "ACTION_TEST_ULB_REPORT",
-    "message": "ULB Report",
+    "message": "Rapport ULB",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "ACTION_TEST_ULB_STATS",
-    "message": "ULB Stats",
+    "message": "Statistiques ULB",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -4309,7 +4309,7 @@
   },
   {
     "code": "ACTION_TEST_VIEWFACILITY",
-    "message": "Voir l'installation",
+    "message": "Voir l'établissement",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -4741,7 +4741,7 @@
   },
   {
     "code": "ADVT.LIGHT_WALA_BOARD_TAX",
-    "message": "Lumière sans planche",
+    "message": "Tableau Wala léger",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -5239,7 +5239,7 @@
   },
   {
     "code": "BILLAMEND_COURTORDER",
-    "message": "Cour ou",
+    "message": "Ordonnance du tribunal",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -5359,7 +5359,7 @@
   },
   {
     "code": "BILLINGSERVICE_BUSINESSSERVICE_ADVT_LIGHT_WALA_BOARD",
-    "message": "Lumière sans planche",
+    "message": "Tableau Wala léger",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -5425,7 +5425,7 @@
   },
   {
     "code": "BILLINGSERVICE_BUSINESSSERVICE_CH_BIDI_&_CIGRETTE_CHALLAN",
-    "message": "Bidi & Cigarette Challan",
+    "message": "Bidi & Cigrette Challan",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -5599,7 +5599,7 @@
   },
   {
     "code": "BILLINGSERVICE_BUSINESSSERVICE_FN_TENDER_EARNEST_MONEY_DEPOSIT_REFUNDABLE FEE",
-    "message": "Dépôt d'argent sérieux (frais remboursables)",
+    "message": "Dépôt d'acompte (frais remboursables)",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -5623,7 +5623,7 @@
   },
   {
     "code": "BILLINGSERVICE_BUSINESSSERVICE_FTP_BUILDING_PLANNER_RENEW",
-    "message": "Renouveler le planificateur du bâtiment",
+    "message": "Le planificateur du bâtiment renouvelle",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -5707,7 +5707,7 @@
   },
   {
     "code": "BILLINGSERVICE_BUSINESSSERVICE_NKS",
-    "message": "Frais de manuel de carte/bâtiment",
+    "message": "Frais du manuel Naksha/Building",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -5755,7 +5755,7 @@
   },
   {
     "code": "BILLINGSERVICE_BUSINESSSERVICE_NKS_COLONY_SAMBANDHI_FEES",
-    "message": "Frais liés à la colonie",
+    "message": "Frais de colonie Sambandhi",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -5797,19 +5797,19 @@
   },
   {
     "code": "BILLINGSERVICE_BUSINESSSERVICE_NKS_NAKSHA_CHANGES",
-    "message": "changements de carte",
+    "message": "Naksha change",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "BILLINGSERVICE_BUSINESSSERVICE_NKS_NAKSHA_FEES",
-    "message": "Frais de carte",
+    "message": "Frais de Naksha",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "BILLINGSERVICE_BUSINESSSERVICE_NKS_NAKSHA_RENEW_FEES",
-    "message": "Frais de renouvellement de carte",
+    "message": "Naksha renouvelle les frais",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -5929,7 +5929,7 @@
   },
   {
     "code": "BILLINGSERVICE_BUSINESSSERVICE_OTHER_BUS_ADDA_FEE",
-    "message": "Frais spéciaux pour les bus",
+    "message": "Frais supplémentaires pour le bus",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -6085,7 +6085,7 @@
   },
   {
     "code": "BILLINGSERVICE_BUSINESSSERVICE_RT_JAMIN_THEKA",
-    "message": "Garantie Théka",
+    "message": "Jamin Théka",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -6223,7 +6223,7 @@
   },
   {
     "code": "BILLINGSERVICE_BUSINESSSERVICE_TB_CHALLAN_UNDER_SECTION_156",
-    "message": "Challan En vertu de l’article 156 121, etc.",
+    "message": "Challan En vertu de l'article 156 121, etc.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -6253,7 +6253,7 @@
   },
   {
     "code": "BILLINGSERVICE_BUSINESSSERVICE_TEHBAZAARI FEE_CHALLAN_UNDER_SECTION_156_121_ETC",
-    "message": "Challan En vertu de l’article 156 121, etc.",
+    "message": "Challan En vertu de l'article 156 121, etc.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -6265,7 +6265,7 @@
   },
   {
     "code": "BILLINGSERVICE_BUSINESSSERVICE_TEHBAZAARI_FEE_CHALLAN_UNDER_SECTION_156",
-    "message": "Challan En vertu de l’article 156 121, etc.",
+    "message": "Challan En vertu de l'article 156 121, etc.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -6685,7 +6685,7 @@
   },
   {
     "code": "BPA_APPLICATION_NO_CODE",
-    "message": "Numéro de demande : {0}",
+    "message": "N° de demande {0}",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -6823,7 +6823,7 @@
   },
   {
     "code": "BPA_FAQ_ANS_TWO",
-    "message": "Vous pouvez renouveler les permis au comptoir ou via le portail. Après vous être connecté, recherchez la demande de permis correspondante sur le portail. Cliquez ensuite sur le lien du permis que vous souhaitez renouveler. Ensuite, remplissez la demande de renouvellement de permis et cliquez sur Soumettre.",
+    "message": "Vous pouvez renouveler les permis au comptoir ou via le portail. Après vous être connecté, recherchez la demande de permis concernée sur le portail. Cliquez ensuite sur le lien du permis que vous souhaitez renouveler. Ensuite, remplissez la demande de renouvellement de permis et cliquez sur Soumettre.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -6937,7 +6937,7 @@
   },
   {
     "code": "BPA_KHATHA_NUMBER_LABEL",
-    "message": "Numéro de compte",
+    "message": "Numéro Khata",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -6967,7 +6967,7 @@
   },
   {
     "code": "BPA_LICENSE_VALID_LABEL",
-    "message": "Permis valable jusqu'à {0}",
+    "message": "Permis valable jusqu'au {0}",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -7609,7 +7609,7 @@
   },
   {
     "code": "CCF_ADHERENCE_TO_DATA_PRINCIPLES_LABEL",
-    "message": "ADHÉRENCE AUX PRINCIPES DE CONFIDENTIALITÉ DES DONNÉES",
+    "message": "ADHÉSION AUX PRINCIPES DE CONFIDENTIALITÉ DES DONNÉES",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -7645,7 +7645,7 @@
   },
   {
     "code": "CCF_COLLECT_IP_SERVICES_USED_LABEL",
-    "message": "Les informations que nous collectons dépendent des services que vous utilisez et peuvent varier de temps à autre, qui seront informées par les modifications apportées à cette politique.",
+    "message": "Les informations que nous collectons dépendent des services que vous utilisez et peuvent varier de temps à autre, ce qui sera informé par les modifications apportées à cette politique.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -7699,7 +7699,7 @@
   },
   {
     "code": "CCF_PP_ADHERENCE_TO_DATA_LABEL",
-    "message": "ADHÉRENCE AUX PRINCIPES DE CONFIDENTIALITÉ DES DONNÉES",
+    "message": "ADHÉSION AUX PRINCIPES DE CONFIDENTIALITÉ DES DONNÉES",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -7747,7 +7747,7 @@
   },
   {
     "code": "CCF_PP_DATA_DO_WE_COLLECT_INFO_3_LABEL",
-    "message": "Les informations que nous collectons dépendent des services que vous utilisez et peuvent varier de temps à autre, qui seront informées par les modifications apportées à cette politique.",
+    "message": "Les informations que nous collectons dépendent des services que vous utilisez et peuvent varier de temps à autre, ce qui sera informé par les modifications apportées à cette politique.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -7867,7 +7867,7 @@
   },
   {
     "code": "CCF_PP_HOW_DO_WE_PROCESS_INFO_11_LABEL",
-    "message": "Nous ne traiterons, ne divulguerons ni ne partagerons vos données sauf comme décrit dans cette politique ou comme autrement autorisé par vous.",
+    "message": "Nous ne traiterons, ne divulguerons ni ne partagerons vos données sauf comme décrit dans cette politique ou autrement autorisé par vous.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -7957,7 +7957,7 @@
   },
   {
     "code": "CCF_PP_REFERS_LABEL",
-    "message": "Grâce au NOM DU PROGRAMME, vous pouvez accéder et bénéficier des services offerts par les services gouvernementaux de l'ÉTAT OU DE L'ULB, les services du gouvernement central, les organismes locaux et leurs agences et les organismes corporatifs/privés (services publics) (prestataires de services). Vous pouvez utiliser le site Web/l'application/les services de PROGRAM NAME de différentes manières, par exemple pour la découverte de services, l'utilisation de services, l'enregistrement de griefs, etc.",
+    "message": "Grâce à NOM DU PROGRAMME, vous pouvez accéder et bénéficier des services offerts par les services gouvernementaux de l'ÉTAT OU DE L'ULB, les services du gouvernement central, les organismes locaux et leurs agences et les organismes corporatifs/privés (services publics) (prestataires de services). Vous pouvez utiliser le site Web/l'application/les services de PROGRAM NAME de différentes manières, par exemple pour la découverte de services, l'utilisation de services, l'enregistrement de griefs, etc.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -8023,7 +8023,7 @@
   },
   {
     "code": "CCF_PROCESS_DISCLOSE_SHARE_NOT_SHARE_LABEL",
-    "message": "Nous ne traiterons, ne divulguerons ni ne partagerons vos données sauf comme décrit dans cette politique ou comme autrement autorisé par vous.",
+    "message": "Nous ne traiterons, ne divulguerons ni ne partagerons vos données sauf comme décrit dans cette politique ou autrement autorisé par vous.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -8071,7 +8071,7 @@
   },
   {
     "code": "CCF_STORE_DELETE_YOUR_ACCOUNT_LABEL",
-    "message": "Vous pouvez supprimer votre compte à tout moment. En cas de suppression, nous supprimerons toutes vos informations personnelles du système, afin qu'elles ne soient plus visibles et/ou accessibles lors de toute opération régulière. Toutefois, les PII peuvent être conservées de manière cryptée à des fins d'exigences/conformités légales {SELON L'UNION / L'ÉTAT / LOIS ULB} à compter de la date de suppression/résiliation.",
+    "message": "Vous pouvez supprimer votre compte à tout moment. En cas de suppression, nous supprimerons toutes vos informations personnelles du système, afin qu'elles ne soient plus visibles et/ou accessibles lors de toute opération régulière. Cependant, les informations personnelles peuvent être conservées de manière cryptée à des fins d'exigences/conformités légales {AS PER UNION / STATE / ULB LAWS} à compter de la date de suppression/résiliation.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -8089,13 +8089,13 @@
   },
   {
     "code": "CCF_STORE_REVIEW_EDIT_LABEL",
-    "message": "Vous pouvez consulter et modifier vos données, ainsi que supprimer vos données de l'application/du site Web en suivant les procédures {SELON L'UNION / L'ÉTAT / LOIS ULB}.",
+    "message": "Vous pouvez consulter et modifier vos données, ainsi que supprimer vos données de l'application/du site Web en suivant les procédures {AS PER UNION / STATE / ULB LAWS}.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "CCF_STORE_SECURE_MANNER_LABEL",
-    "message": "Vos données sont stockées de manière sécurisée. Plateforme DIGIT, qui intègre des paramètres de confidentialité (tels que le cryptage), qui ne permettent à personne de voir vos données, à l'exception des personnes autorisées à le faire en vertu de leur fonction officielle. Sauf indication contraire, ces données seront conservées pendant une durée minimale de {SELON L'UNION / ETAT / LOIS ULB} et une durée maximale de {SELON L'UNION / ETAT / LOIS ULB}.",
+    "message": "Vos données sont stockées de manière sécurisée. Plateforme DIGIT, qui intègre des paramètres de confidentialité (tels que le cryptage), qui ne permettent à personne de voir vos données, à l'exception des personnes autorisées à le faire en vertu de leur fonction officielle. Sauf indication contraire, ces données seront conservées pendant une durée minimale de {AS PER UNION / STATE / ULB LAWS} et une durée maximale de {AS PER UNION / STATE / ULB LAWS}.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -8113,7 +8113,7 @@
   },
   {
     "code": "CCF_STORE_UNREGISTER_LABEL",
-    "message": "Si vous supprimez/supprimez simplement l'application de votre appareil mobile mais ne supprimez pas votre profil ou ne vous désinscrivez pas de l'application/du site Web, vous continuerez à être un utilisateur enregistré de l'application et nous continuerons à vous envoyer toutes les communications que vous avez choisi à moins et jusqu'à ce que vous vous désinscriviez de ces communications, ou {CONFORMÉMENT À LA LOI DE L'UNION / DE L'ÉTAT / DE L'ULB}.",
+    "message": "Si vous supprimez/supprimez simplement l'application de votre appareil mobile mais ne supprimez pas votre profil ou ne vous désinscrivez pas de l'application/du site Web, vous continuerez à être un utilisateur enregistré de l'application et nous continuerons à vous envoyer toutes les communications pour lesquelles vous avez choisi à moins et jusqu'à ce que vous vous désinscriviez de ces communications, ou {AS PER UNION / STATE / ULB LAW}.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -8299,7 +8299,7 @@
   },
   {
     "code": "CITIZEN_CONSENT_FORM_PP_ACCESS_AVAIL_LABEL",
-    "message": "Grâce au NOM DU PROGRAMME, vous pouvez accéder et bénéficier des services offerts par les services gouvernementaux de l'ÉTAT OU DE L'ULB, les services du gouvernement central, les organismes locaux et leurs agences et les organismes corporatifs/privés (services publics) (prestataires de services). Vous pouvez utiliser le site Web/l'application/les services de PROGRAM NAME de différentes manières, par exemple pour la découverte de services, l'utilisation de services, l'enregistrement de griefs, etc.",
+    "message": "Grâce à NOM DU PROGRAMME, vous pouvez accéder et bénéficier des services offerts par les services gouvernementaux de l'ÉTAT OU DE L'ULB, les services du gouvernement central, les organismes locaux et leurs agences et les organismes corporatifs/privés (services publics) (prestataires de services). Vous pouvez utiliser le site Web/l'application/les services de PROGRAM NAME de différentes manières, par exemple pour la découverte de services, l'utilisation de services, l'enregistrement de griefs, etc.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -8317,7 +8317,7 @@
   },
   {
     "code": "CITIZEN_CONSENT_FORM_PP_PRIVANCY_SECURITY_LABEL",
-    "message": "{NOM DU PROGRAMME} (« nous » ou « notre » ou « notre ») respecte la vie privée de nos utilisateurs (« utilisateur » ou « vous » également appelé « votre »). Par conséquent, nous maintenons les normes les plus élevées en matière d’activités sécurisées, de confidentialité et de sécurité des informations/données des utilisateurs.",
+    "message": "{PROGRAM NAME} (« nous » ou « notre » ou « notre ») respecte la vie privée de nos utilisateurs (« utilisateur » ou « vous » également appelé « votre »). Par conséquent, nous maintenons les normes les plus élevées en matière d’activités sécurisées, de confidentialité et de sécurité des informations/données des utilisateurs.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -8347,7 +8347,7 @@
   },
   {
     "code": "CITIZEN_FAILURE_BPA_LOW_RISK_PERMIT_FEE_PAYMENT_MESSAGE_DETAIL",
-    "message": "Une notification concernant l'échec de paiement a été envoyée au numéro de portable enregistré de l'utilisateur/propriétaire.",
+    "message": "Une notification concernant l'échec du paiement a été envoyée au numéro de portable enregistré de l'utilisateur/propriétaire.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -8359,7 +8359,7 @@
   },
   {
     "code": "CITIZEN_FAILURE_BPA_NC_APP_FEE_PAYMENT_MESSAGE_DETAIL",
-    "message": "Une notification concernant l'échec de paiement a été envoyée au numéro de portable enregistré de l'utilisateur/propriétaire.",
+    "message": "Une notification concernant l'échec du paiement a été envoyée au numéro de portable enregistré de l'utilisateur/propriétaire.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -8371,7 +8371,7 @@
   },
   {
     "code": "CITIZEN_FAILURE_BPA_NC_SAN_FEE_PAYMENT_MESSAGE_DETAIL",
-    "message": "Une notification concernant l'échec de paiement a été envoyée au numéro de portable enregistré de l'utilisateur/propriétaire.",
+    "message": "Une notification concernant l'échec du paiement a été envoyée au numéro de portable enregistré de l'utilisateur/propriétaire.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -8515,7 +8515,7 @@
   },
   {
     "code": "CITIZEN_FEEDBACK_PENDING",
-    "message": "En attente des commentaires des citoyens",
+    "message": "En attente de commentaires des citoyens",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -9511,7 +9511,7 @@
   },
   {
     "code": "COMMON_MASTERS_DEPARTMENT_CHAI",
-    "message": "CHAI",
+    "message": "CHAÏ",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -9535,7 +9535,7 @@
   },
   {
     "code": "COMMON_MASTERS_DEPARTMENT_DEPT_12",
-    "message": "Direction des naissances et des décès",
+    "message": "Service des naissances et des décès",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -9607,7 +9607,7 @@
   },
   {
     "code": "COMMON_MASTERS_DEPARTMENT_DEPT_23",
-    "message": "vers Tehbaza",
+    "message": "Tehbazari",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -9847,7 +9847,7 @@
   },
   {
     "code": "COMMON_MASTERS_DEPARTMENT_MISAU",
-    "message": "MISSION",
+    "message": "MISAU",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -10069,7 +10069,7 @@
   },
   {
     "code": "COMMON_MASTERS_DESIGNATION_DESIG_108",
-    "message": "Restaurants",
+    "message": "Restaurer",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -10117,7 +10117,7 @@
   },
   {
     "code": "COMMON_MASTERS_DESIGNATION_DESIG_115",
-    "message": "Technicien junior",
+    "message": "Technicien Junior",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -10141,7 +10141,7 @@
   },
   {
     "code": "COMMON_MASTERS_DESIGNATION_DESIG_119",
-    "message": "Ingénieur de chantier/entrepreneur",
+    "message": "Ingénieur de chantier/Entrepreneur",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -10177,7 +10177,7 @@
   },
   {
     "code": "COMMON_MASTERS_DESIGNATION_DESIG_125",
-    "message": "Sévadar",
+    "message": "Sewadar",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -10285,7 +10285,7 @@
   },
   {
     "code": "COMMON_MASTERS_DESIGNATION_DESIG_34",
-    "message": "Assistante Junior",
+    "message": "Assistante junior",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -10339,7 +10339,7 @@
   },
   {
     "code": "COMMON_MASTERS_DESIGNATION_DESIG_43",
-    "message": "Directeur",
+    "message": "Surintendant",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -10477,7 +10477,7 @@
   },
   {
     "code": "COMMON_MASTERS_DESIGNATION_DESIG_66",
-    "message": "Programmes informatiques",
+    "message": "Programmeur informatique",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -10699,7 +10699,7 @@
   },
   {
     "code": "COMMON_MASTERS_DESIGNATION_WIR",
-    "message": "NOUS",
+    "message": "FIL",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -10759,7 +10759,7 @@
   },
   {
     "code": "COMMON_MASTERS_DESIGNATION_WRK_JE",
-    "message": "Ingénieur Junior",
+    "message": "Ingénieur junior",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -10939,7 +10939,7 @@
   },
   {
     "code": "COMMON_MASTERS_OWNERTYPE_NA",
-    "message": "QUE",
+    "message": "N / A",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -10999,13 +10999,13 @@
   },
   {
     "code": "COMMON_MASTERS_PAYMENTMODE_NEFT",
-    "message": "Huile",
+    "message": "Neft",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "COMMON_MASTERS_PAYMENTMODE_OFFLINE_NEFT",
-    "message": "HUILE",
+    "message": "NEFT",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -11077,7 +11077,7 @@
   },
   {
     "code": "COMMON_MASTERS_STRUCTURETYPE_IMMOVABLE_KUTCHA",
-    "message": "Pour appeler",
+    "message": "Kutcha",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -11155,7 +11155,7 @@
   },
   {
     "code": "COMMON_MASTERS_null",
-    "message": "QUE",
+    "message": "N / A",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -11233,7 +11233,7 @@
   },
   {
     "code": "COMMON_NA",
-    "message": "QUE",
+    "message": "N / A",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -11257,7 +11257,7 @@
   },
   {
     "code": "COMMON_NEFT",
-    "message": "HUILE",
+    "message": "NEFT",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -12631,7 +12631,7 @@
   },
   {
     "code": "CORE_FORGOT_PASSWORD_POPUP_DESCRIPTION",
-    "message": "Veuillez contacter votre administrateur si vous avez oublié votre mot de passe.",
+    "message": "Veuillez contacter votre administrateur si vous avez oublié votre mot de passe",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -12805,7 +12805,7 @@
   },
   {
     "code": "CORE_LOADING_DYNAMIC_CONTENT",
-    "message": "Chargement du contenu dynamique",
+    "message": "Chargement de contenu dynamique",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -12817,13 +12817,13 @@
   },
   {
     "code": "CORE_LOADING_ERROR_COMPONENT",
-    "message": "Chargement du composant d'erreur",
+    "message": "Composant d'erreur de chargement",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "CORE_LOADING_FAQS",
-    "message": "Chargement de la FAQ",
+    "message": "Chargement des FAQ",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -12835,7 +12835,7 @@
   },
   {
     "code": "CORE_LOADING_HOME",
-    "message": "Chargement de la page d'accueil",
+    "message": "Chargement Accueil",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -12853,7 +12853,7 @@
   },
   {
     "code": "CORE_LOADING_LOCATION_SELECTION",
-    "message": "Chargement de la sélection d'emplacement",
+    "message": "Sélection de l'emplacement de chargement",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -12883,7 +12883,7 @@
   },
   {
     "code": "CORE_LOADING_SIGN_UP",
-    "message": "Chargement de l'inscription",
+    "message": "Chargement Inscription",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -13489,7 +13489,7 @@
   },
   {
     "code": "CS_ADDCOMPLAINT_COMPLAINT_LOCATION",
-    "message": "lieu de plainte",
+    "message": "शिकायत का स्थान",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -13561,7 +13561,7 @@
   },
   {
     "code": "CS_BILL_DUEDATE",
-    "message": "Deux rendez-vous",
+    "message": "Date d'échéance",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -13861,7 +13861,7 @@
   },
   {
     "code": "CS_COMMON_FSM_CITIZEN_FEEDBACK_PENDING",
-    "message": "En attente des commentaires des citoyens",
+    "message": "En attente de commentaires des citoyens",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -14203,7 +14203,7 @@
   },
   {
     "code": "CS_COMMON_OBPS",
-    "message": "STFR",
+    "message": "STOB",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -14299,7 +14299,7 @@
   },
   {
     "code": "CS_COMMON_RECIEPT_NO",
-    "message": "Numéro de reçu",
+    "message": "Numéro de réception",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -14419,7 +14419,7 @@
   },
   {
     "code": "CS_COMMON_TRACK_COMPLAINT_TEXT",
-    "message": "La notification ainsi que votre numéro de réclamation sont envoyées au numéro de portable de votre plaignant. Le plaignant peut suivre l'état de la plainte à l'aide d'une application mobile ou Web.",
+    "message": "La notification ainsi que votre numéro de plainte sont envoyées au numéro de portable de votre plaignant. Le plaignant peut suivre l'état de la plainte à l'aide d'une application mobile ou Web.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -14659,7 +14659,7 @@
   },
   {
     "code": "CS_FILE_APPLICATION_PROPERTY_LOCATION_PROVIDE_LANDMARK_TEXT",
-    "message": "Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.",
+    "message": "Fournissez le point de repère pour nous aider à atteindre facilement l'emplacement de la propriété.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15001,7 +15001,7 @@
   },
   {
     "code": "CS_LOGIN_TEXT",
-    "message": "Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.",
+    "message": "Fournissez le numéro de mobile et validez avec OTP qui vous est envoyé par SMS. Cela nous aidera à vous contacter au cas où nous aurions besoin de plus d'informations sur la plainte.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15055,7 +15055,7 @@
   },
   {
     "code": "CS_NA",
-    "message": "QUE",
+    "message": "N / A",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15079,7 +15079,7 @@
   },
   {
     "code": "CS_OVERDUE_BY_DAY",
-    "message": "En retard de {0} jour",
+    "message": "En retard d'ici {0} jour",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15475,13 +15475,13 @@
   },
   {
     "code": "CS_SLA_DAY",
-    "message": "il y a {0} jours",
+    "message": "Il y a {0} jours",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "CS_SLA_DAY_ONE",
-    "message": "il y a {0} jours",
+    "message": "il y a {0} jour",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15499,7 +15499,7 @@
   },
   {
     "code": "CS_SLA_MONTH",
-    "message": "il y a {0} mois",
+    "message": "Il y a {0} mois",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15517,19 +15517,19 @@
   },
   {
     "code": "CS_SLA_TIME",
-    "message": "il y a {0} heures",
+    "message": "Il y a {0} heures",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "CS_SLA_TIME_ONE",
-    "message": "il y a {0} heures",
+    "message": "Il y a {0} heure",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "CS_SLA_WEEK",
-    "message": "il y a {0} semaines",
+    "message": "Il y a {0} semaines",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15769,13 +15769,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_A08q5iv9N39",
-    "message": "Nouveau",
+    "message": "NOUVELLE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_A0CTg34QpT9",
-    "message": "MUCUACUCA",
+    "message": "MUCUACUKA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15787,7 +15787,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_A1uoGgoM34u",
-    "message": "NAMA VE",
+    "message": "NAMAVE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15811,7 +15811,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_A35U5Jzu5gP",
-    "message": "UNITÉ DE QUARTIER 18",
+    "message": "BAIRRO UNIDADE18",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15835,13 +15835,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_A52CvEu55Uk",
-    "message": "Mize",
+    "message": "MIZÉLÉ",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_A5p5W2wRGMH",
-    "message": "RIEN",
+    "message": "NANTHOTHO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15865,7 +15865,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_A7uwlzkFy6N",
-    "message": "D'ABORD",
+    "message": "MUUALO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15877,13 +15877,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_A8VJkOEaHLG",
-    "message": "NE PAS",
+    "message": "KUTUCA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_A950WXKP1UF",
-    "message": "DANS LE CAMION",
+    "message": "MUTOROU",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15895,7 +15895,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_A9Og6ap2NxP",
-    "message": "NAMPUA",
+    "message": "NAMPAUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15907,7 +15907,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_A9to2JcYH0K",
-    "message": "ET MACOSI",
+    "message": "NAMACOZI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15919,7 +15919,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_AANpTQQ0hyK",
-    "message": "CONSEILS",
+    "message": "NAMIGOPE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15949,7 +15949,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_AE33awlYqy0",
-    "message": "EN ATTENDANT",
+    "message": "NANTIRA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -15961,7 +15961,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_AESqqoDlrw9",
-    "message": "QINGA",
+    "message": "QUINGA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16033,7 +16033,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_AJinooipcpg",
-    "message": "MOURIR",
+    "message": "MUERETE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16051,31 +16051,31 @@
   },
   {
     "code": "DEFAULT_ADMIN_AL22vJ1Ylg1",
-    "message": "MANGEZ-LE",
+    "message": "MANGANE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_ALNFhmRD89Z",
-    "message": "SIÈGE SOCIAL DE MAVUCO",
+    "message": "MAVUCO SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_ALqR6noETRu",
-    "message": "NAMPUA",
+    "message": "NAMPAUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_ANPCxuN71vY",
-    "message": "PRINCIPAL 2",
+    "message": "MUALIA 2",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_AP0DncjBdda",
-    "message": "MAGASIN CAVACAVA",
+    "message": "CAVACAVA LOJA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16087,7 +16087,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_AQywV2N3nQm",
-    "message": "ET CUCO",
+    "message": "NAMACUCO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16117,7 +16117,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_ATDXqrEAaLI",
-    "message": "DIFFICILE",
+    "message": "NAUAUANE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16135,7 +16135,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_AUkvmh3y4jq",
-    "message": "je venais",
+    "message": "NAGERA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16147,13 +16147,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_AVfC1l8pB4i",
-    "message": "MULISSÉ",
+    "message": "MUILISSE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_AWdtkasezpg",
-    "message": "EST-CE ?",
+    "message": "GÉLO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16171,19 +16171,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_AYQZNijQ5uO",
-    "message": "LEQUEL",
+    "message": "CUALÉIA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_AYQl50vLcdA",
-    "message": "UN HOMME D'ÉCHECS",
+    "message": "MALEVANE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_AZnrjkdNGXY",
-    "message": "NACULUA",
+    "message": "NACULUPUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16195,13 +16195,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_AcroliqmDTi",
-    "message": "SIÈGE DES LOUPS (LOUPS)",
+    "message": "LUPI SEDE (LUPI)",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_AdIt2KTL9Ip",
-    "message": "NAMACU B.",
+    "message": "NAMACUCU B.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16225,7 +16225,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_AewOC139QNQ",
-    "message": "ECULUMUE",
+    "message": "ÉCULUMUE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16243,19 +16243,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_AgHX7eKLW9z",
-    "message": "DISSOLVANT",
+    "message": "QUITAMIHÈNE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_AgmFfbgB2rG",
-    "message": "PERSONNE",
+    "message": "NICUIA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_AhA4Lujodc8",
-    "message": "SONGUE ET TOUS",
+    "message": "SONGUE NABURI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16279,7 +16279,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_Air0dJHQD1y",
-    "message": "VOUS PRIEZ",
+    "message": "NICUMARIRI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16309,7 +16309,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_AlYQcupSaFI",
-    "message": "NOUVEAU QUARTIER",
+    "message": "BAIRRO NOVO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16333,7 +16333,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_AnOtRwMwMW1",
-    "message": "NOMS",
+    "message": "NOMZEZE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16345,13 +16345,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_Ana46P1bpVU",
-    "message": "VERSET",
+    "message": "MITEMANE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_AnoZoXrdqo4",
-    "message": "SIÈGE NAPLES",
+    "message": "NAPULUPO SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16369,13 +16369,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_AopqHEIULZR",
-    "message": "silencieux",
+    "message": "TACATIUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_AqGrHR2qYfv",
-    "message": "CHANGEMENT",
+    "message": "MUTACAGE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16387,19 +16387,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_AqdVR4TXfJ0",
-    "message": "NAPHOPA",
+    "message": "NAHOPA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Aqerwg0S6cZ",
-    "message": "AVANT B",
+    "message": "NAMUA B.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_AqfwGMwB9dv",
-    "message": "FOU",
+    "message": "NAPUÉE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16417,13 +16417,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_ArcQTBZJSzx",
-    "message": "MÉDECINE3",
+    "message": "NACHIROPA3",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_As2EsBvj9Rt",
-    "message": "PAYS-BAS",
+    "message": "NATERÉ",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16435,13 +16435,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_AsihRBAavyM",
-    "message": "TU VOIS",
+    "message": "MUANONA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_AtkmBEJw4yi",
-    "message": "NOUVELLE VIE",
+    "message": "VIDA NOVA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16453,7 +16453,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_AvD8Vee5Ywk",
-    "message": "CARRIÈRE",
+    "message": "PEDREIRA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16465,25 +16465,25 @@
   },
   {
     "code": "DEFAULT_ADMIN_AvmueTfvsIs",
-    "message": "LIRE",
+    "message": "NIVAHACA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_AvzSaUJeoJb",
-    "message": "PULL-OVER",
+    "message": "MUPILA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_AwViJ7yd9eI",
-    "message": "CONSEILS",
+    "message": "NAMIGE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_AwYGtQJtL4V",
-    "message": "VRAI",
+    "message": "MUNLÉLA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16495,7 +16495,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_AxsPWalBofl",
-    "message": "VOICI 1",
+    "message": "NAVAVA1",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16513,7 +16513,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_B0YgZTkRdXl",
-    "message": "DEMANDER",
+    "message": "NANUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16531,7 +16531,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_B2HfUIOZVOz",
-    "message": "MAROMOMO",
+    "message": "MAROROMO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16549,7 +16549,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_B4s7qTIURMb",
-    "message": "MORT",
+    "message": "MUEROTA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16567,7 +16567,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_B6WBMWaWGPO",
-    "message": "CONSTRUIT",
+    "message": "EWUILE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16579,7 +16579,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_B6y51jGsoem",
-    "message": "NACACANA – SIÈGE SOCIAL",
+    "message": "NACACANA- SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16591,25 +16591,25 @@
   },
   {
     "code": "DEFAULT_ADMIN_B8eiWlqSqpG",
-    "message": "ILS SONT PARTIS",
+    "message": "MARRU",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BAVguSLGiCR",
-    "message": "1er MAI",
+    "message": "1 DE MAIO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BAjmz60xTJt",
-    "message": "NOUVEAU",
+    "message": "MUPIA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BAmGNMZ35k3",
-    "message": "ARGENT",
+    "message": "MALOHA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16621,37 +16621,37 @@
   },
   {
     "code": "DEFAULT_ADMIN_BBgX347gRo2",
-    "message": "ET LE VIEUX",
+    "message": "NAMADALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BBlKhkj3AFs",
-    "message": "MOSQUÉE",
+    "message": "MESQUITA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BBnVC8SVZ6U",
-    "message": "ET LIVRES",
+    "message": "NAMAPONDA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BBqjM3jBOLw",
-    "message": "CHAMP EXPASAO",
+    "message": "CAMPO EXPASAO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BC4LOaXXNFp",
-    "message": "CAPABLE",
+    "message": "GEBA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BCTQ8VPZUWh",
-    "message": "FRONTIÈRE",
+    "message": "BEIRA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16663,13 +16663,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_BDDAHF8jglo",
-    "message": "ATTAQUÉ",
+    "message": "NAPALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BDj031TDmCW",
-    "message": "DITES-LE",
+    "message": "NATHETHÉ",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16699,13 +16699,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_BH7a5jyDyzl",
-    "message": "SIÈGE SOCIAL DE MUALUA",
+    "message": "MUALUA SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BHdV5brOMXC",
-    "message": "CARRIÈRE",
+    "message": "PEDREIRA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16723,7 +16723,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_BIq5oGyuwhP",
-    "message": "Limon",
+    "message": "MULIMONE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16735,13 +16735,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_BJkwz2rDlJ1",
-    "message": "À CUBA",
+    "message": "MUCUBA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BKpv1AZeSFW",
-    "message": "VOIR C",
+    "message": "SIEE C",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16777,7 +16777,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_BLo5nd9GdBA",
-    "message": "MPAHIA",
+    "message": "MPAHEIA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16789,7 +16789,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_BM5fHRmc8JT",
-    "message": "HEUREUX",
+    "message": "IULUTI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16807,7 +16807,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_BMZiRNf370s",
-    "message": "NU",
+    "message": "NAHOTE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16831,37 +16831,37 @@
   },
   {
     "code": "DEFAULT_ADMIN_BPkXwABU5S7",
-    "message": "LAISSEZ-LE ENTRER",
+    "message": "MUTORONE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BQzwmYcWjc1",
-    "message": "INFUSION",
+    "message": "NAPARUE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BRDAlYezopi",
-    "message": "PETITS ENFANTS",
+    "message": "MUCUCUNE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BRd06nozVdB",
-    "message": "SIMPLE",
+    "message": "SIMPUITI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BRomu7GjPho",
-    "message": "4 OCTOBRE",
+    "message": "4 DE L'OUTUBRO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BSav94icJeq",
-    "message": "MAPI",
+    "message": "MAPIA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16885,25 +16885,25 @@
   },
   {
     "code": "DEFAULT_ADMIN_BVB6bnXEjJl",
-    "message": "EN GROS",
+    "message": "MASSAL",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BWMotvzRZ1l",
-    "message": "4 VOIES",
+    "message": "4CAMINHO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BWu52GJm4Gh",
-    "message": "TRAIN A",
+    "message": "TERÈNE a",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BXcGublKWG3",
-    "message": "EMPLACEMENT CHANGÉ",
+    "message": "MUTATA SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16915,7 +16915,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_BY0CSGMDDeZ",
-    "message": "je rugis",
+    "message": "NAZURUMA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16939,7 +16939,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_Ba52xsjicwj",
-    "message": "MUCULE",
+    "message": "MUCULO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16957,37 +16957,37 @@
   },
   {
     "code": "DEFAULT_ADMIN_BdKz0fnnA2d",
-    "message": "TU VOIS",
+    "message": "MUANONA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BdymqQ2JKsd",
-    "message": "CONVARE_SEDE",
+    "message": "CUNVARE_SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Be1E0lQXH9l",
-    "message": "EN RETARD",
+    "message": "NATÉLA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Becm91NNACv",
-    "message": "4 VOIES",
+    "message": "4CAMINHO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BhC8SvnRODs",
-    "message": "ÉQUIPAGE",
+    "message": "KRU",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BhHlS49E4TY",
-    "message": "MAÇON B.",
+    "message": "MURERE bernard",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -16999,13 +16999,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_BhyAfkru9ZS",
-    "message": "DARIUA",
+    "message": "TARIUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BhyFrSyvh1R",
-    "message": "SAISONS",
+    "message": "MARUACHA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17017,7 +17017,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_BiToYeTQgYQ",
-    "message": "ÉGLISE",
+    "message": "CHHULO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17029,7 +17029,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_BjE8gXrRfSD",
-    "message": "ORANGES",
+    "message": "MARARANGE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17053,7 +17053,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_Bk9w2osDiVY",
-    "message": "À l'hôpital",
+    "message": "MURIPOTANA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17071,7 +17071,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_Blkjpkvd1Q7",
-    "message": "EN ATTENDANT",
+    "message": "NANTIRA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17089,7 +17089,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_BouBzKJBLuV",
-    "message": "NOUS SOUVENONS DE DIA",
+    "message": "SETIMO DIA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17113,7 +17113,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_BrDCXwz5YUg",
-    "message": "TEMPS B",
+    "message": "NAPETO B.",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17125,7 +17125,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_BrwU8MMmcaw",
-    "message": "CUHAAR",
+    "message": "CUHAR",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17149,7 +17149,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_BtsPMyzZ1TL",
-    "message": "LIBÉRATION",
+    "message": "RIPIHA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17161,13 +17161,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_BvXOvxVsCNs",
-    "message": "MYCOLÈNE - SIÈGE",
+    "message": "MICOLENE-SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BwJlIKZKhUI",
-    "message": "VU BEAUCOUP",
+    "message": "SERRA MUITA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17185,7 +17185,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_BxXovfGLH1q",
-    "message": "HONTE",
+    "message": "NSONE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17197,19 +17197,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_By9L5i8VkxS",
-    "message": "SANTÉ 2",
+    "message": "MUTANAPO 2",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_ByBNDv2UqbU",
-    "message": "3 FÉVRIER",
+    "message": "3 DE FEVEREIRO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_ByRjSXVRocf",
-    "message": "PEAU",
+    "message": "NAHA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17221,13 +17221,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_ByzbQVcssgi",
-    "message": "GÉSIER",
+    "message": "MOÉLA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_BzNj5sDX9Is",
-    "message": "VILLE HAUTE",
+    "message": "CITÉ HAUTE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17239,7 +17239,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_C044nu44nPT",
-    "message": "DEMAIN",
+    "message": "MURRURA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17269,7 +17269,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_C2WNEqZJ3Ax",
-    "message": "OPPRESSION",
+    "message": "ZULUME",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17281,7 +17281,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_C3bsqlwdxLe",
-    "message": "SIÈGE SOCIAL DE NAICOLE",
+    "message": "NAÏCOLE SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17305,7 +17305,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_C636urPC0TP",
-    "message": "Et sois doux",
+    "message": "MITEQUEREQUE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17317,19 +17317,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_C6L05R3qAc7",
-    "message": "DE VITRE",
+    "message": "WÉPANE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_C6uobBf3xPu",
-    "message": "catita1",
+    "message": "CATITA1",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_C7Xwq1Ye64q",
-    "message": "À l'hôpital",
+    "message": "MURIPOTANA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17341,7 +17341,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_C85GHKUknji",
-    "message": "À MUCUPA",
+    "message": "MUCUPASSA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17365,13 +17365,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_CB1M5YB1PVR",
-    "message": "TERRE FRAPPÉE",
+    "message": "TERRA BATIDA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CB6VJsyptkp",
-    "message": "MOLLEIA",
+    "message": "MOLÉIA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17383,7 +17383,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_CBK72wC1haW",
-    "message": "QUARTIER DE MUTOTE",
+    "message": "BAIRRO DE MUTOTE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17401,7 +17401,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_CChCCVzoNok",
-    "message": "Tu seras heureux",
+    "message": "MUCHAPALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17419,13 +17419,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_CDJMhD2NK4K",
-    "message": "NOUS NE LE FAISONS PAS",
+    "message": "NALAMA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CDOWmKHC00r",
-    "message": "ET CITATIONS",
+    "message": "NAMAQUETHO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17449,7 +17449,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_CF6xsmOyKZK",
-    "message": "DONNÉ",
+    "message": "MUÉPANE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17461,13 +17461,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_CG0sEiRjD5o",
-    "message": "ANTENNES-3KM",
+    "message": "ANTENAS-3KM",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CGIwA62bENX",
-    "message": "TOMBER AMOUREUX",
+    "message": "RATANE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17485,13 +17485,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_CHVi2Pxy5WI",
-    "message": "ALORS",
+    "message": "NATHÉPA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CHaKGWwXxYl",
-    "message": "LONZO",
+    "message": "LONCO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17515,7 +17515,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_CIkWUjzxMvt",
-    "message": "CARRIÈRE",
+    "message": "PEDREIRA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17539,19 +17539,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_CLFm3hT3DYD",
-    "message": "QUARTIER DE NATAPALALA",
+    "message": "BAIRRO NATAPALALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CLbZnTZZ4dE",
-    "message": "QUARTIER 1",
+    "message": "BAIRRO 1",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CM9AmSC9Ns0",
-    "message": "SINON",
+    "message": "NAMALALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17575,13 +17575,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_CPHpVKMQWeC",
-    "message": "DE VITRE",
+    "message": "WÉPANE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CQ3YjbRUGp0",
-    "message": "FAMILLES",
+    "message": "MALAPA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17599,13 +17599,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_CQToKqqGmyD",
-    "message": "MOTO",
+    "message": "MOTOA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CRhZ849jsdk",
-    "message": "PRIÈRE",
+    "message": "NAMUALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17641,7 +17641,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_CSV6PsMjWRk",
-    "message": "CITOYEN",
+    "message": "MÉPÉONE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17653,19 +17653,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_CSy9eb8z3ZC",
-    "message": "PARADIS",
+    "message": "SAMAMA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CTXvKGWQUhZ",
-    "message": "LE JETÉ",
+    "message": "MPAGO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CU64MzwEs7x",
-    "message": "DIEU",
+    "message": "MULIMÉLO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17677,13 +17677,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_CUYdYZZY8R5",
-    "message": "AVAIT 1",
+    "message": "IMALA1",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CUa6wiXNaYB",
-    "message": "MOSSURIL-SIÈGE SOCIAL",
+    "message": "MOSSURIL-SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17695,7 +17695,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_CUoV94cTFHl",
-    "message": "MUTHIPEL",
+    "message": "MUTHIPELA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17719,7 +17719,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_CZYNtPyQxc8",
-    "message": "LA MIOLÈNE",
+    "message": "MIOLÈNE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17731,7 +17731,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_CbUYCStdztb",
-    "message": "NOTRE",
+    "message": "NATHU",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17743,7 +17743,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_Cd9WteNFZoK",
-    "message": "NOUVELLE SOCIÉTÉ",
+    "message": "NOVA SOCIÉDADE A",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17761,13 +17761,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_Cee3hADlRD9",
-    "message": "FOURNIR",
+    "message": "NIPEPE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CfjpWlT3S8z",
-    "message": "REJOIGNEZ-LE",
+    "message": "MUTHÉLÈNE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17785,19 +17785,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_Ci1sYlpSc5o",
-    "message": "je le mange",
+    "message": "NAMUITULA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CiIveJNcehy",
-    "message": "ILS ONT ÉTÉ SÉDÉS",
+    "message": "LALAUA SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CidSeYiiW3G",
-    "message": "ROUTE DE NAMINHUCO",
+    "message": "NAMINHUCO ESTRADA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17815,7 +17815,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_CjxAQueH8Cw",
-    "message": "SIÈGE SOCIAL DE MONAPO",
+    "message": "MONAPO SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17845,7 +17845,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_CmYbPGqw7jM",
-    "message": "Nain",
+    "message": "NANOA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17857,13 +17857,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_CnJKVgXMy9r",
-    "message": "FAUX",
+    "message": "NAPACO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CousD5oCZ9n",
-    "message": "NINÉE",
+    "message": "NIHEIA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17875,13 +17875,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_Cq6r3ZUFWiM",
-    "message": "LÉGER - MÉTAL",
+    "message": "MAHAVANE - METALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CrYeauIu4JI",
-    "message": "ÉCHOUÉ",
+    "message": "NAUAÏA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17893,7 +17893,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_Cs33CpB9cnp",
-    "message": "Tout ira bien",
+    "message": "MUCHARAPANE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17905,13 +17905,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_Cs8yeiK8uhX",
-    "message": "ENGAGEMENT",
+    "message": "IMORA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CsRXEuZtD7y",
-    "message": "EP1 DE LA COUPE",
+    "message": "EP1 DE MUCOPA NAMACHILO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17935,7 +17935,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_CuKar68OK9l",
-    "message": "NIPTO 1",
+    "message": "NAPITHO 1",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17947,7 +17947,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_Cv1o8sBiLQP",
-    "message": "SIÈGE SOCIAL DE NATHOPO",
+    "message": "NATHOPO SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -17983,31 +17983,31 @@
   },
   {
     "code": "DEFAULT_ADMIN_CyphxIxxip6",
-    "message": "QUARTIER 8 DE MARCO NAPIPINE",
+    "message": "8 DE MARCO BAIRRO DE NAPIPINE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CzQQa3my9Hr",
-    "message": "REVOIR",
+    "message": "MUAMURRUMUTALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_CzdNZ2OhIlH",
-    "message": "REGARDEZ UN",
+    "message": "TITIALO a",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Czf9v2bnZjR",
-    "message": "PONTS",
+    "message": "MILATHO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_D0LbzvACGrj",
-    "message": "Faites-le-nous savoir",
+    "message": "CHITIPUE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18037,7 +18037,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_D2I2ZykMmeW",
-    "message": "VU",
+    "message": "NAMAITA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18067,19 +18067,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_D3bQtv3byoP",
-    "message": "3 FÉVRIER",
+    "message": "3 DE FEVEREIRO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_D4H6dcmoEOY",
-    "message": "PAS",
+    "message": "PITOCUIR",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_D54C9ViIE5m",
-    "message": "ET MATHUA",
+    "message": "NAMATHUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18091,7 +18091,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_D5dSdC8mCFR",
-    "message": "TRANSMETTRE",
+    "message": "AMPITA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18109,13 +18109,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_D6QkttfRd1v",
-    "message": "APPRENDRE",
+    "message": "IMPARA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_D6zc8k84rDA",
-    "message": "MÉTÉO",
+    "message": "MÉTÉPO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18127,7 +18127,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_D72pZvqYNYx",
-    "message": "QUARTIER 1 DE JUIN",
+    "message": "BAIRRO 1 DE JUNHO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18145,7 +18145,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_D7qyoCdSWp3",
-    "message": "NÉPAL 1",
+    "message": "NIAPALA 1",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18163,13 +18163,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_D9x0wNgZy6L",
-    "message": "NANNOTHO",
+    "message": "NANHOTHO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_D9ylvrLYdPJ",
-    "message": "ET MEMBRES",
+    "message": "NAMALUNGO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18181,7 +18181,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DB6vgEaPbNF",
-    "message": "SIÈGE ANGOCHE",
+    "message": "ANGOCHE SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18193,7 +18193,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DBtmPx5yEYt",
-    "message": "MUANONA C",
+    "message": "MUANONA c",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18241,7 +18241,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DGX35aVjItv",
-    "message": "TABLEAU",
+    "message": "THEPO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18265,13 +18265,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_DHqnivWlx4d",
-    "message": "VANYA",
+    "message": "VANHIA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DI0BywSZhta",
-    "message": "Époustouflé",
+    "message": "NAHIPA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18283,19 +18283,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_DIcm7JGbngc",
-    "message": "porter",
+    "message": "PHÉQUÈRE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DJYP40MYjpF",
-    "message": "NAMAIME",
+    "message": "NAMAÏME",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DJlY4w5nVfq",
-    "message": "19 OCTOBRE",
+    "message": "19 D'OUTUBRO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18307,13 +18307,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_DKguce15wei",
-    "message": "UNITÉ DE QUARTIER 14",
+    "message": "BAIRRO UNIDADE14",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DKjor20PB2x",
-    "message": "BIEN",
+    "message": "MUHIRE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18331,7 +18331,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DLjnScYchYZ",
-    "message": "NAZIRE",
+    "message": "NAHIRE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18343,7 +18343,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DM0bIaWRxeU",
-    "message": "Je le jette",
+    "message": "NAMTUPA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18355,7 +18355,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DMPnkoqecrY",
-    "message": "ET LA MUSIQUE",
+    "message": "NAKUCULO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18367,7 +18367,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DP4Lt2GkTvZ",
-    "message": "POPIA",
+    "message": "POPAÏA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18385,7 +18385,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DQ1Es3pW2yy",
-    "message": "lié",
+    "message": "LIPITE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18415,19 +18415,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_DTJt1uosdxB",
-    "message": "CAS MUTTER",
+    "message": "MUTACASSE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DTmPv4CV8TS",
-    "message": "LE QUARTIER",
+    "message": "NÉCOTIE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DTwiblXUXt3",
-    "message": "je le tue",
+    "message": "NAMIPAUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18445,7 +18445,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DVWfUpcK4dU",
-    "message": "COLLINE",
+    "message": "EXTÉRIEUR",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18457,7 +18457,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DWCqDujgPQO",
-    "message": "NOM",
+    "message": "IMIJA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18499,7 +18499,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DYmfSq3kl6H",
-    "message": "ANTIQUITES",
+    "message": "ANTICUANE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18529,25 +18529,25 @@
   },
   {
     "code": "DEFAULT_ADMIN_DaoXIU94c4G",
-    "message": "AMOUR 2",
+    "message": "RATANE2",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DbBniqDRpOD",
-    "message": "ENSEIGNEMENT",
+    "message": "NTEAMUALI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DbIRgmaRfBv",
-    "message": "AU NAMIP",
+    "message": "NAMIPISSA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DcygRjphmlT",
-    "message": "TOMBER AMOUREUX",
+    "message": "RATANE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18577,7 +18577,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DedzkHLNQgw",
-    "message": "Plusieurs fois",
+    "message": "MUITIUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18607,13 +18607,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_DfZsOSoHuDf",
-    "message": "नन्वावा",
+    "message": "NANVAVA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DfzvYtYak6j",
-    "message": "Tu m'insultes",
+    "message": "MNAMITUCUE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18631,13 +18631,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_DgLKX5k2OqU",
-    "message": "RÉPARER LE",
+    "message": "MUAPATIA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DgdCMGOwqK5",
-    "message": "AFFAIRE",
+    "message": "NAMORO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18649,7 +18649,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DgrwzOp9HrP",
-    "message": "QUATRE",
+    "message": "MUAPALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18661,25 +18661,25 @@
   },
   {
     "code": "DEFAULT_ADMIN_DhSQ4aOwi54",
-    "message": "Un mensonge",
+    "message": "CHINE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DhTvTo3XZ3w",
-    "message": "NACUSOUP",
+    "message": "NACUZUPA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DhpNAtNZ0Dl",
-    "message": "COURAGEUX",
+    "message": "MÉLULI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DiqChllTfCj",
-    "message": "GÉNIAL",
+    "message": "NAHAVARA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18697,7 +18697,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DjslemvOhBf",
-    "message": "QUARTIER SUD DE NAMICOPO",
+    "message": "SUL BAIRRO DE NAMICOPO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18727,19 +18727,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_DlTcNsrxiEP",
-    "message": "MÉMORIAL",
+    "message": "MÉCUASSE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DlYTImalXZx",
-    "message": "À AHURA",
+    "message": "MUAHURA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DlvSJwPNTCu",
-    "message": "MAPO",
+    "message": "MAPOGE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18751,7 +18751,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_Dmn5hY7njIt",
-    "message": "MARIÉ",
+    "message": "MUELÉLA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18763,13 +18763,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_DmtodQNyh4Z",
-    "message": "Mécutus 1",
+    "message": "MECUTUUSSE 1",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DnwfBySCKcu",
-    "message": "ANGLETERRE",
+    "message": "NKILA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18781,19 +18781,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_DoE725sdEEj",
-    "message": "TU SAIS",
+    "message": "MUCUJUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DoIHAVIgjWB",
-    "message": "SCIE À TABLE",
+    "message": "SERRA DE MESA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DpGFzUJfFJJ",
-    "message": "SIÈGE SOCIAL DE NAMPUARA",
+    "message": "NAMPUARA SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18805,19 +18805,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_DpgiHjhxtdh",
-    "message": "EMPLACEMENT DE NAQUESSA",
+    "message": "LOCALITÉ DE NAQUESSA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DpzHMT0tHHY",
-    "message": "DORMIR",
+    "message": "MURARA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DpziwA7x7q9",
-    "message": "HEUREUX",
+    "message": "MULHANIUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18835,7 +18835,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_DsTXvLo2lZ8",
-    "message": "NACHULA",
+    "message": "NACHILUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18853,13 +18853,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_Du1liEcdkhY",
-    "message": "RÉCHAUFFEZ-LE",
+    "message": "CHITHENTHÉNI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_DvvnLZ1z9Ar",
-    "message": "GÉRER",
+    "message": "NAPHATHA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18889,19 +18889,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_DxOYGXiBfC5",
-    "message": "NINEQUENE",
+    "message": "NÉGÉNÉQUENE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Dxb4P5MzVlp",
-    "message": "ACHETEZ-LE",
+    "message": "MOUAHIVIRE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Dy9Ho5pEXee",
-    "message": "MÉMOIRE",
+    "message": "ESPRIT",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18931,7 +18931,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_E1KjrWkZZKl",
-    "message": "DOUX A E B",
+    "message": "MUTOMOTE A E B",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18943,13 +18943,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_E1rJAJVMWrH",
-    "message": "MOATALA",
+    "message": "MUATALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_E39QPg2ohYw",
-    "message": "un batelier",
+    "message": "NAICULO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18961,7 +18961,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_E3m9Ucv80Zk",
-    "message": "NOMBRES",
+    "message": "NOMOLA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -18985,7 +18985,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_E56CC7aisYX",
-    "message": "FAUX",
+    "message": "NAMALI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19027,31 +19027,31 @@
   },
   {
     "code": "DEFAULT_ADMIN_E7Oo8lMC3oS",
-    "message": "TERENE DANS LE QUARTIER DE MURRAPANIUA",
+    "message": "TERENE A BAIRRO DE MURRAPANIUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_E7hIHG5FmGX",
-    "message": "TOMBER AMOUREUX",
+    "message": "RATANE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_E7jRshb7WxJ",
-    "message": "Muet",
+    "message": "MUTELE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_E8S2jKKpA7P",
-    "message": "DÉMON",
+    "message": "DEMU",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_E921tYxw501",
-    "message": "Agrandissement MPénéca",
+    "message": "MPENECA EXPANSÃO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19063,7 +19063,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_EA98keKQaJm",
-    "message": "SECRÉTARIAT DE LA MUCULUONE",
+    "message": "SECRÉTAIRE DE MUCULUONE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19075,13 +19075,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_EBCO5SgklNR",
-    "message": "D'ABORD",
+    "message": "MUALUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_EC6xzo9m6VP",
-    "message": "ATHANASE",
+    "message": "ATANASIO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19111,13 +19111,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_EFeXBHdNew0",
-    "message": "NAPLES",
+    "message": "NAPARA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_EFmt1i36lqH",
-    "message": "NAIRAW",
+    "message": "NAIRAWE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19147,13 +19147,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_EGGzP2OCEnD",
-    "message": "QUESTION",
+    "message": "QUISSONE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_EGpTCzdI5g4",
-    "message": "1er MAI",
+    "message": "1 DE MAIO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19177,13 +19177,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_EJPBDVeSiL5",
-    "message": "À VOUS À VOUS",
+    "message": "SANA SANA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_EJapivmPSYo",
-    "message": "FILLE",
+    "message": "MUANAMURITHA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19213,7 +19213,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_EM6RClxwZbB",
-    "message": "NIVEAU",
+    "message": "NIVIHÉ",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19225,13 +19225,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_ENHrPb97zz2",
-    "message": "VOUS LE PORTEZ",
+    "message": "MUAVALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_EPCXr99JAws",
-    "message": "MOPER",
+    "message": "MOPERRA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19261,7 +19261,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_ERAx3Plbyt4",
-    "message": "TIRRE (COMPREND NAHOLOCO)",
+    "message": "TIRRE (INCLUI NAHOLOCO)",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19273,19 +19273,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_ESPTAlNJOLD",
-    "message": "C'est là",
+    "message": "ILIPO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_ESyaIEtyIUv",
-    "message": "1er MAI",
+    "message": "1º DE MAIO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_ESz4Zt7SMJj",
-    "message": "3 FÉVRIER",
+    "message": "3 DE FEVEREIRO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19303,7 +19303,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_EUPXuXqx8xo",
-    "message": "GOUTTE (AC21)",
+    "message": "MITETE(AC21)",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19321,13 +19321,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_EW1QQayBNtI",
-    "message": "TU VOIS",
+    "message": "MUANONA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_EW83EDgDabE",
-    "message": "PUERLÉIA",
+    "message": "PUÉRÉIA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19357,7 +19357,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_EZr0lS2KEsU",
-    "message": "FEU",
+    "message": "MEPUHI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19369,7 +19369,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_EZt8mPve4pa",
-    "message": "MONTÉE MUSCULAIRE",
+    "message": "MUCU NASCENTE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19387,13 +19387,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_Eb2g2bwi0VQ",
-    "message": "RECHERCHÉ",
+    "message": "VULIA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Eb7qI53t4c7",
-    "message": "LUTTE",
+    "message": "BRIGANHA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19411,13 +19411,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_EbtROg9fDib",
-    "message": "MEJAMUA – SIÈGE SOCIAL",
+    "message": "MEJAMUA- SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_EcJbbvoE4Mu",
-    "message": "AVEC NOUS",
+    "message": "NATIWE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19435,7 +19435,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_Ee0rNDR6XV0",
-    "message": "EDUARDO MNDLANE 1 ET 2",
+    "message": "EDUARDO MNDLANE 1 E 2",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19447,25 +19447,25 @@
   },
   {
     "code": "DEFAULT_ADMIN_EgCLiUlTuBF",
-    "message": "PARFUM",
+    "message": "CHAMPIGNON",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Egcfn59Ek3z",
-    "message": "MAUVAIS",
+    "message": "MALOCO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_EgzLJDcsgfP",
-    "message": "ARGENT",
+    "message": "MONÉIA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_EiN5jCyQRP1",
-    "message": "MUECANE QUARTIER DE MUAHIVIRE",
+    "message": "MUECANE BAIRRO DE MUAHIVIRE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19483,19 +19483,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_EkAZp2WxKb6",
-    "message": "NAMA LUCO",
+    "message": "NAMALUCO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_ElBFTigf9fg",
-    "message": "CUEGERA",
+    "message": "MUCUEGERA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Em7ThHXf6L3",
-    "message": "ET CITATIONS",
+    "message": "NAMAQUETHO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19513,13 +19513,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_EmqX42XaijC",
-    "message": "NAPOMÉ (GRATITUDE)",
+    "message": "NAPOMÉ (MAURUA)",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_EnMj6vxGogh",
-    "message": "NOUVELLE ALLIANCE",
+    "message": "NOVA ALIANCA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19537,25 +19537,25 @@
   },
   {
     "code": "DEFAULT_ADMIN_EpB5shvTqCa",
-    "message": "LANGUE",
+    "message": "TILINI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_EpJrJZDqiiR",
-    "message": "ROUTE DE QUARTIER",
+    "message": "BAIRO ESTRADA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_EpZod7dbwjO",
-    "message": "LIRE",
+    "message": "NIVAHACA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_EpmEk3F2EpV",
-    "message": "ARGENT",
+    "message": "MUEHELA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19567,25 +19567,25 @@
   },
   {
     "code": "DEFAULT_ADMIN_Er00KOxrHPJ",
-    "message": "VRAI",
+    "message": "MULÉLÉ",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Er1odp9Pums",
-    "message": "ALLER",
+    "message": "ALUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_EtVQHBq2YW6",
-    "message": "BEAU",
+    "message": "MPÉPUNE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Eu8Ri8OqM3I",
-    "message": "MATTO",
+    "message": "MATOTOA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19603,7 +19603,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_EvIdh1HyPM3",
-    "message": "Muné",
+    "message": "MUNEA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19615,7 +19615,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_Ew1dEipHuiH",
-    "message": "NANTIRA - SIÈGE SOCIAL",
+    "message": "NANTIRA-SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19627,13 +19627,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_EwdUthb6GLw",
-    "message": "ESPAGNE",
+    "message": "IPALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_ExMl7qnCyzi",
-    "message": "4 VOIES",
+    "message": "4CAMINHO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19645,7 +19645,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_EyO0J8r2ukV",
-    "message": "À MUCUPA",
+    "message": "MUCUPASSA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19657,7 +19657,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_EzLcJFyAK9t",
-    "message": "À COLOVA",
+    "message": "MUCOLOVA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19687,13 +19687,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_F28wEKyXnbe",
-    "message": "LAPULA",
+    "message": "LAPUELA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_F2FZ4tjSSGM",
-    "message": "MÉCUTIN",
+    "message": "MÉCUTINE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19717,25 +19717,25 @@
   },
   {
     "code": "DEFAULT_ADMIN_F3wuaxpoebv",
-    "message": "Tu mourras",
+    "message": "MULAWE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_F4FK7rE2iZo",
-    "message": "DIFFICILE",
+    "message": "NAUAUANE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_F5Rd5Qh92C2",
-    "message": "UNITÉ DE QUARTIER 10",
+    "message": "BAIRRO UNIDADE10",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_F5X2lqrIhIO",
-    "message": "je peux le donner",
+    "message": "NAWEPA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19747,13 +19747,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_F6ALwzqB6FS",
-    "message": "AVAIT",
+    "message": "IMALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_F71godnP9fd",
-    "message": "QUARTIER NAMUATHO C MUAHIVIRE",
+    "message": "NAMUATHO C BAIRRO DE MUAHIVIRE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19771,7 +19771,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_F8FvpdllIG8",
-    "message": "AFFAIRE",
+    "message": "NAMORO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19783,25 +19783,25 @@
   },
   {
     "code": "DEFAULT_ADMIN_F8rsxsKLIRG",
-    "message": "ILS ONT EU",
+    "message": "IMALE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_F9BjVyBaSoB",
-    "message": "MAHAANE",
+    "message": "MAHEANE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_FA3X1ct6B73",
-    "message": "TRIANGLE",
+    "message": "TRIANGULO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_FAE5uUGso6Y",
-    "message": "MOELLE",
+    "message": "MÉDULE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19813,7 +19813,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FBkujUc9rdy",
-    "message": "NAMA KOCHES",
+    "message": "NAMAKOCHE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19825,7 +19825,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FCFLNeri23p",
-    "message": "À LOUER",
+    "message": "LUAZÉ",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19837,7 +19837,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FEVNWkO0af1",
-    "message": "MUSPITES",
+    "message": "MUHIPITE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19861,7 +19861,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FH6AvCKipMu",
-    "message": "ASSASSINÉ",
+    "message": "MUETHÉIA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19879,7 +19879,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FJGEqithyFw",
-    "message": "ET DES CHANSONS",
+    "message": "NAMACULA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19897,7 +19897,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FLNn2npBHP9",
-    "message": "LABORATOIRE",
+    "message": "RARAPO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19909,7 +19909,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FLjNjU2wbvN",
-    "message": "Il a dit",
+    "message": "YATHI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19921,7 +19921,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FOEP7xdpmLB",
-    "message": "CHAULA A ET B",
+    "message": "CHAULA A E B",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19933,13 +19933,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_FQ0SmCLkxqi",
-    "message": "NIPUE",
+    "message": "NIPEUE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_FQ9G6Ml4KMR",
-    "message": "ET VÊTEMENTS",
+    "message": "NAMUATHO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19951,7 +19951,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FRIUef2l887",
-    "message": "SALAIRE",
+    "message": "MUAPAGI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -19969,7 +19969,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FUCJqqXxcai",
-    "message": "avait",
+    "message": "LUASÉ",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20005,7 +20005,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FVsiUxkKjy4",
-    "message": "NAMILA",
+    "message": "NAMILALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20035,25 +20035,25 @@
   },
   {
     "code": "DEFAULT_ADMIN_FXirXWqUZPo",
-    "message": "DURÉE",
+    "message": "DURAO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_FXxDC6kZKiK",
-    "message": "NATHIQUIN",
+    "message": "NATHIQUINI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_FY8YyUbdv1q",
-    "message": "NE PAS VÉRIFIER",
+    "message": "MUTACAZE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_FYUrDaS6wGu",
-    "message": "DISPARU",
+    "message": "Nawawane",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20077,7 +20077,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_Fa53l19r22J",
-    "message": "QUARTIER NAMARREPO NAPIPINE",
+    "message": "NAMARREPO A BAIRRO DE NAPIPINE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20095,7 +20095,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FaYWfHxF4yo",
-    "message": "NAPHOPA",
+    "message": "NAHOPA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20119,7 +20119,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FdvtazJKeC0",
-    "message": "CINQ CENTS",
+    "message": "QUINHENTO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20137,13 +20137,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_Ff7wEd1NOFc",
-    "message": "NOUVEAU QUARTIER",
+    "message": "BAIRRO NOVO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Fg2FLsN2fcY",
-    "message": "N'IMPORTE OÙ",
+    "message": "NAPHÉPA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20155,13 +20155,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_FghiWU4VXyX",
-    "message": "CAP LEVECHA",
+    "message": "CABO LEVECHA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_FgwqExQ41QC",
-    "message": "POUR TOUJOURS",
+    "message": "NAMUALI",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20203,7 +20203,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FkHfyXjoIcg",
-    "message": "MOURIR",
+    "message": "MORRERRENE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20215,25 +20215,25 @@
   },
   {
     "code": "DEFAULT_ADMIN_FkPFHcpjyHB",
-    "message": "TÉLÉCHARGER",
+    "message": "KHUPULA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_FmNSogekKiy",
-    "message": "SAUVEGARDER",
+    "message": "PUTUKUA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Fmg5PxuCAf0",
-    "message": "LA BAGUE",
+    "message": "MUNHÈTE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Fmnjr5VnceX",
-    "message": "SIÈGE SOCIAL DE LA MUATUA",
+    "message": "MUATUA SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20245,25 +20245,25 @@
   },
   {
     "code": "DEFAULT_ADMIN_FnLGY4qFVrK",
-    "message": "MUGELÈNE",
+    "message": "MUGELÉLÈNE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_Fo4GBKV2JdP",
-    "message": "UNITÉ DE QUARTIER 5",
+    "message": "BAIRRO UNIDADE 5",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_FoTTmP6Cgh3",
-    "message": "1er MAI",
+    "message": "1O DE MAIO A",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_FpygdGvrAXF",
-    "message": "CADRAN",
+    "message": "COMPOSANT",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20275,19 +20275,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_FrDb10kWylC",
-    "message": "CAP LOURENCO",
+    "message": "CABO LOURENCO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_FrPW8Jyh4W6",
-    "message": "Je ne peux pas le gérer",
+    "message": "NACULO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_FrenHNsE9BD",
-    "message": "QUARTIER MUTOTOPE DE MUAHIVIRE",
+    "message": "MUTOTOPE BAIRRO DE MUAHIVIRE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20323,7 +20323,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_Ftj9ELyX7I0",
-    "message": "MAPILÈNE (SIÈGE SOCIAL)",
+    "message": "MAPILÈNE (SEDE)",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20341,7 +20341,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FxmBuQYQSNQ",
-    "message": "CHEFS DE MUSÉE",
+    "message": "MUZE-SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20359,7 +20359,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_FzF4DQlVwoZ",
-    "message": "QUARTIER HÔPITALIER",
+    "message": "HÔPITAL DU BAIRRO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20371,13 +20371,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_G0ca1uKxZtT",
-    "message": "SIÈGE SOCIAL DU RAPAL",
+    "message": "RAPALE SEDE",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_G150KDw8ySB",
-    "message": "CAP CARAU",
+    "message": "CABO CARAU",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20389,7 +20389,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_G1THGzRXwZM",
-    "message": "ENREGISTREMENTS",
+    "message": "TAPALA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20413,13 +20413,13 @@
   },
   {
     "code": "DEFAULT_ADMIN_G2fhrlV9QJD",
-    "message": "TU VOIS",
+    "message": "MUANONA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_G38LaazsySg",
-    "message": "LENTEMENT",
+    "message": "NAMANONO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20431,7 +20431,7 @@
   },
   {
     "code": "DEFAULT_ADMIN_G3Zl9bXsWHI",
-    "message": "MACHINERIE",
+    "message": "MACHICORO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20497,19 +20497,19 @@
   },
   {
     "code": "DEFAULT_ADMIN_G8nz8eXObDX",
-    "message": "CUPULAMANO",
+    "message": "CUPULAMONO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_G8rEP60oi2J",
-    "message": "N'IMPORTE OÙ",
+    "message": "NAPHÉPA",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "DEFAULT_ADMIN_G9E2WeIzCjS",
-    "message": "AFFAIRE",
+    "message": "NAMORO",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20612,6 +20612,18 @@
   {
     "code": "FORGOT",
     "message": "J'ai oublié ton",
+    "module": "digit-ui",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCMBOUNDARY",
+    "message": "Limite",
+    "module": "digit-ui",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCMBOUNDARY.BOUNDARY_MANAGEMENT",
+    "message": "Gestion des limites",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20821,7 +20833,7 @@
   },
   {
     "code": "MODULE_CARD_DESC_HCMCONSOLE",
-    "message": "La console est utilisée pour gérer la campagne",
+    "message": "Planifiez, gérez et suivez vos activités de campagne",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20833,13 +20845,13 @@
   },
   {
     "code": "MODULE_CARD_DESC_PAYMEMTS",
-    "message": "Gérer les paiements",
+    "message": "Configurer et gérer vos paiements",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "MODULE_CARD_DESC_PAYMENTS",
-    "message": "Gérer les paiements",
+    "message": "Configurer et gérer vos paiements",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20904,6 +20916,12 @@
     "locale": "fr_DEMO"
   },
   {
+    "code": "PAYMENTS.ATTENDANCE_SETUP_PAYMENT_ATTRIBUTES",
+    "message": "Configurer les attributs de paiement",
+    "module": "digit-ui",
+    "locale": "fr_DEMO"
+  },
+  {
     "code": "PAYMENTS.INBOX",
     "message": "Boîte de réception",
     "module": "digit-ui",
@@ -20917,13 +20935,13 @@
   },
   {
     "code": "PAYMENTS.MANAGE_BILLSAPPROVER",
-    "message": "Gérer les factures (Approbation)",
+    "message": "Gérer les factures (approbateur)",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "PAYMENTS.MANAGE_BILLSREVIEWER",
-    "message": "Gérer les factures (Révision)",
+    "message": "Gérer les factures (révision)",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -20971,7 +20989,7 @@
   },
   {
     "code": "PAYMENTS_LINK_PAYMENTS_MANAGE_BILLS",
-    "message": "Gérer les factures",
+    "message": "Gérer les factures (Modifier)",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -21265,13 +21283,13 @@
   },
   {
     "code": "WBH_LOADING_BOUNDARY_HOME",
-    "message": "Chargement de la maison de frontière",
+    "message": "Chargement de la limite d'accueil",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
   {
     "code": "WBH_LOADING_BOUNDARY_RELATION",
-    "message": "Chargement de la relation de frontière",
+    "message": "Chargement d'une relation de frontière",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -21289,7 +21307,7 @@
   },
   {
     "code": "WBH_LOADING_MANAGE_MASTER",
-    "message": "Chargement de Gérer le maître",
+    "message": "Chargement de la gestion principale",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -21301,7 +21319,7 @@
   },
   {
     "code": "WBH_LOADING_MDMS_EDIT",
-    "message": "Chargement de l'édition MDMS",
+    "message": "Chargement de MDMS Modifier",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -21355,7 +21373,7 @@
   },
   {
     "code": "WBH_LOADING_VIEW_BOUNDARY",
-    "message": "Chargement de la limite de vue",
+    "message": "Chargement de la limite de la vue",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },
@@ -21415,7 +21433,7 @@
   },
   {
     "code": "WORKBENCH_LINK_WORKBENCH_SETUP_MASTERS",
-    "message": "Maîtres de configuration",
+    "message": "Maîtres d'installation",
     "module": "digit-ui",
     "locale": "fr_DEMO"
   },

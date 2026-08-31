@@ -19,13 +19,13 @@
   },
   {
     "code": "PRIVACY_HEADER",
-    "message": "Aviso de Privacidade",
+    "message": "Aviso de privacidade",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_10_SUB_10",
-    "message": "Política de Privacidade (Versão)",
+    "message": "Versão da Política de Privacidade",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
@@ -43,31 +43,31 @@
   },
   {
     "code": "PRIVACY_HEADER_11_SUB_11",
-    "message": "Dúvidas e reclamações",
+    "message": "Consultas e Queixas",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_11_SUB_11_DESC_1",
-    "message": "Para quaisquer dúvidas ou reclamações, entre em contato com [informações de contato].",
+    "message": "Para qualquer dúvida ou reclamação, entre em contato com [informações de contato].",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_12_SUB_12",
-    "message": "Anexo: Detalhes da coleta, uso e compartilhamento de dados",
+    "message": "Anexo: Detalhes de coleta, uso e compartilhamento de dados",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_12_SUB_12_DESC_1",
-    "message": "Este anexo lista os campos de dados específicos que o HCM Console coleta para esta implementação, o motivo da coleta de cada um e com quem os dados são compartilhados. O Proprietário do Programa o preenche para cada implantação.",
+    "message": "Este anexo lista os campos de dados específicos que o Console HCM coleta para esta implementação, por que cada um é coletado e com quem é compartilhado. O proprietário do programa o conclui por implantação.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_12_SUB_12_DESC_2",
-    "message": "[Preencher conforme a implementação] Campo de dados: [campo] | Finalidade: [motivo da coleta] | Compartilhado com: [entidade ou 'não compartilhado']",
+    "message": "[Preencher por implementação] Campo de dados: [campo] | Finalidade: [por que foi coletado] | Compartilhado com: [entidade ou `não compartilhado`]",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
@@ -79,43 +79,43 @@
   },
   {
     "code": "PRIVACY_HEADER_1_SUB_1_DESC_1",
-    "message": "Esta é a política de privacidade do HCM Console.",
+    "message": "Esta é a política de privacidade do Console HCM.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_1_SUB_1_DESC_2",
-    "message": "O HCM Console é um software utilizado para configurar e operar campanhas de saúde pública. Ele é baseado na plataforma DIGIT, desenvolvida e mantida pela eGov Foundation.",
+    "message": "Console HCM é um software usado para configurar e operar campanhas de saúde pública. É alimentado pela plataforma DIGIT, desenvolvida e mantida pela eGov Foundation.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_1_SUB_1_DESC_3",
-    "message": "O HCM Console foi adotado em sua jurisdição por [Nome da Agência Governamental].",
+    "message": "O Console HCM foi adotado em sua jurisdição por [Nome da Agência Governamental].",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_1_SUB_1_DESC_4",
-    "message": "Você está lendo esta política porque é um usuário do HCM Console.",
+    "message": "Você está lendo esta política porque é usuário do Console HCM.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_1_SUB_1_DESC_5",
-    "message": "Isso pode ocorrer porque você configura campanhas, gerencia operações de campanha ou acessa o Console de alguma outra forma como parte do seu trabalho.",
+    "message": "Isso pode ocorrer porque você configura campanhas, gerencia operações de campanha ou acessa o Console como parte do seu trabalho.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_1_SUB_1_DESC_6",
-    "message": "Ao utilizar o HCM Console, dados sobre você, que podem incluir informações de identificação pessoal (PII), podem ser coletados, armazenados, processados, utilizados e compartilhados.",
+    "message": "Quando você usa o HCM Console, seus dados, que podem incluir informações de identificação pessoal (PII), podem ser coletados, armazenados, processados, usados ​​e compartilhados.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_1_SUB_1_DESC_7",
-    "message": "Esta política descreve os fundamentos disso, como é feito e seus direitos em relação a isso.",
+    "message": "Esta política descreve a base para isso, como isso é feito e seus direitos em relação a isso.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
@@ -133,37 +133,37 @@
   },
   {
     "code": "PRIVACY_HEADER_2_SUB_2_DESC_2",
-    "message": "a. 'Você' refere-se a você, o leitor, e a qualquer usuário do HCM Console.",
+    "message": "um. `Você` refere-se a você, leitor, e a qualquer usuário do HCM Console.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_2_SUB_2_DESC_3",
-    "message": "b. 'Dados' ou 'seus dados' refere-se a dados sobre você que podem ser coletados, armazenados, processados, usados ​​ou compartilhados enquanto você usa o HCM Console.",
+    "message": "b. `Dados` ou `seus dados` referem-se a dados sobre você que podem ser coletados, armazenados, processados, usados ​​ou compartilhados enquanto você usa o Console HCM.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_2_SUB_2_DESC_3_SUBDESC_1",
-    "message": "i. Se você for funcionário público ou contratado do governo, seu nome, cargo e informações de contato oficiais (número de telefone, e-mail, endereço postal) não serão tratados como informações pessoais identificáveis ​​(PII). A maioria dos usuários do Console se enquadra nessa categoria.",
+    "message": "eu. Se você for um funcionário ou contratado do governo, seu nome, designação e informações de contato oficial (número de telefone, e-mail, endereço postal) não serão tratados como PII. A maioria dos usuários do Console se enquadra nesta categoria.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_2_SUB_2_DESC_3_SUBDESC_2",
-    "message": "ii. Seu número de identificação nacional ou outro número de documento de identificação é tratado como PII (Informação Pessoal Identificável), mesmo que não seja PII por si só.",
+    "message": "ii. Seu número de identificação nacional ou outro número de documento de identificação é tratado como PII, mesmo que não seja PII por si só.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_2_SUB_2_DESC_4",
-    "message": "c. 'Informações de identificação pessoal' ou 'IIP' referem-se a dados que permitiriam a alguém que os visualizasse identificar ou entrar em contato com você: seu nome, o nome de seu pai ou responsável, número de telefone pessoal, e-mail pessoal, endereço postal ou residencial pessoal, fotografias suas, fotografias ou digitalizações de seus documentos de identificação e informações biométricas, como impressões digitais ou dados da retina.",
+    "message": "c. `Informações de identificação pessoal` ou `PII` referem-se a dados que permitiriam que alguém os visualizasse para identificá-lo ou contatá-lo: seu nome, o nome de seus pais ou responsáveis, número de telefone pessoal, e-mail pessoal, endereço postal ou residencial pessoal, fotografias suas, fotografias ou digitalizações de seus documentos de identificação e informações biométricas, como impressões digitais ou dados de retina.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_2_SUB_2_DESC_5",
-    "message": "d. 'Proprietário do Programa' refere-se a [Nome da Agência Governamental].",
+    "message": "d. `Proprietário do Programa` refere-se a [Nome da Agência Governamental].",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
@@ -175,19 +175,19 @@
   },
   {
     "code": "PRIVACY_HEADER_3_SUB_3",
-    "message": "Bases para a coleta, armazenamento, processamento, uso e compartilhamento de dados",
+    "message": "Base para coleta, armazenamento, processamento, uso e compartilhamento de dados",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_3_SUB_3_DESC_1",
-    "message": "O Proprietário do Programa é uma agência governamental que atua na execução de uma campanha de saúde pública. Para operar o Console HCM com segurança, é necessário conhecer os usuários, controlar o acesso de cada um e manter um registro das ações realizadas no sistema.",
+    "message": "O Proprietário do Programa é uma agência governamental que atua para realizar uma campanha de saúde pública. Operar o Console HCM com segurança requer saber quem são seus usuários, controlar o que cada usuário pode acessar e manter um registro das ações realizadas no sistema.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_3_SUB_3_DESC_2",
-    "message": "O processamento dos seus dados de conta e de atividade para estes fins é uma finalidade legítima. Quando a legislação da sua jurisdição exigir o seu consentimento para qualquer parte deste processamento, esse consentimento será solicitado conforme exigido por essa legislação.",
+    "message": "O processamento dos dados da sua conta e atividade para esses fins é uma finalidade legítima. Quando a lei da sua jurisdição exigir o seu consentimento para qualquer parte deste processamento, esse consentimento será solicitado conforme exigido por essa lei.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
@@ -199,19 +199,19 @@
   },
   {
     "code": "PRIVACY_HEADER_4_SUB_4_DESC_1",
-    "message": "Ao utilizar o HCM Console, seus dados podem ser coletados das seguintes maneiras:",
+    "message": "Quando você usa o Console HCM, seus dados podem ser coletados das seguintes maneiras:",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_4_SUB_4_DESC_1_SUBDESC_1",
-    "message": "Você fornece essas informações diretamente por meio do uso do aplicativo HCM Console, por exemplo, ao fazer login, configurar seu perfil ou configurar uma campanha.",
+    "message": "Você as fornece diretamente por meio do uso do aplicativo Console do HCM, por exemplo, ao fazer login, configurar seu perfil ou configurar uma campanha.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_4_SUB_4_DESC_1_SUBDESC_2",
-    "message": "O HCM Console acessa essa informação a partir de registros administrativos existentes, por exemplo, quando sua conta é provisionada por um administrador ou quando sua função é atribuída.",
+    "message": "O Console HCM acessa-o a partir de registros administrativos existentes, por exemplo, quando sua conta é provisionada por um administrador ou sua função é atribuída.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
@@ -247,7 +247,7 @@
   },
   {
     "code": "PRIVACY_HEADER_4_SUB_4_DESC_2",
-    "message": "O HCM Console aplica, por padrão, limitação de finalidade e minimização de dados. Você só precisa fornecer os dados necessários para usar o Console e para o Proprietário do Programa operá-lo.",
+    "message": "O Console HCM aplica limitação de finalidade e minimização de dados por padrão. Somente serão solicitados os dados necessários para você usar o Console e para o Proprietário do Programa operá-lo.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
@@ -259,37 +259,37 @@
   },
   {
     "code": "PRIVACY_HEADER_5_SUB_5_DESC_1",
-    "message": "Por padrão, o HCM Console armazena seus dados com segurança:",
+    "message": "Por padrão, o Console HCM armazena seus dados com segurança:",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_5_SUB_5_DESC_1_SUBDESC_1",
-    "message": "Armazenamento digital seguro. A plataforma DIGIT é fornecida com configurações padrão de segurança. Os administradores podem ajustar essas configurações para atender às necessidades locais, mas a configuração padrão já é segura.",
+    "message": "Armazenamento digital seguro. A plataforma DIGIT é fornecida com configurações padrão seguras. Os administradores podem ajustar essas configurações para atender às necessidades locais, mas a configuração pronta para uso é segura.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_5_SUB_5_DESC_1_SUBDESC_2",
-    "message": "Criptografia em repouso. O serviço de criptografia da plataforma DIGIT criptografa os dados confidenciais armazenados pelo HCM Console.",
+    "message": "Criptografia em repouso. O DIGIT Platform Encryption Service criptografa dados confidenciais armazenados pelo Console HCM.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_5_SUB_5_DESC_1_SUBDESC_3",
-    "message": "Criptografia em trânsito. Todos os dados são transmitidos via HTTPS (TLS).",
+    "message": "Criptografia em trânsito. Todos os dados são transmitidos por HTTPS (TLS).",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_5_SUB_5_DESC_1_SUBDESC_4",
-    "message": "Registros de auditoria assinados. As alterações nos dados são registradas em um registro de auditoria assinado. É sempre possível identificar quem fez uma alteração, e esse usuário não pode negar posteriormente tê-la feito.",
+    "message": "Registros de auditoria assinados. As alterações nos dados são registradas em um log de auditoria assinado. É sempre possível identificar quem fez uma alteração, e esse usuário não poderá posteriormente negar que a fez.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_5_SUB_5_DESC_1_SUBDESC_5",
-    "message": "Cadastro de usuários. As informações da sua conta são armazenadas em um cadastro de usuários controlado.",
+    "message": "Cadastro de usuário. As informações da sua conta são mantidas em um registro de usuário controlado.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
@@ -301,31 +301,31 @@
   },
   {
     "code": "PRIVACY_HEADER_6_SUB_1",
-    "message": "Processamento e utilização de dados",
+    "message": "Processamento e uso de dados",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_6_SUB_6_DESC_1",
-    "message": "Seus dados são processados ​​e usados ​​para autenticá-lo quando você faz login, para determinar a que você tem permissão de acesso, para operar o Console e para manter o registro de auditoria das ações realizadas no sistema.",
+    "message": "Seus dados são processados ​​e usados ​​para autenticá-lo quando você faz login, para determinar o que você tem permissão para acessar, para operar o Console e para manter o registro de auditoria das ações realizadas no sistema.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_6_SUB_6_DESC_2",
-    "message": "O HCM Console aplica, por padrão, o princípio do menor privilégio e a limitação de finalidade. Somente os usuários que precisam visualizar seus dados para realizar suas tarefas podem acessá-los.",
+    "message": "O Console HCM aplica o menor privilégio e limitação de finalidade por padrão. Somente usuários que precisam ver seus dados para realizar seu trabalho podem acessá-los.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_6_SUB_6_DESC_3",
-    "message": "O acesso é controlado por meio de autenticação, o que significa que cada usuário deve fazer login e verificar sua identidade, e por meio do controle de acesso baseado em funções (RBAC), o que significa que o que um usuário pode acessar é determinado por sua função.",
+    "message": "O acesso é controlado por meio de autenticação, o que significa que cada usuário deve fazer login e verificar quem é, e por meio de controle de acesso baseado em função (RBAC), o que significa que o que um usuário pode acessar é determinado por sua função.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_6_SUB_6_DESC_4",
-    "message": "A Fundação eGov não recomenda a criação de funções de `superusuário` com amplo acesso, a menos que haja uma necessidade específica para isso.",
+    "message": "A Fundação eGov não incentiva a criação de funções de “superusuário” com amplo acesso, a menos que haja uma necessidade específica para elas.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
@@ -337,25 +337,25 @@
   },
   {
     "code": "PRIVACY_HEADER_7_SUB_7_DESC_1",
-    "message": "Seus dados poderão ser compartilhados com as entidades listadas abaixo, para os fins descritos em cada uma delas. O responsável pelo programa deve preencher esta seção para a implementação específica antes da publicação desta política.",
+    "message": "Os seus dados poderão ser partilhados com as entidades listadas abaixo, para os fins indicados em cada uma delas. O Proprietário do Programa deve preencher esta seção para a implementação específica antes da publicação desta política.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_7_SUB_7_DESC_2",
-    "message": "[Preencher conforme a implementação] Entidade: [nome] | Dados compartilhados: [campos] | Finalidade: [finalidade] Entidade: [nome] | Dados compartilhados: [campos] | Finalidade: [finalidade]",
+    "message": "[Preencher por implementação] Entidade: [nome] | Dados compartilhados: [campos] | Finalidade: [finalidade] Entidade: [nome] | Dados compartilhados: [campos] | Objetivo: [propósito]",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_7_SUB_7_DESC_3",
-    "message": "O HCM Console aplica, por padrão, o princípio do menor privilégio e a limitação de finalidade. Informações pessoais identificáveis ​​(PII) não são compartilhadas para fins analíticos ou em qualquer caso em que dados agregados ou despersonalizados atendam à finalidade.",
+    "message": "O Console HCM aplica o menor privilégio e limitação de finalidade por padrão. As PII não são compartilhadas para análise ou em qualquer caso em que dados agregados ou despersonalizados atendam à finalidade.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_7_SUB_7_DESC_4",
-    "message": "Os seus dados não serão partilhados com outras entidades além das acima mencionadas, a menos que dê o seu consentimento para essa partilha, ou que a partilha seja exigida por lei, por ordem judicial ou por órgão similar.",
+    "message": "Os seus dados não serão partilhados com outras entidades além das listadas acima, a menos que você consinta com essa partilha, ou a menos que a partilha seja exigida por lei ou por ordem de um tribunal ou órgão similar.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
@@ -367,43 +367,43 @@
   },
   {
     "code": "PRIVACY_HEADER_8_SUB_8_DESC_1",
-    "message": "Os seus dados serão conservados durante o período especificado pelo Proprietário do Programa e pela legislação aplicável.",
+    "message": "Seus dados são retidos pelo período especificado pelo Proprietário do Programa e pela lei aplicável.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_8_SUB_8_DESC_2",
-    "message": "Os seus dados poderão ser eliminados pelo Proprietário do Programa, em conformidade com os seus processos estabelecidos e a legislação aplicável.",
+    "message": "Seus dados podem ser excluídos pelo Proprietário do Programa de acordo com os processos estabelecidos e a lei aplicável.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_8_SUB_8_DESC_3",
-    "message": "Exceto nos casos em que o direito de exclusão lhe seja concedido pela legislação aplicável ou pelo Proprietário do Programa, você não tem o direito de exigir que o Proprietário do Programa exclua seus dados.",
+    "message": "Exceto quando um direito de exclusão for concedido a você pela lei aplicável ou pelo Proprietário do Programa, você não tem o direito de exigir que o Proprietário do Programa exclua seus dados.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_8_SUB_8_DESC_4",
-    "message": "Excluir sua conta ou as mensagens trocadas pelo Console não significa, por si só, que seus dados foram removidos dos registros do Proprietário do Programa.",
+    "message": "Excluir sua conta ou excluir mensagens trocadas por meio do Console não significa, por si só, que seus dados foram removidos dos registros do Proprietário do Programa.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_9_SUB_9",
-    "message": "Seus direitos em relação a esses dados",
+    "message": "Seus direitos em relação a estes dados",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_9_SUB_9_DESC_1",
-    "message": "Sujeito à legislação aplicável, você tem os seguintes direitos:",
+    "message": "Sujeito à lei aplicável, você tem os seguintes direitos:",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_9_SUB_9_DESC_2",
-    "message": "a. Você tem o direito de saber quais dados são coletados, armazenados, processados, usados ​​e compartilhados. Esta política fornece essas informações.",
+    "message": "um. Você tem o direito de saber quais dados são coletados, armazenados, processados, usados ​​e compartilhados. Esta política fornece essas informações.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
@@ -415,13 +415,13 @@
   },
   {
     "code": "PRIVACY_HEADER_9_SUB_9_DESC_3_SUBDESC_1",
-    "message": "i. O responsável pelo programa determina o procedimento de correção.",
+    "message": "eu. O Proprietário do Programa determina o procedimento de correção.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_9_SUB_9_DESC_3_SUBDESC_2",
-    "message": "ii. Para isso, entre em contato com o responsável pelo programa através das [informações de contato].",
+    "message": "ii. Para fazer isso, entre em contato com o proprietário do programa em [informações de contato].",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
@@ -433,25 +433,25 @@
   },
   {
     "code": "PRIVACY_HEADER_9_SUB_9_DESC_4_SUBDESC_1",
-    "message": "i. Para solicitar isso, entre em contato com o responsável pelo programa através das [informações de contato].",
+    "message": "eu. Para solicitar isso, entre em contato com o proprietário do programa em [informações de contato].",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_9_SUB_9_DESC_5",
-    "message": "d. Caso seus dados sejam compartilhados com qualquer pessoa ou organização que não esteja descrita na seção 'Compartilhamento de dados', o Proprietário do Programa entrará em contato com você e solicitará seu consentimento, sujeito à legislação aplicável.",
+    "message": "d. Se os seus dados forem compartilhados com qualquer pessoa ou organização ainda não descrita na seção \"Compartilhamento de dados\", o Proprietário do Programa entrará em contato com você e solicitará seu consentimento, sujeito à lei aplicável.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_9_SUB_9_DESC_5_SUBDESC_1",
-    "message": "i. Você tem o direito de recusar o consentimento, caso em que seus dados não poderão ser compartilhados com essa pessoa ou organização adicional.",
+    "message": "eu. Tem o direito de recusar o consentimento, caso em que os seus dados não poderão ser partilhados com essa pessoa ou organização adicional.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },
   {
     "code": "PRIVACY_HEADER_9_SUB_9_DESC_5_SUBDESC_2",
-    "message": "ii. Isso pode não se aplicar quando o compartilhamento for exigido por lei ou por ordem judicial.",
+    "message": "ii. Isto pode não se aplicar quando a partilha for exigida por lei ou por ordem de um tribunal ou órgão judicial.",
     "module": "digit-privacy-policy",
     "locale": "pt_DEMO"
   },

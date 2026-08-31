@@ -217,7 +217,7 @@
   },
   {
     "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-stockreports-oncho",
     "locale": "fr_DEMO"
   },
@@ -343,7 +343,7 @@
   },
   {
     "code": "STOCKRECONREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
-    "message": "Sélectionnez un produit",
+    "message": "Sélectionner un produit",
     "module": "hcm-base-stockreports-oncho",
     "locale": "fr_DEMO"
   },
@@ -541,7 +541,7 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_PRODUCT_LABEL",
-    "message": "Sélectionnez un produit",
+    "message": "Sélectionner un produit",
     "module": "hcm-base-stockreports-oncho",
     "locale": "fr_DEMO"
   },
@@ -865,7 +865,7 @@
   },
   {
     "code": "STOCK_REPORT_DETAILS_INFO_CARD_LABEL",
-    "message": "Informations sur le rapport sur les stocks",
+    "message": "Informations sur le rapport de stock",
     "module": "hcm-base-stockreports-oncho",
     "locale": "fr_DEMO"
   },
@@ -973,7 +973,7 @@
   },
   {
     "code": "infoCardLabel",
-    "message": "Informations sur le rapport sur les stocks",
+    "message": "Informations sur le rapport de stock",
     "module": "hcm-base-stockreports-oncho",
     "locale": "fr_DEMO"
   },
@@ -1069,7 +1069,7 @@
   },
   {
     "code": "selectProductLabel",
-    "message": "Sélectionnez un produit",
+    "message": "Sélectionner un produit",
     "module": "hcm-base-stockreports-oncho",
     "locale": "fr_DEMO"
   },
@@ -1087,13 +1087,13 @@
   },
   {
     "code": "selectedProduct",
-    "message": "Sélectionnez un produit",
+    "message": "Sélectionner un produit",
     "module": "hcm-base-stockreports-oncho",
     "locale": "fr_DEMO"
   },
   {
     "code": "selectedReckonProduct",
-    "message": "Sélectionnez un produit",
+    "message": "Sélectionner un produit",
     "module": "hcm-base-stockreports-oncho",
     "locale": "fr_DEMO"
   },
@@ -1165,7 +1165,7 @@
   },
   {
     "code": "stockreportsViewReportsStockDamaged",
-    "message": "Crosse endommagée",
+    "message": "Stock endommagé",
     "module": "hcm-base-stockreports-oncho",
     "locale": "fr_DEMO"
   },

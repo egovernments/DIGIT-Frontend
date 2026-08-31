@@ -259,13 +259,13 @@
   },
   {
     "code": "ACTION_LABEL_UPDATE_DATES",
-    "message": "Atualizar datas",
+    "message": "Datas de atualização",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "ACTION_LABEL_VIEW_TIMELINE",
-    "message": "Credenciais do usuário",
+    "message": "Ver linha do tempo",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -433,7 +433,7 @@
   },
   {
     "code": "ACTION_UNIFIED_UPLOAD_SCREEN",
-    "message": "Carregar arquivo unificado",
+    "message": "Carregar dados do microplano",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -445,7 +445,7 @@
   },
   {
     "code": "ACTION_UPLOAD_SCREEN",
-    "message": "Upload datas",
+    "message": "Carregar dados",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -685,7 +685,7 @@
   },
   {
     "code": "ALPHANUMERICONLY",
-    "message": "Somente alfanumérico",
+    "message": "Apenas alfanumérico",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -793,7 +793,7 @@
   },
   {
     "code": "APPCONFIG_VERSION",
-    "message": "Versão do AppConfig",
+    "message": "Versão",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -841,7 +841,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_1_DESCRIPTION",
-    "message": "Pergunte ao cuidador se a criança está apresentando alguma doença ou desconforto geral, como fraqueza, diarreia, vômito, dificuldade para respirar ou outros problemas de saúde.",
+    "message": "Pergunte ao cuidador se a criança está apresentando alguma doença ou desconforto geral, como fraqueza, diarréia, vômito, dificuldade para respirar ou outros problemas de saúde.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -1363,7 +1363,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_TITLE",
-    "message": "Dados registrados com sucesso!",
+    "message": "Dados registrados com sucesso",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -1789,7 +1789,7 @@
   },
   {
     "code": "APP_CONFIGURATION_SUCCESS_RESPONSE",
-    "message": "A configuração do aplicativo móvel foi concluída com sucesso.",
+    "message": "A configuração do aplicativo móvel foi concluída com êxito.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -1999,7 +1999,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_HOUSEHOLDOVERVIEW",
-    "message": "Visão geral da família",
+    "message": "Visão Geral do Agregado Familiar",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2083,7 +2083,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_RECORDLESSEXCESS",
-    "message": "Perda/excesso de estoque recorde",
+    "message": "Registrar estoque menor/excesso",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2095,7 +2095,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_REDOSE",
-    "message": "Redose",
+    "message": "Refazer detalhes",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2173,7 +2173,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_SCANSTOCKRECEIPT",
-    "message": "Detalhes do Recibo de Estoque",
+    "message": "Detalhes do recebimento de estoque",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2191,7 +2191,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_STOCK",
-    "message": "Frasco de estoque",
+    "message": "Estoques de vacinação em nível de equipe",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2551,7 +2551,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_RECORDLESSEXCESS_WAREHOUSEDETAILS",
-    "message": "Perda/excesso de estoque recorde",
+    "message": "Registrar detalhes do armazém",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2677,7 +2677,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_SCANSTOCKRECEIPT",
-    "message": "Detalhes do Recibo de Estoque",
+    "message": "Detalhes do recebimento de estoque",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2695,7 +2695,7 @@
   },
   {
     "code": "APP_CONFIG_PAGE_STOCKRECEIPTDETAILS_STOCKRECEIPTDETAILS",
-    "message": "Detalhes do Recibo de Estoque",
+    "message": "Detalhes do recebimento de estoque",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2833,7 +2833,7 @@
   },
   {
     "code": "ATTENDANCE_REGISTER_README_ERROR_3",
-    "message": "Código de limite inválido — O valor de limite inserido não é reconhecido para esta campanha. Use apenas os códigos de limite disponíveis nos menus suspensos da coluna.",
+    "message": "Código limite não reconhecido — o valor limite inserido não faz parte desta campanha. Use apenas os códigos de limite disponíveis nos menus suspensos da coluna.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2881,7 +2881,7 @@
   },
   {
     "code": "ATTENDANCE_REGISTER_README_STEP_2",
-    "message": "Cada linha do modelo representa um registro de presença. Preencha as colunas de limite da esquerda para a direita — por exemplo, Estado, depois Distrito e, em seguida, o nível mais baixo em que deseja que o registro seja criado. Você deve preencher pelo menos uma coluna de limite por linha; linhas sem limite preenchido serão rejeitadas. O registro será criado no nível de limite mais baixo que você preencheu.",
+    "message": "Cada linha do modelo representa um registo de presenças. Preencha as colunas de limite da esquerda para a direita — por exemplo, Estado, depois Distrito e, em seguida, o nível mais baixo em que deseja que o registro seja criado. Você deve preencher pelo menos uma coluna de limite por linha; linhas sem limite preenchido serão rejeitadas. O registro será criado no nível de limite mais baixo que você preencheu.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2911,7 +2911,7 @@
   },
   {
     "code": "ATTENDEE_README_ENROLLMENT_DESC_3",
-    "message": "Se você precisar mover um usuário de um registro para outro, você deve primeiro desativá-lo do seu registro atual. Uma vez que seu status esteja definido como Desativado e o upload do arquivo, eles poderão ser mapeados para um novo cadastro, isso pode ser feito no mesmo dia.",
+    "message": "Se você precisar mover um usuário de um registro para outro, você deve primeiro desativá-lo do seu registro atual. Uma vez que seu status esteja definido como Desabilitado e o upload do arquivo, eles poderão ser mapeados para um novo cadastro, isso pode ser feito no mesmo dia.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -2947,7 +2947,7 @@
   },
   {
     "code": "ATTENDEE_README_ERROR_5",
-    "message": "Formato de data inválido. Use DD-MM-AAAA ou DD/MM/AAAA — Uma célula de data contém um formato não reconhecido ou caracteres extras. Os formatos aceitos são apenas DD-MM-AAAA e DD/MM/AAAA.",
+    "message": "Formato de data não aceito — uma célula de data contém um formato não reconhecido ou caracteres extras. Use apenas DD-MM-AAAA ou DD/MM/AAAA.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3097,13 +3097,13 @@
   },
   {
     "code": "BEDNET",
-    "message": "Rede de cama",
+    "message": "Rede mosquiteira",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "BENEFICIARY",
-    "message": "Beneficiário",
+    "message": "Nome do Beneficiário",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3343,7 +3343,7 @@
   },
   {
     "code": "BOUNDARY_LOCALISATION_ERROR",
-    "message": "Falha na criação do limite. Erro de localização.!",
+    "message": "Falha na criação do limite. Erro de localização.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3373,7 +3373,7 @@
   },
   {
     "code": "BOUNDARY_NO_VALID_ROWS",
-    "message": "Planilha inválida, baixe e adicione os dados",
+    "message": "A planilha não possui linhas utilizáveis. Baixe o modelo e adicione os dados.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3421,7 +3421,7 @@
   },
   {
     "code": "BOUNDARY_SHEET_HEADER_ERROR",
-    "message": "O cabeçalho da folha limite é inválido.",
+    "message": "Os cabeçalhos da folha limite não correspondem ao modelo. Use os cabeçalhos do modelo baixado.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3451,7 +3451,7 @@
   },
   {
     "code": "BOUNDARY_TARGET_ERROR",
-    "message": "O destino está ausente ou tem um valor inválido.",
+    "message": "O alvo está faltando ou não há número. Insira uma meta para cada limite.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3637,7 +3637,7 @@
   },
   {
     "code": "CAMPAIGN_ATTRIBUTE_MAXCOUNT",
-    "message": "Contagem máxima",
+    "message": "Máximo de mosquiteiros por domicílio",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3733,7 +3733,7 @@
   },
   {
     "code": "CAMPAIGN_CREATION_TAKES_SOME_TIME_PLEASE_WAIT",
-    "message": "A criação da campanha leva algum tempo. Por favor, aguarde!",
+    "message": "A criação da campanha leva algum tempo. Por favor, aguarde",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -3865,13 +3865,13 @@
   },
   {
     "code": "CAMPAIGN_CYCLE_INFO_IRS-MZ",
-    "message": "Os ciclos e entregas em cada ciclo são definidos de acordo com as directrizes da OMS para campanhas de “Pulverização Residual Interior”.",
+    "message": "Os ciclos e entregas em cada ciclo são configurados de acordo com as directrizes da OMS para campanhas de “Pulverização Residual Interior”.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_CYCLE_INFO_IRS_MZ",
-    "message": "Os ciclos e entregas em cada ciclo são definidos de acordo com as directrizes da OMS para campanhas de “Pulverização Residual Interior”.",
+    "message": "Os ciclos e entregas em cada ciclo são configurados de acordo com as directrizes da OMS para campanhas de “Pulverização Residual Interior”.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4093,25 +4093,25 @@
   },
   {
     "code": "CAMPAIGN_END_DATE_ERROR",
-    "message": "Campo obrigatório!",
+    "message": "Campo obrigatório",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_END_DATE_SAME_ERROR",
-    "message": "As datas de início e término de uma campanha não podem ser iguais!",
+    "message": "As datas de início e término de uma campanha não podem ser iguais",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_FACILITY_CREATION_PROCESS",
-    "message": "A criação das instalações está em andamento.",
+    "message": "A criação da instalação está em andamento",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_FACILITY_MAPPING_PROCESS",
-    "message": "O mapeamento das instalações está em andamento.",
+    "message": "O mapeamento das instalações está em andamento",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4123,13 +4123,13 @@
   },
   {
     "code": "CAMPAIGN_FIELD_ERROR_MANDATORY",
-    "message": "Campo obrigatório!",
+    "message": "Campo obrigatório",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_FIELD_MANDATORY",
-    "message": "Campo obrigatório!",
+    "message": "Campo obrigatório",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4165,7 +4165,7 @@
   },
   {
     "code": "CAMPAIGN_MAXCOUNT_BEDNET_INDIVIDUAL_LABEL",
-    "message": "Contagem máxima",
+    "message": "Máximo de mosquiteiros por domicílio",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4189,13 +4189,13 @@
   },
   {
     "code": "CAMPAIGN_NAME_FIELD_ERROR",
-    "message": "Campo obrigatório!",
+    "message": "Campo obrigatório",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_NAME_FIELD_ERROR ",
-    "message": "Campo obrigatório!",
+    "message": "Campo obrigatório",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4219,7 +4219,7 @@
   },
   {
     "code": "CAMPAIGN_NAME_MISSING_TYPE_ERROR",
-    "message": "Insira um nome de campanha!",
+    "message": "Insira um nome de campanha",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4285,7 +4285,7 @@
   },
   {
     "code": "CAMPAIGN_OBSERVATION_STRATEGY_HEADING",
-    "message": "Selecione a estratégia de observação para a campanha.",
+    "message": "Selecione a estratégia de observação para a campanha",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4369,7 +4369,7 @@
   },
   {
     "code": "CAMPAIGN_PROJECT_CREATION_PROCESS",
-    "message": "A criação do projeto está em andamento.",
+    "message": "A criação do projeto está em andamento",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4525,7 +4525,7 @@
   },
   {
     "code": "CAMPAIGN_REQUIREMENTS_HEADING",
-    "message": "Prepare os dados da sua campanha",
+    "message": "Antes de começar",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4537,7 +4537,7 @@
   },
   {
     "code": "CAMPAIGN_RESOURCE_MAPPING_PROCESS",
-    "message": "O mapeamento do projeto está em andamento.",
+    "message": "O mapeamento do projeto está em andamento",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4639,7 +4639,7 @@
   },
   {
     "code": "CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_ERROR",
-    "message": "Faltam atributos no ciclo {CYCLE_NO} de entrega {DELIVERY_NO} para a condição de entrega {CONDITION_NO}.",
+    "message": "Atributos estão faltando no ciclo {CYCLE_NO} entrega {DELIVERY_NO} para condição de entrega {CONDITION_NO}.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4663,19 +4663,19 @@
   },
   {
     "code": "CAMPAIGN_SUMMARY_PRODUCT_MISSING_ERROR",
-    "message": "Faltam produtos no ciclo {CYCLE_NO} de entrega {DELIVERY_NO} para a condição de entrega {CONDITION_NO}.",
+    "message": "Faltam produtos no ciclo {CYCLE_NO} entrega {DELIVERY_NO} para condição de entrega {CONDITION_NO}.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_SUMMARY_VALUES_MISSING_ERROR",
-    "message": "Faltam valores no ciclo {CYCLE_NO} de entrega {DELIVERY_NO} para a condição de entrega {CONDITION_NO}.",
+    "message": "Faltam valores no ciclo {CYCLE_NO} entrega {DELIVERY_NO} para condição de entrega {CONDITION_NO}.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_TAB_INFO_TEXT_IRS-MZ",
-    "message": "Os ciclos e entregas em cada ciclo são definidos de acordo com as directrizes da OMS para campanhas de “Pulverização Residual Interior”.",
+    "message": "Os ciclos e entregas em cada ciclo são configurados de acordo com as directrizes da OMS para campanhas de “Pulverização Residual Interior”.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4795,7 +4795,7 @@
   },
   {
     "code": "CAMPAIGN_USER_CREATION_PROCESS",
-    "message": "A criação do usuário está em andamento.",
+    "message": "A criação do usuário está em andamento",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4813,13 +4813,13 @@
   },
   {
     "code": "CAMPAIGN_USER_MAPPING_PROCESS",
-    "message": "O mapeamento de usuários está em andamento.",
+    "message": "O mapeamento do usuário está em andamento",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "CAMPAIGN_VALIDATION_INPROGRESS",
-    "message": "Por favor, aguarde. A validação está em andamento.",
+    "message": "Por favor, aguarde. A validação está em andamento",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -4975,7 +4975,7 @@
   },
   {
     "code": "CHIEFDOM",
-    "message": "Chiefdom",
+    "message": "Chefia",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -5071,7 +5071,7 @@
   },
   {
     "code": "CMN_ALL_DATA_FETCH_DONE",
-    "message": "Todo o mapeamento concluído",
+    "message": "Todo o mapeamento foi concluído",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -5317,7 +5317,7 @@
   },
   {
     "code": "COMMUNITY",
-    "message": "Community",
+    "message": "Comunidade",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -5473,7 +5473,7 @@
   },
   {
     "code": "CONFIGURATION_UPDATED_SUCCESSFULLY",
-    "message": "Configuração atualizada com sucesso!",
+    "message": "Configuração atualizada com sucesso",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -5551,7 +5551,7 @@
   },
   {
     "code": "CONSOLE_NAMING_CONVENTION_NO_LEADING_TRAILING_SPACE",
-    "message": "O nome da campanha deve começar com uma letra e terminar com uma letra ou um número.",
+    "message": "O nome da campanha deve começar com uma letra e terminar com uma letra ou número.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -5575,7 +5575,7 @@
   },
   {
     "code": "COPYING_CONFIG_FOR_SELECTED_MODULES",
-    "message": "Preparando as coisas",
+    "message": "Configurando as coisas",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -5683,7 +5683,7 @@
   },
   {
     "code": "CORE_INITIALIZING_MODULE",
-    "message": "Inicializando o módulo {{moduleCode}}",
+    "message": "Configurando as coisas",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -5713,7 +5713,7 @@
   },
   {
     "code": "COUNCIL",
-    "message": "Council",
+    "message": "Conselho",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -5755,7 +5755,7 @@
   },
   {
     "code": "CREATE_CAMPAIGN",
-    "message": "Criar uma nova campanha",
+    "message": "Crie uma nova campanha",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -5767,7 +5767,7 @@
   },
   {
     "code": "CREATE_CHECKLIST",
-    "message": "Configurar",
+    "message": "Criar lista de verificação",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -5857,13 +5857,13 @@
   },
   {
     "code": "CS_ACTION_HCM_UPDATE_DATES",
-    "message": "Atualizar datas",
+    "message": "Datas de atualização",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "CS_ACTION_UPDATE_DATES",
-    "message": "Alterar datas da campanha",
+    "message": "Alterar datas de campanha",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -6217,7 +6217,7 @@
   },
   {
     "code": "DETAILS_FOOTER",
-    "message": "Dica: prepare suas listas de verificação de campo com antecedência para agilizar o processo de configuração.",
+    "message": "Dica: Prepare suas listas de verificação de campo com antecedência para agilizar o processo de configuração.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -6289,7 +6289,7 @@
   },
   {
     "code": "DIGIT_HCM_DELIVERY_MODULE",
-    "message": "Módulo de Entrega",
+    "message": "Módulo de entrega",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -6367,7 +6367,7 @@
   },
   {
     "code": "DIGIT_LOC_BULK_UPLOAD_XLS",
-    "message": "Localização de upload em massa XLS",
+    "message": "Carregar traduções",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -6385,7 +6385,7 @@
   },
   {
     "code": "DIGIT_LOC_DOWNLOAD_INITIATED",
-    "message": "Baixando dados de localização",
+    "message": "Baixando dados de traduções",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -6397,13 +6397,13 @@
   },
   {
     "code": "DIGIT_LOC_EMPTY_OR_INVALID_FILE",
-    "message": "O arquivo enviado está vazio ou é inválido.",
+    "message": "O arquivo enviado está vazio ou ilegível. Carregue o modelo preenchido.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "DIGIT_LOC_FILE_VALIDATION_ERROR",
-    "message": "O formato ou conteúdo do arquivo enviado é inválido.",
+    "message": "O arquivo enviado não corresponde ao formato esperado. Baixe o modelo e tente novamente.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -6433,7 +6433,7 @@
   },
   {
     "code": "DIGIT_LOC_MESSAGE_HEADER",
-    "message": "Message",
+    "message": "Mensagens",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -6445,6 +6445,12 @@
   },
   {
     "code": "DIGIT_LOC_MESSAGE_HEADER_ENGLISH",
+    "message": "Mensagens em inglês",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DIGIT_LOC_MESSAGE_HEADER_English",
     "message": "Mensagens em inglês",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
@@ -6463,6 +6469,12 @@
   },
   {
     "code": "DIGIT_LOC_MESSAGE_HEADER_PORTUGUÊS",
+    "message": "Mensagens Portuguesas",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DIGIT_LOC_MESSAGE_HEADER_Portugues",
     "message": "Mensagens Portuguesas",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
@@ -6553,13 +6565,13 @@
   },
   {
     "code": "DIGIT_LOC_UPLOAD_LOCALIZATION",
-    "message": "Carregar localizações",
+    "message": "Carregue um arquivo Excel contendo texto específico do idioma para atualizar rótulos e mensagens para idiomas suportados.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "DIGIT_LOC_UPLOAD_MESSAGE",
-    "message": "Carregar localizações",
+    "message": "Carregue um arquivo Excel contendo texto específico do idioma para atualizar rótulos e mensagens para idiomas suportados.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -6613,7 +6625,7 @@
   },
   {
     "code": "DISTRICT",
-    "message": "District",
+    "message": "Distrito",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -7033,7 +7045,7 @@
   },
   {
     "code": "ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE",
-    "message": "A configuração da sua campanha está concluída!",
+    "message": "A configuração da sua campanha está concluída",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -7057,7 +7069,7 @@
   },
   {
     "code": "ES_CAMPAIGN_DATE_CHANGE_WITH_BOUNDARY_SUCCESS",
-    "message": "Data alterada com sucesso para os limites selecionados!",
+    "message": "Data alterada com sucesso para os limites selecionados",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -7135,7 +7147,7 @@
   },
   {
     "code": "ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT",
-    "message": "Se você alterar os dados de limite da campanha nesta etapa, os arquivos enviados nas etapas seguintes serão excluídos",
+    "message": "Se você alterar os dados de limite da campanha nesta etapa, os arquivos carregados nas etapas seguintes serão excluídos",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -7177,7 +7189,7 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_TEXT",
-    "message": "Baixe o modelo Excel para criar registros de presença para sua campanha. Preencha os detalhes do limite, revise os IDs de registro gerados automaticamente e carregue o arquivo concluído para gerar registros.",
+    "message": "Baixe o modelo Excel para criar registros de presença para sua campanha. Preencha os detalhes dos limites, revise os IDs de registro gerados automaticamente e carregue o arquivo concluído para gerar registros.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -7213,13 +7225,13 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_HEADER",
-    "message": "Você deseja baixar o arquivo unificado",
+    "message": "Você deseja baixar o arquivo microplan",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT",
-    "message": "O arquivo unificado incluirá todas as planilhas de instalações, usuários e alvos.",
+    "message": "Carregue um único arquivo contendo dados de instalações, usuários e alvos necessários para a configuração e planejamento de sua campanha.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -7363,7 +7375,7 @@
   },
   {
     "code": "ES_PRODUCT_CREATE_SUCCESS_RESPONSE",
-    "message": "Recurso criado com sucesso!",
+    "message": "Recurso criado com sucesso",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -7399,7 +7411,7 @@
   },
   {
     "code": "ES_REQUIRED",
-    "message": "Obrigatório !",
+    "message": "Obrigatório",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -7513,7 +7525,7 @@
   },
   {
     "code": "FACILITYWITHBOUNDARY_README_HEADER_2_SUB_2_DESC_2",
-    "message": "Etapa 2: nesta etapa, o usuário terá que adicionar entradas na coluna Uso da instalação com entradas válidas sendo Ativas ou Inativas, onde o usuário pode definir o uso de uma instalação como Ativo se a instalação estiver sendo usada para uma campanha ou então pode ser definida como Inativa. As entradas na coluna Uso da Instalação precisam ser adicionadas para todas as entradas.",
+    "message": "Passo 2: Nesta etapa, o usuário terá que adicionar entradas na coluna Uso da Instalação com entradas válidas sendo Ativas ou Inativas, onde o usuário pode definir o uso de uma instalação como Ativo se a instalação estiver sendo usada para uma campanha ou então pode ser definida como Inativa. As entradas na coluna Uso da Instalação precisam ser adicionadas para todas as entradas.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -7609,7 +7621,7 @@
   },
   {
     "code": "FEATURE_CONFIG_SUCCESS_DESCRIPTION",
-    "message": "Agora você sabe o que o Console HCM pode fazer. Você pode planejar campanhas, gerenciar sua equipe, organizar locais e usar modelos com eficiência. Mergulhe e comece a gerenciar suas campanhas de saúde com confiança!",
+    "message": "Agora você sabe o que o Console HCM pode fazer. Você pode planejar campanhas, gerenciar sua equipe, organizar locais e usar modelos com eficiência. Mergulhe e comece a gerenciar suas campanhas de saúde com confiança",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -7651,7 +7663,7 @@
   },
   {
     "code": "FETCHING_CAMPAIGN_DETAILS",
-    "message": "Obtendo detalhes da campanha",
+    "message": "Buscando detalhes da campanha",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -8305,7 +8317,7 @@
   },
   {
     "code": "GO_TO_MY_CAMPAIGNS",
-    "message": "Acesse Minhas Campanhas",
+    "message": "Ir para Minhas Campanhas",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -8317,7 +8329,7 @@
   },
   {
     "code": "GREATER_THAN_EQUAL_TO",
-    "message": "maior ou igual a",
+    "message": "Maior ou igual a",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -8437,7 +8449,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY",
-    "message": "Capacidade",
+    "message": "Capacidade (a unidade varia de acordo com a mercadoria)",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -8509,7 +8521,7 @@
   },
   {
     "code": "HCM_ADMIN_CONSOLE_TARGET_INDIVIDUAL",
-    "message": "Alvo individual",
+    "message": "Alvo Individual",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -8713,13 +8725,19 @@
   },
   {
     "code": "HCM_ATTENDANCE_ATTENDEE_ATLEAST_ONE_REQUIRED",
-    "message": "Pelo menos um usuário deve ter uma data de inscrição em todas as planilhas de funcionário, avaliador e aprovador.",
+    "message": "Pelo menos um usuário deve ter uma data de inscrição nas folhas de trabalhador, marcador e aprovador.",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ATTENDANCE_ATTENDEE_NO_USERS",
+    "message": "Nenhum usuário encontrado nas planilhas. Adicione pelo menos um usuário com uma data de inscrição nas planilhas de trabalhador, marcador e aprovador.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_ATTENDANCE_OFC_YET_TO_BE_MAPPED",
-    "message": "En attente de cartographie",
+    "message": "Ainda a ser mapeado",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -8731,7 +8749,7 @@
   },
   {
     "code": "HCM_ATTENDANCE_REGISTER_ATLEAST_ONE_REQUIRED",
-    "message": "É necessário pelo menos um registro de presença na folha.",
+    "message": "É necessário pelo menos um registro de presença na planilha.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -9013,7 +9031,7 @@
   },
   {
     "code": "HCM_CAMPAIGN_CREATION_PROGRESS",
-    "message": "A criação da campanha está em andamento. Você não pode editar a campanha neste momento.",
+    "message": "A criação da campanha está em andamento. Você não pode editar a campanha agora.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -9067,7 +9085,7 @@
   },
   {
     "code": "HCM_CAMPAIGN_DATE_MISSING",
-    "message": "Insira a data de início e término da campanha!",
+    "message": "Insira a data de início e término da campanha",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -9265,7 +9283,7 @@
   },
   {
     "code": "HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA",
-    "message": "Carregar dados unificados",
+    "message": "Carregar dados do microplano",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -9307,7 +9325,7 @@
   },
   {
     "code": "HCM_CHECKLIST_DESC",
-    "message": "Configure listas de verificação simples para os supervisores acompanharem e revisarem as atividades de campo.",
+    "message": "Configure listas de verificação para os supervisores acompanharem e revisarem as atividades de campo durante a campanha.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -9361,7 +9379,7 @@
   },
   {
     "code": "HCM_CHECKLIST_TYPE_HF_RF_DRUG_SE_CC",
-    "message": "Encaminhamento para unidades de saúde: efeito colateral do medicamento do ciclo atual",
+    "message": "Encaminhamento para unidade de saúde: efeito colateral do medicamento do ciclo atual",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -9451,7 +9469,7 @@
   },
   {
     "code": "HCM_CHECK_FILE_AGAIN_ALERTCARD_TITLE",
-    "message": "Erros encontrados no arquivo carregado",
+    "message": "Erros encontrados no arquivo enviado",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -9643,7 +9661,7 @@
   },
   {
     "code": "HCM_CM_SEARCH_FACILITIES",
-    "message": "Instalações de pesquisa",
+    "message": "Recursos de pesquisa",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -9787,7 +9805,7 @@
   },
   {
     "code": "HCM_CONFIRMING_RESOURCE_CREATION",
-    "message": "Criação de recursos",
+    "message": "Criando recursos",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -9847,7 +9865,7 @@
   },
   {
     "code": "HCM_CREATE_CAMPAIGN_DESCRIPTION",
-    "message": "Você pode criar uma nova campanha do zero, reutilizar configurações de uma existente ou começar com um modelo de campanha. Clonar ou usar um modelo ajuda a transferir configurações importantes como limites, módulos, formulários e regras de entrega para reduzir o tempo de configuração.",
+    "message": "Você pode criar uma nova campanha do zero, reutilizar configurações de uma campanha existente ou começar com um modelo de campanha. Clonar ou usar um modelo ajuda a transferir configurações importantes como limites, módulos, formulários e regras de entrega para reduzir o tempo de configuração.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -10069,7 +10087,7 @@
   },
   {
     "code": "HCM_DELIVERY_DESC",
-    "message": "Defina como os recursos serão entregues, incluindo cronogramas de entrega, número de ciclos e rodadas e condições de entrega. Essas configurações garantem distribuição e tempo adequados de recursos.",
+    "message": "Defina como os recursos serão entregues, incluindo cronogramas de entrega, ciclos, rodadas e condições de entrega.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -10195,7 +10213,7 @@
   },
   {
     "code": "HCM_EDIT_DELIVERY_BUTTON",
-    "message": "Editar configuração de entrega",
+    "message": "Editar estratégia de entrega",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -10207,7 +10225,7 @@
   },
   {
     "code": "HCM_EDIT_MOBILE_APP_BUTTON",
-    "message": "Editar configuração do celular",
+    "message": "Editar configuração móvel",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -10297,7 +10315,7 @@
   },
   {
     "code": "HCM_FACILITIES_DESC",
-    "message": "Os nomes e as capacidades de todas as instalações participantes.",
+    "message": "Os nomes e capacidades de todas as instalações participantes.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -10399,13 +10417,13 @@
   },
   {
     "code": "HCM_HIERARCHY_BOUNDARY_DATA_ACTIVE",
-    "message": "Dados de limites disponíveis",
+    "message": "Dados de limite disponíveis",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_HIERARCHY_BOUNDARY_DATA_INACTIVE",
-    "message": "Não há dados de limites disponíveis",
+    "message": "Nenhum dado de limite disponível",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -10423,13 +10441,13 @@
   },
   {
     "code": "HCM_HIERARCHY_CHANGE_WARNING_DESC",
-    "message": "Isso removerá todos os limites selecionados e arquivos carregados associados à hierarquia atual. Você precisará configurá-los novamente após fazer a alteração.",
+    "message": "Você está prestes a editar o limite selecionado. Quaisquer limites e estratégias de entrega configurados serão removidos e você precisará configurá-los novamente. Você quer continuar?",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_HIERARCHY_CHANGE_WARNING_TITLE",
-    "message": "Prosseguir para Editar hierarquia de limites?",
+    "message": "Prossiga para Editar limite?",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -10501,7 +10519,7 @@
   },
   {
     "code": "HCM_IS_INVALID",
-    "message": "é inválido.",
+    "message": "precisa ser corrigido.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -10620,6 +10638,12 @@
     "locale": "pt_DEMO"
   },
   {
+    "code": "HCM_MICROPLAN_TEMPLATE",
+    "message": "Modelo de microplano",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
     "code": "HCM_MIN_3_CHARS_REQUIRED",
     "message": "Mínimo de 3 caracteres necessários",
     "module": "hcm-campaignmanager",
@@ -10651,7 +10675,7 @@
   },
   {
     "code": "HCM_MOBILE_APP_DESC",
-    "message": "Configure o aplicativo móvel que os trabalhadores de campo usarão. Configure formulários, habilite recursos e personalize a interface de acordo com os requisitos de sua campanha.",
+    "message": "Configure o aplicativo móvel para trabalhadores de campo. Configure formulários e personalize o aplicativo com base nos requisitos da sua campanha.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -10681,7 +10705,7 @@
   },
   {
     "code": "HCM_MODULE_DESCRIPTION_BEDNETS_HFREFERALFLOW",
-    "message": "Referência é o processo de direcionar uma pessoa, cliente ou caso a outro indivíduo, profissional ou organização para obter mais assistência, serviços ou experiência.",
+    "message": "Referência é o processo de direcionar uma pessoa, cliente ou caso a outro indivíduo, profissional ou organização para obter assistência, serviços ou experiência adicional.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -10717,7 +10741,7 @@
   },
   {
     "code": "HCM_MODULE_DESCRIPTION_BEDNET_HFREFERALFLOW",
-    "message": "Referência é o processo de direcionar uma pessoa, cliente ou caso a outro indivíduo, profissional ou organização para obter mais assistência, serviços ou experiência.",
+    "message": "Referência é o processo de direcionar uma pessoa, cliente ou caso a outro indivíduo, profissional ou organização para obter assistência, serviços ou experiência adicional.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -10795,7 +10819,7 @@
   },
   {
     "code": "HCM_MODULE_DESCRIPTION_LLIN-MZ_HFREFERALFLOW",
-    "message": "Referência é o processo de direcionar uma pessoa, cliente ou caso a outro indivíduo, profissional ou organização para obter mais assistência, serviços ou experiência.",
+    "message": "Referência é o processo de direcionar uma pessoa, cliente ou caso a outro indivíduo, profissional ou organização para obter assistência, serviços ou experiência adicional.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -10891,7 +10915,7 @@
   },
   {
     "code": "HCM_MODULE_DESCRIPTION_MR-DN_HFREFERALFLOW",
-    "message": "Referência é o processo de direcionar uma pessoa, cliente ou caso a outro indivíduo, profissional ou organização para obter mais assistência, serviços ou experiência.",
+    "message": "Referência é o processo de direcionar uma pessoa, cliente ou caso a outro indivíduo, profissional ou organização para obter assistência, serviços ou experiência adicional.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -11095,13 +11119,13 @@
   },
   {
     "code": "HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY",
-    "message": "Não há dados de limite disponíveis para um ou mais níveis na hierarquia selecionada. Adicione dados de limite para prosseguir com esta hierarquia.",
+    "message": "Nenhum dado de limite está disponível para um ou mais níveis na hierarquia selecionada. Adicione dados de limite para prosseguir com esta hierarquia",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_NO_BOUNDARY_LEVELS",
-    "message": "Não há níveis de limite disponíveis.",
+    "message": "Nenhum nível de limite disponível",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -11179,7 +11203,7 @@
   },
   {
     "code": "HCM_PLEASE_WAIT_TRY_IN_SOME_TIME",
-    "message": "Aguarde. A geração do modelo está em andamento.",
+    "message": "Aguarde. A geração do modelo está em andamento. Clique novamente em 'Donwload Template'",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -11365,7 +11389,7 @@
   },
   {
     "code": "HCM_REPORTS_CONFIGURATION_DESC",
-    "message": "Selecione e configure os relatórios que deseja incluir nesta campanha.",
+    "message": "Selecione e configure os relatórios que deseja incluir e usar em sua campanha.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -11569,7 +11593,7 @@
   },
   {
     "code": "HCM_SEARCH_STAFF_WAREHOUSE",
-    "message": "Procure por Pessoal ou Armazém",
+    "message": "Procure por equipe ou armazém",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -11857,7 +11881,7 @@
   },
   {
     "code": "HCM_STOCK_REPORT_DESC",
-    "message": "Descrição do relatório de estoque",
+    "message": "Acompanhe as transações de estoque, incluindo movimentação de estoque, quantidades, instalações, usuários e detalhes da transação.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -11917,7 +11941,7 @@
   },
   {
     "code": "HCM_TARGET",
-    "message": "População-alvo",
+    "message": "População Alvo",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -11935,7 +11959,7 @@
   },
   {
     "code": "HCM_TARGET_DESC",
-    "message": "Os beneficiários-alvo, as estimativas de participação e as metas de cobertura da campanha.",
+    "message": "Os beneficiários-alvo, contagens estimadas e metas de cobertura da campanha.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -12097,7 +12121,7 @@
   },
   {
     "code": "HCM_UNIFIED_DATA_MESSAGE",
-    "message": "O arquivo unificado incluirá todas as planilhas de instalações, usuários e alvos.",
+    "message": "Carregue um único arquivo contendo dados de instalações, usuários e alvos necessários para a configuração e planejamento de sua campanha.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -12211,19 +12235,19 @@
   },
   {
     "code": "HCM_UPLOAD_LOCALIZATIONS_DATA_BUTTON",
-    "message": "Carregar conteúdo de idioma",
+    "message": "Carregar traduções",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_UPLOAD_LOCALIZATION_DATA_DESC",
-    "message": "Carregue o arquivo Excel contendo texto específico do idioma para este módulo. Isso ajuda a atualizar rótulos e mensagens para qualquer idioma que você queira oferecer suporte.",
+    "message": "Carregue um arquivo Excel contendo texto específico do idioma para atualizar rótulos e mensagens para idiomas suportados.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_UPLOAD_LOCALIZATION_DATA_HEADING",
-    "message": "Fazer upload em massa de conteúdo de idioma",
+    "message": "Carregar traduções",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -12259,13 +12283,13 @@
   },
   {
     "code": "HCM_UPLOAD_UNIFIED_DATA_DESC",
-    "message": "Carregar um único arquivo unificado contendo dados de instalação, usuário e destino",
+    "message": "Carregue um único arquivo contendo dados de instalações, usuários e alvos necessários para a configuração e planejamento de sua campanha.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_UPLOAD_UNIFIED_DATA_HEADING",
-    "message": "Carregar dados unificados",
+    "message": "Carregar dados do microplano",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -12433,19 +12457,19 @@
   },
   {
     "code": "HCM_WHERE_DESC",
-    "message": "Os limites administrativos onde a campanha será realizada.",
+    "message": "Os limites administrativos onde a campanha será conduzida.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_WHO",
-    "message": "Estratégia de Entrega",
+    "message": "Estratégia de entrega",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_WHO_DESC",
-    "message": "A abordagem de implementação e as condições que determinam como a intervenção será realizada.",
+    "message": "A abordagem de execução e as condições que determinam como a intervenção será realizada.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -12775,7 +12799,7 @@
   },
   {
     "code": "IMMUTABLE_IDENTITY_MISMATCH",
-    "message": "Por favor, baixe o modelo e, em seguida, faça o upload do arquivo.",
+    "message": "Baixe o modelo e depois carregue o arquivo.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -12823,7 +12847,7 @@
   },
   {
     "code": "INVALID_COLUMNS",
-    "message": "As colunas do arquivo são inválidas.",
+    "message": "As colunas do arquivo não correspondem ao modelo. Use o modelo baixado sem alterar as colunas.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -12835,13 +12859,13 @@
   },
   {
     "code": "INVALID_FILE",
-    "message": "O arquivo parece ser inválido. Verifique e carregue o formato correto.",
+    "message": "Não foi possível ler este arquivo. Carregue o arquivo no formato correto.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "INVALID_FILE_CONTENT",
-    "message": "Conteúdo do arquivo inválido — o arquivo não corresponde ao formato esperado.",
+    "message": "O conteúdo do arquivo não corresponde ao formato esperado. Baixe o modelo e preencha-o sem alterar a estrutura.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -12853,25 +12877,25 @@
   },
   {
     "code": "INVALID_FILE_FORMAT",
-    "message": "Formato de arquivo inválido. Faça upload do arquivo .xlsx ou .xls",
+    "message": "Este tipo de arquivo não é compatível. Carregue um arquivo .xlsx ou .xls.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "INVALID_FILE_WITH_GAP",
-    "message": "O arquivo enviado apresenta lacunas nas linhas. Remova a lacuna e faça upload novamente.",
+    "message": "O arquivo enviado tem lacunas nas linhas. Remova a lacuna e faça upload novamente.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "INVALID_LOGIN_CREDENTIALS",
-    "message": "Credenciais de login inválidas",
+    "message": "O nome de usuário ou a senha estão incorretos. Tente novamente.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "INVALID_README_CONFIG",
-    "message": "Configuração ReadMe inválida ou ausente.",
+    "message": "A configuração ReadMe está ausente ou ilegível.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -12907,31 +12931,31 @@
   },
   {
     "code": "INVALID_RESOURCE_DISTRIBUTION_STRATEGY",
-    "message": "A estratégia de distribuição de recursos é inválida.",
+    "message": "A estratégia de distribuição de recursos não é reconhecida. Escolha uma estratégia da lista.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "INVALID_SHEETNAME",
-    "message": "O nome da planilha fornecido é inválido.",
+    "message": "O nome da planilha não corresponde ao modelo. Mantenha os nomes das planilhas do modelo baixado.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "INVALID_TEMPLATE",
-    "message": "Modelo sem metadados de campanha ou inválido. Faça upload apenas do modelo gerado.",
+    "message": "Este modelo não contém detalhes da campanha. Carregue apenas o modelo gerado.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "INVALID_TEMPLATE_NAME",
-    "message": "Nome de modelo inválido",
+    "message": "Insira um nome de modelo válido.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "INVALID_USE_OF_MAX_COUNT",
-    "message": "O atributo Max Count deve ser usado em combinação com outros atributos.",
+    "message": "O número máximo de mosquiteiros por agregado familiar deve ser utilizado em combinação com outros atributos.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -12979,7 +13003,7 @@
   },
   {
     "code": "INVENTORY_RECORD_LESS_EXCESS_HEADING",
-    "message": "Perda/excesso de estoque recorde",
+    "message": "Registrar estoque menor/excesso",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13201,13 +13225,13 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
-    "message": "Reclamação",
+    "message": "Rótulo",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "Encaminhamento para unidades de saúde",
+    "message": "Encaminhamento para estabelecimento de saúde",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13351,7 +13375,7 @@
   },
   {
     "code": "LLIN-mz",
-    "message": "Rede de cama",
+    "message": "Rede mosquiteira",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13375,13 +13399,13 @@
   },
   {
     "code": "LOADING_APP_MODULE",
-    "message": "Carregando o módulo do aplicativo",
+    "message": "Carregando módulo do aplicativo",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "LOADING_BULK_STOCK_UPLOAD",
-    "message": "Tela de carregamento de ações",
+    "message": "Carregando tela de upload de estoque",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13393,7 +13417,7 @@
   },
   {
     "code": "LOADING_CAMPAIGN_HOME",
-    "message": "Carregando opções de configuração da campanha",
+    "message": "Carregando opções de configuração de campanha",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13405,13 +13429,13 @@
   },
   {
     "code": "LOADING_COMMODITY_CAMPAIGNS",
-    "message": "Campanhas de carregamento de mercadorias",
+    "message": "Carregando campanhas de commodities",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "LOADING_COMMODITY_DASHBOARD",
-    "message": "Carregando painel de controle de mercadorias",
+    "message": "Carregando painel de commodities",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13435,13 +13459,13 @@
   },
   {
     "code": "LOADING_CREATE_CHECKLIST",
-    "message": "Configuração da lista de verificação de carregamento",
+    "message": "Carregando configuração da lista de verificação",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "LOADING_CREATE_REGISTERS",
-    "message": "Carregando a tela de upload do cadastro",
+    "message": "Carregando tela de upload de cadastro",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13453,7 +13477,7 @@
   },
   {
     "code": "LOADING_EMPLOYEE_APP",
-    "message": "Carregando o aplicativo do funcionário",
+    "message": "Carregando aplicativo de funcionário",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13465,7 +13489,7 @@
   },
   {
     "code": "LOADING_MAP_ATTENDEES",
-    "message": "Tela de carregamento do modelo de upload",
+    "message": "Carregando tela de modelo de upload",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13489,13 +13513,13 @@
   },
   {
     "code": "LOADING_NEW_UPLOAD_SCREEN",
-    "message": "Tela de carregamento de upload",
+    "message": "Carregando tela de upload",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "LOADING_REGISTER_DETAILS",
-    "message": "Detalhes do registro de carregamento",
+    "message": "Carregando detalhes do cadastro",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13525,7 +13549,7 @@
   },
   {
     "code": "LOADING_UNIFIED_UPLOAD_SCREEN",
-    "message": "Carregando a tela de upload do microplano",
+    "message": "Carregando tela de upload do microplano",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13537,13 +13561,13 @@
   },
   {
     "code": "LOADING_UPDATE_CHECKLIST",
-    "message": "Lista de verificação de carregamento",
+    "message": "Carregando lista de verificação",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "LOADING_VIEW_CHECKLIST",
-    "message": "Lista de verificação de carregamento",
+    "message": "Carregando lista de verificação",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13603,7 +13627,7 @@
   },
   {
     "code": "MALICIOUS_CONTENT_DETECTED",
-    "message": "Envio de arquivo rejeitado — conteúdo malicioso detectado",
+    "message": "Upload de arquivo rejeitado — conteúdo malicioso detectado",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13663,7 +13687,7 @@
   },
   {
     "code": "MAP_ATTENDEES",
-    "message": "Criar trabalhadores registrados",
+    "message": "Mapear participantes",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13753,7 +13777,7 @@
   },
   {
     "code": "MICROPLAN",
-    "message": "CHAD - ITN",
+    "message": "CHADE - ITN",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13771,13 +13795,13 @@
   },
   {
     "code": "MICROPLAN_MO_14_01_01_01_01_KE_AKWARA_HEALTH_POST",
-    "message": "no Posto de Saúde de Akwara",
+    "message": "Posto de Saúde ke Akwara",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "MICROPLAN_MO_14_01_01_01_GAWASU_DAMANA",
-    "message": "Morto",
+    "message": "Gawasu Damana",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13801,7 +13825,7 @@
   },
   {
     "code": "MICROPLAN_MO_14_01_01_03_01_KE_AMBURSA_PRIMARY_HEALTH_CENTRE",
-    "message": "no Centro Primário de Saúde de Ambursa",
+    "message": "Centro de Saúde Primário ke Ambursa",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13813,7 +13837,7 @@
   },
   {
     "code": "MICROPLAN_MO_14_01_01_BIRNIN_KEBBI",
-    "message": "Cidade de Kebbi",
+    "message": "Birnin Kebbi",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13831,13 +13855,13 @@
   },
   {
     "code": "MICROPLAN_MO_15_01_01_01_01_MAIGANA_HP",
-    "message": "Alto-falante HP",
+    "message": "Maigana HP",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "MICROPLAN_MO_15_01_01_01_02_DUNDUN_HP",
-    "message": "Feliz HP",
+    "message": "Dundun Hp",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13855,7 +13879,7 @@
   },
   {
     "code": "MICROPLAN_MO_15_01_01_02_02_FULATAN_HP",
-    "message": "Placas HP",
+    "message": "Fulatan Hp",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13867,7 +13891,7 @@
   },
   {
     "code": "MICROPLAN_MO_15_01_01_AJINGI",
-    "message": "Aula",
+    "message": "Ajingi",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -13915,7 +13939,7 @@
   },
   {
     "code": "MICROPLAN_MO_16_01_01_02_AGYANA_PAN_DAGI",
-    "message": "Clique aqui",
+    "message": "Agyana Pan Dagi",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -14035,7 +14059,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_COMPLAINTS",
-    "message": "Deixe que os trabalhadores de campo registem as questões levantadas pelos prestadores de cuidados ou pela comunidade durante a distribuição – tais como preocupações sobre medicamentos, famílias perdidas ou qualidade do serviço – para apoiar o acompanhamento e a resolução atempados.",
+    "message": "Deixe que os trabalhadores de campo registem as questões levantadas pelos cuidadores ou pela comunidade durante a distribuição – tais como preocupações sobre medicamentos, famílias perdidas ou qualidade do serviço – para apoiar o acompanhamento e a resolução atempados.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -14209,7 +14233,7 @@
   },
   {
     "code": "NA",
-    "message": "QUE",
+    "message": "N / D",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -14299,7 +14323,7 @@
   },
   {
     "code": "NIGERIA",
-    "message": "Nigeria - SMC",
+    "message": "Nigéria – SMC",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -14653,7 +14677,7 @@
   },
   {
     "code": "PHU",
-    "message": "PHU",
+    "message": "UPH",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -14688,8 +14712,14 @@
     "locale": "pt_DEMO"
   },
   {
+    "code": "PLEASE_WAIT_WHILE_ADDING_BOUNDARIES",
+    "message": "Aguarde enquanto adicionamos limites",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
     "code": "PLEASE_WAIT_WHILE_UPDATING",
-    "message": "Aguarde enquanto a campanha é atualizada.",
+    "message": "Aguarde enquanto atualiza a campanha",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -15145,7 +15175,7 @@
   },
   {
     "code": "REGION",
-    "message": "Region",
+    "message": "Região",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -15223,7 +15253,7 @@
   },
   {
     "code": "REGISTER_NA",
-    "message": "QUE",
+    "message": "N / D",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -15493,13 +15523,13 @@
   },
   {
     "code": "RESOURCE1",
-    "message": "Rede mosquiteira Grau 1",
+    "message": "Rede mosquiteira grau 1",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "RESOURCE2",
-    "message": "Rede mosquiteira Grau 2",
+    "message": "Rede mosquiteira grau 2",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -15631,7 +15661,7 @@
   },
   {
     "code": "SCHEMA_DEFINITION_NOT_FOUND_ERR",
-    "message": "Esquema não encontrado!",
+    "message": "Esquema não encontrado",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -15709,7 +15739,7 @@
   },
   {
     "code": "SECTION",
-    "message": "Section",
+    "message": "Seção",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -15889,7 +15919,7 @@
   },
   {
     "code": "SOME_ERROR_OCCURED_IN_FETCH_RETRYING",
-    "message": "Erro ao buscar, tentando novamente!",
+    "message": "Erro ao buscar, tentando novamente",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -16045,7 +16075,7 @@
   },
   {
     "code": "SUBMITTING_APP_CONFIG",
-    "message": "Enviando a configuração do aplicativo",
+    "message": "Enviando configuração do aplicativo",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -16285,7 +16315,7 @@
   },
   {
     "code": "TEMPLATE_GENERATION_TIMEOUT",
-    "message": "Falha na geração do modelo. Erro de tempo limite!",
+    "message": "Falha na geração do modelo. Erro de tempo limite",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -16363,7 +16393,7 @@
   },
   {
     "code": "TOWN",
-    "message": "Town",
+    "message": "Cidade",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -16537,7 +16567,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "ID exclusivo do beneficiário",
+    "message": "ID do beneficiário",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -16603,7 +16633,7 @@
   },
   {
     "code": "UPDATE_DATE_CHANGE",
-    "message": "Alterar datas de campanha",
+    "message": "Alterar datas da campanha",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -16789,13 +16819,13 @@
   },
   {
     "code": "VALIDATION_ERROR",
-    "message": "Por favor, insira o nome da campanha.",
+    "message": "Insira o nome da campanha.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
   {
     "code": "VALIDATION_ERROR_CAMPAIGN_ID",
-    "message": "CampaignId não encontrado ou inválido",
+    "message": "ID da campanha não encontrado. Verifique a campanha e tente novamente.",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -16843,7 +16873,7 @@
   },
   {
     "code": "VALIDATION_PREFIX_TEXT_MAX_LENGTH",
-    "message": "O texto do prefixo precisa ter {maxLength} caracteres ou menos",
+    "message": "O texto do prefixo deve ter {maxLength} caracteres ou menos",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -17005,7 +17035,7 @@
   },
   {
     "code": "WBH_BOUNDARY_CREATION_TIMEOUT",
-    "message": "Falha na criação de dados de limite. Erro de tempo limite!",
+    "message": "Falha na criação de dados de limite. Erro de tempo limite",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -17077,7 +17107,7 @@
   },
   {
     "code": "WBH_DOWNLOAD_CURRENT_UNIFIED_DATA",
-    "message": "Baixar planilha unificada atual",
+    "message": "Baixe a planilha atual do microplano",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -17209,7 +17239,7 @@
   },
   {
     "code": "WBH_RECEIVER_TYPE_NA",
-    "message": "QUE",
+    "message": "N / D",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -17239,7 +17269,7 @@
   },
   {
     "code": "WBH_SENDER_TYPE_NA",
-    "message": "QUE",
+    "message": "N / D",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -17329,7 +17359,7 @@
   },
   {
     "code": "WBH_UPLOAD_UNIFIED_DATA",
-    "message": "Carregar arquivo unificado",
+    "message": "Carregar dados do microplano",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -17533,7 +17563,7 @@
   },
   {
     "code": "cycleNumber",
-    "message": "Número do Ciclo",
+    "message": "Número do ciclo",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -17959,7 +17989,7 @@
   },
   {
     "code": "qrscanner",
-    "message": "Scanner QR",
+    "message": "Leitor QR",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -17995,7 +18025,7 @@
   },
   {
     "code": "scanner",
-    "message": "Scanner QR",
+    "message": "Leitor QR",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   },
@@ -18176,6 +18206,222 @@
   {
     "code": "{{fn:getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
     "message": "Remetente",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPCONFIG_CUSTOM_PATTERN",
+    "message": "Lógica personalizada",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APP_CONFIG_PAGE_REDOSEDETAILS",
+    "message": "Refazer detalhes",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CAMPAIGN_ATTENDANCE_REGISTER_ATTENDEE_CREATION_PROCESS",
+    "message": "Criação de registro de presença em andamento",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CAMPAIGN_ATTENDANCE_REGISTER_CREATION_PROCESS",
+    "message": "Criação de registro de presença em andamento",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "Configure options forSelect Status",
+    "message": "Configurar opções para filtros",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FACE_AUTH_GATE_MATCH_LABEL",
+    "message": "Correspondido",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FETCHING_BOUNDARIES",
+    "message": "Buscando limites",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FILE_GENERATION_IN_PROGRESS",
+    "message": "A geração do arquivo está em andamento",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_TARGET_CO-DELIVERY_AGE_3_TO_59",
+    "message": "Meta (3 a 59 meses)",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_TARGET_CO-DELIVERY_AGE_60_TO_180",
+    "message": "Meta (60 a 180 meses)",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_TARGET_CO-DELIVERY_ALBENDAZOLE",
+    "message": "Alvo (Albendazol 400 mg)",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_TARGET_CO-DELIVERY_IVERMETCIN",
+    "message": "Alvo (Ivermetcina 100mg)",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_TARGET_CO-DELIVERY_NOPV2",
+    "message": "Alvo (sem PV2)",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_TARGET_CO-DELIVERY_SPAQ1",
+    "message": "Alvo (SPAQ1)",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_TARGET_CO-DELIVERY_SPAQ2",
+    "message": "Alvo (SPAQ2)",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_TARGET_INT_CAMP_AGE_12_TO_59",
+    "message": "12 a 59 meses",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_TARGET_INT_CAMP_AGE_1_TO_11",
+    "message": "1 a 11 meses",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_TARGET_INT_CAMP_COLUUM_HOUSEHOLD",
+    "message": "Alvo doméstico",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_TARGET_INT_CAMP_COLUUM_PRODUCT",
+    "message": "Destino do produto",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BATCH_ALL_FAILED_MSG",
+    "message": "Todos os registros {{total}} falharam ao criar",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BATCH_CREATING",
+    "message": "Criando lote {{current}} de {{total}}",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BATCH_ERROR_SHEET_DOWNLOADED",
+    "message": "Os registros {{failed}} falharam. Folha de erros baixada.",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BATCH_INTERRUPTED_DETAIL",
+    "message": "{{completed}} de {{total}} lotes concluídos. Os registros {{processed}}/{{totalRecords}} foram processados ​​antes da interrupção.",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BATCH_PARTIAL_FAILURE_MSG",
+    "message": "{{failed}} de {{total}} registros falharam",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BATCH_PARTIAL_FAILURE_TOAST",
+    "message": "Registros {{succeeded}}/{{total}} criados. {{failed}} falhou.",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BATCH_PROCESSING_COMPLETE",
+    "message": "Processamento concluído. Os registros {{failedCount}} falharam.",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BATCH_PROGRESS_LABEL",
+    "message": "Lote {{current}} / {{total}}",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BATCH_RECORDS_STATUS",
+    "message": "Registros {{processed}}/{{total}} processados ​​| {{failed}} falhou",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BATCH_SUCCESS_MSG",
+    "message": "Todos os registros {{total}} criados e verificados com sucesso",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BATCH_VERIFYING",
+    "message": "Verificando lote {{current}} de {{total}} (tentativa {{attempt}}/{{maxAttempts}})",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BENEFICIARY_VISIT_LIST",
+    "message": "Relatório da lista de visitas de beneficiários",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BULK_STOCK_UPLOAD",
+    "message": "Upload de estoque em massa",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_COMMODITY_CAMPAIGNS",
+    "message": "Campanhas de commodities",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ERROR_DELETING_REGISTER",
+    "message": "O registro já foi excluído. Atualize a página.",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "IMMUTABLE_CELL_TAMPERED",
+    "message": "Os valores da planilha pré-preenchida foram adulterados. Baixe novamente e carregue o arquivo válido.",
+    "module": "hcm-campaignmanager",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "LOADING_DASHBOARD_CONFIGURATION",
+    "message": "Carregando configuração do painel",
     "module": "hcm-campaignmanager",
     "locale": "pt_DEMO"
   }

@@ -547,7 +547,7 @@
   },
   {
     "code": "STOCKREPORTS_REPORT_DETAILS_SELECT_WAREHOUSE_LABEL",
-    "message": "Selecione Armazém",
+    "message": "Selecione o armazém",
     "module": "hcm-base-stockreports-oncho",
     "locale": "pt_DEMO"
   },
@@ -931,7 +931,7 @@
   },
   {
     "code": "additionalFields",
-    "message": "Campos Adicionais",
+    "message": "Campos adicionais",
     "module": "hcm-base-stockreports-oncho",
     "locale": "pt_DEMO"
   },
@@ -991,7 +991,7 @@
   },
   {
     "code": "productVariants",
-    "message": "Variantes de produto",
+    "message": "Variantes do produto",
     "module": "hcm-base-stockreports-oncho",
     "locale": "pt_DEMO"
   },
@@ -1075,7 +1075,7 @@
   },
   {
     "code": "selectWarehouseLabel",
-    "message": "Selecione Armazém",
+    "message": "Selecione o armazém",
     "module": "hcm-base-stockreports-oncho",
     "locale": "pt_DEMO"
   },

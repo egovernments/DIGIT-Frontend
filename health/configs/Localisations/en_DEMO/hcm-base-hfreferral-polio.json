@@ -1,5 +1,11 @@
 [
   {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Label",
+    "module": "hcm-base-hfreferral-polio",
+    "locale": "en_DEMO"
+  },
+  {
     "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ1_LABEL",
     "message": "Child evaluated for adverse reaction for the doses?",
     "module": "hcm-base-hfreferral-polio",

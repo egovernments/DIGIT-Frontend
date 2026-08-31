@@ -1024,5 +1024,11 @@
     "message": "Nom de référence",
     "module": "hcm-base-hfreferral-bednet",
     "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Étiquette",
+    "module": "hcm-base-hfreferral-bednet",
+    "locale": "fr_DEMO"
   }
 ]

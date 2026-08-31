@@ -505,7 +505,7 @@
   },
   {
     "code": "REASON_FOR_MARKING_ATTENDANCE_MANUALLY_DESC",
-    "message": "Selecione o motivo da marcação de presença manualmente",
+    "message": "Por favor selecione o motivo da marcação de presença manualmente",
     "module": "hcm-attendance",
     "locale": "pt_DEMO"
   },
@@ -583,7 +583,7 @@
   },
   {
     "code": "SESSION_SELECTION_HEADER",
-    "message": "Selecione a sessão",
+    "message": "Selecione Sessão",
     "module": "hcm-attendance",
     "locale": "pt_DEMO"
   },

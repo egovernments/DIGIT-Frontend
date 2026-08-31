@@ -7,7 +7,7 @@
   },
   {
     "code": "ATTENDANCE_REPORT_HEADER_ATTENDANCE_MARKER",
-    "message": "Marcador de presença",
+    "message": "Marcador de Presença",
     "module": "muster-roll",
     "locale": "pt_DEMO"
   },
@@ -151,7 +151,7 @@
   },
   {
     "code": "ATTENDANCE_REPORT_TOTAL_PERFORMANCE_HEADER",
-    "message": "Métrica de Desempenho",
+    "message": "Métrica de desempenho",
     "module": "muster-roll",
     "locale": "pt_DEMO"
   },
@@ -175,7 +175,7 @@
   },
   {
     "code": "WAREHOUSE_MANAGER",
-    "message": "Warehouse Manager",
+    "message": "Gerente de Armazém",
     "module": "muster-roll",
     "locale": "pt_DEMO"
   }

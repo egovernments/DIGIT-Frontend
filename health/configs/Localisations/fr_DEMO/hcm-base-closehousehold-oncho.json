@@ -43,7 +43,7 @@
   },
   {
     "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
-    "message": "Saisissez les détails du ménage que vous marquez comme fermé.",
+    "message": "Capturez les détails du ménage que vous marquez comme fermé.",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "fr_DEMO"
   },
@@ -205,7 +205,7 @@
   },
   {
     "code": "HCM_CLOSE_HOUSEHOLD_INFO_CARD_TEXT",
-    "message": "Veuillez confirmer que vous vous trouvez bien au domicile indiqué dans le village sélectionné. Vos coordonnées GPS seront enregistrées dans le cadre de la clôture du domicile.",
+    "message": "Confirmez que vous êtes dans le bon foyer dans le village sélectionné. Votre position GPS sera enregistrée dans le cadre de la fermeture du foyer.",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "fr_DEMO"
   },
@@ -362,6 +362,12 @@
   {
     "code": "scanner",
     "message": "Scanner le bon",
+    "module": "hcm-base-closehousehold-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Étiquette",
     "module": "hcm-base-closehousehold-oncho",
     "locale": "fr_DEMO"
   }

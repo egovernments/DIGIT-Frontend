@@ -337,7 +337,7 @@
   },
   {
     "code": "BOUNDARY_DATA_MANAGEMENT",
-    "message": "Gestion des données limites",
+    "message": "Gestion des données de limites",
     "module": "hcm-hr",
     "locale": "fr_DEMO"
   },
@@ -559,7 +559,7 @@
   },
   {
     "code": "CORE_COMMON_NA",
-    "message": "QUE",
+    "message": "N / A",
     "module": "hcm-hr",
     "locale": "fr_DEMO"
   },
@@ -1087,7 +1087,7 @@
   },
   {
     "code": "ERR_HRMS_INVALID_EMP_TYPE",
-    "message": "Type d'employé saisi non valide.",
+    "message": "Type d'employé entré non valide.",
     "module": "hcm-hr",
     "locale": "fr_DEMO"
   },
@@ -1111,7 +1111,7 @@
   },
   {
     "code": "ERR_HRMS_INVALID_MOB_NO",
-    "message": "Numéro de mobile saisi invalide.",
+    "message": "Numéro de mobile saisi incorrect.",
     "module": "hcm-hr",
     "locale": "fr_DEMO"
   },
@@ -1141,7 +1141,7 @@
   },
   {
     "code": "ERR_HRMS_INVALID_SEARCH_ROLES",
-    "message": "Pour la recherche basée sur les rôles, la transmission de l'identifiant du locataire est obligatoire.",
+    "message": "Pour la recherche basée sur les rôles, la transmission de l’identifiant du locataire est obligatoire.",
     "module": "hcm-hr",
     "locale": "fr_DEMO"
   },
@@ -1189,7 +1189,7 @@
   },
   {
     "code": "ERR_HRMS_MISSING_ROLES",
-    "message": "Numéro de mobile saisi invalide.",
+    "message": "Numéro de mobile saisi incorrect.",
     "module": "hcm-hr",
     "locale": "fr_DEMO"
   },
@@ -2113,7 +2113,7 @@
   },
   {
     "code": "HR_EMAIL_PLACEHOLDER",
-    "message": "Entrez l'e-mail",
+    "message": "Entrez votre e-mail",
     "module": "hcm-hr",
     "locale": "fr_DEMO"
   },
@@ -2383,7 +2383,7 @@
   },
   {
     "code": "HR_LOCALITY_CAMPAIGN_NAME_LABEL",
-    "message": "Campagne de localité",
+    "message": "Campagne Locale",
     "module": "hcm-hr",
     "locale": "fr_DEMO"
   },
@@ -2671,7 +2671,7 @@
   },
   {
     "code": "HR_SUMMARY_DEPT_TEST_DEATILS_SUBHEADER",
-    "message": "Détails des tests",
+    "message": "Détails du test",
     "module": "hcm-hr",
     "locale": "fr_DEMO"
   },

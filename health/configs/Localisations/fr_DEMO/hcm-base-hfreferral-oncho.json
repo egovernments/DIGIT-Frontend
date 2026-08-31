@@ -271,7 +271,7 @@
   },
   {
     "code": "HFREFERRAL_FACILITY_DETAILS_hfCoordinator_LABEL",
-    "message": "Référé par (code d'équipe CDD)",
+    "message": "Référé par (code équipe CDD)",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "fr_DEMO"
   },
@@ -1423,7 +1423,7 @@
   },
   {
     "code": "minSearchChars",
-    "message": "Caractères minimaux",
+    "message": "Caractères minimum",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "fr_DEMO"
   },
@@ -1562,6 +1562,12 @@
   {
     "code": "templateCard",
     "message": "Résumé de référence",
+    "module": "hcm-base-hfreferral-oncho",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Étiquette",
     "module": "hcm-base-hfreferral-oncho",
     "locale": "fr_DEMO"
   }

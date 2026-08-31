@@ -175,49 +175,49 @@
   },
   {
     "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Transaction Type",
+    "message": "Transaction type",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_AGE",
-    "message": "Label Pair Age",
+    "message": "Label pair age",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_BATCH_NUMBER",
-    "message": "Label Pair Batch Number",
+    "message": "Label pair batch number",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
-    "message": "Label Pair Category Complaint Model",
+    "message": "Label pair category complaint model",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "Label Pair Category Hfreferralmodel",
+    "message": "Label pair category hfreferralmodel",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
-    "message": "Label Pair Category Household Model",
+    "message": "Label pair category household model",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
-    "message": "Label Pair Category Individual Model",
+    "message": "Label pair category individual model",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Label Pair Category Insidemonitoringmodel",
+    "message": "Label pair category insidemonitoringmodel",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -229,7 +229,7 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
-    "message": "Label Pair Category Lqamodel",
+    "message": "Label pair category lqamodel",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -241,25 +241,25 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Project Beneficiary",
+    "message": "Project beneficiary",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
-    "message": "Label Pair Category Stock Model",
+    "message": "Label pair category stock model",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
-    "message": "User Action",
+    "message": "User action",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMMENTS",
-    "message": "Label Pair Comments",
+    "message": "Label pair comments",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -271,85 +271,85 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Label Pair Complaint Inbox Complaint Area",
+    "message": "Label pair complaint inbox complaint area",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Label Pair Complaint Inbox Complaint Date",
+    "message": "Label pair complaint inbox complaint date",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Label Pair Complaint Inbox Complaint Number",
+    "message": "Label pair complaint inbox complaint number",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
-    "message": "Label Pair Complaint Inbox Complaint Status",
+    "message": "Label pair complaint inbox complaint status",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Label Pair Complaint Inbox Complaint Type",
+    "message": "Label pair complaint inbox complaint type",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Label Pair Complaint View Complainant Contact",
+    "message": "Label pair complaint view complainant contact",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
-    "message": "Label Pair Complaint View Complaints Area",
+    "message": "Label pair complaint view complaints area",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Label Pair Complaint View Complaints Date",
+    "message": "Label pair complaint view complaints date",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Label Pair Complaint View Complaints Number",
+    "message": "Label pair complaint view complaints number",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Label Pair Complaint View Complaints Type",
+    "message": "Label pair complaint view complaints type",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Label Pair Complaint View Complaint",
+    "message": "Label pair complaint view complaint",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "Label Pair Complaint View Complaint Status",
+    "message": "Label pair complaint view complaint status",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Label Pair Date Of Registration",
+    "message": "Label pair date of registration",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_GENDER",
-    "message": "Label Pair Gender",
+    "message": "Label pair gender",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -367,19 +367,19 @@
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
-    "message": "Beneficiary Name",
+    "message": "Beneficiary name",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
-    "message": "Registration Date",
+    "message": "Registration date",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
-    "message": "Head of Household",
+    "message": "Head of household",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -397,25 +397,25 @@
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
-    "message": "Label Pair Household Head Name",
+    "message": "Label pair household head name",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
-    "message": "Label Pair Household Locality",
+    "message": "Label pair household locality",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "Label Pair Id Number",
+    "message": "Label pair id number",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_ID_TYPE",
-    "message": "Label Pair Id Type",
+    "message": "Label pair id type",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -427,97 +427,97 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Label Pair Ihm Summary Children Present",
+    "message": "Label pair ihm summary children present",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Label Pair Ihm Summary Children Vaccinated",
+    "message": "Label pair ihm summary children vaccinated",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Label Pair Ihm Summary Final Comments",
+    "message": "Label pair ihm summary final comments",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
-    "message": "Label Pair Ihm Summary Missed Absent",
+    "message": "Label pair ihm summary missed absent",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
-    "message": "Label Pair Ihm Summary Missed Asleep",
+    "message": "Label pair ihm summary missed asleep",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Label Pair Ihm Summary Missed Not Revisited",
+    "message": "Label pair ihm summary missed not revisited",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Label Pair Ihm Summary Missed Not Visited",
+    "message": "Label pair ihm summary missed not visited",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Label Pair Ihm Summary Missed Other",
+    "message": "Label pair ihm summary missed other",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Label Pair Ihm Summary Missed Refusal",
+    "message": "Label pair ihm summary missed refusal",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
-    "message": "Label Pair Ihm Summary Missed Routine",
+    "message": "Label pair ihm summary missed routine",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Label Pair Ihm Summary Monitoring Date",
+    "message": "Label pair ihm summary monitoring date",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Label Pair Ihm Summary Monitor Designation",
+    "message": "Label pair ihm summary monitor designation",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Label Pair Ihm Summary Monitor Name",
+    "message": "Label pair ihm summary monitor name",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Label Pair Ihm Summary Poorly Covered",
+    "message": "Label pair ihm summary poorly covered",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Label Pair Ihm Summary Settlement Area",
+    "message": "Label pair ihm summary settlement area",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Label Pair Ihm Summary Settlement Type",
+    "message": "Label pair ihm summary settlement type",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -529,7 +529,7 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
-    "message": "Batch Number",
+    "message": "Batch number",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -541,13 +541,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
-    "message": "Expiry Date",
+    "message": "Expiry date",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
-    "message": "MRN Number",
+    "message": "MRN number",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -577,13 +577,13 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Transaction Reason",
+    "message": "Transaction reason",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Label Pair Inventory Transaction Type",
+    "message": "Label pair inventory transaction type",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -595,199 +595,199 @@
   },
   {
     "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
-    "message": "Waybill Number",
+    "message": "Waybill number",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Label Pair Lqa Absence Reason",
+    "message": "Label pair lqa absence reason",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "Label Pair Lqa Afp Awareness",
+    "message": "Label pair lqa afp awareness",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "Label Pair Lqa Afp Case Count",
+    "message": "Label pair lqa afp case count",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Label Pair Lqa Awareness Other",
+    "message": "Label pair lqa awareness other",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Label Pair Lqa Campaign Awareness",
+    "message": "Label pair lqa campaign awareness",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Label Pair Lqa Caregiver Informed",
+    "message": "Label pair lqa caregiver informed",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Label Pair Lqa Children Under 5",
+    "message": "Label pair lqa children under 5",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Label Pair Lqa Child Age Months",
+    "message": "Label pair lqa child age months",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Label Pair Lqa Child Sex",
+    "message": "Label pair lqa child sex",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Label Pair Lqa Cluster Number",
+    "message": "Label pair lqa cluster number",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Label Pair Lqa Finger Marked",
+    "message": "Label pair lqa finger marked",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Label Pair Lqa Lot Number",
+    "message": "Label pair lqa lot number",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "Label Pair Lqa Opv Doses",
+    "message": "Label pair lqa opv doses",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Label Pair Lqa Other Absence Reason",
+    "message": "Label pair lqa other absence reason",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Label Pair Lqa Other Reason Specify",
+    "message": "Label pair lqa other reason specify",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Label Pair Lqa Other Refusal Reason",
+    "message": "Label pair lqa other refusal reason",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Label Pair Lqa Reason Not Marked",
+    "message": "Label pair lqa reason not marked",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Label Pair Lqa Refusal Reason",
+    "message": "Label pair lqa refusal reason",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Label Pair Lqa Settlement Area",
+    "message": "Label pair lqa settlement area",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Label Pair Lqa Surveyor Name",
+    "message": "Label pair lqa surveyor name",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Label Pair Lqa Survey Date",
+    "message": "Label pair lqa survey date",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MEMBER_COUNT",
-    "message": "Label Pair Member Count",
+    "message": "Label pair member count",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MOBILE_NUMBER",
-    "message": "Label Pair Mobile Number",
+    "message": "Label pair mobile number",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "Label Pair Mrn Number",
+    "message": "Label pair MRN number",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
-    "message": "Label Pair Name Of Individual",
+    "message": "Label pair name of individual",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_QUANTITY_RECEIVED",
-    "message": "Label Pair Quantity Received",
+    "message": "Label pair quantity received",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_NAME",
-    "message": "Label Pair Referral Inbox Name",
+    "message": "Label pair referral inbox name",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
-    "message": "Label Pair Referral Inbox Referral Status",
+    "message": "Label pair referral inbox referral status",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
-    "message": "Label Pair Referral Inbox Referral Symptom",
+    "message": "Label pair referral inbox referral symptom",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_RESOURCE",
-    "message": "Label Pair Resource",
+    "message": "Label pair resource",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Label Pair Stock Expiry",
+    "message": "Label pair stock expiry",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "LABEL_PAIR_WAYBILL_NUMBER",
-    "message": "Label Pair Waybill Number",
+    "message": "Label pair waybill number",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -955,7 +955,7 @@
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_PRIMARY_ACTION_LABEL",
-    "message": "Back to home",
+    "message": "Back to Home",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1027,7 +1027,7 @@
   },
   {
     "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_LABEL",
-    "message": "Facility and Product Selection",
+    "message": "Facility and product selection",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1057,7 +1057,7 @@
   },
   {
     "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
-    "message": "Stock on hand = (Stock received + stock returned) \u2212 (stock issued + stock lost + stock damaged)",
+    "message": "Stock on hand = (Stock received + stock returned) − (stock issued + stock lost + stock damaged)",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1213,7 +1213,7 @@
   },
   {
     "code": "manualCount",
-    "message": "Manual Count",
+    "message": "Manual count",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1225,19 +1225,19 @@
   },
   {
     "code": "stockInHand",
-    "message": "Stock in Hand",
+    "message": "Stock in hand",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "stockRecon",
-    "message": "Stock Reconciliation",
+    "message": "Stock reconciliation",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
   {
     "code": "stockReconciliationCard",
-    "message": "Facility and Product Selection",
+    "message": "Facility and product selection",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },
@@ -1249,7 +1249,7 @@
   },
   {
     "code": "stockTable",
-    "message": "Stock Table",
+    "message": "Stock table",
     "module": "hcm-base-stockreconciliation-co-delivery",
     "locale": "en_DEMO"
   },

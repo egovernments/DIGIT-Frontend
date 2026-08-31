@@ -31,37 +31,37 @@
   },
   {
     "code": "ATTENDANCE_CHIEFDOM",
-    "message": "Chiefdom Level",
+    "message": "Nível de chefia",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "ATTENDANCE_COMMUNITY",
-    "message": "Community Level",
+    "message": "Nível comunitário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "ATTENDANCE_COUNCIL",
-    "message": "Council Level",
+    "message": "Nível do Conselho",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "ATTENDANCE_COUNTRY",
-    "message": "Country Level",
+    "message": "Nível do país",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "ATTENDANCE_DISTRICT",
-    "message": "District Level",
+    "message": "Nível Distrital",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "ATTENDANCE_HEALTHFACILITY",
-    "message": "Health facility Level",
+    "message": "Nível do estabelecimento de saúde",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -85,13 +85,13 @@
   },
   {
     "code": "ATTENDANCE_PAYS",
-    "message": "Pays Level",
+    "message": "Nível de pagamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "ATTENDANCE_PHU",
-    "message": "PHU Level",
+    "message": "Nível de UPH",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -103,19 +103,19 @@
   },
   {
     "code": "ATTENDANCE_PROVINCE",
-    "message": "Province Level",
+    "message": "Nível de província",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "ATTENDANCE_REGION",
-    "message": "Region Level",
+    "message": "Nível de região",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "ATTENDANCE_SECTION",
-    "message": "Section Level",
+    "message": "Nível de seção",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -127,7 +127,7 @@
   },
   {
     "code": "ATTENDANCE_SPP/SFD",
-    "message": "SPP/SFD Level",
+    "message": "Nível SPP/SFD",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -139,25 +139,25 @@
   },
   {
     "code": "ATTENDANCE_STATE",
-    "message": "State Level",
+    "message": "Nível estadual",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "ATTENDANCE_TOWN",
-    "message": "Town Level",
+    "message": "Nível da cidade",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "ATTENDANCE_VILLAGE",
-    "message": "Village Level",
+    "message": "Nível da Aldeia",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "ATTENDANCE_WARD",
-    "message": "Ward Level",
+    "message": "Nível da Ala",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -853,7 +853,7 @@
   },
   {
     "code": "HCM_AM_BILL_IS_ALREADY_GENERATED_INFO_MESSAGE",
-    "message": "A fatura já foi gerada para este limite",
+    "message": "A conta já foi gerada para este limite",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1213,7 +1213,7 @@
   },
   {
     "code": "HCM_AM_CHIEFDOM_LEVEL",
-    "message": "Chiefdom Level",
+    "message": "Nível de chefia",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1291,7 +1291,7 @@
   },
   {
     "code": "HCM_AM_COMMUNITY_LEVEL",
-    "message": "Community Level",
+    "message": "Nível comunitário",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1363,13 +1363,13 @@
   },
   {
     "code": "HCM_AM_COUNCIL_LEVEL",
-    "message": "Council Level",
+    "message": "Nível do Conselho",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_COUNTRY_LEVEL",
-    "message": "Country Level",
+    "message": "Nível do país",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1405,7 +1405,7 @@
   },
   {
     "code": "HCM_AM_DISTRICT_LEVEL",
-    "message": "District Level",
+    "message": "Nível Distrital",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1549,13 +1549,13 @@
   },
   {
     "code": "HCM_AM_ENTER_TAG",
-    "message": "Insira a etiqueta",
+    "message": "Digite o código da equipe",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_ENTER_TEAM_CODE",
-    "message": "Insira o código da etiqueta",
+    "message": "Digite o código da equipe",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1633,13 +1633,13 @@
   },
   {
     "code": "HCM_AM_FOOD",
-    "message": "Remuneração",
+    "message": "Subsídio Alimentar",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_FOOD_ALLOWANCE",
-    "message": "Subsídio de alimentação",
+    "message": "Subsídio Alimentar",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1723,7 +1723,7 @@
   },
   {
     "code": "HCM_AM_HEALTHFACILITY_LEVEL",
-    "message": "Health facility Level",
+    "message": "Nível do estabelecimento de saúde",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1753,13 +1753,13 @@
   },
   {
     "code": "HCM_AM_INFO_TAG_CODE_MSG",
-    "message": "Quer preencher o Tag Code? Se sim, pressione Enter Tag. Caso contrário, atribua-o.",
+    "message": "Quer preencher o Código da Equipe? Se sim, pressione Digitar código da equipe. Caso contrário, atribua-o.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_INITIATED_INFO_MESSAGE",
-    "message": "A fatura já foi gerada para este limite",
+    "message": "A conta já foi gerada para este limite",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -1831,7 +1831,7 @@
   },
   {
     "code": "HCM_AM_MANAGE_BILLS_DESCRIPTION",
-    "message": "Verifique faturas recém-enviadas, revise aquelas já verificadas, edite detalhes quando necessário, baixe cópias para seus registros e envie faturas para aprovação.  Mantenha-se organizado e garanta que todas as faturas sejam processadas sem problemas durante o processo de revisão.",
+    "message": "Verifique faturas recém-enviadas, revise aquelas já verificadas, edite detalhes quando necessário, baixe cópias para seus registros e envie faturas para aprovação.  Mantenha-se organizado e garanta que cada fatura seja processada sem problemas durante o processo de revisão.",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2215,7 +2215,7 @@
   },
   {
     "code": "HCM_AM_PAYS_LEVEL",
-    "message": "Pays Level",
+    "message": "Nível de pagamento",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2299,13 +2299,13 @@
   },
   {
     "code": "HCM_AM_PER_DAY",
-    "message": "diárias",
+    "message": "Diárias",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_PHU_LEVEL",
-    "message": "PHU Level",
+    "message": "Nível de UPH",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2389,7 +2389,7 @@
   },
   {
     "code": "HCM_AM_PROVINCE_LEVEL",
-    "message": "Province Level",
+    "message": "Nível de província",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2401,7 +2401,7 @@
   },
   {
     "code": "HCM_AM_REGION_LEVEL",
-    "message": "Region Level",
+    "message": "Nível de região",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2515,7 +2515,7 @@
   },
   {
     "code": "HCM_AM_SECTION_LEVEL",
-    "message": "Section Level",
+    "message": "Nível de seção",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2629,13 +2629,13 @@
   },
   {
     "code": "HCM_AM_SPP/SFD_LEVEL",
-    "message": "SPP/SFD Level",
+    "message": "Nível SPP/SFD",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
   {
     "code": "HCM_AM_STATE_LEVEL",
-    "message": "State Level",
+    "message": "Nível estadual",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2677,7 +2677,7 @@
   },
   {
     "code": "HCM_AM_TAG_LABEL",
-    "message": "Código de etiqueta",
+    "message": "Código da equipe",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2731,7 +2731,7 @@
   },
   {
     "code": "HCM_AM_TOWN_LEVEL",
-    "message": "Town Level",
+    "message": "Nível da cidade",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2875,7 +2875,7 @@
   },
   {
     "code": "HCM_AM_VIEW_BILL",
-    "message": "Ver conta",
+    "message": "Ver fatura",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2941,7 +2941,7 @@
   },
   {
     "code": "HCM_AM_VILLAGE_LEVEL",
-    "message": "Village Level",
+    "message": "Nível da Aldeia",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -2965,7 +2965,7 @@
   },
   {
     "code": "HCM_AM_WARD_LEVEL",
-    "message": "Ward Level",
+    "message": "Nível da Ala",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3013,7 +3013,7 @@
   },
   {
     "code": "HCM_HIERARCHY_TYPE_BREADCRUMB",
-    "message": "Selecione a hierarquia",
+    "message": "Selecione hierarquia",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3043,7 +3043,7 @@
   },
   {
     "code": "HEALTH_FACILITY_WORKER",
-    "message": "Trabalhador de unidade de saúde",
+    "message": "Trabalhador de estabelecimento de saúde",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3067,7 +3067,7 @@
   },
   {
     "code": "LOADING",
-    "message": "Loading...",
+    "message": "Carregando...",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3265,7 +3265,7 @@
   },
   {
     "code": "PDF_STATIC_LABEL_PYMT_ADV_PREPARED_BY",
-    "message": "Aviso de pagamento elaborado por",
+    "message": "Aviso de pagamento preparado por",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   },
@@ -3416,6 +3416,48 @@
   {
     "code": "view-attendance",
     "message": "Ver presença",
+    "module": "hcm-payments",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_CENTRE",
+    "message": "Nível Central",
+    "module": "hcm-payments",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CAMPAIGN_SUPERVISOR",
+    "message": "Supervisor de Campanha",
+    "module": "hcm-payments",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_AM_CENTRE_LEVEL",
+    "message": "Nível Central",
+    "module": "hcm-payments",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PAYMENT_APPROVER",
+    "message": "Aprovador de pagamento",
+    "module": "hcm-payments",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PAYMENT_EDITOR",
+    "message": "Editor de pagamentos",
+    "module": "hcm-payments",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PAYMENT_REVIEWER",
+    "message": "Revisor de pagamentos",
+    "module": "hcm-payments",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TEAM_SUPERVISOR",
+    "message": "Supervisor de Equipe",
     "module": "hcm-payments",
     "locale": "pt_DEMO"
   }

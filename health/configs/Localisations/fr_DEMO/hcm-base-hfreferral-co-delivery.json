@@ -43,7 +43,7 @@
   },
   {
     "code": "ACTION_UNIFIED_UPLOAD_SCREEN",
-    "message": "Télécharger un fichier unifié",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -79,7 +79,7 @@
   },
   {
     "code": "ADD_HEADER_LOCALIZATION",
-    "message": "Ajouter une étiquette",
+    "message": "Étiquette",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -241,7 +241,7 @@
   },
   {
     "code": "APPCONFIG_MIN_LESS_EQUAL_MAX.COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -331,7 +331,7 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_ALERT_DESCRIPTION",
-    "message": "En fonction des réponses, vous allez à « {value} ». Êtes-vous sûr de vouloir continuer ?",
+    "message": "En fonction des réponses, vous allez vers '{value}'. Êtes-vous sûr de vouloir continuer ?",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -403,13 +403,13 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_DESCRIPTION",
-    "message": "Demandez au soignant si l'enfant a présenté des symptômes inhabituels après avoir pris SPAQ au cours du cycle précédent, tels qu'une éruption cutanée, des vomissements, de la diarrhée ou tout signe de réaction allergique.",
+    "message": "Demandez à la personne qui s'occupe de vous si l'enfant a présenté des symptômes inhabituels après avoir pris les médicaments au cours du cycle précédent, tels qu'une éruption cutanée, des vomissements, de la diarrhée ou tout signe de réaction allergique.",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL",
-    "message": "Y a-t-il des effets secondaires avec le SPAQ administré lors du dernier cycle ?",
+    "message": "Y a-t-il des effets secondaires aux médicaments administrés lors du dernier cycle ?",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -421,13 +421,13 @@
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_DESCRIPTION",
-    "message": "Confirmez si l'enfant a reçu un médicament contenant de la sulfadoxine-pyriméthamine (SP) ou du cotrimoxazole (CTX) au cours des 28 derniers jours, que ce soit pour la prévention ou le traitement de maladies.",
+    "message": "Confirmez si l'enfant a reçu des médicaments au cours des 28 derniers jours, que ce soit pour la prévention ou le traitement de maladies.",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL",
-    "message": "L'enfant a pris des médicaments contenant du SP ou du CTX au cours des 28 derniers jours ?",
+    "message": "L'enfant a pris des comprimés au cours des 28 derniers jours ?",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -769,7 +769,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_surnameOfIndividual",
-    "message": "Nom de famille de la personne",
+    "message": "Nom de la personne",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -889,7 +889,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode_helpText",
-    "message": "Entrez le code postal de la région (Code PIN)",
+    "message": "Entrez le code postal de la région (code PIN)",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1117,7 +1117,7 @@
   },
   {
     "code": "APPONE_REGISTRATION_HOUSEDETAILS_label_weight",
-    "message": "Poids (en Kgs)",
+    "message": "Poids (en kg)",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1375,7 +1375,7 @@
   },
   {
     "code": "APP_CONFIG_CATEGORY_REDOSE",
-    "message": "Redose",
+    "message": "Redoser",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -1585,7 +1585,7 @@
   },
   {
     "code": "APP_CONFIG_FLOW_REDOSE",
-    "message": "Redose",
+    "message": "Redoser",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -2239,7 +2239,7 @@
   },
   {
     "code": "BENEFICIARY",
-    "message": "Bénéficiaire",
+    "message": "Nom du bénéficiaire",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -2971,13 +2971,13 @@
   },
   {
     "code": "ComplaintModel. COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "ComplaintModel.COMPLAINT_INBOX_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3013,7 +3013,7 @@
   },
   {
     "code": "ComplaintModel.COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Numéro de téléphone",
+    "message": "Numéro de contact",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3349,7 +3349,7 @@
   },
   {
     "code": "DIGIT_LOC_SELECT_MODULE_LABEL",
-    "message": "Sélectionner un module",
+    "message": "Sélectionnez le module",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3409,13 +3409,13 @@
   },
   {
     "code": "DRUG_SE_CC",
-    "message": "Effet secondaire du médicament du cycle actuel",
+    "message": "Effet secondaire du médicament (cycle actuel)",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "DRUG_SE_PC",
-    "message": "Effet secondaire du médicament du cycle précédent",
+    "message": "Effet secondaire du médicament (cycle précédent)",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3481,7 +3481,7 @@
   },
   {
     "code": "ENTER_FIELD_LABEL",
-    "message": "Entrez l'étiquette du champ",
+    "message": "Entrez le libellé du champ",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3499,7 +3499,7 @@
   },
   {
     "code": "ENTER_VALID_FILE",
-    "message": "Veuillez saisir un fichier valide",
+    "message": "Veuillez entrer un fichier valide",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -3547,7 +3547,7 @@
   },
   {
     "code": "ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT",
-    "message": "Le fichier unifié comprendra toutes les fiches des installations, des utilisateurs et des cibles.",
+    "message": "Le fichier unifié comprendra toutes les fiches d'installation, d'utilisateur et de cible.",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4231,7 +4231,7 @@
   },
   {
     "code": "HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA",
-    "message": "Télécharger des données unifiées",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4375,7 +4375,7 @@
   },
   {
     "code": "HCM_MAP_USERS_TO_REGISTERS_DESC",
-    "message": "Affectez les utilisateurs de la campagne aux registres de présence pour activer le suivi des présences.",
+    "message": "Affectez les utilisateurs de la campagne aux registres de présence pour permettre le suivi des présences.",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4651,7 +4651,7 @@
   },
   {
     "code": "HCM_UNIFIED_DATA_MESSAGE",
-    "message": "Le fichier unifié comprendra toutes les fiches des installations, des utilisateurs et des cibles.",
+    "message": "Le fichier unifié comprendra toutes les fiches d'installation, d'utilisateur et de cible.",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4675,7 +4675,7 @@
   },
   {
     "code": "HCM_UPLOAD_DATA_HEADING",
-    "message": "Télécharger les données du microplan",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4705,7 +4705,7 @@
   },
   {
     "code": "HCM_UPLOAD_UNIFIED_DATA_HEADING",
-    "message": "Télécharger des données unifiées",
+    "message": "Télécharger les données Microplan",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4831,7 +4831,7 @@
   },
   {
     "code": "HFREFERRAL_REFERRAL_CREATE_administrativeArea_ERROR",
-    "message": "Une unité administrative est requise",
+    "message": "L'unité administrative est requise",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -4879,7 +4879,7 @@
   },
   {
     "code": "HFREFERRAL_REFERRAL_CREATE_feverQ5_ERROR",
-    "message": "Veuillez indiquer si l'enfant a reçu du SPAQ ce cycle",
+    "message": "Veuillez indiquer si l'enfant a reçu des médicaments ce cycle",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5107,7 +5107,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ1_LABEL",
-    "message": "Enfant évalué pour effet indésirable pour SP et AQ ?",
+    "message": "Enfant évalué pour une réaction indésirable aux comprimés donnés ?",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5209,7 +5209,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ5_LABEL",
-    "message": "Un enfant avec un test de paludisme négatif a reçu du SPAQ au cours de ce cycle ?",
+    "message": "Un enfant avec un test de paludisme négatif a-t-il reçu des médicaments au cours de ce cycle ?",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5257,7 +5257,7 @@
   },
   {
     "code": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ1_LABEL",
-    "message": "Enfant évalué pour effet indésirable pour SP et AQ ?",
+    "message": "Enfant évalué pour une réaction indésirable aux comprimés donnés ?",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5689,7 +5689,7 @@
   },
   {
     "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5851,43 +5851,43 @@
   },
   {
     "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
-    "message": "Modèle de plainte de catégorie de paire d'étiquettes",
+    "message": "Modèle de réclamation de catégorie de paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "Catégorie de paire d'étiquettes Hfreferralmodel",
+    "message": "Catégorie de paire d'étiquettes hfreferralmodel",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
-    "message": "Catégorie de paire d'étiquettes Modèle de ménage",
+    "message": "Modèle de ménage de catégorie de paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
-    "message": "Catégorie de paire d'étiquettes Modèle individuel",
+    "message": "Modèle individuel de catégorie de paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Catégorie de paire d'étiquettesModèle de surveillance intérieur",
+    "message": "Catégorie de paire d'étiquettes à l'intérieur du modèle de surveillance",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
-    "message": "Catégorie de paire d'étiquettes Lqamodel",
+    "message": "Catégorie de paire d'étiquettes lqamodel",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
-    "message": "Catégorie de paire d'étiquettes Modèle de stock",
+    "message": "Modèle de stock de catégorie de paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5899,7 +5899,7 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Zone de réclamation",
+    "message": "Espace réclamation",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -5929,73 +5929,73 @@
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Zone de réclamation de la boîte de réception des plaintes concernant les paires d'étiquettes",
+    "message": "Zone de réclamation de la boîte de réception des réclamations pour les paires d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Paire d'étiquettes Boîte de réception de la plainte Date de la plainte",
+    "message": "Date de la réclamation dans la boîte de réception de la réclamation pour la paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Paire d'étiquettes Boîte de réception de la plainte Numéro de plainte",
+    "message": "Numéro de réclamation de la boîte de réception de la réclamation de la paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
-    "message": "Statut de la plainte dans la boîte de réception des plaintes concernant les paires d'étiquettes",
+    "message": "État de la réclamation dans la boîte de réception des réclamations pour les paires d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.",
+    "message": "Type de réclamation de la boîte de réception des réclamations pour les paires d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Paire d'étiquettes Voir la plainte Contact du plaignant",
+    "message": "Vue de la réclamation de la paire d'étiquettes Contact du plaignant",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
-    "message": "Plainte sur les paires d'étiquettes Voir la zone des plaintes",
+    "message": "Zone de réclamation de la vue des réclamations de la paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Paire d'étiquettes Plainte Afficher la date des plaintes",
+    "message": "Réclamation de paire d'étiquettes Afficher la date des réclamations",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Paire d'étiquettes Plainte Afficher le numéro de plainte",
+    "message": "Paire d'étiquettes Voir la réclamation Numéro de réclamation",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Paire d'étiquettes Voir la plainte Type de plainte",
+    "message": "Type de réclamation de vue de réclamation de paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Plainte sur les paires d'étiquettes Voir la plainte",
+    "message": "Réclamation de paire d'étiquettes Afficher la réclamation",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "Réclamation relative à une paire d'étiquettes Afficher l'état de la réclamation",
+    "message": "Réclamation de paire d'étiquettes Afficher l'état de la réclamation",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6037,13 +6037,13 @@
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
-    "message": "Paire d'étiquettes Nom du chef de ménage",
+    "message": "Nom du chef de famille de la paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
-    "message": "Paire d'étiquettes Localité du ménage",
+    "message": "Localité du foyer de la paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6073,97 +6073,97 @@
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Paire d'étiquettes Ihm Résumé Enfants présents",
+    "message": "Paire d'étiquettes résumé ihm enfants présents",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Paire d'étiquettes Ihm Résumé Enfants vaccinés",
+    "message": "Paire d'étiquettes résumé ihm enfants vaccinés",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Paire d'étiquettes Résumé Ihm Commentaires finaux",
+    "message": "Paire d'étiquettes Résumé ihm Commentaires finaux",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
-    "message": "Paire d'étiquettes Résumé Ihm Manqué Absent",
+    "message": "Paire d'étiquettes Résumé IHM manqué absent",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
-    "message": "Paire d'étiquettes Ihm Résumé Missed Endormi",
+    "message": "Paire d'étiquettes Résumé IHM manqué de sommeil",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Paire d'étiquettes Résumé Ihm Manqué Non Revisité",
+    "message": "Paire d'étiquettes Résumé IHM manqué non revisité",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Paire d'étiquettes Résumé Ihm Manqué Non visité",
+    "message": "Paire d'étiquettes Résumé IHM manqué non visité",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Paire d'étiquettes Résumé Ihm Manqué Autre",
+    "message": "Paire d'étiquettes Résumé IHM manqué Autre",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Paire d'étiquettes Ihm Résumé Refus manqué",
+    "message": "Paire d'étiquettes résumé ihm refus manqué",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
-    "message": "Paire d'étiquettes Résumé Ihm Routine manquée",
+    "message": "Paire d'étiquettes Résumé ihm Routine manquée",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Paire d'étiquettes Ihm Résumé Date de surveillance",
+    "message": "Paire d'étiquettes date de surveillance récapitulative ihm",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Paire d'étiquettes Résumé Ihm Désignation du moniteur",
+    "message": "Paire d'étiquettes Désignation récapitulative du moniteur ihm",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Paire d'étiquettes Résumé Ihm Nom du moniteur",
+    "message": "Paire d'étiquettes Résumé IHM Nom du moniteur",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Paire d'étiquettes Résumé Ihm mal couvert",
+    "message": "Résumé de la paire d'étiquettes ihm mal couvert",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Paire d'étiquettes Ihm Sommaire Zone de règlement",
+    "message": "Paire d'étiquettes zone de peuplement récapitulative ihm",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Paire d'étiquettes Ihm Type de règlement récapitulatif",
+    "message": "Paire d'étiquettes Type de règlement récapitulatif ihm",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6199,133 +6199,133 @@
   },
   {
     "code": "LABEL_PAIR_LOCALITY",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Paire d'étiquettes Lqa Raison d'absence",
+    "message": "Paire d'étiquettes motif d'absence lqa",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "Paire d'étiquettes Lqa Afp Sensibilisation",
+    "message": "Paire d'étiquettes sensibilisation à lqa et afp",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "Paire d'étiquettes Lqa Afp Nombre de cas",
+    "message": "Nombre de cas lqa afp pour la paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Paire d'étiquettes Sensibilisation Lqa Autre",
+    "message": "Paire d'étiquettes sensibilisation à la lqa autre",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Sensibilisation à la campagne Lqa de la paire d'étiquettes",
+    "message": "Sensibilisation à la campagne LQA pour la paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Paire d'étiquettes Lqa Soignant informé",
+    "message": "Paire d'étiquettes lqa soignant informé",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Paire d'étiquettes Lqa Enfants de moins de 5 ans",
+    "message": "Paire d'étiquettes lqa enfants de moins de 5 ans",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Paire d'étiquettes Lqa Âge de l'enfant Mois",
+    "message": "Paire d'étiquettes lqa âge enfant mois",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Étiquette Paire Lqa Sexe Enfant",
+    "message": "Paire d'étiquettes sexe d'enfant lqa",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Numéro de cluster Lqa de la paire d'étiquettes",
+    "message": "Numéro de cluster LQA de la paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Paire d'étiquettes Lqa marquées au doigt",
+    "message": "Paire d'étiquettes marquées au doigt LQA",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Paire d'étiquettes Numéro de lot Lqa",
+    "message": "Paire d'étiquettes numéro de lot lqa",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "Paire d'étiquettes Doses Lqa Opv",
+    "message": "Paire d'étiquettes doses lqa opv",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Libellé Paire Lqa Autre Raison Absence",
+    "message": "Paire d'étiquettes lqa autre motif d'absence",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Paire d'étiquettes Lqa Autre raison à préciser",
+    "message": "Paire d'étiquettes lqa, autre raison à préciser",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Paire d'étiquettes Lqa Autre motif de refus",
+    "message": "Paire d'étiquettes lqa autre motif de refus",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Paire d'étiquettes Raison Lqa non marquée",
+    "message": "La raison de la paire d'étiquettes LQA n'est pas marquée",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Raison du refus de la paire d'étiquettes Lqa",
+    "message": "Raison du refus de la paire d'étiquettes LQA",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Paire d'étiquettes Zone de règlement Lqa",
+    "message": "Paire d'étiquettes zone de peuplement lqa",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Paire d'étiquettes Lqa Nom de l'arpenteur",
+    "message": "Paire d'étiquettes Nom de l'arpenteur LQA",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Date de l'enquête Lqa pour la paire d'étiquettes",
+    "message": "Date de l'enquête LQA de la paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6355,13 +6355,13 @@
   },
   {
     "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "Numéro Mrn de la paire d'étiquettes",
+    "message": "Numéro MRN de la paire d'étiquettes",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
-    "message": "Paire d'étiquettes Nom de l'individu",
+    "message": "Nom de la paire d'étiquettes de l'individu",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6391,7 +6391,7 @@
   },
   {
     "code": "LABEL_PAIR_REFERRALNAME",
-    "message": "Nom de la référence",
+    "message": "Nom de référence",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6457,7 +6457,7 @@
   },
   {
     "code": "LABEL_PAIR_TRANSACTIONTYPE",
-    "message": "Type de transaction",
+    "message": "Type d'opération",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6475,7 +6475,7 @@
   },
   {
     "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
-    "message": "Zone de réclamation",
+    "message": "Espace réclamation",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6541,7 +6541,7 @@
   },
   {
     "code": "LOADING_MODULE",
-    "message": "Chargement du module",
+    "message": "Module de chargement",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6583,7 +6583,7 @@
   },
   {
     "code": "LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Le soignant informé",
+    "message": "Soignant informé",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6649,7 +6649,7 @@
   },
   {
     "code": "LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Raison non marquée",
+    "message": "Raison non indiquée",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6661,7 +6661,7 @@
   },
   {
     "code": "LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Zone de règlement",
+    "message": "Zone de peuplement",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -6805,7 +6805,7 @@
   },
   {
     "code": "MODULE_DESCRIPTION_INVENTORY",
-    "message": "Suivez et mettez à jour les niveaux de stock de ressources à chaque point de distribution. Enregistrez les réceptions, les problèmes, la consommation et les pertes pour maintenir une visibilité précise des médicaments tout au long de la campagne.",
+    "message": "Suivez et mettez à jour les niveaux de stock de ressources à chaque point de distribution. Enregistrez les réceptions, les sorties, la consommation et les pertes pour maintenir une visibilité précise des médicaments tout au long de la campagne.",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7417,7 +7417,7 @@
   },
   {
     "code": "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED",
-    "message": "Une unité administrative est requise",
+    "message": "L'unité administrative est requise",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -7669,7 +7669,7 @@
   },
   {
     "code": "RESOURCE2",
-    "message": "Filet de lit grade 2",
+    "message": "Moustiquaire grade 2",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8443,7 +8443,7 @@
   },
   {
     "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Identifiant unique du bénéficiaire",
+    "message": "Identifiant du bénéficiaire",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8509,7 +8509,7 @@
   },
   {
     "code": "VALIDATION_CONDITIONAL_FIELD_LOCALIZED_EMPTY",
-    "message": "La localisation de {{fieldName}} est vide pour {{toggleName}}",
+    "message": "La localisation {{fieldName}} est vide pour {{toggleName}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8521,7 +8521,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTIONS_REQUIRED",
-    "message": "Les options de la liste déroulante sont requises pour le champ {{fieldName}}",
+    "message": "Les options de liste déroulante sont obligatoires pour le champ {{fieldName}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8533,7 +8533,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY",
-    "message": "L'étiquette de l'option de la liste déroulante est vide pour le champ {{fieldName}}",
+    "message": "Le libellé de l'option déroulante est vide pour le champ {{fieldName}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8545,7 +8545,7 @@
   },
   {
     "code": "VALIDATION_DROPDOWN_OPTION_NAME_REQUIRED",
-    "message": "Le nom de l'option de la liste déroulante est requis pour le champ {{fieldName}}",
+    "message": "Le nom de l'option déroulante est obligatoire pour le champ {{fieldName}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8581,19 +8581,19 @@
   },
   {
     "code": "VALIDATION_MANDATORY_FIELD_LOCALIZED_EMPTY",
-    "message": "La localisation de {{propertyName}} est vide pour le champ {{fieldName}}",
+    "message": "La localisation {{propertyName}} est vide pour le champ {{fieldName}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_BODY_LABEL_EMPTY",
-    "message": "L'étiquette du corps de la fenêtre contextuelle est vide pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Le libellé du corps de la fenêtre contextuelle est vide pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_DROPDOWN_OPTIONS_REQUIRED",
-    "message": "Les options de la liste déroulante sont requises pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Les options de liste déroulante sont requises pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8605,7 +8605,7 @@
   },
   {
     "code": "VALIDATION_POPUP_FOOTER_LABEL_EMPTY",
-    "message": "L'étiquette de pied de page de la fenêtre contextuelle {{index}} est vide pour le champ {{fieldName}}",
+    "message": "Le libellé du pied de page contextuel {{index}} est vide pour le champ {{fieldName}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8617,13 +8617,13 @@
   },
   {
     "code": "VALIDATION_POPUP_OPTION_LOCALIZED_VALUE_EMPTY",
-    "message": "L'étiquette de l'option est vide pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Le libellé de l'option est vide pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_RADIO_OPTIONS_REQUIRED",
-    "message": "Les options du bouton radio sont requises pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Les options radio sont obligatoires pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8635,19 +8635,19 @@
   },
   {
     "code": "VALIDATION_POPUP_TABLE_COLUMNS_REQUIRED",
-    "message": "Les colonnes du tableau sont requises pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "Les colonnes du tableau sont obligatoires pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_TABLE_COLUMN_HEADER_EMPTY",
-    "message": "L'en-tête de la colonne du tableau est vide pour {{popupField}} dans le champ {{fieldName}}",
+    "message": "L'en-tête de colonne du tableau est vide pour {{popupField}} dans le champ {{fieldName}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_POPUP_TITLE_EMPTY",
-    "message": "Le titre de la fenêtre contextuelle est vide pour le champ {{fieldName}}",
+    "message": "Le titre de la popup est vide pour le champ {{fieldName}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8671,19 +8671,19 @@
   },
   {
     "code": "VALIDATION_TABLE_COLUMN_HEADER_EMPTY",
-    "message": "L'en-tête de la colonne du tableau est vide pour le champ {{fieldName}}",
+    "message": "L'en-tête de colonne du tableau est vide pour le champ {{fieldName}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_TOGGLE_LOCALIZED_VALUE_EMPTY",
-    "message": "La localisation de {{fieldName}} est vide",
+    "message": "La localisation {{fieldName}} est vide",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "VALIDATION_TOGGLE_VALUE_REQUIRED",
-    "message": "La valeur de {{fieldName}} est requise",
+    "message": "La valeur {{fieldName}} est requise",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8737,7 +8737,7 @@
   },
   {
     "code": "actionButton",
-    "message": "Soumettre",
+    "message": "Retourner",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8833,7 +8833,7 @@
   },
   {
     "code": "advanced.dropdownTemplate",
-    "message": "Modèle déroulant",
+    "message": "Modèle de liste déroulante",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8851,13 +8851,13 @@
   },
   {
     "code": "advanced.facilityFromWhich",
-    "message": "Établissement à partir de",
+    "message": "Installation à partir de",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "advanced.facilityToWhich",
-    "message": "Installation à",
+    "message": "Facilité de",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8869,7 +8869,7 @@
   },
   {
     "code": "advanced.idPopulator",
-    "message": "Populateur d'identifiants",
+    "message": "remplisseur d'identifiants",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8911,7 +8911,7 @@
   },
   {
     "code": "advanced.panelCard",
-    "message": "Carte de panneau",
+    "message": "Carte panneau",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8941,7 +8941,7 @@
   },
   {
     "code": "advanced.resourceCard",
-    "message": "Carte de ressources",
+    "message": "Carte ressource",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -8965,7 +8965,7 @@
   },
   {
     "code": "advanced.searchByID",
-    "message": "Rechercher par pièce d'identité",
+    "message": "Rechercher par identifiant",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9205,7 +9205,7 @@
   },
   {
     "code": "clientReferenceId",
-    "message": "ID de référence client",
+    "message": "Identifiant de référence client",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9415,7 +9415,7 @@
   },
   {
     "code": "dropdownTemplate",
-    "message": "Modèle déroulant",
+    "message": "Modèle de liste déroulante",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9493,7 +9493,7 @@
   },
   {
     "code": "facilityFromWhich",
-    "message": "Établissement à partir de",
+    "message": "Installation à partir de",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9535,7 +9535,7 @@
   },
   {
     "code": "feverQ5",
-    "message": "L’enfant avec un test de paludisme négatif a-t-il reçu du SPAQ au cours de ce cycle ?",
+    "message": "L’enfant dont le test de paludisme est négatif a-t-il reçu des médicaments au cours de ce cycle ?",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9619,7 +9619,7 @@
   },
   {
     "code": "hfCoordinator",
-    "message": "Référé par (code d'équipe CDD)",
+    "message": "Référé par (code équipe CDD)",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9649,13 +9649,13 @@
   },
   {
     "code": "idPopulator",
-    "message": "Populateur d'identifiants",
+    "message": "remplisseur d'identifiants",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "idSearch",
-    "message": "Recherche d'identité",
+    "message": "recherche d'identité",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9745,7 +9745,7 @@
   },
   {
     "code": "listViewMembers",
-    "message": "Afficher les membres",
+    "message": "Voir les membres",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9805,7 +9805,7 @@
   },
   {
     "code": "minSearchChars",
-    "message": "Caractères minimaux",
+    "message": "Caractères minimum",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9877,13 +9877,13 @@
   },
   {
     "code": "overviewLabelPairCard",
-    "message": "Aperçu Détails",
+    "message": "Détails de l'aperçu",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "panelCard",
-    "message": "Carte de panneau",
+    "message": "Carte panneau",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9925,7 +9925,7 @@
   },
   {
     "code": "proximitySeach",
-    "message": "Recherche par proximité",
+    "message": "Rechercher par proximité",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -9973,13 +9973,13 @@
   },
   {
     "code": "redoseButton",
-    "message": "Redose",
+    "message": "Redoser",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
   {
     "code": "redoseComments",
-    "message": "Commentaires sur Redose",
+    "message": "Redoser les commentaires",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -10021,7 +10021,7 @@
   },
   {
     "code": "referralName",
-    "message": "Nom de la référence",
+    "message": "Nom de référence",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -10075,7 +10075,7 @@
   },
   {
     "code": "rowVersion",
-    "message": "Version de ligne",
+    "message": "Version en ligne",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -10195,7 +10195,7 @@
   },
   {
     "code": "sideEffectPQ1",
-    "message": "L'enfant a-t-il été évalué pour déceler des effets indésirables au SP et à l'AQ ?",
+    "message": "L'enfant a-t-il été évalué pour déceler des effets indésirables liés aux comprimés administrés ?",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -10213,7 +10213,7 @@
   },
   {
     "code": "sideEffectQ1",
-    "message": "L'enfant a-t-il été évalué pour déceler des effets indésirables au SP et à l'AQ ?",
+    "message": "L'enfant a-t-il été évalué pour déceler des effets indésirables aux comprimés administrés ?",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   },
@@ -10406,6 +10406,156 @@
   {
     "code": "{{fn:getTransactingPartyLabelByEntryType(item.additionalFields.fields.stockEntryType)}}",
     "message": "Expéditeur",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_MANAGESTOCK_WAREHOUSE_label_dateOfReceipt",
+    "message": "Date de réception",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_ITEMMODEL",
+    "message": "Article",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_NAVIGATIONMODEL",
+    "message": "Navigation",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
+    "message": "Bénéficiaire du projet",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
+    "message": "Action de l'utilisateur",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
+    "message": "Âge",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
+    "message": "Genre",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
+    "message": "Nom du bénéficiaire",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
+    "message": "Date d'inscription",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
+    "message": "Chef de famille",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
+    "message": "Règlement",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+    "message": "Source",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_BATCH_LABEL",
+    "message": "Lot",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
+    "message": "Numéro de lot",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_COMMENTS_LABEL",
+    "message": "Commentaires",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
+    "message": "Expiration",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
+    "message": "Numéro MRN",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_QUANTITY_LABEL",
+    "message": "Quantité",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_RESOURCE_LABEL",
+    "message": "Ressource",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_SENDER_LABEL",
+    "message": "Expéditeur",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_SKU_LABEL",
+    "message": "UGS",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
+    "message": "Motif de la transaction",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
+    "message": "Lettre de transport",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
+    "message": "Numéro de lettre de transport",
+    "module": "hcm-base-hfreferral-co-delivery",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+    "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
     "module": "hcm-base-hfreferral-co-delivery",
     "locale": "fr_DEMO"
   }
