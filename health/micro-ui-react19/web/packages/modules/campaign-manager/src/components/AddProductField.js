@@ -92,7 +92,7 @@ const AddProductField = ({ onSelect }) => {
               <div
                 className="product-label-field"
                 style={{
-                  width: "19rem",
+                  width: "10rem",
                   flexShrink: 0,
                   display: "flex",
                   wordBreak: "break-word",
@@ -115,7 +115,7 @@ const AddProductField = ({ onSelect }) => {
               <div
                 className="product-label-field"
                 style={{
-                  width: "19rem",
+                  width: "10rem",
                   flexShrink: 0,
                   display: "flex",
                   wordBreak: "break-word",
@@ -141,7 +141,7 @@ const AddProductField = ({ onSelect }) => {
               <div
                 className="product-label-field"
                 style={{
-                  width: "19rem",
+                  width: "10rem",
                   flexShrink: 0,
                   display: "flex",
                   wordBreak: "break-word",
