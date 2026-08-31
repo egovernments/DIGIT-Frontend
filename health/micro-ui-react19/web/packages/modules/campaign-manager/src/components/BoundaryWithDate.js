@@ -11,6 +11,12 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
   // const { t } = useTranslation();
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
   const today = Digit.Utils.date.getDate(Date.now());
+  // newDateFormat FieldV1 fires onChange(isoString) not onChange(event); extract local YYYY-MM-DD
+  const isoToLocalDate = (iso) => {
+    if (!iso) return undefined;
+    const dt = new Date(iso);
+    return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
+  };
   const [startDate, setStartDate] = useState(project?.startDate ? Digit.Utils.date.getDate(project?.startDate) : ""); // Set default start date to today
   const [endDate, setEndDate] = useState(project?.endDate ? Digit.Utils.date.getDate(project?.endDate) : ""); // Default end date
   const [cycleDates, setCycleDates] = useState(null);
@@ -94,16 +100,15 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
             placeholder={t(I18N_KEYS.COMMON.HCM_START_DATE)}
             populators={
               today >= startDate
-                ? {}
+                ? { newDateFormat: true }
                 : {
-                    validation: {
-                      min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
-                    },
+                    newDateFormat: true,
+                    min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
                   }
             }
             onChange={(d) => {
               handleDateChange({
-                date: d?.target?.value,
+                date: isoToLocalDate(d),
               });
             }}
           />
@@ -114,16 +119,15 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
             nonEditable={endDate?.length > 0 && today >= endDate ? true : false}
             placeholder={t(I18N_KEYS.COMMON.HCM_END_DATE)}
             populators={{
-              validation: {
-                min:
-                  startDate >= today
-                    ? Digit.Utils.date.getDate(new Date(startDate).getTime() + 2 * ONE_DAY_IN_MS)
-                    : Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
-              },
+              newDateFormat: true,
+              min:
+                startDate >= today
+                  ? Digit.Utils.date.getDate(new Date(startDate).getTime() + 2 * ONE_DAY_IN_MS)
+                  : Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
             }}
             onChange={(d) => {
               handleDateChange({
-                date: d?.target?.value,
+                date: isoToLocalDate(d),
                 endDate: true,
               });
             }}
@@ -146,22 +150,20 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
                   value={item?.startDate}
                   placeholder={t(I18N_KEYS.COMMON.HCM_START_DATE)}
                   populators={{
-                    validation: {
-                      min:
-                        index > 0 && !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime())
-                          ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime() + ONE_DAY_IN_MS)
-                              ?.toISOString()
-                              ?.split("T")?.[0]
-                          : today >= startDate
-                          ? today
-                          : startDate,
-                      max: endDate,
-                    },
+                    newDateFormat: true,
+                    min:
+                      index > 0 && !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime())
+                        ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime() + ONE_DAY_IN_MS)
+                            ?.toISOString()
+                            ?.split("T")?.[0]
+                        : today >= startDate
+                        ? today
+                        : startDate,
+                    max: endDate,
                   }}
                   onChange={(d) => {
-                    // setStartValidation(true);
                     handleCycleDateChange({
-                      date: d?.target?.value,
+                      date: isoToLocalDate(d),
                       cycleIndex: item?.cycleIndex,
                     });
                   }}
@@ -179,20 +181,19 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
                   }
                   placeholder={t(I18N_KEYS.COMMON.HCM_END_DATE)}
                   populators={{
-                    validation: {
-                      min: !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime())
-                        ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime() + ONE_DAY_IN_MS)
-                            ?.toISOString()
-                            ?.split("T")?.[0]
-                        : today >= startDate
-                        ? today
-                        : startDate,
-                      max: endDate,
-                    },
+                    newDateFormat: true,
+                    min: !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime())
+                      ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime() + ONE_DAY_IN_MS)
+                          ?.toISOString()
+                          ?.split("T")?.[0]
+                      : today >= startDate
+                      ? today
+                      : startDate,
+                    max: endDate,
                   }}
                   onChange={(d) => {
                     handleCycleDateChange({
-                      date: d?.target?.value,
+                      date: isoToLocalDate(d),
                       endDate: true,
                       cycleIndex: item?.cycleIndex,
                     });

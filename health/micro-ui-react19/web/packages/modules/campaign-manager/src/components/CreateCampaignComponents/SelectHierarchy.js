@@ -8,6 +8,7 @@ import {
   CardLabel,
   HeaderComponent,
   Loader,
+  NoResultsFound,
   PopUp,
   Button,
   TextInput,
@@ -348,6 +349,19 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
             );
           })}
         </div>
+        {filteredHierarchies.length === 0 && searchQuery.trim().length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <NoResultsFound width={280} height={220} />
+          </div>
+        )}
       </Card>
 
       {viewAllPopup && (
