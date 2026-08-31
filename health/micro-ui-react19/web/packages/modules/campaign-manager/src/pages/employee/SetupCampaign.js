@@ -64,7 +64,13 @@ const SetupCampaign = () => {
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [storedHierarchy, setStoredHierarchy] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
-  const [hierarchyType, setDerivedHierarchyType] = useState(storedHierarchy?.name);
+  // The global store can still hold the previously visited campaign's hierarchy.
+  // For an existing campaign (id in URL) wait for the draft to supply it - a stale
+  // seed briefly drives boundary fetches and, on save, reads as a hierarchy change
+  // that wipes the campaign's configured boundaries.
+  const [hierarchyType, setDerivedHierarchyType] = useState(() =>
+    new URLSearchParams(location.search).get("id") ? undefined : storedHierarchy?.name
+  );
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
