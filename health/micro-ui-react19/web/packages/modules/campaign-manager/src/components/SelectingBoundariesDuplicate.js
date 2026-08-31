@@ -120,7 +120,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
 
   // Only fetch campaign data when session data is NOT available (first visit to boundary step).
   // When session data exists (user navigated back), boundaries are already in session — skip the API call.
-  const hasSessionData = !!sessionData;
+  // A session entry with an empty selection (left behind when other setup steps ran in this SPA
+  // session) must not block seeding from the saved draft — treat it as "no session data"
+  const hasSessionData = !!sessionData?.selectedData?.length;
   const reqCriteria = useMemo(() => ({
     url: `/project-factory/v1/project-type/search`,
     body: {
@@ -146,8 +148,8 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     // Wait for API to finish fetching if campaignNumber exists
     if (campaignNumber && isFetching) return;
 
-    // Only load from campaignData if sessionData is not available
-    if (!sessionData && campaignData?.boundaries) {
+    // Only load from campaignData if sessionData has no boundary selection
+    if (!hasSessionData && campaignData?.boundaries) {
       setSelectedData(campaignData?.boundaries || []);
       // Commented: isUnifiedCampaign is now always controlled by DEFAULT_IS_UNIFIED_CAMPAIGN, user toggle removed
       // if (campaignData?.additionalDetails?.isUnifiedCampaign !== undefined) {
