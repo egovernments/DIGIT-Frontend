@@ -5,7 +5,6 @@ import { Button, Card, AlertCard as InfoCard, Loader, Tab, Toast, Footer } from 
 import BillBoundaryFilter from "./bill_boundary_filter";
 import BillInboxTable from "./billInboxTable";
 import { defaultRowsPerPage, ScreenTypeEnum } from "../../utils/constants";
-import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
 import AlertPopUp from "../alertPopUp";
 import InboxSearchLinkHeader from "../InboxSearchLinkHeader";
@@ -359,7 +358,7 @@ const BillInboxComponent = () => {
     return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
   }
   if (generateBillMutation.isLoading) {
-    return <LoaderWithGap />;
+    return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />;
   }
   if (isAttendanceLoading || isBillLoading) {
     return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />;
