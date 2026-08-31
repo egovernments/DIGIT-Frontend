@@ -15,7 +15,7 @@ import CustomSwitch from "./components/CustomSwitch";
 
 const WorkbenchModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = ["workbench","mdms","schema","hcm-admin-schemas"];
-  const match = useMatch("/employee/workbench/*");
+  const match = useMatch(`/${window?.contextPath}/employee/workbench/*`);
   const path = match?.pathnameBase || "";
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = window?.globalConfigs?.getConfig("CORE_UI_MODULE_LOCALE_PREFIX") || "rainmaker";

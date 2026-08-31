@@ -774,7 +774,7 @@ const LocalisationAdd = () => {
             type="button"
             // onButtonClick={callInputClick}
             onButtonClick={() => setShowModuleDropdownModal(true)}
-            className={"header-btn"}
+            // className={"header-btn"}
           />
           <input className={"hide-input-type-file"} type="file" accept="xls xlsx" onChange={handleBulkUpload} />
         </div>

@@ -43,6 +43,27 @@ const LocalisationSearch = () => {
     setFormData(form)
   }
 
+  const selectedLocaleLabel = formData?.searchForm?.locale?.label;
+
+  const dynamicConfig = useMemo(() => {
+    if (!selectedLocaleLabel) return Config;
+    return {
+      ...Config,
+      sections: {
+        ...Config.sections,
+        searchResult: {
+          ...Config.sections.searchResult,
+          uiConfig: {
+            ...Config.sections.searchResult.uiConfig,
+            columns: Config.sections.searchResult.uiConfig.columns.map((col) =>
+              col.label === "WBH_LOC_HEADER_DEFAULT" ? { ...col, label: `${t("WBH_LOC_HEADER_DEFAULT")} (${t(selectedLocaleLabel)})` } : col
+            ),
+          },
+        },
+      },
+    };
+  }, [selectedLocaleLabel, t]);
+
   const onModalSubmit = async (payload) => {
     if(!payload?.message){
       setShowToast({ label: `${t("WBH_LOC_ENTER_VALID_MESSAGE")}`,type:"error",style:{
@@ -139,7 +160,7 @@ const LocalisationSearch = () => {
       </div>
       <AlertCard additionalElements={[]} label={t("WBH_INFO")} text={t("WBH_INFO_MESSAGE")} variant="default" style={{marginBottom:"1.5rem",maxWidth:"100%"}}/>
       {Config && <div className="inbox-search-wrapper">
-        <InboxSearchComposer onFormValueChange={formUpdate} configs={Config} additionalConfig = {{
+        <InboxSearchComposer onFormValueChange={formUpdate} configs={dynamicConfig} additionalConfig = {{
           resultsTable:{
             onClickSvg
           },
