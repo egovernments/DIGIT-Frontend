@@ -4,10 +4,14 @@
 import { VALIDATION_FUNCTIONS, allRulesMet } from "./campaignNameValidators";
 import { I18N_KEYS } from "./i18nKeyConstants";
 
- const  validateCycleData=(data,t)=> {
+ const  validateCycleData=(data,t,isBednet)=> {
   const { cycle, deliveries } = data?.cycleConfigure?.cycleConfgureDate;
   const cycleData = data.cycleConfigure.cycleData;
   let dateError = [];
+
+  // Bednet (ITN) hides the manual per-cycle date pickers (CycleConfiguration.js), same as
+  // the "cycleConfigure" step validation below - skip this check for it too, for the same reason.
+  if (isBednet) return dateError;
 
   [...Array(cycle)].forEach((item, index) => {
     const check = cycleData?.find((i) => i?.key === index + 1);
@@ -26,10 +30,10 @@ import { I18N_KEYS } from "./i18nKeyConstants";
   return dateError;
 };
 
- const  validateDeliveryRules=(data, projectType, cycleConfigureData,t,setSummaryErrors)=> {
+ const  validateDeliveryRules=(data, projectType, cycleConfigureData,t,setSummaryErrors,isBednet)=> {
   let isValid = true;
   let deliveryRulesError = [];
-  let dateError = validateCycleData(cycleConfigureData,t);
+  let dateError = validateCycleData(cycleConfigureData,t,isBednet);
 
   // Iterate over deliveryRule array
   data.deliveryRule.forEach((cycle) => {
@@ -231,7 +235,7 @@ const validateBoundaryLevel = (data, hierarchyDefinition, lowestHierarchy) => {
 };
 
 // validating the screen data on clicking next button
-export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,lowestHierarchy,hierarchyType,totalFormData,setFetchUpload,setSummaryErrors}) => {
+export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,lowestHierarchy,hierarchyType,totalFormData,setFetchUpload,setSummaryErrors,isBednetCampaign}) => {
   const key = Object.keys(formData)?.[0];
   switch (key) {
     case "campaignName":
@@ -359,6 +363,16 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       const cycleNumber = formData?.cycleConfigure?.cycleConfgureDate?.cycle;
       const deliveryNumber = formData?.cycleConfigure?.cycleConfgureDate?.deliveries;
       const cycleData = formData?.cycleConfigure?.cycleData || [];
+      // Bednet (ITN) hides the per-cycle date pickers in CycleConfiguration.js (single-round
+      // campaign, cycle dates mirror the overall campaign dates) - the manual-date-entry checks
+      // below must not apply to it, since the user has no field to satisfy them with.
+      // Prefer the caller-resolved flag (SetupCampaign.js computes it with the same store+URL
+      // fallback CycleConfiguration.js's own render-guard uses); fall back to deriving from
+      // totalFormData alone for callers that don't pass it (e.g. UpdateCampaign.js).
+      const isBednetForCycle =
+        typeof isBednetCampaign === "boolean"
+          ? isBednetCampaign
+          : /bednet/i.test(totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || "");
 
       // Check if cycle/delivery count is missing or zero
       if (!cycleNumber || !deliveryNumber) {
@@ -366,19 +380,21 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
         return false;
       }
 
-      // Validate if all cycle entries have fromDate and toDate
-      if (cycleData.length < cycleNumber) {
-        setShowToast({ key: "error", label: "HCM_ALL_CYCLE_DATES_MANDATORY" });
-        return false;
-      }
+      if (!isBednetForCycle) {
+        // Validate if all cycle entries have fromDate and toDate
+        if (cycleData.length < cycleNumber) {
+          setShowToast({ key: "error", label: "HCM_ALL_CYCLE_DATES_MANDATORY" });
+          return false;
+        }
 
-      // 3. Validate required cycles have fromDate and toDate
-      const requiredCycles = cycleData.slice(0, cycleNumber);
-      const invalidCycles = requiredCycles.some((cycle) => !cycle.fromDate || !cycle.toDate);
+        // 3. Validate required cycles have fromDate and toDate
+        const requiredCycles = cycleData.slice(0, cycleNumber);
+        const invalidCycles = requiredCycles.some((cycle) => !cycle.fromDate || !cycle.toDate);
 
-      if (invalidCycles) {
-        setShowToast({ key: "error", label: "HCM_ALL_CYCLE_DATES_MANDATORY" });
-        return false;
+        if (invalidCycles) {
+          setShowToast({ key: "error", label: "HCM_ALL_CYCLE_DATES_MANDATORY" });
+          return false;
+        }
       }
 
       setShowToast(null);
@@ -499,14 +515,22 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       return true;
     case "DeliveryDetailsSummary":
       const cycleConfigureData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE;
-      const isCycleError = validateCycleData(cycleConfigureData, t);
+      // Same caller-resolved-flag-with-fallback as the "cycleConfigure" case above - this step
+      // can be reached directly (refresh/back-forward/bookmarked URL) without CycleConfiguration.js
+      // ever mounting, so its Bednet cycleData auto-fill may never have run for this page load.
+      const isBednetForSummary =
+        typeof isBednetCampaign === "boolean"
+          ? isBednetCampaign
+          : /bednet/i.test(totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || "");
+      const isCycleError = validateCycleData(cycleConfigureData, t, isBednetForSummary);
       const deliveryCycleData = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA;
       const isDeliveryError = validateDeliveryRules(
         deliveryCycleData,
         totalFormData?.["HCM_CAMPAIGN_TYPE"]?.projectType?.code?.toUpperCase(),
         cycleConfigureData,
         t,
-        setSummaryErrors
+        setSummaryErrors,
+        isBednetForSummary
       );
       if (isCycleError?.length > 0) {
         setShowToast({ key: "error", label: "DELIVERY_CYCLE_MISMATCH_LENGTH_ERROR" });

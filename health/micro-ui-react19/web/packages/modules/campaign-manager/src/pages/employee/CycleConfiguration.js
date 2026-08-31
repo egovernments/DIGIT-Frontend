@@ -185,6 +185,8 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   const [state, dispatch] = useReducer(reducer, initialState(saved, filteredDeliveryConfig, refetch));
   const { cycleConfgureDate, cycleData } = state;
   const { t } = useTranslation();
+  const todayStr = convertEpochToDate(Date.now());
+  const clampToToday = (dateStr) => (dateStr && dateStr > todayStr ? dateStr : todayStr);
   const isParentSubmitting = useCampaignSubmitting();
   const [dateRange, setDateRange] = useState({
     startDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate || convertEpochToDate(campaignData?.startDate),
@@ -330,7 +332,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
       if (!existing?.fromDate) selectFromDate(index, dateRange.startDate);
       if (!existing?.toDate) selectToDate(index, dateRange.endDate);
     }
-  }, [isBednet, dateRange?.startDate, dateRange?.endDate, cycleConfgureDate?.cycle]);
+  }, [isBednet, dateRange?.startDate, dateRange?.endDate, cycleConfgureDate?.cycle, cycleData?.length]);
 
   useEffect(() => {
     setKey(currentKey);
@@ -455,19 +457,20 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                     }
                     withoutLabel={true}
                     disabled={!isCycleEnabled(index)}
-                    min={
+                    min={clampToToday(
                       index > 0 && cycleData?.find((j) => j.key === index)?.toDate
                         ? new Date(new Date(cycleData?.find((j) => j.key === index)?.toDate)?.getTime() + 86400000)?.toISOString()?.split("T")?.[0]
                         : dateRange?.startDate
-                    }
+                    )}
                     max={dateRange?.endDate}
                     populators={{
                       newDateFormat: true,
                       max: dateRange?.endDate,
-                      min:
+                      min: clampToToday(
                         index > 0 && cycleData?.find((j) => j.key === index)?.toDate
                           ? new Date(new Date(cycleData.find((j) => j.key === index)?.toDate).getTime() + 86400000).toISOString().split("T")[0]
-                          : dateRange?.startDate,
+                          : dateRange?.startDate
+                      ),
                     }}
                     onChange={(d) => selectFromDate(index + 1, d)}
                   />
@@ -482,21 +485,23 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                     }
                     withoutLabel={true}
                     disabled={!isCycleEnabled(index)}
-                    min={
+                    min={clampToToday(
                       cycleData?.find((j) => j.key === index + 1)?.fromDate
                         ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
                             ?.toISOString()
                             ?.split("T")?.[0]
                         : null
-                    }
+                    )}
                     populators={{
                       newDateFormat: true,
                       max: dateRange?.endDate,
-                      min: cycleData?.find((j) => j.key === index + 1)?.fromDate
-                        ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
-                            ?.toISOString()
-                            ?.split("T")?.[0]
-                        : null,
+                      min: clampToToday(
+                        cycleData?.find((j) => j.key === index + 1)?.fromDate
+                          ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
+                              ?.toISOString()
+                              ?.split("T")?.[0]
+                          : null
+                      ),
                     }}
                     max={dateRange?.endDate}
                     onChange={(d) => selectToDate(index + 1, d)}
