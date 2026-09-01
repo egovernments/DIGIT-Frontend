@@ -1927,6 +1927,10 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
           // title — the app hardcodes it — so only its message (description) is editable
           if (selectedField?.__pageInfoCard && parentKey === "label") return null;
 
+          // A read-only field is auto-filled, so the Required control is hidden (see the
+          // toggle case in RenderField) — skip the wrapper too or an empty card renders
+          if (panelItem?.fieldType === "toggle" && bindTo === "required" && selectedField?.readOnly === true) return null;
+
           const shouldShowToggle = !(
             (
               selectedField?.format === "panelCard" &&
