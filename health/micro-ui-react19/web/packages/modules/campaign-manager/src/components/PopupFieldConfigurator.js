@@ -26,13 +26,17 @@ import { I18N_KEYS } from "../utils/i18nKeyConstants";
  * @param {boolean} disabled - Whether the inputs should be disabled
  */
 const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
+  const dispatch = useDispatch();
+  const { selectedField } = useSelector((state) => state.remoteConfig);
   // Determine the type of component and get the items to configure
   const isTableComponent = field?.format === "table";
   const isEnumComponent = ["dropdown", "dropdownTemplate", "select", "selectionCard", "radioList"].includes(field?.format);
 
-  // MDMS-driven fields (isMdms + schemaCode) resolve their options from the master at runtime —
-  // the config's own `enums` is a stale leftover the app ignores. Fetch the same master the
-  // preview renders (see SelectionCard.js) so the panel lists the real options.
+  // MDMS-driven fields (isMdms + schemaCode) define their option SET in the master, but the app
+  // renders the config's `enums` (filtered by isActive) — see the flow builder's selection_card.
+  // Fetch the master (as the preview's SelectionCard.js does), merge it with the config's enums so
+  // every option is listed with its show/hide toggle, and materialise the merged list back into
+  // `enums` so the app receives the full set.
   const schemaParts = typeof field?.schemaCode === "string" ? field.schemaCode.split(".") : [];
   const isMdmsDriven = !!(isEnumComponent && field?.isMdms && schemaParts.length === 2 && schemaParts[0] && schemaParts[1]);
   const tenantId = Digit?.ULBService?.getCurrentTenantId?.();
@@ -45,10 +49,46 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
       select: (data) =>
         (data?.[schemaParts[0]]?.[schemaParts[1]] || [])
           .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
-          .map((opt) => ({ ...opt, name: Digit.Utils.locale.getTransformedLocale(opt.code) })),
+          .map((opt) => ({ code: opt.code, name: Digit.Utils.locale.getTransformedLocale(opt.code) })),
     },
     { schemaCode: isMdmsDriven ? field.schemaCode : undefined }
   ) || {};
+
+  // Master order, keeping the label code and show/hide state of any existing enums entry
+  const mergedOptions = React.useMemo(() => {
+    if (!isMdmsDriven || !Array.isArray(mdmsOptions) || mdmsOptions.length === 0) return null;
+    const enums = Array.isArray(field?.enums) ? field.enums : [];
+    return mdmsOptions.map((opt) => {
+      const existing = enums.find((e) => e?.code === opt.code);
+      return existing
+        ? { code: opt.code, name: existing.name || opt.name, isActive: existing.isActive !== false }
+        : { code: opt.code, name: opt.name, isActive: true };
+    });
+  }, [isMdmsDriven, mdmsOptions, field?.enums]);
+
+  // Write the merged list into the config once it differs, so panel, preview and app agree
+  useEffect(() => {
+    if (!isMdmsDriven || !mergedOptions || disabled) return;
+    const enums = Array.isArray(field?.enums) ? field.enums : [];
+    const same =
+      enums.length === mergedOptions.length &&
+      enums.every(
+        (e, i) =>
+          e?.code === mergedOptions[i].code &&
+          (e?.name || "") === (mergedOptions[i].name || "") &&
+          (e?.isActive !== false) === (mergedOptions[i].isActive !== false)
+      );
+    if (!same) {
+      dispatch(
+        updatePopupFieldProperty({
+          selectedField,
+          fieldName: field?.fieldName,
+          format: field?.format,
+          updates: { enums: mergedOptions },
+        })
+      );
+    }
+  }, [isMdmsDriven, mergedOptions, disabled]);
 
   let items = [];
   let itemType = "";
@@ -59,9 +99,9 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
     itemType = "column";
     propertyPath = "data";
   } else if (isMdmsDriven) {
-    items = mdmsOptions || [];
+    items = mergedOptions || [];
     itemType = "option";
-    propertyPath = null; // options live in the MDMS master, not this config
+    propertyPath = "enums";
   } else if (isEnumComponent) {
     items = field?.format === "radioList" ? field?.data : field?.enums  || [];
     itemType = "option";
@@ -73,9 +113,8 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
   // Count active/visible items (prevent hiding/toggling last one for all field types)
   const activeItemsCount = items.filter((item) => item.isActive !== false).length;
 
-  // If only 1 item exists total, don't show toggles at all.
-  // MDMS-driven options can't be enabled/disabled per campaign from here, so no toggles either.
-  const hideToggles = items.length === 1 || isMdmsDriven;
+  // If only 1 item exists total, don't show toggles at all
+  const hideToggles = items.length === 1;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
