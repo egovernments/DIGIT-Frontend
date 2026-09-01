@@ -254,31 +254,54 @@ function NewAppFieldScreenWrapper({viewMode}) {
         <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS)} />
       </div>
       {/* Page-level info card (conditions.infoCardText) presented as an element with an
-          Infocard tag, consistent with body infoCard fields on template screens */}
-      {currentCard?.conditions?.infoCardText && (
+          Infocard tag and a show/hide toggle, consistent with body infoCard fields on
+          template screens. Toggling off stashes the localisation code in
+          conditions.infoCardTextDisabled and nulls infoCardText — the app only renders
+          the card when infoCardText is present. */}
+      {(currentCard?.conditions?.infoCardText || currentCard?.conditions?.infoCardTextDisabled) && (
         <div className="app-config-field-wrapper">
           <LabelFieldPair className={`appConfigLabelField`}>
-            <div className={`appConfigLabelField-label-container`} style={{ width: "100%" }}>
-              <div className={`appConfigLabelField-label`}>
+            <div className={`appConfigLabelField-label-container toggle`} style={{ width: "70%" }}>
+              <div className={`appConfigLabelField-label toggle`}>
                 <span>{t("INFO_CARD_TEXT")}</span>
               </div>
               <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap" }}>
                 <Tag icon="" label={t("Infocard")} className="app-config-field-tag normal" labelStyle={{}} showIcon={false} style={{}} />
               </div>
             </div>
+            <Switch
+              key={currentCard?.conditions?.infoCardText ? "infocard-on" : "infocard-off"}
+              label=""
+              isCheckedInitially={!!currentCard?.conditions?.infoCardText}
+              disable={viewMode}
+              shapeOnOff
+              onToggle={() => {
+                const cond = { ...(currentCard?.conditions || {}) };
+                if (cond.infoCardText) {
+                  cond.infoCardTextDisabled = cond.infoCardText;
+                  cond.infoCardText = null;
+                } else {
+                  cond.infoCardText = cond.infoCardTextDisabled || null;
+                  cond.infoCardTextDisabled = null;
+                }
+                dispatch(updateHeaderProperty({ fieldKey: "conditions", value: cond }));
+              }}
+            />
           </LabelFieldPair>
-          <HeaderFieldWrapper
-            key="header-infocard-text"
-            label={"INFO_CARD_TEXT"}
-            type="textarea"
-            value={currentCard?.conditions?.infoCardText}
-            currentCard={currentCard}
-            index={2}
-            cardIndex={0}
-            skipPropertyUpdate={true}
-            maxLength={500}
-            viewMode={viewMode}
-          />
+          {currentCard?.conditions?.infoCardText && (
+            <HeaderFieldWrapper
+              key="header-infocard-text"
+              label={"INFO_CARD_TEXT"}
+              type="textarea"
+              value={currentCard?.conditions?.infoCardText}
+              currentCard={currentCard}
+              index={2}
+              cardIndex={0}
+              skipPropertyUpdate={true}
+              maxLength={500}
+              viewMode={viewMode}
+            />
+          )}
         </div>
       )}
       {currentCard?.body?.map((section, index, card) => {
