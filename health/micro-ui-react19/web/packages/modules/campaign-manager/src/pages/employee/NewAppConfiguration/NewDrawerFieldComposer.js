@@ -478,6 +478,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const isMandatory = selectedField?.mandatory === true;
         const isDisabled = viewMode || (panelItem?.disableForRequired && isMandatory);
 
+        // A read-only field is auto-filled and can't be edited in the app (e.g. Refer
+        // Beneficiary → Referred By), so a Required control is meaningless — hide it
+        if (bindTo === "required" && selectedField?.readOnly === true) return null;
+
         const handleToggleChange = (value) => {
           const newToggleValue = Boolean(value);
 
