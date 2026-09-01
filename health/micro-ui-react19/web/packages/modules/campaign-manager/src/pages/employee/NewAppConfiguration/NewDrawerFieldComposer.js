@@ -1923,6 +1923,10 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
           // If bindTo has ".", take the first part (parent key), otherwise use the whole bindTo
           const parentKey = bindTo.includes(".") ? bindTo.split(".")[0] : bindTo;
 
+          // The page-level info card pseudo-field (conditions.infoCardText) has no configurable
+          // title — the app hardcodes it — so only its message (description) is editable
+          if (selectedField?.__pageInfoCard && parentKey === "label") return null;
+
           const shouldShowToggle = !(
             (
               selectedField?.format === "panelCard" &&
