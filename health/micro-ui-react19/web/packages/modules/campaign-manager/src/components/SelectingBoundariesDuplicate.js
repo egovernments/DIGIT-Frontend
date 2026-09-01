@@ -145,19 +145,28 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
 
   const { data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  // Load data from session/API - only run once when API data is ready
+  // Seed local state from session/draft exactly once. The parent rebuilds the session
+  // object (new references) on every save, so re-applying it on each change loops
+  // seed → save → session-change → seed forever; after the first seed the user's local
+  // edits are the source of truth and nothing may overwrite them.
+  const hasSeededRef = useRef(false);
+
+  // Load data from session/API - runs until one source has been applied
   useEffect(() => {
     // Wait for API to finish fetching if campaignNumber exists
     if (campaignNumber && isFetching) return;
 
     // Only load from campaignData if sessionData has no boundary selection
-    if (!hasSessionData && campaignData?.boundaries) {
+    if (hasSeededRef.current) {
+      // already seeded — local edits own the state now
+    } else if (!hasSessionData && campaignData?.boundaries) {
       setSelectedData(campaignData?.boundaries || []);
+      hasSeededRef.current = true;
       // Commented: isUnifiedCampaign is now always controlled by DEFAULT_IS_UNIFIED_CAMPAIGN, user toggle removed
       // if (campaignData?.additionalDetails?.isUnifiedCampaign !== undefined) {
       //   setIsUnifiedCampaign(campaignData?.additionalDetails?.isUnifiedCampaign);
       // }
-    } else if (sessionData) {
+    } else if (hasSessionData) {
       // Session data takes priority - use reference check to avoid expensive JSON.stringify on 55k items
       if (sessionData?.selectedData && sessionData.selectedData !== selectedData) {
         setSelectedData(sessionData.selectedData);
@@ -165,6 +174,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       if (sessionData?.boundaryData && sessionData.boundaryData !== boundaryOptions) {
         setBoundaryOptions(sessionData.boundaryData);
       }
+      hasSeededRef.current = true;
       // Commented: isUnifiedCampaign is now always controlled by DEFAULT_IS_UNIFIED_CAMPAIGN, user toggle removed
       // if (sessionData?.isUnifiedCampaign !== undefined && sessionData.isUnifiedCampaign !== isUnifiedCampaign) {
       //   setIsUnifiedCampaign(sessionData.isUnifiedCampaign);
