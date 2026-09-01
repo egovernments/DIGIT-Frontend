@@ -300,6 +300,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
               skipPropertyUpdate={true}
               maxLength={500}
               viewMode={viewMode}
+              hideLabel={true}
             />
           )}
         </div>
