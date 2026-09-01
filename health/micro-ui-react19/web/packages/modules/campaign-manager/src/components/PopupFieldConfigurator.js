@@ -146,9 +146,10 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
     ? (t(I18N_KEYS.COMMON.ADD_HEADER_LOCALIZATION) || "Add header localization")
     : (t(I18N_KEYS.COMMON.ADD_LOCALIZATION) || "Add localization");
 
-  // Display label text - use translated fieldName instead of index
+  // Display label text - use translated fieldName instead of index.
+  // Option rows show just the option's own name; only table columns keep the "Column:" prefix.
   const translatedFieldName = t(Digit.Utils.locale.getTransformedLocale(localizationCode)) ;
-  const label = `${labelPrefix}: ${translatedFieldName}`;
+  const label = itemType === "column" ? `${labelPrefix}: ${translatedFieldName}` : translatedFieldName;
 
   return (
     <div className="drawer-container-tooltip">
