@@ -30,6 +30,26 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
   const isTableComponent = field?.format === "table";
   const isEnumComponent = ["dropdown", "dropdownTemplate", "select", "selectionCard", "radioList"].includes(field?.format);
 
+  // MDMS-driven fields (isMdms + schemaCode) resolve their options from the master at runtime —
+  // the config's own `enums` is a stale leftover the app ignores. Fetch the same master the
+  // preview renders (see SelectionCard.js) so the panel lists the real options.
+  const schemaParts = typeof field?.schemaCode === "string" ? field.schemaCode.split(".") : [];
+  const isMdmsDriven = !!(isEnumComponent && field?.isMdms && schemaParts.length === 2 && schemaParts[0] && schemaParts[1]);
+  const tenantId = Digit?.ULBService?.getCurrentTenantId?.();
+  const { data: mdmsOptions } = Digit?.Hooks?.useCustomMDMS(
+    tenantId,
+    schemaParts[0],
+    [{ name: schemaParts[1] }],
+    {
+      enabled: isMdmsDriven,
+      select: (data) =>
+        (data?.[schemaParts[0]]?.[schemaParts[1]] || [])
+          .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
+          .map((opt) => ({ ...opt, name: Digit.Utils.locale.getTransformedLocale(opt.code) })),
+    },
+    { schemaCode: isMdmsDriven ? field.schemaCode : undefined }
+  ) || {};
+
   let items = [];
   let itemType = "";
   let propertyPath = "";
@@ -38,6 +58,10 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
     items = field?.data?.columns || [];
     itemType = "column";
     propertyPath = "data";
+  } else if (isMdmsDriven) {
+    items = mdmsOptions || [];
+    itemType = "option";
+    propertyPath = null; // options live in the MDMS master, not this config
   } else if (isEnumComponent) {
     items = field?.format === "radioList" ? field?.data : field?.enums  || [];
     itemType = "option";
@@ -49,8 +73,9 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
   // Count active/visible items (prevent hiding/toggling last one for all field types)
   const activeItemsCount = items.filter((item) => item.isActive !== false).length;
 
-  // If only 1 item exists total, don't show toggles at all
-  const hideToggles = items.length === 1;
+  // If only 1 item exists total, don't show toggles at all.
+  // MDMS-driven options can't be enabled/disabled per campaign from here, so no toggles either.
+  const hideToggles = items.length === 1 || isMdmsDriven;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
