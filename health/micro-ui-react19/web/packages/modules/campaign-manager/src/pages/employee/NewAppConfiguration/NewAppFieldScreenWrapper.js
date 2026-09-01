@@ -259,7 +259,30 @@ function NewAppFieldScreenWrapper({viewMode}) {
           conditions.infoCardTextDisabled and nulls infoCardText — the app only renders
           the card when infoCardText is present. */}
       {(currentCard?.conditions?.infoCardText || currentCard?.conditions?.infoCardTextDisabled) && (
-        <div className="app-config-field-wrapper">
+        <div
+          className="draggableField-cont app-config-field-wrapper"
+          style={currentCard?.conditions?.infoCardText ? { cursor: "pointer" } : {}}
+          onClick={() => {
+            if (!currentCard?.conditions?.infoCardText) return; // hidden card: nothing to edit
+            // Pseudo-field: opens the regular Field-properties view; its message edits go
+            // through the localisation slice like any other field, config shape untouched
+            dispatch(
+              selectField({
+                field: {
+                  fieldName: "pageInfoCard",
+                  type: "template",
+                  format: "infoCard",
+                  label: null,
+                  description: currentCard?.conditions?.infoCardText,
+                  __pageInfoCard: true,
+                },
+                screen: currentCard,
+                card: null,
+                cardIndex: -1,
+              })
+            );
+          }}
+        >
           <LabelFieldPair className={`appConfigLabelField`}>
             <div className={`appConfigLabelField-label-container toggle`} style={{ width: "70%" }}>
               <div className={`appConfigLabelField-label toggle`}>
@@ -269,40 +292,27 @@ function NewAppFieldScreenWrapper({viewMode}) {
                 <Tag icon="" label={t("Infocard")} className="app-config-field-tag normal" labelStyle={{}} showIcon={false} style={{}} />
               </div>
             </div>
-            <Switch
-              key={currentCard?.conditions?.infoCardText ? "infocard-on" : "infocard-off"}
-              label=""
-              isCheckedInitially={!!currentCard?.conditions?.infoCardText}
-              disable={viewMode}
-              shapeOnOff
-              onToggle={() => {
-                const cond = { ...(currentCard?.conditions || {}) };
-                if (cond.infoCardText) {
-                  cond.infoCardTextDisabled = cond.infoCardText;
-                  cond.infoCardText = null;
-                } else {
-                  cond.infoCardText = cond.infoCardTextDisabled || null;
-                  cond.infoCardTextDisabled = null;
-                }
-                dispatch(updateHeaderProperty({ fieldKey: "conditions", value: cond }));
-              }}
-            />
+            <div onClick={(e) => e.stopPropagation()}>
+              <Switch
+                key={currentCard?.conditions?.infoCardText ? "infocard-on" : "infocard-off"}
+                label=""
+                isCheckedInitially={!!currentCard?.conditions?.infoCardText}
+                disable={viewMode}
+                shapeOnOff
+                onToggle={() => {
+                  const cond = { ...(currentCard?.conditions || {}) };
+                  if (cond.infoCardText) {
+                    cond.infoCardTextDisabled = cond.infoCardText;
+                    cond.infoCardText = null;
+                  } else {
+                    cond.infoCardText = cond.infoCardTextDisabled || null;
+                    cond.infoCardTextDisabled = null;
+                  }
+                  dispatch(updateHeaderProperty({ fieldKey: "conditions", value: cond }));
+                }}
+              />
+            </div>
           </LabelFieldPair>
-          {currentCard?.conditions?.infoCardText && (
-            <HeaderFieldWrapper
-              key="header-infocard-text"
-              label={"INFO_CARD_TEXT"}
-              type="textarea"
-              value={currentCard?.conditions?.infoCardText}
-              currentCard={currentCard}
-              index={2}
-              cardIndex={0}
-              skipPropertyUpdate={true}
-              maxLength={500}
-              viewMode={viewMode}
-              hideLabel={true}
-            />
-          )}
         </div>
       )}
       {currentCard?.body?.map((section, index, card) => {
