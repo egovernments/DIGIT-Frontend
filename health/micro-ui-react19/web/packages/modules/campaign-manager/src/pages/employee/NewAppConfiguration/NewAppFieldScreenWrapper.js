@@ -204,6 +204,14 @@ function NewAppFieldScreenWrapper({viewMode}) {
     );
   }
 
+  // True when a body section renders its own Buttons subheader (button-format rows) — the footer
+  // label inputs then join that section instead of opening a second "Buttons" heading
+  const hasBodyButtonRows = (currentCard?.body || []).some((section) => {
+    const sectionBodyFields = currentCard?.type === "template" ? extractTemplateFields(section?.fields) : (section?.fields || []);
+    const sectionFooterFields = currentCard?.type === "template" && currentCard?.footer ? extractTemplateFields(currentCard.footer) : [];
+    return [...sectionBodyFields, ...sectionFooterFields].filter(isFieldEditable).some((f) => f?.format === "button");
+  });
+
   return (
     <React.Fragment>
       {/* <div className="app-config-drawer-subheader">
@@ -394,8 +402,8 @@ function NewAppFieldScreenWrapper({viewMode}) {
           onClick={handleAddSection}
         />
       )}
-      {currentCard?.footer?.length > 0 && (<Divider className="app-config-drawer-action-divider" />)}
-      {currentCard?.footer?.length > 0 && (
+      {currentCard?.footer?.length > 0 && !hasBodyButtonRows && (<Divider className="app-config-drawer-action-divider" />)}
+      {currentCard?.footer?.length > 0 && !hasBodyButtonRows && (
         <div className="app-config-drawer-subheader">
           <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_BUTTONS)}</div>
           <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_BUTTONS)} />
