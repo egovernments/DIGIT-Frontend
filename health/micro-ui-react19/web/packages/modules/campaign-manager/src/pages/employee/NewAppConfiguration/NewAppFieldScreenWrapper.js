@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Divider, LabelFieldPair, TextInput, Switch } from "@egovernments/digit-ui-components";
+import { Button, Divider, LabelFieldPair, TextInput, Switch, Tag } from "@egovernments/digit-ui-components";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup, updateHeaderProperty } from "./redux/remoteConfigSlice";
 import { useCustomT } from "./hooks/useCustomT";
@@ -246,21 +246,6 @@ function NewAppFieldScreenWrapper({viewMode}) {
             viewMode={viewMode}
             maxLength={64}
           />
-          {/* Info card message (page-level conditions.infoCardText) */}
-          {currentCard?.conditions?.infoCardText && (
-            <HeaderFieldWrapper
-              key="header-infocard-text"
-              label={"INFO_CARD_TEXT"}
-              type="textarea"
-              value={currentCard?.conditions?.infoCardText}
-              currentCard={currentCard}
-              index={2}
-              cardIndex={0}
-              skipPropertyUpdate={true}
-              maxLength={500}
-              viewMode={viewMode}
-            />
-          )}
          <Divider />
         </>
       )}
@@ -268,6 +253,34 @@ function NewAppFieldScreenWrapper({viewMode}) {
         <div> {currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS)}</div>
         <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS)} />
       </div>
+      {/* Page-level info card (conditions.infoCardText) presented as an element with an
+          Infocard tag, consistent with body infoCard fields on template screens */}
+      {currentCard?.conditions?.infoCardText && (
+        <div className="app-config-field-wrapper">
+          <LabelFieldPair className={`appConfigLabelField`}>
+            <div className={`appConfigLabelField-label-container`} style={{ width: "100%" }}>
+              <div className={`appConfigLabelField-label`}>
+                <span>{t("INFO_CARD_TEXT")}</span>
+              </div>
+              <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap" }}>
+                <Tag icon="" label={t("Infocard")} className="app-config-field-tag normal" labelStyle={{}} showIcon={false} style={{}} />
+              </div>
+            </div>
+          </LabelFieldPair>
+          <HeaderFieldWrapper
+            key="header-infocard-text"
+            label={"INFO_CARD_TEXT"}
+            type="textarea"
+            value={currentCard?.conditions?.infoCardText}
+            currentCard={currentCard}
+            index={2}
+            cardIndex={0}
+            skipPropertyUpdate={true}
+            maxLength={500}
+            viewMode={viewMode}
+          />
+        </div>
+      )}
       {currentCard?.body?.map((section, index, card) => {
 
         const bodyFields =
