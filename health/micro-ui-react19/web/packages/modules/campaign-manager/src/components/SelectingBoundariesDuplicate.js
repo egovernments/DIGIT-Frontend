@@ -136,8 +136,10 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       select: (data) => {
         return data?.CampaignDetails?.[0];
       },
-      gcTime: 1000000,
-      staleTime: 600000,
+      // No staleTime: the draft changes on every boundary submit, so a cached copy
+      // makes Edit Boundaries reopen with the pre-submit selection. Always refetch.
+      gcTime: 0,
+      staleTime: 0,
     },
   }), [tenantId, campaignNumber, hasSessionData]);
 
