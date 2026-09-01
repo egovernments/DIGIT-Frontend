@@ -54,7 +54,10 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
     { schemaCode: isMdmsDriven ? field.schemaCode : undefined }
   ) || {};
 
-  // Master order, keeping the label code and show/hide state of any existing enums entry
+  // Master order, keeping the label code and show/hide state of any existing enums entry.
+  // The config's enums is the per-campaign SELECTION of master options (the app renders enums),
+  // so master options absent from enums are listed switched OFF — behaviour stays unchanged
+  // until the user turns them on.
   const mergedOptions = React.useMemo(() => {
     if (!isMdmsDriven || !Array.isArray(mdmsOptions) || mdmsOptions.length === 0) return null;
     const enums = Array.isArray(field?.enums) ? field.enums : [];
@@ -62,7 +65,7 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
       const existing = enums.find((e) => e?.code === opt.code);
       return existing
         ? { code: opt.code, name: existing.name || opt.name, isActive: existing.isActive !== false }
-        : { code: opt.code, name: opt.name, isActive: true };
+        : { code: opt.code, name: opt.name, isActive: false };
     });
   }, [isMdmsDriven, mdmsOptions, field?.enums]);
 
