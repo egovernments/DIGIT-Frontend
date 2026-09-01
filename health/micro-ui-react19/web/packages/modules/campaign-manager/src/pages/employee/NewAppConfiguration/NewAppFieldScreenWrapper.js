@@ -291,9 +291,10 @@ function NewAppFieldScreenWrapper({viewMode}) {
 
 
 
-        return (
-          <Fragment key={`card-${index}`}>
-            {fields?.map(({ type, label, active, required, Mandatory, deleteFlag, fieldName, id, ...rest }, i, c) => {
+        // Render one field row; `i` stays the index in the combined body+footer list so the
+        // existing card/field index math is unchanged by the section grouping below
+        const renderFieldRow = (fieldEntry, i, c) => {
+              const { type, label, active, required, Mandatory, deleteFlag, fieldName, id, ...rest } = fieldEntry;
               const isFooterField = i >= bodyFieldsCount;
               const actualCardIndex = isFooterField ? -1 : index; // Use -1 for footer fields
               const actualFieldIndex = isFooterField ? i - bodyFieldsCount : i;
@@ -342,7 +343,22 @@ function NewAppFieldScreenWrapper({viewMode}) {
                 // isFooterField={isFooterField}
                 />
               );
-            })}
+            };
+
+        return (
+          <Fragment key={`card-${index}`}>
+            {fields?.map((fieldEntry, i, c) => (fieldEntry?.format === "button" ? null : renderFieldRow(fieldEntry, i, c)))}
+            {/* Body/template buttons get their own section, consistent with pages whose buttons live in the footer */}
+            {buttonFields.length > 0 && (
+              <>
+                <Divider className="app-config-drawer-action-divider" />
+                <div className="app-config-drawer-subheader">
+                  <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_BUTTONS)}</div>
+                  <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_BUTTONS)} />
+                </div>
+              </>
+            )}
+            {fields?.map((fieldEntry, i, c) => (fieldEntry?.format === "button" ? renderFieldRow(fieldEntry, i, c) : null))}
             {currentCard?.type !== "template" && !viewMode && (<Button
               className={"app-config-drawer-button add-field"}
               type={"button"}
