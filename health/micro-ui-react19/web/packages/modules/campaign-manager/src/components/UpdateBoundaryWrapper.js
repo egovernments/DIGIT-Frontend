@@ -237,7 +237,10 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   }, [selectedData, boundaryOptions, restrictSelection, isUnifiedCampaign]);
 
   useEffect(() => {
-    if (props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType) {
+    // Only sync from session when it actually holds a selection — an empty entry (left
+    // behind by another setup step, or written by the save effect before CampaignData
+    // seeded) must not clobber the boundaries loaded from the campaign
+    if (props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData?.length) {
       setSelectedData(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData);
       setBoundaryOptions(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData);
     }
