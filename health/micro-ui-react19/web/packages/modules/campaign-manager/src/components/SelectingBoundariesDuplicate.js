@@ -179,7 +179,11 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     startMountTransition(() => {
       setIsLoading(false);
     });
-  }, [isFetching, campaignNumber]);
+    // sessionData/campaignData are deps because either can arrive after mount (session
+    // hydrates async, and navigating back lets other steps rewrite the session entry);
+    // with only [isFetching, campaignNumber] a late arrival was never applied and the
+    // screen stayed empty. The reference checks above keep re-runs from looping.
+  }, [isFetching, campaignNumber, hasSessionData, sessionData, campaignData]);
 
   // Only save to session after data is loaded to prevent overwriting with empty values
   useEffect(() => {
