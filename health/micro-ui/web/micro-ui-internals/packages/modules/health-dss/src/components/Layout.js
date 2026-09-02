@@ -11,7 +11,7 @@ import MetricChart from "./MetricChart";
 import Summary from "./Summary";
 import RichSummary from "./RichSummary";
 import HeatMapChart from "./AdvancedMapCharts/HeatMap";
-import MapsTab from "./MapsTab";
+import LeafletMapChart from "./LeafletMapChart";
 import BannerCard from "./BannerCard";
 import LatLongMapChart from "./AdvancedMapCharts/LatLongMap"
 import KibanaCard from "./KibanaCard";
@@ -61,8 +61,8 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
         );
       case "heatmap":
         return <HeatMapChart visualizer={chart} chartId={chart?.id} isNational={false} showLabel={true} pageZoom={pageZoom} />;
-      case "leafletHeatmap":
-        return <MapsTab chartId={chart?.id} visualizer={chart} pageZoom={pageZoom} />;
+      case "leafletHeatMap":
+        return <LeafletMapChart chartId={chart?.id} visualizer={chart} chartType={chart?.chartType} pageZoom={pageZoom} />;
       case "bar":
       case "sideBySideBar":
         return <CustomHorizontalBarChart data={chart} title={title} yAxisLabel={showCustomLabel(title, t)} pageZoom={pageZoom} downloadChartsId={downloadChartsId} />;
@@ -135,6 +135,22 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
         return <BannerCard data={visualizer.charts[0]} chartId={visualizer?.id} chartName={visualizer?.name} nonSync={true} />;
       case "kibanaScreen": 
         return <KibanaCard moduleName={visualizer?.moduleName} pageName={visualizer?.pageName} />
+      case "leafletMap":
+        // The charts array becomes selectable coverage layers inside the map's own layers
+        // panel — deliberately not chips, since switching layer must not reset the view.
+        return (
+          // fullWidth because the map must take the whole row rather than share it with a
+          // sibling chart the way the flex-based chart cards do.
+          <GenericChart
+            key={key}
+            value={value}
+            header={visualizer.name}
+            subHeader={subHeader !== `SUB_${visualizer.name}` ? subHeader : ""}
+            className={"fullWidth"}
+          >
+            <LeafletMapChart charts={visualizer?.charts || []} pageZoom={pageZoom} />
+          </GenericChart>
+        );
       case "latlong":
         return <LatLongMapChart data={visualizer} chartId={visualizer?.id} chartName={visualizer?.name} pageZoom={pageZoom}/>;
       case "cards-list":

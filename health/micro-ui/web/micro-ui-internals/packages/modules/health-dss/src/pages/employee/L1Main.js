@@ -15,6 +15,7 @@ import StackedTable from "../../components/StackedTable";
 import GenericChart from "../../components/GenericChart";
 import NoData from "../../components/NoData";
 import HeatMapChart from "../../components/AdvancedMapCharts/HeatMap";
+import LeafletMapChart from "../../components/LeafletMapChart";
 import CustomPieChart from "../../components/CustomPieChart";
 import CustomHorizontalBarChart from "../../components/CustomHorizontalBarChart";
 import VennDiagramChart from "../../components/VennDiagramChart";
@@ -501,6 +502,19 @@ const L1Main = () => {
                       pageZoom={pageZoom}
                     />
                   
+                  );
+                } else if (item?.vizType === "leafletMap") {
+                  const leafletSubHeader = t(`SUB_${item.name}`);
+                  return (
+                    <GenericChart
+                      key={index}
+                      header={item.name}
+                      subHeader={leafletSubHeader !== `SUB_${item.name}` ? leafletSubHeader : ""}
+                      className={"digit-dss-card-parent fullWidth"}
+                    >
+                      {/* charts[] become selectable coverage layers in the map's layers panel */}
+                      <LeafletMapChart charts={item?.charts || []} pageZoom={pageZoom} />
+                    </GenericChart>
                   );
                 } else if (item?.vizType === "stacked-table") {
                   return (
