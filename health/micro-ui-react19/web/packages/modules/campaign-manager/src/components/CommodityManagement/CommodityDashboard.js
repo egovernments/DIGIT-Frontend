@@ -13,6 +13,7 @@ import useWarehouseManagerSync from "../../hooks/useWarehouseManagerSync";
 import { useCommodityProject } from "./CommodityProjectContext";
 import NewShipmentPopup from "./NewShipmentPopup";
 import useBatchStockCreation from "../../hooks/useBatchStockCreation";
+import useBoundaryLocalization from "../../hooks/useBoundaryLocalization";
 
 const SHEET_SESSION_KEY = "HCM_BATCH_SHEET_DATA";
 
@@ -112,9 +113,41 @@ const CommodityDashboard = () => {
     };
   }, [selectedProject]);
 
-  const hierarchyType = selectedProject?.additionalDetails?.hierarchyType || null;
+  // Fetch campaign details (for campaignId fallback + hierarchyType + auditDetails.createdTime)
+  const campaignReqCriteria = useMemo(() => ({
+    url: `/project-factory/v1/project-type/search`,
+    body: {
+      CampaignDetails: {
+        tenantId,
+        campaignNumber,
+      },
+    },
+    config: {
+      enabled: !!campaignNumber,
+      select: (data) => {
+        const campaign = data?.CampaignDetails?.[0];
+        return {
+          id: campaign?.id,
+          createdTime: campaign?.auditDetails?.createdTime,
+          hierarchyType: campaign?.hierarchyType,
+        };
+      },
+    },
+  }), [tenantId, campaignNumber]);
 
-  // Fetch hierarchy definition based on the project's hierarchyType
+  const { data: campaignSearchData, isLoading: campaignIdLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
+
+  const campaignId = campaignIdFromUrl || campaignSearchData?.id;
+
+  // The campaign is the source of truth for the hierarchy (this branch allows one hierarchy per
+  // campaign); the project's additionalDetails is only a fallback for older projects
+  const hierarchyType = campaignSearchData?.hierarchyType || selectedProject?.additionalDetails?.hierarchyType || "ADMIN";
+
+  // Boundary codes are used as i18n keys across the dashboard and its popups, so the
+  // hcm-boundary-<hierarchyType> module has to be pulled in before anything renders them
+  const { isLoading: boundaryLocalizationLoading } = useBoundaryLocalization(hierarchyType);
+
+  // Fetch hierarchy definition based on the campaign's hierarchyType
   const hierarchyDefCriteria = useMemo(() => ({
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
     changeQueryName: `commodityDash_${hierarchyType}`,
@@ -152,30 +185,6 @@ const CommodityDashboard = () => {
   const topLevelBoundaryType = sortedHierarchy[0]?.boundaryType || null;
   const isTopLevel = !!(userBoundary?.boundaryType && topLevelBoundaryType && userBoundary.boundaryType === topLevelBoundaryType);
 
-  // Fetch campaign details (for campaignId fallback + auditDetails.createdTime)
-  const campaignReqCriteria = useMemo(() => ({
-    url: `/project-factory/v1/project-type/search`,
-    body: {
-      CampaignDetails: {
-        tenantId,
-        campaignNumber,
-      },
-    },
-    config: {
-      enabled: !!campaignNumber,
-      select: (data) => {
-        const campaign = data?.CampaignDetails?.[0];
-        return {
-          id: campaign?.id,
-          createdTime: campaign?.auditDetails?.createdTime,
-        };
-      },
-    },
-  }), [tenantId, campaignNumber]);
-
-  const { data: campaignSearchData, isLoading: campaignIdLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
-
-  const campaignId = campaignIdFromUrl || campaignSearchData?.id;
   const campaignCreatedDate = useMemo(
     () => {
       if (projectCreatedTime) return new Date(projectCreatedTime);
@@ -455,7 +464,7 @@ const CommodityDashboard = () => {
     { key: "pending", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_PENDING_TRANSACTIONS) },
   ];
 
-  if (campaignIdLoading || hierarchyLoading) {
+  if (campaignIdLoading || hierarchyLoading || boundaryLocalizationLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 

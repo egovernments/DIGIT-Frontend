@@ -7,6 +7,7 @@ import StockComponent from "./StockComponent";
 import BulkUpload from "../BulkUpload";
 import XLSX from "xlsx";
 import useBatchStockCreation from "../../hooks/useBatchStockCreation";
+import useBoundaryLocalization from "../../hooks/useBoundaryLocalization";
 
 const BulkStockUpload = () => {
   const { t } = useTranslation();
@@ -154,6 +155,10 @@ const BulkStockUpload = () => {
 
   // Derive BOUNDARY_HIERARCHY_TYPE from the campaign's actual hierarchyType
   const BOUNDARY_HIERARCHY_TYPE = campaignData?.hierarchyType;
+
+  // Boundary codes are rendered as i18n keys in the hierarchy selects below, so the
+  // hcm-boundary-<hierarchyType> module must be loaded before they show up
+  const { isLoading: boundaryLocalizationLoading } = useBoundaryLocalization(BOUNDARY_HIERARCHY_TYPE);
 
   // Fetch boundary hierarchy definition
   const hierarchyDefinitionReqCriteria = useMemo(() => {
@@ -1008,7 +1013,7 @@ const BulkStockUpload = () => {
     }
   }, [uploadedFileData, productVariants, tenantId, campaignData, campaignId, campaignNumber, navigate, t, processBatches, fromFacility, sortedHierarchy, projectBoundaryMap]);
 
-  if (campaignLoading || hierarchyLoading || projectsLoading || boundaryRelLoading || allFacilitiesLoading || projectTypeLoading) {
+  if (campaignLoading || hierarchyLoading || projectsLoading || boundaryRelLoading || allFacilitiesLoading || projectTypeLoading || boundaryLocalizationLoading) {
     return <Loader />;
   }
 
@@ -1238,7 +1243,7 @@ const BulkStockUpload = () => {
                           <span>{f.name !== f.id ? `${f.name} (${f.id})` : f.id}</span>
                           {f.boundaryType && (
                             <span style={{ marginLeft: "0.5rem", fontSize: "0.75rem", color: "#787878", backgroundColor: "#F0F0F0", padding: "0.125rem 0.375rem", borderRadius: "0.25rem" }}>
-                              {t(f.boundaryType)}{f.boundary ? `: ${f.boundary}` : ""}
+                              {t(f.boundaryType)}{f.boundary ? `: ${t(f.boundary)}` : ""}
                             </span>
                           )}
                         </div>
@@ -1323,7 +1328,7 @@ const BulkStockUpload = () => {
                               <span>{f.name !== f.id ? `${f.name} (${f.id})` : f.id}</span>
                               {f.boundaryType && (
                                 <span style={{ marginLeft: "0.5rem", fontSize: "0.75rem", color: "#787878", backgroundColor: "#F0F0F0", padding: "0.125rem 0.375rem", borderRadius: "0.25rem" }}>
-                                  {t(f.boundaryType)}{f.boundary ? `: ${f.boundary}` : ""}
+                                  {t(f.boundaryType)}{f.boundary ? `: ${t(f.boundary)}` : ""}
                                 </span>
                               )}
                             </div>
