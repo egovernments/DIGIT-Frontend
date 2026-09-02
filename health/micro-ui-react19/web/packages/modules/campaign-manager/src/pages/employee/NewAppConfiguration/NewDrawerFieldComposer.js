@@ -478,6 +478,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const isMandatory = selectedField?.mandatory === true;
         const isDisabled = viewMode || (panelItem?.disableForRequired && isMandatory);
 
+        // A read-only field is auto-filled and can't be edited in the app (e.g. Refer
+        // Beneficiary → Referred By), so a Required control is meaningless — hide it
+        if (bindTo === "required" && selectedField?.readOnly === true) return null;
+
         const handleToggleChange = (value) => {
           const newToggleValue = Boolean(value);
 
@@ -1922,6 +1926,14 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
 
           // If bindTo has ".", take the first part (parent key), otherwise use the whole bindTo
           const parentKey = bindTo.includes(".") ? bindTo.split(".")[0] : bindTo;
+
+          // The page-level info card pseudo-field (conditions.infoCardText) has no configurable
+          // title — the app hardcodes it — so only its message (description) is editable
+          if (selectedField?.__pageInfoCard && parentKey === "label") return null;
+
+          // A read-only field is auto-filled, so the Required control is hidden (see the
+          // toggle case in RenderField) — skip the wrapper too or an empty card renders
+          if (panelItem?.fieldType === "toggle" && bindTo === "required" && selectedField?.readOnly === true) return null;
 
           const shouldShowToggle = !(
             (

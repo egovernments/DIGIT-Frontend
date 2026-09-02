@@ -6,7 +6,7 @@ import { LabelFieldPair, TextInput, TextArea } from "@egovernments/digit-ui-comp
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { updateHeaderField, updateHeaderProperty } from "./redux/remoteConfigSlice";
 
-const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex = 0, fieldKey, viewMode, maxLength = 30, skipPropertyUpdate = false }) => {
+const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex = 0, fieldKey, viewMode, maxLength = 30, skipPropertyUpdate = false, hideLabel = false }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const currentLocale = useSelector((state) => state.localization.currentLocale);
@@ -87,9 +87,12 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
   return (
     <LabelFieldPair className={type === "textarea" ? "appConfigHeaderLabelField desc" : "appConfigHeaderLabelField"} removeMargin={true}>
       <div className="appConfigLabelField-label-container">
-        <div className="appConfigLabelField-label">
-          <span>{t(label)}</span>
-        </div>
+        {/* hideLabel: the host (e.g. the info card element row) already renders the title */}
+        {!hideLabel && (
+          <div className="appConfigLabelField-label">
+            <span>{t(label)}</span>
+          </div>
+        )}
         {type === "textarea" ? (
           <TextArea
             type="textarea"

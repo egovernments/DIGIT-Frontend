@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Divider, LabelFieldPair, TextInput, Switch } from "@egovernments/digit-ui-components";
+import { Button, Divider, LabelFieldPair, TextInput, Switch, Tag } from "@egovernments/digit-ui-components";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup, updateHeaderProperty } from "./redux/remoteConfigSlice";
 import { useCustomT } from "./hooks/useCustomT";
@@ -204,6 +204,14 @@ function NewAppFieldScreenWrapper({viewMode}) {
     );
   }
 
+  // True when a body section renders its own Buttons subheader (button-format rows) — the footer
+  // label inputs then join that section instead of opening a second "Buttons" heading
+  const hasBodyButtonRows = (currentCard?.body || []).some((section) => {
+    const sectionBodyFields = currentCard?.type === "template" ? extractTemplateFields(section?.fields) : (section?.fields || []);
+    const sectionFooterFields = currentCard?.type === "template" && currentCard?.footer ? extractTemplateFields(currentCard.footer) : [];
+    return [...sectionBodyFields, ...sectionFooterFields].filter(isFieldEditable).some((f) => f?.format === "button");
+  });
+
   return (
     <React.Fragment>
       {/* <div className="app-config-drawer-subheader">
@@ -238,21 +246,6 @@ function NewAppFieldScreenWrapper({viewMode}) {
             viewMode={viewMode}
             maxLength={64}
           />
-          {/* Info card message (page-level conditions.infoCardText) */}
-          {currentCard?.conditions?.infoCardText && (
-            <HeaderFieldWrapper
-              key="header-infocard-text"
-              label={"INFO_CARD_TEXT"}
-              type="textarea"
-              value={currentCard?.conditions?.infoCardText}
-              currentCard={currentCard}
-              index={2}
-              cardIndex={0}
-              skipPropertyUpdate={true}
-              maxLength={500}
-              viewMode={viewMode}
-            />
-          )}
          <Divider />
         </>
       )}
@@ -260,6 +253,68 @@ function NewAppFieldScreenWrapper({viewMode}) {
         <div> {currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS)}</div>
         <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS)} />
       </div>
+      {/* Page-level info card (conditions.infoCardText) presented as an element with an
+          Infocard tag and a show/hide toggle, consistent with body infoCard fields on
+          template screens. Toggling off stashes the localisation code in
+          conditions.infoCardTextDisabled and nulls infoCardText — the app only renders
+          the card when infoCardText is present. */}
+      {(currentCard?.conditions?.infoCardText || currentCard?.conditions?.infoCardTextDisabled) && (
+        <div
+          className="draggableField-cont app-config-field-wrapper"
+          style={currentCard?.conditions?.infoCardText ? { cursor: "pointer" } : {}}
+          onClick={() => {
+            if (!currentCard?.conditions?.infoCardText) return; // hidden card: nothing to edit
+            // Pseudo-field: opens the regular Field-properties view; its message edits go
+            // through the localisation slice like any other field, config shape untouched
+            dispatch(
+              selectField({
+                field: {
+                  fieldName: "pageInfoCard",
+                  type: "template",
+                  format: "infoCard",
+                  label: null,
+                  description: currentCard?.conditions?.infoCardText,
+                  __pageInfoCard: true,
+                },
+                screen: currentCard,
+                card: null,
+                cardIndex: -1,
+              })
+            );
+          }}
+        >
+          <LabelFieldPair className={`appConfigLabelField`}>
+            <div className={`appConfigLabelField-label-container toggle`} style={{ width: "70%" }}>
+              <div className={`appConfigLabelField-label toggle`}>
+                <span>{t("INFO_CARD_TEXT")}</span>
+              </div>
+              <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap" }}>
+                <Tag icon="" label={t("Infocard")} className="app-config-field-tag normal" labelStyle={{}} showIcon={false} style={{}} />
+              </div>
+            </div>
+            <div onClick={(e) => e.stopPropagation()}>
+              <Switch
+                key={currentCard?.conditions?.infoCardText ? "infocard-on" : "infocard-off"}
+                label=""
+                isCheckedInitially={!!currentCard?.conditions?.infoCardText}
+                disable={viewMode}
+                shapeOnOff
+                onToggle={() => {
+                  const cond = { ...(currentCard?.conditions || {}) };
+                  if (cond.infoCardText) {
+                    cond.infoCardTextDisabled = cond.infoCardText;
+                    cond.infoCardText = null;
+                  } else {
+                    cond.infoCardText = cond.infoCardTextDisabled || null;
+                    cond.infoCardTextDisabled = null;
+                  }
+                  dispatch(updateHeaderProperty({ fieldKey: "conditions", value: cond }));
+                }}
+              />
+            </div>
+          </LabelFieldPair>
+        </div>
+      )}
       {currentCard?.body?.map((section, index, card) => {
 
         const bodyFields =
@@ -291,9 +346,10 @@ function NewAppFieldScreenWrapper({viewMode}) {
 
 
 
-        return (
-          <Fragment key={`card-${index}`}>
-            {fields?.map(({ type, label, active, required, Mandatory, deleteFlag, fieldName, id, ...rest }, i, c) => {
+        // Render one field row; `i` stays the index in the combined body+footer list so the
+        // existing card/field index math is unchanged by the section grouping below
+        const renderFieldRow = (fieldEntry, i, c) => {
+              const { type, label, active, required, Mandatory, deleteFlag, fieldName, id, ...rest } = fieldEntry;
               const isFooterField = i >= bodyFieldsCount;
               const actualCardIndex = isFooterField ? -1 : index; // Use -1 for footer fields
               const actualFieldIndex = isFooterField ? i - bodyFieldsCount : i;
@@ -342,7 +398,22 @@ function NewAppFieldScreenWrapper({viewMode}) {
                 // isFooterField={isFooterField}
                 />
               );
-            })}
+            };
+
+        return (
+          <Fragment key={`card-${index}`}>
+            {fields?.map((fieldEntry, i, c) => (fieldEntry?.format === "button" ? null : renderFieldRow(fieldEntry, i, c)))}
+            {/* Body/template buttons get their own section, consistent with pages whose buttons live in the footer */}
+            {buttonFields.length > 0 && (
+              <>
+                <Divider className="app-config-drawer-action-divider" />
+                <div className="app-config-drawer-subheader">
+                  <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_BUTTONS)}</div>
+                  <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_BUTTONS)} />
+                </div>
+              </>
+            )}
+            {fields?.map((fieldEntry, i, c) => (fieldEntry?.format === "button" ? renderFieldRow(fieldEntry, i, c) : null))}
             {currentCard?.type !== "template" && !viewMode && (<Button
               className={"app-config-drawer-button add-field"}
               type={"button"}
@@ -378,8 +449,8 @@ function NewAppFieldScreenWrapper({viewMode}) {
           onClick={handleAddSection}
         />
       )}
-      {currentCard?.footer?.length > 0 && (<Divider className="app-config-drawer-action-divider" />)}
-      {currentCard?.footer?.length > 0 && (
+      {currentCard?.footer?.length > 0 && !hasBodyButtonRows && (<Divider className="app-config-drawer-action-divider" />)}
+      {currentCard?.footer?.length > 0 && !hasBodyButtonRows && (
         <div className="app-config-drawer-subheader">
           <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_BUTTONS)}</div>
           <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_BUTTONS)} />
