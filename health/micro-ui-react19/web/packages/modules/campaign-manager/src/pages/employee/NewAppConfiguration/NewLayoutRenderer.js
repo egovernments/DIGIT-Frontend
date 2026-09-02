@@ -1,13 +1,10 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Card, CardHeader, CardText, Button, PopUp } from "@egovernments/digit-ui-components";
 import MobileBezelFrame from "../../../components/MobileBezelFrame";
 import { isFieldSelected, renderTemplateComponent } from "./helpers/templateRendererHelpers";
-import { derivePreviewScenarios } from "./helpers/visibilityEvaluator";
-import { PreviewStateContext } from "./helpers/previewStateContext";
-import { setShowPopupPreview, setPreviewStateId } from "./redux/remoteConfigSlice";
+import { setShowPopupPreview } from "./redux/remoteConfigSlice";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
-
 
 /**
  * Render a section (body or footer)
@@ -64,52 +61,12 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
   // Get field type master data from Redux
   const dispatch = useDispatch();
   const { byName } = useSelector((state) => state.fieldTypeMaster);
-  const { showPopupPreview, previewStateId } = useSelector((state) => state.remoteConfig);
+  const { showPopupPreview } = useSelector((state) => state.remoteConfig);
   const fieldTypeMasterData = byName?.fieldTypeMappingConfig || [];
 
   // Get popup config from selected field if it's an actionPopup
   const popupConfig = selectedField?.properties?.popupConfig || {};
-
-  // Simulated preview state: scenarios derived from the page's `visible` expressions.
-  // The preview opens in the Default state (only always-visible elements); the nav
-  // stepper walks through each condition-based state.
-  const scenarios = useMemo(() => derivePreviewScenarios(data, t), [data, t]);
-  const states = useMemo(
-    () => (scenarios.length > 0 ? [{ id: "__default__", displayLabel: "Default", assignments: {}, terms: [] }, ...scenarios] : []),
-    [scenarios]
-  );
-  const safeIndex = Math.max(0, states.findIndex((s) => s.id === previewStateId));
-  const activeScenario = states.length > 0 ? states[safeIndex] : null;
-
-  const stepState = (delta) => dispatch(setPreviewStateId(states[(states.length + safeIndex + delta) % states.length]?.id));
-  const navButtonStyle = {
-    width: "1.75rem",
-    height: "1.75rem",
-    borderRadius: "50%",
-    border: "1px solid #C84C0E",
-    backgroundColor: "#fff",
-    color: "#C84C0E",
-    fontSize: "1rem",
-    lineHeight: 1,
-    cursor: "pointer",
-  };
-
   return (
-    <PreviewStateContext.Provider value={{ scenario: activeScenario }}>
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem" }}>
-      {states.length > 0 && (
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", zIndex: 20 }}>
-          <button type="button" style={navButtonStyle} title="Previous state" onClick={() => stepState(-1)}>
-            {"\u2039"}
-          </button>
-          <span style={{ fontWeight: 600, color: "#0B4B66", minWidth: "14rem", textAlign: "center" }}>
-            {`${activeScenario?.displayLabel} (${safeIndex + 1}/${states.length})`}
-          </span>
-          <button type="button" style={navButtonStyle} title="Next state" onClick={() => stepState(1)}>
-            {"\u203A"}
-          </button>
-        </div>
-      )}
     <MobileBezelFrame>
       <div
         className="mobile-bezel-child-container"
@@ -227,8 +184,6 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
         </PopUp>
       )}
     </MobileBezelFrame>
-    </div>
-    </PreviewStateContext.Provider>
   );
 };
 
