@@ -2,6 +2,27 @@ import React from "react";
 import { FieldV1 } from "@egovernments/digit-ui-components";
 import { getFieldTypeFromMasterData } from "./getFieldTypeFromMasterData";
 import { getComponentName as getComponentNameFromHelper, isEditableComponent } from "./propertyHelpers.js";
+import { isConditionalExpression, isFieldVisibleInScenario } from "./visibilityEvaluator";
+import { usePreviewScenario } from "./previewStateContext";
+
+/**
+ * Applies the simulated preview state to a rendered field.
+ * - "All states" (no scenario): conditional fields render with a dashed outline
+ *   so authors can tell they are runtime-dependent and mutually exclusive.
+ * - With a scenario: fields whose `visible` expression contradicts the scenario
+ *   are hidden; the currently selected field is always shown so it stays editable.
+ */
+const PreviewVisibilityGate = ({ field, isSelected, children }) => {
+  const { scenario } = usePreviewScenario();
+  if (!isConditionalExpression(field?.visible)) return children;
+  if (scenario) {
+    if (!isSelected && !isFieldVisibleInScenario(field, scenario)) return null;
+    return children;
+  }
+  return React.cloneElement(children, {
+    style: { ...(children.props.style || {}), outline: "1px dashed rgba(200, 76, 14, 0.5)", outlineOffset: "-2px" },
+  });
+};
 
 /**
  * Get component name from field master data
@@ -79,17 +100,19 @@ export const renderTemplateComponent = (
   // If custom component found, render it
   if (Component) {
     return (
-      <div key={uniqueKey} onClick={editableComponent ? handleClick : null} className={wrapperClassName}>
-        <Component
-          field={field}
-          t={t}
-          fieldTypeMasterData={fieldTypeMasterData}
-          selectedField={selectedField}
-          onFieldClick={onFieldClick}
-          isFieldSelected={isSelected}
-          data={data}
-        />
-      </div>
+      <PreviewVisibilityGate key={uniqueKey} field={field} isSelected={isSelected}>
+        <div onClick={editableComponent ? handleClick : null} className={wrapperClassName}>
+          <Component
+            field={field}
+            t={t}
+            fieldTypeMasterData={fieldTypeMasterData}
+            selectedField={selectedField}
+            onFieldClick={onFieldClick}
+            isFieldSelected={isSelected}
+            data={data}
+          />
+        </div>
+      </PreviewVisibilityGate>
     );
   }
 
@@ -97,16 +120,17 @@ export const renderTemplateComponent = (
   const fieldType = getFieldTypeFromMasterData(field, fieldTypeMasterData);
 
   return (
-    <div
-      key={uniqueKey}
-      onClick={handleClick}
-      className="template-field-fallback"
-    >
-      {`${
-        fieldType
-          ? fieldType.charAt(0).toUpperCase() + fieldType.slice(1).toLowerCase()
-          : "This"
-      } component will be available soon...`}
-    </div>
+    <PreviewVisibilityGate key={uniqueKey} field={field} isSelected={isSelected}>
+      <div
+        onClick={handleClick}
+        className="template-field-fallback"
+      >
+        {`${
+          fieldType
+            ? fieldType.charAt(0).toUpperCase() + fieldType.slice(1).toLowerCase()
+            : "This"
+        } component will be available soon...`}
+      </div>
+    </PreviewVisibilityGate>
   );
 };

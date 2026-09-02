@@ -1,10 +1,11 @@
-import React, { Fragment, useCallback, useState, useRef, useEffect } from "react";
+import React, { Fragment, useCallback, useMemo, useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Divider, LabelFieldPair, TextInput, Switch, Tag } from "@egovernments/digit-ui-components";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup, updateHeaderProperty } from "./redux/remoteConfigSlice";
+import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup, updateHeaderProperty, setPreviewStateId } from "./redux/remoteConfigSlice";
 import { useCustomT } from "./hooks/useCustomT";
 import NewDraggableField from "./NewDraggableField";
+import { derivePreviewScenarios, describeScenarioConditions } from "./helpers/visibilityEvaluator";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import HeaderFieldWrapper from "./HeaderFieldWrapper";
@@ -98,11 +99,19 @@ const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale,
 function NewAppFieldScreenWrapper({viewMode}) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { currentData } = useSelector((state) => state.remoteConfig);
+  const { currentData, previewStateId } = useSelector((state) => state.remoteConfig);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
 
   const currentCard = currentData;
+  const isTemplatePage = currentCard?.type === "template";
+
+  // Status-tag states for the "View tag state" selector; changing it drives the
+  // same simulated preview state as the stepper above the phone frame.
+  const tagStates = useMemo(
+    () => derivePreviewScenarios(currentCard, t).filter((scenario) => scenario.format === "tag"),
+    [currentCard, t]
+  );
 
   const moveField = useCallback(
     (fromIndex, toIndex, cardIndex) => {
@@ -405,7 +414,104 @@ function NewAppFieldScreenWrapper({viewMode}) {
                 // isFooterField={isFooterField}
                 />
               );
-            };
+        };
+
+        // Template pages group runtime-conditional items after the regular elements:
+        // status tags (only one shows at a time on device) and action buttons/popups.
+        if (isTemplatePage) {
+          const isStatusTag = (f) => f?.format === "tag";
+          // Action group matches the Buttons-section semantics below: explicit button-like
+          // formats plus every footer-originated row (the app's bottom action bar)
+          const isActionField = (f, i) => f?.format === "button" || f?.format === "actionPopup" || f?.format === "qrScanner" || i >= bodyFieldsCount;
+          const tagIndexes = [];
+          const actionIndexes = [];
+          const elementIndexes = [];
+          fields.forEach((f, i) => (isStatusTag(f) ? tagIndexes : isActionField(f, i) ? actionIndexes : elementIndexes).push(i));
+
+          return (
+            <Fragment key={`card-${index}`}>
+              {elementIndexes.map((i) => renderFieldRow(fields[i], i, fields))}
+              {elementIndexes.length > 0 && (tagIndexes.length > 0 || actionIndexes.length > 0) && (
+                <Divider className="app-config-drawer-action-divider" />
+              )}
+              <>
+                  {tagIndexes.length > 0 && (
+                    <>
+                      <div className="app-config-drawer-subheader">
+                        <div>{`${t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_STATUS_TAGS)} (${tagIndexes.length})`}</div>
+                        <ConsoleTooltip iconFill={"#0B4B66"} style={{ marginLeft: "0rem", top: "0rem" }} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_STATUS_TAGS)} />
+                      </div>
+                      <div style={{ fontSize: "0.75rem", color: "#505A5F", marginBottom: "0.5rem" }}>
+                        {t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_STATUS_TAGS_NOTE)}
+                      </div>
+                      {tagStates.length > 0 && (
+                        <div style={{ marginBottom: "0.75rem" }}>
+                          <div style={{ fontWeight: 600, fontSize: "0.875rem", color: "#0B4B66", marginBottom: "0.375rem" }}>
+                            {t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_VIEW_TAG_STATE)}
+                          </div>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.375rem" }}>
+                            {[{ id: "__default__", displayLabel: "Default" }, ...tagStates].map((scenario) => {
+                              const isActive = (previewStateId || "__default__") === scenario.id;
+                              return (
+                                <button
+                                  key={scenario.id}
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    dispatch(setPreviewStateId(scenario.id));
+                                  }}
+                                  style={{
+                                    border: `1px solid ${isActive ? "#C84C0E" : "#D6D5D4"}`,
+                                    borderRadius: "1rem",
+                                    padding: "0.125rem 0.625rem",
+                                    fontSize: "0.75rem",
+                                    cursor: "pointer",
+                                    backgroundColor: isActive ? "#C84C0E" : "#fff",
+                                    color: isActive ? "#fff" : "#363636",
+                                    fontWeight: isActive ? 600 : 400,
+                                  }}
+                                >
+                                  {scenario.displayLabel}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                      {(() => {
+                        const activeTagState = tagStates.find((scenario) => scenario.id === previewStateId);
+                        if (!activeTagState) return null;
+                        return (
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.25rem", alignItems: "center", marginBottom: "0.75rem", fontSize: "0.75rem" }}>
+                            <span style={{ color: "#505A5F" }}>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SHOWN_WHEN)}</span>
+                            {describeScenarioConditions(activeTagState).map((cond, condIndex) => (
+                              <Fragment key={condIndex}>
+                                {condIndex > 0 && <span style={{ color: "#C84C0E", fontWeight: 600 }}>AND</span>}
+                                <span style={{ border: "1px solid #D6D5D4", borderRadius: "1rem", padding: "0 0.375rem", backgroundColor: "#FAFAFA", color: "#363636" }}>
+                                  {`${cond.label} ${cond.op} ${cond.value}`}
+                                </span>
+                              </Fragment>
+                            ))}
+                          </div>
+                        );
+                      })()}
+                      {tagIndexes.map((i) => renderFieldRow(fields[i], i, fields))}
+                    </>
+                  )}
+                  {tagIndexes.length > 0 && actionIndexes.length > 0 && <Divider className="app-config-drawer-action-divider" />}
+                  {actionIndexes.length > 0 && (
+                    <>
+                      <div className="app-config-drawer-subheader">
+                        <div>{`${t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_ACTION_BUTTONS)} (${actionIndexes.length})`}</div>
+                        <ConsoleTooltip iconFill={"#0B4B66"} style={{ marginLeft: "0rem", top: "0rem" }} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_ACTION_BUTTONS)} />
+                      </div>
+                      {actionIndexes.map((i) => renderFieldRow(fields[i], i, fields))}
+                    </>
+                  )}
+              </>
+            </Fragment>
+          );
+        }
 
         return (
           <Fragment key={`card-${index}`}>
@@ -421,8 +527,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
               </>
             )}
             {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) ? renderFieldRow(fieldEntry, i, c) : null))}
-            {currentCard?.type !== "template" && !viewMode && (<Button
-              className={"app-config-drawer-button add-field"}
+            {currentCard?.type !== "template" && !viewMode && (<Button              className={"app-config-drawer-button add-field"}
               type={"button"}
               size={"medium"}
               icon={"AddIcon"}
@@ -484,8 +589,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
           onToggle={handleTogglePreventScreenCapture}
           disable={viewMode}
         />
-      </div>
-    </React.Fragment>
+      </div>    </React.Fragment>
   );
 }
 
