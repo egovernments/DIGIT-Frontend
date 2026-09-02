@@ -31,6 +31,14 @@ const AssignCampaignInbox = () => {
       i18nKey: `${j.boundary?.toUpperCase()}`,
     }));
 
+    // An MDMS-served config can still carry searchFormJsonPath/filterFormJsonPath =
+    // "requestBody.Projects", which the composer would spread into { "0": {...} }.
+    // Force the scratch keys so Projects always leaves as a list.
+    if (configFromMDMS?.apiDetails) {
+      configFromMDMS.apiDetails.searchFormJsonPath = "searchFormState";
+      configFromMDMS.apiDetails.filterFormJsonPath = "filterFormState";
+    }
+
     if (jurisdictions.length && configFromMDMS?.apiDetails?.requestBody) {
       configFromMDMS.apiDetails.requestBody.Projects = jurisdictions.map((jurisdiction) => ({
         tenantId: jurisdiction.tenantId || tenantId,

@@ -59,13 +59,23 @@ const CreateEmployee = ({ editUser = false }) => {
       return data?.["egov-hrms"]?.CreateEmployeeConfig?.[0];
     },
     retry: false,
-    enable: false,
+    enable: true,
   });
 
 
-  const validatePhoneNumber = (value) => {
+ const validatePhoneNumber = (value, config) => {
+    const { minLength, maxLength, min, max } = config?.populators?.validation || {};
     const stringValue = String(value || "");
-    return !!stringValue.match(getPattern("MobileNo"));
+
+    if (
+      (minLength && stringValue.length < minLength) ||
+      (maxLength && stringValue.length > maxLength) ||
+      (min && Number(value) < min) ||
+      (max && Number(value) > max)
+    ) {
+      return false;
+    }
+    return true;
   };
 
   const onFormValueChange = (setValue, formData) => {
