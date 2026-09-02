@@ -26,9 +26,12 @@ const LanguageSelection = () => {
   }
   const selectedLanguage = Digit.StoreData.getCurrentLanguage();
   const [selected, setselected] = useState(selectedLanguage);
-  const handleChangeLanguage = (language) => {
+  const [isChangingLanguage, setIsChangingLanguage] = useState(false);
+  const handleChangeLanguage = async (language) => {
     setselected(language.value);
-    Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
+    setIsChangingLanguage(true);
+    await Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
+    setIsChangingLanguage(false);
   };
   function getContextPath(contextPath) {
     if (!contextPath || typeof contextPath !== "string") return "";
@@ -38,6 +41,7 @@ const LanguageSelection = () => {
   const hasMultipleLanguages = languages?.length > 1;
 
   const handleSubmit = (event) => {
+        if (isChangingLanguage) return;
         navigate(`/${getContextPath(window.contextPath)}/user/login?ts=${Date.now()}`);
   };
 
@@ -67,7 +71,8 @@ const LanguageSelection = () => {
             </div>
           ))}
         </div>
-        <SubmitBar style={{ width: "100%" }} label={t(`CORE_COMMON_CONTINUE`)} onSubmit={handleSubmit} />
+        <SubmitBar style={{ width: "100%" }} label={t(`CORE_COMMON_CONTINUE`)} onSubmit={handleSubmit} disabled={isChangingLanguage} />
+        {isChangingLanguage && <Loader variant={"OverlayLoader"} loaderText={"CORE_LOADING"} />}
       </Card>
       <div className="EmployeeLoginFooter">
         <ImageComponent
