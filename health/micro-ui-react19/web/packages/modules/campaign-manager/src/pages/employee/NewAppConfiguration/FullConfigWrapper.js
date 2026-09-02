@@ -844,11 +844,13 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
           ]}
           setactionFieldsToRight={true}
         />
-        {/* Toast Notification */}
-        {showToast && (
-          <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />
-        )}
       </div>
+      {/* Toast Notification — outside the container: its overflow-hidden scroll areas
+          (center-content/preview-area) clip fixed descendants, cutting the message off
+          at the canvas edge when rendered inside */}
+      {showToast && (
+        <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />
+      )}
     </React.Fragment>
   );
 };
