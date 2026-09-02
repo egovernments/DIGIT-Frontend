@@ -358,9 +358,11 @@ const CreateEmployee = ({ editUser = false }) => {
   const config = isEdit
     ? updatedConfig?.form?.map((section) => ({
       ...section,
-      body: section.body.filter(
-        (field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword" && field.key !== "Jurisdictions"
-      ),
+      body: section.body
+        .filter(
+          (field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword" && field.key !== "Jurisdictions"
+        )
+        .map((field) => field.key === "SelectEmployeeId" ? { ...field, nonEditable: true } : field),
     }))
     : updatedConfig?.form;
 
