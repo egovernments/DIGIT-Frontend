@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { handleShowAddFieldPopup, initializeConfig, addField } from "./redux/remoteConfigSlice";
@@ -1223,9 +1224,14 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           </>
         </PopUp>
       )}
-      {showToast && (
-        <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />
-      )}
+      {/* Portal to body: this component mounts inside the preview area, whose
+          overflow-hidden/auto scroll containers clip fixed descendants — inline the
+          toast was cut off at the canvas edge */}
+      {showToast &&
+        createPortal(
+          <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />,
+          document.body
+        )}
     </React.Fragment>
   );
 };
