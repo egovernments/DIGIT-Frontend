@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { Tag, Divider, FieldV1 } from "@egovernments/digit-ui-components";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
+import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import PopupFieldConfigurator from "../../../components/PopupFieldConfigurator";
@@ -213,9 +214,25 @@ const PopupLabelField = ({ label, path, value, selectedField, viewMode }) => {
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
 
+  // Seeded templates can carry an empty code (e.g. popupConfig.description: "").
+  // useCustomT("") always returns "", so edits under an empty code never display.
+  // Generate a code lazily on first edit and keep it stable across keystrokes.
+  const generatedCodeRef = useRef(null);
+  const effectiveCode = value || generatedCodeRef.current;
+
   // Get localized value using useCustomT hook directly (same as LocalizationInput)
   // Don't fallback to code, empty string is valid
-  const localizedValue = useCustomT(value);
+  const localizedValue = useCustomT(effectiveCode);
+
+  // Keep keystrokes in local state; syncing the input straight from redux
+  // re-renders mid-typing and scrambles fast input (same pattern as
+  // NewDrawerFieldComposer's localValue + isEditingRef).
+  const [localValue, setLocalValue] = useState(localizedValue);
+  const isEditingRef = useRef(false);
+  useEffect(() => {
+    if (isEditingRef.current) return;
+    setLocalValue(localizedValue);
+  }, [localizedValue]);
 
   return (
     <div className="drawer-container-tooltip">
@@ -226,17 +243,39 @@ const PopupLabelField = ({ label, path, value, selectedField, viewMode }) => {
 
       {/* Text field using FieldV1 - same as LocalizationInput */}
       <FieldV1
-        value={localizedValue}
+        value={localValue}
         type="text"
         placeholder={t(I18N_KEYS.APP_CONFIGURATION.ENTER_LABEL_TEXT) || ""}
         withoutLabel={true}
         disabled={viewMode}
+        onBlur={() => {
+          isEditingRef.current = false;
+        }}
         onChange={(e) => {
           const val = e.target.value;
+          isEditingRef.current = true;
+          setLocalValue(val);
+          let code = effectiveCode;
+          if (!code) {
+            // No code yet: mint one (same convention as NewDrawerFieldComposer)
+            // and persist it into popupConfig so it saves with the configuration.
+            code = `POPUP_${path.replace(/\./g, "_").toUpperCase()}_${Date.now()}`;
+            generatedCodeRef.current = code;
+            const newProperties = structuredClone(selectedField.properties);
+            const keys = path.split(".");
+            let node = newProperties.popupConfig;
+            for (let i = 0; i < keys.length - 1; i++) {
+              node = node?.[keys[i]];
+            }
+            if (node) {
+              node[keys[keys.length - 1]] = code;
+              dispatch(updateSelectedField({ properties: newProperties }));
+            }
+          }
           // Update localization for the code
           dispatch(
             updateLocalizationEntry({
-              code: value,
+              code,
               locale: currentLocale || "en_IN",
               message: val,
             })
