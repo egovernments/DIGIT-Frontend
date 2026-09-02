@@ -1,0 +1,386 @@
+[
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "Administration Failed",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "Beneficiary Absent",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Beneficiary Refused",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Cement",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Clay",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_VALIDATION_ERROR",
+    "message": "This is a required field",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Drug Side Effect from the current cycle",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Drug Side Effect from the previous cycle",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Fever",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Glass",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Insufficient Resources",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVENTORY_RECEIVER_LABEL",
+    "message": "Receiver",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVENTORY_SENDER_LABEL",
+    "message": "Sender",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVENTORY_TRANSACTION_TYPE_LABEL",
+    "message": "Transaction type",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "Metal",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Not Enough Stock",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_FACILITIES_FOUND",
+    "message": "No Facilities found",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_PRODUCTS_FOUND",
+    "message": "No Products found",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Not Enough Stock",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Other",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Other",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Other",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "PERFORMANCEISSUE",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Reeds",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SELECT_PRODUCT",
+    "message": "Select product variant",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SELECT_WAREHOUSE",
+    "message": "Select warehouse",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Sick",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATIONSUCCESS_UNDEFINED_UNDEFINED_PAGE_HEADING",
+    "message": " ",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_DESCRIPTION",
+    "message": "Your stock reconciliation has been recorded",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_HEADING",
+    "message": "Stock reconciliation submitted successfully",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_PRIMARY_ACTION_LABEL",
+    "message": "Back to Home",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_ACTION_LABEL",
+    "message": "Submit",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_DESCRIPTION",
+    "message": "Perform stock reconciliation for your facility",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_HEADING",
+    "message": "Stock Reconciliation",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_comments_HELP_TEXT",
+    "message": "Add any comments or observations about the reconciliation",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_comments_LABEL",
+    "message": "Comments",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_HELP_TEXT",
+    "message": "Enter the physical count of stock after manual verification",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_LABEL",
+    "message": "Manual count",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_MIN_ERROR",
+    "message": "Manual count must be 0 or greater",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_REQUIRED_ERROR",
+    "message": "Manual count is required",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_HELP_TEXT",
+    "message": "Select facility and product to reconcile stock",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_LABEL",
+    "message": "Facility and product selection",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_REQUIRED_ERROR",
+    "message": "Please select facility and product",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCKRECON_REPORT_DETAILS_INFO_CARD_LABEL",
+    "message": "Info",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_METRICS",
+    "message": "Stock Metrics",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_DATE",
+    "message": "Date",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_CONTENT",
+    "message": "Stock on hand = (Stock received + stock returned) − (stock issued + stock lost + stock damaged)",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_INFO_CARD_TITLE",
+    "message": "Info",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_DAMAGED",
+    "message": "Stock Damaged",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ISSUED",
+    "message": "Stock Issued",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_LOST",
+    "message": "Stock Lost",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_ON_HAND",
+    "message": "Stock in hand",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RECEIVED",
+    "message": "Stock Received",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECONCILIATION_STOCK_RETURNED",
+    "message": "Stock Returned",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECON_REPORT_DETAILS_INFO_CARD_DESCRIPTION",
+    "message": "Please select warehouse and product variant to view the report",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Delivery Successful",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "Sync not working",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "SECURITYISSUES",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "Sync Not Working",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "TECHNICALISSUES",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "USERACCOUNTISSUES",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockInHand",
+    "message": "Stock in hand",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockRecon",
+    "message": "Stock reconciliation",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "stockTable",
+    "message": "Stock table",
+    "module": "hcm-base-stockreconciliation-default",
+    "locale": "en_DEMO"
+  }
+]

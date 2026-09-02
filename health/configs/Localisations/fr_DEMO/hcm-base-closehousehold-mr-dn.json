@@ -1,0 +1,1058 @@
+[
+        {
+            "code": "ADD_HEADER_LOCALIZATION",
+            "message": "Étiquette",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "ADMINISTRATION_FAILED",
+            "message": "Une zone administrative est requise",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "ADMINISTRATION_SUCCESS",
+            "message": "Succès administratif",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
+            "message": "Fermer Le nom du chef de ménage doit comporter entre 2 et 200 caractères.",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_CATEGORY_CLOSE_HOUSEHOLD",
+            "message": "Fermer le ménage",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_FLOW_CLOSEHOUSEHOLDREGISTRATION",
+            "message": "Fermer l'enregistrement des ménages",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_FLOW_CLOSEHOUSEHOLDSUCCESS",
+            "message": "Succès du ménage proche",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_PAGE_CLOSEHOUSEHOLDDETAILS",
+            "message": "Détails du ménage fermé",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "BENEFICIARY_ABSENT",
+            "message": "Bénéficiaire absent",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "BENEFICIARY_REFERRED",
+            "message": "Bénéficiaire référé",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "BENEFICIARY_REFUSED",
+            "message": "Bénéficiaire refusé",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CEMENT",
+            "message": "Ciment",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLAY",
+            "message": "Argile",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSED_HOUSEHOLD",
+            "message": "Ménage fermé",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_ACTION_LABEL",
+            "message": "Suivant",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
+            "message": "Capturez les détails du ménage que vous marquez comme fermé.",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
+            "message": "Détails du ménage fermé",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+            "message": " ",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
+            "message": "Nom du village",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
+            "message": "Le nom du village est obligatoire",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
+            "message": "Nom du chef de ménage",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_MIN_LENGTH_ERROR",
+            "message": "Le nom doit comporter au moins 3 caractères",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_LABEL",
+            "message": "Précision des coordonnées GPS",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_REQUIRED_ERROR",
+            "message": "La localisation GPS est requise",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_name_REQUIRED_ERROR",
+            "message": "Le nom du chef est requis",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_scanner_LABEL",
+            "message": "Scanner le bon",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_MESSAGE",
+            "message": "Fermer l'enregistrement des ménages",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_administrativeArea_ERROR",
+            "message": "Le nom du village est obligatoire",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_headName_ERROR",
+            "message": "Le nom du chef de ménage est requis",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_latLng_ERROR",
+            "message": "La localisation GPS est requise",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
+            "message": "Les données ont été enregistrées avec succès",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION1",
+            "message": "Les données ont été enregistrées avec succès",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
+            "message": "Données enregistrées avec succès",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING1",
+            "message": "Données enregistrées avec succès",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_MESSAGE",
+            "message": "Ménage clôturé avec succès",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL",
+            "message": "Retourner",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL1",
+            "message": "Retourner",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "DEFAULT",
+            "message": "Défaut",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "DRUG_SE_CC",
+            "message": "Effet secondaire du médicament du cycle en cours",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "DRUG_SE_PC",
+            "message": "Effet secondaire du médicament du cycle précédent",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "DataIssues",
+            "message": "Problèmes de données",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "FEMALE",
+            "message": "Femelle",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "FEVER",
+            "message": "Fièvre",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "GLASS",
+            "message": "Verre",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "GoHome",
+            "message": "Retourner",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "HCM_CLOSE_HOUSEHOLD_INFO_CARD_TEXT",
+            "message": "Confirmez que vous êtes dans le bon foyer dans le village sélectionné. Votre position GPS sera enregistrée dans le cadre de la fermeture du foyer.",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "INELIGIBLE",
+            "message": "Inéligible",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "INSUFFICIENT_RESOURCES",
+            "message": "Ressources insuffisantes",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_AGE",
+            "message": "Âge",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_BATCH_NUMBER",
+            "message": "Numéro de lot",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
+            "message": "Plainte",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
+            "message": "Orientation vers un établissement de santé",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
+            "message": "Ménage",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
+            "message": "Individuel",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
+            "message": "IHM",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_ITEMMODEL",
+            "message": "Article",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
+            "message": "LQA",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_NAVIGATIONMODEL",
+            "message": "Navigation",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
+            "message": "Bénéficiaire du projet",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
+            "message": "Modèle de série",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
+            "message": "Action de l'utilisateur",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMMENTS",
+            "message": "Commentaires",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
+            "message": "Numéro de contact",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
+            "message": "Espace réclamation",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
+            "message": "Date de la plainte",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
+            "message": "Numéro de plainte",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
+            "message": "Statut",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
+            "message": "Type de plainte",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+            "message": "Numéro de contact",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
+            "message": "Espace réclamation",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
+            "message": "Date de la plainte",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
+            "message": "Numéro de plainte",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
+            "message": "Type de plainte",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+            "message": "Description",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
+            "message": "Statut",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
+            "message": "Date d'inscription",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_GENDER",
+            "message": "Genre",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
+            "message": "Âge",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
+            "message": "Genre",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
+            "message": "Nom du bénéficiaire",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
+            "message": "Date d'inscription",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
+            "message": "Chef de famille",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
+            "message": "Règlement",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
+            "message": "Nombre total de membres",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
+            "message": "Chef de famille",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
+            "message": "Localité",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_ID_NUMBER",
+            "message": "Numéro d'identification",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_ID_TYPE",
+            "message": "Type d'identification",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+            "message": "Source d'informations sur la campagne",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
+            "message": "Enfants présents",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
+            "message": "Enfants vaccinés",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
+            "message": "Commentaires finaux",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
+            "message": "Manqué - Absent",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
+            "message": "Manqué - Endormi",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
+            "message": "Manqué - Non revisité",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
+            "message": "Manqué - Non visité",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
+            "message": "Manqué - Autre",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
+            "message": "Manqué - Refus",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
+            "message": "Manqué - Routine",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
+            "message": "Date de surveillance",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
+            "message": "Désignation du moniteur",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
+            "message": "Nom du moniteur",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
+            "message": "Mal couvert",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
+            "message": "Zone de peuplement",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
+            "message": "Type de règlement",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_BATCH_LABEL",
+            "message": "Lot",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
+            "message": "Numéro de lot",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_COMMENTS_LABEL",
+            "message": "Commentaires",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
+            "message": "Date d'expiration",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
+            "message": "Numéro MRN",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_QUANTITY_LABEL",
+            "message": "Quantité",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_RESOURCE_LABEL",
+            "message": "Ressource",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_SENDER_LABEL",
+            "message": "Expéditeur",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_SKU_LABEL",
+            "message": "UGS",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
+            "message": "Motif de la transaction",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
+            "message": "Type d'opération",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
+            "message": "Lettre de transport",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
+            "message": "Numéro de lettre de transport",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
+            "message": "Motif d'absence",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
+            "message": "Sensibilisation à l'AFP",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
+            "message": "Nombre de cas de PFA",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
+            "message": "Autre source de sensibilisation",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
+            "message": "Sensibilisation à la campagne",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
+            "message": "Soignant informé",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
+            "message": "Enfants de moins de 5 ans",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
+            "message": "Âge de l'enfant (mois)",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
+            "message": "Sexe des enfants",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
+            "message": "Numéro de cluster",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
+            "message": "Doigt marqué",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
+            "message": "Numéro de lot",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
+            "message": "Doses de VPO",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
+            "message": "Autre motif d'absence",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
+            "message": "Autre raison (préciser)",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
+            "message": "Autre motif de refus",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
+            "message": "Raison non indiquée",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
+            "message": "Motif du refus",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
+            "message": "Zone de peuplement",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
+            "message": "Nom de l'arpenteur",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
+            "message": "Date de l'enquête",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_MEMBER_COUNT",
+            "message": "Nombre de membres",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_MOBILE_NUMBER",
+            "message": "Numéro de portable",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_MRN_NUMBER",
+            "message": "Numéro MRN",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
+            "message": "Nom",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_QUANTITY_RECEIVED",
+            "message": "Quantité reçue",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_REFERRAL_INBOX_NAME",
+            "message": "Nom",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
+            "message": "Statut de référence",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
+            "message": "Symptôme de référence",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_RESOURCE",
+            "message": "Ressource",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_STOCK_EXPIRY",
+            "message": "Expiration des stocks",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_WAYBILL_NUMBER",
+            "message": "Numéro de lettre de transport",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+            "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+            "message": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "MALE",
+            "message": "Mâle",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "METAL",
+            "message": "Métal",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "NOTENOUGHSTOCK",
+            "message": "Pas assez de stock",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "NOT_ADMINISTERED",
+            "message": "Non administré",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "NOT_REGISTERED",
+            "message": "Non enregistré",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "NotEnoughStock",
+            "message": "Pas assez de stock",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "OTHER",
+            "message": "Autre",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "OTHERS",
+            "message": "Autre",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "Other",
+            "message": "Autre",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "PerformanceIssue",
+            "message": "Problème de performances",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "REEDS",
+            "message": "Roseaux",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "SICK",
+            "message": "Malade",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "SUCCESSFUL_DELIVERY",
+            "message": "Livraison réussie",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "SYNCNOTWORKING",
+            "message": "La synchronisation ne fonctionne pas",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "SecurityIssues",
+            "message": "Problèmes de sécurité",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "SyncNotWorking",
+            "message": "La synchronisation ne fonctionne pas",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "TechnicalIssues",
+            "message": "Problèmes techniques",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "UNIQUE_BENEFICIARY_ID",
+            "message": "Identifiant du bénéficiaire",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "UserAccountIssues",
+            "message": "Problèmes de compte utilisateur",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "administrativeArea",
+            "message": "Nom du village",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "closeHouseholdSuccess",
+            "message": "Données enregistrées avec succès",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "headName",
+            "message": "Nom du chef de ménage",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "latLng",
+            "message": "Précision des coordonnées GPS",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        },
+        {
+            "code": "scanner",
+            "message": "Scanner le bon",
+            "module": "hcm-base-closehousehold-mr-dn",
+            "locale": "fr_DEMO"
+        }
+    ]
