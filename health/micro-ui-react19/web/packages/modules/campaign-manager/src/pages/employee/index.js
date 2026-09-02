@@ -343,7 +343,14 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     },
     {
       internalLink: pathVar.includes("setup-campaign") ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
-      content: t(I18N_KEYS.PAGES.CREATE_NEW_CAMPAIGN),
+      // The boundary (5-6) and delivery-strategy (7-9) steps are entered from separate campaign-home
+      // cards, so their crumb must name the step rather than the generic wizard
+      content:
+        Number(url?.key) >= 5 && Number(url?.key) <= 6
+          ? t(I18N_KEYS.PAGES.CAMPAIGN_BREADCRUMB_SET_BOUNDARY)
+          : Number(url?.key) >= 7 && Number(url?.key) <= 9
+          ? t(I18N_KEYS.PAGES.CAMPAIGN_BREADCRUMB_DELIVERY_STRATEGY)
+          : t(I18N_KEYS.PAGES.CREATE_NEW_CAMPAIGN),
       show: pathVar.includes("setup-campaign") ? true : false,
     },
     {
