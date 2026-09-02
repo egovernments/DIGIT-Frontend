@@ -1849,3 +1849,10 @@ button.digit-button-tertiary.disabled {
 .full-config-wrapper__container .digit-toast-success {
   bottom: 6rem !important;
 }
+
+// The library toast is position:fixed with z-index 20, so on the app-config screen it
+// slid underneath the phone-preview canvas (z-index 40-100) and the footer bar (1000),
+// clipping the start of messages like "At least one menu card must be visible".
+.full-config-wrapper__container .digit-toast-success {
+  z-index: 1100;
+}
