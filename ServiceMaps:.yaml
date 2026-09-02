@@ -1,0 +1,141 @@
+ServiceMaps:
+  serviceName: attendance-service
+  version: 1.0.0
+  mappings:
+    - topic: save-attendance-health
+      configKey: INDEX
+      indexes:
+        - name: attendance-index-v1
+          type: attendance
+          id: $.id
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.auditDetails.createdTime
+
+    - topic: update-attendance-health
+      configKey: INDEX
+      indexes:
+        - name: attendance-index-v1
+          type: attendance
+          id: $.id
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.auditDetails.lastModifiedTime
+
+    - topic: save-attendee-health
+      configKey: INDEX
+      indexes:
+        - name: attendee-index-v1
+          type: attendees
+          id: $.id
+          isBulk: true
+          jsonPath: $.attendees
+          timeStampField: $.auditDetails.createdTime
+
+    - topic: update-attendee-health
+      configKey: INDEX
+      indexes:
+        - name: attendee-index-v1
+          type: attendees
+          id: $.id
+          isBulk: true
+          jsonPath: $.attendees
+          timeStampField: $.auditDetails.lastModifiedTime
+
+    - topic: save-staff-health
+      configKey: INDEX
+      indexes:
+        - name: staff-index-v1
+          type: staff
+          id: $.id
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.auditDetails.createdTime
+
+    - topic: update-staff-health
+      configKey: INDEX
+      indexes:
+        - name: staff-index-v1
+          type: staff
+          id: $.id
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.auditDetails.lastModifiedTime
+
+    - topic: transformer-save-attendance-register
+      configKey: INDEX
+      indexes:
+        - name: transformed-attendance-register-index-v1
+          type: attendance-register
+          id: $.attendanceRegister.id
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.attendanceRegister.auditDetails.lastModifiedTime
+
+    - topic: transformer-save-attendance-log-health
+      configKey: INDEX
+      indexes:
+        - name: attendance-log-index-v1
+          type: attendance-log
+          id: $.attendanceLog.id
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.attendanceLog.auditDetails.lastModifiedTime
+
+    - topic: update-attendance-log-health
+      configKey: INDEX
+      indexes:
+        - name: attendance-log-index-v1
+          type: attendance-log
+          id: $.id
+          isBulk: true
+          jsonPath: $.*
+          timeStampField: $.time
+
+    - topic: ba-transformer-producer-attendance-staff-index
+      configKey: INDEX
+      indexes:
+        - name: ba-staff-index-v1
+          type: staff
+          id: $.staff.id
+          isBulk: true
+          jsonPath: $.*
+          customJsonMapping:
+          indexMapping:
+          Data: {}
+          fieldMapping:
+          - inJsonPath: $
+            outJsonPath: $.Data
+            timeStampField: $.staff.auditDetails.createdTime
+
+    - topic: ba-transformer-save-attendance-register
+      configKey: INDEX
+      indexes:
+        - name: ba-transformed-attendance-register-index-v1
+          type: attendance-register
+          id: $.attendanceRegister.id
+          isBulk: true
+          jsonPath: $.*
+          customJsonMapping:
+          indexMapping:
+          Data: {}
+          fieldMapping:
+          - inJsonPath: $
+            outJsonPath: $.Data
+            timeStampField: $.attendanceRegister.auditDetails.lastModifiedTime
+
+    - topic: ba-transformer-save-attendance-log
+      configKey: INDEX
+      indexes:
+        - name: ba-attendance-log-index-v1
+          type: attendance-log
+          id: $.attendanceLog.id
+          isBulk: true
+          jsonPath: $.*
+          customJsonMapping:
+          indexMapping:
+          Data: {}
+          fieldMapping:
+          - inJsonPath: $
+            outJsonPath: $.Data
+            timeStampField: $.attendanceLog.auditDetails.lastModifiedTime

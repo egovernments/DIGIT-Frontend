@@ -1,2444 +1,2450 @@
 [
-  {
-    "code": "ABDOMINAL_PAIN",
-    "message": "Abdominal Pain",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "ADD_HEADER_LOCALIZATION",
-    "message": "Label",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "ADMINISTRATION_FAILED",
-    "message": "Administration Failed",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "ADMINISTRATION_SUCCESS",
-    "message": "Administration Successful",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_COMPLAINTTYPE_DESCRIPTION",
-    "message": " ",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_mandatory",
-    "message": "Date of birth is required",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender_mandatory",
-    "message": "Gender is required",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
-    "message": "ID details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers_addmember",
-    "message": "ID details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily",
-    "message": "Head of family",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_CATEGORY_COMPLAINTS",
-    "message": "Complaints",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_COMPLAINTACKNOWLEDGEMENT",
-    "message": "Complaint Success",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_COMPLAINTINBOX",
-    "message": "Complaint Inbox",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_COMPLAINTVIEW",
-    "message": "Complaint View",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_COMPLAINT_CREATE",
-    "message": "Create Complaint",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_COMPLAINTDETAILS",
-    "message": "Complaint Details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_COMPLAINTTYPE",
-    "message": "Complaint Type",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_LOCATIONDETAILS",
-    "message": "Location Details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
-    "message": "Permission Handler",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER_PERMISSIONHANDLER",
-    "message": "Permission Handler",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_RECORDSTOCK_STOCKPRODUCTDETAILS",
-    "message": "Stock Product Details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_REFERRAL_CREATE_SIDEEFFECTFROMCURRENTCYCLE",
-    "message": "Side Effect From Current Cycle Checklist",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_PAGE_REFERRAL_CREATE_SIDEEFFECTFROMPREVIOUSCYCLE",
-    "message": "Side Effect From Previous Cycle Checklist",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "ASSIGN_TO_ALL",
-    "message": "Assigned to all",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "ASSIGN_TO_ME",
-    "message": "Assigned to me",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Administrtion Failed",
-    "message": "Administration Failed",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiary Absent",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiary Referred",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "BENEFICIARY_REFUSED",
-    "message": "Beneficiary Refused",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "BODY_ITEM_complaintNumber_LABEL",
-    "message": "Complaint number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "BODY_ITEM_mobileNumber_LABEL",
-    "message": "Mobile number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Back",
-    "message": "Back",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CAMPAIGN_DELIVERY_TAB_SUB_TEXT_ONCHO",
-    "message": "Configuring delivery conditions for Onchocerciasis type campaign.",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CAMPAIGN_PROJECT_ONCHO",
-    "message": "Onchocerciasis Campaign",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CEMENT",
-    "message": "Cement",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CLAY",
-    "message": "Clay",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CLOSED_HOUSEHOLD",
-    "message": "Closed Household",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTFLOW_RAISED_FOR_ANOTHER_USER",
-    "message": "Another user",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTFLOW_RAISED_FOR_MYSELF",
-    "message": "Myself",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_COMPLAINTACKNOWLEDGEMENT_MESSAGE",
-    "message": "Unable to open the page. Please try again",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_COMPLAINT_CREATE_MESSAGE",
-    "message": "Unable to load complaint form. Please try again",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_COMPLAINT_CREATE_addressLine1_ERROR",
-    "message": "Please enter a valid address line 1",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_COMPLAINT_CREATE_addressLine2_ERROR",
-    "message": "Please enter a valid address line 2",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_COMPLAINT_CREATE_administrativeArea_ERROR",
-    "message": "Administrative area is required",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_COMPLAINT_CREATE_complaintDescription_ERROR",
-    "message": "Complaint description is required",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_COMPLAINT_CREATE_complaintRaisedFor_ERROR",
-    "message": "Please select who the complaint is raised for",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_COMPLAINT_CREATE_complaintType_ERROR",
-    "message": "Please select a complaint type",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_COMPLAINT_CREATE_contactNumber_ERROR",
-    "message": "Please enter a valid contact number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_COMPLAINT_CREATE_landmark_ERROR",
-    "message": "Please enter a valid landmark",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_COMPLAINT_CREATE_name_ERROR",
-    "message": "Complainant's name is required",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_COMPLAINT_CREATE_otherReason_ERROR",
-    "message": "Please specify the reason for your complaint",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_COMPLAINT_CREATE_supervisorContactNumber_ERROR",
-    "message": "Please enter a valid supervisor contact number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_COMPLAINT_CREATE_supervisorName_ERROR",
-    "message": "Supervisor's name is required",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_ENUM_NOT_ENOUGH_STOCK",
-    "message": "Not Enough Stock",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_RAISED_FOR_ANOTHER_USER",
-    "message": "Another user",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINTS_RAISED_FOR_MYSELF",
-    "message": "Myself",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_ACTION_LABEL",
-    "message": "Back To Complaints",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_DESCRIPTION",
-    "message": "Sync the record to generate complaint number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_LABEL",
-    "message": "Complaint created successfully!",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_CREATE",
-    "message": "Create Complaint",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_ACTION_LABEL",
-    "message": "Submit",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_DESCRIPTION",
-    "message": " ",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_HEADING",
-    "message": "Complaint Details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_VIEW_ACTION_LABEL",
-    "message": "Open",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_administrativeArea_LABEL",
-    "message": "Administrative area",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_administrativeArea_REQUIRED_ERROR",
-    "message": "Administrative area is required",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_complaintDescription_LABEL",
-    "message": "Complaint description",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_complaintDescription_PATTERN_ERROR",
-    "message": "Please enter a valid complaint description using only letters, numbers, and basic punctuation",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_complaintDescription_REQUIRED_ERROR",
-    "message": "Complaint description is required",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_complaintRaisedFor_LABEL",
-    "message": "Are you raising a complaint for yourself or another user?",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_complaintRaisedFor_REQUIRED_ERROR",
-    "message": "Please select who the complaint is raised for",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_contactNumber_LABEL",
-    "message": "Complainant's contact number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_contactNumber_REQUIRED_ERROR",
-    "message": "Contact number is required",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_name_LABEL",
-    "message": "Complainant's name",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_name_LABEL_MAX_VALIDATION",
-    "message": "Length should be from 2 to 64 characters",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_name_LABEL_MIN_VALIDATION",
-    "message": "Length should be from 2 to 64 characters",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_name_REQUIRED_ERROR",
-    "message": "Complainant's name is required",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_supervisorContactNumber_LABEL",
-    "message": "Supervisor's contact number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_DETAILS_supervisorName_LABEL",
-    "message": "Supervisor's name",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_BACK",
-    "message": "Back",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_COMPLAINANT_CONTACT",
-    "message": "Contact",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Area",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Complaint Date",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Complaint Number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_COMPLAINT_STATUS",
-    "message": "Status",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Complaint Type",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_DESCRIPTION",
-    "message": " ",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_FILTER_COMPLAINT_TYPE_LABEL",
-    "message": "Complaint type",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_FILTER_LABEL",
-    "message": "Filter",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_FILTER_LOCALITY_TYPE_LABEL",
-    "message": "Locality",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_FILTER_PRIMARY_ACTION_LABEL",
-    "message": "Filter",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_FILTER_SECONDARY_ACTION_LABEL",
-    "message": "Clear",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_HEADING",
-    "message": "Complaint Inbox",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_PRIMARY_ACTION",
-    "message": "File Complaint",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_SEARCH_COMPLAINT_NUMBER_LABEL",
-    "message": "Complaint number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_SEARCH_LABEL",
-    "message": "Search",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_SEARCH_MOBILE_NUMBER_LABEL",
-    "message": "Mobile number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_SEARCH_PRIMARY_ACTION_LABEL",
-    "message": "Search",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_SEARCH_SECONDARY_ACTION_LABEL",
-    "message": "Clear",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_SORT_LABEL",
-    "message": "Sort",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_SORT_LATEST_FIRST",
-    "message": "Latest first",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_SORT_LATEST_LAST",
-    "message": "Latest last",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_SORT_POPUP_LABEL",
-    "message": "Sort by:",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_SORT_PRIMARY_ACTION_LABEL",
-    "message": "Sort",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_INBOX_SORT_SECONDARY_ACTION_LABEL",
-    "message": "Clear",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_TYPE_ACTION_LABEL",
-    "message": "Next",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_TYPE_DESCRIPTION",
-    "message": " ",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_TYPE_HEADING",
-    "message": "Complaint Type",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_TYPE_complaintType_LABEL",
-    "message": "Select your complaint type",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_TYPE_complaintType_REQUIRED_ERROR",
-    "message": "Please select a complaint type",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_TYPE_otherReason_LABEL",
-    "message": "Reason for complaint",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_TYPE_otherReason_REQUIRED_ERROR",
-    "message": "Please specify the reason for your complaint",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_VIEW_ACTION_LABEL",
-    "message": "Back To Complaints",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Contact Number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_VIEW_COMPLAINTS_AREA",
-    "message": "Area",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Complaint Date",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Complaint Number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Complaint Type",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Description",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "Status",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "COMPLAINT_VIEW_HEADING",
-    "message": "Complaint Details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_NOT_FOUND",
-    "message": "Complaint Not Found",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_NOT_FOUND_DESC",
-    "message": "We couldn't find any complaints in the records. You can file a new complaint.",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORRESPONDENCE",
-    "message": "Correspondence",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DATAISSUES",
-    "message": "Data Issue",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DEFAULT",
-    "message": "Default",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DELIVERY",
-    "message": "Delivery Details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DIARRHOEA",
-    "message": "Diarrhoea",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DIGIT_HCM_CLOSEHOUSEHOLD_MODULE",
-    "message": "Close Household Module",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DIGIT_HCM_STOCKREPORTS_MODULE",
-    "message": "Stock Reports Module",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DRUG_SE_CC",
-    "message": "Drug Side Effect from the current cycle",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DRUG_SE_PC",
-    "message": "Drug Side Effect from the previous cycle",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Data Issues",
-    "message": "Data Issues",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DataIssues",
-    "message": "Data Issues",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FEMALE",
-    "message": "Female",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FEVER",
-    "message": "Fever",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FIELD_LABEL",
-    "message": "Field label",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FILTER_BUTTON_ACTIONPOPUP",
-    "message": "Filter",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_1_LABEL",
-    "message": "Submit",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_2_LABEL",
-    "message": "Cancel",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_cancel2_LABEL",
-    "message": "Clear Label",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_cancel_LABEL",
-    "message": "Cancel",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_clearFilter_LABEL",
-    "message": "Clear Filter",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_close_LABEL",
-    "message": "Close",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_fileComplaint_LABEL",
-    "message": "File Complaint",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_filter_LABEL",
-    "message": "Filter",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_saveFilter_LABEL",
-    "message": "Save Filter",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_search_LABEL",
-    "message": "Search",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_sort_LABEL",
-    "message": "Sort",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FUNERAL",
-    "message": "Funeral",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "GLASS",
-    "message": "Glass",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "GoHome",
-    "message": "Go Home",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
-    "message": "Delivery Comments",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM.HOUSE_STRUCTURE_TYPES",
-    "message": "House Structure Types",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM.ID_TYPE_OPTIONS_POPULATOR",
-    "message": "ID Type Options",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM.REFERRAL_REASONS",
-    "message": "Referral Reasons",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM.SEARCH_HOUSEHOLD_FILTERS",
-    "message": "Household Filters",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM_PLEASE_WAIT_TRY_IN_SOME_TIME",
-    "message": "Please wait. Template generation is in progress.",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM_STOCKRECONCILIATION_MODULE",
-    "message": "Stock Reconciliation Module",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS",
-    "message": "Special characters are not allowed",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "HFREFERALFLOW",
-    "message": "Referral Flow",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "ID_TYPE_OPTIONS_POPULATOR",
-    "message": "ID Type Options",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INCOMPATIBLE",
-    "message": "Incompatible",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INELIGIBLE",
-    "message": "Ineligible",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INSUFFICIENT_RESOURCES",
-    "message": "Insufficient Resources",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_AGE",
-    "message": "Age",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_BATCH_NUMBER",
-    "message": "Batch number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
-    "message": "Complaint",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "HF referral",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
-    "message": "Household",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
-    "message": "Individual",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Monitoring",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_ITEMMODEL",
-    "message": "Item",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
-    "message": "LQA model",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_NAVIGATIONMODEL",
-    "message": "Navigation",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Project beneficiary",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
-    "message": "Stock",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
-    "message": "User action",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMMENTS",
-    "message": "Comments",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
-    "message": "Complainant contact",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Area",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Complaint date",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Complaint number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
-    "message": "Status",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Complaint type",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Contact number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
-    "message": "Area",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Complaint date",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Complaint number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Complaint type",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Description",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "Status",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Date of registration",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_GENDER",
-    "message": "Gender",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
-    "message": "Age",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
-    "message": "Gender",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
-    "message": "Beneficiary name",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
-    "message": "Registration date",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
-    "message": "Head of household",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
-    "message": "Settlement",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-    "message": "Total members",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
-    "message": "Head of household",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
-    "message": "Locality",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "ID number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_ID_TYPE",
-    "message": "ID type",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
-    "message": "Source",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Children present",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Children vaccinated",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Final comments",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
-    "message": "Missed - Absent",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
-    "message": "Missed - Asleep",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Missed - Not revisited",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Missed - Not visited",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Missed - Other",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Missed - Refusal",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
-    "message": "Missed - Routine",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Monitoring date",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Monitor designation",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Monitor name",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Poorly covered",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Settlement area",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Settlement type",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INBOXCOMPLAINANTTCONTACT",
-    "message": "Complainant contact",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_BATCH_LABEL",
-    "message": "Batch",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
-    "message": "Batch number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_COMMENTS_LABEL",
-    "message": "Comments",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
-    "message": "Expiry date",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
-    "message": "MRN number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_QUANTITY_LABEL",
-    "message": "Quantity",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_RESOURCE_LABEL",
-    "message": "Resource",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_SENDER_LABEL",
-    "message": "Sender",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_SKU_LABEL",
-    "message": "SKU",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Transaction reason",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Transaction type",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
-    "message": "Waybill",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
-    "message": "Waybill number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Absence reason",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "AFP awareness",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "AFP case count",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Other awareness",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Campaign awareness",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Caregiver informed",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Children under 5",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Child age (months)",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Child sex",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Cluster number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Finger marked",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Lot number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "OPV doses",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Other absence reason",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Other reason (specify)",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Other refusal reason",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Reason not marked",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Refusal reason",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Settlement area",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Surveyor name",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Survey date",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_MEMBER_COUNT",
-    "message": "Member count",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_MOBILE_NUMBER",
-    "message": "Mobile number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "MRN number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
-    "message": "Name",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_QUANTITY_RECEIVED",
-    "message": "Quantity received",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFERRAL_INBOX_NAME",
-    "message": "Name",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
-    "message": "Referral status",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
-    "message": "Referral symptom",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFRRALSYMPTOM",
-    "message": "Referral symptom",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_RESOURCE",
-    "message": "Resource",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Expiry date",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_VIEWCOMPLAINANTTCONTACT",
-    "message": "Complainant contact",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_VIEWCOMPLAINTESCRIPTION",
-    "message": "Complaint description",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_WAYBILL_NUMBER",
-    "message": "Waybill number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
-    "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
-    "message": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LATEST_FIRST",
-    "message": "Latest first",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LATEST_LAST",
-    "message": "Latest last",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LOCALISATION_ERROR",
-    "message": "Localization Error",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LOCATION_DETAILS_ACTION_LABEL",
-    "message": "Next",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LOCATION_DETAILS_DESCRIPTION",
-    "message": " ",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LOCATION_DETAILS_HEADING",
-    "message": "Location Details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LOCATION_DETAILS_addressLine1_LABEL",
-    "message": "Address line 1",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LOCATION_DETAILS_addressLine2_LABEL",
-    "message": "Address line 2",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LOCATION_DETAILS_landmark_LABEL",
-    "message": "Landmark",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LOCATION_DETAILS_pincode_LABEL",
-    "message": "Pincode",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LOCATION_DETAILS_typeOfAddress_LABEL",
-    "message": "Type of address",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "MALE",
-    "message": "Male",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "METAL",
-    "message": "Metal",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "MOBILE_LENGTH_10_DIGIT",
-    "message": "Contact number must be 10 digits",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "MOBILE_LENGTH_10_DIGITS",
-    "message": "Contact number must be 10 digits",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NOTENOUGHSTOCK",
-    "message": "Not Enough Stock",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NOT_ADMINISTERED",
-    "message": "Not Administered",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NOT_REGISTERED",
-    "message": "Not Registered",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NO_OPTIONS_AVAILABLE",
-    "message": "No options available",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NotEnoughStock",
-    "message": "Not Enough Stock",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "OTHER",
-    "message": "Other",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "OTHERS",
-    "message": "Other",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Other",
-    "message": "Other",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PERFORMANCEISSUE",
-    "message": "Performance Issues",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PERMANENT",
-    "message": "Permanent",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PerformanceIssue",
-    "message": "Performance Issues",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "QUANTITY_RECEIVED",
-    "message": "Quantity Received",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REEDS",
-    "message": "Reeds",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
-    "message": "Administrative unit",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SEARCH_BUTTON_ACTIONPOPUP",
-    "message": "Search",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SECURITYISSUES",
-    "message": "Security Issues",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SICK",
-    "message": "Sick",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SKIN_REACTION",
-    "message": "Skin Reaction",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SORT_BUTTON_ACTIONPOPUP",
-    "message": "Sort",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SUCCESSFUL_DELIVERY",
-    "message": "Delivery Successful",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SUPERVISOR_DETAILS_name_LABEL_MAX_VALIDATION",
-    "message": "Length should be from 2 to 64 characters",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SUPERVISOR_name_LABEL_MIN_VALIDATION",
-    "message": "Length should be from 2 to 64 characters",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SYNCNOTWORKING",
-    "message": "Sync Not Working",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Security Issues",
-    "message": "Security Issues",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SecurityIssues",
-    "message": "Security Issues",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "StockModel.QUANTITY_RECEIVED",
-    "message": "Quantity Received",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "StockModel.RECEIVED_FROM",
-    "message": "Received From",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SyncNotWorking",
-    "message": "Sync Not Working",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "TECHNICALISSUES",
-    "message": "Technical Issues",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "TO_INELIGIBLE_FLOW",
-    "message": "Ineligible Flow",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "TO_REFERRAL_FLOW",
-    "message": "Referral Flow",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "TRANSPORT_TYPE_1",
-    "message": "Transport Type 1",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "TRANSPORT_TYPE_2",
-    "message": "Transport Type 2",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Task.createdTime",
-    "message": "Completed On",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Technical Issues",
-    "message": "Technical Issues",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "TechnicalIssues",
-    "message": "Technical Issues",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Beneficiary ID",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UNIQUE_KEY_UPDATE_ERR",
-    "message": "Form has been configured incorrectly. Please refresh, check, and fix it.",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "USERACCOUNTISSUES",
-    "message": "User Account Issues",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "User Account Issues",
-    "message": "User Account Issues",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UserAccountIssues",
-    "message": "User Account Issues",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "VOMITTING",
-    "message": "Vomiting",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "WEAKNESS",
-    "message": "Weakness",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "addressLine1",
-    "message": "Address line 1",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "addressLine2",
-    "message": "Address line 2",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "administrativeArea",
-    "message": "Administrative area",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "assignTo",
-    "message": "Assign to",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "backToComplaints",
-    "message": "Back To Complaints",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cancel",
-    "message": "Clear",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cancel2",
-    "message": "Clear",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cancel3",
-    "message": "Clear",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "clientReferenceId",
-    "message": "Client reference ID",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "close",
-    "message": "Back To Complaints",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "complaintAcknowledgement",
-    "message": "Complaint acknowledgement",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "complaintCard",
-    "message": "Complaint",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "complaintClientReferenceId",
-    "message": "Complaint reference ID",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "complaintDescription",
-    "message": "Complaint description",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "complaintInbox",
-    "message": "Complaint inbox",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "complaintInbox_row",
-    "message": " ",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "complaintNumber",
-    "message": "Complaint number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "complaintRaisedFor",
-    "message": "Are you raising a complaint for yourself or another user?",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "complaintSuccess",
-    "message": "Complaint created successfully!",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "complaintType",
-    "message": "Select your complaint type",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "complaintView",
-    "message": "Complaint view",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "complaintsFilter",
-    "message": "Filter",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "complaintsLabelPair",
-    "message": "Complaint details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "contactNumber",
-    "message": "Contact number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "createdTime",
-    "message": "Created On",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "dropDown",
-    "message": "Select option",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "dropdown",
-    "message": "Select option",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "dropdownTemplate",
-    "message": "Filter options",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "fileComplaint",
-    "message": "File Complaint",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "filter",
-    "message": "Filter",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "idPopulator",
-    "message": "Auto-generated ID",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "infocard",
-    "message": "Information",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "labelPairComplaint",
-    "message": "Complaint",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "labelPairList",
-    "message": "Details summary",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "landmark",
-    "message": "Landmark",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "listOfComplaints",
-    "message": "Complaints",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "listView",
-    "message": "Complaints",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "locality",
-    "message": "Locality",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "localityBoundaryCode",
-    "message": "Locality code",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "meberDetails",
-    "message": "Member details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "menu_card",
-    "message": "Menu",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "mobileNumber",
-    "message": "Mobile number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "name",
-    "message": "Complainant's name",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "oroductdetail",
-    "message": "Complaint details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "otherReason",
-    "message": "Reason for complaint",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "pincode",
-    "message": "Pincode",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "qr_view",
-    "message": "QR view",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "row2",
-    "message": "Detail summary",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "rowtemplate",
-    "message": "Complaint summary",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "search",
-    "message": "Search",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "searchByID",
-    "message": "Search by ID",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "searchComplaints",
-    "message": "Search",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "serviceCode",
-    "message": "Service code",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "serviceRequestId",
-    "message": "Service request ID",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "sort",
-    "message": "Sort",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "sortBy",
-    "message": "Sort by",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "sortComplaints",
-    "message": "Sort",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "stockSuccess",
-    "message": "Complaint recorded",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "successCard",
-    "message": "Confirmation",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "supervisorContactNumber",
-    "message": "Supervisor's contact number",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "supervisorName",
-    "message": "Supervisor's name",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "table",
-    "message": "Records",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "tag",
-    "message": "Status",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "tenantId",
-    "message": "Tenant",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textArea",
-    "message": "Description",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textInput",
-    "message": "Search",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate",
-    "message": "Additional details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate2",
-    "message": "Additional details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate3",
-    "message": "Additional details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate4",
-    "message": "Complaint details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate5",
-    "message": "Complaint details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplatetext",
-    "message": "Complaint details",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textarea",
-    "message": "Description",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "time",
-    "message": "Time of incident",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "typeOfAddress",
-    "message": "Type of address",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "viewDetails",
-    "message": "Open",
-    "module": "hcm-base-complaints-polio",
-    "locale": "en_DEMO"
-  }
-]
+        {
+            "code": "ABDOMINAL_PAIN",
+            "message": "Abdominal Pain",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "ADD_HEADER_LOCALIZATION",
+            "message": "Label",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "ADMINISTRATION_FAILED",
+            "message": "Administration Failed",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "ADMINISTRATION_SUCCESS",
+            "message": "Administration successful",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APPONE_COMPLAINTTYPE_DESCRIPTION",
+            "message": " ",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_mandatory",
+            "message": "Date of birth is required",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender_mandatory",
+            "message": "Gender is required",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
+            "message": "ID details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers_addmember",
+            "message": "ID details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily",
+            "message": "Head of family",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_CATEGORY_COMPLAINTS",
+            "message": "Complaints",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_FLOW_COMPLAINTACKNOWLEDGEMENT",
+            "message": "Complaint Success",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_FLOW_COMPLAINTINBOX",
+            "message": "Complaint Inbox",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_FLOW_COMPLAINTVIEW",
+            "message": "Complaint View",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_FLOW_COMPLAINT_CREATE",
+            "message": "Create Complaint",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_PAGE_COMPLAINTDETAILS",
+            "message": "Complaint Details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_PAGE_COMPLAINTTYPE",
+            "message": "Complaint Type",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_PAGE_LOCATIONDETAILS",
+            "message": "Location Details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER",
+            "message": "Permission Handler",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_PAGE_PERMISSIONHANDLER_PERMISSIONHANDLER",
+            "message": "Permission Handler",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_PAGE_RECORDSTOCK_STOCKPRODUCTDETAILS",
+            "message": "Stock Product Details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_PAGE_REFERRAL_CREATE_SIDEEFFECTFROMCURRENTCYCLE",
+            "message": "Side Effect From Current Cycle Checklist",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_PAGE_REFERRAL_CREATE_SIDEEFFECTFROMPREVIOUSCYCLE",
+            "message": "Side Effect From Previous Cycle Checklist",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "ASSIGN_TO_ALL",
+            "message": "Assigned to all",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "ASSIGN_TO_ME",
+            "message": "Assigned to me",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "Administrtion Failed",
+            "message": "Administration Failed",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "BENEFICIARY_ABSENT",
+            "message": "Beneficiary absent",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "BENEFICIARY_REFERRED",
+            "message": "Beneficiary referred",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "BENEFICIARY_REFUSED",
+            "message": "Beneficiary refused",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "BODY_ITEM_complaintNumber_LABEL",
+            "message": "Complaint number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "BODY_ITEM_mobileNumber_LABEL",
+            "message": "Mobile number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "Back",
+            "message": "Back",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CAMPAIGN_DELIVERY_TAB_SUB_TEXT_ONCHO",
+            "message": "Configuring delivery conditions for Onchocerciasis type campaign.",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CAMPAIGN_PROJECT_ONCHO",
+            "message": "Onchocerciasis Campaign",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CEMENT",
+            "message": "Cement",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CLAY",
+            "message": "Clay",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CLOSED_HOUSEHOLD",
+            "message": "Closed household",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTFLOW_RAISED_FOR_ANOTHER_USER",
+            "message": "Another user",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTFLOW_RAISED_FOR_MYSELF",
+            "message": "Myself",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_COMPLAINTACKNOWLEDGEMENT_MESSAGE",
+            "message": "Unable to open the page. Please try again",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_COMPLAINT_CREATE_MESSAGE",
+            "message": "Unable to load complaint form. Please try again",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_COMPLAINT_CREATE_addressLine1_ERROR",
+            "message": "Please enter a valid address line 1",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_COMPLAINT_CREATE_addressLine2_ERROR",
+            "message": "Please enter a valid address line 2",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_COMPLAINT_CREATE_administrativeArea_ERROR",
+            "message": "Administrative area is required",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_COMPLAINT_CREATE_complaintDescription_ERROR",
+            "message": "Complaint description is required",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_COMPLAINT_CREATE_complaintRaisedFor_ERROR",
+            "message": "Please select who the complaint is raised for",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_COMPLAINT_CREATE_complaintType_ERROR",
+            "message": "Please select a complaint type",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_COMPLAINT_CREATE_contactNumber_ERROR",
+            "message": "Please enter a valid contact number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_COMPLAINT_CREATE_landmark_ERROR",
+            "message": "Please enter a valid landmark",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_COMPLAINT_CREATE_name_ERROR",
+            "message": "Complainant's name is required",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_COMPLAINT_CREATE_otherReason_ERROR",
+            "message": "Please specify the reason for your complaint",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_COMPLAINT_CREATE_supervisorContactNumber_ERROR",
+            "message": "Please enter a valid supervisor contact number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_COMPLAINT_CREATE_supervisorName_ERROR",
+            "message": "Supervisor's name is required",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_ENUM_NOT_ENOUGH_STOCK",
+            "message": "Not enough stock",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_RAISED_FOR_ANOTHER_USER",
+            "message": "Another user",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINTS_RAISED_FOR_MYSELF",
+            "message": "Myself",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_ACTION_LABEL",
+            "message": "Back To Complaints",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_DESCRIPTION",
+            "message": "Sync the record to generate complaint number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_ACKNOWLEDGEMENT_SUCCESS_PANEL_CARD_LABEL",
+            "message": "Complaint created successfully!",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_CREATE",
+            "message": "Create Complaint",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_ACTION_LABEL",
+            "message": "Submit",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_DESCRIPTION",
+            "message": " ",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_HEADING",
+            "message": "Complaint Details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_VIEW_ACTION_LABEL",
+            "message": "Open",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_administrativeArea_LABEL",
+            "message": "Administrative area",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_administrativeArea_REQUIRED_ERROR",
+            "message": "Administrative area is required",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_complaintDescription_LABEL",
+            "message": "Complaint description",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_complaintDescription_PATTERN_ERROR",
+            "message": "Please enter a valid complaint description using only letters, numbers, and basic punctuation",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_complaintDescription_REQUIRED_ERROR",
+            "message": "Complaint description is required",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_complaintRaisedFor_LABEL",
+            "message": "Are you raising a complaint for yourself or another user?",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_complaintRaisedFor_REQUIRED_ERROR",
+            "message": "Please select who the complaint is raised for",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_contactNumber_LABEL",
+            "message": "Complainant's contact number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_contactNumber_REQUIRED_ERROR",
+            "message": "Contact number is required",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_name_LABEL",
+            "message": "Complainant's name",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_name_LABEL_MAX_VALIDATION",
+            "message": "Length should be from 2 to 64 characters",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_name_LABEL_MIN_VALIDATION",
+            "message": "Length should be from 2 to 64 characters",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_name_REQUIRED_ERROR",
+            "message": "Complainant's name is required",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_supervisorContactNumber_LABEL",
+            "message": "Supervisor's contact number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_DETAILS_supervisorName_LABEL",
+            "message": "Supervisor's name",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_BACK",
+            "message": "Back",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_COMPLAINANT_CONTACT",
+            "message": "Contact",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_COMPLAINT_AREA",
+            "message": "Area",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_COMPLAINT_DATE",
+            "message": "Complaint date",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_COMPLAINT_NUMBER",
+            "message": "Complaint number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_COMPLAINT_STATUS",
+            "message": "Status",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_COMPLAINT_TYPE",
+            "message": "Complaint type",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_DESCRIPTION",
+            "message": " ",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_FILTER_COMPLAINT_TYPE_LABEL",
+            "message": "Complaint type",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_FILTER_LABEL",
+            "message": "Filter",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_FILTER_LOCALITY_TYPE_LABEL",
+            "message": "Locality",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_FILTER_PRIMARY_ACTION_LABEL",
+            "message": "Filter",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_FILTER_SECONDARY_ACTION_LABEL",
+            "message": "Clear",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_HEADING",
+            "message": "Complaint Inbox",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_PRIMARY_ACTION",
+            "message": "File Complaint",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_SEARCHBAR_LABEL",
+            "message": "Search",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_SEARCH_COMPLAINT_NUMBER_LABEL",
+            "message": "Complaint number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_SEARCH_LABEL",
+            "message": "Search",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_SEARCH_MOBILE_NUMBER_LABEL",
+            "message": "Mobile number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_SEARCH_PRIMARY_ACTION_LABEL",
+            "message": "Search",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_SEARCH_SECONDARY_ACTION_LABEL",
+            "message": "Clear",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_SORT_LABEL",
+            "message": "Sort",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_SORT_LATEST_FIRST",
+            "message": "Latest first",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_SORT_LATEST_LAST",
+            "message": "Latest last",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_SORT_POPUP_LABEL",
+            "message": "Sort by:",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_SORT_PRIMARY_ACTION_LABEL",
+            "message": "Sort",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_INBOX_SORT_SECONDARY_ACTION_LABEL",
+            "message": "Clear",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_TYPE_ACTION_LABEL",
+            "message": "Next",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_TYPE_DESCRIPTION",
+            "message": " ",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_TYPE_HEADING",
+            "message": "Complaint Type",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_TYPE_complaintType_LABEL",
+            "message": "Select your complaint type",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_TYPE_complaintType_REQUIRED_ERROR",
+            "message": "Please select a complaint type",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_TYPE_otherReason_LABEL",
+            "message": "Reason for complaint",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_TYPE_otherReason_REQUIRED_ERROR",
+            "message": "Please specify the reason for your complaint",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_VIEW_ACTION_LABEL",
+            "message": "Back To Complaints",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+            "message": "Contact number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_VIEW_COMPLAINTS_AREA",
+            "message": "Area",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_VIEW_COMPLAINTS_DATE",
+            "message": "Complaint date",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_VIEW_COMPLAINTS_NUMBER",
+            "message": "Complaint number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_VIEW_COMPLAINTS_TYPE",
+            "message": "Complaint type",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+            "message": "Description",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_VIEW_COMPLAINT_STATUS",
+            "message": "Status",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "COMPLAINT_VIEW_HEADING",
+            "message": "Complaint Summary",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_NOT_FOUND",
+            "message": "Complaint not found",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_NOT_FOUND_DESC",
+            "message": "We couldn't find any complaints in the records. You can file a new complaint.",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORRESPONDENCE",
+            "message": "Correspondence",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "DATAISSUES",
+            "message": "Data Issue",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "DEFAULT",
+            "message": "Default",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "DELIVERY",
+            "message": "Vaccination details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "DIARRHOEA",
+            "message": "Diarrhoea",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "DIGIT_HCM_CLOSEHOUSEHOLD_MODULE",
+            "message": "Close Household Module",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "DIGIT_HCM_STOCKREPORTS_MODULE",
+            "message": "Stock Reports Module",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "DRUG_SE_CC",
+            "message": "Drug Side Effect from the current cycle",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "DRUG_SE_PC",
+            "message": "Drug Side Effect from the previous cycle",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "Data Issues",
+            "message": "Data issues",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "DataIssues",
+            "message": "Data issues",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FEMALE",
+            "message": "Female",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FEVER",
+            "message": "Fever",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FIELD_LABEL",
+            "message": "Field label",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FILTER_BUTTON_ACTIONPOPUP",
+            "message": "Filter",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_1_LABEL",
+            "message": "Submit",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_2_LABEL",
+            "message": "Cancel",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_cancel2_LABEL",
+            "message": "Clear Label",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_cancel_LABEL",
+            "message": "Cancel",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_clearFilter_LABEL",
+            "message": "Clear Filter",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_close_LABEL",
+            "message": "Close",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_fileComplaint_LABEL",
+            "message": "File Complaint",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_filter_LABEL",
+            "message": "Filter",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_saveFilter_LABEL",
+            "message": "Save Filter",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_search_LABEL",
+            "message": "Search",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_sort_LABEL",
+            "message": "Sort",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FUNERAL",
+            "message": "Funeral",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "GLASS",
+            "message": "Glass",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "GoHome",
+            "message": "Go Home",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+            "message": "Vaccination Comments",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "HCM.HOUSE_STRUCTURE_TYPES",
+            "message": "House Structure Types",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "HCM.ID_TYPE_OPTIONS_POPULATOR",
+            "message": "ID Type Options",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "HCM.REFERRAL_REASONS",
+            "message": "Referral Reasons",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "HCM.SEARCH_HOUSEHOLD_FILTERS",
+            "message": "Household Filters",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "HCM_PLEASE_WAIT_TRY_IN_SOME_TIME",
+            "message": "Please wait. Template generation is in progress.",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "HCM_STOCKRECONCILIATION_MODULE",
+            "message": "Stock Reconciliation Module",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS",
+            "message": "Special characters are not allowed",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "HFREFERALFLOW",
+            "message": "Referral Flow",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "ID_TYPE_OPTIONS_POPULATOR",
+            "message": "ID Type Options",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "INCOMPATIBLE",
+            "message": "Incompatible",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "INELIGIBLE",
+            "message": "Ineligible",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "INSUFFICIENT_RESOURCES",
+            "message": "Insufficient Resources",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_AGE",
+            "message": "Age",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_BATCH_NUMBER",
+            "message": "Batch number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
+            "message": "Complaint",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
+            "message": "HF referral",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
+            "message": "Household",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
+            "message": "Individual",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
+            "message": "Monitoring",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_ITEMMODEL",
+            "message": "Item",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
+            "message": "LQA model",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_NAVIGATIONMODEL",
+            "message": "Navigation",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
+            "message": "Project beneficiary",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
+            "message": "Stock",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_USERACTIONMODEL",
+            "message": "User action",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMMENTS",
+            "message": "Comments",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
+            "message": "Complainant contact",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
+            "message": "Area",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
+            "message": "Complaint date",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
+            "message": "Complaint number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
+            "message": "Status",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
+            "message": "Complaint type",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+            "message": "Contact number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
+            "message": "Area",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
+            "message": "Complaint date",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
+            "message": "Complaint number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
+            "message": "Complaint type",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+            "message": "Description",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
+            "message": "Status",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
+            "message": "Date of registration",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_GENDER",
+            "message": "Gender",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
+            "message": "Age",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
+            "message": "Gender",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
+            "message": "Beneficiary name",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
+            "message": "Registration date",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
+            "message": "Head of household",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
+            "message": "Settlement",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
+            "message": "Total members",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
+            "message": "Head of household",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
+            "message": "Locality",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_ID_NUMBER",
+            "message": "ID number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_ID_TYPE",
+            "message": "ID type",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_CAMPAIGN_INFO_SOURCE_LABEL",
+            "message": "Source",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
+            "message": "Children present",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
+            "message": "Children vaccinated",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
+            "message": "Final comments",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
+            "message": "Missed - Absent",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
+            "message": "Missed - Asleep",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
+            "message": "Missed - Not revisited",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
+            "message": "Missed - Not visited",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
+            "message": "Missed - Other",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
+            "message": "Missed - Refusal",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
+            "message": "Missed - Routine",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
+            "message": "Monitoring date",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
+            "message": "Monitor designation",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
+            "message": "Monitor name",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
+            "message": "Poorly covered",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
+            "message": "Settlement area",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
+            "message": "Settlement type",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INBOXCOMPLAINANTTCONTACT",
+            "message": "Complainant contact",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_BATCH_LABEL",
+            "message": "Batch",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
+            "message": "Batch number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_COMMENTS_LABEL",
+            "message": "Comments",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
+            "message": "Expiry date",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
+            "message": "MRN number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_QUANTITY_LABEL",
+            "message": "Quantity",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_RESOURCE_LABEL",
+            "message": "Resource",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_SENDER_LABEL",
+            "message": "Sender",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_SKU_LABEL",
+            "message": "SKU",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
+            "message": "Transaction reason",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
+            "message": "Transaction type",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
+            "message": "Waybill",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
+            "message": "Waybill number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
+            "message": "Absence reason",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
+            "message": "AFP awareness",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
+            "message": "AFP case count",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
+            "message": "Other awareness",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
+            "message": "Campaign awareness",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
+            "message": "Caregiver informed",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
+            "message": "Children under 5",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
+            "message": "Child age (months)",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
+            "message": "Child sex",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
+            "message": "Cluster number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
+            "message": "Finger marked",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
+            "message": "Lot number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
+            "message": "OPV doses",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
+            "message": "Other absence reason",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
+            "message": "Other reason (specify)",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
+            "message": "Other refusal reason",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
+            "message": "Reason not marked",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
+            "message": "Refusal reason",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
+            "message": "Settlement area",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
+            "message": "Surveyor name",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
+            "message": "Survey date",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_MEMBER_COUNT",
+            "message": "Member count",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_MOBILE_NUMBER",
+            "message": "Mobile number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_MRN_NUMBER",
+            "message": "MRN number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
+            "message": "Name",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_QUANTITY_RECEIVED",
+            "message": "Quantity received",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_REFERRAL_INBOX_NAME",
+            "message": "Name",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
+            "message": "Referral status",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
+            "message": "Referral symptom",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_REFRRALSYMPTOM",
+            "message": "Referral symptom",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_RESOURCE",
+            "message": "Resource",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_STOCK_EXPIRY",
+            "message": "Expiry date",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_VIEWCOMPLAINANTTCONTACT",
+            "message": "Complainant contact",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_VIEWCOMPLAINTESCRIPTION",
+            "message": "Complaint description",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_WAYBILL_NUMBER",
+            "message": "Waybill number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+            "message": "{{fn:getQuantityLabel(item.additionalFields.fields.sku)}}",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+            "message": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LATEST_FIRST",
+            "message": "Latest first",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LATEST_LAST",
+            "message": "Latest last",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LOCALISATION_ERROR",
+            "message": "Localization Error",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LOCATION_DETAILS_ACTION_LABEL",
+            "message": "Next",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LOCATION_DETAILS_DESCRIPTION",
+            "message": " ",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LOCATION_DETAILS_HEADING",
+            "message": "Location Details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LOCATION_DETAILS_addressLine1_LABEL",
+            "message": "Address line 1",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LOCATION_DETAILS_addressLine2_LABEL",
+            "message": "Address line 2",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LOCATION_DETAILS_landmark_LABEL",
+            "message": "Landmark",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LOCATION_DETAILS_pincode_LABEL",
+            "message": "Pincode",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LOCATION_DETAILS_typeOfAddress_LABEL",
+            "message": "Type of address",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "MALE",
+            "message": "Male",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "METAL",
+            "message": "Metal",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "MOBILE_LENGTH_10_DIGIT",
+            "message": "Contact number must be 10 digits",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "MOBILE_LENGTH_10_DIGITS",
+            "message": "Contact number must be 10 digits",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "NOTENOUGHSTOCK",
+            "message": "Not enough stock",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "NOT_ADMINISTERED",
+            "message": "Not administered",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "NOT_REGISTERED",
+            "message": "Not Registered",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "NO_OPTIONS_AVAILABLE",
+            "message": "No options available",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "NotEnoughStock",
+            "message": "Not enough stock",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "OTHER",
+            "message": "Other",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "OTHERS",
+            "message": "Other",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "Other",
+            "message": "Other",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "PERFORMANCEISSUE",
+            "message": "Performance Issues",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "PERMANENT",
+            "message": "Permanent",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "PerformanceIssue",
+            "message": "Performance Issues",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "QUANTITY_RECEIVED",
+            "message": "Quantity received",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "REEDS",
+            "message": "Reeds",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "REFER_BENEFICIARY_LABEL_ADMINISTRATIVE_UNIT",
+            "message": "Administrative unit",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SEARCH_BUTTON_ACTIONPOPUP",
+            "message": "Search",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SECURITYISSUES",
+            "message": "Security issues",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SICK",
+            "message": "Sick",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SKIN_REACTION",
+            "message": "Skin Reaction",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SORT_BUTTON_ACTIONPOPUP",
+            "message": "Sort",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SUCCESSFUL_DELIVERY",
+            "message": "Vaccination successful",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SUPERVISOR_DETAILS_name_LABEL_MAX_VALIDATION",
+            "message": "Length should be from 2 to 64 characters",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SUPERVISOR_name_LABEL_MIN_VALIDATION",
+            "message": "Length should be from 2 to 64 characters",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SYNCNOTWORKING",
+            "message": "Sync not working",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "Security Issues",
+            "message": "Security issues",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SecurityIssues",
+            "message": "Security issues",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "StockModel.QUANTITY_RECEIVED",
+            "message": "Quantity Received",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "StockModel.RECEIVED_FROM",
+            "message": "Received From",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SyncNotWorking",
+            "message": "Sync not working",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "TECHNICALISSUES",
+            "message": "Technical issues",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "TO_INELIGIBLE_FLOW",
+            "message": "Ineligible Flow",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "TO_REFERRAL_FLOW",
+            "message": "Referral Flow",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "TRANSPORT_TYPE_1",
+            "message": "Transport Type 1",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "TRANSPORT_TYPE_2",
+            "message": "Transport Type 2",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "Task.createdTime",
+            "message": "Completed on",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "Technical Issues",
+            "message": "Technical issues",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "TechnicalIssues",
+            "message": "Technical issues",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "UNIQUE_BENEFICIARY_ID",
+            "message": "Beneficiary ID",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "UNIQUE_KEY_UPDATE_ERR",
+            "message": "Form has been configured incorrectly. Please refresh, check, and fix it.",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "USERACCOUNTISSUES",
+            "message": "User account issues",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "User Account Issues",
+            "message": "User account issues",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "UserAccountIssues",
+            "message": "User account issues",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "VOMITTING",
+            "message": "Vomiting",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "WEAKNESS",
+            "message": "Weakness",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "addressLine1",
+            "message": "Address line 1",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "addressLine2",
+            "message": "Address line 2",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "administrativeArea",
+            "message": "Administrative area",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "assignTo",
+            "message": "Assign to",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "backToComplaints",
+            "message": "Back To Complaints",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "cancel",
+            "message": "Clear",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "cancel2",
+            "message": "Clear",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "cancel3",
+            "message": "Clear",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "clientReferenceId",
+            "message": "Client reference ID",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "close",
+            "message": "Back To Complaints",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "complaintAcknowledgement",
+            "message": "Complaint acknowledgement",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "complaintCard",
+            "message": "Complaint",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "complaintClientReferenceId",
+            "message": "Complaint reference ID",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "complaintDescription",
+            "message": "Complaint description",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "complaintInbox",
+            "message": "Complaint inbox",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "complaintInbox_row",
+            "message": " ",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "complaintNumber",
+            "message": "Complaint number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "complaintRaisedFor",
+            "message": "Are you raising a complaint for yourself or another user?",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "complaintSuccess",
+            "message": "Complaint created successfully!",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "complaintType",
+            "message": "Select your complaint type",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "complaintView",
+            "message": "Complaint view",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "complaintsFilter",
+            "message": "Filter",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "complaintsLabelPair",
+            "message": "Complaints Label Pair",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "contactNumber",
+            "message": "Contact number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "createdTime",
+            "message": "Created On",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "dropDown",
+            "message": "Select option",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "dropdown",
+            "message": "Select option",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "dropdownTemplate",
+            "message": "Filter options",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "fileComplaint",
+            "message": "File Complaint",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "filter",
+            "message": "Filter",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "idPopulator",
+            "message": "Auto-generated ID",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "infocard",
+            "message": "Information",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "labelPairComplaint",
+            "message": "Complaint",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "labelPairList",
+            "message": "Details summary",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "landmark",
+            "message": "Landmark",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "listOfComplaints",
+            "message": "Complaints",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "listView",
+            "message": "Complaints",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "locality",
+            "message": "Locality",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "localityBoundaryCode",
+            "message": "Locality code",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "meberDetails",
+            "message": "Member details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "menu_card",
+            "message": "Menu",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "mobileNumber",
+            "message": "Mobile number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "name",
+            "message": "Complainant's name",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "oroductdetail",
+            "message": "Complaint details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "otherReason",
+            "message": "Reason for complaint",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "pincode",
+            "message": "Pincode",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "qr_view",
+            "message": "QR view",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "row2",
+            "message": "Detail summary",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "rowtemplate",
+            "message": "Complaint summary",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "search",
+            "message": "Search",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "searchByID",
+            "message": "Search by ID",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "searchComplaints",
+            "message": "Search",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "serviceCode",
+            "message": "Service code",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "serviceRequestId",
+            "message": "Service request ID",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "sort",
+            "message": "Sort",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "sortBy",
+            "message": "Sort by",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "sortComplaints",
+            "message": "Sort",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "stockSuccess",
+            "message": "Complaint recorded",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "successCard",
+            "message": "Confirmation",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "supervisorContactNumber",
+            "message": "Supervisor's contact number",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "supervisorName",
+            "message": "Supervisor's name",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "table",
+            "message": "Records",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "tag",
+            "message": "Status",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "tenantId",
+            "message": "Tenant",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textArea",
+            "message": "Description",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textInput",
+            "message": "Search",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate",
+            "message": "Additional details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate2",
+            "message": "Additional details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate3",
+            "message": "Additional details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate4",
+            "message": "Complaint details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate5",
+            "message": "Complaint details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplatetext",
+            "message": "Complaint details",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textarea",
+            "message": "Description",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "time",
+            "message": "Time of incident",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "typeOfAddress",
+            "message": "Type of address",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "viewDetails",
+            "message": "Open",
+            "module": "hcm-base-complaints-polio",
+            "locale": "en_DEMO"
+        }
+    ]

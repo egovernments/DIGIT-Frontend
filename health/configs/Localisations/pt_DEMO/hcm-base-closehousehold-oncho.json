@@ -1,374 +1,374 @@
-[
-  {
-    "code": "ADMINISTRATION_FAILED",
-    "message": "Falha na administração",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
-    "message": "O nome do chefe da família fechado deve ter entre 2 e 200 caracteres",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "BENEFICIARY_ABSENT",
-    "message": "Beneficiário Ausente",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "BENEFICIARY_REFUSED",
-    "message": "Beneficiário recusado",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CEMENT",
-    "message": "Cimento",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLAY",
-    "message": "Argila",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_ACTION_LABEL",
-    "message": "Próximo",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
-    "message": "Capture os detalhes da família que você está marcando como fechada.",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
-    "message": "Detalhes da família fechada",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
-    "message": " ",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
-    "message": "Nome da aldeia",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
-    "message": "Fechar a área administrativa da família é obrigatório",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
-    "message": "Nome do chefe da família",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_MIN_LENGTH_ERROR",
-    "message": "O nome deve ter pelo menos 3 caracteres",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_LABEL",
-    "message": "Precisão das coordenadas GPS",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_REQUIRED_ERROR",
-    "message": "Fechar Latlng doméstico é obrigatório",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_name_REQUIRED_ERROR",
-    "message": "O nome do chefe é obrigatório",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_scanner_LABEL",
-    "message": "Digitalizar comprovante",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_MESSAGE",
-    "message": "Fechar registro familiar",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_administrativeArea_ERROR",
-    "message": "O nome da aldeia é obrigatório",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_headName_ERROR",
-    "message": "O nome do chefe da família é obrigatório",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_latLng_ERROR",
-    "message": "A localização GPS é obrigatória",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
-    "message": "Os dados foram registrados com sucesso",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION1",
-    "message": "Os dados foram registrados com sucesso",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
-    "message": "Dados registrados com sucesso",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING1",
-    "message": "Dados registrados com sucesso",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_MESSAGE",
-    "message": "Família fechada com sucesso",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL",
-    "message": "Volte",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL1",
-    "message": "Volte",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "DRUG_SE_CC",
-    "message": "Efeito colateral da droga do ciclo atual",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "DRUG_SE_PC",
-    "message": "Efeito colateral da droga do ciclo anterior",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "FEMALE",
-    "message": "Fêmea",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "FEVER",
-    "message": "Febre",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "GLASS",
-    "message": "Vidro",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "HCM_CLOSE_HOUSEHOLD_INFO_CARD_TEXT",
-    "message": "Confirme se você está na residência correta na aldeia selecionada. A sua localização GPS será registada como parte do encerramento do agregado familiar.",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "INSUFFICIENT_RESOURCES",
-    "message": "Recursos insuficientes",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "MALE",
-    "message": "Macho",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "METAL",
-    "message": "Metal",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "NOTENOUGHSTOCK",
-    "message": "Estoque insuficiente",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "NotEnoughStock",
-    "message": "Estoque insuficiente",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "OTHER",
-    "message": "Outro",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "OTHERS",
-    "message": "Outro",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "Other",
-    "message": "Outro",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "PERFORMANCEISSUE",
-    "message": "Problemas de desempenho",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "PerformanceIssue",
-    "message": "Problema de desempenho",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "REEDS",
-    "message": "Juncos",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "SECURITYISSUES",
-    "message": "Problemas de segurança",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "SICK",
-    "message": "Doente",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "SUCCESSFUL_DELIVERY",
-    "message": "Entrega bem-sucedida",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "SYNCNOTWORKING",
-    "message": "A sincronização não funciona",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "SecurityIssues",
-    "message": "Problemas de segurança",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "SyncNotWorking",
-    "message": "A sincronização não funciona",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "TECHNICALISSUES",
-    "message": "Problemas técnicos",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "TechnicalIssues",
-    "message": "Problemas técnicos",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "USERACCOUNTISSUES",
-    "message": "Problemas de conta de usuário",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "UserAccountIssues",
-    "message": "Problemas de conta de usuário",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "administrativeArea",
-    "message": "Nome da aldeia",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "closeHouseholdSuccess",
-    "message": "Dados registrados com sucesso",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "headName",
-    "message": "Nome do chefe da família",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "latLng",
-    "message": "Precisão das coordenadas GPS",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "scanner",
-    "message": "Digitalizar comprovante",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  },
-  {
-    "code": "ADD_HEADER_LOCALIZATION",
-    "message": "Rótulo",
-    "module": "hcm-base-closehousehold-oncho",
-    "locale": "pt_DEMO"
-  }
-]
+ [
+        {
+            "code": "ADD_HEADER_LOCALIZATION",
+            "message": "Rótulo",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "ADMINISTRATION_FAILED",
+            "message": "Falha na administração",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
+            "message": "O nome do chefe da família fechado deve ter entre 2 e 200 caracteres",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "BENEFICIARY_ABSENT",
+            "message": "Beneficiário ausente",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "BENEFICIARY_REFUSED",
+            "message": "Beneficiário recusado",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CEMENT",
+            "message": "Cimento",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLAY",
+            "message": "Argila",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_ACTION_LABEL",
+            "message": "Próximo",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
+            "message": "Capture os detalhes da família que você está marcando como fechada.",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
+            "message": "Detalhes da família fechada",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+            "message": " ",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
+            "message": "Nome da aldeia",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
+            "message": "Fechar a área administrativa da família é obrigatório",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
+            "message": "Nome do chefe da família",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_MIN_LENGTH_ERROR",
+            "message": "O nome deve ter pelo menos 3 caracteres",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_LABEL",
+            "message": "Precisão das coordenadas GPS",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_REQUIRED_ERROR",
+            "message": "Fechar Latlng doméstico é obrigatório",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_name_REQUIRED_ERROR",
+            "message": "O nome do chefe é obrigatório",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_scanner_LABEL",
+            "message": "Digitalizar comprovante",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_MESSAGE",
+            "message": "Fechar registro familiar",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_administrativeArea_ERROR",
+            "message": "O nome da aldeia é obrigatório",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_headName_ERROR",
+            "message": "O nome do chefe da família é obrigatório",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDREGISTRATION_latLng_ERROR",
+            "message": "A localização GPS é obrigatória",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
+            "message": "Os dados foram registrados com sucesso",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION1",
+            "message": "Os dados foram registrados com sucesso",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
+            "message": "Dados registrados com sucesso",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING1",
+            "message": "Dados registrados com sucesso",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_MESSAGE",
+            "message": "Família fechada com sucesso",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL",
+            "message": "Volte",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL1",
+            "message": "Volte",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "DRUG_SE_CC",
+            "message": "Efeito colateral da droga do ciclo atual",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "DRUG_SE_PC",
+            "message": "Efeito colateral da droga do ciclo anterior",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "FEMALE",
+            "message": "Fêmea",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "FEVER",
+            "message": "Febre",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "GLASS",
+            "message": "Vidro",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "HCM_CLOSE_HOUSEHOLD_INFO_CARD_TEXT",
+            "message": "Confirme se você está na residência correta na aldeia selecionada. A sua localização GPS será registada como parte do encerramento do agregado familiar.",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "INSUFFICIENT_RESOURCES",
+            "message": "Recursos insuficientes",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "MALE",
+            "message": "Macho",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "METAL",
+            "message": "Metal",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "NOTENOUGHSTOCK",
+            "message": "Estoque insuficiente",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "NotEnoughStock",
+            "message": "Estoque insuficiente",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "OTHER",
+            "message": "Outro",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "OTHERS",
+            "message": "Outro",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "Other",
+            "message": "Outro",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "PERFORMANCEISSUE",
+            "message": "Problemas de desempenho",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "PerformanceIssue",
+            "message": "Problema de desempenho",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "REEDS",
+            "message": "Juncos",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "SECURITYISSUES",
+            "message": "Problemas de segurança",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "SICK",
+            "message": "Doente",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "SUCCESSFUL_DELIVERY",
+            "message": "Entrega bem-sucedida",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "SYNCNOTWORKING",
+            "message": "A sincronização não funciona",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "SecurityIssues",
+            "message": "Problemas de segurança",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "SyncNotWorking",
+            "message": "A sincronização não funciona",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "TECHNICALISSUES",
+            "message": "Problemas técnicos",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "TechnicalIssues",
+            "message": "Problemas técnicos",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "USERACCOUNTISSUES",
+            "message": "Problemas de conta de usuário",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "UserAccountIssues",
+            "message": "Problemas de conta de usuário",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "administrativeArea",
+            "message": "Nome da aldeia",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "closeHouseholdSuccess",
+            "message": "Dados registrados com sucesso",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "headName",
+            "message": "Nome do chefe da família",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "latLng",
+            "message": "Precisão das coordenadas GPS",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "scanner",
+            "message": "Digitalizar comprovante",
+            "module": "hcm-base-closehousehold-oncho",
+            "locale": "pt_DEMO"
+        }
+    ]

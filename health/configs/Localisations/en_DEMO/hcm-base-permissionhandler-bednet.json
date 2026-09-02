@@ -1,2006 +1,2006 @@
-[
-  {
-    "code": "ABDOMINAL_PAIN",
-    "message": "Abdominal Pain",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "ADMINISTRATION_FAILED",
-    "message": "Administration Failed",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "ADMINISTRATION_SUCCESS",
-    "message": "Administration Success",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_CATEGORY_PERMISSIONHANDLER",
-    "message": "App Permissions",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
-    "message": "App Permissions",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "BENEFICIARY_REFERRED",
-    "message": "Beneficiary Referred",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "BENEFICIARY_REFUSED",
-    "message": "Beneficiary Refused",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CEMENT",
-    "message": "Cement",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CLAY",
-    "message": "Clay",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CLOSED_HOUSEHOLD",
-    "message": "Closed Household",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_ACCESS_PERMISSION_DIALOG_DESC",
-    "message": "The HCM app requires access to some phone features to function properly. Please allow access to proceed.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_ACCESS_REQUIRED",
-    "message": "Access Required",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_ALLOW_ACCESS",
-    "message": "Allow Access",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_ALLOW_BACKGROUND_ACTIVITY",
-    "message": "Please check if background activity is enabled from settings.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_ALLOW_PERMISSIONS",
-    "message": "Allow Access",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_ALLOW_PERMISSIONS_DESCRIPTION",
-    "message": "Allow Permissions",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_BACK",
-    "message": "Back",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
-    "message": "Beneficiary not found!",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-    "message": "We couldn’t find this beneficiary in the records. You can add them as a new beneficiary.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_DONT_ALLOW",
-    "message": "Don’t Allow",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSIONS_ALERT",
-    "message": "Allow required permissions",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSION_ACCESS_PAGE_DESC",
-    "message": "Allow access to required phone features to continue using the DIGIT HCM app.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSION_BLUETOOTHSCAN",
-    "message": "Bluetooth",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSION_CAMERA",
-    "message": "Camera",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSION_CAMERA_DESC",
-    "message": "Use your device camera.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSION_GRANTED",
-    "message": "Permission granted",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSION_IGNOREBATTERYOPTIMIZATIONS",
-    "message": "Ignore battery optimization",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSION_IGNOREBATTERYOPTIMIZATIONS_WARNING",
-    "message": "Allow background activity in Settings > Battery",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSION_LOCATION",
-    "message": "Location",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSION_LOCATION_DESC",
-    "message": "Access your device location.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES",
-    "message": "Nearby share",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES_DESC",
-    "message": "Share data with nearby devices.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSION_NOTIFICATION",
-    "message": "Notifications",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSION_NOTIFICATION_DESC",
-    "message": "Get alerts and updates from the app.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "CORE_COMMON_PERMISSION_NOT_GRANTED",
-    "message": "Permission not granted",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DEFAULT",
-    "message": "Default",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DIARRHOEA",
-    "message": "Diarrhoea",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DRUG_SE_CC",
-    "message": "Drug SE CC",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "DRUG_SE_PC",
-    "message": "Drug SE PC",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Data Issues",
-    "message": "Data Issues",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "ENABLE_PERMISSION_CHECKBOX",
-    "message": "Please enable the required permission checkbox to continue.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FEMALE",
-    "message": "Female",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FEVER",
-    "message": "Fever",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_backgroundActivityConfirmed_LABEL",
-    "message": "Confirm",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_coreCommonAllowAccess_LABEL",
-    "message": "Allow Access",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_coreCommonDontAllow_LABEL",
-    "message": "Don't Allow",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_permissionHandlerButton2_LABEL",
-    "message": "Settings",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FOOTER_ACTION_permissionHandlerButton_LABEL",
-    "message": "Allow Access",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "FUNERAL",
-    "message": "Funeral",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "GLASS",
-    "message": "Glass",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "GRANT_PERMISSION",
-    "message": "Grant",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "GRANT_PERMISSION_BATTERY",
-    "message": "Grant",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "GRANT_PERMISSION_BLUETOOTH",
-    "message": "Grant",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "GRANT_PERMISSION_CAMERA",
-    "message": "Grant",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "GRANT_PERMISSION_LOCATION",
-    "message": "Grant",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "GRANT_PERMISSION_NEARBY",
-    "message": "Grant",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "GRANT_PERMISSION_NOTIFICATION",
-    "message": "Grant",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INCOMPATIBLE",
-    "message": "Incompatible",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "INELIGIBLE",
-    "message": "Ineligible",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_AGE",
-    "message": "Age",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_BATCHNUMBER",
-    "message": "Batch number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_BATCH_NUMBER",
-    "message": "Batch number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
-    "message": "Complaint",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
-    "message": "HF referral model",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
-    "message": "Household",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
-    "message": "Individual",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
-    "message": "Inside monitoring",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_ITEMMODEL",
-    "message": "Item model",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
-    "message": "LQA model",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_NAVIGATIONMODEL",
-    "message": "Navigation model",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
-    "message": "Project beneficiary",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
-    "message": "Stock",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_CODE",
-    "message": "Settlement area",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMMENTS",
-    "message": "Comments",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINTAREA",
-    "message": "Area",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINTDATE",
-    "message": "Complaint date",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINTNUMBER",
-    "message": "Complaint number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINTSTATUS",
-    "message": "Status",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
-    "message": "Complainant contact",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
-    "message": "Complaint area",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
-    "message": "Complaint date",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
-    "message": "Complaint number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
-    "message": "Complaint status",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
-    "message": "Complaint type",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
-    "message": "Complainant contact",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
-    "message": "Area",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
-    "message": "Complaint date",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
-    "message": "Complaint number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
-    "message": "Complaint type",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
-    "message": "Complaint description",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
-    "message": "Complaint status",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_DATEOFBIRTH",
-    "message": "Date of birth",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_DATEOFREGISTRATION",
-    "message": "Registration date",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
-    "message": "Date of registration",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_EXPIRYDATE",
-    "message": "Expiry date",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_GENDER",
-    "message": "Gender",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_GIVENNAME",
-    "message": "Name",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCMTOTALMEMBERS",
-    "message": "Total members",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
-    "message": "Age",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
-    "message": "Gender",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
-    "message": "Name",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
-    "message": "Registration date",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
-    "message": "Head of household",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
-    "message": "Settlement",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-    "message": "Total members",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HEADNAME",
-    "message": "Head of household",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
-    "message": "Head of household",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
-    "message": "Locality",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IDNUMBER",
-    "message": "ID number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IDTYPE",
-    "message": "ID type",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_ID_NUMBER",
-    "message": "ID number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_ID_TYPE",
-    "message": "ID type",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYCHILDRENPRESENT",
-    "message": "Children present",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYCHILDRENVACCINATED",
-    "message": "Children vaccinated",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYFINALCOMMENTS",
-    "message": "Final comments",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYMISSEDABSENT",
-    "message": "Missed (absent)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYMISSEDASLEEP",
-    "message": "Missed (asleep)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTREVISITED",
-    "message": "Missed (not revisited)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTVISITED",
-    "message": "Missed (not visited)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYMISSEDOTHER",
-    "message": "Missed (other)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYMISSEDREFUSAL",
-    "message": "Missed (refusal)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYMISSEDROUTINE",
-    "message": "Missed (routine)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYMONITORDESIGNATION",
-    "message": "Monitor designation",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYMONITORINGDATE",
-    "message": "Monitoring date",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYMONITORNAME",
-    "message": "Monitor name",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYPOORLYCOVERED",
-    "message": "Poorly covered",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
-    "message": "Settlement area",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTTYPE",
-    "message": "Settlement type",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
-    "message": "Children present",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
-    "message": "Children vaccinated",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
-    "message": "Final comments",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
-    "message": "Missed (absent)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
-    "message": "Missed (asleep)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
-    "message": "Missed (not revisited)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
-    "message": "Missed (not visited)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
-    "message": "Missed (other)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
-    "message": "Missed (refusal)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
-    "message": "Missed (routine)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
-    "message": "Monitoring date",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
-    "message": "Monitor designation",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
-    "message": "Monitor name",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
-    "message": "Poorly covered",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
-    "message": "Settlement area",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
-    "message": "Settlement type",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INBOXCOMPLAINANTCONTACT",
-    "message": "Contact",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INBOXCOMPLAINTNUMBER",
-    "message": "Complaint number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INBOXCOMPLAINTTYPE",
-    "message": "Complaint type",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_BATCH_LABEL",
-    "message": "Batch number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
-    "message": "Batch number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_COMMENTS_LABEL",
-    "message": "Comments",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
-    "message": "Expiry date",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
-    "message": "MRN number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_QUANTITY_LABEL",
-    "message": "Quantity",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_RESOURCE_LABEL",
-    "message": "Resource",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_SENDER_LABEL",
-    "message": "Sender",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_SKU_LABEL",
-    "message": "SKU",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
-    "message": "Transaction reason",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
-    "message": "Transaction type",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
-    "message": "Waybill number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
-    "message": "Waybill number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LOCALITY",
-    "message": "Settlement area",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQAABSENCEREASONLABEL",
-    "message": "Absence reason",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQAAFPAWARENESSLABEL",
-    "message": "AFP awareness",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQAAFPCASECOUNTLABEL",
-    "message": "AFP case count",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQAAWARENESSOTHERLABEL",
-    "message": "Awareness (other)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQACAMPAIGNAWARENESSLABEL",
-    "message": "Campaign awareness",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQACAREGIVERINFORMEDLABEL",
-    "message": "Caregiver informed",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQACHILDAGEMONTHSLABEL",
-    "message": "Child age (months)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQACHILDRENUNDER5LABEL",
-    "message": "LQA children under 5",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQACHILDSEXLABEL",
-    "message": "Child sex",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQACLUSTERNUMBERLABEL",
-    "message": "LQA cluster number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQAFINGERMARKEDLABEL",
-    "message": "Finger marked",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQALOTNUMBERLABEL",
-    "message": "LQA lot number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQAOPVDOSESLABEL",
-    "message": "OPV doses",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQAOTHERABSENCEREASONLABEL",
-    "message": "Other absence reason",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQAOTHERREASONSPECIFYLABEL",
-    "message": "Other reason (specify)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQAOTHERREFUSALREASONLABEL",
-    "message": "Other refusal reason",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQAREASONNOTMARKEDLABEL",
-    "message": "Reason not marked",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQAREFUSALREASONLABEL",
-    "message": "Refusal reason",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
-    "message": "LQA settlement area",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQASURVEYDATELABEL",
-    "message": "LQA survey date",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQASURVEYORNAMELABEL",
-    "message": "LQA surveyor name",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
-    "message": "Absence reason",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
-    "message": "AFP awareness",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
-    "message": "AFP case count",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
-    "message": "Other awareness",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
-    "message": "Campaign awareness",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
-    "message": "Caregiver informed",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
-    "message": "Children under 5",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
-    "message": "Child age (months)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
-    "message": "Child sex",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
-    "message": "Cluster number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
-    "message": "Finger marked",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
-    "message": "Lot number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
-    "message": "OPV doses",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
-    "message": "Other absence reason",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
-    "message": "Other reason (specify)",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
-    "message": "Other refusal reason",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
-    "message": "Reason not marked",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
-    "message": "Refusal reason",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
-    "message": "Settlement area",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
-    "message": "Surveyor name",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
-    "message": "Survey date",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_MEMBERCOUNT",
-    "message": "Member count",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_MEMBER_COUNT",
-    "message": "Member count",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_MOBILENUMBER",
-    "message": "Mobile number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_MOBILE_NUMBER",
-    "message": "Mobile number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_MRNNUMBER",
-    "message": "MRN number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_MRN_NUMBER",
-    "message": "MRN number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
-    "message": "Name",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_QUANTITY",
-    "message": "Quantity",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_QUANTITYRECEIVED",
-    "message": "Quantity received",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_QUANTITY_RECEIVED",
-    "message": "Quantity received",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_RECEIVER",
-    "message": "Receiver",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFERRALNAME",
-    "message": "Name",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFERRALSTATUS",
-    "message": "Status",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFERRAL_INBOX_NAME",
-    "message": "Name",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
-    "message": "Referral status",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
-    "message": "Referral symptom",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_REFRRALSYMPTOM",
-    "message": "Referral symptom",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_RESOURCE",
-    "message": "Resource",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_SENDERID",
-    "message": "Sender ID",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_SKU",
-    "message": "Resource",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_STOCKEXPIRY",
-    "message": "Stock expiry",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_STOCK_EXPIRY",
-    "message": "Stock expiry",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_TRANSACTIONREASON",
-    "message": "Transaction reason",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_TRANSACTIONTYPE",
-    "message": "Transaction type",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_VIEWCOMPLAINANTCONTACT",
-    "message": "Contact",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
-    "message": "Area",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_VIEWCOMPLAINTESCRIPTION",
-    "message": "Description",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_VIEWCOMPLAINTSTATUS",
-    "message": "Status",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_VIEWCOMPLAINTTYPE",
-    "message": "Type",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_WAYBILLNUMBER",
-    "message": "Waybill number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_WAYBILL_NUMBER",
-    "message": "Waybill number",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
-    "message": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "MALE",
-    "message": "Male",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "METAL",
-    "message": "Metal",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NEAR_BY_WIFI_DEVICES",
-    "message": "Nearby Devices",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NOTIFICATION_PERMISSION_TAG",
-    "message": "Notifications permission status",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NOT_ADMINISTERED",
-    "message": "Not Administered",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NOT_REGISTERED",
-    "message": "Not Registered",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "NotEnoughStock",
-    "message": "Not Enough Stock",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "OPEN_SETTINGS",
-    "message": "Settings",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "OTHER",
-    "message": "Other",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Other",
-    "message": "Other",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PERMISSIONS_ALERT",
-    "message": "Allow required permissions",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PERMISSION_CONTINUE",
-    "message": "Continue",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PERMISSION_DENIED_OPEN_SETTINGS",
-    "message": "Enable permission in Settings.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY",
-    "message": "Please check if background activity is enabled from settings.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "PerformanceIssue",
-    "message": "Performance Issue",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "REEDS",
-    "message": "Reeds",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SICK",
-    "message": "Sick",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SKIN_REACTION",
-    "message": "Skin Reaction",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SUCCESSFUL_DELIVERY",
-    "message": "Successful Delivery",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Security Issues",
-    "message": "Security Issues",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "SyncNotWorking",
-    "message": "Sync Not Working",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "TRANSPORT_TYPE_1",
-    "message": "Transport Type 1",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "TRANSPORT_TYPE_2",
-    "message": "Transport Type 2",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "Technical Issues",
-    "message": "Technical Issues",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "UNIQUE_BENEFICIARY_ID",
-    "message": "Beneficiary ID",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "User Account Issues",
-    "message": "User Account Issues",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "VOMITTING",
-    "message": "Vomiting",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "WEAKNESS",
-    "message": "Weakness",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "backgroundActivityConfirmed",
-    "message": "Please check if background activity is enabled from settings.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "batteryOptimizationTag",
-    "message": "Battery permission status",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "batteryStatus",
-    "message": "Battery status",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "blueToothPermissionStatus",
-    "message": "Bluetooth status",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "blueToothScan",
-    "message": "Bluetooth scan permission status",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "cameraPermissionStatus",
-    "message": "Camera status",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "card",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "card2",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "card3",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "card4",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "card5",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "card6",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "column",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "column2",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "column3",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "column4",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "column5",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "column6",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "column7",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonAllowAccess",
-    "message": "Allow Access",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonDontAllow",
-    "message": "Don't Allow",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionBluetoothscan",
-    "message": "Bluetooth",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionBluetoothscanDesc",
-    "message": "Scan for nearby Bluetooth devices.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionCamera",
-    "message": "Camera",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionCameraDesc",
-    "message": "Use your device camera.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionIgnorebatteryoptimizations",
-    "message": "Ignore battery optimization",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionLocation",
-    "message": "Location",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionLocationDesc",
-    "message": "Access your device location.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionNearbywifidevices",
-    "message": "Nearby share",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionNearbywifidevicesDesc",
-    "message": "Share data with nearby devices.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionNotification",
-    "message": "Notifications",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "coreCommonPermissionNotificationDesc",
-    "message": "Get alerts and updates from the app.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "icon",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "icon2",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "icon3",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "icon4",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "icon5",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "icon6",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "locationPermission",
-    "message": "Location permission status",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "locationPermissionStatus",
-    "message": "Location permission",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "nearByDevicesStatus",
-    "message": "Nearby devices",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "notificansIcon",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "notificationPermissionStatus",
-    "message": "Notification permission",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "permissionHandlerAllowBackGroundActivity",
-    "message": "Allow background activity in Settings > Battery",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "permissionHandlerButton",
-    "message": "Allow Access",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "permissionHandlerButton2",
-    "message": "Settings",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "permissionHandler_column",
-    "message": "Permissions",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "row",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "row10",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "row11",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "row12",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "row2",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "row3",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "row4",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "row5",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "row6",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "row7",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "row8",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "row9",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate",
-    "message": "Notifications",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate10",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate11",
-    "message": "Ignore battery optimization",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate12",
-    "message": "Allow the app to run in the background for uninterrupted service.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate2",
-    "message": "Enable notifications to receive campaign alerts and updates.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate3",
-    "message": "Battery optimization",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate4",
-    "message": "Disable battery optimization to keep the app running during field work.",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate5",
-    "message": "App permissions",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate6",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate7",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate8",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  },
-  {
-    "code": "textTemplate9",
-    "message": " ",
-    "module": "hcm-base-permissionhandler-bednet",
-    "locale": "en_DEMO"
-  }
-]
+ [
+        {
+            "code": "ABDOMINAL_PAIN",
+            "message": "Abdominal Pain",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "ADMINISTRATION_FAILED",
+            "message": "Administration Failed",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "ADMINISTRATION_SUCCESS",
+            "message": "Administration Success",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_CATEGORY_PERMISSIONHANDLER",
+            "message": "Allow Access",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "APP_CONFIG_FLOW_PERMISSIONHANDLER",
+            "message": "Allow Access",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "BENEFICIARY_REFERRED",
+            "message": "Beneficiary referred",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "BENEFICIARY_REFUSED",
+            "message": "Beneficiary refused",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CEMENT",
+            "message": "Cement",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CLAY",
+            "message": "Clay",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CLOSED_HOUSEHOLD",
+            "message": "Closed household",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_ACCESS_PERMISSION_DIALOG_DESC",
+            "message": "The HCM app requires access to some phone features to function properly. Please allow access to proceed.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_ACCESS_REQUIRED",
+            "message": "Access Required",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_ALLOW_ACCESS",
+            "message": "Allow Access",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_ALLOW_BACKGROUND_ACTIVITY",
+            "message": "Run the app in the background.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_ALLOW_PERMISSIONS",
+            "message": "Allow Access",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_ALLOW_PERMISSIONS_DESCRIPTION",
+            "message": "Allow Permissions",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_BACK",
+            "message": "Back",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND",
+            "message": "Beneficiary not found!",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
+            "message": "We couldn’t find this beneficiary in the records. You can add them as a new beneficiary.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_DONT_ALLOW",
+            "message": "Don’t Allow",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSIONS_ALERT",
+            "message": "Allow required permissions",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSION_ACCESS_PAGE_DESC",
+            "message": "Allow access to required phone features to continue using the DIGIT HCM app.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSION_BLUETOOTHSCAN",
+            "message": "Bluetooth",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSION_CAMERA",
+            "message": "Camera",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSION_CAMERA_DESC",
+            "message": "Use your device camera.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSION_GRANTED",
+            "message": "Permission granted",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSION_IGNOREBATTERYOPTIMIZATIONS",
+            "message": "Ignore Battery Optimization",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSION_IGNOREBATTERYOPTIMIZATIONS_WARNING",
+            "message": "Please check if background activity is enabled from settings",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSION_LOCATION",
+            "message": "Location",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSION_LOCATION_DESC",
+            "message": "Access your device location.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES",
+            "message": "Nearby Share",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES_DESC",
+            "message": "Share data with nearby devices.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSION_NOTIFICATION",
+            "message": "Notifications",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSION_NOTIFICATION_DESC",
+            "message": "Get alerts and updates from the app.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "CORE_COMMON_PERMISSION_NOT_GRANTED",
+            "message": "Permission not granted",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "DEFAULT",
+            "message": "Default",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "DIARRHOEA",
+            "message": "Diarrhoea",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "DRUG_SE_CC",
+            "message": "Drug SE CC",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "DRUG_SE_PC",
+            "message": "Drug SE PC",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "Data Issues",
+            "message": "Data issues",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "ENABLE_PERMISSION_CHECKBOX",
+            "message": "Please enable the required permission checkbox to continue.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FEMALE",
+            "message": "Female",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FEVER",
+            "message": "Fever",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_backgroundActivityConfirmed_LABEL",
+            "message": "Confirm",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_coreCommonAllowAccess_LABEL",
+            "message": "Allow Access",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_coreCommonDontAllow_LABEL",
+            "message": "Don't Allow",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_permissionHandlerButton2_LABEL",
+            "message": "Settings",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FOOTER_ACTION_permissionHandlerButton_LABEL",
+            "message": "Allow Access",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "FUNERAL",
+            "message": "Funeral",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "GLASS",
+            "message": "Glass",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "GRANT_PERMISSION",
+            "message": "Grant",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "GRANT_PERMISSION_BATTERY",
+            "message": "Grant",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "GRANT_PERMISSION_BLUETOOTH",
+            "message": "Grant",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "GRANT_PERMISSION_CAMERA",
+            "message": "Grant",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "GRANT_PERMISSION_LOCATION",
+            "message": "Grant",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "GRANT_PERMISSION_NEARBY",
+            "message": "Grant",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "GRANT_PERMISSION_NOTIFICATION",
+            "message": "Grant",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "INCOMPATIBLE",
+            "message": "Incompatible",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "INELIGIBLE",
+            "message": "Ineligible",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_AGE",
+            "message": "Age",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_BATCHNUMBER",
+            "message": "Batch number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_BATCH_NUMBER",
+            "message": "Batch number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_COMPLAINTMODEL",
+            "message": "Complaint",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_HFREFERRALMODEL",
+            "message": "HF referral model",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_HOUSEHOLDMODEL",
+            "message": "Household",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_INDIVIDUALMODEL",
+            "message": "Individual",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_INSIDEMONITORINGMODEL",
+            "message": "Inside monitoring",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_ITEMMODEL",
+            "message": "Item model",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_LQAMODEL",
+            "message": "LQA model",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_NAVIGATIONMODEL",
+            "message": "Navigation model",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_PROJECTBENEFICIARYMODEL",
+            "message": "Project beneficiary",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CATEGORY_STOCKMODEL",
+            "message": "Stock",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_CODE",
+            "message": "Settlement area",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMMENTS",
+            "message": "Comments",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINTAREA",
+            "message": "Area",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINTDATE",
+            "message": "Complaint date",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINTNUMBER",
+            "message": "Complaint number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINTSTATUS",
+            "message": "Status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINANT_CONTACT",
+            "message": "Complainant contact",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_AREA",
+            "message": "Complaint area",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_DATE",
+            "message": "Complaint date",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_NUMBER",
+            "message": "Complaint number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_STATUS",
+            "message": "Complaint status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_INBOX_COMPLAINT_TYPE",
+            "message": "Complaint type",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+            "message": "Complainant contact",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_AREA",
+            "message": "Area",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_DATE",
+            "message": "Complaint date",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_NUMBER",
+            "message": "Complaint number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINTS_TYPE",
+            "message": "Complaint type",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_DESCRIPTION",
+            "message": "Complaint description",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_COMPLAINT_VIEW_COMPLAINT_STATUS",
+            "message": "Complaint status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_DATEOFBIRTH",
+            "message": "Date of birth",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_DATEOFREGISTRATION",
+            "message": "Registration date",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_DATE_OF_REGISTRATION",
+            "message": "Date of registration",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_EXPIRYDATE",
+            "message": "Expiry date",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_GENDER",
+            "message": "Gender",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_GIVENNAME",
+            "message": "Name",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCMTOTALMEMBERS",
+            "message": "Total members",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_BENEFICIARY_AGE_LABEL",
+            "message": "Age",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_BENEFICIARY_GENDER_LABEL",
+            "message": "Gender",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_BENEFICIARY_NAME_LABEL",
+            "message": "Name",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_BENEFICIARY_REGISTRATION_DATE_LABEL",
+            "message": "Registration date",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_HEAD_LABEL",
+            "message": "Head of household",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_SETTLEMENT_LABEL",
+            "message": "Settlement",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
+            "message": "Total members",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HEADNAME",
+            "message": "Head of household",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HOUSEHOLD_HEAD_NAME",
+            "message": "Head of household",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_HOUSEHOLD_LOCALITY",
+            "message": "Locality",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IDNUMBER",
+            "message": "ID number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IDTYPE",
+            "message": "ID type",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_ID_NUMBER",
+            "message": "ID number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_ID_TYPE",
+            "message": "ID type",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYCHILDRENPRESENT",
+            "message": "Children present",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYCHILDRENVACCINATED",
+            "message": "Children vaccinated",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYFINALCOMMENTS",
+            "message": "Final comments",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYMISSEDABSENT",
+            "message": "Missed (absent)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYMISSEDASLEEP",
+            "message": "Missed (asleep)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTREVISITED",
+            "message": "Missed (not revisited)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYMISSEDNOTVISITED",
+            "message": "Missed (not visited)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYMISSEDOTHER",
+            "message": "Missed (other)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYMISSEDREFUSAL",
+            "message": "Missed (refusal)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYMISSEDROUTINE",
+            "message": "Missed (routine)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYMONITORDESIGNATION",
+            "message": "Monitor designation",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYMONITORINGDATE",
+            "message": "Monitoring date",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYMONITORNAME",
+            "message": "Monitor name",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYPOORLYCOVERED",
+            "message": "Poorly covered",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTAREA",
+            "message": "Settlement area",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHMSUMMARYSETTLEMENTTYPE",
+            "message": "Settlement type",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_PRESENT",
+            "message": "Children present",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_CHILDREN_VACCINATED",
+            "message": "Children vaccinated",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_FINAL_COMMENTS",
+            "message": "Final comments",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ABSENT",
+            "message": "Missed (absent)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ASLEEP",
+            "message": "Missed (asleep)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_REVISITED",
+            "message": "Missed (not revisited)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_NOT_VISITED",
+            "message": "Missed (not visited)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_OTHER",
+            "message": "Missed (other)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_REFUSAL",
+            "message": "Missed (refusal)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MISSED_ROUTINE",
+            "message": "Missed (routine)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MONITORING_DATE",
+            "message": "Monitoring date",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_DESIGNATION",
+            "message": "Monitor designation",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_MONITOR_NAME",
+            "message": "Monitor name",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_POORLY_COVERED",
+            "message": "Poorly covered",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_AREA",
+            "message": "Settlement area",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_IHM_SUMMARY_SETTLEMENT_TYPE",
+            "message": "Settlement type",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INBOXCOMPLAINANTCONTACT",
+            "message": "Contact",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INBOXCOMPLAINTNUMBER",
+            "message": "Complaint number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INBOXCOMPLAINTTYPE",
+            "message": "Complaint type",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_BATCH_LABEL",
+            "message": "Batch number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_BATCH_NUMBER_LABEL",
+            "message": "Batch number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_COMMENTS_LABEL",
+            "message": "Comments",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_EXPIRY_LABEL",
+            "message": "Expiry date",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_MRN_NUMBER_LABEL",
+            "message": "MRN number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_QUANTITY_LABEL",
+            "message": "Quantity",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_RESOURCE_LABEL",
+            "message": "Resource",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_SENDER_LABEL",
+            "message": "Sender",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_SKU_LABEL",
+            "message": "SKU",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_TRANSACTION_REASON_LABEL",
+            "message": "Transaction reason",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_TRANSACTION_TYPE_LABEL",
+            "message": "Transaction type",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_WAYBILL_LABEL",
+            "message": "Waybill number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_INVENTORY_WAYBILL_NUMBER_LABEL",
+            "message": "Waybill number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LOCALITY",
+            "message": "Settlement area",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQAABSENCEREASONLABEL",
+            "message": "Absence reason",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQAAFPAWARENESSLABEL",
+            "message": "AFP awareness",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQAAFPCASECOUNTLABEL",
+            "message": "AFP case count",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQAAWARENESSOTHERLABEL",
+            "message": "Awareness (other)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQACAMPAIGNAWARENESSLABEL",
+            "message": "Campaign awareness",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQACAREGIVERINFORMEDLABEL",
+            "message": "Caregiver informed",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQACHILDAGEMONTHSLABEL",
+            "message": "Child age (months)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQACHILDRENUNDER5LABEL",
+            "message": "LQA children under 5",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQACHILDSEXLABEL",
+            "message": "Child sex",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQACLUSTERNUMBERLABEL",
+            "message": "LQA cluster number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQAFINGERMARKEDLABEL",
+            "message": "Finger marked",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQALOTNUMBERLABEL",
+            "message": "LQA lot number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQAOPVDOSESLABEL",
+            "message": "OPV doses",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQAOTHERABSENCEREASONLABEL",
+            "message": "Other absence reason",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQAOTHERREASONSPECIFYLABEL",
+            "message": "Other reason (specify)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQAOTHERREFUSALREASONLABEL",
+            "message": "Other refusal reason",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQAREASONNOTMARKEDLABEL",
+            "message": "Reason not marked",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQAREFUSALREASONLABEL",
+            "message": "Refusal reason",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQASETTLEMENTAREALABEL",
+            "message": "LQA settlement area",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQASURVEYDATELABEL",
+            "message": "LQA survey date",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQASURVEYORNAMELABEL",
+            "message": "LQA surveyor name",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_ABSENCE_REASON_LABEL",
+            "message": "Absence reason",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_AFP_AWARENESS_LABEL",
+            "message": "AFP awareness",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_AFP_CASE_COUNT_LABEL",
+            "message": "AFP case count",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_AWARENESS_OTHER_LABEL",
+            "message": "Other awareness",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CAMPAIGN_AWARENESS_LABEL",
+            "message": "Campaign awareness",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CAREGIVER_INFORMED_LABEL",
+            "message": "Caregiver informed",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CHILDREN_UNDER_5_LABEL",
+            "message": "Children under 5",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CHILD_AGE_MONTHS_LABEL",
+            "message": "Child age (months)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CHILD_SEX_LABEL",
+            "message": "Child sex",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_CLUSTER_NUMBER_LABEL",
+            "message": "Cluster number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_FINGER_MARKED_LABEL",
+            "message": "Finger marked",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_LOT_NUMBER_LABEL",
+            "message": "Lot number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_OPV_DOSES_LABEL",
+            "message": "OPV doses",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_OTHER_ABSENCE_REASON_LABEL",
+            "message": "Other absence reason",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_OTHER_REASON_SPECIFY_LABEL",
+            "message": "Other reason (specify)",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_OTHER_REFUSAL_REASON_LABEL",
+            "message": "Other refusal reason",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_REASON_NOT_MARKED_LABEL",
+            "message": "Reason not marked",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_REFUSAL_REASON_LABEL",
+            "message": "Refusal reason",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_SETTLEMENT_AREA_LABEL",
+            "message": "Settlement area",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_SURVEYOR_NAME_LABEL",
+            "message": "Surveyor name",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_LQA_SURVEY_DATE_LABEL",
+            "message": "Survey date",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_MEMBERCOUNT",
+            "message": "Member count",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_MEMBER_COUNT",
+            "message": "Member count",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_MOBILENUMBER",
+            "message": "Mobile number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_MOBILE_NUMBER",
+            "message": "Mobile number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_MRNNUMBER",
+            "message": "MRN number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_MRN_NUMBER",
+            "message": "MRN number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_NAME_OF_INDIVIDUAL",
+            "message": "Name",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_QUANTITY",
+            "message": "Quantity",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_QUANTITYRECEIVED",
+            "message": "Quantity received",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_QUANTITY_RECEIVED",
+            "message": "Quantity received",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_RECEIVER",
+            "message": "Receiver",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_REFERRALNAME",
+            "message": "Name",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_REFERRALSTATUS",
+            "message": "Status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_REFERRAL_INBOX_NAME",
+            "message": "Name",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_STATUS",
+            "message": "Referral status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_REFERRAL_INBOX_REFERRAL_SYMPTOM",
+            "message": "Referral symptom",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_REFRRALSYMPTOM",
+            "message": "Referral symptom",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_RESOURCE",
+            "message": "Resource",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_SENDERID",
+            "message": "Sender ID",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_SKU",
+            "message": "Resource",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_STOCKEXPIRY",
+            "message": "Stock expiry",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_STOCK_EXPIRY",
+            "message": "Stock expiry",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_TRANSACTIONREASON",
+            "message": "Transaction reason",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_TRANSACTIONTYPE",
+            "message": "Transaction type",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_VIEWCOMPLAINANTCONTACT",
+            "message": "Contact",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_VIEWCOMPLAINTAREA",
+            "message": "Area",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_VIEWCOMPLAINTESCRIPTION",
+            "message": "Description",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_VIEWCOMPLAINTSTATUS",
+            "message": "Status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_VIEWCOMPLAINTTYPE",
+            "message": "Type",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_WAYBILLNUMBER",
+            "message": "Waybill number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_WAYBILL_NUMBER",
+            "message": "Waybill number",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "LABEL_PAIR_{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+            "message": "{{fn:getSecondPagePartyLabel(item.additionalFields.fields)}}",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "MALE",
+            "message": "Male",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "METAL",
+            "message": "Metal",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "NEAR_BY_WIFI_DEVICES",
+            "message": "Nearby devices",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "NOTIFICATION_PERMISSION_TAG",
+            "message": "Notifications permission status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "NOT_ADMINISTERED",
+            "message": "Not administered",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "NOT_REGISTERED",
+            "message": "Not Registered",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "NotEnoughStock",
+            "message": "Not enough stock",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "OPEN_SETTINGS",
+            "message": "Settings",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "OTHER",
+            "message": "Other",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "Other",
+            "message": "Other",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "PERMISSIONS_ALERT",
+            "message": "Allow required permissions",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "PERMISSION_CONTINUE",
+            "message": "Continue",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "PERMISSION_DENIED_OPEN_SETTINGS",
+            "message": "Enable permission in Settings.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY",
+            "message": "Run the app in the background.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "PerformanceIssue",
+            "message": "Performance issue",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "REEDS",
+            "message": "Reeds",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SICK",
+            "message": "Sick",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SKIN_REACTION",
+            "message": "Skin Reaction",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SUCCESSFUL_DELIVERY",
+            "message": "Successful Delivery",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "Security Issues",
+            "message": "Security issues",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "SyncNotWorking",
+            "message": "Sync not working",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "TRANSPORT_TYPE_1",
+            "message": "Transport Type 1",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "TRANSPORT_TYPE_2",
+            "message": "Transport Type 2",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "Technical Issues",
+            "message": "Technical issues",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "UNIQUE_BENEFICIARY_ID",
+            "message": "Beneficiary ID",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "User Account Issues",
+            "message": "User account issues",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "VOMITTING",
+            "message": "Vomiting",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "WEAKNESS",
+            "message": "Weakness",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "backgroundActivityConfirmed",
+            "message": "Run the app in the background.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "batteryOptimizationTag",
+            "message": "Battery permission status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "batteryStatus",
+            "message": "Battery status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "blueToothPermissionStatus",
+            "message": "Bluetooth status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "blueToothScan",
+            "message": "Bluetooth scan permission status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "cameraPermissionStatus",
+            "message": "Camera permission status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "card",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "card2",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "card3",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "card4",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "card5",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "card6",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "column",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "column2",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "column3",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "column4",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "column5",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "column6",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "column7",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "coreCommonAllowAccess",
+            "message": "Allow Access",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "coreCommonDontAllow",
+            "message": "Don't Allow",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "coreCommonPermissionBluetoothscan",
+            "message": "Bluetooth",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "coreCommonPermissionBluetoothscanDesc",
+            "message": "Scan and connect to nearby devices.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "coreCommonPermissionCamera",
+            "message": "Camera",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "coreCommonPermissionCameraDesc",
+            "message": "Use your device camera.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "coreCommonPermissionIgnorebatteryoptimizations",
+            "message": "Ignore Battery Optimization",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "coreCommonPermissionLocation",
+            "message": "Location",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "coreCommonPermissionLocationDesc",
+            "message": "Access your device location.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "coreCommonPermissionNearbywifidevices",
+            "message": "Nearby Share",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "coreCommonPermissionNearbywifidevicesDesc",
+            "message": "Share data with nearby devices.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "coreCommonPermissionNotification",
+            "message": "Notifications",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "coreCommonPermissionNotificationDesc",
+            "message": "Get alerts and updates from the app.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "icon",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "icon2",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "icon3",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "icon4",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "icon5",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "icon6",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "locationPermission",
+            "message": "Location permission status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "locationPermissionStatus",
+            "message": "Location status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "nearByDevicesStatus",
+            "message": "Nearby devices status",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "notificansIcon",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "notificationPermissionStatus",
+            "message": "Notification permission",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "permissionHandlerAllowBackGroundActivity",
+            "message": "Run the app in the background.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "permissionHandlerButton",
+            "message": "Allow Access",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "permissionHandlerButton2",
+            "message": "Settings",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "permissionHandler_column",
+            "message": "Permissions",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "row",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "row10",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "row11",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "row12",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "row2",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "row3",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "row4",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "row5",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "row6",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "row7",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "row8",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "row9",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate",
+            "message": "Notifications",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate10",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate11",
+            "message": "Ignore Battery Optimization",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate12",
+            "message": "Allow the app to run in the background for uninterrupted service.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate2",
+            "message": "Enable notifications to receive campaign alerts and updates.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate3",
+            "message": "Battery optimization",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate4",
+            "message": "Run the app in the background.",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate5",
+            "message": "Allow Access",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate6",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate7",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate8",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        },
+        {
+            "code": "textTemplate9",
+            "message": " ",
+            "module": "hcm-base-permissionhandler-bednet",
+            "locale": "en_DEMO"
+        }
+    ]
