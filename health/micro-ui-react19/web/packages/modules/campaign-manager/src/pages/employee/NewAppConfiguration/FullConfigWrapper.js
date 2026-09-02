@@ -52,6 +52,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const [collapsedCategories, setCollapsedCategories] = useState({});
   const [formElementSearch, setFormElementSearch] = useState("");
   const [fieldTypeMaster, setFieldTypeMaster] = useState(appConfigStore.getState().fieldTypeMaster?.byName);
+  const [campaignLocalization, setCampaignLocalization] = useState(appConfigStore.getState().localization);
 
   useEffect(() => {
     const mdmsCtx = window?.globalConfigs?.getConfig("MDMS_V1_CONTEXT_PATH") || "egov-mdms-service";
@@ -60,9 +61,26 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
     );
     const unsubscribe = appConfigStore.subscribe(() => {
       setFieldTypeMaster(appConfigStore.getState().fieldTypeMaster?.byName);
+      setCampaignLocalization(appConfigStore.getState().localization);
     });
     return unsubscribe;
   }, [tenantId]);
+
+  // Flow/category/page names must honour the campaign's own localization module (e.g. polio renames
+  // "Redose" to "Revisit") — that data lives in appConfigStore's localization slice, not in i18next,
+  // so translate from there first and only fall back to the global t.
+  const campaignT = React.useCallback(
+    (code) => {
+      const locState = campaignLocalization?.data;
+      if (Array.isArray(locState)) {
+        const entry = locState.find((item) => item.code === code);
+        const locale = campaignLocalization?.currentLocale || Digit?.SessionStorage?.get("locale");
+        if (entry?.[locale]) return entry[locale];
+      }
+      return t(code);
+    },
+    [campaignLocalization, t]
+  );
 
   const sidePanelRef = useRef(null);
   const sidebarRef = useRef(null);
@@ -284,7 +302,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
     const query = flowSearchQuery.trim().toLowerCase();
     const filtered = query
       ? sorted.filter((flow) => {
-          const flowLabel = t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`));
+          const flowLabel = campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`));
           return flowLabel.toLowerCase().includes(query);
         })
       : sorted;
@@ -305,7 +323,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
       category: cat,
       flows: categoryMap[cat],
     }));
-  }, [flowConfig, flowSearchQuery, t]);
+  }, [flowConfig, flowSearchQuery, campaignT]);
 
   // Show loader while fetching data
   if (isLoading) {
@@ -349,8 +367,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
           size={"medium"}
         />
         <div className="full-config-wrapper__flow-name-header">
-          {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flowModule}`))}
-          <span style={{fontSize: "0.75rem", marginTop: "0.375rem"}}> ({`${t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_VERSION)} - ${version}`})</span>
+          {campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flowModule}`))}
+          <span style={{fontSize: "0.75rem", marginTop: "0.375rem"}}> ({`${t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_VERSION)} ${version}`})</span>
         </div>
         <AppHelpTutorial appPath={path} location={propsLocation} buttonLabel="CAMP_HELP_TEXT" />
       </div>
@@ -378,7 +396,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               handleToggleSidePanel("formelements");
             }}
           >
-            {activeSidePanel === "formelements" ? <CustomSVG.VariableAddFilled fill={"#0B4B66"} width={"24px"} height={"24px"} /> : <CustomSVG.VariableAdd fill={currentPageType === "template" || viewMode ? "#B1B4B6" : "#0B4B66"} width={"24px"} height={"24px"}/>}
+            {activeSidePanel === "formelements" ? <CustomSVG.VariableAddFilled fill={"#0B4B66"} width={"24px"} height={"24px"} /> : <CustomSVG.VariableAdd fill={currentPageType === "template" || viewMode ? "#C5C5C5" : "#0B4B66"} width={"24px"} height={"24px"}/>}
             <span>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FORMELEMENTS)}</span>
           </div>
           <div
@@ -386,7 +404,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               activeSidePanel === "roles" ? "full-config-wrapper__sidebar-menu-item--active" : ""
             }`}
           >
-            {activeSidePanel === "roles" ? <SVG.Person fill="#B1B4B6" /> : <SVG.PersonOutline fill="#B1B4B6" />}
+            {activeSidePanel === "roles" ? <SVG.Person fill="#C5C5C5" /> : <SVG.PersonOutline fill="#C5C5C5" />}
 
             <span>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ROLES)}</span>
           </div>
@@ -459,26 +477,28 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                 </div>
                 {groupedFlows.map((group) => {
                   const isExpanded = flowSearchQuery ? true : !collapsedCategories[group.category];
-                  const isSingleFlow = group.flows.length === 1;
 
-                  // Single-flow category: render as flat flow item without category header (only when not searching)
-                  if (isSingleFlow && !flowSearchQuery) {
-                    const flow = group.flows[0];
+                  // Flows without a category in config have no group to name — render them flat
+                  if (group.category === "UNCATEGORIZED" && !flowSearchQuery) {
                     return (
                       <div key={group.category} className="full-config-wrapper__category-group">
-                        <div
-                          className={`full-config-wrapper__flow-item ${
-                            selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
-                          }`}
-                          onClick={() => handleFlowClick(flow)}
-                        >
-                          {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
-                        </div>
+                        {group.flows.map((flow) => (
+                          <div
+                            key={flow.id}
+                            className={`full-config-wrapper__flow-item ${
+                              selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
+                            }`}
+                            onClick={() => handleFlowClick(flow)}
+                          >
+                            {campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
+                          </div>
+                        ))}
                       </div>
                     );
                   }
 
-                  // Multi-flow category: render with collapsible header
+                  // Every real category renders with its collapsible header so single-flow
+                  // categories (e.g. Revisit) still appear as their own group
                   return (
                     <div key={group.category} className="full-config-wrapper__category-group">
                       <div
@@ -486,7 +506,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                         onClick={() => !flowSearchQuery && toggleCategory(group.category)}
                       >
                         <span className="full-config-wrapper__category-title">
-                          {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_CATEGORY_${group.category}`))}
+                          {campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_CATEGORY_${group.category}`))}
                         </span>
                         <span
                           className={`full-config-wrapper__category-chevron ${
@@ -506,7 +526,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                               }`}
                               onClick={() => handleFlowClick(flow)}
                             >
-                              {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
+                              {campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
                             </div>
                           ))}
                         </div>
@@ -556,8 +576,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                   const FIELD_TYPE_ICON_MAP = {
                     // Basic
                     checkbox: "CheckboxSVG",
-                    date: "Calendar",
-                    dob: "Calendar",
+                    date: "DateRange",
+                    dob: "Event",
                     dropdown: "EventList",
                     mobileNumber: "Call",
                     number: "Numeric123",
@@ -567,10 +587,13 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                     textarea: "TextAd",
                     // Advanced
                     idPopulator: "Badge",
-                    latLng: "GpsFixed",
+                    latLng: "LocateIcon",
                     locality: "LocationCity",
-                    qrScanner: "QrCodeScanner",
-                    selectionTag: "Dashboard",
+                    qrScanner: "QrCode",
+                    selectionCard: "GridView",
+                    referralCycle: "AutoRenew",
+                    scanner: "QrCodeScanner",
+                    select: "GridView",
                   };
 
                   // Same filter as the "Add Field" popup in AppConfigurationWrapper
@@ -660,7 +683,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                 className={`full-config-wrapper__page-tab ${selectedPageName === page.name ? "full-config-wrapper__page-tab--active" : ""}`}
                 onClick={() => handlePageClick(page)}
               >
-                {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_PAGE_${page.name}`))}
+                {campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_PAGE_${page.name}`))}
               </div>
             ))}
           </div>
@@ -671,7 +694,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             <div className="full-config-wrapper__flow-tag">
               {/* <ConversionPath fill="#0057BD" /> */}
               <FlowUnfilled fill="#0057BD" />
-              <span>{t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${activeFlow?.name}`))}</span>
+              <span>{campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${activeFlow?.name}`))}</span>
             </div>
 
             {/* Left Arrow */}
@@ -730,7 +753,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                           textAlign: "right",
                         }
                       : {
-                          color: "#1C00BD",
+                          color: "#0057BD",
                           fontFamily: "Roboto",
                           fontWeight: 600,
                           fontStyle: "SemiBold",
@@ -740,8 +763,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                   }
                   style={
                     currentPageType === "template"
-                      ? { backgroundColor: "#FFFCC0", borderRadius: "6px", top: "6px", position: "absolute" }
-                      : { backgroundColor: "#EBECFE", borderRadius: "6px", top: "6px", position: "absolute" }
+                      ? { backgroundColor: "#FFF7D6", borderRadius: "6px", top: "6px", position: "absolute" }
+                      : { backgroundColor: "#DEEFFF", borderRadius: "6px", top: "6px", position: "absolute" }
                   }
                 />
               )}

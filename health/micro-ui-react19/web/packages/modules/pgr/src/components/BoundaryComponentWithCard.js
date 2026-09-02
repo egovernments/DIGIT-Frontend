@@ -87,7 +87,7 @@ const BoundaryComponentWithCard = ({ t, config, onSelect, userType, formData }) 
    */
 
   if (isBoundaryLoading) {
-    return <Loader variant={"PageLoader"} className={"digit-center-loader"} />
+    return <Loader className={"digit-center-loader"} />;
   }
 
   // Get the first boundary key that has data
@@ -124,7 +124,7 @@ const BoundaryDropdown = ({ label, data, onChange, selected, isMandatory }) => {
 
   return (
     <div className="boundary-dropdown-wrapper" style={{display:"flex",flexDirection:"row",gap:"1rem"}}>
-      <div className="comment-label-without-card" style={{width:"33%"}}>
+      <div className="digit-header-content label comment-label-without-card" style={{width:"33%"}}>
         {label}
         {isMandatory && <span style={{ color: "#d4351c" }}> *</span>}
       </div>

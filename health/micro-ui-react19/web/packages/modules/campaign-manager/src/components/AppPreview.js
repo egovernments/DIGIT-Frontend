@@ -1,5 +1,5 @@
 import React, { Fragment, useMemo, useState } from "react";
-import { Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components";
+import { AlertCard, Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components";
 import MobileBezelFrame from "./MobileBezelFrame";
 import ComponentToRender from "./ComponentToRender";
 import useCampaignStore from "../hooks/useCampaignStore";
@@ -11,7 +11,7 @@ const Tabs = React.memo(({ tabs, activeTab, onTabChange, t }) => {
     <div className="configure-app-tabs" style={{
       display: "flex",
       scrollbarWidth: "none",
-      borderBottom: "2px solid #e0e0e0",
+      borderBottom: "2px solid #D6D5D4",
       backgroundColor: "#fff",
       overflow: "auto"
     }}>
@@ -115,7 +115,9 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
         }}
       >
         <Card
-          className="app-preview-card"
+          className={`app-preview-card ${
+            data?.flow === "CHECKLIST" || /checklist/i.test(t(data?.heading || "")) ? "checklist-preview" : ""
+          }`}
           style={{
             backgroundColor: "#eee",
             boxShadow: "none",
@@ -127,6 +129,17 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
             {/* RENDERING HEADER AND SUB-HEADING */}
             {data.heading && <CardHeader className="app-preview-card-header">{t(data.heading)}</CardHeader>}
             {data.description && <CardText className="app-preview-sub-heading">{t(data.description)}</CardText>}
+
+            {/* Info card driven by the page-level conditions.infoCardText (mirrors the mobile app) */}
+            {data?.conditions?.infoCardText && (
+              <AlertCard
+                populators={{ name: "infocard" }}
+                variant="default"
+                className="cmn-help-info-card"
+                text={t(data.conditions.infoCardText)}
+                style={{ margin: "0 0 1rem 0" }}
+              />
+            )}
 
             {/* RENDERING TABS */}
             {showTabs && (
@@ -152,17 +165,23 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
                       ((selectedField.fieldName && selectedField.fieldName === field.fieldName) ||
                         (selectedField.id && selectedField.id === field.id));
 
+                    // The app wraps a field in a grey card only when conditions.wrapInCard is set
+                    // (visibilityCondition alone renders flat in the app) - mirror exactly that
+                    const isDependent = field?.conditions?.wrapInCard === true;
+
                     return (
                       <div
                         key={field.id || field.fieldName || originalFieldIndex}
+                        className={isDependent ? "app-preview-dependent-field" : undefined}
                         onClick={() => onFieldClick && onFieldClick(field, data, card, cardIndex, originalFieldIndex)}
                         style={{
                           cursor: "pointer",
-                          // border: isSelected ? "2px solid #C84C0E" : "2px solid transparent",
-                          // borderRadius: "4px",
-                          // padding: "8px",
-                          // margin: "4px 0",
-                          // backgroundColor: isSelected ? "#C84C0E08" : "transparent",
+                          ...(isDependent && {
+                            backgroundColor: "#fafafa",
+                            border: "1px solid #d6d5d4",
+                            borderRadius: "0.5rem",
+                            padding: "0.75rem",
+                          }),
                         }}
                       >
                         <ComponentToRender field={field} t={t} selectedField={selectedField} isSelected={isSelected} />
@@ -181,7 +200,7 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
               position: "sticky",
               bottom: 0,
               backgroundColor: "#fff",
-              borderTop: "1px solid #e0e0e0",
+              borderTop: "1px solid #D6D5D4",
               padding: "12px 16px",
               display: "flex",
               flexDirection: "column",

@@ -128,7 +128,7 @@ const styles = {
   camera: {
     width: "10px",
     height: "10px",
-    backgroundColor: "#333",
+    backgroundColor: "#363636",
     borderRadius: "50%",
     position: "absolute",
     top: "10px",

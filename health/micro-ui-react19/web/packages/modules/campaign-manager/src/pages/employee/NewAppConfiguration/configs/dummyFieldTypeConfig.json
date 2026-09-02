@@ -126,7 +126,10 @@
     "properties": [
       {
         "code": "variation",
-        "options": ["primary", "secondary"]
+        "options": [
+          "primary",
+          "secondary"
+        ]
       },
       {
         "code": "icon",
@@ -210,7 +213,10 @@
     "properties": [
       {
         "code": "type",
-        "options": ["primary", "secondary"]
+        "options": [
+          "primary",
+          "secondary"
+        ]
       },
       {
         "code": "icon",
@@ -238,7 +244,10 @@
     "properties": [
       {
         "code": "panelType",
-        "options": ["success", "error"]
+        "options": [
+          "success",
+          "error"
+        ]
       }
     ]
   },
@@ -256,7 +265,10 @@
     "properties": [
       {
         "code": "cardType",
-        "options": ["primary", "secondary"]
+        "options": [
+          "primary",
+          "secondary"
+        ]
       }
     ]
   },
@@ -297,7 +309,12 @@
     "properties": [
       {
         "code": "tagType",
-        "options": ["success", "error", "warning", "monochrome"]
+        "options": [
+          "success",
+          "error",
+          "warning",
+          "monochrome"
+        ]
       }
     ]
   },
@@ -557,7 +574,12 @@
     "properties": [
       {
         "code": "infoCardType",
-        "options": ["info", "success", "error", "warning"]
+        "options": [
+          "info",
+          "success",
+          "error",
+          "warning"
+        ]
       }
     ]
   },
@@ -615,6 +637,17 @@
     "fieldType": "component"
   },
   {
+    "type": "stockReconciliationCard",
+    "order": 27,
+    "category": "advanced",
+    "metadata": {
+      "type": "dynamic",
+      "format": "custom"
+    },
+    "component": "DropdownTemplate",
+    "fieldType": "component"
+  },
+  {
     "type": "facilityToWhich",
     "order": 27,
     "category": "advanced",
@@ -627,6 +660,17 @@
   },
   {
     "type": "evaluationFacility",
+    "order": 27,
+    "category": "advanced",
+    "metadata": {
+      "type": "dynamic",
+      "format": "custom"
+    },
+    "component": "DropdownTemplate",
+    "fieldType": "component"
+  },
+  {
+    "type": "productdetail",
     "order": 27,
     "category": "advanced",
     "metadata": {

@@ -182,7 +182,7 @@ const AddProducts = React.memo(({
             </div>
             
             <div className="add-resource-label-field-container">
-              <LabelFieldPair style={{ display: "grid" }}>
+              <LabelFieldPair style={{ display: "grid", gap: "0.5rem" }}>
                 <label>{t(I18N_KEYS.PAGES.CAMPAIGN_ADD_PRODUCTS_LABEL)}</label>
                 <Dropdown
                   t={t}
@@ -200,10 +200,11 @@ const AddProducts = React.memo(({
               </LabelFieldPair>
               
               {!projectConfig?.productCountHide && (
-                <LabelFieldPair style={{ 
-                  display: "flex", 
-                  flexDirection: "column", 
-                  alignItems: "flex-start" 
+                <LabelFieldPair style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "0.5rem"
                 }}>
                   <label>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_COUNT_LABEL)}</label>
                   <TextInput

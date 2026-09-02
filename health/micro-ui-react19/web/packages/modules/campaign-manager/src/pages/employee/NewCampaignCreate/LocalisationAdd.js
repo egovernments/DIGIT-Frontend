@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Toast, Card, Button, HeaderComponent, Loader, Footer } from "@egovernments/digit-ui-components";
+import { Toast, Card, Button, HeaderComponent, Loader, Footer, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
@@ -25,6 +25,8 @@ const LocalisationBulkUpload = () => {
   const [showToast, setShowToast] = useState(null);
   const [uploadedFile, setUploadedFile] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [showTemplatePopup, setShowTemplatePopup] = useState(false);
+  const templatePopupShownRef = useRef(false);
   const inputRef = useRef(null);
 
   // Campaign from URL
@@ -147,6 +149,15 @@ const LocalisationBulkUpload = () => {
               : null,
           },
         ];
+
+  // Offer the translation template for download on first visit, same as the
+  // other upload screens - only before any file has been uploaded
+  useEffect(() => {
+    if (isTemplateReady && uploadedFile.length === 0 && !templatePopupShownRef.current) {
+      templatePopupShownRef.current = true;
+      setShowTemplatePopup(true);
+    }
+  }, [isTemplateReady, uploadedFile.length]);
 
   // Fetch localizations for allowed modules only
   useEffect(() => {
@@ -347,9 +358,19 @@ const LocalisationBulkUpload = () => {
         return;
       }
 
+      // The localization service rejects a request containing the same code twice
+      // (DUPLICATE_RECORDS), so a single repeated row in the sheet failed the whole
+      // upload; dedupe by code+module+locale keeping the bottom-most sheet row
+      const dedupedMessages = Object.values(
+        allMessages.reduce((acc, msg) => {
+          acc[`${msg.code}__${msg.module}__${msg.locale}`] = msg;
+          return acc;
+        }, {})
+      );
+
       // Group messages by module and locale for separate API calls
       const groupedMessages = {};
-      allMessages.forEach((msg) => {
+      dedupedMessages.forEach((msg) => {
         const key = `${msg.module}__${msg.locale}`;
         if (!groupedMessages[key]) {
           groupedMessages[key] = [];
@@ -369,34 +390,35 @@ const LocalisationBulkUpload = () => {
       const CHUNK_SIZE = 500;
 
       // Make separate API calls for each module-locale combination, chunking if needed
-      const upsertPromises = Object.entries(groupedMessages).flatMap(([, messages]) => {
-        // If messages exceed chunk size, split into chunks
-        if (messages.length > CHUNK_SIZE) {
-          const chunks = chunkArray(messages, CHUNK_SIZE);
-          return chunks.map((chunk) =>
-            Digit.CustomService.getResponse({
-              url: `/localization/messages/v1/_upsert`,
-              body: {
-                tenantId: stateId,
-                messages: chunk,
-              },
-            })
-          );
-        }
-        // Otherwise, single API call
-        return Digit.CustomService.getResponse({
-          url: `/localization/messages/v1/_upsert`,
-          body: {
-            tenantId: stateId,
-            messages: messages,
-          },
-        });
+      const upsertPromises = Object.entries(groupedMessages).flatMap(([groupKey, messages]) => {
+        const chunks = messages.length > CHUNK_SIZE ? chunkArray(messages, CHUNK_SIZE) : [messages];
+        return chunks.map((chunk) =>
+          Digit.CustomService.getResponse({
+            url: `/localization/messages/v1/_upsert`,
+            body: {
+              tenantId: stateId,
+              messages: chunk,
+            },
+          }).then(
+            (res) => ({ groupKey, res }),
+            // Tag the failure with its module so one bad group doesn't hide the rest
+            (err) => Promise.reject({ groupKey, err })
+          )
+        );
       });
 
-      await Promise.all(upsertPromises);
+      // One failing module used to reject the whole upload with a generic error;
+      // settle all groups and report exactly which modules failed
+      const results = await Promise.allSettled(upsertPromises);
+      const failedGroups = [...new Set(results.filter((r) => r.status === "rejected").map((r) => r.reason?.groupKey?.split("__")[0]))];
+      if (failedGroups.length === results.length && results.length > 0) {
+        throw new Error(`All uploads failed: ${failedGroups.join(", ")}`);
+      }
 
-      // Show warning if some messages were empty, otherwise show success
-      if (emptyMessageCount > 0) {
+      // Show failures/warnings first, otherwise success
+      if (failedGroups.length > 0) {
+        setShowToast({ label: `${t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_UPSERT_FAILED)}: ${failedGroups.join(", ")}`, type: "error" });
+      } else if (emptyMessageCount > 0) {
         setShowToast({ label: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_MESSAGES_EMPTY_WARNING), type: "warning" });
       } else {
         setShowToast({ label: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_UPSERT_SUCCESS), type: "success" });
@@ -454,6 +476,45 @@ const LocalisationBulkUpload = () => {
 
       <Card>
         {(isDownloadLoading || isUploading || isCampaignLoading) && <Loader variant="OverlayLoader" />}
+
+        {showTemplatePopup && (
+          <PopUp
+            type={"default"}
+            showIcon={true}
+            className={"popUpClass"}
+            footerclassName={"popUpFooter"}
+            heading={t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_DOWNLOAD_TEMPLATE_MODAL_HEADER)}
+            children={[<div key="loc-template-text">{t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_DOWNLOAD_TEMPLATE_MODAL_TEXT)}</div>]}
+            onOverlayClick={() => setShowTemplatePopup(false)}
+            footerChildren={[
+              <Button
+                key="loc-template-cancel"
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_UPLOAD_CANCEL)}
+                title={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_UPLOAD_CANCEL)}
+                onClick={() => setShowTemplatePopup(false)}
+              />,
+              <Button
+                key="loc-template-download"
+                type={"button"}
+                size={"large"}
+                variation={"primary"}
+                icon={"FileDownload"}
+                label={t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_DOWNLOAD_TEMPLATE)}
+                title={t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_DOWNLOAD_TEMPLATE)}
+                onClick={() => {
+                  inputRef.current?.click();
+                  setShowTemplatePopup(false);
+                }}
+                id={"file-download-template-localization-popup"}
+              />,
+            ]}
+            sortFooterChildren={true}
+            onClose={() => setShowTemplatePopup(false)}
+          ></PopUp>
+        )}
 
         {/* Download Template Button */}
         <div style={{ display: "flex", justifyContent: "space-between"}}>

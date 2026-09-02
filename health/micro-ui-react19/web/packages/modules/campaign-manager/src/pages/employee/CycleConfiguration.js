@@ -185,6 +185,8 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   const [state, dispatch] = useReducer(reducer, initialState(saved, filteredDeliveryConfig, refetch));
   const { cycleConfgureDate, cycleData } = state;
   const { t } = useTranslation();
+  const todayStr = convertEpochToDate(Date.now());
+  const clampToToday = (dateStr) => (dateStr && dateStr > todayStr ? dateStr : todayStr);
   const isParentSubmitting = useCampaignSubmitting();
   const [dateRange, setDateRange] = useState({
     startDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate || convertEpochToDate(campaignData?.startDate),
@@ -320,6 +322,18 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     dispatch({ type: "SELECT_FROM_DATE", index, payload: isoString });
   };
 
+  // Bednet (ITN) is a single-round campaign: cycle dates are not asked, they
+  // mirror the campaign dates (the date pickers are hidden below)
+  const isBednet = /bednet/i.test(selectedProjectType || "");
+  useEffect(() => {
+    if (!isBednet || !dateRange?.startDate || !dateRange?.endDate) return;
+    for (let index = 1; index <= (cycleConfgureDate?.cycle || 1); index++) {
+      const existing = cycleData?.find((j) => j.key === index);
+      if (!existing?.fromDate) selectFromDate(index, dateRange.startDate);
+      if (!existing?.toDate) selectToDate(index, dateRange.endDate);
+    }
+  }, [isBednet, dateRange?.startDate, dateRange?.endDate, cycleConfgureDate?.cycle, cycleData?.length]);
+
   useEffect(() => {
     setKey(currentKey);
     setCurrentStep(currentKey);
@@ -420,6 +434,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               </LabelFieldPair>
             </Card>
           </div>
+          {!isBednet && (
           <Card className="campaign-counter-container">
             <HeaderComponent className="cycle-configuration-heading" style={{ marginBottom: "1.5rem" }}>
               {t(I18N_KEYS.PAGES.CAMPAIGN_ADD_START_END_DATE_TEXT)}
@@ -442,19 +457,20 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                     }
                     withoutLabel={true}
                     disabled={!isCycleEnabled(index)}
-                    min={
+                    min={clampToToday(
                       index > 0 && cycleData?.find((j) => j.key === index)?.toDate
                         ? new Date(new Date(cycleData?.find((j) => j.key === index)?.toDate)?.getTime() + 86400000)?.toISOString()?.split("T")?.[0]
                         : dateRange?.startDate
-                    }
+                    )}
                     max={dateRange?.endDate}
                     populators={{
                       newDateFormat: true,
                       max: dateRange?.endDate,
-                      min:
+                      min: clampToToday(
                         index > 0 && cycleData?.find((j) => j.key === index)?.toDate
                           ? new Date(new Date(cycleData.find((j) => j.key === index)?.toDate).getTime() + 86400000).toISOString().split("T")[0]
-                          : dateRange?.startDate,
+                          : dateRange?.startDate
+                      ),
                     }}
                     onChange={(d) => selectFromDate(index + 1, d)}
                   />
@@ -469,21 +485,23 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                     }
                     withoutLabel={true}
                     disabled={!isCycleEnabled(index)}
-                    min={
+                    min={clampToToday(
                       cycleData?.find((j) => j.key === index + 1)?.fromDate
                         ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
                             ?.toISOString()
                             ?.split("T")?.[0]
                         : null
-                    }
+                    )}
                     populators={{
                       newDateFormat: true,
                       max: dateRange?.endDate,
-                      min: cycleData?.find((j) => j.key === index + 1)?.fromDate
-                        ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
-                            ?.toISOString()
-                            ?.split("T")?.[0]
-                        : null,
+                      min: clampToToday(
+                        cycleData?.find((j) => j.key === index + 1)?.fromDate
+                          ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
+                              ?.toISOString()
+                              ?.split("T")?.[0]
+                          : null
+                      ),
                     }}
                     max={dateRange?.endDate}
                     onChange={(d) => selectToDate(index + 1, d)}
@@ -492,6 +510,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               </LabelFieldPair>
             ))}
           </Card>
+          )}
         </div>
       </div>
     </>

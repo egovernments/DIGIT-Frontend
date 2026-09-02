@@ -28,7 +28,7 @@ const Colors = {
       errorbg: "#FFF5F4",
       success: "#00703C",
       successbg: "#F1FFF8",
-      warning: "#9E5F00",
+      warning: "#5C450A",
       warningbg: "#FFF9F0",
       info: "#0057BD",
       infobg: "#DEEFFF",

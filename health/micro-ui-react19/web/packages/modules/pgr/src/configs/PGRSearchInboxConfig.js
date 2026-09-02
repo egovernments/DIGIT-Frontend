@@ -8,7 +8,7 @@
 
 import Urls from "../utils/urls";
 
-const PGRSearchInboxConfig = () => {
+const PGRSearchInboxConfig = (hierarchyType = null) => {
   return {
     label: "CS_COMMON_INBOX",
     type: "inbox",
@@ -21,7 +21,9 @@ const PGRSearchInboxConfig = () => {
             businessService: ["PGR"],
             moduleName: "RAINMAKER-PGR",
           },
-          moduleSearchCriteria: {},
+          moduleSearchCriteria: {
+            hierarchyType: hierarchyType,
+          },
         },
       },
       minParametersForSearchForm: 0,
@@ -163,6 +165,7 @@ const PGRSearchInboxConfig = () => {
             assignedToMe: null,
             locality: null,
             status: [],
+            hierarchyType: hierarchyType,
           },
 
           fields: [

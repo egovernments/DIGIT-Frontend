@@ -6,7 +6,7 @@ import { LabelFieldPair, TextInput, TextArea } from "@egovernments/digit-ui-comp
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { updateHeaderField, updateHeaderProperty } from "./redux/remoteConfigSlice";
 
-const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex = 0, fieldKey, viewMode }) => {
+const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex = 0, fieldKey, viewMode, maxLength = 30, skipPropertyUpdate = false, hideLabel = false }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const currentLocale = useSelector((state) => state.localization.currentLocale);
@@ -44,6 +44,10 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
       })
     );
 
+    // Fields whose localization code already lives elsewhere in the config (e.g. the
+    // page-level conditions.infoCardText) only need the message updated
+    if (skipPropertyUpdate) return;
+
     // Update header property in Redux - use new action if fieldKey is provided
     if (fieldKey) {
       dispatch(updateHeaderProperty({ fieldKey, value: locCode }));
@@ -51,12 +55,12 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
       // Fallback to old method for backward compatibility
       dispatch(updateHeaderField({ cardIndex, fieldIndex: index, value: label }));
     }
-  }, [value, generateLocCode, currentLocale, cardIndex, index, fieldKey, dispatch]);
+  }, [value, generateLocCode, currentLocale, cardIndex, index, fieldKey, skipPropertyUpdate, dispatch]);
 
   const handleChange = useCallback((e) => {
     let newValue = e.target.value;
-    if (newValue.length > 30) {
-      newValue = newValue.slice(0, 30);
+    if (newValue.length > maxLength) {
+      newValue = newValue.slice(0, maxLength);
     }
     setLocalValue(newValue);
 
@@ -69,7 +73,7 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
     debounceTimerRef.current = setTimeout(() => {
       dispatchUpdates(newValue);
     }, 800);
-  }, [dispatchUpdates]);
+  }, [dispatchUpdates, maxLength]);
 
   const handleBlur = useCallback(() => {
     // Force immediate dispatch on blur
@@ -83,9 +87,12 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
   return (
     <LabelFieldPair className={type === "textarea" ? "appConfigHeaderLabelField desc" : "appConfigHeaderLabelField"} removeMargin={true}>
       <div className="appConfigLabelField-label-container">
-        <div className="appConfigLabelField-label">
-          <span>{t(label)}</span>
-        </div>
+        {/* hideLabel: the host (e.g. the info card element row) already renders the title */}
+        {!hideLabel && (
+          <div className="appConfigLabelField-label">
+            <span>{t(label)}</span>
+          </div>
+        )}
         {type === "textarea" ? (
           <TextArea
             type="textarea"
@@ -95,7 +102,7 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
             onChange={handleChange}
             onBlur={handleBlur}
             disabled={viewMode}
-            maxLength={30}
+            maxLength={maxLength}
           />
         ) : (
           <TextInput
@@ -105,7 +112,7 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
             onChange={handleChange}
             onBlur={handleBlur}
             disabled={viewMode}
-            maxLength={30}
+            maxLength={maxLength}
           />
         )}
       </div>

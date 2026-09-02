@@ -72,7 +72,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.baseTimeout` }
   );
   const [readMeInfo, setReadMeInfo] = useState({});
-  const [showPopUp, setShowPopUp] = useState(true);
+  // Start closed: the type-effect below decides; defaulting open flashed the
+  // download-template popup on microplan "edit data" entry before hydration
+  const [showPopUp, setShowPopUp] = useState(false);
   const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
@@ -395,6 +397,10 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   useEffect(() => {
     const totalFormData = props?.props?.sessionData;
+    // A cloned campaign's pre-filled sheet only becomes visible once the campaign
+    // fetch resolves - deciding the popup before that shows "download template"
+    // over an already-filled sheet. Wait for campaignData when one is expected.
+    if (searchParams.get("campaignNumber") && !props?.props?.campaignData) return;
     const campaignResources = props?.props?.campaignData?.resources || [];
     const resourceDetailsFromSearch = props?.props?.resourceDetails || [];
 
@@ -438,21 +444,21 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         const { uploadedFile, isSuccess } = getUploadedData("HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA", "boundary");
         setUploadedFile(uploadedFile);
         setIsSuccess(isSuccess);
-        setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        setShowPopUp(!parentId && !downloadedTemplates[type] && !uploadedFile.length);
         break;
       }
       case "facility": {
         const { uploadedFile, isSuccess } = getUploadedData("HCM_CAMPAIGN_UPLOAD_FACILITY_DATA", "facility");
         setUploadedFile(uploadedFile);
         setIsSuccess(isSuccess);
-        setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        setShowPopUp(!parentId && !downloadedTemplates[type] && !uploadedFile.length);
         break;
       }
       case "unified-console": {
         const { uploadedFile, isSuccess } = getUploadedData("HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA", "unified-console-resources");
         setUploadedFile(uploadedFile);
         setIsSuccess(isSuccess);
-        setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        setShowPopUp(!parentId && !downloadedTemplates[type] && !uploadedFile.length);
         break;
       }
       case "attendanceRegister": {
@@ -460,10 +466,10 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         // const { uploadedFile, isSuccess } = getUploadedData("HCM_ATTENDANCE_REGISTER_DATA", "attendanceRegister");
         // setUploadedFile(uploadedFile);
         // setIsSuccess(isSuccess);
-        // setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        // setShowPopUp(!parentId && !downloadedTemplates[type] && !uploadedFile.length);
         setUploadedFile([]);
         setIsSuccess(null);
-        setShowPopUp(!downloadedTemplates[type]);
+        setShowPopUp(!parentId && !downloadedTemplates[type]);
         break;
       }
       case "attendanceRegisterAttendee": {
@@ -471,17 +477,17 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         // const { uploadedFile, isSuccess } = getUploadedData("HCM_ATTENDANCE_ATTENDEE_DATA", "attendanceRegisterAttendee");
         // setUploadedFile(uploadedFile);
         // setIsSuccess(isSuccess);
-        // setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        // setShowPopUp(!parentId && !downloadedTemplates[type] && !uploadedFile.length);
         setUploadedFile([]);
         setIsSuccess(null);
-        setShowPopUp(!downloadedTemplates[type]);
+        setShowPopUp(!parentId && !downloadedTemplates[type]);
         break;
       }  
       default: {
         const { uploadedFile, isSuccess } = getUploadedData("HCM_CAMPAIGN_UPLOAD_USER_DATA", "user");
         setUploadedFile(uploadedFile);
         setIsSuccess(isSuccess);
-        setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        setShowPopUp(!parentId && !downloadedTemplates[type] && !uploadedFile.length);
         break;
       }
     }
@@ -1045,7 +1051,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         generatedResource?.fileStoreId || generatedResource?.fileStoreid;
       const customFileName = `${campaignName}_${t(
         "HCM_FILLED",
-      )}_Unified_Template`;
+      )}_${t(I18N_KEYS.COMPONENTS.HCM_MICROPLAN_TEMPLATE)}`;
       downloadExcelWithCustomName({
         fileStoreId,
         customName: customFileName,
@@ -1322,7 +1328,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         }
         // Download the file directly using fileStoreId
         setDownloadError(false);
-        const customFileName = parentId ? `${campaignName}_${t(I18N_KEYS.COMPONENTS.HCM_FILLED)}_Unified_Template` : `${campaignName}_Unified_Template`;
+        const customFileName = parentId ? `${campaignName}_${t(I18N_KEYS.COMPONENTS.HCM_FILLED)}_${t(I18N_KEYS.COMPONENTS.HCM_MICROPLAN_TEMPLATE)}` : `${campaignName}_${t(I18N_KEYS.COMPONENTS.HCM_MICROPLAN_TEMPLATE)}`;
         downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName });
         setDownloadedTemplates((prev) => ({
           ...prev,
@@ -1436,15 +1442,12 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           return;
         }
 
-        // If pending/inprogress, poll till timeout
+        // If pending/inprogress, show toast immediately and let user retry
         if (resource?.status === "pending" || resource?.status === "inprogress") {
-          resource = await pollUntilDone();
-          if (resource?.status === "completed") {
-            setLoader(false);
-            downloadFromResource(resource);
-            return;
-          }
-          // If still not completed after polling, treat as failed
+          setLoader(false);
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t(I18N_KEYS.COMPONENTS.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
+          return;
         }
 
         // If failed or no resource found, trigger generate
@@ -1620,7 +1623,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           <Card>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <TagComponent campaignName={campaignName} />
-             <div style={{ display: "flex", gap: "0.75rem" }}>
+             <div style={{ display: "flex", gap: "0.75rem", marginLeft: "auto" }}>
                 {type === "attendanceRegisterAttendee" && props?.props?.resourceDetails?.[0]?.processedFileStoreId && (
                   <Button
                     label={t(I18N_KEYS.COMPONENTS.HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE)}

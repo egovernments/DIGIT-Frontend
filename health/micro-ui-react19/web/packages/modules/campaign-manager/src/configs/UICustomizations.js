@@ -936,6 +936,221 @@ export const UICustomizations = {
       return "TQM_VIEW_TEST_DETAILS";
     },
   },
+  MyCampaignConfigUpcomingUpdated: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["creating", "created"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
+        createdBy: Digit.UserService.getUser().info.uuid,
+        campaignsIncludeDates: false,
+        startDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0], "daystart"),
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    getCustomActionLabel: (obj, row) => {
+      return "";
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      const [timeLine, setTimeline] = React.useState(false);
+      const [campainCopying, setCampaignCopying] = React.useState(false);
+      // const { t } = useTranslation();
+      const resourceIdArr = [];
+      row?.resources?.map((i) => {
+        if (i?.createResourceId && i?.type === "user") {
+          resourceIdArr.push(i?.createResourceId);
+        }
+      });
+      const onActionSelect = (value, row) => {
+        switch (value?.code) {
+          case "ACTION_LABEL_UPDATE_DATES":
+            window.navigateState(
+              {
+                name: row?.campaignName,
+                data: row,
+                projectId: row?.projectId,
+                campaignId: row?.id,
+              },
+              "",
+              `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}&campaignName=${row?.campaignName}`
+            );
+            const navEvent = new PopStateEvent("popstate");
+            window.dispatchEvent(navEvent);
+            break;
+          case "ACTION_LABEL_VIEW_TIMELINE":
+            setTimeline(true);
+            break;
+
+          case "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS":
+            window.navigateState(
+              {
+                name: row?.campaignName,
+                data: row,
+              },
+              "",
+              `/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${row?.id}&campaignName=${row?.campaignName}`
+            );
+            const nav = new PopStateEvent("popstate");
+            window.dispatchEvent(nav);
+            break;
+
+          case "ACTION_LABEL_CONFIGURE_APP":
+            window.navigateState(
+              {
+                name: row?.campaignName,
+                data: row,
+                projectId: row?.projectId,
+                campaignType: row?.projectType,
+              },
+              "",
+              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}&projectType=${row?.projectType}`
+            );
+            const navEvent1 = new PopStateEvent("popstate");
+            window.dispatchEvent(navEvent1);
+            break;
+          case "CREATE_COPY":
+            setCampaignCopying(true);
+            break;
+          default:
+            console.log(value);
+            break;
+        }
+      };
+      switch (key) {
+        case "CAMPAIGN_NAME":
+          return (
+            <span className="link">
+              <Link to={`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`}>
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t(I18N_KEYS.CONFIGS.ES_COMMON_NA))}
+              </Link>
+            </span>
+          );
+        case "CAMPAIGN_LAST_UPDATE":
+          return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
+        case "CAMPAIGN_START_DATE":
+          return Digit.DateUtils.ConvertEpochToDate(value);
+        case "CAMPAIGN_END_DATE":
+          return Digit.DateUtils.ConvertEpochToDate(value);
+        case "CAMPAIGN_ACTIONS":
+          return (
+            <>
+              <Button
+                className="campaign-action-button"
+                type="actionButton"
+                variation="secondary"
+                label={"Action"}
+                title={"Action"}
+                options={[
+                  ...(row?.status === "created"
+                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t(I18N_KEYS.CONFIGS.ACTION_LABEL_UPDATE_DATES) }]
+                    : []),
+                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t(I18N_KEYS.COMMON.ACTION_LABEL_CONFIGURE_APP) },
+                  { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t(I18N_KEYS.CONFIGS.ACTION_LABEL_VIEW_TIMELINE) },
+                  { key: 4, code: "CREATE_COPY", i18nKey: t(I18N_KEYS.CONFIGS.CREATE_COPY) },
+                  ...(row?.status === "created"
+                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t(I18N_KEYS.CONFIGS.ACTION_LABEL_UPDATE_BOUNDARY_DETAILS) }]
+                    : []),
+                ]}
+                optionsKey="i18nKey"
+                showBottom={true}
+                isSearchable={false}
+                onOptionSelect={(item) => onActionSelect(item, row)}
+              />
+              {timeLine && (
+                <PopUp
+                  type={"default"}
+                  heading={t(I18N_KEYS.COMMON.ES_CAMPAIGN_TIMELINE)}
+                  onOverlayClick={() => setTimeline(false)}
+                  onClose={() => setTimeline(false)}
+                >
+                  <TimelineComponent campaignId={row?.id} resourceId={resourceIdArr} />
+                </PopUp>
+              )}
+              {campainCopying && (
+                <CloneCampaignWrapper
+                  row={row}
+                  campaignId={row?.id}
+                  campaignName={row?.campaignName}
+                  setCampaignCopying={setCampaignCopying}
+                />
+              )}
+            </>
+          );
+        default:
+          return "case_not_found";
+      }
+    },
+    onCardClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    onCardActionClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    getCustomActionLabel: (obj, row) => {
+      return "TQM_VIEW_TEST_DETAILS";
+    },
+    postProcess: (data) => {
+      if (!data || !Array.isArray(data.CampaignDetails) || data.CampaignDetails.length === 0) return;
+      const parentIds = new Set(
+        data.CampaignDetails
+          .filter((c) => c.parentId)
+          .map((c) => c.parentId)
+      );
+      if (parentIds.size > 0) {
+        data.CampaignDetails = data.CampaignDetails.filter((c) => !parentIds.has(c.id));
+      }
+    },
+  },
   MyCampaignConfigDrafts: {
     preProcess: (data, additionalDetails) => {
       const tenantId = Digit?.ULBService?.getCurrentTenantId();

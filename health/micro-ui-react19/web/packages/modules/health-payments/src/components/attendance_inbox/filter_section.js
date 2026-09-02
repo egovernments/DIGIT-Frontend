@@ -26,6 +26,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
   const [loadingPeriods, setLoadingPeriods] = useState(false);
   const [billingConfigData, setBillingConfigData] = useState(null);
   const [showToast, setShowToast] = useState(null);
+  const [lastFetchedProjectId, setLastFetchedProjectId] = useState(null);
 
   const onChangeId = (value) => {
     setBoundary(value);
@@ -108,6 +109,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
 
           setPeriods(periodOptions);
           Digit.SessionStorage.set("projectPeriods", periodOptions);
+          setLastFetchedProjectId(projectId);
         } else {
           setPeriods([]);
           setSelectedPeriod(null);
@@ -122,7 +124,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
         setLoadingPeriods(false);
       }
     },
-    [tenantId, projectSelected]
+    [tenantId]
   );
 
   // Handle period selection manually
@@ -166,14 +168,13 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
     }
   }, []);
 
-  // Fetch periods when project is selected
+  // Fetch periods when project is selected or changes
   useEffect(() => {
-    if (periods.length == 0) {
-      if (projectSelected?.referenceID || projectSelected?.id) {
-        fetchBillingPeriods(projectSelected.referenceID || projectSelected.id);
-      }
+    const projectId = projectSelected?.referenceID || projectSelected?.id;
+    if (projectId && projectId !== lastFetchedProjectId) {
+      fetchBillingPeriods(projectId);
     }
-  }, [projectSelected, fetchBillingPeriods]);
+  }, [projectSelected, lastFetchedProjectId, fetchBillingPeriods]);
 
   // Handle reset
   useEffect(() => {
@@ -246,7 +247,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
             {
               loadingPeriods ? (
                 <div style={{ padding: "1rem", textAlign: "center" }}>
-                  <Loader />
+                  <Loader variant={"PageLoader"} className={"digit-center-loader"} />
                 </div>
               ) : (
                 // periods.length > 0 ?

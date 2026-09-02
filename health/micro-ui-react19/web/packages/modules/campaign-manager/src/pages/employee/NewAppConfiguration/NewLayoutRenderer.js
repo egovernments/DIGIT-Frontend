@@ -29,7 +29,28 @@ const renderSection = (section, sectionName, fieldTypeMasterData, selectedField,
             id: field.id || field.fieldName || `${sectionName}-${field.format}-${index}`,
           };
 
-          return renderTemplateComponent(fieldWithId, fieldTypeMasterData, selectedField, t, onFieldClick, data, sectionName, index);
+          const rendered = renderTemplateComponent(fieldWithId, fieldTypeMasterData, selectedField, t, onFieldClick, data, sectionName, index);
+
+          // The app wraps a field in a grey card only when conditions.wrapInCard is set
+          // (visibilityCondition alone renders flat in the app) - mirror exactly that
+          const isDependent = field?.conditions?.wrapInCard === true;
+          if (isDependent) {
+            return (
+              <div
+                key={`dependent-${fieldWithId.id}`}
+                className="app-preview-dependent-field"
+                style={{
+                  backgroundColor: "#fafafa",
+                  border: "1px solid #d6d5d4",
+                  borderRadius: "0.5rem",
+                  padding: "0.75rem",
+                }}
+              >
+                {rendered}
+              </div>
+            );
+          }
+          return rendered;
         })}
     </>
   );
@@ -100,7 +121,9 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
         }}
       >
         <Card
-          className="app-preview-card"
+          className={`app-preview-card ${
+            data?.flow === "CHECKLIST" || /checklist/i.test(t(data?.heading || "")) ? "checklist-preview" : ""
+          }`}
           style={{
             padding: "1rem",
             backgroundColor: "#eee",
@@ -134,7 +157,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
               position: "sticky",
               bottom: 0,
               backgroundColor: "#fff",
-              borderTop: "1px solid #e0e0e0",
+              borderTop: "1px solid #D6D5D4",
               padding: "12px 16px",
               display: "flex",
               flexDirection: "column",
@@ -156,6 +179,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
           heading={t(popupConfig.title) || t(I18N_KEYS.APP_CONFIGURATION.DEFAULT_POPUP_HEADING)}
           alertHeading={t(popupConfig.title) || t(I18N_KEYS.APP_CONFIGURATION.DEFAULT_POPUP_HEADING)}
           alertMessage={t(popupConfig.description) || ""}
+          description={popupConfig.type === "alert" ? undefined : t(popupConfig.description) || ""}
           onClose={() => {
             dispatch(setShowPopupPreview(false));
           }}

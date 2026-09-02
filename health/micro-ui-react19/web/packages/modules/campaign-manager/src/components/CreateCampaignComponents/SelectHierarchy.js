@@ -8,6 +8,7 @@ import {
   CardLabel,
   HeaderComponent,
   Loader,
+  NoResultsFound,
   PopUp,
   Button,
   TextInput,
@@ -214,7 +215,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
   }, [selected, boundaryData, isBoundaryLoading]);
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader className="digit-center-loader"/>;
   }
 
   const filteredHierarchies = allHierarchyDefinitions.filter((definition) =>
@@ -259,7 +260,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
           removeMargin={true}
         >
           <CardLabel style={{width:"100%"}} className="select-hierarchy-search-label">
-            {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH_BY_HIERARCHY_NAME)}
+            {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH)}
           </CardLabel>
           <div className="digit-field select-hierarchy-search-bar-field" style={{ width: "100%" }}>
             <TextInput
@@ -267,6 +268,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={"select-hierarchy-search-bar"}
+              placeholder= {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH_BY_HIERARCHY_NAME)}
             />
           </div>
         </LabelFieldPair>
@@ -348,6 +350,19 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
             );
           })}
         </div>
+        {filteredHierarchies.length === 0 && searchQuery.trim().length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <NoResultsFound width={280} height={220} />
+          </div>
+        )}
       </Card>
 
       {viewAllPopup && (

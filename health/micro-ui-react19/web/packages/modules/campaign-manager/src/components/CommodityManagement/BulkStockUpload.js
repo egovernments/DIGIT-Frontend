@@ -602,15 +602,19 @@ const BulkStockUpload = () => {
 
   // Extract product variants — prefer campaign-specific delivery rules resources over MDMS defaults
   const productVariants = useMemo(() => {
-    const seen = new Set();
+    const seenIds = new Set();
+    const seenNames = new Set();
     const variants = [];
 
-    const campaignResources = (campaignData?.deliveryRules || []).flatMap((rule) => rule?.resources || []);
+    const deliveryRules = Array.isArray(campaignData?.deliveryRules) ? campaignData.deliveryRules : [];
+    const campaignResources = deliveryRules.flatMap((rule) => rule?.resources || []);
     if (campaignResources.length > 0) {
       campaignResources.forEach((r) => {
-        if (r?.productVariantId && !seen.has(r.productVariantId)) {
-          seen.add(r.productVariantId);
-          variants.push({ productVariantId: r.productVariantId, name: r.name || r.productVariantId });
+        const displayName = r.name || r.productVariantId;
+        if (r?.productVariantId && !seenIds.has(r.productVariantId) && !seenNames.has(displayName)) {
+          seenIds.add(r.productVariantId);
+          seenNames.add(displayName);
+          variants.push({ productVariantId: r.productVariantId, name: displayName });
         }
       });
       return variants;
@@ -1075,7 +1079,7 @@ const BulkStockUpload = () => {
                   {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_PROGRESS_LABEL, { current: batchStatus.currentBatch, total: batchStatus.total })}
                 </span>
               </div>
-              <div style={{ width: "100%", backgroundColor: "#E0E0E0", borderRadius: "4px", height: "8px", marginBottom: "0.75rem" }}>
+              <div style={{ width: "100%", backgroundColor: "#D6D5D4", borderRadius: "4px", height: "8px", marginBottom: "0.75rem" }}>
                 <div
                   style={{
                     width: `${batchStatus.total > 0 ? (batchStatus.completed / batchStatus.total) * 100 : 0}%`,

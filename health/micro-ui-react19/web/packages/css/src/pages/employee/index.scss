@@ -1223,6 +1223,12 @@ tbody {
   .digit-header-content.label {
     width: 100%;
     .label-container {
+      // The required "*" is a flex sibling of the label text, so a wrapped label
+      // leaves it floating at the right edge — flow both inline instead
+      display: inline;
+      > div {
+        display: inline;
+      }
       label {
         white-space: pre-wrap;
       }
@@ -1301,6 +1307,14 @@ tbody {
   background: #fafafa;
   border-radius: 0.5rem;
   padding: 1rem;
+  // Table drawer: each column (label + toggle + localization input) is its own white
+  // bordered sub-group on the grey container
+  .drawer-table-column-group {
+    background-color: #ffffff;
+    border: 1px solid #d6d5d4;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+  }
   .drawer-container-tooltip {
     position: relative;
     display: flex;
@@ -1427,7 +1441,7 @@ tbody {
 .drag-handle span {
   width: 4px;
   height: 4px;
-  background-color: #d9d9d9;
+  background-color: #C5C5C5;
   border-radius: 50%;
   display: block;
 }
@@ -1485,8 +1499,42 @@ tbody {
   color: #0b4b66;
   font-weight: 700;
 }
+/* Core topbar only passes showArrow to the profile dropdown, so the tenant and
+   language dropdowns render as bare labels; give them the same caret affordance */
+.digit-header-action-fields .header-dropdown-label label.cp {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
+  &::after {
+    content: "";
+    display: inline-block;
+    margin-left: 0.375rem;
+    border-left: 0.3125rem solid transparent;
+    border-right: 0.3125rem solid transparent;
+    border-top: 0.375rem solid currentColor;
+  }
+
+  /* Newer core versions render their own arrow (span.header-dropdown-arrow) after
+     the label; suppress this fallback caret there or the header shows two arrows */
+  &:has(+ .header-dropdown-arrow)::after {
+    display: none;
+  }
+}
+
 .zoom-content {
   height: 100%;
+
+  /* The mobile preview is a narrow scaled container inside a desktop viewport,
+     so the popup's mobile media queries never fire; force the mobile layout here */
+  .digit-popup-footer-buttons {
+    margin-left: 0;
+    width: 100%;
+
+    button {
+      flex: 1;
+    }
+  }
 }
 
 .onhover-tooltip-text {
@@ -1496,7 +1544,7 @@ tbody {
   top: 100%; /* shows tooltip below the element */
   left: 50%;
   transform: translateX(-50%);
-  background-color: #333;
+  background-color: #363636;
   color: #fff;
   padding: 6px 10px;
   border-radius: 4px;
@@ -1568,6 +1616,24 @@ tbody {
   }
   .app-preview-card-header {
     color: #0b4b66;
+  }
+  // Checklist questions follow Heading S - Mobile: 16px, bold, black
+  // (px on purpose: the app root font-size is 90%, so 1rem computes to 14.4px)
+  &.checklist-preview .digit-label-field-pair .digit-header-content label.label-styles {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--digitv2-lightTheme-text-primary);
+  }
+  // Divider between consecutive checklist questions. Each question sits in a wrapper div
+  // directly under .app-card, so the divider goes on every question wrapper that follows
+  // another one — nothing before the first question.
+  &.checklist-preview
+    .app-card
+    > div:has(.digit-label-field-pair)
+    + div:has(.digit-label-field-pair) {
+    border-top: 1px solid #d6d5d4;
+    padding-top: 1rem;
+    margin-top: 0.5rem;
   }
 }
 .app-card{

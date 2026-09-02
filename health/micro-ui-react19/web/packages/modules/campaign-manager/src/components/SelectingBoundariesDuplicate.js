@@ -120,7 +120,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
 
   // Only fetch campaign data when session data is NOT available (first visit to boundary step).
   // When session data exists (user navigated back), boundaries are already in session — skip the API call.
-  const hasSessionData = !!sessionData;
+  // A session entry with an empty selection (left behind when other setup steps ran in this SPA
+  // session) must not block seeding from the saved draft — treat it as "no session data"
+  const hasSessionData = !!sessionData?.selectedData?.length;
   const reqCriteria = useMemo(() => ({
     url: `/project-factory/v1/project-type/search`,
     body: {
@@ -134,26 +136,37 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       select: (data) => {
         return data?.CampaignDetails?.[0];
       },
-      gcTime: 1000000,
-      staleTime: 600000,
+      // No staleTime: the draft changes on every boundary submit, so a cached copy
+      // makes Edit Boundaries reopen with the pre-submit selection. Always refetch.
+      gcTime: 0,
+      staleTime: 0,
     },
   }), [tenantId, campaignNumber, hasSessionData]);
 
   const { data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  // Load data from session/API - only run once when API data is ready
+  // Seed local state from session/draft exactly once. The parent rebuilds the session
+  // object (new references) on every save, so re-applying it on each change loops
+  // seed → save → session-change → seed forever; after the first seed the user's local
+  // edits are the source of truth and nothing may overwrite them.
+  const hasSeededRef = useRef(false);
+
+  // Load data from session/API - runs until one source has been applied
   useEffect(() => {
     // Wait for API to finish fetching if campaignNumber exists
     if (campaignNumber && isFetching) return;
 
-    // Only load from campaignData if sessionData is not available
-    if (!sessionData && campaignData?.boundaries) {
+    // Only load from campaignData if sessionData has no boundary selection
+    if (hasSeededRef.current) {
+      // already seeded — local edits own the state now
+    } else if (!hasSessionData && campaignData?.boundaries) {
       setSelectedData(campaignData?.boundaries || []);
+      hasSeededRef.current = true;
       // Commented: isUnifiedCampaign is now always controlled by DEFAULT_IS_UNIFIED_CAMPAIGN, user toggle removed
       // if (campaignData?.additionalDetails?.isUnifiedCampaign !== undefined) {
       //   setIsUnifiedCampaign(campaignData?.additionalDetails?.isUnifiedCampaign);
       // }
-    } else if (sessionData) {
+    } else if (hasSessionData) {
       // Session data takes priority - use reference check to avoid expensive JSON.stringify on 55k items
       if (sessionData?.selectedData && sessionData.selectedData !== selectedData) {
         setSelectedData(sessionData.selectedData);
@@ -161,6 +174,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       if (sessionData?.boundaryData && sessionData.boundaryData !== boundaryOptions) {
         setBoundaryOptions(sessionData.boundaryData);
       }
+      hasSeededRef.current = true;
       // Commented: isUnifiedCampaign is now always controlled by DEFAULT_IS_UNIFIED_CAMPAIGN, user toggle removed
       // if (sessionData?.isUnifiedCampaign !== undefined && sessionData.isUnifiedCampaign !== isUnifiedCampaign) {
       //   setIsUnifiedCampaign(sessionData.isUnifiedCampaign);
@@ -177,7 +191,11 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     startMountTransition(() => {
       setIsLoading(false);
     });
-  }, [isFetching, campaignNumber]);
+    // sessionData/campaignData are deps because either can arrive after mount (session
+    // hydrates async, and navigating back lets other steps rewrite the session entry);
+    // with only [isFetching, campaignNumber] a late arrival was never applied and the
+    // screen stayed empty. The reference checks above keep re-runs from looping.
+  }, [isFetching, campaignNumber, hasSessionData, sessionData, campaignData]);
 
   // Only save to session after data is loaded to prevent overwriting with empty values
   useEffect(() => {
@@ -318,7 +336,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
                 <Tag label={campaignName} type="monochrome" stroke={true} />
                 {hierarchyType && (
                   <Tag
-                    label={`${t(I18N_KEYS.COMPONENTS.HCM_HIERARCHY_TYPE)} : ${hierarchyType}`}
+                    label={`${t(I18N_KEYS.COMPONENTS.HCM_HIERARCHY_TYPE)} : ${t(hierarchyType)}`}
                     type="warning"
                     stroke={true}
                   />

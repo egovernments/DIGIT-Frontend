@@ -205,7 +205,7 @@ const StockComponent = ({ allProjectIds }) => {
             backgroundColor: "#f5f5f5",
             borderRadius: "8px",
             marginBottom: "16px",
-            border: "1px solid #e0e0e0",
+            border: "1px solid #D6D5D4",
           }}
         >
           <h4 style={{ marginBottom: "12px", color: "#333" }}>{t(I18N_KEYS.COMMODITY_MANAGEMENT.FILTER_BY_DATE)}</h4>
