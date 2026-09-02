@@ -30,7 +30,10 @@ const LanguageSelection = () => {
   const handleChangeLanguage = async (language) => {
     setselected(language.value);
     setIsChangingLanguage(true);
-    await Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
+    await Promise.all([
+      Digit.LocalizationService.getLocale({ modules: ["digit-ui", "digit-privacy-policy"], locale: language.value, tenantId: stateInfo.code }),
+      Digit.LocalizationService.changeLanguage(language.value, stateInfo.code),
+    ]);
     setIsChangingLanguage(false);
   };
   function getContextPath(contextPath) {
