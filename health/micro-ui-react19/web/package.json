@@ -47,7 +47,7 @@
     "@egovernments/digit-ui-module-core": "2.0.0-dev-34",
     "@egovernments/digit-ui-react-components": "2.0.0-dev-18",
     "@egovernments/digit-ui-svg-components": "2.0.0-dev-08",
-    "@egovernments/digit-ui-components": "2.0.0-dev-62",
+    "@egovernments/digit-ui-components": "2.0.0-dev-63",
     "@egovernments/digit-ui-module-workbench": "2.0.0-dev-27",
     "@egovernments/digit-ui-module-campaign-manager": "1.0.0",
     "@tanstack/react-query": "^5.62.16",
