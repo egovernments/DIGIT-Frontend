@@ -360,6 +360,11 @@ function NewAppFieldScreenWrapper({viewMode}) {
         const visibleButtonCount = buttonFields.filter((f) => f?.hidden !== true).length;
         const isOnlyButton = buttonFields.length === 1;
 
+        // A menu screen (e.g. Manage Stock) with every menu card hidden would be a dead end
+        // in the app, so the last visible menu card cannot be switched off either
+        const menuCardFields = fields.filter((f) => f?.format === "menu_card");
+        const visibleMenuCardCount = menuCardFields.filter((f) => f?.hidden !== true).length;
+
 
 
         // Render one field row; `i` stays the index in the combined body+footer list so the
@@ -387,11 +392,17 @@ function NewAppFieldScreenWrapper({viewMode}) {
                       : () => {
                           const isTurningOffLastButton =
                             rest?.format === "button" && rest?.hidden !== true && visibleButtonCount <= 1;
-                          if (isTurningOffLastButton) {
+                          const isTurningOffLastMenuCard =
+                            rest?.format === "menu_card" && rest?.hidden !== true && visibleMenuCardCount <= 1;
+                          if (isTurningOffLastButton || isTurningOffLastMenuCard) {
                             if (typeof window.__appConfig_showToast === "function") {
                               window.__appConfig_showToast({
                                 key: "error",
-                                label: t(I18N_KEYS.APP_CONFIGURATION.AT_LEAST_ONE_BUTTON_REQUIRED),
+                                label: t(
+                                  isTurningOffLastMenuCard
+                                    ? I18N_KEYS.APP_CONFIGURATION.AT_LEAST_ONE_MENU_CARD_REQUIRED
+                                    : I18N_KEYS.APP_CONFIGURATION.AT_LEAST_ONE_BUTTON_REQUIRED
+                                ),
                               });
                             }
                             setToggleResetKey((n) => n + 1);
