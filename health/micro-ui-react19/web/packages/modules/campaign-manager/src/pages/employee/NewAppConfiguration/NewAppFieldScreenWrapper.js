@@ -209,7 +209,11 @@ function NewAppFieldScreenWrapper({viewMode}) {
   const hasBodyButtonRows = (currentCard?.body || []).some((section) => {
     const sectionBodyFields = currentCard?.type === "template" ? extractTemplateFields(section?.fields) : (section?.fields || []);
     const sectionFooterFields = currentCard?.type === "template" && currentCard?.footer ? extractTemplateFields(currentCard.footer) : [];
-    return [...sectionBodyFields, ...sectionFooterFields].filter(isFieldEditable).some((f) => f?.format === "button");
+    // Footer rows always join the Buttons section, whatever their format (qrScanner, actionPopup, …)
+    return (
+      sectionBodyFields.filter(isFieldEditable).some((f) => f?.format === "button") ||
+      sectionFooterFields.filter(isFieldEditable).length > 0
+    );
   });
 
   return (
@@ -340,7 +344,10 @@ function NewAppFieldScreenWrapper({viewMode}) {
 
         // Every screen needs a CTA. A lone button therefore has no toggle at all, and where there are
         // several, the last visible one cannot be switched off either.
-        const buttonFields = fields.filter((f) => f?.format === "button");
+        // Footer entries all render in the app's bottom action bar, so every footer row is an
+        // action button regardless of format (qrScanner "Scan QR", actionPopup "Download IDs", …)
+        const isButtonRow = (f, i) => f?.format === "button" || i >= bodyFieldsCount;
+        const buttonFields = fields.filter((f, i) => isButtonRow(f, i));
         const visibleButtonCount = buttonFields.filter((f) => f?.hidden !== true).length;
         const isOnlyButton = buttonFields.length === 1;
 
@@ -402,7 +409,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
 
         return (
           <Fragment key={`card-${index}`}>
-            {fields?.map((fieldEntry, i, c) => (fieldEntry?.format === "button" ? null : renderFieldRow(fieldEntry, i, c)))}
+            {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) ? null : renderFieldRow(fieldEntry, i, c)))}
             {/* Body/template buttons get their own section, consistent with pages whose buttons live in the footer */}
             {buttonFields.length > 0 && (
               <>
@@ -413,7 +420,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
                 </div>
               </>
             )}
-            {fields?.map((fieldEntry, i, c) => (fieldEntry?.format === "button" ? renderFieldRow(fieldEntry, i, c) : null))}
+            {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) ? renderFieldRow(fieldEntry, i, c) : null))}
             {currentCard?.type !== "template" && !viewMode && (<Button
               className={"app-config-drawer-button add-field"}
               type={"button"}
@@ -455,8 +462,11 @@ function NewAppFieldScreenWrapper({viewMode}) {
           <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_BUTTONS)}</div>
           <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_BUTTONS)} />
         </div>)}
+      {/* When footer buttons already render as element rows in the Buttons section, the
+          per-footer label inputs would duplicate that editing affordance — rows win */}
       {currentCard?.footer &&
         currentCard?.footer.length > 0 &&
+        !hasBodyButtonRows &&
         currentCard?.footer?.map((footerButtonConfig, index) => (
           <FooterLabelField key={`footer-${index}`} footerButtonConfig={footerButtonConfig} index={index} currentLocale={currentLocale} dispatch={dispatch} t={t} viewMode={viewMode} />
       ))}
