@@ -455,8 +455,11 @@ function NewAppFieldScreenWrapper({viewMode}) {
           <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_BUTTONS)}</div>
           <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_BUTTONS)} />
         </div>)}
+      {/* When footer buttons already render as element rows in the Buttons section, the
+          per-footer label inputs would duplicate that editing affordance — rows win */}
       {currentCard?.footer &&
         currentCard?.footer.length > 0 &&
+        !hasBodyButtonRows &&
         currentCard?.footer?.map((footerButtonConfig, index) => (
           <FooterLabelField key={`footer-${index}`} footerButtonConfig={footerButtonConfig} index={index} currentLocale={currentLocale} dispatch={dispatch} t={t} viewMode={viewMode} />
       ))}
