@@ -1,4 +1,4 @@
-import React, { useReducer, Fragment, useEffect, useState, act } from "react";
+import React, { useReducer, Fragment, useEffect, useState, useRef, act } from "react";
 import { useTranslation } from "react-i18next";
 import { useCampaignSubmitting } from "../../components/CampaignSubmitContext";
 import { TextInput, Loader, FieldV1,Card,LabelFieldPair,CardText,CardLabel, HeaderComponent, RadioButtons } from "@egovernments/digit-ui-components";
@@ -184,6 +184,8 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   const tempSession = formStorageData;
   const [state, dispatch] = useReducer(reducer, initialState(saved, filteredDeliveryConfig, refetch));
   const { cycleConfgureDate, cycleData } = state;
+  const hasUserEditedCycleDatesRef = useRef(false);
+  const previousProjectTypeRef = useRef(selectedProjectType);
   const { t } = useTranslation();
   const todayStr = convertEpochToDate(Date.now());
   const clampToToday = (dateStr) => (dateStr && dateStr > todayStr ? dateStr : todayStr);
@@ -233,6 +235,16 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   // }, [filteredDeliveryConfig, deliveryConfigLoading]);
 
   useEffect(() => {
+    // Compare the project type itself, not filteredDeliveryConfig's object identity - the
+    // underlying MDMS query (useCustomMDMS) also has staleTime:0/cacheTime:0, so a refetch can
+    // hand back a content-equivalent-but-new-reference config even when nothing meaningful
+    // (the actual project type) changed, which defeated this guard via a different trigger.
+    const projectTypeChanged = previousProjectTypeRef.current !== selectedProjectType;
+    previousProjectTypeRef.current = selectedProjectType;
+    if (hasUserEditedCycleDatesRef.current && !projectTypeChanged) {
+      return;
+    }
+
     // const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
     const sessionData = formStorageData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
     const campaignCycleData = campaignData?.additionalDetails?.cycleData;
@@ -291,35 +303,67 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   };
 
   const selectToDate = (index, d) => {
+    hasUserEditedCycleDatesRef.current = true;
     const localDate = new Date(d);
     localDate.setHours(0, 0, 0, 0); // Local midnight
     // Add 5.5 hours so UTC becomes local midnight
     const adjustedDate = new Date(localDate.getTime() + 19800000);
     const isoString = adjustedDate.toISOString();
 
-    // Check if the new toDate conflicts with subsequent cycle dates
-    // Find the next cycle's fromDate
-    const nextCycleData = cycleData?.find((j) => j.key === index + 1);
-    if (nextCycleData?.fromDate) {
-      const newToDate = new Date(isoString);
-      const nextFromDate = new Date(nextCycleData.fromDate);
-
-      // If new toDate is >= next cycle's fromDate, clear subsequent cycles
-      if (newToDate >= nextFromDate) {
-        dispatch({ type: "CLEAR_SUBSEQUENT_CYCLES", index });
+    const currentCycleData = cycleData?.find((j) => j.key === index);
+    if (currentCycleData?.fromDate) {
+      if (new Date(isoString) <= new Date(currentCycleData.fromDate)) return;
+    } else {
+      const previousCycleData = cycleData?.find((j) => j.key === index - 1);
+      if (previousCycleData?.toDate) {
+        const minAllowed = new Date(new Date(previousCycleData.toDate).getTime() + 86400000);
+        if (new Date(isoString) < minAllowed) return;
       }
     }
 
     dispatch({ type: "SELECT_TO_DATE", index, payload: isoString });
+    // Editing this cycle's end date invalidates every cycle after it, whether or not the new
+    // value actually overlaps the next one - always clear cycle index+1 onward so the user has
+    // to re-confirm them, rather than only when a specific numeric conflict is detected. A no-op
+    // if there's nothing there yet.
+    dispatch({ type: "CLEAR_SUBSEQUENT_CYCLES", index });
+  };
+
+  const getToDateMinFallback = (cycleKey) => {
+    const previous = cycleData?.find((j) => j.key === cycleKey - 1);
+    return previous?.toDate ? new Date(new Date(previous.toDate).getTime() + 86400000).toISOString().split("T")[0] : null;
+  };
+
+  const getFromDateMinFallback = (cycleKey) => {
+    const previous = cycleData?.find((j) => j.key === cycleKey - 1);
+    const anchor = previous?.toDate || previous?.fromDate;
+    return anchor ? new Date(new Date(anchor).getTime() + 86400000).toISOString().split("T")[0] : dateRange?.startDate;
   };
 
   const selectFromDate = (index, d) => {
+    hasUserEditedCycleDatesRef.current = true;
     const localDate = new Date(d);
     localDate.setHours(0, 0, 0, 0); // Local midnight
     // Add 5.5 hours so UTC becomes local midnight
     const adjustedDate = new Date(localDate.getTime() + 19800000);
     const isoString = adjustedDate.toISOString();
+
+    const previousCycleData = cycleData?.find((j) => j.key === index - 1);
+    const previousCycleAnchor = previousCycleData?.toDate || previousCycleData?.fromDate;
+    if (previousCycleAnchor && new Date(isoString) < new Date(new Date(previousCycleAnchor).getTime() + 86400000)) {
+      return;
+    }
+    const currentCycleData = cycleData?.find((j) => j.key === index);
+    if (currentCycleData?.toDate && new Date(isoString) >= new Date(currentCycleData.toDate)) {
+      dispatch({ type: "SELECT_TO_DATE", index, payload: null });
+    }
+
     dispatch({ type: "SELECT_FROM_DATE", index, payload: isoString });
+    // Editing this cycle's start date invalidates every cycle after it, whether or not the new
+    // value actually overlaps the next one - always clear cycle index+1 onward so the user has
+    // to re-confirm them, rather than only when a specific numeric conflict is detected. A no-op
+    // if there's nothing there yet.
+    dispatch({ type: "CLEAR_SUBSEQUENT_CYCLES", index });
   };
 
   // Bednet (ITN) is a single-round campaign: cycle dates are not asked, they
@@ -457,20 +501,12 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                     }
                     withoutLabel={true}
                     disabled={!isCycleEnabled(index)}
-                    min={clampToToday(
-                      index > 0 && cycleData?.find((j) => j.key === index)?.toDate
-                        ? new Date(new Date(cycleData?.find((j) => j.key === index)?.toDate)?.getTime() + 86400000)?.toISOString()?.split("T")?.[0]
-                        : dateRange?.startDate
-                    )}
+                    min={clampToToday(getFromDateMinFallback(index + 1))}
                     max={dateRange?.endDate}
                     populators={{
                       newDateFormat: true,
                       max: dateRange?.endDate,
-                      min: clampToToday(
-                        index > 0 && cycleData?.find((j) => j.key === index)?.toDate
-                          ? new Date(new Date(cycleData.find((j) => j.key === index)?.toDate).getTime() + 86400000).toISOString().split("T")[0]
-                          : dateRange?.startDate
-                      ),
+                      min: clampToToday(getFromDateMinFallback(index + 1)),
                     }}
                     onChange={(d) => selectFromDate(index + 1, d)}
                   />
@@ -484,13 +520,13 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                         : ""
                     }
                     withoutLabel={true}
-                    disabled={!isCycleEnabled(index)}
+                    disabled={!isCycleEnabled(index) || !cycleData?.find((j) => j.key === index + 1)?.fromDate}
                     min={clampToToday(
                       cycleData?.find((j) => j.key === index + 1)?.fromDate
                         ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
                             ?.toISOString()
                             ?.split("T")?.[0]
-                        : null
+                        : getToDateMinFallback(index + 1)
                     )}
                     populators={{
                       newDateFormat: true,
@@ -500,7 +536,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                           ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
                               ?.toISOString()
                               ?.split("T")?.[0]
-                          : null
+                          : getToDateMinFallback(index + 1)
                       ),
                     }}
                     max={dateRange?.endDate}
