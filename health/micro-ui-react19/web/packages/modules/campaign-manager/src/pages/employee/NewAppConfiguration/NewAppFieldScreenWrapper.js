@@ -211,7 +211,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
     const sectionFooterFields = currentCard?.type === "template" && currentCard?.footer ? extractTemplateFields(currentCard.footer) : [];
     // Footer rows always join the Buttons section, whatever their format (qrScanner, actionPopup, …)
     return (
-      sectionBodyFields.filter(isFieldEditable).some((f) => f?.format === "button") ||
+      sectionBodyFields.filter(isFieldEditable).some((f) => ["button", "actionPopup", "qrScanner"].includes(f?.format)) ||
       sectionFooterFields.filter(isFieldEditable).length > 0
     );
   });
@@ -346,7 +346,9 @@ function NewAppFieldScreenWrapper({viewMode}) {
         // several, the last visible one cannot be switched off either.
         // Footer entries all render in the app's bottom action bar, so every footer row is an
         // action button regardless of format (qrScanner "Scan QR", actionPopup "Download IDs", …)
-        const isButtonRow = (f, i) => f?.format === "button" || i >= bodyFieldsCount;
+        // Popup-opening actions (actionPopup, qrScanner) render as buttons in the app,
+        // so they belong in the Buttons section alongside plain buttons and footer rows
+        const isButtonRow = (f, i) => f?.format === "button" || f?.format === "actionPopup" || f?.format === "qrScanner" || i >= bodyFieldsCount;
         const buttonFields = fields.filter((f, i) => isButtonRow(f, i));
         const visibleButtonCount = buttonFields.filter((f) => f?.hidden !== true).length;
         const isOnlyButton = buttonFields.length === 1;
