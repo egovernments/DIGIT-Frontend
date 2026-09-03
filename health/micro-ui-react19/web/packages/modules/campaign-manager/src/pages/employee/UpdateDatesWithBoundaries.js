@@ -59,6 +59,20 @@ function UpdateDatesWithBoundaries() {
     return false;
   };
 
+  // Cycle dates are stored as epoch numbers here (Digit.Utils.pt.convertDateToEpoch in
+  // DateWithBoundary.js's reducer), so plain numeric comparison is enough - no date-string
+  // parsing needed. checkValid below only checks presence, never chronological order, so this
+  // is a separate, additive check rather than folded into it.
+  const hasCycleOrderError = (cycles) => {
+    if (!cycles || cycles.length < 2) return false;
+    const sorted = [...cycles].sort((a, b) => a.id - b.id);
+    return sorted.some((cycle, idx) => {
+      if (cycle.startDate && cycle.endDate && cycle.endDate <= cycle.startDate) return true;
+      if (idx > 0 && cycle.startDate && sorted[idx - 1].endDate && cycle.startDate <= sorted[idx - 1].endDate) return true;
+      return false;
+    });
+  };
+
   const checkValid = (data) => {
     if (DateWithBoundary) {
       const temp = data?.dateWithBoundary;
@@ -102,6 +116,22 @@ function UpdateDatesWithBoundaries() {
       setShowToast({ isError: true, label: "UPDATE_DATE_MANDATORY_FIELDS_MISSING" });
       return;
     }
+
+    if (DateWithBoundary) {
+      const hasOrderError = formData?.dateWithBoundary?.some((i) =>
+        hasCycleOrderError(i?.additionalDetails?.projectType?.cycles)
+      );
+      if (hasOrderError) {
+        setShowToast({ isError: true, label: "HCM_CYCLE_DATE_ORDER_ERROR" });
+        return;
+      }
+    } else {
+      if (hasCycleOrderError(formData?.dateAndCycle?.additionalDetails?.projectType?.cycles)) {
+        setShowToast({ isError: true, label: "HCM_CYCLE_DATE_ORDER_ERROR" });
+        return;
+      }
+    }
+
     setShowPopUp(formData);
   };
 

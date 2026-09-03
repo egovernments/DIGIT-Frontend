@@ -20,6 +20,11 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
   const [startDate, setStartDate] = useState(project?.startDate ? Digit.Utils.date.getDate(project?.startDate) : ""); // Set default start date to today
   const [endDate, setEndDate] = useState(project?.endDate ? Digit.Utils.date.getDate(project?.endDate) : ""); // Default end date
   const [cycleDates, setCycleDates] = useState(null);
+  // Field-level errors per cycle ({ [cycleIndex]: { startDate: errorKey, endDate: errorKey } }).
+  // This screen edits an already-configured campaign - the admin may not remember every
+  // adjacent cycle's dates, so unlike the campaign-creation wizard, a bad pick here is left in
+  // place with an inline error rather than being silently rejected or clearing other cycles.
+  const [cycleErrors, setCycleErrors] = useState({});
 
   useEffect(() => {
     setStartDate(project?.startDate ? Digit.Utils.date.getDate(project?.startDate) : "");
@@ -57,6 +62,35 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
     if (typeof date === "undefined" || date <= today) {
       return null;
     }
+
+    // Compare against adjacent cycles as plain "YYYY-MM-DD" strings (lexicographically
+    // sortable) - same source (cycleDates) the min/max populators already read from. This
+    // only computes and records an error; it does not change what gets dispatched below.
+    const cycleArrayIndex = cycleDates?.findIndex((c) => c.cycleIndex === cycleIndex);
+    const currentCycle = cycleArrayIndex > -1 ? cycleDates?.[cycleArrayIndex] : null;
+    const previousCycle = cycleArrayIndex > 0 ? cycleDates?.[cycleArrayIndex - 1] : null;
+
+    let errorKey = null;
+    if (!endDate) {
+      const previousAnchor = previousCycle?.endDate || previousCycle?.startDate;
+      if (previousAnchor && date <= previousAnchor) {
+        errorKey = "HCM_CYCLE_START_BEFORE_PREVIOUS_CYCLE_ERROR";
+      } else if (currentCycle?.endDate && date >= currentCycle.endDate) {
+        errorKey = "HCM_CYCLE_START_AFTER_OWN_END_ERROR";
+      }
+    } else if (currentCycle?.startDate) {
+      if (date <= currentCycle.startDate) {
+        errorKey = "HCM_CYCLE_END_BEFORE_OWN_START_ERROR";
+      }
+    } else if (previousCycle?.endDate && date <= previousCycle.endDate) {
+      errorKey = "HCM_CYCLE_END_BEFORE_PREVIOUS_CYCLE_ERROR";
+    }
+
+    setCycleErrors((prev) => ({
+      ...prev,
+      [cycleIndex]: { ...prev?.[cycleIndex], [endDate ? "endDate" : "startDate"]: errorKey },
+    }));
+
     if (!endDate) {
       dateReducerDispatch({
         type: "CYCLE_START_DATE",
@@ -149,6 +183,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
                   nonEditable={item?.startDate?.length > 0 && today >= item?.startDate ? true : false}
                   value={item?.startDate}
                   placeholder={t(I18N_KEYS.COMMON.HCM_START_DATE)}
+                  error={cycleErrors?.[item?.cycleIndex]?.startDate ? t(cycleErrors[item.cycleIndex].startDate) : ""}
                   populators={{
                     newDateFormat: true,
                     min:
@@ -180,6 +215,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
                       : false
                   }
                   placeholder={t(I18N_KEYS.COMMON.HCM_END_DATE)}
+                  error={cycleErrors?.[item?.cycleIndex]?.endDate ? t(cycleErrors[item.cycleIndex].endDate) : ""}
                   populators={{
                     newDateFormat: true,
                     min: !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime())

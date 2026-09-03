@@ -395,6 +395,22 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
           setShowToast({ key: "error", label: "HCM_ALL_CYCLE_DATES_MANDATORY" });
           return false;
         }
+
+        // Backstop for chronological order (each cycle ends after it starts, and starts
+        // after the previous cycle ends) - CycleConfiguration.js's own onChange handlers now
+        // reject/clear bad picks as they're entered, but this catches data that reached
+        // cycleData some other way (e.g. a draft saved before those guards existed).
+        const sortedCycles = [...requiredCycles].sort((a, b) => a.key - b.key);
+        const hasDateOrderError = sortedCycles.some((cycle, idx) => {
+          if (new Date(cycle.toDate) <= new Date(cycle.fromDate)) return true;
+          if (idx > 0 && new Date(cycle.fromDate) <= new Date(sortedCycles[idx - 1].toDate)) return true;
+          return false;
+        });
+
+        if (hasDateOrderError) {
+          setShowToast({ key: "error", label: "HCM_ALL_CYCLE_DATES_MANDATORY" });
+          return false;
+        }
       }
 
       setShowToast(null);
