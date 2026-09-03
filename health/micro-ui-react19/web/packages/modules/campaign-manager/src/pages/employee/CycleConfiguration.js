@@ -302,8 +302,12 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     dispatch({ type: "UPDATE_OBSERVATION_STRATEGY", payload: value });
   };
 
-  const selectToDate = (index, d) => {
-    hasUserEditedCycleDatesRef.current = true;
+  const selectToDate = (index, d, { isAutoFill = false } = {}) => {
+    // The Bednet auto-fill effect below calls this internally, before MDMS's IsCycleDisable
+    // (and cycle/delivery counts) may have loaded yet. Marking that as a "user edit" would
+    // permanently stop the one RELOAD that's supposed to pick up that fresh MDMS value (see
+    // the RELOAD effect's hasUserEditedCycleDatesRef guard) - only a real onChange should count.
+    if (!isAutoFill) hasUserEditedCycleDatesRef.current = true;
     const localDate = new Date(d);
     localDate.setHours(0, 0, 0, 0); // Local midnight
     // Add 5.5 hours so UTC becomes local midnight
@@ -340,8 +344,9 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     return anchor ? new Date(new Date(anchor).getTime() + 86400000).toISOString().split("T")[0] : dateRange?.startDate;
   };
 
-  const selectFromDate = (index, d) => {
-    hasUserEditedCycleDatesRef.current = true;
+  const selectFromDate = (index, d, { isAutoFill = false } = {}) => {
+    // Same reasoning as selectToDate above.
+    if (!isAutoFill) hasUserEditedCycleDatesRef.current = true;
     const localDate = new Date(d);
     localDate.setHours(0, 0, 0, 0); // Local midnight
     // Add 5.5 hours so UTC becomes local midnight
@@ -373,8 +378,8 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     if (!isBednet || !dateRange?.startDate || !dateRange?.endDate) return;
     for (let index = 1; index <= (cycleConfgureDate?.cycle || 1); index++) {
       const existing = cycleData?.find((j) => j.key === index);
-      if (!existing?.fromDate) selectFromDate(index, dateRange.startDate);
-      if (!existing?.toDate) selectToDate(index, dateRange.endDate);
+      if (!existing?.fromDate) selectFromDate(index, dateRange.startDate, { isAutoFill: true });
+      if (!existing?.toDate) selectToDate(index, dateRange.endDate, { isAutoFill: true });
     }
   }, [isBednet, dateRange?.startDate, dateRange?.endDate, cycleConfgureDate?.cycle, cycleData?.length]);
 

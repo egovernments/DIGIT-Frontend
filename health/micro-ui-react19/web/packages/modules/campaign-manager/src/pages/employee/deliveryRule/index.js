@@ -20,6 +20,10 @@ const store = configureStore({
     }),
 });
 
+// Provides read-only access to campaign data held in the Redux store.
+// Used as a fallback by validators when form state is unavailable (e.g., after component remount).
+export const getDeliveryRulesCampaignData = () => store.getState().deliveryRules.campaignData || [];
+
 const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount = 2, subTabCount = 3, ...props }) => {
   const {
     projectConfig,

@@ -58,7 +58,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
     }
   };
 
-  const handleCycleDateChange = ({ date, endDate = false, cycleIndex }) => {
+  const handleCycleDateChange = ({ date, endDate: isEndDateField = false, cycleIndex }) => {
     if (typeof date === "undefined" || date <= today) {
       return null;
     }
@@ -66,32 +66,47 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
     // Compare against adjacent cycles as plain "YYYY-MM-DD" strings (lexicographically
     // sortable) - same source (cycleDates) the min/max populators already read from. This
     // only computes and records an error; it does not change what gets dispatched below.
+    // Note: the parameter above is named `isEndDateField` (not `endDate`) specifically so it
+    // doesn't shadow the outer `endDate` state (the campaign's own end date), which the checks
+    // below need to reference directly.
     const cycleArrayIndex = cycleDates?.findIndex((c) => c.cycleIndex === cycleIndex);
     const currentCycle = cycleArrayIndex > -1 ? cycleDates?.[cycleArrayIndex] : null;
     const previousCycle = cycleArrayIndex > 0 ? cycleDates?.[cycleArrayIndex - 1] : null;
 
     let errorKey = null;
-    if (!endDate) {
+    if (!isEndDateField) {
       const previousAnchor = previousCycle?.endDate || previousCycle?.startDate;
       if (previousAnchor && date <= previousAnchor) {
         errorKey = "HCM_CYCLE_START_BEFORE_PREVIOUS_CYCLE_ERROR";
       } else if (currentCycle?.endDate && date >= currentCycle.endDate) {
         errorKey = "HCM_CYCLE_START_AFTER_OWN_END_ERROR";
+      } else if (startDate && date < startDate) {
+        // Every cycle date must fall within the overall campaign's own date range - the
+        // field's `min`/`max` populators are meant to enforce this while picking, but (same
+        // as elsewhere in this codebase) typing directly into the newDateFormat picker's text
+        // input bypasses them, so this needs its own explicit check.
+        errorKey = "HCM_CYCLE_START_BEFORE_CAMPAIGN_START_ERROR";
+      } else if (endDate && date > endDate) {
+        errorKey = "HCM_CYCLE_START_AFTER_CAMPAIGN_END_ERROR";
       }
     } else if (currentCycle?.startDate) {
       if (date <= currentCycle.startDate) {
         errorKey = "HCM_CYCLE_END_BEFORE_OWN_START_ERROR";
+      } else if (endDate && date > endDate) {
+        errorKey = "HCM_CYCLE_END_AFTER_CAMPAIGN_END_ERROR";
       }
     } else if (previousCycle?.endDate && date <= previousCycle.endDate) {
       errorKey = "HCM_CYCLE_END_BEFORE_PREVIOUS_CYCLE_ERROR";
+    } else if (endDate && date > endDate) {
+      errorKey = "HCM_CYCLE_END_AFTER_CAMPAIGN_END_ERROR";
     }
 
     setCycleErrors((prev) => ({
       ...prev,
-      [cycleIndex]: { ...prev?.[cycleIndex], [endDate ? "endDate" : "startDate"]: errorKey },
+      [cycleIndex]: { ...prev?.[cycleIndex], [isEndDateField ? "endDate" : "startDate"]: errorKey },
     }));
 
-    if (!endDate) {
+    if (!isEndDateField) {
       dateReducerDispatch({
         type: "CYCLE_START_DATE",
         date: date,

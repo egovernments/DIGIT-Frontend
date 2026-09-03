@@ -3,6 +3,7 @@
  */
 import { VALIDATION_FUNCTIONS, allRulesMet } from "./campaignNameValidators";
 import { I18N_KEYS } from "./i18nKeyConstants";
+import { getDeliveryRulesCampaignData } from "../pages/employee/deliveryRule";
 
  const  validateCycleData=(data,t,isBednet)=> {
   const { cycle, deliveries } = data?.cycleConfigure?.cycleConfgureDate;
@@ -417,9 +418,15 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       return true;
 
     case "deliveryRule":
-      // Tolerate an absent/malformed value here (this data can arrive via totalFormData instead) -
-      // the payload builder is what guards against overwriting saved rules
       const deliveryRules = Array.isArray(formData?.deliveryRule) ? formData.deliveryRule : [];
+      if (deliveryRules.length === 0) {
+        // Form state may be empty if the component was remounted (e.g., back-and-forward navigation).
+        // Fall back to the Redux store, which always reflects the user's last saved input, to run validation.
+        const reduxRules = getDeliveryRulesCampaignData();
+        const attrError = checkAttributeValidity({ deliveryRule: reduxRules });
+        if (attrError) { setShowToast({ key: "error", label: attrError }); }
+        return false;
+      }
       const validateMaxCondition = hasInvalidMaxCountAttribute(deliveryRules);
       if (validateMaxCondition) {
         setShowToast({ key: "error", label: "INVALID_USE_OF_MAX_COUNT" });

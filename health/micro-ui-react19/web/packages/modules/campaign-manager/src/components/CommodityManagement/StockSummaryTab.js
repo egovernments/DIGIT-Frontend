@@ -943,14 +943,16 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
                   size="medium"
                 />
               )}
-              <Button
-                type="button"
-                variation="secondary"
-                label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_EXPORT_XLSX)}
-                icon="FileDownload"
-                onClick={handleExcelDownload}
-                size="medium"
-              />
+              {filteredData.length > 0 && (
+                <Button
+                  type="button"
+                  variation="secondary"
+                  label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_EXPORT_XLSX)}
+                  icon="FileDownload"
+                  onClick={handleExcelDownload}
+                  size="medium"
+                />
+              )}
             </div>
           }
         >
@@ -980,14 +982,16 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           subHeader={""}
           onChange={(e) => setSummarySearchQuery(e.target.value)}
           exportButton={
-            <Button
-              type="button"
-              variation="secondary"
-              label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_EXPORT_XLSX)}
-              icon="FileDownload"
-              onClick={handleSummaryExport}
-              size="medium"
-            />
+            summaryFilteredData.length > 0 ? (
+              <Button
+                type="button"
+                variation="secondary"
+                label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_EXPORT_XLSX)}
+                icon="FileDownload"
+                onClick={handleSummaryExport}
+                size="medium"
+              />
+            ) : null
           }
         >
           <ReusableTableWrapper
