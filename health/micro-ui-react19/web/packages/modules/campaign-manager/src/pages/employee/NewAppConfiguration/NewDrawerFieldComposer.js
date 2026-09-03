@@ -1122,12 +1122,16 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                     // they have no editable localisation, so skip them instead of printing the raw expression
                     if (/\{\{.*\}\}/.test(item.key)) return null;
 
-                    // Find entity name for this field
+                    // Find entity name and fieldKey for this field.
+                    // Items from saved config only carry {key, value}, so fieldKey
+                    // must be resolved from labelPairConfig (which is always loaded here).
                     let entityName = "";
+                    let resolvedFieldKey = item.fieldKey;
                     for (const entity of labelPairConfig) {
                       const field = entity.labelFields?.find((f) => f.name === item.key);
                       if (field) {
                         entityName = entity.entity;
+                        resolvedFieldKey = field.fieldKey || resolvedFieldKey;
                         break;
                       }
                     }
@@ -1137,7 +1141,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                         key={`${item.key}-${index}`}
                         code={item.key}
                         // item={item}
-                        label={`${t(Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_CATEGORY_${entityName}`) || "ENTITY")} - ${t(Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_${item.fieldKey}`))}`}
+                        label={`${t(Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_CATEGORY_${entityName}`) || "ENTITY")} - ${t(Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_${resolvedFieldKey}`))}`}
                         // entityName={entityName}
                         selectedField={selectedField}
                         currentLocale={currentLocale}
