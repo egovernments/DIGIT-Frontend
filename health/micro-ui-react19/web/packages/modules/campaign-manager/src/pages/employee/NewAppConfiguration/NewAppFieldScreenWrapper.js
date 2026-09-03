@@ -80,18 +80,23 @@ const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale,
   }
 
   return (
-    <LabelFieldPair key={`footer-${index}`} className="app-preview-app-config-drawer-action-button" removeMargin={true}>
-      <div className="">
-        <span>{`${labelMap[footerButtonConfig?.properties?.type] || ""} ${t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ACTION_BUTTON_LABEL)}`}</span>
-      </div>
-      <TextInput
-        name={`footerLabel-${index}`}
-        value={localValue}
-        onChange={(event) => handleChange(event.target.value)}
-        onBlur={handleBlur}
-        disabled={viewMode}
-      />
-    </LabelFieldPair>
+    // Card wrapper matching the element rows in template pages' Buttons sections, so
+    // form pages' footer button doesn't render as a bare label + input
+    <div className="draggableField-cont app-config-field-wrapper" style={{ padding: "0.75rem", marginBottom: "1rem" }}>
+      <LabelFieldPair key={`footer-${index}`} className="app-preview-app-config-drawer-action-button" removeMargin={true}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "0.5rem" }}>
+          <span>{`${labelMap[footerButtonConfig?.properties?.type] || ""} ${t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ACTION_BUTTON_LABEL)}`}</span>
+          <Tag icon="" label={t("Button")} className="app-config-field-tag normal" showIcon={false} />
+        </div>
+        <TextInput
+          name={`footerLabel-${index}`}
+          value={localValue}
+          onChange={(event) => handleChange(event.target.value)}
+          onBlur={handleBlur}
+          disabled={viewMode}
+        />
+      </LabelFieldPair>
+    </div>
   );
 });
 
@@ -211,7 +216,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
     const sectionFooterFields = currentCard?.type === "template" && currentCard?.footer ? extractTemplateFields(currentCard.footer) : [];
     // Footer rows always join the Buttons section, whatever their format (qrScanner, actionPopup, …)
     return (
-      sectionBodyFields.filter(isFieldEditable).some((f) => f?.format === "button") ||
+      sectionBodyFields.filter(isFieldEditable).some((f) => ["button", "actionPopup", "qrScanner"].includes(f?.format)) ||
       sectionFooterFields.filter(isFieldEditable).length > 0
     );
   });
@@ -346,7 +351,9 @@ function NewAppFieldScreenWrapper({viewMode}) {
         // several, the last visible one cannot be switched off either.
         // Footer entries all render in the app's bottom action bar, so every footer row is an
         // action button regardless of format (qrScanner "Scan QR", actionPopup "Download IDs", …)
-        const isButtonRow = (f, i) => f?.format === "button" || i >= bodyFieldsCount;
+        // Popup-opening actions (actionPopup, qrScanner) render as buttons in the app,
+        // so they belong in the Buttons section alongside plain buttons and footer rows
+        const isButtonRow = (f, i) => f?.format === "button" || f?.format === "actionPopup" || f?.format === "qrScanner" || i >= bodyFieldsCount;
         const buttonFields = fields.filter((f, i) => isButtonRow(f, i));
         const visibleButtonCount = buttonFields.filter((f) => f?.hidden !== true).length;
         const isOnlyButton = buttonFields.length === 1;
