@@ -36,12 +36,12 @@ const ManageBills = () => {
 
   useEffect(() => {
     if (!resolvedRole) {
-      history.replace(`/${window.contextPath}/employee`);
+      history(`/${window.contextPath}/employee`, { replace: true });
       return;
     }
     Digit.SessionStorage.set(MANAGE_BILLS_ROLE_STORAGE_KEY, resolvedRole);
     if (!normalizedRoleFromParam) {
-      history.replace(`/${window.contextPath}/employee/payments/manage-bills/${resolvedRole}`);
+      history(`/${window.contextPath}/employee/payments/manage-bills/${resolvedRole}`, { replace: true });
     }
   }, [history, normalizedRoleFromParam, resolvedRole]);
 
@@ -673,7 +673,7 @@ const ManageBills = () => {
           variation="secondary"
           label={t("HCM_AM_BACK")}
           icon="ArrowBack"
-          onClick={() => history.push(`/${window.contextPath}/employee/payments/manage-bills-project-selection/${resolvedRole}`)}
+          onClick={() => history(`/${window.contextPath}/employee/payments/manage-bills-project-selection/${resolvedRole}`)}
           style={{
             flexShrink: 0,
             minWidth: "10rem",

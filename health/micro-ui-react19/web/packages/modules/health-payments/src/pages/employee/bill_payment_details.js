@@ -117,15 +117,18 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const navigateToWorkflowSuccess = (action, billNumber) => {
     const config = workflowSuccessNavConfig?.[action];
     if (!config?.route) return false;
-    history.replace(config.route, {
-      state: "success",
-      info: "HCM_AM_BILL_NUMBER",
-      fileName: billNumber || "NA",
-      message: config.messageKey,
-      description: `<p>${t(config.descriptionKey || config.messageKey)}</p>`,
-      showFooter: false,
-      back: "HCM_AM_BACK",
-      backlink: `/${window.contextPath}/employee/payments/manage-bills/${resolvedRole}`,
+    history(config.route, {
+      replace: true,
+      state: {
+        state: "success",
+        info: "HCM_AM_BILL_NUMBER",
+        fileName: billNumber || "NA",
+        message: config.messageKey,
+        description: `<p>${t(config.descriptionKey || config.messageKey)}</p>`,
+        showFooter: false,
+        back: "HCM_AM_BACK",
+        backlink: `/${window.contextPath}/employee/payments/manage-bills/${resolvedRole}`,
+      },
     });
     return true;
   };
@@ -137,12 +140,12 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
   useEffect(() => {
     if (!resolvedRole) {
-      history.replace(`/${window.contextPath}/employee`);
+      history(`/${window.contextPath}/employee`, { replace: true });
       return;
     }
     Digit.SessionStorage.set(MANAGE_BILLS_ROLE_STORAGE_KEY, resolvedRole);
     if (!normalizedRoleFromParam) {
-      history.replace(`/${window.contextPath}/employee/payments/view-bill-payment-details/${resolvedRole}`, location.state);
+      history(`/${window.contextPath}/employee/payments/view-bill-payment-details/${resolvedRole}`, { replace: true, state: location.state });
     }
   }, [history, location.state, normalizedRoleFromParam, resolvedRole]);
 
@@ -574,15 +577,18 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               transitionTime: 2000,
             });
             if (wfAction === "EDIT") { //move to success response page after edit success
-              history.replace(`/${window.contextPath}/employee/payments/edit-bill-success`, {
-                state: "success",
-                info: t("HCM_AM_BILL_NUMBER"),
-                fileName: BillData?.bills?.[0]?.billNumber || t("NA"),
-                description: t(`HCM_AM_BILL_DETAIL_UPDATE_SUCCESS_DESCRIPTION`),
-                message: t(`HCM_AM_BILL_DETAIL_UPDATE_SUCCESS`),
-                isShowButton: false,
-                back: t(`GO_BACK_TO_HOME`),
-                backlink: `/${window.contextPath}/employee`
+              history(`/${window.contextPath}/employee/payments/edit-bill-success`, {
+                replace: true,
+                state: {
+                  state: "success",
+                  info: t("HCM_AM_BILL_NUMBER"),
+                  fileName: BillData?.bills?.[0]?.billNumber || t("NA"),
+                  description: t(`HCM_AM_BILL_DETAIL_UPDATE_SUCCESS_DESCRIPTION`),
+                  message: t(`HCM_AM_BILL_DETAIL_UPDATE_SUCCESS`),
+                  isShowButton: false,
+                  back: t(`GO_BACK_TO_HOME`),
+                  backlink: `/${window.contextPath}/employee`,
+                },
               });
             }
             else{
@@ -959,15 +965,18 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         },
       });
 
-      history.replace(`/${window.contextPath}/employee/payments/send-for-approval-success`, {
-        state: "success",
-        info: "HCM_AM_BILL_NUMBER",
-        fileName: billData?.billNumber || billID || "NA",
-        message: "HCM_AM_REPORT_GENERATION_IN_PROGRESS",
-        description: `<p>${t("HCM_AM_REPORT_GENERATION_IN_PROGRESS")}</p>`,
-        showFooter: false,
-        back: "HCM_AM_BACK",
-        backlink: `/${window.contextPath}/employee/payments/manage-bills/${resolvedRole}`,
+      history(`/${window.contextPath}/employee/payments/send-for-approval-success`, {
+        replace: true,
+        state: {
+          state: "success",
+          info: "HCM_AM_BILL_NUMBER",
+          fileName: billData?.billNumber || billID || "NA",
+          message: "HCM_AM_REPORT_GENERATION_IN_PROGRESS",
+          description: `<p>${t("HCM_AM_REPORT_GENERATION_IN_PROGRESS")}</p>`,
+          showFooter: false,
+          back: "HCM_AM_BACK",
+          backlink: `/${window.contextPath}/employee/payments/manage-bills/${resolvedRole}`,
+        },
       });
     } catch (error) {
       setShowToast({
@@ -1529,7 +1538,7 @@ const renderActionBar = (ctaButton) => (
       variation="secondary"
       label={t("HCM_AM_BACK")}
       icon="ArrowBack"
-      onClick={() => history.goBack()}
+      onClick={() => history(-1)}
       style={{
         flexShrink: 0,
         minWidth: "10rem",
@@ -1977,10 +1986,7 @@ const downloadOptions = [
                       label={t("HCM_AM_EDIT_ON_EXCEL")}
                       icon="TableView"
                       size="medium"
-                      onClick={() => history.push(
-                        `/${window.contextPath}/employee/payments/edit-bill-on-excel`,
-                        { billID, billData }
-                      )}
+                      onClick={() => history(`/${window.contextPath}/employee/payments/edit-bill-on-excel`, { state: { billID, billData } })}
                     />
                   )}
                 </div>
