@@ -1,8 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
-import { Card, LoaderScreen, NoResultsFound,HeaderComponent } from "@egovernments/digit-ui-components";
+import { Loader,Card, NoResultsFound,HeaderComponent } from "@egovernments/digit-ui-components";
 import MyBillsSearch from "../../components/MyBillsSearch";
 import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
@@ -143,7 +142,7 @@ const FetchBills = (props) => {
 
 
     if (isBillLoading) {
-        return <LoaderScreen />
+        return <Loader />
     }
 
     return (
@@ -166,7 +165,7 @@ const FetchBills = (props) => {
             //     marginTop: "1rem"
             // }}
             >
-                {isFetching ? <Loader />: <MyBillsTable data={tableData} onSelectionChange={props?.onSelectionChange} totalCount={totalCount} isSelectableRows={props?.isSelectableRows} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
+                {isFetching ? <Loader className="digit-center-loader"/>: <MyBillsTable data={tableData} onSelectionChange={props?.onSelectionChange} totalCount={totalCount} isSelectableRows={props?.isSelectableRows} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                     handlePerRowsChange={handlePerRowsChange} />}
                     
             </Card>

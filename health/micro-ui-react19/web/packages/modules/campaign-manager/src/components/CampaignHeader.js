@@ -1,4 +1,4 @@
-import { BackButton, Tutorial, useTourState, Help } from "@egovernments/digit-ui-react-components";
+import { Tutorial, useTourState, Help } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useContext, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
