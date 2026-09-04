@@ -9,7 +9,6 @@ import MapFilterIndex from "./MapFilterIndex";
 import CustomScaleControl from "./CustomScaleControl";
 import BaseMapSwitcher from "./BaseMapSwitcher";
 import { jsonReader } from "../utils/jsonReader";
-import { Header } from "@egovernments/digit-ui-react-components";
 
 // Utility function to introduce a delay
 export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

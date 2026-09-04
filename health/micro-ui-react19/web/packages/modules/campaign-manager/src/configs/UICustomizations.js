@@ -21,7 +21,6 @@ import {
 import TimelineComponent from "../components/TimelineComponent";
 import getMDMSUrl from "../utils/getMDMSUrl";
 import { useTranslation } from "react-i18next";
-import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import CloneCampaignWrapper from "../components/CloneCampaignWrapper";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
