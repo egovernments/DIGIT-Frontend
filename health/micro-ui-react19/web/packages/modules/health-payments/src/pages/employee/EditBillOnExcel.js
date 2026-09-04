@@ -1,8 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Loader } from "@egovernments/digit-ui-react-components";
-import { Card, Button, Toast, HeaderComponent, Footer } from "@egovernments/digit-ui-components";
+import { Card, Button, Toast, HeaderComponent, Footer,Loader } from "@egovernments/digit-ui-components";
 import BulkUpload from "../../components/BulkUpload";
 import { downloadFileWithName } from "../../utils";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";

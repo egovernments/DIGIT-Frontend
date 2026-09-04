@@ -3,7 +3,6 @@ import { CheckCircle } from "@egovernments/digit-ui-svg-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
-import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { AlertCard, Toast, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
 import { callTemplateDownloadByUntilCompleted } from "../utils/pollUtils";
 import { fetchFromMicroplan, searchCampaign, waitForSomeTime } from "../hooks/useFetchFromMicroplan";

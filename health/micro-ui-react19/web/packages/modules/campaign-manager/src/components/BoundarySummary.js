@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";

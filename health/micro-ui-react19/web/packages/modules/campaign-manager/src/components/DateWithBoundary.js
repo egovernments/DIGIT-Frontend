@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment, useReducer, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
+import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import { Button, Card, Dropdown, MultiSelectDropdown, Toast,HeaderComponent } from "@egovernments/digit-ui-components";
 import BoundaryWithDate from "./BoundaryWithDate";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";

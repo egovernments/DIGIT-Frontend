@@ -1,16 +1,9 @@
 import {
   Button,
   Card,
-  Chip,
-  Header,
   Loader,
-  PopUp,
   Toast,
-  CardText,
   NoResultsFound,
-  Tab,
-  LoaderScreen,
-  LoaderComponent,
 } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
