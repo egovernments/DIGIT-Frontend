@@ -41,9 +41,20 @@ RUN yarn build:webpack
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
-ENV WORK_DIR=/var/web/dashboard-ui
 
+# Path prefix is resolved at container start-up from these two env vars.
+# COUNTRY_PREFIX is supplied per environment by the deployment; when it is empty
+# the app is served at /dashboard-ui, exactly as before this change.
+ENV BUILD_VARIANT=dashboard-ui
+ENV COUNTRY_PREFIX=""
+
+# Content directory kept as-is, so anything the deployment mounts here still works
+ENV WORK_DIR=/var/web/dashboard-ui
 RUN mkdir -p ${WORK_DIR}
 
 COPY --from=build /app/web/build ${WORK_DIR}/
-COPY --from=build /app/web/health-dss/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/web/health-dss/nginx.conf.template /tmp/nginx.conf.template
+COPY --from=build /app/web/health-dss/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]

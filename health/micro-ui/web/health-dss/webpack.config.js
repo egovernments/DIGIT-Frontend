@@ -49,7 +49,10 @@ module.exports = {
   output: {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "build"),
-    publicPath: "/dashboard-ui/",
+    // Placeholder public path. The container entrypoint rewrites it to the real
+    // base path (/<COUNTRY_PREFIX>/<BUILD_VARIANT>/) at start-up, so one image can
+    // be served from any path prefix. webpack 4 has no publicPath: "auto".
+    publicPath: process.env.PUBLIC_PATH || "/__BASE_PATH__/",
   },
   optimization: {
     splitChunks: {

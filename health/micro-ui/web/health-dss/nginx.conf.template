@@ -1,0 +1,61 @@
+server {
+    listen 80;
+    underscores_in_headers on;
+    server_tokens off;
+    # Emit relative Location headers, so redirects keep the scheme/host the
+    # ingress terminated TLS on instead of downgrading to http://<pod-host>
+    absolute_redirect off;
+
+    # Health check endpoint for Kubernetes probes
+    location = / {
+        return 200 'OK';
+        add_header Content-Type text/plain;
+    }
+
+    # Bare base path -> trailing slash, otherwise it misses the SPA location below
+    location = ${BASE_PATH} {
+        return 301 ${BASE_PATH}/;
+    }
+
+    # index.html must never be cached, it is what points at the hashed bundles
+    location = ${BASE_PATH}/index.html {
+        alias /var/web/dashboard-ui/index.html;
+        expires -1;
+        add_header Cache-Control "no-cache";
+    }
+
+    # React SPA
+    location ${BASE_PATH}/ {
+        alias /var/web/dashboard-ui/;
+        index index.html index.htm;
+        try_files $uri $uri/ ${BASE_PATH}/index.html;
+    }
+
+    # Gzip compression
+    gzip on;
+    gzip_proxied any;
+    gzip_min_length 1024;
+    gzip_comp_level 5;
+    gzip_vary on;
+
+    gzip_types
+        text/plain
+        text/css
+        application/json
+        application/javascript
+        application/xml
+        text/xml
+        application/xml+rss
+        image/svg+xml
+        font/ttf
+        font/otf
+        application/font-woff
+        application/font-woff2;
+
+    gzip_disable "MSIE [1-6]\.(?!.*SV1)";
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+}
