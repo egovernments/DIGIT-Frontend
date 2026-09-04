@@ -8,7 +8,6 @@ import { findAllOverlappingPeriods } from "../../utils/time_conversion";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { formatDate } from "../../utils/time_conversion";
 import { Card, NoResultsFound, Loader, Toast,HeaderComponent } from "@egovernments/digit-ui-components";
-import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 
 
 import _ from "lodash";
