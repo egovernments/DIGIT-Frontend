@@ -73,10 +73,15 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     return getFieldValueByPath(selectedField, bindTo, panelItem.defaultValue || "");
   }, [selectedField, panelItem.bindTo, panelItem.defaultValue]);
 
+  // The app renders the country code from prefixText (it has no
+  // showCountryCodeDropdown), so a seeded "+91" means the code IS shown —
+  // the toggle must read ON even when the flag was never written.
+  const hasCountryCodePrefix = panelItem.bindTo === "showCountryCodeDropdown" && Boolean(selectedField?.prefixText);
+
   // Keep local toggle in sync when selectedField changes from outside
   useEffect(() => {
-    setLocalToggle(Boolean(getFieldValue()));
-  }, [getFieldValue]);
+    setLocalToggle(Boolean(getFieldValue()) || hasCountryCodePrefix);
+  }, [getFieldValue, hasCountryCodePrefix]);
 
   // Check if field should be visible based on field type
   const isFieldVisible = useCallback(() => {
@@ -233,7 +238,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       return [];
     }
 
-    const toggleValue = Boolean(getFieldValue());
+    const toggleValue = Boolean(getFieldValue()) || hasCountryCodePrefix;
 
     return panelItem.conditionalField.filter((cField) => {
       // If no condition specified, show only when toggle is true
@@ -545,10 +550,11 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             }
           }
 
-          // Special handling for showCountryCode toggle
+          // The app shows whatever prefixText holds (there is no
+          // showCountryCodeDropdown on the app side): ON keeps an existing
+          // code or seeds the default, OFF removes the code.
           if (bindTo === "showCountryCodeDropdown") {
-            // Clear prefixText in both directions — ON uses country code dropdown, OFF starts fresh for custom prefix
-            updatedField.prefixText = "";
+            updatedField.prefixText = newToggleValue ? selectedField?.prefixText || "+91" : "";
           }
 
           // isGS1 and scanner regex pattern are mutually exclusive
