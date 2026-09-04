@@ -1,4 +1,4 @@
-import { PopUp, SVG, DownloadIcon } from "@egovernments/digit-ui-react-components";
+import { PopUp } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { Button, Loader } from "@egovernments/digit-ui-components";

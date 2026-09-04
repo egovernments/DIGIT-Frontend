@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
 import { Card, LoaderScreen, NoResultsFound,HeaderComponent } from "@egovernments/digit-ui-components";
 import MyBillsSearch from "../../components/MyBillsSearch";

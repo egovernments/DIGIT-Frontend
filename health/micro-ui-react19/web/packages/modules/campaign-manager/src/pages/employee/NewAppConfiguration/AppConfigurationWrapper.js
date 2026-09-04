@@ -6,7 +6,6 @@ import { handleShowAddFieldPopup, initializeConfig, addField } from "./redux/rem
 import { getFieldMaster } from "./redux/fieldMasterSlice";
 import { getFieldPanelMaster } from "./redux/fieldPanelPropertiesSlice";
 import { fetchLocalization, setLocalizationData, updateLocalizationEntry } from "./redux/localizationSlice";
-import { Header } from "@egovernments/digit-ui-react-components";
 import { Button, Dropdown, LabelFieldPair, Loader, PopUp, Tag, TextBlock, TextInput, Toast } from "@egovernments/digit-ui-components";
 import IntermediateWrapper from "./IntermediateWrapper";
 import { useCustomT, useCustomTranslate, useFieldDataLabel } from "./hooks/useCustomT";
