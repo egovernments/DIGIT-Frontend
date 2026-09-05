@@ -39,7 +39,7 @@ RUN yarn install
 # Build the project
 RUN yarn build:webpack
 
-FROM nginx:mainline-alpine
+FROM nginx:1.29.5-alpine3.23
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
 ENV WORK_DIR=/var/web/microplan-ui
 
