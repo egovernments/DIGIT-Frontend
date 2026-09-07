@@ -49,7 +49,13 @@ const dummyPanelConfig = {
         {
           type: "text",
           label: "APPCONFIG_ERRORMESSAGE",
-          bindTo: "required.message",
+          // errorMessage is the key that exists in the TransformedFormConfig
+          // schema and survives the MDMS round-trip; "required.message" was
+          // dropped on save, which left this input permanently empty.
+          bindTo: "errorMessage",
+          // Placeholder hinting the default; when left empty the transformer
+          // falls back to the CORE_COMMON_REQUIRED localization code.
+          innerLabel: "APPCONFIG_ERRORMESSAGE_PLACEHOLDER",
         },
       ],
       showFieldOnToggle: true,
