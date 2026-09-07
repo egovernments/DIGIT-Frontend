@@ -560,7 +560,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             {/* Render Conditional Fields based on condition property */}
             {getConditionalFields().map((cField, index) => (
               <ConditionalField
-                key={`${cField.bindTo}-${index}`}
+                // Key by the selected field too: without it the input survives
+                // switching fields, so its stale local value and pending
+                // debounced write land on the newly selected field.
+                key={`${selectedField?.id ?? selectedField?.fieldName ?? ""}-${cField.bindTo}-${index}`}
                 cField={cField}
                 selectedField={selectedField}
                 onFieldChange={onFieldChange}
@@ -1904,7 +1907,8 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
             ) // hide if missing
           );
           return shouldShowToggle ? (
-            <div key={panelItem.id} className="drawer-toggle-field-container">
+            // Keyed by the selected field too — see ConditionalField key note.
+            <div key={`${selectedField?.id ?? selectedField?.fieldName ?? ""}-${panelItem.id}`} className="drawer-toggle-field-container">
               <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} viewMode={viewMode} />
             </div>
           ) : null;
