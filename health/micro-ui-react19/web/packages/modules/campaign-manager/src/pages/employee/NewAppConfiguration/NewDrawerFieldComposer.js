@@ -1383,7 +1383,14 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
   // codes live in the campaign locale module, not the ones i18next loads.
   const innerLabelText = useCustomT(cField.innerLabel || "");
 
-  const [conditionalLocalValue, setConditionalLocalValue] = useState(translatedValue === true ? "" : translatedValue || "");
+  // Pre-fill from the panel config's defaultValue (a localization code, e.g.
+  // "Field is required") when the field has no message of its own. Editing
+  // still generates a per-field code, so the shared default is never mutated.
+  const defaultValueText = useCustomT(cField.defaultValue || "");
+
+  const [conditionalLocalValue, setConditionalLocalValue] = useState(
+    translatedValue === true ? "" : translatedValue || defaultValueText || ""
+  );
   const conditionalDebounceRef = useRef(null);
   // Ref to track if user is actively editing (prevents useEffect from overwriting local value)
   const isEditingRef = useRef(false);
@@ -1414,10 +1421,10 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
   useEffect(() => {
     // Don't overwrite local value while user is actively editing
     if (isEditingRef.current) return;
-    const newVal = translatedValue === true ? "" : translatedValue || "";
+    const newVal = translatedValue === true ? "" : translatedValue || defaultValueText || "";
     setConditionalLocalValue(newVal);
     localValueRef.current = newVal;
-  }, [translatedValue]);
+  }, [translatedValue, defaultValueText]);
 
   const handleConditionalChange = useCallback(
     (value) => {
