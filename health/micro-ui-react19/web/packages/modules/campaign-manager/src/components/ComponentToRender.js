@@ -1,4 +1,4 @@
-import { FieldV1 } from "@egovernments/digit-ui-components";
+import { CheckBox, FieldV1 } from "@egovernments/digit-ui-components";
 import React, { useEffect, useRef, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -95,6 +95,47 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
   const optionsKey = useMemo(() => {
     return field?.isMdms && isValidSchema ? "code" : "name";
   }, [field?.isMdms, isValidSchema]);
+
+  // Checkbox preview: render the atom directly with the required asterisk
+  // inside the label node so it wraps with the text — FieldV1's checkbox
+  // path renders the asterisk as a flex sibling of the label, which floats
+  // it to the row's right edge instead of after the last word.
+  if (field?.format === "checkbox" && !component) {
+    return (
+      <div ref={fieldRef}>
+        <div
+          className={`digit-label-field-pair digit-formcomposer-fieldpair app-preview-field-pair ${
+            isFieldSelected ? "app-preview-selected" : ""
+          }`}
+        >
+          <div className="digit-field">
+            {/* CheckBox's label prop is string-only (it runs TOSENTENCECASE on
+                it) and renders the required asterisk as a 100%-width flex
+                sibling, so we hide it and render our own label with the
+                asterisk inline after the text. */}
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", width: "100%" }}>
+              {/* flex: 0 0 auto keeps the checkbox square from claiming the
+                  row (its container is 100% wide), leaving the label the rest */}
+              <div style={{ flex: "0 0 auto" }}>
+                <CheckBox
+                  label=""
+                  hideLabel
+                  checked={false}
+                  onChange={() => {}}
+                  disabled={field?.readOnly || false}
+                  removeMargin
+                />
+              </div>
+              <label className="label" style={{ flex: "1 1 auto", minWidth: 0 }}>
+                {customT(field?.label)}
+                {field?.required && <span style={{ color: "#B91900" }}> *</span>}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={fieldRef}>
