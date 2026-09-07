@@ -5,12 +5,12 @@ import { useSelector } from "react-redux";
 import {
   getAppTypeFromMasterData,
   getFieldTypeFromMasterData,
-  getFieldTypeFromMasterData2,
 } from "../pages/employee/NewAppConfiguration/helpers/getFieldTypeFromMasterData";
 import { getComponentFromMasterData } from "../pages/employee/NewAppConfiguration/helpers/getComponentFromMasterData";
 
 const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => {
   const { byName } = useSelector((state) => state.fieldTypeMaster);
+  const { byName: fieldPanelConfig } = useSelector((state) => state.fieldPanelMaster);
   const { t } = useTranslation();
   const fieldRef = useRef(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -41,6 +41,15 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
   }, [isFieldSelected]);
 
   const shouldCustomTranslate = !field?.isMdms && (fieldType === "dropdown" || fieldType === "radio" || fieldType === "checkbox");
+
+  // Fields that carry their own label (scanner button, checkbox) render a blank label,
+  // so hide the label row altogether - otherwise a required field shows an orphan asterisk
+  const resolvedLabel =
+    field?.showLabel === false || fieldType === "checkbox" || field?.format?.toLowerCase() === "scanner" || field?.format?.toLowerCase() === "qrscanner"
+      ? ""
+      : shouldCustomTranslate
+      ? field?.label
+      : customT(field?.label) || "";
 
   // Parse schemaCode to get moduleName and masterName
   const { moduleName, masterName, isValidSchema } = useMemo(() => {
@@ -96,10 +105,25 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
     return field?.isMdms && isValidSchema ? "code" : "name";
   }, [field?.isMdms, isValidSchema]);
 
+  // Show defaultValue in preview for field types where it's enabled in MDMS panel config.
+  // Uses `fieldType` (UI-level type e.g. "numeric") not `field?.type` (raw JSON schema type e.g. "integer")
+  // because visibilityEnabledFor in MDMS is configured with UI type names, not raw schema types.
+  const previewValue = useMemo(() => {
+    const panelContent = fieldPanelConfig?.drawerPanelConfig?.content || [];
+    const defaultValueConfig = panelContent.find((item) => item.id === "defaultValue");
+    const enabledTypes = defaultValueConfig?.visibilityEnabledFor || [];
+    if (enabledTypes.includes(fieldType) && field?.value != null && field?.value !== "" && field?.value !== true) {
+      const num = Number(field.value);
+      if (!isNaN(num)) return num;
+    }
+    return "";
+  }, [fieldPanelConfig, fieldType, field?.value]);
+
   // Checkbox preview: render the atom directly with the required asterisk
   // inside the label node so it wraps with the text — FieldV1's checkbox
   // path renders the asterisk as a flex sibling of the label, which floats
   // it to the row's right edge instead of after the last word.
+  // NOTE: keep this early return below every hook call.
   if (field?.format === "checkbox" && !component) {
     return (
       <div ref={fieldRef}>
@@ -154,13 +178,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
         description={shouldCustomTranslate ? field?.helpText : customT(field?.helpText) || ""}
         // error={shouldCustomTranslate ? field?.errorMessage : customT(field?.errorMessage) || null}
         infoMessage={shouldCustomTranslate ? field?.tooltip : customT(field?.tooltip) || null}
-        label={
-          field?.showLabel === false || fieldType === "checkbox" || field.format === "scanner"
-            ? ""
-            : shouldCustomTranslate
-            ? field?.label
-            : customT(field?.label) || ""
-        }
+        label={resolvedLabel}
         onChange={function noRefCheck() {}}
         placeholder={shouldCustomTranslate ? field?.innerLabel : customT(field?.innerLabel) || ""}
         populators={{
@@ -179,10 +197,10 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
             ? { moduleName: "common-masters", masterName: "CountryCodes", defaultCountryCode: "+91" }
             : null
         }}
-        withoutLabel={field?.format === "checkbox" ? true : false}
-        required={getFieldTypeFromMasterData2(field) === "custom" ? null : field?.required}
+        withoutLabel={field?.format === "checkbox" || !resolvedLabel}
+        required={field?.required ?? field?.mandatory ?? null}
         type={fieldType}
-        value={""}
+        value={previewValue}
         disabled={field?.readOnly || false}
         showToolTip={true}
       />

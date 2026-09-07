@@ -9,14 +9,14 @@ import useCampaignStore from "../../../hooks/useCampaignStore";
 const CreateRegistersScreen = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [totalFormData, setTotalFormData] = useState({});
   const [showToast, setShowToast] = useState(false);
   const [loader, setLoader] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const campaignName = searchParams.get("campaignName");
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [params, setParams] = useCampaignStore("HCM_ATTENDANCE_REGISTER_DATA", {});
+  const [rawParams, setParams] = useCampaignStore("HCM_ATTENDANCE_REGISTER_DATA");
+  const params = React.useMemo(() => rawParams || {}, [rawParams]);
 
   const reqCriteria = {
     url: `/project-factory/v1/project-type/search`,
@@ -42,12 +42,13 @@ const CreateRegistersScreen = () => {
     },
     config: {
       enabled: !!campaignData?.id,
-      select: (data) => data?.ResourceDetails || [],
+      select: (data) => data?.ResourceDetails,
       staleTime: 0,
       cacheTime: 0,
     },
   };
-  const { data: resourceDetails = [] } = Digit.Hooks.useCustomAPIHook(resourceSearchCriteria);
+  const { data: rawResourceDetails } = Digit.Hooks.useCustomAPIHook(resourceSearchCriteria);
+  const resourceDetails = React.useMemo(() => rawResourceDetails || [], [rawResourceDetails]);
 
   const reqUpdate = {
     url: `/project-factory/v1/resource-details/_create`,
@@ -57,13 +58,11 @@ const CreateRegistersScreen = () => {
   };
   const mutationUpdate = Digit.Hooks.useCustomAPIMutationHook(reqUpdate);
 
-  useEffect(() => setTotalFormData(params), [params]);
-
-  const [config, setConfig] = useState(createRegistersConfig({ totalFormData, campaignData, resourceDetails }));
+  const [config, setConfig] = useState(createRegistersConfig({ totalFormData: params, campaignData, resourceDetails }));
 
   useEffect(() => {
-    setConfig(createRegistersConfig({ totalFormData, campaignData, resourceDetails }));
-  }, [campaignData, totalFormData, resourceDetails]);
+    setConfig(createRegistersConfig({ totalFormData: params, campaignData, resourceDetails }));
+  }, [campaignData, params, resourceDetails]);
 
   const showErrorToast = (messageKey) => {
     setShowToast({ key: "error", label: messageKey });

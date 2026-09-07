@@ -32,16 +32,17 @@ const searchLocalisationService = async ({ tenantId, module, locale: locales, pa
 
       return result; // Indicate success
     } else {
+      const resolvedLocale = Array.isArray(locale) ? locale[0] : locale;
       const response = await Digit.CustomService.getResponse({
         url: "/localization/messages/v1/_search",
-        params: { ...params, tenantId: tenantId, module: module, locale: locale },
+        params: { ...params, tenantId: tenantId, module: module, locale: resolvedLocale },
         body: {},
       });
 
       const result = [];
       response?.messages?.forEach(({ code, message, module }) => {
         let item = { code, module };
-        item[locale] = message; // mimic same format as multipleLocale
+        item[resolvedLocale] = message; // mimic same format as multipleLocale
         result.push(item);
       });
 

@@ -25,7 +25,6 @@ import CycleDataPreview from "./components/CycleDataPreview";
 import CampaignResourceDocuments from "./components/CampaignResourceDocuments";
 import ConfigureApp from "./pages/employee/ConfigureApp";
 import TimelineComponent from "./components/TimelineComponent";
-import { DSSCard } from "./components/DSSCard";
 import UpdateDatesWithBoundaries from "./pages/employee/UpdateDatesWithBoundaries";
 import DateWithBoundary from "./components/DateWithBoundary";
 import BoundaryWithDate from "./components/BoundaryWithDate";
@@ -111,7 +110,7 @@ export const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 const EmployeeApp = lazyWithFallback(
   () => import(/* webpackChunkName: "employee-app" */ "./pages/employee"),
   () => require("./pages/employee").default,
-  { loaderText: "Loading Employee App..." }
+  { loaderText: "LOADING_EMPLOYEE_APP" }
 );
 
 // QUICK FIXES JUST TO WORK AROUND Z-INDEX ISSUES WITH POPUPS AND MODALS - SHOULD BE REMOVED LATER ONCE POPUP SWICTH TO REACT PORTAL
@@ -169,7 +168,7 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
   }, []);
   // Boundary localizations (boundary-${hierarchyType}) are loaded in the boundary selection screens
   // (SelectingBoundariesDuplicate / UpdateBoundaryWrapper) where the hierarchy type is already known.
-  const moduleCode = ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration", "dummy-module"];
+  const moduleCode = ["campaignmanager", "admin-schemas", "checklist", "appconfiguration"];
 
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
@@ -217,7 +216,6 @@ const componentsToRegister = {
   CycleDataPreview,
   CampaignResourceDocuments,
   ConfigureApp,
-  DSSCard,
   UpdateDatesWithBoundaries,
   DateWithBoundary,
   BoundaryWithDate,

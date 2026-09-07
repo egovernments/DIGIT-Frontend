@@ -35,11 +35,15 @@ export const cycleDataRemap=(data)=> {
     return operatorMapping[operator] || ""; // Default to empty if not found
   }
   export const  restructureData=(data, cycleData, DeliveryConfig, projectType , type)=> {
+    // Session data can hold a malformed (non-array) deliveryRule - bail instead of throwing
+    // "data.map is not a function" and taking the whole screen down
+    if (!Array.isArray(data)) return null;
+
     const deliveryConfig = cloneDeep(DeliveryConfig?.find(e => e.code === String(projectType)));
-  
+
     const resourcesMap = new Map();
-    const ageInfo = { maxAge: -Infinity, minAge: Infinity };  
-  
+    const ageInfo = { maxAge: -Infinity, minAge: Infinity };
+
     const cycles = data.map((cycle, index) => {
       const cycleStartDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[index]?.fromDate, "daystart");
       const cycleEndDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[index]?.toDate, "dayend");

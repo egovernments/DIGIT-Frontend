@@ -21,7 +21,9 @@ function NewDraggableField({
   cardIndex,
   moveField,
   onHide,
-  isTemplate
+  isTemplate,
+  hideToggle,
+  toggleResetKey
 }) {
   const ref = useRef(null);
 
@@ -80,6 +82,8 @@ function NewDraggableField({
         onDelete={onDelete != null ? () => onDelete() : null}
         onSelectField={onSelectField}
         onHide={onHide != null ? () => onHide(): null}
+        hideToggle={hideToggle}
+        toggleResetKey={toggleResetKey}
         config={config}
         Mandatory={Mandatory}
         rest={rest}

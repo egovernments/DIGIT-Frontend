@@ -69,7 +69,7 @@ export const getFieldTypeOptionFromMasterData = (selectedField, fieldTypeMasterD
     return undefined;
   }
 
-  return fieldTypeMasterData.find((item) => {
+  const matched = fieldTypeMasterData.find((item) => {
     const typeMatches = item?.metadata?.type === selectedField?.type;
     const formatMatches = item?.metadata?.format === selectedField?.format;
 
@@ -90,4 +90,24 @@ export const getFieldTypeOptionFromMasterData = (selectedField, fieldTypeMasterD
       return typeMatches || item?.metadata?.format === selectedField?.type;
     }
   });
+  if (matched) return matched;
+
+  // Without a match the drawer renders a blank field type AND skips the compatibleTypes
+  // restriction, letting a field be converted to a type its data model can't store.
+  // A custom component with no master entry of its own (e.g. fieldName "stockReconciliationCard")
+  // is represented as a synthetic component entry: the drawer then shows the component name and,
+  // for dynamic types, keeps the dropdown disabled.
+  if (selectedField?.format === "custom" && selectedField?.fieldName) {
+    return {
+      type: selectedField.fieldName,
+      category: "advanced",
+      metadata: { type: selectedField.type, format: selectedField.format },
+      fieldType: "component",
+    };
+  }
+
+  // Some seeded configs use the mobile-app fieldType where the master expects a format
+  // (e.g. {type: "integer", format: "number"} vs the master's number = {integer, text}),
+  // so fall back to matching the format against fieldType within the same data type.
+  return fieldTypeMasterData.find((item) => item?.metadata?.type === selectedField?.type && item?.fieldType === selectedField?.format);
 };

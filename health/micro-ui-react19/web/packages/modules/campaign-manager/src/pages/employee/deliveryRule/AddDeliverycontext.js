@@ -163,11 +163,12 @@ const AddAttributeField = React.memo(({
     let val = e.target.value;
     val = val.replace(/[^\d.]/g, "");
     val = val.match(/^\d*\.?\d{0,2}/)[0] || "";
-    
+
     if (isNaN(val) || [" ", "e", "E"].some(f => val.includes(f))) {
       return;
     }
-    
+    if (val.length > 10) return;
+
     updateAttributeField(rule.ruleKey, attribute.key, 'value', val);
   }, [updateAttributeField, rule.ruleKey, attribute.key]);
 
@@ -179,11 +180,12 @@ const AddAttributeField = React.memo(({
     let val = e.target.value;
     val = val.replace(/[^\d.]/g, "");
     val = val.match(/^\d*\.?\d{0,2}/)[0] || "";
-    
+
     if (isNaN(val) || [" ", "e", "E"].some(f => val.includes(f))) {
       return;
     }
-    
+    if (val.length > 10) return;
+
     const field = range === "to" ? "toValue" : "fromValue";
     updateAttributeField(rule.ruleKey, attribute.key, field, val);
   }, [updateAttributeField, rule.ruleKey, attribute.key]);
@@ -195,8 +197,8 @@ const AddAttributeField = React.memo(({
 
   return (
     <div className="attribute-field-wrapper">
-      <LabelFieldPair style={{ marginBottom: "0rem" }}>
-        <CardLabel isMandatory className="card-label-smaller">
+      <LabelFieldPair style={{ marginBottom: "0rem" }} className="add-attribute-field">
+        <CardLabel isMandatory className="card-label-smaller add-attribute-field-label">
           {t(I18N_KEYS.COMPONENTS.CAMPAIGN_ATTRIBUTE_LABEL)}
         </CardLabel>
         <Dropdown
@@ -212,8 +214,8 @@ const AddAttributeField = React.memo(({
         />
       </LabelFieldPair>
 
-      <LabelFieldPair style={{ marginBottom: "0rem" }}>
-        <CardLabel isMandatory className="card-label-smaller">
+      <LabelFieldPair style={{ marginBottom: "0rem" }} className="add-attribute-field">
+        <CardLabel isMandatory className="card-label-smaller add-attribute-field-label">
           {t(I18N_KEYS.COMPONENTS.CAMPAIGN_OPERATOR_LABEL)}
         </CardLabel>
         <Dropdown
@@ -230,16 +232,16 @@ const AddAttributeField = React.memo(({
 
       {isRangeOperator ? (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-          <LabelFieldPair style={{ marginBottom: "0rem" }}>
-            <CardLabel className="card-label-smaller">{t(I18N_KEYS.PAGES.CAMPAIGN_FROM_LABEL)}</CardLabel>
+          <LabelFieldPair style={{ marginBottom: "0rem" }} className="add-attribute-field">
+            <CardLabel className="card-label-smaller add-attribute-field-label">{t(I18N_KEYS.PAGES.CAMPAIGN_FROM_LABEL)}</CardLabel>
             <TextInput
               value={attribute?.fromValue || ""}
               onChange={(e) => handleRangeValueChange(e, "from")}
               disable={false}
             />
           </LabelFieldPair>
-          <LabelFieldPair style={{ marginBottom: "0rem" }}>
-            <CardLabel className="card-label-smaller">{t(I18N_KEYS.PAGES.CAMPAIGN_TO_LABEL)}</CardLabel>
+          <LabelFieldPair style={{ marginBottom: "0rem" }} className="add-attribute-field">
+            <CardLabel className="card-label-smaller add-attribute-field-label">{t(I18N_KEYS.PAGES.CAMPAIGN_TO_LABEL)}</CardLabel>
             <TextInput
               value={attribute?.toValue || ""}
               onChange={(e) => handleRangeValueChange(e, "to")}
@@ -248,8 +250,8 @@ const AddAttributeField = React.memo(({
           </LabelFieldPair>
         </div>
       ) : (
-        <LabelFieldPair style={{ marginBottom: "0rem" }}>
-          <CardLabel className="card-label-smaller">{t(I18N_KEYS.COMPONENTS.CAMPAIGN_VALUE_LABEL)}</CardLabel>
+        <LabelFieldPair style={{ marginBottom: "0rem" }} className="add-attribute-field">
+          <CardLabel className="card-label-smaller add-attribute-field-label">{t(I18N_KEYS.COMPONENTS.CAMPAIGN_VALUE_LABEL)}</CardLabel>
           <div className="field" style={{ display: "flex", width: "100%" }}>
             {isDropdownValue ? (
               optionsLoading ? (
@@ -280,8 +282,9 @@ const AddAttributeField = React.memo(({
 
       {canDelete && (
         <Button
-          variation="link"
-          style={{ marginTop: "3rem" }}
+          variation="teritiary"
+          size="medium"
+          style={{ marginTop: "20px" }}
           label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELETE_ROW_TEXT)}
           title={t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELETE_ROW_TEXT)}
           icon="Delete"
@@ -386,21 +389,14 @@ const AddDeliveryRule = React.memo(({
             {t(I18N_KEYS.PAGES.CAMPAIGN_DELIVERY_RULE_LABEL)} {rule.ruleKey}
           </p>
           {canDelete && (
-            <div
-              className="hover"
+            <Button
+              variation="teritiary"
+              size="large"
+              title={t(I18N_KEYS.PAGES.CAMPAIGN_DELETE_CONDITION_LABEL)}
+              label={t(I18N_KEYS.PAGES.CAMPAIGN_DELETE_CONDITION_LABEL)}
+              icon={"Delete"}
               onClick={onDelete}
-              style={{
-                fontWeight: "600",
-                fontSize: "1rem",
-                color: PRIMARY_COLOR,
-                display: "flex",
-                gap: "0.5rem",
-                alignItems: "center",
-                cursor: "pointer",
-              }}
-            >
-              <DustbinIcon /> {t(I18N_KEYS.PAGES.CAMPAIGN_DELETE_CONDITION_LABEL)}
-            </div>
+            />
           )}
         </CardHeader>
 

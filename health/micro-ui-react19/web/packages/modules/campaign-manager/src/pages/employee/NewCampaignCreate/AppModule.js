@@ -263,7 +263,9 @@ const AppModule = () => {
   };
 
   if (productTypeLoading || isLoading || mdmsData?.length == 0) {
-    return <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.CAMPAIGN_CREATE.SAVING_FEATURES_CONFIG_IN_SERVER)} />;
+    // Nothing is rendered behind this, so it is a page loader - OverlayLoader also pulls in the
+    // library's 6-dot overlay animation, which does not match the rest of the flow
+    return <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.CAMPAIGN_CREATE.LOADING_MODULE)} />;
   }
 
   return (

@@ -139,8 +139,14 @@ const SelectionCard = ({ field, t, props }) => {
       options = generateFallbackOptions(selectionField?.label || selectionField?.fieldName);
     }
   } else if (selectionField?.isMdms) {
-    // If isMdms is true, only use MDMS data. If schemaCode is invalid, show empty options.
-    options = hasValidMdmsData ? mdmsData : [];
+    // The app renders the config's enums (its per-campaign selection of the master options,
+    // filtered by isActive) — mirror that here so the preview matches the device. Fall back to
+    // the full master list only when the config carries no selection yet.
+    options = hasValidEnums
+      ? selectionField.enums.filter((o) => o?.isActive !== false)
+      : hasValidMdmsData
+      ? mdmsData
+      : [];
   } else if (hasValidEnums) {
     options = selectionField.enums.filter((o) => o.isActive !== false);
   } else if (hasValidDropdownOptions) {

@@ -16,7 +16,9 @@ const Response = () => {
   const isMobile = window.Digit.Utils.browser.isMobile();
 
   const navigation = (link) => {
-    navigate(link ? link : `/${window.contextPath}/employee/`);
+    // Replace the success screen in history so browser Back can never land on a
+    // completed flow's success state again
+    navigate(link ? link : `/${window.contextPath}/employee/`, { replace: true });
   };
 
   useEffect(() => {

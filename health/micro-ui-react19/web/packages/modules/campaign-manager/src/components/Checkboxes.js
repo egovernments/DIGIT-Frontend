@@ -1,4 +1,3 @@
-import { CloseSvg } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useEffect, useMemo, useState, useRef } from "react";
 import { CheckBox, Tooltip } from "@egovernments/digit-ui-components";
 import CreateQuestion from "./CreateQuestion";

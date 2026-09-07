@@ -31,9 +31,9 @@ export const InboxConfig = {
             type: "search",
             typeMobile: "filter",
             headerStyle: null,
-            primaryLabel: "FILTER",
-            primaryLabelVariation: "teritiary",
-            primaryLabelIcon: "FilterListAlt",
+            primaryLabel: "Search",
+            primaryLabelVariation: "primary",
+            primaryLabelIcon: "",
             secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
             minReqFields: 0,
             defaultValues: {

@@ -1,4 +1,3 @@
-import { CloseSvg } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useEffect, useMemo, useState, useRef } from "react";
 import { TextInput, Tooltip, CheckBox, Button, FieldV1 } from "@egovernments/digit-ui-components";
 import { DustbinIcon } from "./icons/DustbinIcon";

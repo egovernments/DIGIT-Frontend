@@ -397,7 +397,7 @@ const AppFeaturesList = ({ selectedModuleFeatures, selectedModuleCode, selectedF
               <SVG.CheckCircle fill="#00703C" width="3rem" height="3rem" style={{ position: "absolute", left: "-10px", top: "-14px" }} />
             )}
             <HeaderComponent className={`detail-header ${featureSelected ? "selected-header" : ""}`}>{t(feature?.code)}</HeaderComponent>
-            <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
+            <hr style={{ border: "1px solid #D6D5D4", width: "100%", margin: "0.5rem 0" }} />
             <p className="module-description">{t(feature?.description)}</p>
             <Button
               className="campaign-module-button"

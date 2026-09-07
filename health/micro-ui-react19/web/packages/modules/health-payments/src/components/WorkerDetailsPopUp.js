@@ -37,7 +37,8 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
             if (!/^[0-9]{10}$/.test(trimmed.bankAccount)) {
                 e.bankAccount = t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_INVALID_BANK_ACCOUNT_ERROR) || "Bank account must be exactly 10 digits.";
             }
-            if (!/^(?:[0-9]{3}|[0-9]{9})$/.test(trimmed.bankCode)) {
+            // Blank is a valid bank code per the error message itself - only validate when provided
+            if (trimmed.bankCode && !/^(?:[0-9]{3}|[0-9]{9})$/.test(trimmed.bankCode)) {
                 e.bankCode = t(I18N_KEYS.COMPONENTS_ATTENDANCE.HCM_AM_INVALID_BANK_CODE_ERROR) || "Bank code must be 3 or 9 digits.";
             }
             if (!/^[A-Za-z0-9]{1,35}$/.test(trimmed.beneficiaryCode)) {

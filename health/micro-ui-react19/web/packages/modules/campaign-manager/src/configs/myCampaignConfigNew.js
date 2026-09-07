@@ -211,6 +211,7 @@ export const myCampaignConfigNew = {
       additionalSections: {},
       persistFormData: true,
       showAsRemovableTagsInMobile: true,
+      // postProcessResult: true,
     },
     {
       headerLabel: "CAMPAIGN_SEARCH_TITLE",

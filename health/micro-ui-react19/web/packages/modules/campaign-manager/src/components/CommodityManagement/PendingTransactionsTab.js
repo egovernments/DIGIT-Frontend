@@ -7,6 +7,7 @@ import GenericChart from "./GenericChart";
 import UserDetails from "./UserDetails";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import usePaginatedSearch from "../../hooks/usePaginatedSearch";
 
 const PendingTransactionsTab = ({
   rawStockData,
@@ -30,8 +31,9 @@ const PendingTransactionsTab = ({
   const projectFacilityCriteria = useMemo(
     () => ({
       url: `${getProjectServiceUrl()}/facility/v1/_search`,
-      params: { tenantId, limit: 100, offset: 0 },
+      params: { tenantId },
       body: { ProjectFacility: { projectId: [projectId] } },
+      dataKey: "ProjectFacilities",
       config: {
         enabled: !!projectId && !!tenantId,
         select: (data) => {
@@ -46,7 +48,7 @@ const PendingTransactionsTab = ({
     [tenantId, projectId]
   );
   const { data: projectFacilityIds = new Set(), isLoading: projectFacilitiesLoading } =
-    Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
+    usePaginatedSearch(projectFacilityCriteria);
 
   // Extract unique facility IDs and product variant IDs from stock data
   const { facilityIds, productVariantIds } = useMemo(() => {
@@ -65,8 +67,9 @@ const PendingTransactionsTab = ({
   const facilitySearchCriteria = useMemo(
     () => ({
       url: `/facility/v1/_search`,
-      params: { tenantId, limit: facilityIds.length || 10, offset: 0 },
+      params: { tenantId },
       body: { Facility: { id: facilityIds } },
+      dataKey: "Facilities",
       config: {
         enabled: !!facilityIds.length && !!tenantId,
         select: (data) => {
@@ -91,7 +94,7 @@ const PendingTransactionsTab = ({
     [tenantId, facilityIds]
   );
   const { data: facilityNameMap = {}, isLoading: facilitiesLoading } =
-    Digit.Hooks.useCustomAPIHook(facilitySearchCriteria);
+    usePaginatedSearch(facilitySearchCriteria);
 
   // Fetch product variants
   const variantSearchCriteria = useMemo(

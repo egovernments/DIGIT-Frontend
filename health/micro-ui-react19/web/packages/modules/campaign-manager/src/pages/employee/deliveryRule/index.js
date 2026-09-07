@@ -5,6 +5,7 @@ import { Loader } from "@egovernments/digit-ui-components";
 import deliveryRulesReducer from './deliveryRulesSlice';
 import { useDeliveryRules, useDeliveryRuleData } from './useDeliveryRules';
 import MultiTab from "./MultiTabcontext";
+import { useCampaignSubmitting } from "../../../components/CampaignSubmitContext";
 
 // Configure Redux store
 const store = configureStore({
@@ -18,6 +19,10 @@ const store = configureStore({
       },
     }),
 });
+
+// Provides read-only access to campaign data held in the Redux store.
+// Used as a fallback by validators when form state is unavailable (e.g., after component remount).
+export const getDeliveryRulesCampaignData = () => store.getState().deliveryRules.campaignData || [];
 
 const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount = 2, subTabCount = 3, ...props }) => {
   const {
@@ -34,6 +39,7 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
 
   const {
     campaignData,
+    storedCampaignId,
     initializeData,
     initialized,
     loading: storeLoading,
@@ -43,6 +49,8 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     syncDeliveryCount,
     updateObservationStrategyAction,
   } = useDeliveryRules();
+
+  const isParentSubmitting = useCampaignSubmitting();
 
   // Track previous project type and campaign ID to detect changes
   const prevProjectTypeRef = useRef(null);
@@ -86,7 +94,9 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
   // Get saved delivery rules
   const savedDeliveryRules = useMemo(() => {
     const saved = sessionData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
-    return saved;
+    // Ignore a malformed (non-array) value so the rules get rebuilt from the cycle config
+    // instead of carrying the bad shape forward into the submit payload
+    return Array.isArray(saved) ? saved : undefined;
   }, [sessionData]);
 
   // Store attribute and operator config in refs to avoid dependency issues
@@ -129,6 +139,17 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     prevCampaignIdRef.current = currentCampaignId;
   }, [selectedProjectType, currentCampaignId, resetData]);
 
+  // If the Redux store holds data for a different campaign, reset it so
+  // the initialization effect below can run fresh for the current campaign.
+  useEffect(() => {
+    if (initialized && storedCampaignId && storedCampaignId !== currentCampaignId) {
+      resetData();
+      hasInitialSyncRef.current = false;
+      prevCycleCountRef.current = null;
+      prevDeliveryCountRef.current = null;
+    }
+  }, [initialized, currentCampaignId, storedCampaignId, resetData]);
+
   // Initialize campaign data when dependencies are ready
   useEffect(() => {
     if (!cycleData?.cycleConfgureDate || !effectiveDeliveryConfig) {
@@ -147,12 +168,12 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     }
 
     try {
-      initializeData(cycles, deliveries, effectiveDeliveryConfig, savedDeliveryRules, attributeConfigRef.current, operatorConfigRef.current);
+      initializeData(cycles, deliveries, effectiveDeliveryConfig, savedDeliveryRules, attributeConfigRef.current, operatorConfigRef.current, currentCampaignId);
     } catch (error) {
       console.error('Error initializing campaign data:', error);
       setErrorState(error.message);
     }
-  }, [cycleData, effectiveDeliveryConfig, initialized, initializeData, savedDeliveryRules, setErrorState]);
+  }, [cycleData, effectiveDeliveryConfig, initialized, initializeData, savedDeliveryRules, setErrorState, currentCampaignId]);
 
   // Perform initial sync after initialization to handle saved data with different counts
   useEffect(() => {
@@ -289,12 +310,9 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     }
   }, [dataError, setErrorState]);
 
-  // Clean up on unmount
-  useEffect(() => {
-    return () => {
-      resetData();
-    };
-  }, [resetData]);
+  // No unmount cleanup — the module-level Redux store persists across navigations
+  // (e.g. navigating to add-product and back). Stale data for a different campaign
+  // is handled by the campaign ID comparison effect above.
 
   // Counteract Dropdown components' built-in scrollIntoView({behavior:"smooth"})
   // that fires on mount when the element is below the viewport.
@@ -335,6 +353,8 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
   }, [initialized]);
 
   if (dataLoading || storeLoading || !initialized) {
+    // The flow already shows its overlay loader while saving - do not stack a second loader
+    if (isParentSubmitting) return null;
     return <Loader page={true} variant="PageLoader" />;
   }
 

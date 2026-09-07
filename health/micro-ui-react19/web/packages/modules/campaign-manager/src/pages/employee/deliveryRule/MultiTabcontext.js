@@ -12,6 +12,8 @@ const Tabs = React.memo(() => {
   const { campaignData, activeTabIndex, changeTab } = useDeliveryRules();
   const { t } = useTranslation();
 
+  if (campaignData.length <= 1) return null;
+
   const tabItems = campaignData.map((cycle, index) => ({
     code: String(index),
     name: `${t(I18N_KEYS.PAGES.CAMPAIGN_CYCLE)} ${index + 1}`,
@@ -36,7 +38,7 @@ const SubTabs = React.memo(() => {
   const { activeCycle, activeSubTabIndex, changeSubTab } = useDeliveryRules();
   const { t } = useTranslation();
 
-  if (!activeCycle?.deliveries) {
+  if (!activeCycle?.deliveries || activeCycle.deliveries.length <= 1) {
     return null;
   }
 
@@ -59,7 +61,13 @@ const SubTabs = React.memo(() => {
 });
 
 const TabContent = React.memo(({ project }) => {
+  const { activeCycle, campaignData } = useDeliveryRules();
   const { t } = useTranslation();
+
+  const hasMultipleCycles = campaignData?.length > 1;
+  const hasMultipleDeliveries = activeCycle?.deliveries?.length > 1;
+
+  if (!hasMultipleCycles && !hasMultipleDeliveries) return null;
 
   return (
     <Card className="sub-tab-container">
@@ -78,7 +86,6 @@ const MultiTab = React.memo(({ projectConfig, attributeConfig, operatorConfig, d
   // Get session data for display
   const tempSession = useMemo(() => formStorageData || {}, [formStorageData, projectConfig]);
 
-  const campaignName = tempSession?.HCM_CAMPAIGN_NAME?.campaignName;
   const projectType = tempSession?.HCM_CAMPAIGN_TYPE?.projectType || projectConfig?.code;
   const campaignDates = tempSession?.HCM_CAMPAIGN_DATE?.campaignDates;
 
@@ -90,6 +97,7 @@ const MultiTab = React.memo(({ projectConfig, attributeConfig, operatorConfig, d
 
     const startDate = convertEpochToNewDateFormat(campaignDates.startDate);
     const endDate = convertEpochToNewDateFormat(campaignDates.endDate);
+    if (!startDate || !endDate) return "";
     return `${startDate} - ${endDate}`;
   }, [campaignDates]);
 
@@ -102,15 +110,13 @@ const MultiTab = React.memo(({ projectConfig, attributeConfig, operatorConfig, d
   return (
     <div className="container-full">
       <div className="card-container-delivery">
-        {campaignName && <TagComponent campaignName={campaignName} />}
+        {formattedDates && <TagComponent campaignName={formattedDates} />}
 
         {projectTitle && (
-          <HeaderComponent styles={{ marginTop: "1.5rem" }} className="select-boundary-screen-heading">
+          <HeaderComponent styles={{ marginTop: "1.5rem",marginBottom: "1.5rem" }} className="select-boundary-screen-heading">
             {t(projectTitle)}
           </HeaderComponent>
         )}
-
-        {formattedDates && <Paragraph customClassName="cycle-paragraph" value={formattedDates} />}
 
         <div className="campaign-cycle-container">
           <div className="campaign-tabs-container">

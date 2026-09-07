@@ -126,7 +126,7 @@
 }
 .upcoming-timeline {
   .timeline-label {
-    color: #b1b4b6;
+    color: #C5C5C5;
   }
 }
 .container {
@@ -213,7 +213,7 @@
   .digit-tag-text {
     color: #0057bd !important;
   }
-  background-color: #eff8ff !important;
+  background-color: #DEEFFF !important;
   border-color: #0057bd !important;
 }
 .digit-popup-wrapper.dataMapping {
@@ -1078,7 +1078,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background-color: #F5F2F2;
+    background-color: #EEEEEE;
     padding: 0.5rem;
     border-radius: 0.5rem;
 
@@ -1280,6 +1280,15 @@
     box-shadow: 0px 2px 7px 0px #00000026;
 
 
+    .select-hierarchy-campaign-selection-card-name-row {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
     .select-hierarchy-campaign-selection-card-name {
       font-family: var(--digitv2-fontFamily-sans);
       font-style: var(--digitv2-fontStyle-normal);
@@ -1316,6 +1325,13 @@
       background-color: #BAD6C9;
       border: 2px solid #00703C;
       box-shadow: 0px 2px 7px 0px #00000026;
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+      box-shadow: none;
     }
   }
 }
@@ -1549,7 +1565,7 @@
 }
 
 .hierarchy-change-popup{
-  max-width: 35%;
+  max-width: 35% !important;
   .digit-popup-alert-heading{
     color: #0B4B66 !important;
   }

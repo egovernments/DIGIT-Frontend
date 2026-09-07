@@ -1172,6 +1172,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <TagComponent campaignName={campaignName} />
               <Button
+                style={{ marginLeft: "auto" }}
                 label={getDownloadLabel()}
                 title={getDownloadLabel()}
                 variation="secondary"

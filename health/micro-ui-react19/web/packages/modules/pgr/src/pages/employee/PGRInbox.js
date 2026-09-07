@@ -74,8 +74,10 @@ const PGRSearchInbox = () => {
     enable: false, // Disabled fetch by default, fallback to static config
   });
 
+  const hierarchyType = (selectedHierarchy && selectedHierarchy.hierarchyType) || null;
+
   // Fallback to static config if MDMS is not available
-  const configs = PGRSearchInboxConfig();
+  const configs = useMemo(() => PGRSearchInboxConfig(hierarchyType), [hierarchyType]);
 
   // Fetch the list of service definitions (e.g., complaint types) for current tenant
   const serviceDefs = Digit.Hooks.pgr.useServiceDefs(tenantId, "PGR");
@@ -97,11 +99,11 @@ const PGRSearchInbox = () => {
   );
 
   /**
-   * Reset or refresh config when the route changes
+   * Reset or refresh config when the route changes or hierarchy type changes
    */
   useEffect(() => {
     setPageConfig(_.cloneDeep(configs));
-  }, [location]);
+  }, [location, hierarchyType]);
 
   useEffect(() => {
     const style = document.createElement("style");

@@ -8,20 +8,34 @@ import {
   CardLabel,
   HeaderComponent,
   Loader,
+  NoResultsFound,
   PopUp,
   Button,
   TextInput,
+  Tag,
 } from "@egovernments/digit-ui-components";
 
 const MAX_VISIBLE_LEVELS = 5;
 
 const hasDependentData = (formData) => {
+  // Check for actual data content, not just key existence — IndexedDB keys
+  // can persist across sessions/campaigns and produce false positives.
+  const hasBoundarySelections =
+    formData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData?.length > 0;
+  const hasUploadedBoundary =
+    formData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0;
+  const hasUploadedFacility =
+    formData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0;
+  const hasUploadedUser =
+    formData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length > 0;
+  const hasUploadedUnified =
+    formData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.length > 0;
   return !!(
-    formData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA ||
-    formData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA ||
-    formData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA ||
-    formData?.HCM_CAMPAIGN_UPLOAD_USER_DATA ||
-    formData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA
+    hasBoundarySelections ||
+    hasUploadedBoundary ||
+    hasUploadedFacility ||
+    hasUploadedUser ||
+    hasUploadedUnified
   );
 };
 
@@ -64,6 +78,65 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
 
   const allHierarchyDefinitions = hierarchyData?.BoundaryHierarchy || [];
 
+  // Parallel existence check for all hierarchies — shown as tags on each card
+  const [boundaryStatusMap, setBoundaryStatusMap] = useState({});
+  // Shape: { [hierarchyType]: "loading" | "active" | "inactive" | "error" }
+  // "error" = network/auth failure (indistinguishable from absence); no tag is shown.
+
+  useEffect(() => {
+    if (!allHierarchyDefinitions.length) return;
+    let cancelled = false;
+
+    const initialMap = {};
+    allHierarchyDefinitions.forEach((d) => { initialMap[d.hierarchyType] = "loading"; });
+    setBoundaryStatusMap(initialMap);
+
+    // Batched to avoid firing up to 500 simultaneous POSTs when many hierarchies exist.
+    const BATCH_SIZE = 5;
+    const defs = allHierarchyDefinitions;
+
+    (async () => {
+      const results = [];
+      for (let i = 0; i < defs.length; i += BATCH_SIZE) {
+        if (cancelled) return;
+        const batch = defs.slice(i, i + BATCH_SIZE);
+        const batchResults = await Promise.all(
+          batch.map((d) =>
+            Digit.CustomService.getResponse({
+              url: `/boundary-service/boundary-relationships/_search`,
+              useCache: false,
+              method: "POST",
+              params: {
+                tenantId,
+                hierarchyType: d.hierarchyType,
+                includeChildren: false,
+                limit: 1,
+              },
+              body: {},
+            })
+              .then((res) => ({
+                hierarchyType: d.hierarchyType,
+                hasData: !!(res?.TenantBoundary?.[0]?.boundary?.length),
+              }))
+              // null = request failed; treat as unknown, not as confirmed-inactive
+              .catch(() => ({ hierarchyType: d.hierarchyType, hasData: null }))
+          )
+        );
+        results.push(...batchResults);
+      }
+
+      if (cancelled) return;
+      const map = {};
+      results.forEach((r) => {
+        map[r.hierarchyType] = r.hasData === true ? "active" : r.hasData === false ? "inactive" : "error";
+      });
+      setBoundaryStatusMap(map);
+    })();
+
+    // Cancels stale in-flight batches if definitions or tenant change mid-flight
+    return () => { cancelled = true; };
+  }, [allHierarchyDefinitions, tenantId]);
+
   const [selected, setSelected] = useState(
     formData?.SelectHierarchy?.hierarchy ||
       hierarchyValue ||
@@ -103,8 +176,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
   const onHierarchySelect = (value) => {
     if (isSameHierarchy(selected, value)) return;
     const isHierarchyChanged = hierarchyValue && !isSameHierarchy(hierarchyValue, value);
-    const hasData = hasDependentData(formStorageData) || !!(formData?.SelectHierarchy?.hasBoundaryData);
-    if (isHierarchyChanged && hasData) {
+    if (isHierarchyChanged && hasDependentData(formStorageData)) {
       setPendingSelection(value);
       setShowConfirmPopup(true);
     } else {
@@ -143,7 +215,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
   }, [selected, boundaryData, isBoundaryLoading]);
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader className="digit-center-loader"/>;
   }
 
   const filteredHierarchies = allHierarchyDefinitions.filter((definition) =>
@@ -188,7 +260,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
           removeMargin={true}
         >
           <CardLabel style={{width:"100%"}} className="select-hierarchy-search-label">
-            {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH_BY_HIERARCHY_NAME)}
+            {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH)}
           </CardLabel>
           <div className="digit-field select-hierarchy-search-bar-field" style={{ width: "100%" }}>
             <TextInput
@@ -196,6 +268,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={"select-hierarchy-search-bar"}
+              placeholder= {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH_BY_HIERARCHY_NAME)}
             />
           </div>
         </LabelFieldPair>
@@ -207,16 +280,35 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
             const hierarchy = { name: definition.hierarchyType };
             const isSelected = isSameHierarchy(selected, hierarchy);
             const hasMoreLevels = levels.length > MAX_VISIBLE_LEVELS;
+            const isDisabled = levels.length === 0;
 
             return (
               <Card
                 key={definition.id || definition.hierarchyType}
-                onClick={() => onHierarchySelect(hierarchy)}
-                className={`select-hierarchy-campaign-selection-card ${isSelected ? "selected" : ""}`}
+                onClick={isDisabled ? undefined : () => onHierarchySelect(hierarchy)}
+                className={`select-hierarchy-campaign-selection-card ${isSelected ? "selected" : ""} ${isDisabled ? "disabled" : ""}`}
               >
-                <span className="select-hierarchy-campaign-selection-card-name">
-                  {t(definition.hierarchyType)}
-                </span>
+                <div className="select-hierarchy-campaign-selection-card-name-row">
+                  <span className="select-hierarchy-campaign-selection-card-name">
+                    {t(definition.hierarchyType)}
+                  </span>
+                  {!isDisabled && boundaryStatusMap[definition.hierarchyType] === "active" && (
+                    <Tag
+                      label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_HIERARCHY_BOUNDARY_DATA_ACTIVE)}
+                      type="success"
+                      stroke={true}
+                      showIcon={false}
+                    />
+                  )}
+                  {!isDisabled && boundaryStatusMap[definition.hierarchyType] === "inactive" && (
+                    <Tag
+                      label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_HIERARCHY_BOUNDARY_DATA_INACTIVE)}
+                      type="error"
+                      stroke={true}
+                      showIcon={false}
+                    />
+                  )}
+                </div>
                 {levels.length > 0 ? (
                   <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                     {levels.slice(0, MAX_VISIBLE_LEVELS).map((level, index) => (
@@ -258,6 +350,19 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
             );
           })}
         </div>
+        {filteredHierarchies.length === 0 && searchQuery.trim().length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <NoResultsFound width={280} height={220} />
+          </div>
+        )}
       </Card>
 
       {viewAllPopup && (
@@ -316,6 +421,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
               onClick={onConfirmChange}
             />,
           ]}
+          showAlertAsSvg={true}
         />
       )}
     </React.Fragment>

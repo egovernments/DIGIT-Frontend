@@ -41,7 +41,7 @@ const UnifiedUploadScreen = () => {
       cacheTime: 0,
     },
   };
-  const { data: campaignData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { data: campaignData, isLoading: isCampaignLoading } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   const reqUpdate = {
     url: `/project-factory/v1/project-type/update`,
@@ -136,6 +136,10 @@ const UnifiedUploadScreen = () => {
   };
 
   if (loader) return <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />;
+
+  // Wait for the campaign fetch before rendering the upload area - otherwise a
+  // pre-filled sheet (e.g. on a cloned campaign) appears only after a blank flash
+  if (campaignNumber && isCampaignLoading) return <Loader page={true} variant={"PageLoader"} />;
 
   const closeToast = () => setShowToast(null);
 

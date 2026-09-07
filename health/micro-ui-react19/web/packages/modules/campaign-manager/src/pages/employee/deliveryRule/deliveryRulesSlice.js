@@ -2,6 +2,7 @@ import { createSlice, createSelector } from '@reduxjs/toolkit';
 
 const initialState = {
   campaignData: [],
+  campaignId: null,
   activeTabIndex: 0,
   activeSubTabIndex: 0,
   loading: false,
@@ -14,10 +15,11 @@ const deliveryRulesSlice = createSlice({
   initialState,
   reducers: {
     initializeCampaignData: (state, action) => {
-      const { cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig } = action.payload;
+      const { cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig, campaignId } = action.payload;
 
       // Always reset the state to ensure clean initialization
       state.campaignData = [];
+      state.campaignId = campaignId || null;
       state.activeTabIndex = 0;
       state.activeSubTabIndex = 0;
       state.error = null;
@@ -53,6 +55,7 @@ const deliveryRulesSlice = createSlice({
     
     resetCampaignData: (state) => {
       state.campaignData = [];
+      state.campaignId = null;
       state.activeTabIndex = 0;
       state.activeSubTabIndex = 0;
       state.initialized = false;
@@ -629,6 +632,7 @@ function generateInitialAttributes(attributeConfigFromProject, globalAttributeCo
 }
 // Selectors
 export const selectCampaignData = (state) => state.deliveryRules.campaignData;
+export const selectCampaignId = (state) => state.deliveryRules.campaignId;
 export const selectActiveTabIndex = (state) => state.deliveryRules.activeTabIndex;
 export const selectActiveSubTabIndex = (state) => state.deliveryRules.activeSubTabIndex;
 export const selectLoading = (state) => state.deliveryRules.loading;

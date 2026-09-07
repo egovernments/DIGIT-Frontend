@@ -247,6 +247,7 @@ const transformTemplate = (screenData) => {
   template.preventScreenCapture = screenData.preventScreenCapture || false;
   template.submitCondition = screenData.submitCondition || null;
   template.order = screenData.order;
+  if (screenData.isSuccessorErrorScreen !== undefined) template.isSuccessorErrorScreen = screenData.isSuccessorErrorScreen;
 
   return template;
 };

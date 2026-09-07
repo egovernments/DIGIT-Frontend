@@ -1,8 +1,72 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import AssignButton from "../AssignButton";
 
 export const UICustomizations = {
+  AssignCampaignInboxConfig: {
+    preProcess: (data) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const searchForm = (data && data.state && data.state.searchForm) || {};
+      const tableForm = (data && data.state && data.state.tableForm) || {};
+      const jurisdictionProjects = (data && data.body && data.body.jurisdictionProjects) || [];
+      const effectiveTenantId = (jurisdictionProjects[0] && jurisdictionProjects[0].tenantId) || tenantId;
+
+      const searchParams = {};
+      if (searchForm.projectType) searchParams.projectType = (searchForm.projectType && searchForm.projectType.code) || searchForm.projectType;
+      if (searchForm.name) searchParams.name = searchForm.name;
+      if (searchForm.projectNumber) searchParams.projectNumber = searchForm.projectNumber;
+      if (searchForm.startDate) searchParams.startDate = searchForm.startDate;
+      if (searchForm.endDate) searchParams.endDate = searchForm.endDate;
+
+      const selectedBoundaryCode = searchForm.boundary && (searchForm.boundary.code || searchForm.boundary);
+      let projects;
+      if (selectedBoundaryCode) {
+        projects = [{ tenantId: effectiveTenantId, address: { boundary: selectedBoundaryCode }, ...searchParams }];
+      } else if (jurisdictionProjects.length > 0) {
+        projects = jurisdictionProjects.map((j) => ({
+          tenantId: j.tenantId || effectiveTenantId,
+          address: j.address,
+          ...searchParams,
+        }));
+      } else {
+        projects = [{ tenantId: effectiveTenantId, ...searchParams }];
+      }
+
+      const requestParam = {
+        tenantId: effectiveTenantId,
+        limit: tableForm.limit || 10,
+        offset: tableForm.offset || 0,
+      };
+
+      const requestBody = {
+        Projects: projects,
+        tenantId: effectiveTenantId,
+        apiOperation: "SEARCH",
+      };
+
+      return { ...data, body: requestBody, params: requestParam, changeQueryName: JSON.stringify({ projects, tableForm }) };
+    },
+
+    additionalCustomizations: (row, key, column, value, t) => {
+      switch (key) {
+        case "PROJECT_TYPE":
+          return value ? <span>{t(value)}</span> : <span>{t("CORE_COMMON_NA")}</span>;
+        case "PROJECT_BOUNDARY_TYPE": {
+          const hierarchy = Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED");
+          const hierarchyType = (hierarchy && hierarchy.hierarchyType) || "";
+          return value ? <span>{t(hierarchyType + "_" + value)}</span> : <span>{t("CORE_COMMON_NA")}</span>;
+        }
+        case "PROJECT_BOUNDARY":
+          return value ? <span>{t(value)}</span> : <span>{t("CORE_COMMON_NA")}</span>;
+        case "ASSIGNMENT":
+          return <AssignButton row={row} t={t} />;
+        default:
+          return null;
+      }
+    },
+  },
+
   HRMSInboxConfig: {
     preProcess: (data) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();

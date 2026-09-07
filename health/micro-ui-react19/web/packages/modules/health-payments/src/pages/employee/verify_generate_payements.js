@@ -1,8 +1,7 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
-import { Card, Loader as LoaderScreen, NoResultsFound,HeaderComponent } from "@egovernments/digit-ui-components";
+import { Card, Loader, NoResultsFound,HeaderComponent } from "@egovernments/digit-ui-components";
 import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
 import VerifyBillsSearch from "../../components/VerifyBillsSearch";
@@ -252,7 +251,7 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
 
 
     if (isBillLoading || isTableActionLoading) {
-        return <LoaderScreen />
+        return <Loader className="digit-center-loader"/>
     }
 
     return (
@@ -266,7 +265,7 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
 
             <Card>
                 {isFetching ? (
-                    <Loader />
+                    <Loader className="digit-center-loader" />
                 ) : tableData.length === 0 ? (
                     <NoResultsFound text={t(I18N_KEYS.PAGES_BILLS.HCM_AM_NO_DATA_FOUND_FOR_BILLS)} width={280} height={220} />
                 ) : (

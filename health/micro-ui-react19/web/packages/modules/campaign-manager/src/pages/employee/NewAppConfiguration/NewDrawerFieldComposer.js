@@ -73,10 +73,15 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     return getFieldValueByPath(selectedField, bindTo, panelItem.defaultValue || "");
   }, [selectedField, panelItem.bindTo, panelItem.defaultValue]);
 
+  // The app renders the country code from prefixText (it has no
+  // showCountryCodeDropdown), so a seeded "+91" means the code IS shown —
+  // the toggle must read ON even when the flag was never written.
+  const hasCountryCodePrefix = panelItem.bindTo === "showCountryCodeDropdown" && Boolean(selectedField?.prefixText);
+
   // Keep local toggle in sync when selectedField changes from outside
   useEffect(() => {
-    setLocalToggle(Boolean(getFieldValue()));
-  }, [getFieldValue]);
+    setLocalToggle(Boolean(getFieldValue()) || hasCountryCodePrefix);
+  }, [getFieldValue, hasCountryCodePrefix]);
 
   // Check if field should be visible based on field type
   const isFieldVisible = useCallback(() => {
@@ -148,11 +153,26 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   // Memoized options for fieldTypeDropdown to prevent recomputation every render
   const fieldTypeDropdownOptions = useMemo(() => {
     const fieldTypeOptions = fieldTypeMaster?.fieldTypeMappingConfig || [];
+    // Conversions are restricted based on the currently selected field's master entry:
+    // its compatibleTypes list when configured, otherwise its data type (metadata.type),
+    // so a field can never switch to a type the field worker app's data model can't store
+    // (e.g. a Date of Birth field (string) cannot become a Checkbox (boolean))
+    const currentFieldTypeOption = getFieldTypeOptionFromMasterData(selectedField, fieldTypeOptions);
+    const currentDataType = currentFieldTypeOption?.metadata?.type;
+    const compatibleTypes =
+      Array.isArray(currentFieldTypeOption?.compatibleTypes) && currentFieldTypeOption.compatibleTypes.length > 0
+        ? currentFieldTypeOption.compatibleTypes
+        : null;
+    const restrictByDataType = currentDataType && currentDataType !== "template" && currentDataType !== "dynamic";
     const filteredOptions = fieldTypeOptions.filter((item) => {
       // Always filter out dynamic types
       if (item?.metadata?.type === "dynamic") return false;
       // Filter out template types only for forms (pageType === "object")
       if (pageType === "object" && item?.metadata?.type === "template") return false;
+      // Only offer the current type and its configured compatible types
+      if (compatibleTypes) return item?.type === currentFieldTypeOption?.type || compatibleTypes.includes(item?.type);
+      // Without a compatibleTypes config, fall back to matching the field's data type
+      if (restrictByDataType && item?.metadata?.type !== currentDataType) return false;
       return true;
     });
 
@@ -171,13 +191,13 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         options: advancedOptions.map((item) => ({ ...item, name: item.type, code: t(`${item.category}.${item.type}`) })),
       },
     ].filter((group) => group.options.length > 0);
-  }, [fieldTypeMaster?.fieldTypeMappingConfig, pageType, t]);
+  }, [fieldTypeMaster?.fieldTypeMappingConfig, pageType, selectedField, t]);
 
   // Initialize local value when field changes
   useEffect(() => {
     // Don't overwrite local value while user is actively editing
     if (isEditingRef.current) return;
-    if (panelItem.fieldType === "text") {
+    if (panelItem.fieldType === "text" || panelItem.fieldType === "textarea") {
       const newVal = localizedFieldValue || "";
       setLocalValue(newVal);
       localValueRef.current = newVal;
@@ -218,7 +238,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       return [];
     }
 
-    const toggleValue = Boolean(getFieldValue());
+    const toggleValue = Boolean(getFieldValue()) || hasCountryCodePrefix;
 
     return panelItem.conditionalField.filter((cField) => {
       // If no condition specified, show only when toggle is true
@@ -463,6 +483,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const isMandatory = selectedField?.mandatory === true;
         const isDisabled = viewMode || (panelItem?.disableForRequired && isMandatory);
 
+        // A read-only field is auto-filled and can't be edited in the app (e.g. Refer
+        // Beneficiary → Referred By), so a Required control is meaningless — hide it
+        if (bindTo === "required" && selectedField?.readOnly === true) return null;
+
         const handleToggleChange = (value) => {
           const newToggleValue = Boolean(value);
 
@@ -526,10 +550,11 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             }
           }
 
-          // Special handling for showCountryCode toggle
+          // The app shows whatever prefixText holds (there is no
+          // showCountryCodeDropdown on the app side): ON keeps an existing
+          // code or seeds the default, OFF removes the code.
           if (bindTo === "showCountryCodeDropdown") {
-            // Clear prefixText in both directions — ON uses country code dropdown, OFF starts fresh for custom prefix
-            updatedField.prefixText = "";
+            updatedField.prefixText = newToggleValue ? selectedField?.prefixText || "+91" : "";
           }
 
           // isGS1 and scanner regex pattern are mutually exclusive
@@ -574,13 +599,18 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         );
       }
 
-      case "text": {
+      // textarea shares the text path: FieldV1 renders a TextArea for
+      // type="textarea". Without this case a textarea panel item (e.g. the
+      // noResultCard description) fell through to `default: return null`,
+      // leaving an empty property box with no way to edit the value.
+      case "text":
+      case "textarea": {
         const isMandatory = selectedField?.mandatory === true;
         const isDisabled = viewMode || (panelItem?.disableForRequired && isMandatory);
         const maxLength = panelItem.maxLength;
         return (
           <FieldV1
-            type="text"
+            type={panelItem.fieldType === "textarea" ? "textarea" : "text"}
             label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             value={localValue}
             onChange={(event) => {
@@ -1097,12 +1127,20 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               {selectedData.length > 0 && (
                 <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
                   {selectedData.map((item, index) => {
-                    // Find entity name for this field
+                    // Computed keys ({{fn:...}} / {{...}} expressions) are resolved at app runtime;
+                    // they have no editable localisation, so skip them instead of printing the raw expression
+                    if (/\{\{.*\}\}/.test(item.key)) return null;
+
+                    // Find entity name and fieldKey for this field.
+                    // Items from saved config only carry {key, value}, so fieldKey
+                    // must be resolved from labelPairConfig (which is always loaded here).
                     let entityName = "";
+                    let resolvedFieldKey = item.fieldKey;
                     for (const entity of labelPairConfig) {
                       const field = entity.labelFields?.find((f) => f.name === item.key);
                       if (field) {
                         entityName = entity.entity;
+                        resolvedFieldKey = field.fieldKey || resolvedFieldKey;
                         break;
                       }
                     }
@@ -1112,7 +1150,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                         key={`${item.key}-${index}`}
                         code={item.key}
                         // item={item}
-                        label={`${t(Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_CATEGORY_${entityName}`) || "ENTITY")} - ${t(Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_${item.fieldKey}`))}`}
+                        label={`${t(Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_CATEGORY_${entityName}`) || "ENTITY")} - ${t(Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_${resolvedFieldKey}`))}`}
                         // entityName={entityName}
                         selectedField={selectedField}
                         currentLocale={currentLocale}
@@ -1229,7 +1267,10 @@ const LocalizationInput = React.memo(
     };
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      <div
+        className={isTableColumn ? "drawer-table-column-group" : ""}
+        style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+      >
         {/* Label row with toggle for table columns */}
         <div
           style={{
@@ -1581,8 +1622,8 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
                 }
               }
 
-              // Enforce maxLength for text/textarea conditional fields
-              if ((cField.type === "text" || cField.type === "textarea") && cFieldMaxLength && newValue.length > cFieldMaxLength) {
+              // Enforce maxLength for text/textarea/number/numeric conditional fields
+              if ((cField.type === "text" || cField.type === "textarea" || cField.type === "number" || cField.type === "numeric") && cFieldMaxLength && newValue.length > cFieldMaxLength) {
                 return;
               }
 
@@ -1612,7 +1653,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
                 ...(cField.type === "number" && cFieldMax !== undefined && { max: cFieldMax }),
               },
               ...((isMobileNumberPrefix || isIntegerPrefixOrSuffix) && { maxLength: maxPrefixSuffixLength }),
-              ...((cField.type === "text" || cField.type === "textarea") && cFieldMaxLength && { maxLength: cFieldMaxLength }),
+              ...((cField.type === "text" || cField.type === "textarea" || cField.type === "number" || cField.type === "numeric") && cFieldMaxLength && { maxLength: cFieldMaxLength }),
             }}
           />
         </div>
@@ -1910,6 +1951,14 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
 
           // If bindTo has ".", take the first part (parent key), otherwise use the whole bindTo
           const parentKey = bindTo.includes(".") ? bindTo.split(".")[0] : bindTo;
+
+          // The page-level info card pseudo-field (conditions.infoCardText) has no configurable
+          // title — the app hardcodes it — so only its message (description) is editable
+          if (selectedField?.__pageInfoCard && parentKey === "label") return null;
+
+          // A read-only field is auto-filled, so the Required control is hidden (see the
+          // toggle case in RenderField) — skip the wrapper too or an empty card renders
+          if (panelItem?.fieldType === "toggle" && bindTo === "required" && selectedField?.readOnly === true) return null;
 
           const shouldShowToggle = !(
             (

@@ -2,6 +2,7 @@ import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { CampaignConfig } from "../../configs/CampaignConfig";
 import { Stepper, Toast, Button, Footer, Loader,SVG } from "@egovernments/digit-ui-components";
 import {
@@ -17,6 +18,7 @@ import { handleValidate } from "../../utils/setupCampaignValidators";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import useCampaignStore from "../../hooks/useCampaignStore";
+import CampaignSubmitContext from "../../components/CampaignSubmitContext";
 import { useDispatch } from "react-redux";
 import {
   clearUnifiedUploadData,
@@ -63,9 +65,16 @@ const SetupCampaign = () => {
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [storedHierarchy, setStoredHierarchy] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
-  const [hierarchyType, setDerivedHierarchyType] = useState(storedHierarchy?.name);
+  // The global store can still hold the previously visited campaign's hierarchy.
+  // For an existing campaign (id in URL) wait for the draft to supply it - a stale
+  // seed briefly drives boundary fetches and, on save, reads as a hierarchy change
+  // that wipes the campaign's configured boundaries.
+  const [hierarchyType, setDerivedHierarchyType] = useState(() =>
+    new URLSearchParams(location.search).get("id") ? undefined : storedHierarchy?.name
+  );
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState(0);
   const [totalFormData, setTotalFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -167,6 +176,12 @@ const SetupCampaign = () => {
       select: (data) => {
         return data?.[0];
       },
+      // Override hook defaults (gcTime: 0, staleTime: 0) to prevent background refetches.
+      // Without this, every SetupCampaign re-render finds data stale and triggers a refetch,
+      // causing cascading re-renders and unresponsive dropdowns on the boundary step.
+      // Explicit draftRefetch() calls (after update operations) still bypass staleTime.
+      staleTime: 600000,
+      gcTime: 1000000,
     },
   });
 
@@ -328,7 +343,7 @@ const SetupCampaign = () => {
             } else {
               payloadData.additionalDetails.cycleData = {};
             }
-            if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+            if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
                 totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
@@ -336,7 +351,9 @@ const SetupCampaign = () => {
               );
               payloadData.deliveryRules = [temp?.[0]];
               // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
-            } else {
+            } else if (!totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+              // Genuinely no delivery rules yet - send empty. A malformed (truthy non-array) value
+              // is left out of the payload entirely so it can't wipe the rules saved on the draft.
               payloadData.deliveryRules = [];
             }
             if (!payloadData?.startDate && !payloadData?.endDate) {
@@ -506,7 +523,7 @@ const SetupCampaign = () => {
             } else {
               payloadData.additionalDetails.cycleData = {};
             }
-            if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+            if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
                 totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
@@ -588,7 +605,7 @@ const SetupCampaign = () => {
             } else {
               payloadData.additionalDetails.cycleData = {};
             }
-            if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+            if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
                 totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
@@ -599,7 +616,9 @@ const SetupCampaign = () => {
 
               payloadData.deliveryRules = [temp?.[0]];
               // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
-            } else {
+            } else if (!totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+              // Genuinely no delivery rules yet - send empty. A malformed (truthy non-array) value
+              // is left out of the payload entirely so it can't wipe the rules saved on the draft.
               payloadData.deliveryRules = [];
             }
             if (!payloadData?.startDate && !payloadData?.endDate) {
@@ -613,14 +632,17 @@ const SetupCampaign = () => {
               setIsUpdating(true);
               await updateCampaign(payloadData, {
                 onError: (error, variables) => {
-                  if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
+                  if (filteredConfig?.[0]?.form?.[0]?.isLast || filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                     setShowToast({ key: "error", label: error?.message ? error?.message : error });
                   }
                 },
                 onSuccess: async (data) => {
                   updateUrlParams({ id: data?.CampaignDetails?.id });
                   draftRefetch();
-                  if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
+                  queryClient.invalidateQueries({ queryKey: ["SEARCH_CAMPAIGN"] });
+                  if (filteredConfig?.[0]?.form?.[0]?.isLast) {
+                    setCurrentKey(currentKey + 1);
+                  } else if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                     setCurrentKey(currentKey + 1);
                   }
                 },
@@ -698,6 +720,12 @@ const SetupCampaign = () => {
     }
 
     setIsSubmitting(true);
+    // Same resolution CycleConfiguration.js uses for its own isBednet render-guard (store first,
+    // URL projectType param as fallback) - the validator's Bednet check must match this exactly,
+    // otherwise the two can disagree about whether this is a Bednet campaign.
+    const selectedProjectTypeForValidation =
+      totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || searchParams.get("projectType");
+    const isBednetCampaign = /bednet/i.test(selectedProjectTypeForValidation || "");
     // validating the screen data on clicking next button
     const checkValid = handleValidate({
       formData,
@@ -709,6 +737,7 @@ const SetupCampaign = () => {
       setSummaryErrors,
       t,
       setShowToast,
+      isBednetCampaign,
     });
     if (checkValid === false) {
       return;
@@ -1153,6 +1182,18 @@ const SetupCampaign = () => {
     setShowToast(null);
   };
 
+  // The overlay loader below covers the whole screen, so step components must not render their own
+  // page loader underneath it - they read this flag and stay silent while it is up.
+  // Declared before the early returns below so the hook always runs (Rules of Hooks).
+  const submitStatus = useMemo(() => ({ isSubmitting: !!(loader || isUpdating || isDataCreating) }), [loader, isUpdating, isDataCreating]);
+
+  // Show loader while campaign data is being fetched for any editing flow.
+  // The existing isDraft/isPreview checks below miss cases like draft=null&isDraft=true
+  // where draftLoading is true but neither condition matches.
+  if (id && draftLoading) {
+    return <Loader page={true} variant={"PageLoader"} />;
+  }
+
   if (isPreview === "true" && !draftData) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
@@ -1206,8 +1247,9 @@ const SetupCampaign = () => {
   };
 
   return (
+    <CampaignSubmitContext.Provider value={submitStatus}>
     <React.Fragment>
-      {loader || (isUpdating && <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />)}
+      {(loader || isUpdating) && <Loader page={true} variant={"OverlayLoader"} loaderText={currentKey == 6 ? t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_ADDING_BOUNDARIES) : t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />}
       {/* {noAction !== "false" && (
         <Stepper
           customSteps={["HCM_CAMPAIGN_SETUP_DETAILS", "HCM_BOUNDARY_DETAILS", "HCM_DELIVERY_DETAILS", "HCM_UPLOAD_DATA", "HCM_REVIEW_DETAILS"]}
@@ -1224,7 +1266,7 @@ const SetupCampaign = () => {
             body: config?.body.filter((a) => !a.hideInEmployee),
           };
         })}
-        isDisabled={isDataCreating}
+        isDisabled={isDataCreating || isUpdating}
         onSubmit={onSubmit}
         showSecondaryLabel={currentKey > 1 ? true : false}
         secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t(I18N_KEYS.COMMON.HCM_BACK) : noAction === "false" ? null : t(I18N_KEYS.COMMON.HCM_BACK)}
@@ -1292,6 +1334,7 @@ const SetupCampaign = () => {
         />
       )}
     </React.Fragment>
+    </CampaignSubmitContext.Provider>
   );
 };
 

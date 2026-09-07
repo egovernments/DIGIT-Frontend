@@ -1,5 +1,6 @@
-import React, { useReducer, Fragment, useEffect, useState, act } from "react";
+import React, { useReducer, Fragment, useEffect, useState, useRef, act } from "react";
 import { useTranslation } from "react-i18next";
+import { useCampaignSubmitting } from "../../components/CampaignSubmitContext";
 import { TextInput, Loader, FieldV1,Card,LabelFieldPair,CardText,CardLabel, HeaderComponent, RadioButtons } from "@egovernments/digit-ui-components";
 import { deliveryConfig } from "../../configs/deliveryConfig";
 import getDeliveryConfig from "../../utils/getDeliveryConfig";
@@ -113,7 +114,6 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   const campaignNumber = searchParams.get("campaignNumber");
   const selectedProjectType =
     formStorageData?.HCM_CAMPAIGN_TYPE?.projectType?.code || searchParams.get("projectType");
-  const campaignName = formStorageData?.HCM_CAMPAIGN_NAME?.campaignName;
   const [filteredDeliveryConfig, setFilterDeliveryConfig] = useState(null);
   const { isLoading: deliveryConfigLoading, data } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -184,7 +184,12 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   const tempSession = formStorageData;
   const [state, dispatch] = useReducer(reducer, initialState(saved, filteredDeliveryConfig, refetch));
   const { cycleConfgureDate, cycleData } = state;
+  const hasUserEditedCycleDatesRef = useRef(false);
+  const previousProjectTypeRef = useRef(selectedProjectType);
   const { t } = useTranslation();
+  const todayStr = convertEpochToDate(Date.now());
+  const clampToToday = (dateStr) => (dateStr && dateStr > todayStr ? dateStr : todayStr);
+  const isParentSubmitting = useCampaignSubmitting();
   const [dateRange, setDateRange] = useState({
     startDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate || convertEpochToDate(campaignData?.startDate),
     endDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate || convertEpochToDate(campaignData?.endDate),
@@ -230,6 +235,16 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   // }, [filteredDeliveryConfig, deliveryConfigLoading]);
 
   useEffect(() => {
+    // Compare the project type itself, not filteredDeliveryConfig's object identity - the
+    // underlying MDMS query (useCustomMDMS) also has staleTime:0/cacheTime:0, so a refetch can
+    // hand back a content-equivalent-but-new-reference config even when nothing meaningful
+    // (the actual project type) changed, which defeated this guard via a different trigger.
+    const projectTypeChanged = previousProjectTypeRef.current !== selectedProjectType;
+    previousProjectTypeRef.current = selectedProjectType;
+    if (hasUserEditedCycleDatesRef.current && !projectTypeChanged) {
+      return;
+    }
+
     // const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
     const sessionData = formStorageData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
     const campaignCycleData = campaignData?.additionalDetails?.cycleData;
@@ -287,37 +302,86 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     dispatch({ type: "UPDATE_OBSERVATION_STRATEGY", payload: value });
   };
 
-  const selectToDate = (index, d) => {
+  const selectToDate = (index, d, { isAutoFill = false } = {}) => {
+    // The Bednet auto-fill effect below calls this internally, before MDMS's IsCycleDisable
+    // (and cycle/delivery counts) may have loaded yet. Marking that as a "user edit" would
+    // permanently stop the one RELOAD that's supposed to pick up that fresh MDMS value (see
+    // the RELOAD effect's hasUserEditedCycleDatesRef guard) - only a real onChange should count.
+    if (!isAutoFill) hasUserEditedCycleDatesRef.current = true;
     const localDate = new Date(d);
     localDate.setHours(0, 0, 0, 0); // Local midnight
     // Add 5.5 hours so UTC becomes local midnight
     const adjustedDate = new Date(localDate.getTime() + 19800000);
     const isoString = adjustedDate.toISOString();
 
-    // Check if the new toDate conflicts with subsequent cycle dates
-    // Find the next cycle's fromDate
-    const nextCycleData = cycleData?.find((j) => j.key === index + 1);
-    if (nextCycleData?.fromDate) {
-      const newToDate = new Date(isoString);
-      const nextFromDate = new Date(nextCycleData.fromDate);
-
-      // If new toDate is >= next cycle's fromDate, clear subsequent cycles
-      if (newToDate >= nextFromDate) {
-        dispatch({ type: "CLEAR_SUBSEQUENT_CYCLES", index });
+    const currentCycleData = cycleData?.find((j) => j.key === index);
+    if (currentCycleData?.fromDate) {
+      if (new Date(isoString) <= new Date(currentCycleData.fromDate)) return;
+    } else {
+      const previousCycleData = cycleData?.find((j) => j.key === index - 1);
+      if (previousCycleData?.toDate) {
+        const minAllowed = new Date(new Date(previousCycleData.toDate).getTime() + 86400000);
+        if (new Date(isoString) < minAllowed) return;
       }
     }
 
     dispatch({ type: "SELECT_TO_DATE", index, payload: isoString });
+    // Editing this cycle's end date invalidates every cycle after it, whether or not the new
+    // value actually overlaps the next one - always clear cycle index+1 onward so the user has
+    // to re-confirm them, rather than only when a specific numeric conflict is detected. A no-op
+    // if there's nothing there yet.
+    dispatch({ type: "CLEAR_SUBSEQUENT_CYCLES", index });
   };
 
-  const selectFromDate = (index, d) => {
+  const getToDateMinFallback = (cycleKey) => {
+    const previous = cycleData?.find((j) => j.key === cycleKey - 1);
+    return previous?.toDate ? new Date(new Date(previous.toDate).getTime() + 86400000).toISOString().split("T")[0] : null;
+  };
+
+  const getFromDateMinFallback = (cycleKey) => {
+    const previous = cycleData?.find((j) => j.key === cycleKey - 1);
+    const anchor = previous?.toDate || previous?.fromDate;
+    return anchor ? new Date(new Date(anchor).getTime() + 86400000).toISOString().split("T")[0] : dateRange?.startDate;
+  };
+
+  const selectFromDate = (index, d, { isAutoFill = false } = {}) => {
+    // Same reasoning as selectToDate above.
+    if (!isAutoFill) hasUserEditedCycleDatesRef.current = true;
     const localDate = new Date(d);
     localDate.setHours(0, 0, 0, 0); // Local midnight
     // Add 5.5 hours so UTC becomes local midnight
     const adjustedDate = new Date(localDate.getTime() + 19800000);
     const isoString = adjustedDate.toISOString();
+
+    const previousCycleData = cycleData?.find((j) => j.key === index - 1);
+    const previousCycleAnchor = previousCycleData?.toDate || previousCycleData?.fromDate;
+    if (previousCycleAnchor && new Date(isoString) < new Date(new Date(previousCycleAnchor).getTime() + 86400000)) {
+      return;
+    }
+    const currentCycleData = cycleData?.find((j) => j.key === index);
+    if (currentCycleData?.toDate && new Date(isoString) >= new Date(currentCycleData.toDate)) {
+      dispatch({ type: "SELECT_TO_DATE", index, payload: null });
+    }
+
     dispatch({ type: "SELECT_FROM_DATE", index, payload: isoString });
+    // Editing this cycle's start date invalidates every cycle after it, whether or not the new
+    // value actually overlaps the next one - always clear cycle index+1 onward so the user has
+    // to re-confirm them, rather than only when a specific numeric conflict is detected. A no-op
+    // if there's nothing there yet.
+    dispatch({ type: "CLEAR_SUBSEQUENT_CYCLES", index });
   };
+
+  // Bednet (ITN) is a single-round campaign: cycle dates are not asked, they
+  // mirror the campaign dates (the date pickers are hidden below)
+  const isBednet = /bednet/i.test(selectedProjectType || "");
+  useEffect(() => {
+    if (!isBednet || !dateRange?.startDate || !dateRange?.endDate) return;
+    for (let index = 1; index <= (cycleConfgureDate?.cycle || 1); index++) {
+      const existing = cycleData?.find((j) => j.key === index);
+      if (!existing?.fromDate) selectFromDate(index, dateRange.startDate, { isAutoFill: true });
+      if (!existing?.toDate) selectToDate(index, dateRange.endDate, { isAutoFill: true });
+    }
+  }, [isBednet, dateRange?.startDate, dateRange?.endDate, cycleConfgureDate?.cycle, cycleData?.length]);
 
   useEffect(() => {
     setKey(currentKey);
@@ -346,7 +410,9 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   };
 
   if (isLoading || campaignDataLoading || deliveryConfigLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The flow already shows its overlay loader while saving - do not stack a second loader
+    if (isParentSubmitting) return null;
+    return <Loader page={true} variant={"PageLoader"} />
   }
 
   return (
@@ -355,18 +421,16 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
         <div className="card-container2">
           <div style={{ marginBottom: "1.5rem" }}>
             <Card>
-              <TagComponent campaignName={campaignName} />
+              {dateRange?.startDate && dateRange?.endDate && (() => {
+                const startFormatted = convertEpochToNewDateFormat(dateRange.startDate);
+                const endFormatted = convertEpochToNewDateFormat(dateRange.endDate);
+                return startFormatted && endFormatted ? (
+                  <TagComponent campaignName={`${startFormatted} - ${endFormatted}`} />
+                ) : null;
+              })()}
               <HeaderComponent className="cycle-configuration-heading">
                 {t(`CAMPAIGN_PROJECT_${selectedProjectType.toUpperCase()}`)}
               </HeaderComponent>
-              {tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate && tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate && (
-                <p className="dates-description" style={{margin:"0rem"}}>
-                  {`${convertEpochToNewDateFormat(tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)} - ${convertEpochToNewDateFormat(
-                    tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
-                  )}`}
-                </p>
-              )}
-              <CardText style={{fontSize:"19px",color:"#505a5f"}}>{t(`CAMPAIGN_CYCLE_CONFIGURE_HEADING_${selectedProjectType.toUpperCase()}`)}</CardText>
               <LabelFieldPair>
                 <CardLabel className="cycleBold" style={{ fontWeight: "700",width:"40%" }}>
                   {t(I18N_KEYS.PAGES.CAMPAIGN_NO_OF_CYCLE)}
@@ -419,6 +483,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               </LabelFieldPair>
             </Card>
           </div>
+          {!isBednet && (
           <Card className="campaign-counter-container">
             <HeaderComponent className="cycle-configuration-heading" style={{ marginBottom: "1.5rem" }}>
               {t(I18N_KEYS.PAGES.CAMPAIGN_ADD_START_END_DATE_TEXT)}
@@ -441,19 +506,12 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                     }
                     withoutLabel={true}
                     disabled={!isCycleEnabled(index)}
-                    min={
-                      index > 0 && cycleData?.find((j) => j.key === index)?.toDate
-                        ? new Date(new Date(cycleData?.find((j) => j.key === index)?.toDate)?.getTime() + 86400000)?.toISOString()?.split("T")?.[0]
-                        : dateRange?.startDate
-                    }
+                    min={clampToToday(getFromDateMinFallback(index + 1))}
                     max={dateRange?.endDate}
                     populators={{
                       newDateFormat: true,
                       max: dateRange?.endDate,
-                      min:
-                        index > 0 && cycleData?.find((j) => j.key === index)?.toDate
-                          ? new Date(new Date(cycleData.find((j) => j.key === index)?.toDate).getTime() + 86400000).toISOString().split("T")[0]
-                          : dateRange?.startDate,
+                      min: clampToToday(getFromDateMinFallback(index + 1)),
                     }}
                     onChange={(d) => selectFromDate(index + 1, d)}
                   />
@@ -467,22 +525,24 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                         : ""
                     }
                     withoutLabel={true}
-                    disabled={!isCycleEnabled(index)}
-                    min={
+                    disabled={!isCycleEnabled(index) || !cycleData?.find((j) => j.key === index + 1)?.fromDate}
+                    min={clampToToday(
                       cycleData?.find((j) => j.key === index + 1)?.fromDate
                         ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
                             ?.toISOString()
                             ?.split("T")?.[0]
-                        : null
-                    }
+                        : getToDateMinFallback(index + 1)
+                    )}
                     populators={{
                       newDateFormat: true,
                       max: dateRange?.endDate,
-                      min: cycleData?.find((j) => j.key === index + 1)?.fromDate
-                        ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
-                            ?.toISOString()
-                            ?.split("T")?.[0]
-                        : null,
+                      min: clampToToday(
+                        cycleData?.find((j) => j.key === index + 1)?.fromDate
+                          ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
+                              ?.toISOString()
+                              ?.split("T")?.[0]
+                          : getToDateMinFallback(index + 1)
+                      ),
                     }}
                     max={dateRange?.endDate}
                     onChange={(d) => selectToDate(index + 1, d)}
@@ -491,6 +551,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               </LabelFieldPair>
             ))}
           </Card>
+          )}
         </div>
       </div>
     </>

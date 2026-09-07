@@ -44,6 +44,12 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
   // isUnifiedCampaign is always true (user toggle removed, unified mode is the default)
   const hasUnifiedResource = totalFormData?.additionalDetails?.isUnifiedCampaign ?? params?.additionalDetails?.isUnifiedCampaign ?? true;
 
+  // Round type comes from the CycleSelection step as HCM_SINGLE_ROUND / HCM_MULTI_ROUND. Persist it
+  // so the round tag can be shown before delivery rules exist (a draft has no cycles yet). Falls
+  // back to whatever is already on the campaign so edits do not drop it.
+  const cycleSelection = formData?.CycleSelection || totalFormData?.CycleSelection || params?.CycleSelection;
+  const roundType = cycleSelection === "HCM_MULTI_ROUND" ? "MULTI_ROUND" : cycleSelection === "HCM_SINGLE_ROUND" ? "SINGLE_ROUND" : params?.additionalDetails?.roundType;
+
   return {
     CampaignDetails: {
       hierarchyType: hierarchyType,
@@ -68,6 +74,7 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
           cycleConfgureDate: cycleConfgureDateFromForm,
         },
         isUnifiedCampaign: hasUnifiedResource,
+        ...(roundType ? { roundType } : {}),
       },
     },
   };

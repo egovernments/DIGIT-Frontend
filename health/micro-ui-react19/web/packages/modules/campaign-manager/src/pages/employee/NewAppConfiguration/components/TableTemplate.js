@@ -110,7 +110,7 @@ const TableTemplate = ({ field, t, fieldTypeMasterData }) => {
         style={{
           width: "100%",
           overflowX: "auto",
-          border: "1px solid #e0e0e0",
+          border: "1px solid #D6D5D4",
           borderRadius: "4px",
           position: "relative",
           zIndex: 0,

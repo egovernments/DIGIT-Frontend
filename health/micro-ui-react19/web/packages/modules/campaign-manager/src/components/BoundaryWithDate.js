@@ -11,9 +11,20 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
   // const { t } = useTranslation();
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
   const today = Digit.Utils.date.getDate(Date.now());
+  // newDateFormat FieldV1 fires onChange(isoString) not onChange(event); extract local YYYY-MM-DD
+  const isoToLocalDate = (iso) => {
+    if (!iso) return undefined;
+    const dt = new Date(iso);
+    return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
+  };
   const [startDate, setStartDate] = useState(project?.startDate ? Digit.Utils.date.getDate(project?.startDate) : ""); // Set default start date to today
   const [endDate, setEndDate] = useState(project?.endDate ? Digit.Utils.date.getDate(project?.endDate) : ""); // Default end date
   const [cycleDates, setCycleDates] = useState(null);
+  // Field-level errors per cycle ({ [cycleIndex]: { startDate: errorKey, endDate: errorKey } }).
+  // This screen edits an already-configured campaign - the admin may not remember every
+  // adjacent cycle's dates, so unlike the campaign-creation wizard, a bad pick here is left in
+  // place with an inline error rather than being silently rejected or clearing other cycles.
+  const [cycleErrors, setCycleErrors] = useState({});
 
   useEffect(() => {
     setStartDate(project?.startDate ? Digit.Utils.date.getDate(project?.startDate) : "");
@@ -47,11 +58,55 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
     }
   };
 
-  const handleCycleDateChange = ({ date, endDate = false, cycleIndex }) => {
+  const handleCycleDateChange = ({ date, endDate: isEndDateField = false, cycleIndex }) => {
     if (typeof date === "undefined" || date <= today) {
       return null;
     }
-    if (!endDate) {
+
+    // Compare against adjacent cycles as plain "YYYY-MM-DD" strings (lexicographically
+    // sortable) - same source (cycleDates) the min/max populators already read from. This
+    // only computes and records an error; it does not change what gets dispatched below.
+    // Note: the parameter above is named `isEndDateField` (not `endDate`) specifically so it
+    // doesn't shadow the outer `endDate` state (the campaign's own end date), which the checks
+    // below need to reference directly.
+    const cycleArrayIndex = cycleDates?.findIndex((c) => c.cycleIndex === cycleIndex);
+    const currentCycle = cycleArrayIndex > -1 ? cycleDates?.[cycleArrayIndex] : null;
+    const previousCycle = cycleArrayIndex > 0 ? cycleDates?.[cycleArrayIndex - 1] : null;
+
+    let errorKey = null;
+    if (!isEndDateField) {
+      const previousAnchor = previousCycle?.endDate || previousCycle?.startDate;
+      if (previousAnchor && date <= previousAnchor) {
+        errorKey = "HCM_CYCLE_START_BEFORE_PREVIOUS_CYCLE_ERROR";
+      } else if (currentCycle?.endDate && date >= currentCycle.endDate) {
+        errorKey = "HCM_CYCLE_START_AFTER_OWN_END_ERROR";
+      } else if (startDate && date < startDate) {
+        // Every cycle date must fall within the overall campaign's own date range - the
+        // field's `min`/`max` populators are meant to enforce this while picking, but (same
+        // as elsewhere in this codebase) typing directly into the newDateFormat picker's text
+        // input bypasses them, so this needs its own explicit check.
+        errorKey = "HCM_CYCLE_START_BEFORE_CAMPAIGN_START_ERROR";
+      } else if (endDate && date > endDate) {
+        errorKey = "HCM_CYCLE_START_AFTER_CAMPAIGN_END_ERROR";
+      }
+    } else if (currentCycle?.startDate) {
+      if (date <= currentCycle.startDate) {
+        errorKey = "HCM_CYCLE_END_BEFORE_OWN_START_ERROR";
+      } else if (endDate && date > endDate) {
+        errorKey = "HCM_CYCLE_END_AFTER_CAMPAIGN_END_ERROR";
+      }
+    } else if (previousCycle?.endDate && date <= previousCycle.endDate) {
+      errorKey = "HCM_CYCLE_END_BEFORE_PREVIOUS_CYCLE_ERROR";
+    } else if (endDate && date > endDate) {
+      errorKey = "HCM_CYCLE_END_AFTER_CAMPAIGN_END_ERROR";
+    }
+
+    setCycleErrors((prev) => ({
+      ...prev,
+      [cycleIndex]: { ...prev?.[cycleIndex], [isEndDateField ? "endDate" : "startDate"]: errorKey },
+    }));
+
+    if (!isEndDateField) {
       dateReducerDispatch({
         type: "CYCLE_START_DATE",
         date: date,
@@ -94,16 +149,15 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
             placeholder={t(I18N_KEYS.COMMON.HCM_START_DATE)}
             populators={
               today >= startDate
-                ? {}
+                ? { newDateFormat: true }
                 : {
-                    validation: {
-                      min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
-                    },
+                    newDateFormat: true,
+                    min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
                   }
             }
             onChange={(d) => {
               handleDateChange({
-                date: d?.target?.value,
+                date: isoToLocalDate(d),
               });
             }}
           />
@@ -114,16 +168,15 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
             nonEditable={endDate?.length > 0 && today >= endDate ? true : false}
             placeholder={t(I18N_KEYS.COMMON.HCM_END_DATE)}
             populators={{
-              validation: {
-                min:
-                  startDate >= today
-                    ? Digit.Utils.date.getDate(new Date(startDate).getTime() + 2 * ONE_DAY_IN_MS)
-                    : Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
-              },
+              newDateFormat: true,
+              min:
+                startDate >= today
+                  ? Digit.Utils.date.getDate(new Date(startDate).getTime() + 2 * ONE_DAY_IN_MS)
+                  : Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
             }}
             onChange={(d) => {
               handleDateChange({
-                date: d?.target?.value,
+                date: isoToLocalDate(d),
                 endDate: true,
               });
             }}
@@ -145,23 +198,22 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
                   nonEditable={item?.startDate?.length > 0 && today >= item?.startDate ? true : false}
                   value={item?.startDate}
                   placeholder={t(I18N_KEYS.COMMON.HCM_START_DATE)}
+                  error={cycleErrors?.[item?.cycleIndex]?.startDate ? t(cycleErrors[item.cycleIndex].startDate) : ""}
                   populators={{
-                    validation: {
-                      min:
-                        index > 0 && !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime())
-                          ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime() + ONE_DAY_IN_MS)
-                              ?.toISOString()
-                              ?.split("T")?.[0]
-                          : today >= startDate
-                          ? today
-                          : startDate,
-                      max: endDate,
-                    },
+                    newDateFormat: true,
+                    min:
+                      index > 0 && !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime())
+                        ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime() + ONE_DAY_IN_MS)
+                            ?.toISOString()
+                            ?.split("T")?.[0]
+                        : today >= startDate
+                        ? today
+                        : startDate,
+                    max: endDate,
                   }}
                   onChange={(d) => {
-                    // setStartValidation(true);
                     handleCycleDateChange({
-                      date: d?.target?.value,
+                      date: isoToLocalDate(d),
                       cycleIndex: item?.cycleIndex,
                     });
                   }}
@@ -178,21 +230,21 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
                       : false
                   }
                   placeholder={t(I18N_KEYS.COMMON.HCM_END_DATE)}
+                  error={cycleErrors?.[item?.cycleIndex]?.endDate ? t(cycleErrors[item.cycleIndex].endDate) : ""}
                   populators={{
-                    validation: {
-                      min: !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime())
-                        ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime() + ONE_DAY_IN_MS)
-                            ?.toISOString()
-                            ?.split("T")?.[0]
-                        : today >= startDate
-                        ? today
-                        : startDate,
-                      max: endDate,
-                    },
+                    newDateFormat: true,
+                    min: !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime())
+                      ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime() + ONE_DAY_IN_MS)
+                          ?.toISOString()
+                          ?.split("T")?.[0]
+                      : today >= startDate
+                      ? today
+                      : startDate,
+                    max: endDate,
                   }}
                   onChange={(d) => {
                     handleCycleDateChange({
-                      date: d?.target?.value,
+                      date: isoToLocalDate(d),
                       endDate: true,
                       cycleIndex: item?.cycleIndex,
                     });

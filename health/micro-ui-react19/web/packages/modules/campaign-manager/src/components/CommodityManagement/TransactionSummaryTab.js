@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader, Button, Toast } from "@egovernments/digit-ui-components";
+import { Loader, Button, Toast, Tag } from "@egovernments/digit-ui-components";
 import DataSyncCard from "./DataSyncCard";
 import SummaryCard from "./SummaryCard";
 import ReusableTableWrapper from "./ReusableTableWrapper";
@@ -9,6 +9,7 @@ import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import usePaginatedSearch from "../../hooks/usePaginatedSearch";
 
 const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   const getFieldValue = (fieldKey) => {
@@ -95,8 +96,9 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   // Fetch project facilities using the selected project (passed from CommodityDashboard)
   const projectFacilityCriteria = useMemo(() => ({
     url: `${getProjectServiceUrl()}/facility/v1/_search`,
-    params: { tenantId, limit: 100, offset: 0 },
+    params: { tenantId },
     body: { ProjectFacility: { projectId: [projectId] } },
+    dataKey: "ProjectFacilities",
     config: {
       enabled: !!projectId && !!tenantId,
       select: (data) => {
@@ -108,7 +110,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       },
     },
   }), [tenantId, projectId]);
-  const { data: projectFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
+  const { data: projectFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = usePaginatedSearch(projectFacilityCriteria);
 
   // Extract unique facility IDs and product variant IDs from stock data
   const { facilityIds, productVariantIds } = useMemo(() => {
@@ -126,8 +128,9 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   // Fetch facility details by IDs and build name lookup map
   const facilitySearchCriteria = useMemo(() => ({
     url: `/facility/v1/_search`,
-    params: { tenantId, limit: facilityIds.length || 10, offset: 0 },
+    params: { tenantId },
     body: { Facility: { id: facilityIds } },
+    dataKey: "Facilities",
     config: {
       enabled: !!facilityIds.length && !!tenantId,
       select: (data) => {
@@ -154,7 +157,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       },
     },
   }), [tenantId, facilityIds]);
-  const { data: facilityMaps, isLoading: facilitiesLoading } = Digit.Hooks.useCustomAPIHook(facilitySearchCriteria);
+  const { data: facilityMaps, isLoading: facilitiesLoading } = usePaginatedSearch(facilitySearchCriteria);
   const facilityNameMap = facilityMaps?.nameMap || {};
 
   // Fetch product variants
@@ -382,25 +385,22 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRANSACTION_TYPE), key: "transactionType", grow: 1, sortable: false },
 ];
 
-  // Helper to map status to CSS class
-  const getStatusClass = (status) => {
-    const classMap = {
-      Completed: "cm-status-badge--completed",
-      Received: "cm-status-badge--completed",
-      "In-Transit": "cm-status-badge--in-transit",
-      Rejected: "cm-status-badge--rejected",
-      Returned: "cm-status-badge--completed",
-      "Return Initiated": "cm-status-badge--in-transit",
-      "Return Rejected": "cm-status-badge--rejected",
+  const getStatusTagType = (status) => {
+    const typeMap = {
+      Completed: "success",
+      Received: "success",
+      Returned: "success",
+      "In-Transit": "warning",
+      "Return Initiated": "warning",
+      Rejected: "error",
+      "Return Rejected": "error",
     };
-    return classMap[status] || "cm-status-badge--default";
+    return typeMap[status] || "monochrome";
   };
 
   const customCellRenderer = {
     status: (row) => (
-      <span className={`cm-status-badge ${getStatusClass(row.status)}`}>
-        {row.status}
-      </span>
+      <Tag label={row.status} type={getStatusTagType(row.status)} showIcon={false} stroke={false} />
     ),
     sentFrom: (row) => (
       <div>
@@ -452,15 +452,12 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       return "N/A";
     },
     transactionType: (row) => (
-      <span
-        className={`cm-tx-type-badge ${
-          row.transactionType === "Reverse - Logistics"
-            ? "cm-tx-type-badge--reverse"
-            : "cm-tx-type-badge--logistics"
-        }`}
-      >
-        {row.transactionType}
-      </span>
+      <Tag
+        label={row.transactionType}
+        type={row.transactionType === "Reverse - Logistics" ? "warning" : "success"}
+        showIcon={false}
+        stroke={false}
+      />
     ),
   };
 
@@ -497,7 +494,6 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
           { label: "HCM_TOTAL_TRANSACTIONS", value: filteredSummaryStats.total },
           { label: "HCM_TOTAL_COMPLETED", value: filteredSummaryStats.completed },
           { label: "HCM_TOTAL_PENDING", value: filteredSummaryStats.pending },
-          { label: "HCM_TOTAL_REJECTED", value: filteredSummaryStats.rejected },
           { label: "HCM_TOTAL_RETURNED", value: filteredSummaryStats.returned },
         ]}
       />

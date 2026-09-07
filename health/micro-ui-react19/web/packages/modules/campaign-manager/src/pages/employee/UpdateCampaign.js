@@ -338,7 +338,7 @@ const UpdateCampaign = () => {
                 type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
               })) || [];
             }
-            const hasUnifiedResource = temp?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
+            const hasUnifiedResource = isUnifiedCampaign || temp?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
             payloadData.resources = temp;
             payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
             payloadData.additionalDetails = {
@@ -432,7 +432,7 @@ const UpdateCampaign = () => {
                 type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
               })) || [];
             }
-            const hasUnifiedResource = tempResources?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
+            const hasUnifiedResource = isUnifiedCampaign || tempResources?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
             payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
             payloadData.additionalDetails = {
               beneficiaryType:
@@ -521,7 +521,7 @@ const UpdateCampaign = () => {
                 type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
               })) || [];
             }
-            const hasUnifiedResource = tempResources?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
+            const hasUnifiedResource = isUnifiedCampaign || tempResources?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
 
             payloadData.resources = tempResources;
             payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
