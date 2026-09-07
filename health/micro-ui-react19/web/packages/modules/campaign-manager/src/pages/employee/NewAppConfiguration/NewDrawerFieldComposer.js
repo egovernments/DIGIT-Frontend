@@ -1378,6 +1378,11 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
   const localizedValue = useCustomT(fieldValue);
   const translatedValue = shouldSkipLocalization ? fieldValue : localizedValue;
 
+  // Placeholder: campaign-module localization first (where APPCONFIG_* codes
+  // are seeded), then i18next — t() alone shows the raw code because these
+  // codes live in the campaign locale module, not the ones i18next loads.
+  const innerLabelText = useCustomT(cField.innerLabel || "");
+
   const [conditionalLocalValue, setConditionalLocalValue] = useState(translatedValue === true ? "" : translatedValue || "");
   const conditionalDebounceRef = useRef(null);
   // Ref to track if user is actively editing (prevents useEffect from overwriting local value)
@@ -1591,7 +1596,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
               handleConditionalChange(newValue);
             }}
             onBlur={handleConditionalBlur}
-            placeholder={cField.innerLabel ? t(cField.innerLabel) : null}
+            placeholder={cField.innerLabel ? (innerLabelText || t(cField.innerLabel)) : null}
             populators={{
               fieldPairClassName: "drawer-toggle-conditional-field",
               validation: {
