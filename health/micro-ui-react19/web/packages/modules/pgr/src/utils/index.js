@@ -163,9 +163,10 @@ export const formPayloadToCreateComplaint = (formData, tenantId, user) => {
     "type": "EMPLOYEE",
     "tenantId": tenantId,
   } : user;
-  
+
   const boundaryCode = formData?.SelectedBoundary?.code;
   const localityCode = boundaryCode;
+  const hierarchyType = Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED")?.hierarchyType || null;
 
   const safeAdditionalDetail = {
     supervisorName : formData?.SupervisorName?.trim()?.length > 0 ? formData?.SupervisorName?.trim() : null,
@@ -186,6 +187,7 @@ export const formPayloadToCreateComplaint = (formData, tenantId, user) => {
       "user": userInfo,
       "isDeleted": false,
       "rowVersion": 1,
+      "hierarchyType": hierarchyType,
       "address": {
         "landmark": formData?.landmark,
         "buildingName": formData?.AddressOne,

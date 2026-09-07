@@ -538,6 +538,7 @@ const CreateChecklist = () => {
       if (data?.success) {
         // Updated success condition check
         navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
+          replace: true,
           state: {
             message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
             preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",

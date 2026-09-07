@@ -185,6 +185,16 @@ const campaignStore = configureStore({
 
 // --- Hydration: Read single key from IndexedDB on app mount ---
 async function hydrateFromIndexedDB() {
+  // campaignStore is a module-level singleton — hydration.hydrated stays true even
+  // when the React component tree (App / HydrationGate) unmounts during SPA navigation
+  // (e.g. user visits the DIGIT employee home and returns to the campaign module).
+  // On remount, HydrationGate calls this function again. Without this guard, the async
+  // IDB restore would complete AFTER the synchronous resetCreateCampaignData() calls
+  // (CampaignHome's effect, App's effect), writing stale campaign data back into the
+  // store and pre-filling the "create from scratch" form with the previous draft.
+  if (campaignStore.getState().hydration.hydrated) {
+    return;
+  }
   try {
     const persisted = await getBoundaryData(IDB_PERSIST_KEY);
     if (persisted) {

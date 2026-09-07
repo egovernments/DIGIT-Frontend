@@ -4,7 +4,8 @@ import React, { Fragment, useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
-import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit, Translate, Assessment } from "@egovernments/digit-ui-svg-components";
+import { CustomSVG } from "@egovernments/digit-ui-components";
+import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit, Translate, DocumentIconSolid } from "@egovernments/digit-ui-svg-components";
 import { transformUpdateCreateData } from "../../../utils/transformUpdateCreateData";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
@@ -197,6 +198,7 @@ const CampaignDetails = () => {
   const retryTimerRef = useRef(null);
   const afterUpload = location.state?.afterUpload;
   const [isPolling, setIsPolling] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!afterUpload) return;
@@ -399,7 +401,7 @@ const CampaignDetails = () => {
                   : t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SELECT_BOUNDARY_BUTTON),
               navLink:
                 campaignData?.status === "created" || campaignData?.parentId
-                  ? `update-campaign?key=1&parentId=${campaignData?.id}&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}&isUnifiedCampaign=${campaignData?.additionalDetails?.isUnifiedCampaign} `
+                  ? `update-campaign?key=1&parentId=${campaignData?.id}&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}&isUnifiedCampaign=${campaignData?.additionalDetails?.isUnifiedCampaign}`
                   : `setup-campaign?key=5&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
               type: campaignData?.boundaries?.length > 0 || campaignData?.parentId ? "secondary" : "primary",
               icon: <GlobeLocationPin fill={"#c84c0e"} />,
@@ -500,7 +502,11 @@ const CampaignDetails = () => {
                       : "primary",
                     icon: (
                       <UploadCloud
-                        fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"}
+                        fill={
+                          campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId
+                            ? "#c5c5c5"
+                            : "#C84C0E"
+                        }
                       />
                     ),
                     disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
@@ -526,7 +532,11 @@ const CampaignDetails = () => {
                     type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
                     icon: (
                       <UploadCloud
-                        fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"}
+                        fill={
+                          campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId
+                            ? "#c5c5c5"
+                            : "#C84C0E"
+                        }
                       />
                     ),
                     disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
@@ -535,28 +545,29 @@ const CampaignDetails = () => {
               ],
             },
           ]),
-      {
-        noCardStyle: true,
-        sections: [
-          {
-            type: "COMPONENT",
-            component: "ViewDetailComponent",
-            noCardStyle: true,
-            props: {
-              headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_HEADING),
-              desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_DESC),
-              buttonLabel: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_BUTTON),
-              buttonId: "campaign-details-page-button-setup-attendance",
-              navLink: `setup-attendance?campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
-              type: "primary",
-              icon: <Groups fill={campaignData?.boundaries?.length <= 0 || campaignData?.status !== "created" ? "#C5C5C5" : "#C84C0E"} width={"40px"} height={"40px"} />,
-              // disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status !== "created" || campaignData?.parentId, //todo check
-              disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status !== "created",
-
+      ...(campaignData?.boundaries?.length <= 0 || (campaignData?.status !== "created" && !campaignData?.parentId)
+        ? []
+        : [
+            {
+              noCardStyle: true,
+              sections: [
+                {
+                  type: "COMPONENT",
+                  component: "ViewDetailComponent",
+                  noCardStyle: true,
+                  props: {
+                    headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_HEADING),
+                    desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_DESC),
+                    buttonLabel: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_BUTTON),
+                    buttonId: "campaign-details-page-button-setup-attendance",
+                    navLink: `setup-attendance?campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
+                    type: "primary",
+                    icon: <Groups fill={"#C84C0E"} width={"40px"} height={"40px"} />,
+                  },
+                },
+              ],
             },
-          },
-        ],
-      },
+          ]),
       {
         noCardStyle: true,
         sections: [
@@ -620,7 +631,7 @@ const CampaignDetails = () => {
                     : `campaign-details-page-button-reports-configuration`,
                 type: isReportsConfigured ? "secondary" : "primary",
                 navLink: `reports-configuration?campaignNumber=${campaignData?.campaignNumber}&projectType=${campaignData?.projectType}&tenantId=${tenantId}${isReportsConfigured ? "&edit=true" : ""}`,
-                icon: <Assessment fill={isOngoingCampaign ? "#c5c5c5" : "#C84C0E"} width={"40px"} height={"40px"} />,
+                icon: <CustomSVG.DocumentIconSolid fill={isOngoingCampaign ? "#c5c5c5" : "#C84C0E"} width={"40px"} height={"40px"} />,
                 disabled: isOngoingCampaign,
               };
             })(),
@@ -661,12 +672,14 @@ const CampaignDetails = () => {
   };
 
   const onsubmit = async () => {
+    if (isSubmitting) return;
     const valideDates = validateCampaignDates(campaignData?.deliveryRules?.[0]?.cycles, campaignData);
     if (!valideDates) {
       setShowToast({ key: "error", label: "INVALID_DATES" });
       return;
     }
-    await mutationUpdate.mutate(
+    setIsSubmitting(true);
+    mutationUpdate.mutate(
       {
         url: `/project-factory/v1/project-type/update`,
         body: transformUpdateCreateData({ campaignData }),
@@ -695,6 +708,7 @@ const CampaignDetails = () => {
           );
         },
         onError: (error, result) => {
+          setIsSubmitting(false);
           const errorCode = error?.response?.data?.Errors?.[0]?.code;
           setShowToast({ key: "error", label: errorCode ? t(errorCode) : t(I18N_KEYS.CAMPAIGN_CREATE.ERROR_CREATE_CAMPAIGN) });
         },
@@ -738,6 +752,8 @@ const CampaignDetails = () => {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
+  const isMutationLoading = isSubmitting;
+
   const week = `${convertEpochToNewDateFormat(campaignData?.startDate)} - ${convertEpochToNewDateFormat(campaignData?.endDate)}`;
 
   const closeToast = () => {
@@ -746,6 +762,7 @@ const CampaignDetails = () => {
 
   return (
     <>
+      {isMutationLoading && <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_CREATION_PROGRESS)}/>}
       <div className="campaign-details-header">
         <div style={{ display: "flex", alignItems: "baseline", gap: "1rem" }}>
           <HeaderComponent className={"date-header"}>{campaignData?.campaignName}</HeaderComponent>
@@ -828,6 +845,7 @@ const CampaignDetails = () => {
                   title={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CREATE_CAMPAIGN)}
                   onClick={onsubmit}
                   isDisabled={
+                    isMutationLoading ||
                     campaignData?.boundaries?.length === 0 ||
                     campaignData?.deliveryRules?.length === 0 ||
                     campaignData?.deliveryRules?.some((rule) => rule?.cycles?.length === 0) ||

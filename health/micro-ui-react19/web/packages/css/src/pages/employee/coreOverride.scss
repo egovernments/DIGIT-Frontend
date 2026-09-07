@@ -404,3 +404,16 @@ header {
   line-height: normal;
   height: unset;
 }
+
+.login-container {
+  .login-form-container {
+    .bannerHeader {
+      .bannerLogo {
+        width: 100%;
+        height: 100%;
+        max-width: 138px;
+        max-height: 40px;
+      }
+    }
+  }
+}

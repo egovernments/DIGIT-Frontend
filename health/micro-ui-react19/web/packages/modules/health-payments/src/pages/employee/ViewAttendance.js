@@ -3,15 +3,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Loader,
-  Divider,
   Button,
   PopUp,
   Card,
   Link,
   ViewCardFieldPair,
   Toast,
-  LoaderScreen,
-  LoaderComponent,
   HeaderComponent,
   Footer,
 } from "@egovernments/digit-ui-components";
@@ -92,7 +89,15 @@ const ViewAttendance = ({ editAttendance = false }) => {
   // INFO:: de-enroll attendee
   const [showDeEnrollPopup, setShowDeEnrollPopup] = useState(false);
 
-  const project = Digit?.SessionStorage.get("staffProjects");
+  // `staffProjects` holds every project this user is assigned to. Supervisors
+  // are assigned to several, so indexing [0] showed whichever campaign happened
+  // to be first rather than the one this register belongs to. Resolve against
+  // the project the user actually selected — the same value the register search
+  // filters on — and only fall back to the first entry if nothing is selected.
+  const staffProjects = Digit?.SessionStorage.get("staffProjects") || [];
+  const activeProject = Digit?.SessionStorage.get("selectedProject");
+  const currentProject =
+    staffProjects.find((p) => p?.id === activeProject?.id) || activeProject || staffProjects[0];
 
   const AttendancereqCri = {
     url: `/${attendanceContextPath}/v1/_search`,
@@ -457,7 +462,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     config: {
       // enabled: selectedProject ? true : false, //todo: check
       select: (mdmsData) => {
-        const referenceCampaignId = project[0]?.id;
+        const referenceCampaignId = currentProject?.id;
         return mdmsData.MdmsRes.HCM.WORKER_RATES.filter((item) => item.campaignId === referenceCampaignId)?.[0]
       },
     }
@@ -769,14 +774,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
             )}
           </div>
           {renderLabelPair("HCM_AM_ATTENDANCE_ID", t(registerNumber))}
-          {renderLabelPair("HCM_AM_CAMPAIGN_NAME", t(project?.[0]?.name || "NA"))}
-          {renderLabelPair("HCM_AM_PROJECT_TYPE", t(project?.[0]?.projectType || "NA"))}
+          {renderLabelPair("HCM_AM_CAMPAIGN_NAME", t(currentProject?.name || "NA"))}
+          {renderLabelPair("HCM_AM_PROJECT_TYPE", t(currentProject?.projectType || "NA"))}
           {renderLabelPair("HCM_AM_BOUNDARY_CODE", t(boundaryCode || "NA"))}
           {renderLabelPair("HCM_AM_ATTENDANCE_OFFICER", individualsData?.Individual?.[0]?.name?.givenName)}
           {renderLabelPair("HCM_AM_ATTENDANCE_OFFICER_CONTACT_NUMBER", individualsData?.Individual?.[0]?.mobileNumber)}
           {renderLabelPair("HCM_AM_NO_OF_ATTENDEE", AttendanceData?.attendanceRegister[0]?.attendees?.length || 0)}
-          {/* {renderLabelPair("HCM_AM_CAMPAIGN_START_DATE", formatTimestampToDate(project?.[0]?.startDate))} */}
-          {/* {renderLabelPair("HCM_AM_CAMPAIGN_END_DATE", formatTimestampToDate(project?.[0]?.endDate))} */}
+          {/* {renderLabelPair("HCM_AM_CAMPAIGN_START_DATE", formatTimestampToDate(currentProject?.startDate))} */}
+          {/* {renderLabelPair("HCM_AM_CAMPAIGN_END_DATE", formatTimestampToDate(currentProject?.endDate))} */}
 
           {renderLabelPair(
             "HCM_AM_EVENT_DURATION",
@@ -832,7 +837,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           <AttendanceManagementTable
             data={attendanceSummary}
             setAttendanceSummary={setAttendanceSummary}
-            duration={parseInt(periodDurationInDays ? periodDurationInDays : "0", 10) || 0}
+            duration={attendanceDuration || parseInt(periodDurationInDays || "0", 10) || 0}
             editAttendance={editAttendance}
             onAttendeeClick={(row) => setSelectedAttendee(row)}
             className="attendance-management-table"

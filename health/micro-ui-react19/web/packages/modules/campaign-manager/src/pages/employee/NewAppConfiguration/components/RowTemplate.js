@@ -41,13 +41,13 @@ const RowTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFieldClic
             ? "flex-end"
             : "flex-start",
         alignItems:
-          properties.crossAxisAlignment === "start"
-            ? "flex-start"
+          properties.crossAxisAlignment === "center"
+            ? "center"
             : properties.crossAxisAlignment === "end"
             ? "flex-end"
             : properties.crossAxisAlignment === "stretch"
             ? "stretch"
-            : "center",
+            : "flex-start",
         flexWrap: properties.wrap ? "wrap" : "nowrap",
       }}
     >
@@ -58,7 +58,14 @@ const RowTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFieldClic
           id: child.id || child.fieldName || `row-${field.id}-child-${index}`,
         };
 
-        return renderTemplateComponent(childWithId, fieldTypeMasterData, selectedField, t, onFieldClick, data, `row-${field.id}`, index);
+        // Action-like children hug their content; other fields (search bars, inputs, text)
+        // share the remaining row width — mirrors the mobile app's Row sizing
+        const hugsContent = ["button", "actionPopup", "icon", "tag"].includes(child?.format);
+        return (
+          <div key={childWithId.id} style={{ flex: hugsContent ? "0 0 auto" : "1 1 auto", minWidth: 0, display: "flex" }}>
+            {renderTemplateComponent(childWithId, fieldTypeMasterData, selectedField, t, onFieldClick, data, `row-${field.id}`, index)}
+          </div>
+        );
       })}
     </div>
   );

@@ -26,9 +26,72 @@ import { I18N_KEYS } from "../utils/i18nKeyConstants";
  * @param {boolean} disabled - Whether the inputs should be disabled
  */
 const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
+  const dispatch = useDispatch();
+  const { selectedField } = useSelector((state) => state.remoteConfig);
   // Determine the type of component and get the items to configure
   const isTableComponent = field?.format === "table";
   const isEnumComponent = ["dropdown", "dropdownTemplate", "select", "selectionCard", "radioList"].includes(field?.format);
+
+  // MDMS-driven fields (isMdms + schemaCode) define their option SET in the master, but the app
+  // renders the config's `enums` (filtered by isActive) — see the flow builder's selection_card.
+  // Fetch the master (as the preview's SelectionCard.js does), merge it with the config's enums so
+  // every option is listed with its show/hide toggle, and materialise the merged list back into
+  // `enums` so the app receives the full set.
+  const schemaParts = typeof field?.schemaCode === "string" ? field.schemaCode.split(".") : [];
+  const isMdmsDriven = !!(isEnumComponent && field?.isMdms && schemaParts.length === 2 && schemaParts[0] && schemaParts[1]);
+  const tenantId = Digit?.ULBService?.getCurrentTenantId?.();
+  const { data: mdmsOptions } = Digit?.Hooks?.useCustomMDMS(
+    tenantId,
+    schemaParts[0],
+    [{ name: schemaParts[1] }],
+    {
+      enabled: isMdmsDriven,
+      select: (data) =>
+        (data?.[schemaParts[0]]?.[schemaParts[1]] || [])
+          .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
+          .map((opt) => ({ code: opt.code, name: Digit.Utils.locale.getTransformedLocale(opt.code) })),
+    },
+    { schemaCode: isMdmsDriven ? field.schemaCode : undefined }
+  ) || {};
+
+  // Master order, keeping the label code and show/hide state of any existing enums entry.
+  // The config's enums is the per-campaign SELECTION of master options (the app renders enums),
+  // so master options absent from enums are listed switched OFF — behaviour stays unchanged
+  // until the user turns them on.
+  const mergedOptions = React.useMemo(() => {
+    if (!isMdmsDriven || !Array.isArray(mdmsOptions) || mdmsOptions.length === 0) return null;
+    const enums = Array.isArray(field?.enums) ? field.enums : [];
+    return mdmsOptions.map((opt) => {
+      const existing = enums.find((e) => e?.code === opt.code);
+      return existing
+        ? { code: opt.code, name: existing.name || opt.name, isActive: existing.isActive !== false }
+        : { code: opt.code, name: opt.name, isActive: false };
+    });
+  }, [isMdmsDriven, mdmsOptions, field?.enums]);
+
+  // Write the merged list into the config once it differs, so panel, preview and app agree
+  useEffect(() => {
+    if (!isMdmsDriven || !mergedOptions || disabled) return;
+    const enums = Array.isArray(field?.enums) ? field.enums : [];
+    const same =
+      enums.length === mergedOptions.length &&
+      enums.every(
+        (e, i) =>
+          e?.code === mergedOptions[i].code &&
+          (e?.name || "") === (mergedOptions[i].name || "") &&
+          (e?.isActive !== false) === (mergedOptions[i].isActive !== false)
+      );
+    if (!same) {
+      dispatch(
+        updatePopupFieldProperty({
+          selectedField,
+          fieldName: field?.fieldName,
+          format: field?.format,
+          updates: { enums: mergedOptions },
+        })
+      );
+    }
+  }, [isMdmsDriven, mergedOptions, disabled]);
 
   let items = [];
   let itemType = "";
@@ -38,6 +101,10 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
     items = field?.data?.columns || [];
     itemType = "column";
     propertyPath = "data";
+  } else if (isMdmsDriven) {
+    items = mergedOptions || [];
+    itemType = "option";
+    propertyPath = "enums";
   } else if (isEnumComponent) {
     items = field?.format === "radioList" ? field?.data : field?.enums  || [];
     itemType = "option";
@@ -146,9 +213,10 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
     ? (t(I18N_KEYS.COMMON.ADD_HEADER_LOCALIZATION) || "Add header localization")
     : (t(I18N_KEYS.COMMON.ADD_LOCALIZATION) || "Add localization");
 
-  // Display label text - use translated fieldName instead of index
+  // Display label text - use translated fieldName instead of index.
+  // Option rows show just the option's own name; only table columns keep the "Column:" prefix.
   const translatedFieldName = t(Digit.Utils.locale.getTransformedLocale(localizationCode)) ;
-  const label = `${labelPrefix}: ${translatedFieldName}`;
+  const label = itemType === "column" ? `${labelPrefix}: ${translatedFieldName}` : translatedFieldName;
 
   return (
     <div className="drawer-container-tooltip">

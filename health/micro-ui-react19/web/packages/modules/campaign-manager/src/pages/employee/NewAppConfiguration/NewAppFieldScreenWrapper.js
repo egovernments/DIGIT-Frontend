@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Divider, LabelFieldPair, TextInput, Switch } from "@egovernments/digit-ui-components";
+import { Button, Divider, LabelFieldPair, TextInput, Switch, Tag } from "@egovernments/digit-ui-components";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup, updateHeaderProperty } from "./redux/remoteConfigSlice";
 import { useCustomT } from "./hooks/useCustomT";
@@ -80,18 +80,23 @@ const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale,
   }
 
   return (
-    <LabelFieldPair key={`footer-${index}`} className="app-preview-app-config-drawer-action-button" removeMargin={true}>
-      <div className="">
-        <span>{`${labelMap[footerButtonConfig?.properties?.type] || ""} ${t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ACTION_BUTTON_LABEL)}`}</span>
-      </div>
-      <TextInput
-        name={`footerLabel-${index}`}
-        value={localValue}
-        onChange={(event) => handleChange(event.target.value)}
-        onBlur={handleBlur}
-        disabled={viewMode}
-      />
-    </LabelFieldPair>
+    // Card wrapper matching the element rows in template pages' Buttons sections, so
+    // form pages' footer button doesn't render as a bare label + input
+    <div className="draggableField-cont app-config-field-wrapper" style={{ padding: "0.75rem", marginBottom: "1rem" }}>
+      <LabelFieldPair key={`footer-${index}`} className="app-preview-app-config-drawer-action-button" removeMargin={true}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "0.5rem" }}>
+          <span>{`${labelMap[footerButtonConfig?.properties?.type] || ""} ${t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ACTION_BUTTON_LABEL)}`}</span>
+          <Tag icon="" label={t("Button")} className="app-config-field-tag normal" showIcon={false} />
+        </div>
+        <TextInput
+          name={`footerLabel-${index}`}
+          value={localValue}
+          onChange={(event) => handleChange(event.target.value)}
+          onBlur={handleBlur}
+          disabled={viewMode}
+        />
+      </LabelFieldPair>
+    </div>
   );
 });
 
@@ -117,6 +122,9 @@ function NewAppFieldScreenWrapper({viewMode}) {
     },
     [dispatch]
   );
+
+  // Bumped whenever a toggle is refused, so the Switch can be remounted and show the real state
+  const [toggleResetKey, setToggleResetKey] = useState(0);
 
   const handleHideField = useCallback(
     (fieldName, cardIndex, role, key) => {
@@ -201,6 +209,18 @@ function NewAppFieldScreenWrapper({viewMode}) {
     );
   }
 
+  // True when a body section renders its own Buttons subheader (button-format rows) — the footer
+  // label inputs then join that section instead of opening a second "Buttons" heading
+  const hasBodyButtonRows = (currentCard?.body || []).some((section) => {
+    const sectionBodyFields = currentCard?.type === "template" ? extractTemplateFields(section?.fields) : (section?.fields || []);
+    const sectionFooterFields = currentCard?.type === "template" && currentCard?.footer ? extractTemplateFields(currentCard.footer) : [];
+    // Footer rows always join the Buttons section, whatever their format (qrScanner, actionPopup, …)
+    return (
+      sectionBodyFields.filter(isFieldEditable).some((f) => ["button", "actionPopup", "qrScanner"].includes(f?.format)) ||
+      sectionFooterFields.filter(isFieldEditable).length > 0
+    );
+  });
+
   return (
     <React.Fragment>
       {/* <div className="app-config-drawer-subheader">
@@ -208,35 +228,102 @@ function NewAppFieldScreenWrapper({viewMode}) {
         <ConsoleTooltip className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_HEAD_FIELDS)} />
       </div>
       <Divider /> */}
-      {/* Heading Field */}
-      <HeaderFieldWrapper
-        key="header-heading"
-        label={"PAGE_HEADING"}
-        type="text"
-        value={currentCard?.heading}
-        currentCard={currentCard}
-        index={0}
-        cardIndex={0}
-        fieldKey="heading"
-        viewMode={viewMode}
-      />
-      {/* Description Field */}
-      <HeaderFieldWrapper
-        key="header-description"
-        label={"PAGE_DESCRIPTION"}
-        type="textarea"
-        value={currentCard?.description}
-        currentCard={currentCard}
-        index={1}
-        cardIndex={0}
-        fieldKey="description"
-        viewMode={viewMode}
-      />
-      <Divider />
+      {!(currentCard?.isSuccessorErrorScreen) && (
+        <>
+          {/* Heading Field */}
+          <HeaderFieldWrapper
+            key="header-heading"
+            label={"PAGE_HEADING"}
+            type="text"
+            value={currentCard?.heading}
+            currentCard={currentCard}
+            index={0}
+            cardIndex={0}
+            fieldKey="heading"
+            viewMode={viewMode}
+          />
+          {/* Description Field */}
+          <HeaderFieldWrapper
+            key="header-description"
+            label={"PAGE_DESCRIPTION"}
+            type="textarea"
+            value={currentCard?.description}
+            currentCard={currentCard}
+            index={1}
+            cardIndex={0}
+            fieldKey="description"
+            viewMode={viewMode}
+            maxLength={64}
+          />
+         <Divider />
+        </>
+      )}
       <div className="app-config-drawer-subheader">
         <div> {currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS)}</div>
         <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS)} />
       </div>
+      {/* Page-level info card (conditions.infoCardText) presented as an element with an
+          Infocard tag and a show/hide toggle, consistent with body infoCard fields on
+          template screens. Toggling off stashes the localisation code in
+          conditions.infoCardTextDisabled and nulls infoCardText — the app only renders
+          the card when infoCardText is present. */}
+      {(currentCard?.conditions?.infoCardText || currentCard?.conditions?.infoCardTextDisabled) && (
+        <div
+          className="draggableField-cont app-config-field-wrapper"
+          style={currentCard?.conditions?.infoCardText ? { cursor: "pointer" } : {}}
+          onClick={() => {
+            if (!currentCard?.conditions?.infoCardText) return; // hidden card: nothing to edit
+            // Pseudo-field: opens the regular Field-properties view; its message edits go
+            // through the localisation slice like any other field, config shape untouched
+            dispatch(
+              selectField({
+                field: {
+                  fieldName: "pageInfoCard",
+                  type: "template",
+                  format: "infoCard",
+                  label: null,
+                  description: currentCard?.conditions?.infoCardText,
+                  __pageInfoCard: true,
+                },
+                screen: currentCard,
+                card: null,
+                cardIndex: -1,
+              })
+            );
+          }}
+        >
+          <LabelFieldPair className={`appConfigLabelField`}>
+            <div className={`appConfigLabelField-label-container toggle`} style={{ width: "70%" }}>
+              <div className={`appConfigLabelField-label toggle`}>
+                <span>{t("INFO_CARD_TEXT")}</span>
+              </div>
+              <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap" }}>
+                <Tag icon="" label={t("Infocard")} className="app-config-field-tag normal" labelStyle={{}} showIcon={false} style={{}} />
+              </div>
+            </div>
+            <div onClick={(e) => e.stopPropagation()}>
+              <Switch
+                key={currentCard?.conditions?.infoCardText ? "infocard-on" : "infocard-off"}
+                label=""
+                isCheckedInitially={!!currentCard?.conditions?.infoCardText}
+                disable={viewMode}
+                shapeOnOff
+                onToggle={() => {
+                  const cond = { ...(currentCard?.conditions || {}) };
+                  if (cond.infoCardText) {
+                    cond.infoCardTextDisabled = cond.infoCardText;
+                    cond.infoCardText = null;
+                  } else {
+                    cond.infoCardText = cond.infoCardTextDisabled || null;
+                    cond.infoCardTextDisabled = null;
+                  }
+                  dispatch(updateHeaderProperty({ fieldKey: "conditions", value: cond }));
+                }}
+              />
+            </div>
+          </LabelFieldPair>
+        </div>
+      )}
       {currentCard?.body?.map((section, index, card) => {
 
         const bodyFields =
@@ -256,11 +343,32 @@ function NewAppFieldScreenWrapper({viewMode}) {
         const fields = [...editableBodyFields, ...editableFooterFields];
         const bodyFieldsCount = editableBodyFields.length;
 
+        // A panel card is the screen itself (e.g. "Stock recorded successfully"), so switching it off
+        // would just blank the preview - it gets no visibility toggle. The actions it carries
+        // (primary/secondary buttons, listed here as separate rows) keep theirs.
+
+        // Every screen needs a CTA. A lone button therefore has no toggle at all, and where there are
+        // several, the last visible one cannot be switched off either.
+        // Footer entries all render in the app's bottom action bar, so every footer row is an
+        // action button regardless of format (qrScanner "Scan QR", actionPopup "Download IDs", …)
+        // Popup-opening actions (actionPopup, qrScanner) render as buttons in the app,
+        // so they belong in the Buttons section alongside plain buttons and footer rows
+        const isButtonRow = (f, i) => f?.format === "button" || f?.format === "actionPopup" || f?.format === "qrScanner" || i >= bodyFieldsCount;
+        const buttonFields = fields.filter((f, i) => isButtonRow(f, i));
+        const visibleButtonCount = buttonFields.filter((f) => f?.hidden !== true).length;
+        const isOnlyButton = buttonFields.length === 1;
+
+        // A menu screen (e.g. Manage Stock) with every menu card hidden would be a dead end
+        // in the app, so the last visible menu card cannot be switched off either
+        const menuCardFields = fields.filter((f) => f?.format === "menu_card");
+        const visibleMenuCardCount = menuCardFields.filter((f) => f?.hidden !== true).length;
 
 
-        return (
-          <Fragment key={`card-${index}`}>
-            {fields?.map(({ type, label, active, required, Mandatory, deleteFlag, fieldName, id, ...rest }, i, c) => {
+
+        // Render one field row; `i` stays the index in the combined body+footer list so the
+        // existing card/field index math is unchanged by the section grouping below
+        const renderFieldRow = (fieldEntry, i, c) => {
+              const { type, label, active, required, Mandatory, deleteFlag, fieldName, id, ...rest } = fieldEntry;
               const isFooterField = i >= bodyFieldsCount;
               const actualCardIndex = isFooterField ? -1 : index; // Use -1 for footer fields
               const actualFieldIndex = isFooterField ? i - bodyFieldsCount : i;
@@ -276,8 +384,31 @@ function NewAppFieldScreenWrapper({viewMode}) {
                   required={required}
                   isDelete={deleteFlag === true ? true : false}
                   onDelete={viewMode ? null : () => handleDeleteField(actualFieldIndex, actualCardIndex)}
-                  onHide={viewMode ? null : () => handleHideField(fieldName, actualCardIndex, rest?.role, rest?.key)}                  onSelectField={rest?.hidden ? null : () => handleSelectField(c[i], currentCard, card[index], actualCardIndex, actualFieldIndex)}
-                  config={c[i]}
+                  onHide={
+                    viewMode
+                      ? null
+                      : () => {
+                          const isTurningOffLastButton =
+                            rest?.format === "button" && rest?.hidden !== true && visibleButtonCount <= 1;
+                          const isTurningOffLastMenuCard =
+                            rest?.format === "menu_card" && rest?.hidden !== true && visibleMenuCardCount <= 1;
+                          if (isTurningOffLastButton || isTurningOffLastMenuCard) {
+                            if (typeof window.__appConfig_showToast === "function") {
+                              window.__appConfig_showToast({
+                                key: "error",
+                                label: t(
+                                  isTurningOffLastMenuCard
+                                    ? I18N_KEYS.APP_CONFIGURATION.AT_LEAST_ONE_MENU_CARD_REQUIRED
+                                    : I18N_KEYS.APP_CONFIGURATION.AT_LEAST_ONE_BUTTON_REQUIRED
+                                ),
+                              });
+                            }
+                            setToggleResetKey((n) => n + 1);
+                            return;
+                          }
+                          handleHideField(fieldName, actualCardIndex, rest?.role, rest?.key);
+                        }}                  
+                  onSelectField={rest?.hidden ? null : () => handleSelectField(c[i], currentCard, card[index], actualCardIndex, actualFieldIndex)}                  config={c[i]}
                   Mandatory={Mandatory}
                   rest={{...rest, fieldName}}
                   index={i}
@@ -285,12 +416,29 @@ function NewAppFieldScreenWrapper({viewMode}) {
                   cardIndex={actualCardIndex}
                   indexOfCard={index}
                   moveField={viewMode ? null : type !== "template" ? moveField : null}
+                  hideToggle={rest?.format === "panelCard" || rest?.format === "labelPairList" || (rest?.format === "button" && isOnlyButton)}
+                  toggleResetKey={toggleResetKey}
                   fields={c}
                   isTemplate={currentCard?.type === "template"}
                 // isFooterField={isFooterField}
                 />
               );
-            })}
+            };
+
+        return (
+          <Fragment key={`card-${index}`}>
+            {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) ? null : renderFieldRow(fieldEntry, i, c)))}
+            {/* Body/template buttons get their own section, consistent with pages whose buttons live in the footer */}
+            {buttonFields.length > 0 && (
+              <>
+                <Divider className="app-config-drawer-action-divider" />
+                <div className="app-config-drawer-subheader">
+                  <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_BUTTONS)}</div>
+                  <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_BUTTONS)} />
+                </div>
+              </>
+            )}
+            {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) ? renderFieldRow(fieldEntry, i, c) : null))}
             {currentCard?.type !== "template" && !viewMode && (<Button
               className={"app-config-drawer-button add-field"}
               type={"button"}
@@ -326,14 +474,17 @@ function NewAppFieldScreenWrapper({viewMode}) {
           onClick={handleAddSection}
         />
       )}
-      {currentCard?.footer?.length > 0 && (<Divider className="app-config-drawer-action-divider" />)}
-      {currentCard?.footer?.length > 0 && (
+      {currentCard?.footer?.length > 0 && !hasBodyButtonRows && (<Divider className="app-config-drawer-action-divider" />)}
+      {currentCard?.footer?.length > 0 && !hasBodyButtonRows && (
         <div className="app-config-drawer-subheader">
           <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_BUTTONS)}</div>
           <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_BUTTONS)} />
         </div>)}
+      {/* When footer buttons already render as element rows in the Buttons section, the
+          per-footer label inputs would duplicate that editing affordance — rows win */}
       {currentCard?.footer &&
         currentCard?.footer.length > 0 &&
+        !hasBodyButtonRows &&
         currentCard?.footer?.map((footerButtonConfig, index) => (
           <FooterLabelField key={`footer-${index}`} footerButtonConfig={footerButtonConfig} index={index} currentLocale={currentLocale} dispatch={dispatch} t={t} viewMode={viewMode} />
       ))}

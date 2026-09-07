@@ -55,11 +55,12 @@ The Commodity Management screens read their stock and commodity configuration fr
 
 ### Multi-hierarchy selection step
 
-A new **first step** has been added to the campaign creation wizard. Users select the boundary hierarchy type (e.g., administrative vs. health facility hierarchy) before filling in any other campaign details.
+A new **step 4 (the final step)** has been added to the initial campaign creation wizard. Users select the boundary hierarchy type (e.g., administrative vs. health facility hierarchy) as the last step before the campaign draft is saved.
 
-- Available hierarchy types are pulled from the Boundary Management API.
-- The selection is saved to session storage and used by all subsequent steps in the wizard.
-- During campaign updates, this step is shown as **read-only** — the hierarchy cannot be changed.
+- Available hierarchy types are pulled from the Boundary Management API. Each card shows the hierarchy's boundary levels and a tag indicating whether boundary data is already loaded.
+- The selection is saved to the campaign store (`campaign.hierarchy` in Redux, persisted to IndexedDB via the `CAMPAIGN_APP_STATE` key) and used by all subsequent steps in the wizard.
+- While the campaign is in **draft state**, hierarchy can still be changed from the campaign details screen via an Edit button. If boundary selections or uploaded files already exist, a confirmation popup appears before switching (dependent data is cleared).
+- Once the campaign status becomes **"created"**, the hierarchy edit button is hidden and the hierarchy is locked — it cannot be changed.
 
 ---
 
@@ -162,7 +163,36 @@ Commodity Management screens (shipment creation, bulk stock upload) now derive h
 
 ### Persistent validation status on file upload
 
-`NewUploadData` now shows a persistent `AlertCard` below the upload section summarizing validation results (success / warning / error), which stays visible until a new file is uploaded, the file is removed, or validation restarts. A "View Errors" button opens the uploaded file directly when validation fails.
+`NewUploadData` now shows a persistent `AlertCard` below the upload section summarizing validation results (success / warning / error), which stays visible until a new file is uploaded, the file is removed, or validation restarts. When validation fails, the card displays the API error code to help diagnose the issue.
+
+---
+
+## What Changed After v2.1
+
+### App Configuration Improvements
+
+Several enhancements were made to AppConfig v2 fields and previews:
+
+- **Field type restriction** — The field type dropdown now only shows types that are compatible with the current field. Compatibility is driven by `HCM-ADMIN-CONSOLE.FieldTypeMappingConfig` MDMS master.
+- **Mandatory asterisk** — The mandatory asterisk now reads from the persisted `mandatory` flag, not computed UI state, so it reflects saved state correctly after navigation.
+- **Toggle-hide for `labelPairList`** — `labelPairList` format fields now support the toggle-hide control.
+- **Checklist preview** — Question labels render at 16px bold with dividers between questions. Table field drawer shows column sub-group cards.
+- **Info card on closed household screen** — A configurable info card can now be shown on the closed household screen, set via `infoCardText` in the page condition.
+- **App preview and button fixes** — App preview row sizing corrected; tertiary button alignment fixed.
+
+---
+
+### Boundary Labels and Shipment Sheet
+
+- **Hierarchy type tag translated** — The hierarchy type name shown in the boundary tag in `SelectingBoundariesDuplicate.js` is now passed through `t()` so it displays a localized label instead of the raw hierarchy type code.
+- **Shipment sheet header color** — Header row background corrected from `4CAF50` to `93C47D` to match microplan sheets.
+- **Shipment popup loads its own boundary localizations** — `NewShipmentPopup` no longer relies on the host page to have loaded boundary localizations; it fetches them directly.
+
+---
+
+### Attendance Registers — Loading Fix
+
+Attendance registers in `MapUsersToRegistersScreen` were previously blocked behind an `isRegisterCreationCompleted` gate that could remain false even when registers were ready, causing the list to never appear. Registers now fetch as soon as `campaignNumber` is present and resource loading is complete.
 
 ---
 
@@ -170,6 +200,20 @@ Commodity Management screens (shipment creation, bulk stock upload) now derive h
 
 | Issue fixed | Details |
 |---|---|
+| Bulk stock recovery banner appeared across different campaigns | Session keys for BulkStockUpload are now scoped per campaign |
+| Dashboard showed all project-type reports instead of only campaign-configured reports | Reports list now filters to only those configured for that specific campaign |
+| Attendance card shown before campaign creation completed | Card is now hidden until campaign is created |
+| Date range selection broken in Commodity Management | Fixed |
+| "Rejected" column showing in Transaction Summary | Column removed |
+| Sheet issue in upcoming campaign edit flow | Fixed |
+| Clone campaign date saved with wrong format when using FieldV1 `newDateFormat: true` | `onChange` now converts the display string to an IST-offset ISO timestamp |
+| Loader messages showed raw key strings instead of translated text | Loader message keys corrected to proper i18n format |
+| Delivery details campaign name tag missing or incorrect | Fixed |
+| Localization search call included unnecessary locale modules | Unused modules removed from moduleCode; locale array value now resolved to single string before API call |
+| Ship commodity action button incorrectly shown in completed Stock Summary view | Button removed from Stock Summary tab in completed campaigns |
+| Unified template download filename not localized | Filename now uses the `HCM_MICROPLAN_TEMPLATE` localization key |
+| AppConfig default value not applied correctly | Fixed |
+| AppConfig v2 field type fallback missing for unknown master entries | Fallback tiers added |
 | Stale campaign data on update screen | Old data was shown instead of the latest campaign state |
 | Template polling timeout | Polling interval was too short, causing premature timeouts |
 | Stale data when switching hierarchy | Hierarchy, name, boundary, loader, and cycle display all refreshed incorrectly |
@@ -214,7 +258,7 @@ Commodity Management screens (shipment creation, bulk stock upload) now derive h
 
 | Component / Hook | What it is |
 |---|---|
-| `SelectHierarchy.js` | Hierarchy type picker — first step of campaign creation wizard |
+| `SelectHierarchy.js` | Hierarchy type picker — step 4 (last step) of the initial campaign creation wizard |
 | `CommodityCampaigns.js` | Main commodity dashboard page |
 | `StockSummaryTab.js` | Stock summary tab |
 | `PendingTransactionsTab.js` | Pending transactions tab |

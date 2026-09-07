@@ -51,7 +51,7 @@ const BoundaryDetailsSummary = (props) => {
             <div>
               <div className="digit-tag-container" style={{ display: "flex", maxWidth: "100%", margin: "0rem" }}>
                 {groupedByParent[parentKey].slice(0, expandedGroups[parentKey] ? groupedByParent[parentKey].length : 10).map((boundary) => (
-                  <Chip key={boundary.code} text={t(boundary.code)} onClick={() => {}} className="multiselectdropdown-tag" hideClose={true} />
+                  <Chip key={boundary.code} text={t(boundary.code)} className="multiselectdropdown-tag" hideClose={true} />
                 ))}
                 {groupedByParent[parentKey].length > 10 && (
                   <Button

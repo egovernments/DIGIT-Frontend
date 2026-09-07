@@ -148,8 +148,14 @@ const AddProducts = React.memo(({
 
   const canAddMore = availableOptions.length > 0;
 
-  if(isProductLoading){
-    return (<Loader/>);
+  // Hold the popup's height while the product list loads - a bare Loader collapsed to nothing,
+  // so the spinner was easy to miss entirely while waiting on /product/v1/_search
+  if (isProductLoading) {
+    return (
+      <div className="add-resource-wrapper" style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "8rem" }}>
+        <Loader />
+      </div>
+    );
   }
 
 
@@ -176,7 +182,7 @@ const AddProducts = React.memo(({
             </div>
             
             <div className="add-resource-label-field-container">
-              <LabelFieldPair style={{ display: "grid" }}>
+              <LabelFieldPair style={{ display: "grid", gap: "0.5rem" }}>
                 <label>{t(I18N_KEYS.PAGES.CAMPAIGN_ADD_PRODUCTS_LABEL)}</label>
                 <Dropdown
                   t={t}
@@ -189,15 +195,16 @@ const AddProducts = React.memo(({
                   select={(value) => updateProductValue(product.key, value)}
                   optionKey="displayName"
                   isSearchable={true}
-                  optionCardStyles={{maxHeight:"10vh"}}
+                  optionCardStyles={{maxHeight:"20vh"}}
                 />
               </LabelFieldPair>
               
               {!projectConfig?.productCountHide && (
-                <LabelFieldPair style={{ 
-                  display: "flex", 
-                  flexDirection: "column", 
-                  alignItems: "flex-start" 
+                <LabelFieldPair style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "0.5rem"
                 }}>
                   <label>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_COUNT_LABEL)}</label>
                   <TextInput

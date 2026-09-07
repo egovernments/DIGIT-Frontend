@@ -28,7 +28,7 @@ const Colors = {
       errorbg: "#FFF5F4",
       success: "#00703C",
       successbg: "#F1FFF8",
-      warning: "#9E5F00",
+      warning: "#5C450A",
       warningbg: "#FFF9F0",
       info: "#0057BD",
       infobg: "#DEEFFF",
@@ -263,6 +263,87 @@ const Wrapper = ({
   );
 };
 
+const ITEM_HEIGHT = 45;
+const MAX_VISIBLE_ITEMS = 8;
+const OVERSCAN_COUNT = 5;
+
+// Defined at module level so its identity is stable across renders.
+// When Menu was inside MultiSelectDropdown, every state update (e.g. checkbox
+// check) created a new component type, causing React to unmount + remount
+// FixedSizeList and reset its scroll position to 0.
+const Menu = ({
+  variant,
+  flattenedOptions,
+  filteredOptions,
+  selectAllOption,
+  listRef,
+  optionsKey,
+  addCategorySelectAllCheck,
+  categorySelectAllLabel,
+  categorySelected,
+  handleCategorySelection,
+  selectAllChecked,
+  addSelectAllCheck,
+  MenuItem,
+  t,
+}) => {
+  const optionsToRender = variant === "nestedmultiselect" ? flattenedOptions : filteredOptions;
+
+  if (!optionsToRender || optionsToRender?.length === 0) {
+    return (
+      <div className={`digit-multiselectdropodwn-menuitem ${variant ? variant : ""} unsuccessfulresults`} key={"-1"} onClick={() => {}}>
+        {<span> {t(I18N_KEYS.COMPONENTS.NO_RESULTS_FOUND)}</span>}
+      </div>
+    );
+  }
+
+  // Add 2px buffer to prevent sub-pixel scrollbar when items exactly fill the container
+  const listHeight = Math.min(optionsToRender.length, MAX_VISIBLE_ITEMS) * ITEM_HEIGHT + 2;
+
+  const VirtualizedRow = ({ index, style }) => {
+    const option = optionsToRender[index];
+    if (option.options) {
+      return (
+        <div style={style} key={index} className={`digit-nested-category ${addSelectAllCheck ? "selectAll" : ""}`}>
+          <div className="digit-category-name">{t(option[optionsKey])}</div>
+          {addCategorySelectAllCheck && (
+            <div className="digit-category-selectAll" onClick={() => handleCategorySelection(option)}>
+              <div className="category-selectAll-label">{categorySelectAllLabel ? categorySelectAllLabel : t(I18N_KEYS.COMMON.SELECT_ALL)}</div>
+              <input type="checkbox" checked={selectAllChecked || categorySelected[option.code]} />
+              <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
+                <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    } else {
+      return (
+        <div style={{ ...style, height: style.height, boxSizing: "border-box" }}>
+          <MenuItem option={option} index={index} />
+        </div>
+      );
+    }
+  };
+
+  return (
+    <div>
+      {selectAllOption}
+      <List
+        ref={listRef}
+        height={listHeight}
+        itemCount={optionsToRender.length}
+        itemSize={ITEM_HEIGHT}
+        width="100%"
+        overscanCount={OVERSCAN_COUNT}
+        style={{ overflowX: "hidden" }}
+      >
+        {VirtualizedRow}
+      </List>
+    </div>
+  );
+};
+
 const MultiSelectDropdown = ({
   options,
   optionsKey,
@@ -346,14 +427,35 @@ const MultiSelectDropdown = ({
     }
   }
 
-  // Use a content-based key so the sync fires when selected items change, not just count
-  const selectedSyncKey = useMemo(() => selected?.map((s) => s?.code).join(",") ?? "", [selected]);
+  // Lightweight rolling checksum over all codes: O(n) without building a huge
+  // joined string, and unlike length + bookends it detects mid-list replacements.
+  const selectedSyncKey = useMemo(() => {
+    if (!selected || selected.length === 0) return "";
+    let hash = 0;
+    for (let i = 0; i < selected.length; i++) {
+      const code = selected[i]?.code || "";
+      for (let j = 0; j < code.length; j++) {
+        hash = (hash * 31 + code.charCodeAt(j)) | 0;
+      }
+      hash = (hash * 31 + i) | 0;
+    }
+    return `${selected.length}|${hash}`;
+  }, [selected]);
 
   useEffect(() => {
-    dispatch({
-      type: "REPLACE_COMPLETE_STATE",
-      payload: fnToSelectOptionThroughProvidedSelection(selected),
+    // Use React.startTransition so the heavy dispatch (16k+ items in boundary dropdowns)
+    // doesn't block user interactions like Clear All clicks.
+    React.startTransition(() => {
+      dispatch({
+        type: "REPLACE_COMPLETE_STATE",
+        payload: fnToSelectOptionThroughProvidedSelection(selected),
+      });
     });
+    // Reset Select All and category checkboxes when selection is cleared externally (e.g., parent dropdown cleared)
+    if (!selected || selected.length === 0) {
+      setSelectAllChecked(false);
+      setCategorySelected({});
+    }
   }, [selectedSyncKey]);
 
   // useEffect(() => {
@@ -406,32 +508,39 @@ const MultiSelectDropdown = ({
     return false;
   }, [selectedCodesSet]);
 
+  // Inline selection check to avoid stale closure from useCallback checkSelection.
+  // This ensures the effect always reads the current render's selectedCodesSet directly.
+  // Wrapped in React.startTransition so the heavy iteration (16k+ boundary items) doesn't
+  // block user interactions.
   useEffect(() => {
-    const allOptionsSelected =
-      variant === "nestedmultiselect" ? checkSelection(flattenedOptions.filter((option) => !option.options)) : checkSelection(options);
+    React.startTransition(() => {
+      const inlineCheck = (items) => items && items.length > 0 ? items.every((o) => selectedCodesSet.has(o.code)) : false;
+      const leafOptions = variant === "nestedmultiselect" ? flattenedOptions.filter((option) => !option.options) : options;
+      const allOptionsSelected = inlineCheck(leafOptions);
 
-    setSelectAllChecked(allOptionsSelected);
+      setSelectAllChecked(allOptionsSelected);
 
-    const query = deferredSearchQuery?.toLowerCase();
-    const newCategorySelected = {};
-    options
-      .filter((option) => option.options)
-      .forEach((category) => {
-        let filteredCategoryOptions = category.options;
+      const query = deferredSearchQuery?.toLowerCase();
+      const newCategorySelected = {};
+      options
+        .filter((option) => option.options)
+        .forEach((category) => {
+          let filteredCategoryOptions = category.options;
 
-        if (query?.length > 0) {
-          filteredCategoryOptions = category.options.filter((option) =>
-            t(option?.code)?.toLowerCase()?.includes(query)
-          );
-        }
+          if (query?.length > 0) {
+            filteredCategoryOptions = category.options.filter((option) =>
+              t(option?.code)?.toLowerCase()?.includes(query)
+            );
+          }
 
-        if (filteredCategoryOptions?.length > 0) {
-          newCategorySelected[category.code] = checkSelection(filteredCategoryOptions);
-        }
-      });
+          if (filteredCategoryOptions?.length > 0) {
+            newCategorySelected[category.code] = inlineCheck(filteredCategoryOptions);
+          }
+        });
 
-    setCategorySelected(newCategorySelected);
-  }, [options, selectedCodesSet, deferredSearchQuery, checkSelection, flattenedOptions, variant, t]);
+      setCategorySelected(newCategorySelected);
+    });
+  }, [options, selectedCodesSet, deferredSearchQuery, flattenedOptions, variant, t]);
 
   function handleOutsideClickAndSubmitSimultaneously() {
     setActive(false);
@@ -515,6 +624,8 @@ const MultiSelectDropdown = ({
 
   const handleClearAll = () => {
     dispatch({ type: "REPLACE_COMPLETE_STATE", payload: [] });
+    setSelectAllChecked(false);
+    setCategorySelected({});
     onSelect([], getCategorySelectAllState(), props);
     if (onClose) {
       onClose([], getCategorySelectAllState(), props);
@@ -531,6 +642,7 @@ const MultiSelectDropdown = ({
       setIsProcessing(true);
       requestAnimationFrame(() => {
         startTransition(() => {
+          let updatedState;
           if (selectAllChecked) {
             // Only remove items that are in the current options, keep others
             const currentOptionCodesSet = new Set(
@@ -538,10 +650,10 @@ const MultiSelectDropdown = ({
                 ? flattenedOptions.filter((option) => !option.options).map((option) => option.code)
                 : options.map((option) => option.code)
             );
-            const remainingSelections = alreadyQueuedSelectedState.filter(
+            updatedState = alreadyQueuedSelectedState.filter(
               (selected) => !currentOptionCodesSet.has(selected.code) || frozenCodesSet.has(selected.code)
             );
-            dispatch({ type: "REPLACE_COMPLETE_STATE", payload: remainingSelections });
+            dispatch({ type: "REPLACE_COMPLETE_STATE", payload: updatedState });
             setSelectAllChecked(false);
           } else {
             // Build the new selections from current options
@@ -564,17 +676,17 @@ const MultiSelectDropdown = ({
               propsData: [null, option],
             }));
 
-            const mergedPayload = [...existingSelections, ...newPayload];
+            updatedState = [...existingSelections, ...newPayload];
 
             dispatch({
               type: "REPLACE_COMPLETE_STATE",
-              payload: mergedPayload,
+              payload: updatedState,
             });
             setSelectAllChecked(true);
           }
           setIsProcessing(false);
           onSelect(
-            alreadyQueuedSelectedState?.map((e) => e.propsData),
+            updatedState?.map((e) => e.propsData),
             getCategorySelectAllState(),
             props
           );
@@ -742,13 +854,18 @@ const MultiSelectDropdown = ({
       const existing = seenCodes.get(option?.code);
 
       if (existing) {
-        // If the code already exists, merge the new options into the copy
+        // Merge children via push instead of concat to avoid O(n²) array copying.
+        // concat copies the entire accumulated array on each call; push is O(1) amortized.
         if (option.options) {
-          existing.options = (existing.options || []).concat(option.options);
+          if (!existing.options) existing.options = [];
+          for (let k = 0; k < option.options.length; k++) {
+            existing.options.push(option.options[k]);
+          }
         }
       } else {
-        // Create a shallow copy to avoid mutating the original option
-        const copy = option.options ? { ...option, options: [...option.options] } : option;
+        // Always shallow copy to avoid mutating the caller's memoized option objects.
+        // Without this, a later duplicate merge (push onto existing.options) would mutate the original.
+        const copy = { ...option, options: option.options ? [...option.options] : [] };
         seenCodes.set(option?.code, copy);
         flattened.push(copy);
       }
@@ -827,6 +944,8 @@ const MultiSelectDropdown = ({
         style={{
           pointerEvents: isFrozen ? "none" : "auto",
           opacity: isFrozen ? 0.6 : 1,
+          height: "100%",
+          boxSizing: "border-box",
         }}
       >
         <input
@@ -869,67 +988,6 @@ const MultiSelectDropdown = ({
       <p className={`digit-label ${addSelectAllCheck ? "selectAll" : ""}`}>{selectAllLabel ? selectAllLabel : t(I18N_KEYS.COMMON.SELECT_ALL)}</p>
     </div>
   );
-  const ITEM_HEIGHT = 45;
-  const MAX_VISIBLE_ITEMS = 8;
-  const OVERSCAN_COUNT = 5;
-
-  const Menu = () => {
-    const optionsToRender = variant === "nestedmultiselect" ? flattenedOptions : filteredOptions;
-
-    if (!optionsToRender || optionsToRender?.length === 0) {
-      return (
-        <div className={`digit-multiselectdropodwn-menuitem ${variant ? variant : ""} unsuccessfulresults`} key={"-1"} onClick={() => {}}>
-          {<span> {t(I18N_KEYS.COMPONENTS.NO_RESULTS_FOUND)}</span>}
-        </div>
-      );
-    }
-
-    // Add 2px buffer to prevent sub-pixel scrollbar when items exactly fill the container
-    const listHeight = Math.min(optionsToRender.length, MAX_VISIBLE_ITEMS) * ITEM_HEIGHT + 2;
-
-    const VirtualizedRow = ({ index, style }) => {
-      const option = optionsToRender[index];
-      if (option.options) {
-        return (
-          <div style={style} key={index} className={`digit-nested-category ${addSelectAllCheck ? "selectAll" : ""}`}>
-            <div className="digit-category-name">{t(option[optionsKey])}</div>
-            {addCategorySelectAllCheck && (
-              <div className="digit-category-selectAll" onClick={() => handleCategorySelection(option)}>
-                <div className="category-selectAll-label">{categorySelectAllLabel ? categorySelectAllLabel : t(I18N_KEYS.COMMON.SELECT_ALL)}</div>
-                <input type="checkbox" checked={selectAllChecked || categorySelected[option.code]} />
-                <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
-                  <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
-                </div>
-              </div>
-            )}
-          </div>
-        );
-      } else {
-        return (
-          <div style={style}>
-            <MenuItem option={option} index={index} />
-          </div>
-        );
-      }
-    };
-
-    return (
-      <div>
-        {selectAllOption}
-        <List
-          ref={listRef}
-          height={listHeight}
-          itemCount={optionsToRender.length}
-          itemSize={ITEM_HEIGHT}
-          width="100%"
-          overscanCount={OVERSCAN_COUNT}
-          style={{ overflowX: "hidden" }}
-        >
-          {VirtualizedRow}
-        </List>
-      </div>
-    );
-  };
   return (
     <div style={{ position: "relative" }}>
       {(isProcessing || isPending) && (
@@ -1003,7 +1061,22 @@ const MultiSelectDropdown = ({
                 optionsKey={optionsKey}
               />
             ) : (
-              <Menu />
+              <Menu
+                variant={variant}
+                flattenedOptions={flattenedOptions}
+                filteredOptions={filteredOptions}
+                selectAllOption={selectAllOption}
+                listRef={listRef}
+                optionsKey={optionsKey}
+                addCategorySelectAllCheck={addCategorySelectAllCheck}
+                categorySelectAllLabel={categorySelectAllLabel}
+                categorySelected={categorySelected}
+                handleCategorySelection={handleCategorySelection}
+                selectAllChecked={selectAllChecked}
+                addSelectAllCheck={addSelectAllCheck}
+                MenuItem={MenuItem}
+                t={t}
+              />
             )}
           </div>
         ) : null}

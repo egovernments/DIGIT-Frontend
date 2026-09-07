@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useCampaignSubmitting } from "./CampaignSubmitContext";
 import { useNavigate } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
@@ -224,6 +225,7 @@ function reverseDeliveryRemap(data, t) {
 }
 const DeliveryDetailsSummary = (props) => {
   const { t } = useTranslation();
+  const isParentSubmitting = useCampaignSubmitting();
   const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [formStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", null);
@@ -239,7 +241,6 @@ const DeliveryDetailsSummary = (props) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-  const campaignName = formStorageData?.HCM_CAMPAIGN_NAME?.campaignName;
   const handleRedirect = (step, activeCycle) => {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
@@ -356,6 +357,8 @@ const DeliveryDetailsSummary = (props) => {
     },
   });
 
+  const campaignName = formStorageData?.HCM_CAMPAIGN_NAME?.campaignName || data?.data?.campaignName;
+
   // Retry search if delivery rules (cycles) are not yet persisted by the backend
   const retryCountRef = useRef(0);
   const retryTimerRef = useRef(null);
@@ -431,12 +434,14 @@ const DeliveryDetailsSummary = (props) => {
     else setKey(8);
   };
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The flow already shows its overlay loader while saving - do not stack a second loader
+    if (isParentSubmitting) return null;
+    return <Loader page={true} variant={"PageLoader"} />
   }
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching || isPolling) && <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />}
+      {!isParentSubmitting && (isLoading || (!data && !error) || isFetching || isPolling) && <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />}
       <div className="container-full">
         {/* <div className="card-container">
           <Card className="card-header-timeline">
@@ -454,7 +459,7 @@ const DeliveryDetailsSummary = (props) => {
         <div className="card-container-delivery">
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
-            <HeaderComponent className="summary-header">{t(I18N_KEYS.COMPONENTS.HCM_DELIVERY_DETAILS_SUMMARY)}</HeaderComponent>
+            <HeaderComponent className="summary-header select-boundary-screen-heading">{t(I18N_KEYS.COMPONENTS.HCM_DELIVERY_DETAILS_SUMMARY)}</HeaderComponent>
           </div>
           <div className="campaign-summary-container delivery-summary">
             <ViewComposer data={updatedObject} cardErrors={summaryErrors} />

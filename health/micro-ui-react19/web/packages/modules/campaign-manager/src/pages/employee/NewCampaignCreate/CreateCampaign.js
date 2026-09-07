@@ -9,11 +9,12 @@ import { transformCreateData } from "../../../utils/transformCreateData";
 import { handleCreateValidate } from "../../../utils/handleCreateValidate";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import useCampaignStore from "../../../hooks/useCampaignStore";
-import { resetAllCampaignData, clearSelectedHierarchy, clearSelectedHierarchyCode } from "../../../store/campaignStore";
-import { useDispatch } from "react-redux";
+import { resetAllCampaignData, resetCreateCampaignData, clearSelectedHierarchy, clearSelectedHierarchyCode, campaignStore } from "../../../store/campaignStore";
+import { useLocation } from "react-router-dom";
 const CreateCampaign = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [showToast, setShowToast] = useState(null);
   const [totalFormData, setTotalFormData] = useState({});
@@ -23,7 +24,6 @@ const CreateCampaign = () => {
   const fromTemplate = searchParams.get("fromTemplate");
   const [params, setParams] = useCampaignStore("HCM_ADMIN_CONSOLE_DATA", {});
   const [storedHierarchy] = useCampaignStore("HCM_CAMPAIGN_SELECTED_HIERARCHY", null);
-  const dispatch = useDispatch();
   const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData, editName, fromTemplate));
   const [loader, setLoader] = useState(null);
   const skip = searchParams.get("skip");
@@ -164,13 +164,16 @@ const CreateCampaign = () => {
     setTotalFormData(params);
   }, [params]);
 
+  // Reset all campaign state when entering for a new campaign (no id).
+  // location.key changes on every navigation, ensuring this runs even if
+  // the component stays mounted across back/forward navigations.
   useEffect(() => {
-    if (!id) {
-      dispatch(clearSelectedHierarchy());
-      dispatch(clearSelectedHierarchyCode());
-      setParams({});  // Clear stale campaign name/date/type from previous flow
+    if (!id && !searchParams.get("campaignNumber") && !editName && !fromTemplate && !searchParams.get("key")) {
+      campaignStore.dispatch(resetCreateCampaignData());
+      setParams({});
+      hasLoadedDraft.current = false;
     }
-  }, []);
+  }, [location.key]);
 
   useEffect(() => {
     updateUrlParams({ key: currentKey });
@@ -245,7 +248,7 @@ const CreateCampaign = () => {
   };
 
   const cleanupSessionAndNavigate = (campNumber, campTenantId) => {
-    dispatch(resetAllCampaignData());
+    campaignStore.dispatch(resetAllCampaignData());
     const baseUrl = `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campNumber}&tenantId=${campTenantId}`;
     navigate(isDraft === "true" ? `${baseUrl}&draft=true` : baseUrl);
   };
@@ -432,6 +435,25 @@ const CreateCampaign = () => {
       return;
     }
 
+    // Date validation checks - only on HCM_CAMPAIGN_DATE step. This must run BEFORE
+    // setTotalFormData below: committing an invalid (e.g. equal start/end) date pair into
+    // totalFormData here, even briefly, lets a later transformCreateData call read that stale
+    // cached value instead of the corrected one the user actually submits afterward - the
+    // "Next" click looks blocked, but the invalid dates are already poisoning saved state.
+    if (name === "HCM_CAMPAIGN_DATE") {
+      const { startDate, endDate } = formData?.DateSelection || {};
+      if (!startDate || !endDate) {
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_CAMPAIGN_DATE_MISSING) });
+        return;
+      }
+      const start = new Date(startDate).getTime();
+      const end = new Date(endDate).getTime();
+      if (start >= end) {
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE) });
+        return;
+      }
+    }
+
     setTotalFormData((prevData) => ({
       ...prevData,
       [name]: formData,
@@ -460,20 +482,6 @@ const CreateCampaign = () => {
         setShowToast(null);
       }
       setIsValidatingName(false);
-    }
-    // Date validation checks - only on HCM_CAMPAIGN_DATE step
-    if (name === "HCM_CAMPAIGN_DATE") {
-      const { startDate, endDate } = formData?.DateSelection || {};
-      if (!startDate || !endDate) {
-        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_CAMPAIGN_DATE_MISSING) });
-        return;
-      }
-      const start = new Date(startDate).getTime();
-      const end = new Date(endDate).getTime();
-      if (start >= end) {
-        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE) });
-        return;
-      }
     }
 
     // Sync campaignDates (from CampaignDates component) to DateSelection so downstream code reads correct dates

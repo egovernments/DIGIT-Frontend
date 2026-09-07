@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useCallback, useEffect, useMemo } from 'react';
 import {
   selectCampaignData,
+  selectCampaignId,
   selectActiveTabIndex,
   selectActiveSubTabIndex,
   selectActiveCycle,
@@ -35,6 +36,7 @@ export const useDeliveryRules = () => {
   const dispatch = useDispatch();
 
   const campaignData = useSelector(selectCampaignData);
+  const storedCampaignId = useSelector(selectCampaignId);
   const activeTabIndex = useSelector(selectActiveTabIndex);
   const activeSubTabIndex = useSelector(selectActiveSubTabIndex);
   const activeCycle = useSelector(selectActiveCycle);
@@ -45,8 +47,8 @@ export const useDeliveryRules = () => {
   const initialized = useSelector(selectInitialized);
 
 
-  const initializeData = useCallback((cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig) => {
-    dispatch(initializeCampaignData({ cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig }));
+  const initializeData = useCallback((cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig, campaignId) => {
+    dispatch(initializeCampaignData({ cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig, campaignId }));
   }, [dispatch]);
 
   const changeTab = useCallback((tabIndex) => {
@@ -154,6 +156,7 @@ export const useDeliveryRules = () => {
   return {
     // State
     campaignData,
+    storedCampaignId,
     activeTabIndex,
     activeSubTabIndex,
     activeCycle,

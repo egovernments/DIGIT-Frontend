@@ -94,17 +94,7 @@ const BoundaryComponent = ({ t, config, onSelect, formData, index, hierarchy }) 
   };
 
   if (isLoading) {
-    return <div
-      style={{
-        display: "flex",
-        justifyContent: "center",  // horizontal center
-        alignItems: "center",      // vertical center
-        height: "100vh",           // take full viewport height
-        width: "100%",             // full width
-      }}
-    >
-      {<Loader />}
-    </div>;
+    return <Loader />;
   }
 
   return (

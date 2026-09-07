@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useCampaignSubmitting } from "./CampaignSubmitContext";
 import { useNavigate } from "react-router-dom";
 import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Button, Toast, PopUp, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
@@ -148,6 +149,7 @@ const fetchcd = async (tenantId, projectId) => {
 };
 const CampaignSummary = (props) => {
   const { t } = useTranslation();
+  const isParentSubmitting = useCampaignSubmitting();
   const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
@@ -670,7 +672,9 @@ const CampaignSummary = (props) => {
   }, [data?.data]);
 
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The flow already shows its overlay loader while saving - do not stack a second loader
+    if (isParentSubmitting) return null;
+    return <Loader page={true} variant={"PageLoader"} />
   }
   const closeToast = () => {
     setShowToast(null);
@@ -752,7 +756,7 @@ const CampaignSummary = (props) => {
   return (
     <>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-1.5rem" }}>
-        <HeaderComponent className="summary-header">{t(I18N_KEYS.COMPONENTS.ES_TQM_SUMMARY_HEADING)}</HeaderComponent>
+        <HeaderComponent className="summary-header select-boundary-screen-heading">{t(I18N_KEYS.COMPONENTS.ES_TQM_SUMMARY_HEADING)}</HeaderComponent>
         {timeLine && (
           <PopUp type={"default"} heading={t(I18N_KEYS.COMMON.ES_CAMPAIGN_TIMELINE)} onOverlayClick={() => setTimeline(false)} onClose={() => setTimeline(false)}>
             <TimelineComponent campaignId={campaignId} resourceId={resource} />

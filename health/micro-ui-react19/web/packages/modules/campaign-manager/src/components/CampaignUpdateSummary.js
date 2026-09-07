@@ -337,7 +337,7 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
       <TagComponent campaignName={campaignName || parentCampaign?.campaignName} />
 
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-1.5rem", marginTop: "1.5rem" }}>
-        <HeaderComponent className="summary-header">{t(I18N_KEYS.COMPONENTS.ES_TQM_SUMMARY_HEADING)}</HeaderComponent>
+        <HeaderComponent className="summary-header select-boundary-screen-heading">{t(I18N_KEYS.COMPONENTS.ES_TQM_SUMMARY_HEADING)}</HeaderComponent>
       </div>
 
       <div className="campaign-summary-container campaign-update-summary">

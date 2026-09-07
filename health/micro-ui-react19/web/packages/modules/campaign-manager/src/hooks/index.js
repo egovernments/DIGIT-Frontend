@@ -30,6 +30,7 @@ import { useProcessData } from "./useProcessData";
 import useBatchStockCreation from "./useBatchStockCreation";
 import useStockData from "./useStockData";
 import useWarehouseManagerSync from "./useWarehouseManagerSync";
+import useCampaignTemplateSearch from "./useCampaignTemplateSearch";
 
 const UserService = {};
 
@@ -70,6 +71,7 @@ const campaign = {
   useBatchStockCreation,
   useStockData,
   useWarehouseManagerSync,
+  useCampaignTemplateSearch,
 };
 
 const Hooks = {

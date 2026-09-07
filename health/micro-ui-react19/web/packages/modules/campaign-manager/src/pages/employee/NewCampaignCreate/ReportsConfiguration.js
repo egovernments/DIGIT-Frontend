@@ -659,6 +659,7 @@ const ReportsConfiguration = () => {
             style={{
               minWidth: "12.5rem",
             }}
+            isSuffix={true}
           />,
         ]}
         maxActionFieldsAllowed={5}

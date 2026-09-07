@@ -7,6 +7,7 @@ import StockComponent from "./StockComponent";
 import BulkUpload from "../BulkUpload";
 import XLSX from "xlsx";
 import useBatchStockCreation from "../../hooks/useBatchStockCreation";
+import usePaginatedSearch from "../../hooks/usePaginatedSearch";
 
 const BulkStockUpload = () => {
   const { t } = useTranslation();
@@ -42,7 +43,7 @@ const BulkStockUpload = () => {
     result: batchResult,
     reset: resetBatchState,
     abort: abortBatchProcessing,
-  } = useBatchStockCreation({ tenantId });
+  } = useBatchStockCreation({ tenantId, campaignNumber });
 
   // Ref to store original sheet data for error sheet generation
   const originalSheetDataRef = useRef(null);
@@ -394,12 +395,13 @@ const BulkStockUpload = () => {
   // Fetch ALL project facilities to know which projects have facilities
   const allFacilityReqCriteria = useMemo(() => ({
     url: `/${projectServicePath}/facility/v1/_search`,
-    params: { tenantId: tenantId, limit: 1000, offset: 0 },
+    params: { tenantId: tenantId },
     body: {
       ProjectFacility: {
         projectId: allProjectIds,
       },
     },
+    dataKey: "ProjectFacilities",
     config: {
       enabled: !!allProjectIds?.length,
       select: (data) => {
@@ -413,7 +415,7 @@ const BulkStockUpload = () => {
     },
   }), [tenantId, allProjectIds]);
 
-  const { data: projectIdsWithFacilities, isLoading: allFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(allFacilityReqCriteria);
+  const { data: projectIdsWithFacilities, isLoading: allFacilitiesLoading } = usePaginatedSearch(allFacilityReqCriteria);
 
   // Build hierarchy filter options only from projects that have facilities
   const hierarchyFilterOptions = useMemo(() => {
@@ -525,12 +527,13 @@ const BulkStockUpload = () => {
   // Fetch "From" facilities
   const fromFacilityReqCriteria = useMemo(() => ({
     url: `/${projectServicePath}/facility/v1/_search`,
-    params: { tenantId: tenantId, limit: 1000, offset: 0 },
+    params: { tenantId: tenantId },
     body: {
       ProjectFacility: {
         projectId: fromFilteredProjectIds,
       },
     },
+    dataKey: "ProjectFacilities",
     config: {
       enabled: !!fromFilteredProjectIds?.length,
       select: (data) => {
@@ -548,7 +551,7 @@ const BulkStockUpload = () => {
     },
   }), [tenantId, fromFilteredProjectIds]);
 
-  const { data: rawFromFacilityList, isLoading: fromFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(fromFacilityReqCriteria);
+  const { data: rawFromFacilityList, isLoading: fromFacilitiesLoading } = usePaginatedSearch(fromFacilityReqCriteria);
 
   // Enrich From facilities with boundary level info
   const fromFacilityList = useMemo(() => {
@@ -562,12 +565,13 @@ const BulkStockUpload = () => {
   // Fetch "To" facilities
   const toFacilityReqCriteria = useMemo(() => ({
     url: `/${projectServicePath}/facility/v1/_search`,
-    params: { tenantId: tenantId, limit: 1000, offset: 0 },
+    params: { tenantId: tenantId },
     body: {
       ProjectFacility: {
         projectId: toFilteredProjectIds,
       },
     },
+    dataKey: "ProjectFacilities",
     config: {
       enabled: !!toFilteredProjectIds?.length,
       select: (data) => {
@@ -585,7 +589,7 @@ const BulkStockUpload = () => {
     },
   }), [tenantId, toFilteredProjectIds]);
 
-  const { data: rawToFacilityList, isLoading: toFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(toFacilityReqCriteria);
+  const { data: rawToFacilityList, isLoading: toFacilitiesLoading } = usePaginatedSearch(toFacilityReqCriteria);
 
   // Enrich To facilities with boundary level info
   const toFacilityList = useMemo(() => {
@@ -596,25 +600,39 @@ const BulkStockUpload = () => {
     });
   }, [rawToFacilityList, projectBoundaryMap]);
 
-  // Extract product variants from MDMS project type resources
+  // Extract product variants — prefer campaign-specific delivery rules resources over MDMS defaults
   const productVariants = useMemo(() => {
+    const seenIds = new Set();
+    const seenNames = new Set();
+    const variants = [];
+
+    const deliveryRules = Array.isArray(campaignData?.deliveryRules) ? campaignData.deliveryRules : [];
+    const campaignResources = deliveryRules.flatMap((rule) => rule?.resources || []);
+    if (campaignResources.length > 0) {
+      campaignResources.forEach((r) => {
+        const displayName = r.name || r.productVariantId;
+        if (r?.productVariantId && !seenIds.has(r.productVariantId) && !seenNames.has(displayName)) {
+          seenIds.add(r.productVariantId);
+          seenNames.add(displayName);
+          variants.push({ productVariantId: r.productVariantId, name: displayName });
+        }
+      });
+      return variants;
+    }
+
+    // Fallback: MDMS defaults when campaign has no delivery rules configured yet
     if (!projectTypeData) return [];
     const projectTypes = projectTypeData?.["HCM-PROJECT-TYPES"]?.projectTypes || [];
     const matchedType = projectTypes.find((pt) => pt?.code === projectType);
     if (!matchedType?.resources) return [];
-    const variants = [];
-    const seen = new Set();
     matchedType.resources.forEach((r) => {
       if (r?.productVariantId && !seen.has(r.productVariantId)) {
         seen.add(r.productVariantId);
-        variants.push({
-          productVariantId: r.productVariantId,
-          name: r.name || r.productVariantId,
-        });
+        variants.push({ productVariantId: r.productVariantId, name: r.name || r.productVariantId });
       }
     });
     return variants;
-  }, [projectTypeData, projectType]);
+  }, [campaignData, projectTypeData, projectType]);
 
   // Filter "From" facilities by search
   const filteredFromFacilities = useMemo(() => {
@@ -1061,7 +1079,7 @@ const BulkStockUpload = () => {
                   {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_PROGRESS_LABEL, { current: batchStatus.currentBatch, total: batchStatus.total })}
                 </span>
               </div>
-              <div style={{ width: "100%", backgroundColor: "#E0E0E0", borderRadius: "4px", height: "8px", marginBottom: "0.75rem" }}>
+              <div style={{ width: "100%", backgroundColor: "#D6D5D4", borderRadius: "4px", height: "8px", marginBottom: "0.75rem" }}>
                 <div
                   style={{
                     width: `${batchStatus.total > 0 ? (batchStatus.completed / batchStatus.total) * 100 : 0}%`,

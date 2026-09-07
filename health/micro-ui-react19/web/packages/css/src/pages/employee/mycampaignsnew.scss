@@ -35,6 +35,10 @@
     .digit-results-card-tags {
       display: flex;
       gap: 1rem;
+
+      .digit-tag-wrapper{
+        cursor: default;
+      }
     }
   }
 

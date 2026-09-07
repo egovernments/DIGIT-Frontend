@@ -1,11 +1,11 @@
 import React, { Fragment, useEffect, useState, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { handleShowAddFieldPopup, initializeConfig, addField } from "./redux/remoteConfigSlice";
 import { getFieldMaster } from "./redux/fieldMasterSlice";
 import { getFieldPanelMaster } from "./redux/fieldPanelPropertiesSlice";
 import { fetchLocalization, setLocalizationData, updateLocalizationEntry } from "./redux/localizationSlice";
-import { Header } from "@egovernments/digit-ui-react-components";
 import { Button, Dropdown, LabelFieldPair, Loader, PopUp, Tag, TextBlock, TextInput, Toast } from "@egovernments/digit-ui-components";
 import IntermediateWrapper from "./IntermediateWrapper";
 import { useCustomT, useCustomTranslate, useFieldDataLabel } from "./hooks/useCustomT";
@@ -845,6 +845,16 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       }
     });
 
+    // Every screen needs a CTA: if it defines buttons at all, at least one must stay visible.
+    // Screens that legitimately carry no button are left alone.
+    const buttons = allFields.filter((field) => field?.format === "button");
+    if (buttons.length > 0 && buttons.every((button) => button?.hidden === true)) {
+      errors.push({
+        fieldLabel: "",
+        message: "AT_LEAST_ONE_BUTTON_REQUIRED",
+      });
+    }
+
     return errors;
   }, [currentData, panelConfig, fieldTypeMaster, localizationData, currentLocale]);
 
@@ -1213,9 +1223,14 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           </>
         </PopUp>
       )}
-      {showToast && (
-        <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />
-      )}
+      {/* Portal to body: this component mounts inside the preview area, whose
+          overflow-hidden/auto scroll containers clip fixed descendants — inline the
+          toast was cut off at the canvas edge */}
+      {showToast &&
+        createPortal(
+          <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />,
+          document.body
+        )}
     </React.Fragment>
   );
 };

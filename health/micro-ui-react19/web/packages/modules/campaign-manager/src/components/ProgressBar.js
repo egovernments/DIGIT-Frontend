@@ -6,7 +6,7 @@ export const ProgressBar = ({ steps, currentStep }) => {
 
     return (
       <div style={{ marginBottom: "1.5rem" }}>
-        <div style={{ background: "#e0e0e0", height: "8px", borderRadius: "4px" }}>
+        <div style={{ background: "#D6D5D4", height: "8px", borderRadius: "4px" }}>
           <div
             style={{
               width: `${progress}%`,

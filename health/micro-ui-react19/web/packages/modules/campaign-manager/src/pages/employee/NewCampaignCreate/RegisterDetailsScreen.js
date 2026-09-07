@@ -156,7 +156,7 @@ const RegisterDetailsScreen = () => {
 
   const getApproverName = () => {
     const approver = staff.find((s) => s.staffType === "APPROVER");
-    return approver?.additionalDetails?.staffName || NA;
+    return approver?.additionalDetails?.staffName || t(I18N_KEYS.PAGES.HCM_ATTENDANCE_OFC_YET_TO_BE_MAPPED) || NA;
   };
 
   const handleDeleteUser = (user) => {
@@ -220,10 +220,11 @@ const RegisterDetailsScreen = () => {
     },
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_BOUNDARY_COLUMN),
+      grow:2,
       cell: () => {
         const code = registerData?.localityCode || boundaryCode || NA;
         return (
-          <span title={t(code)} style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          <span title={t(code)} style={{textOverflow: "ellipsis", whiteSpace: "normal",wordBreak: "break-all"  }}>
             {t(code)}
           </span>
         );

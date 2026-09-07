@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader, Button, Toast } from "@egovernments/digit-ui-components";
+import { Loader, Button, Toast, Tag } from "@egovernments/digit-ui-components";
 import DataSyncCard from "./DataSyncCard";
 import SummaryCard from "./SummaryCard";
 import ReusableTableWrapper from "./ReusableTableWrapper";
@@ -9,6 +9,7 @@ import GenericChart from "./GenericChart";
 import CommodityShipmentPopup from "./CommodityShipmentPopup";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import usePaginatedSearch from "../../hooks/usePaginatedSearch";
 
 const toCamelCase = (str) =>
   str.split(" ")
@@ -42,8 +43,9 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   // Fetch facility details by IDs (name + usage/type)
   const facilitySearchCriteria = useMemo(() => ({
     url: `/facility/v1/_search`,
-    params: { tenantId, limit: facilityIds.length || 10, offset: 0 },
+    params: { tenantId },
     body: { Facility: { id: facilityIds } },
+    dataKey: "Facilities",
     config: {
       enabled: !!facilityIds.length && !!tenantId,
       select: (data) => {
@@ -74,7 +76,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       },
     },
   }), [tenantId, facilityIds]);
-  const { data: facilityMaps, isLoading: facilitiesLoading } = Digit.Hooks.useCustomAPIHook(facilitySearchCriteria);
+  const { data: facilityMaps, isLoading: facilitiesLoading } = usePaginatedSearch(facilitySearchCriteria);
   const facilityNameMap = facilityMaps?.nameMap || {};
 
 
@@ -150,8 +152,9 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   // Fetch project facilities using the selected project (not derived from context)
   const projectFacilityCriteria = useMemo(() => ({
     url: `${getProjectServiceUrl()}/facility/v1/_search`,
-    params: { tenantId, limit: 100, offset: 0 },
+    params: { tenantId },
     body: { ProjectFacility: { projectId: [projectId] } },
+    dataKey: "ProjectFacilities",
     config: {
       enabled: !!projectId && !!tenantId,
       select: (data) => {
@@ -163,7 +166,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       },
     },
   }), [tenantId, projectId]);
-  const { data: userFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
+  const { data: userFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = usePaginatedSearch(projectFacilityCriteria);
 
   // User's own facility: first project facility (primary facility for shipment actions)
   const userOwnFacilityId = useMemo(() => {
@@ -330,11 +333,15 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   const facilityStockSummaryRows = useMemo(() => {
     if (!finalStockData?.length) return [];
 
-    // Build name fallback from stock records (each record embeds facilityName + transactingFacilityName)
+    // Build name fallback from stock records (each record embeds facilityName + transactingFacilityName).
+    // Skip entries where facilityName === facilityId — the API returning the raw ID as name means no
+    // real name is available; falling through to userNameMap gives the correct user display name.
     const namesFromData = {};
     finalStockData.forEach((stock) => {
-      if (stock.facilityId && stock.facilityName) namesFromData[stock.facilityId] = stock.facilityName;
-      if (stock.transactingFacilityId && stock.transactingFacilityName) namesFromData[stock.transactingFacilityId] = stock.transactingFacilityName;
+      if (stock.facilityId && stock.facilityName && stock.facilityName !== stock.facilityId)
+        namesFromData[stock.facilityId] = stock.facilityName;
+      if (stock.transactingFacilityId && stock.transactingFacilityName && stock.transactingFacilityName !== stock.transactingFacilityId)
+        namesFromData[stock.transactingFacilityId] = stock.transactingFacilityName;
     });
     const resolveName = (fId) => facilityNameMap[fId] || namesFromData[fId] || userNameMap[fId] || fId;
 
@@ -433,6 +440,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         rows.push({
           facilityId,
           facilityName: resolveName(facilityId),
+          staffName: !facilityNameMap[facilityId] ? (userNameMap[facilityId] || null) : null,
           facilityType: facilityUsageMap[facilityId] || (!facilityNameMap[facilityId] ? t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STAFF) : "—"),
           boundary: getBoundaryDisplay(facilityId),
           boundaryHierarchy: getBoundaryHierarchyDisplay(facilityId),
@@ -555,13 +563,6 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       minWidth: "120px",
       sortable: true,
     },
-    ...(!isCompleted ? [{
-      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_ACTION),
-      key: "action",
-      grow: 1.5,
-      minWidth: "240px",
-      sortable: false,
-    }] : []),
   ];
 
   // Stock Summary List tab — filtered data + columns + cell renderer
@@ -579,7 +580,6 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_RECEIVED), key: "totalReceived", grow: 0.7, minWidth: "110px", sortable: true },
     { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_ACCEPTED), key: "totalAccepted", grow: 0.7, minWidth: "110px", sortable: true },
     { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_ISSUED),   key: "totalIssued",   grow: 0.7, minWidth: "110px", sortable: true },
-    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_REJECTED), key: "totalRejected", grow: 0.7, minWidth: "110px", sortable: true },
     { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_RETURNED), key: "totalReturned", grow: 0.7, minWidth: "110px", sortable: true },
     { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BALANCE),        key: "balance",       grow: 0.7, minWidth: "110px", sortable: true },
   ];
@@ -599,7 +599,6 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     totalReceived: (row) => <span className="cm-cell-stock">{row.totalReceived?.toLocaleString()}</span>,
     totalAccepted: (row) => <span className="cm-cell-stock">{row.totalAccepted?.toLocaleString()}</span>,
     totalIssued:   (row) => <span className="cm-cell-stock">{row.totalIssued?.toLocaleString()}</span>,
-    totalRejected: (row) => <span className="cm-cell-stock">{row.totalRejected?.toLocaleString()}</span>,
     totalReturned: (row) => <span className="cm-cell-stock">{row.totalReturned?.toLocaleString()}</span>,
     balance: (row) => (
       <span className={`cm-cell-stock${row.balance < 0 ? " cm-balance-negative" : ""}`}>
@@ -612,19 +611,38 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   const exportTableToXlsx = useCallback((data, exportColumns, sheetName, fileName) => {
     if (!data?.length) return;
     try {
-      const XLSX = require("xlsx");
+      const XLSXStyle = require("xlsx-js-style");
       const timestamp = new Date().toISOString().split("T")[0];
-      const rows = data.map((row) => {
-        const out = {};
-        exportColumns.forEach((col) => {
-          out[col.label] = row[col.key] !== undefined && row[col.key] !== null ? String(row[col.key]) : "N/A";
-        });
-        return out;
-      });
-      const ws = XLSX.utils.json_to_sheet(rows);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, sheetName);
-      XLSX.writeFile(wb, `${fileName}_${timestamp}.xlsx`);
+
+      const headerStyle = {
+        font: { bold: true, color: { rgb: "000000" }, sz: 11 },
+        fill: { fgColor: { rgb: "93C47D" } },
+        alignment: { horizontal: "center", vertical: "center", wrapText: true },
+        border: {
+          top: { style: "thin", color: { rgb: "000000" } },
+          bottom: { style: "thin", color: { rgb: "000000" } },
+          left: { style: "thin", color: { rgb: "000000" } },
+          right: { style: "thin", color: { rgb: "000000" } },
+        },
+      };
+
+      const headerRow = exportColumns.map((col) => ({ v: col.label, t: "s", s: headerStyle }));
+
+      const dataRows = data.map((row) =>
+        exportColumns.map((col) => ({
+          v: row[col.key] !== undefined && row[col.key] !== null ? String(row[col.key]) : "N/A",
+          t: "s",
+          s: { alignment: { wrapText: true, vertical: "top" } },
+        }))
+      );
+
+      const ws = XLSXStyle.utils.aoa_to_sheet([headerRow, ...dataRows]);
+      ws["!cols"] = exportColumns.map(() => ({ wch: 22 }));
+      ws["!freeze"] = { xSplit: 0, ySplit: 1 };
+
+      const wb = XLSXStyle.utils.book_new();
+      XLSXStyle.utils.book_append_sheet(wb, ws, sheetName);
+      XLSXStyle.writeFile(wb, `${fileName}_${timestamp}.xlsx`);
     } catch (err) {
       console.error("XLSX export error:", err);
     }
@@ -755,14 +773,13 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     [tenantId, t, handleExcelDownload],
   );
 
-  // Helper to map status to CSS class
-  const getStatusClass = (status) => {
-    const classMap = {
-      Completed: "cm-status-badge--completed",
-      "In-Transit": "cm-status-badge--in-transit",
-      Rejected: "cm-status-badge--rejected",
+  const getStatusTagType = (status) => {
+    const typeMap = {
+      Completed: "success",
+      "In-Transit": "warning",
+      Rejected: "error",
     };
-    return classMap[status] || "cm-status-badge--default";
+    return typeMap[status] || "monochrome";
   };
 
   const customCellRenderer = {
@@ -784,20 +801,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       </span>
     ),
     displayStatus: (row) => (
-      <span className={`cm-status-badge ${getStatusClass(row.displayStatus)}`}>
-        {row.displayStatus}
-      </span>
-    ),
-    action: (row) => (
-      <Button
-        onClick={() =>
-          setShipmentFacility({ id: row.facilityId, name: row.warehouseName, productVariantId: row.productVariantId })
-        }
-        title={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SHIP_COMMODITY)}
-        icon={"Add"}
-        label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SHIP_COMMODITY)}
-        variation={"secondary"}
-      />
+      <Tag label={row.displayStatus} type={getStatusTagType(row.displayStatus)} showIcon={false} stroke={false} />
     ),
   };
 
@@ -837,7 +841,6 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
             { label: "HCM_TOTAL_RECEIVED", value: commodity.totalReceived },
             { label: "HCM_TOTAL_ACCEPTED", value: commodity.totalAccepted },
             { label: "HCM_TOTAL_ISSUED", value: commodity.totalIssued },
-            { label: "HCM_TOTAL_REJECTED", value: commodity.totalRejected },
             { label: "HCM_TOTAL_RETURNED", value: commodity.totalReturned },
             { label: "HCM_BALANCE", value: commodity.balance },
           ]}
@@ -929,14 +932,28 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           subHeader={""}
           onChange={handleSearch}
           exportButton={
-            <Button
-              type="button"
-              variation="secondary"
-              label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_EXPORT_XLSX)}
-              icon="FileDownload"
-              onClick={handleExcelDownload}
-              size="medium"
-            />
+            <div style={{ display: "flex", gap: "8px" }}>
+              {!isCompleted && userOwnFacilityId && (
+                <Button
+                  type="button"
+                  variation="secondary"
+                  label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SHIP_COMMODITY)}
+                  icon="Add"
+                  onClick={() => setShipmentFacility({ id: userOwnFacilityId, name: facilityNameMap[userOwnFacilityId] || "", productVariantId: undefined })}
+                  size="medium"
+                />
+              )}
+              {filteredData.length > 0 && (
+                <Button
+                  type="button"
+                  variation="secondary"
+                  label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_EXPORT_XLSX)}
+                  icon="FileDownload"
+                  onClick={handleExcelDownload}
+                  size="medium"
+                />
+              )}
+            </div>
           }
         >
           <ReusableTableWrapper
@@ -965,14 +982,16 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           subHeader={""}
           onChange={(e) => setSummarySearchQuery(e.target.value)}
           exportButton={
-            <Button
-              type="button"
-              variation="secondary"
-              label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_EXPORT_XLSX)}
-              icon="FileDownload"
-              onClick={handleSummaryExport}
-              size="medium"
-            />
+            summaryFilteredData.length > 0 ? (
+              <Button
+                type="button"
+                variation="secondary"
+                label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_EXPORT_XLSX)}
+                icon="FileDownload"
+                onClick={handleSummaryExport}
+                size="medium"
+              />
+            ) : null
           }
         >
           <ReusableTableWrapper

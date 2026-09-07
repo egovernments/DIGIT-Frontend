@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, Fragment } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { Loader,Divider, Button, PopUp, AlertCard as InfoCard, Card, Link, ViewCardFieldPair, Toast, Tab, NoResultsFound, TooltipWrapper, HeaderComponent, Footer } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";

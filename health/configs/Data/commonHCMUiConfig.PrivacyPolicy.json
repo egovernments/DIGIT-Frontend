@@ -4,389 +4,298 @@
     "module": "HCM",
     "contents": [
       {
-        "header": "PRIVACY_HEADER_1_SUB_1",
+        "header": "HCM_PRIVACY_S1",
         "descriptions": [
           {
-            "text": "PRIVACY_HEADER_1_SUB_1_DESC_1",
+            "text": "HCM_PRIVACY_S1_D1",
+            "type": "null",
+            "isBold": true
+          },
+          {
+            "text": "HCM_PRIVACY_S1_D2",
             "type": "null",
             "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_1_SUB_1_DESC_2",
+            "text": "HCM_PRIVACY_S1_D3",
             "type": "null",
             "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_1_SUB_1_DESC_3",
+            "text": "HCM_PRIVACY_S1_D4",
             "type": "null",
             "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_1_SUB_1_DESC_4",
-            "type": "null",
-            "isBold": false
-          },
-          {
-            "text": "PRIVACY_HEADER_1_SUB_1_DESC_5",
-            "type": "null",
-            "isBold": false
-          },
-          {
-            "text": "PRIVACY_HEADER_1_SUB_1_DESC_6",
-            "type": "null",
-            "isBold": false
-          },
-          {
-            "text": "PRIVACY_HEADER_1_SUB_1_DESC_7",
+            "text": "HCM_PRIVACY_S1_D5",
             "type": "null",
             "isBold": false
           }
         ]
       },
       {
-        "header": "PRIVACY_HEADER_2_SUB_2",
+        "header": "HCM_PRIVACY_S2",
         "descriptions": [
           {
-            "text": "PRIVACY_HEADER_2_SUB_2_DESC_1",
+            "text": "HCM_PRIVACY_S2_D1",
             "type": "null",
             "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_2_SUB_2_DESC_2",
-            "type": "null",
+            "text": "HCM_PRIVACY_S2_D2",
+            "type": "points",
             "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_2_SUB_2_DESC_3",
-            "type": "null",
+            "text": "HCM_PRIVACY_S2_D3",
+            "type": "points",
             "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_2_SUB_2_DESC_4",
+            "text": "HCM_PRIVACY_S2_D4",
+            "type": "points",
+            "isBold": false
+          },
+          {
+            "text": "HCM_PRIVACY_S2_D5",
             "type": "null",
             "isBold": false,
-            "subDescriptions": [
-              {
-                "text": "PRIVACY_HEADER_2_SUB_2_DESC_3_SUBDESC_1",
-                "type": "null",
-                "isBold": false,
-                "isSpaceRequired": true
-              },
-              {
-                "text": "PRIVACY_HEADER_2_SUB_2_DESC_3_SUBDESC_2",
-                "type": "null",
-                "isBold": false,
-                "isSpaceRequired": true
-              }
-            ]
+            "isSpaceRequired": true
           },
           {
-            "text": "PRIVACY_HEADER_2_SUB_2_DESC_5",
-            "type": "null",
-            "isBold": false
-          }
-        ]
-      },
-      {
-        "header": "PRIVACY_HEADER_3_SUB_3",
-        "descriptions": [
-          {
-            "text": "PRIVACY_HEADER_3_SUB_3_DESC_1",
-            "type": "null",
-            "isBold": false
-          },
-          {
-            "text": "PRIVACY_HEADER_3_SUB_3_DESC_2",
-            "type": "null",
-            "isBold": false
-          }
-        ]
-      },
-      {
-        "header": "PRIVACY_HEADER_4_SUB_4",
-        "descriptions": [
-          {
-            "text": "PRIVACY_HEADER_4_SUB_4_DESC_1",
+            "text": "HCM_PRIVACY_S2_D6",
             "type": "null",
             "isBold": false,
-            "subDescriptions": [
-              {
-                "text": "PRIVACY_HEADER_4_SUB_4_DESC_1_SUBDESC_1",
-                "type": "points",
-                "isBold": false,
-                "isSpaceRequired": true
-              },
-              {
-                "text": "PRIVACY_HEADER_4_SUB_4_DESC_1_SUBDESC_2",
-                "type": "points",
-                "isBold": false,
-                "isSpaceRequired": true
-              },
-              {
-                "text": "PRIVACY_HEADER_4_SUB_4_DESC_1_SUBDESC_3",
-                "type": "points",
-                "isBold": false,
-                "isSpaceRequired": true
-              },
-              {
-                "text": "PRIVACY_HEADER_4_SUB_4_DESC_1_SUBDESC_4",
-                "type": "points",
-                "isBold": false,
-                "isSpaceRequired": true
-              },
-              {
-                "text": "PRIVACY_HEADER_4_SUB_4_DESC_1_SUBDESC_5",
-                "type": "points",
-                "isBold": false,
-                "isSpaceRequired": true
-              },
-              {
-                "text": "PRIVACY_HEADER_4_SUB_4_DESC_1_SUBDESC_6",
-                "type": "points",
-                "isBold": false,
-                "isSpaceRequired": true
-              },
-              {
-                "text": "PRIVACY_HEADER_4_SUB_4_DESC_1_SUBDESC_7",
-                "type": "points",
-                "isBold": false,
-                "isSpaceRequired": true
-              }
-            ]
+            "isSpaceRequired": true
           },
           {
-            "text": "PRIVACY_HEADER_4_SUB_4_DESC_2",
+            "text": "HCM_PRIVACY_S2_D7",
+            "type": "points",
+            "isBold": false
+          }
+        ]
+      },
+      {
+        "header": "HCM_PRIVACY_S3",
+        "descriptions": [
+          {
+            "text": "HCM_PRIVACY_S3_D1",
+            "type": "null",
+            "isBold": false
+          },
+          {
+            "text": "HCM_PRIVACY_S3_D2",
             "type": "null",
             "isBold": false
           }
         ]
       },
       {
-        "header": "PRIVACY_HEADER_5_SUB_5",
+        "header": "HCM_PRIVACY_S4",
         "descriptions": [
           {
-            "text": "PRIVACY_HEADER_5_SUB_5_DESC_1",
+            "text": "HCM_PRIVACY_S4_D1",
+            "type": "null",
+            "isBold": false
+          },
+          {
+            "text": "HCM_PRIVACY_S4_D2",
+            "type": "points",
+            "isBold": false
+          },
+          {
+            "text": "HCM_PRIVACY_S4_D3",
+            "type": "points",
+            "isBold": false
+          },
+          {
+            "text": "HCM_PRIVACY_S4_D4",
+            "type": "null",
+            "isBold": false
+          }
+        ]
+      },
+      {
+        "header": "HCM_PRIVACY_S5",
+        "descriptions": [
+          {
+            "text": "HCM_PRIVACY_S5_D1",
+            "type": "null",
+            "isBold": false
+          },
+          {
+            "text": "HCM_PRIVACY_S5_D2",
+            "type": "points",
+            "isBold": false
+          },
+          {
+            "text": "HCM_PRIVACY_S5_D3",
+            "type": "points",
+            "isBold": false
+          },
+          {
+            "text": "HCM_PRIVACY_S5_D4",
+            "type": "points",
+            "isBold": false
+          },
+          {
+            "text": "HCM_PRIVACY_S5_D5",
+            "type": "points",
+            "isBold": false
+          },
+          {
+            "text": "HCM_PRIVACY_S5_D6",
+            "type": "points",
+            "isBold": false
+          }
+        ]
+      },
+      {
+        "header": "HCM_PRIVACY_S6",
+        "descriptions": [
+          {
+            "text": "HCM_PRIVACY_S6_D1",
+            "type": "null",
+            "isBold": false
+          },
+          {
+            "text": "HCM_PRIVACY_S6_D2",
+            "type": "null",
+            "isBold": false
+          },
+          {
+            "text": "HCM_PRIVACY_S6_D3",
+            "type": "null",
+            "isBold": false
+          },
+          {
+            "text": "HCM_PRIVACY_S6_D4",
+            "type": "null",
+            "isBold": false
+          }
+        ]
+      },
+      {
+        "header": "HCM_PRIVACY_S7",
+        "descriptions": [
+          {
+            "text": "HCM_PRIVACY_S7_D1",
+            "type": "null",
+            "isBold": false
+          },
+          {
+            "text": "HCM_PRIVACY_S7_D2",
             "type": "null",
             "isBold": false,
-            "subDescriptions": [
-              {
-                "text": "PRIVACY_HEADER_5_SUB_5_DESC_1_SUBDESC_1",
-                "type": "points",
-                "isBold": false,
-                "isSpaceRequired": true
-              },
-              {
-                "text": "PRIVACY_HEADER_5_SUB_5_DESC_1_SUBDESC_2",
-                "type": "points",
-                "isBold": false,
-                "isSpaceRequired": true
-              },
-              {
-                "text": "PRIVACY_HEADER_5_SUB_5_DESC_1_SUBDESC_3",
-                "type": "points",
-                "isBold": false,
-                "isSpaceRequired": true
-              },
-              {
-                "text": "PRIVACY_HEADER_5_SUB_5_DESC_1_SUBDESC_4",
-                "type": "points",
-                "isBold": false,
-                "isSpaceRequired": true
-              },
-              {
-                "text": "PRIVACY_HEADER_5_SUB_5_DESC_1_SUBDESC_5",
-                "type": "points",
-                "isBold": false,
-                "isSpaceRequired": true
-              },
-              {
-                "text": "PRIVACY_HEADER_5_SUB_5_DESC_1_SUBDESC_6",
-                "type": "points",
-                "isBold": false,
-                "isSpaceRequired": true
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "header": "PRIVACY_HEADER_6_SUB_1",
-        "descriptions": [
+            "isSpaceRequired": true
+          },
           {
-            "text": "PRIVACY_HEADER_6_SUB_6_DESC_1",
+            "text": "HCM_PRIVACY_S7_D3",
             "type": "null",
             "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_6_SUB_6_DESC_2",
-            "type": "null",
-            "isBold": false
-          },
-          {
-            "text": "PRIVACY_HEADER_6_SUB_6_DESC_3",
-            "type": "null",
-            "isBold": false
-          },
-          {
-            "text": "PRIVACY_HEADER_6_SUB_6_DESC_4",
+            "text": "HCM_PRIVACY_S7_D4",
             "type": "null",
             "isBold": false
           }
         ]
       },
       {
-        "header": "PRIVACY_HEADER_7_SUB_1",
+        "header": "HCM_PRIVACY_S8",
         "descriptions": [
           {
-            "text": "PRIVACY_HEADER_7_SUB_7_DESC_1",
+            "text": "HCM_PRIVACY_S8_D1",
             "type": "null",
             "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_7_SUB_7_DESC_2",
+            "text": "HCM_PRIVACY_S8_D2",
             "type": "null",
             "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_7_SUB_7_DESC_3",
-            "type": "null",
-            "isBold": false
-          },
-          {
-            "text": "PRIVACY_HEADER_7_SUB_7_DESC_4",
+            "text": "HCM_PRIVACY_S8_D3",
             "type": "null",
             "isBold": false
           }
         ]
       },
       {
-        "header": "PRIVACY_HEADER_8_SUB_1",
+        "header": "HCM_PRIVACY_S9",
         "descriptions": [
           {
-            "text": "PRIVACY_HEADER_8_SUB_8_DESC_1",
+            "text": "HCM_PRIVACY_S9_D1",
             "type": "null",
             "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_8_SUB_8_DESC_2",
-            "type": "null",
+            "text": "HCM_PRIVACY_S9_D2",
+            "type": "points",
             "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_8_SUB_8_DESC_3",
-            "type": "null",
+            "text": "HCM_PRIVACY_S9_D3",
+            "type": "points",
             "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_8_SUB_8_DESC_4",
-            "type": "null",
-            "isBold": false
-          }
-        ]
-      },
-      {
-        "header": "PRIVACY_HEADER_9_SUB_9",
-        "descriptions": [
-          {
-            "text": "PRIVACY_HEADER_9_SUB_9_DESC_1",
-            "type": "null",
+            "text": "HCM_PRIVACY_S9_D4",
+            "type": "points",
             "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_9_SUB_9_DESC_2",
-            "type": "null",
+            "text": "HCM_PRIVACY_S9_D5",
+            "type": "points",
             "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_9_SUB_9_DESC_3",
+            "text": "HCM_PRIVACY_S9_D6",
             "type": "null",
             "isBold": false,
-            "subDescriptions": [
-              {
-                "text": "PRIVACY_HEADER_9_SUB_9_DESC_3_SUBDESC_1",
-                "type": "null",
-                "isBold": false,
-                "isSpaceRequired": true
-              },
-              {
-                "text": "PRIVACY_HEADER_9_SUB_9_DESC_3_SUBDESC_2",
-                "type": "null",
-                "isBold": false,
-                "isSpaceRequired": true
-              }
-            ]
+            "isSpaceRequired": true
           },
           {
-            "text": "PRIVACY_HEADER_9_SUB_9_DESC_4",
+            "text": "HCM_PRIVACY_S9_D7",
             "type": "null",
             "isBold": false,
-            "subDescriptions": [
-              {
-                "text": "PRIVACY_HEADER_9_SUB_9_DESC_4_SUBDESC_1",
-                "type": "null",
-                "isBold": false,
-                "isSpaceRequired": true
-              }
-            ]
+            "isSpaceRequired": true
+          }
+        ]
+      },
+      {
+        "header": "HCM_PRIVACY_S10",
+        "descriptions": [
+          {
+            "text": "HCM_PRIVACY_S10_D1",
+            "type": "null",
+            "isBold": false
+          }
+        ]
+      },
+      {
+        "header": "HCM_PRIVACY_S11",
+        "descriptions": [
+          {
+            "text": "HCM_PRIVACY_S11_D1",
+            "type": "null",
+            "isBold": false
+          }
+        ]
+      },
+      {
+        "header": "HCM_PRIVACY_S12",
+        "descriptions": [
+          {
+            "text": "HCM_PRIVACY_S12_D1",
+            "type": "null",
+            "isBold": false
           },
           {
-            "text": "PRIVACY_HEADER_9_SUB_9_DESC_5",
+            "text": "HCM_PRIVACY_S12_D2",
             "type": "null",
             "isBold": false,
-            "subDescriptions": [
-              {
-                "text": "PRIVACY_HEADER_9_SUB_9_DESC_5_SUBDESC_1",
-                "type": "null",
-                "isBold": false,
-                "isSpaceRequired": true
-              },
-              {
-                "text": "PRIVACY_HEADER_9_SUB_9_DESC_5_SUBDESC_2",
-                "type": "null",
-                "isBold": false,
-                "isSpaceRequired": true
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "header": "PRIVACY_HEADER_10_SUB_10",
-        "descriptions": [
-          {
-            "text": "PRIVACY_HEADER_10_SUB_10_DESC_1",
-            "type": "null",
-            "isBold": false
-          },
-          {
-            "text": "PRIVACY_HEADER_10_SUB_10_DESC_2",
-            "type": "null",
-            "isBold": false
-          }
-        ]
-      },
-      {
-        "header": "PRIVACY_HEADER_11_SUB_11",
-        "descriptions": [
-          {
-            "text": "PRIVACY_HEADER_11_SUB_11_DESC_1",
-            "type": "null",
-            "isBold": false
-          }
-        ]
-      },
-      {
-        "header": "PRIVACY_HEADER_12_SUB_12",
-        "descriptions": [
-          {
-            "text": "PRIVACY_HEADER_12_SUB_12_DESC_1",
-            "type": "step",
-            "isBold": false
-          },
-          {
-            "text": "PRIVACY_HEADER_12_SUB_12_DESC_2",
-            "type": "step",
-            "isBold": false
+            "isSpaceRequired": true
           }
         ]
       }

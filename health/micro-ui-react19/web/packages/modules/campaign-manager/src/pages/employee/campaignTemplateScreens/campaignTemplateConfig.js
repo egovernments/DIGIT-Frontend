@@ -77,7 +77,7 @@ export const campaignTemplateConfig = {
                 disable: false,
                 populators: {
                   name: "disease",
-                  optionsKey: "code",
+                  optionsKey: "name",
                   allowMultiSelect: false,
                   masterName: "commonUiConfig",
                   moduleName: "CampaignTemplateConfig",
@@ -116,6 +116,7 @@ export const campaignTemplateConfig = {
       additionalSections: {},
       persistFormData: true,
       showAsRemovableTagsInMobile: true,
+      customHookName: "campaign.useCampaignTemplateSearch",
     },
   ],
 };

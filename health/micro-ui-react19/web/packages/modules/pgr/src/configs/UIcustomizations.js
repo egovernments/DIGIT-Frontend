@@ -80,6 +80,10 @@ export const UICustomizations = {
       const statuses = Object.keys(rawStatuses).filter((key) => rawStatuses[key] === true);
       if (statuses.length > 0) moduleSearchCriteria.status = statuses;
 
+      // Filter: hierarchyType
+      const hierarchyType = filterForm.hierarchyType || ((Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED") || {}).hierarchyType) || null;
+      if (hierarchyType) moduleSearchCriteria.hierarchyType = hierarchyType;
+
       // Replace body with a new object so useCustomAPIHook detects the reference change
       data.body = {
         inbox: {

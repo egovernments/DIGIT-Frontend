@@ -1,7 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import HierarchySelection from "../../components/HierarchySelection";
 
 const EmployeeApp = ({ stateCode, userType, tenants }) => {
   const { t } = useTranslation();
@@ -13,6 +14,12 @@ const EmployeeApp = ({ stateCode, userType, tenants }) => {
   const PGRResponse = Digit?.ComponentRegistryService?.getComponent("PGRResponse");
   const BreadCrumbs = Digit?.ComponentRegistryService?.getComponent("PGRBreadCrumbs");
 
+  const hierarchySelected = Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED");
+
+  if (!hierarchySelected && !location.pathname.includes("select-hierarchy")) {
+    return <Navigate to="select-hierarchy" state={{ from: location.pathname }} replace />;
+  }
+
   return (
     <div className="ground-container">
       <React.Fragment>
@@ -23,6 +30,11 @@ const EmployeeApp = ({ stateCode, userType, tenants }) => {
               content: t(I18N_KEYS.PAGES_INBOX.ACTION_TEST_HOME),
               internalLink: `/${window?.contextPath}/employee`,
               show: !location.pathname.includes("complaint-success"),
+            },
+            {
+              content: t(I18N_KEYS.COMPONENTS.HCM_HIERARCHY_TYPE_BREADCRUMB),
+              internalLink: `/${window?.contextPath}/employee/pgr/select-hierarchy`,
+              show: !location.pathname.includes("complaint-success") && !location.pathname.includes("complaint-failed"),
             },
             {
               internalLink: `/${window?.contextPath}/employee/pgr/create-complaint`,
@@ -44,6 +56,7 @@ const EmployeeApp = ({ stateCode, userType, tenants }) => {
       </React.Fragment>
 
       <Routes>
+        <Route path="select-hierarchy" element={<HierarchySelection />} />
         <Route path="create-complaint" element={<PGRCreateComplaint />} />
         <Route path="complaint-success" element={<PGRResponse />} />
         <Route path="complaint-failed" element={<PGRResponse />} />

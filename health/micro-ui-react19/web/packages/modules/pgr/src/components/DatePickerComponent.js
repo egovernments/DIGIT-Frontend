@@ -45,7 +45,11 @@ const DatePickerComponent = ({ t, config, onSelect, formData, errors, setError, 
   // Get max date (today's date if max is "currentDate")
   const getMaxDate = () => {
     if (config?.populators?.validation?.max === "currentDate") {
-      return new Date().toISOString().split("T")[0];
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      const dd = String(now.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
     }
     return config?.populators?.validation?.max || "";
   };

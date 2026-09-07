@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import { addProductConfig } from "../../configs/addProductConfig";
-import { Toast ,SVG} from "@egovernments/digit-ui-components";
+import { Toast, SVG, Loader, PopUp, Button, CardText } from "@egovernments/digit-ui-components";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import useCampaignStore from "../../hooks/useCampaignStore";
 
@@ -13,6 +13,9 @@ function AddProduct() {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [formStorageData] = useCampaignStore("HCM_CAMPAIGN_MANAGER_FORM_DATA", null);
   const [showToast, setShowToast] = useState(null);
+  // Holds the validated form data while the confirmation popup is open
+  const [pendingResources, setPendingResources] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
   const { state } = useLocation();
   const { mutate: createProduct } = Digit.Hooks.campaign.useCreateProduct(tenantId);
   const { mutate: createProductVariant } = Digit.Hooks.campaign.useCreateProductVariant(tenantId);
@@ -80,6 +83,14 @@ function AddProduct() {
       return;
     }
 
+    // Confirm before creating - resource creation is not reversible from this screen
+    setPendingResources(formData);
+  };
+
+  const createResources = async (formData) => {
+    setPendingResources(null);
+    setIsCreating(true);
+
     const payloadData = formData?.["addProduct"]?.map((i) => ({
       tenantId: tenantId,
       type: i?.type?.code,
@@ -88,6 +99,7 @@ function AddProduct() {
 
     await createProduct(payloadData, {
       onError: (error, variables) => {
+        setIsCreating(false);
         setShowToast({ key: "error", label: error, isError: true });
       },
       onSuccess: async (data) => {
@@ -124,12 +136,14 @@ function AddProduct() {
         });
         
         if ((variantPayload || []).some((item) => item == null && item == undefined)) {
+          setIsCreating(false);
           setShowToast({ key: "error", label: "DUPLICATE_PRODUCT_VARIANT_ERROR", isError: true });
           return;
         }
         
         await createProductVariant(variantPayload, {
           onError: (error, variables) => {
+            setIsCreating(false);
             setShowToast({ key: "error", label: error, isError: true });
           },
           onSuccess: async (data) => {
@@ -182,8 +196,48 @@ function AddProduct() {
     navigate(returnPath);
   };
 
+  const pendingNames = (pendingResources?.["addProduct"] || []).map((i) => `${i?.name} - ${i?.variant}`).join(", ");
+
   return (
     <div>
+      {isCreating && <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.PAGES.HCM_CONFIRMING_RESOURCE_CREATION)} />}
+
+      {pendingResources && (
+        <PopUp
+          className={"resource-confirm-pop-module"}
+          type={"default"}
+          heading={t(I18N_KEYS.PAGES.ES_CAMPAIGN_ADD_PRODUCT_BUTTON)}
+          children={[
+            <div key="body">
+              <CardText style={{ margin: 0 }}>{pendingNames}</CardText>
+            </div>,
+          ]}
+          onOverlayClick={() => setPendingResources(null)}
+          onClose={() => setPendingResources(null)}
+          footerChildren={[
+            <Button
+              key="back"
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t(I18N_KEYS.COMMON.HCM_BACK)}
+              title={t(I18N_KEYS.COMMON.HCM_BACK)}
+              onClick={() => setPendingResources(null)}
+            />,
+            <Button
+              key="confirm"
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t(I18N_KEYS.PAGES.CONFIRM)}
+              title={t(I18N_KEYS.PAGES.CONFIRM)}
+              onClick={() => createResources(pendingResources)}
+            />,
+          ]}
+          sortFooterChildren={true}
+        ></PopUp>
+      )}
+
       <FormComposerV2
         showMultipleCardsWithoutNavs={true}
         label={t(I18N_KEYS.PAGES.ES_CAMPAIGN_ADD_PRODUCT_BUTTON)}

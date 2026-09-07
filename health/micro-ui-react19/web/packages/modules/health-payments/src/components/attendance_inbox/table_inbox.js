@@ -86,9 +86,6 @@ const CustomInboxTable = ({
           <Button
             label={t(`${row.id}`)}
             onClick={() => {
-              // const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
-              // const endDate = existingPaymentInbox?.selectedProject?.endDate;
-
               const selectedP = Digit.SessionStorage.get("selectedPeriod");
               const endDate = selectedP?.periodEndDate;
 
@@ -112,7 +109,6 @@ const CustomInboxTable = ({
                   );
                 }
               } else {
-                console.warn("No endDate found in session storage");
                 navigate(
                   `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`,
                   { state: nextState }
@@ -122,7 +118,7 @@ const CustomInboxTable = ({
             title={t(`${row.id}`)}
             variation="link"
             size={"medium"}
-            style={{ minWidth: "unset" }}
+            style={{ minWidth: "unset", whiteSpace: "normal", wordBreak: "break-all", textAlign: "left" }}
           />
         </span>
       ),
@@ -283,7 +279,7 @@ const CustomInboxTable = ({
                     height: "100%",
                   }}
                 >
-                  <Loader />
+                  <Loader variant={"PageLoader"} className={"digit-center-loader"} />
                 </div>
               ) : tableData && tableData.length === 0 ? (
                 <NoResultsFound style={{ height: "40vh" }} width={280} height={220} text={t(I18N_KEYS.COMMON.HCM_AM_NO_DATA_FOUND)} />
@@ -293,7 +289,7 @@ const CustomInboxTable = ({
                   className="search-component-table digit-attendance-inbox-table"
                   data={tableData}
                   progressPending={isLoading}
-                  progressComponent={<Loader />}
+                  progressComponent={<Loader variant={"PageLoader"} className={"digit-center-loader"} />}
                   pagination
                   paginationServer
                   customStyles={tableCustomStyle(false)}

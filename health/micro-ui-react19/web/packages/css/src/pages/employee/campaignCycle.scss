@@ -64,7 +64,7 @@
       &::-webkit-scrollbar-thumb {
         background: #d6d5d4;
         /* Color of the scrollbar thumb */
-        border-radius: 5px;
+        border-radius: 4px;
         /* Adjust the border-radius for rounded corners */
         height: 0.5rem;
       }
@@ -133,7 +133,7 @@
 .upload-drag-drop-container {
   background-color: #fafafa;
   border: 1.5px dashed #d6d5d4;
-  border-radius: 5px;
+  border-radius: 4px;
   padding: 1rem 1rem 1rem 1rem;
   display: flex;
   align-items: center;
@@ -161,7 +161,7 @@
   margin-left: 0rem;
 
   .drag-drop {
-    color: #b1b4b6;
+    color: #C5C5C5;
   }
 
   .browse-text {

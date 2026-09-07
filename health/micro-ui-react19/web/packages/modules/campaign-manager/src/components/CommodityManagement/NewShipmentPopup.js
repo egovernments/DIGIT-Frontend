@@ -14,6 +14,7 @@ import {
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import usePaginatedSearch from "../../hooks/usePaginatedSearch";
 
 const NewShipmentPopup = ({
   campaignNumber,
@@ -73,6 +74,23 @@ const NewShipmentPopup = ({
   // Derive BOUNDARY_HIERARCHY_TYPE from the campaign's actual hierarchyType
   const BOUNDARY_HIERARCHY_TYPE = campaignData?.hierarchyType;
 
+  // Boundary localizations (boundary type labels + boundary code -> name) are not part of the
+  // module-level static load in Module.js (hierarchyType isn't known until campaignData loads),
+  // so this popup has to load them itself, same as SelectingBoundariesDuplicate.js does.
+  const stateCode = Digit.ULBService.getStateId();
+  const language = Digit.StoreData.getCurrentLanguage();
+  const boundaryModuleCode = useMemo(
+    () => (BOUNDARY_HIERARCHY_TYPE ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] : null),
+    [BOUNDARY_HIERARCHY_TYPE]
+  );
+  Digit.Services.useStore({
+    stateCode,
+    moduleCode: boundaryModuleCode || [],
+    language,
+    modulePrefix: "hcm",
+    config: { enabled: !!boundaryModuleCode },
+  });
+
   const hierarchyDefinitionReqCriteria = useMemo(
     () => ({
       url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -104,6 +122,7 @@ const NewShipmentPopup = ({
       includeChildren: true,
     },
     body: {},
+    changeQueryName: `boundaryRel_${tenantId}_${BOUNDARY_HIERARCHY_TYPE}`,
     config: {
       enabled: !!BOUNDARY_HIERARCHY_TYPE,
       cacheTime: 1000000,
@@ -134,26 +153,40 @@ const NewShipmentPopup = ({
   const campaignName = campaignData?.campaignName || "";
   const projectServicePath = window.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || `health-project`;
 
-  // Extract product variants from MDMS project type resources
+  // Extract product variants — prefer campaign-specific delivery rules resources over MDMS defaults
   const campaignProjectType = campaignData?.projectType;
   const productVariants = useMemo(() => {
+    const seenIds = new Set();
+    const seenNames = new Set();
+    const variants = [];
+
+    const deliveryRules = Array.isArray(campaignData?.deliveryRules) ? campaignData.deliveryRules : [];
+    const campaignResources = deliveryRules.flatMap((rule) => rule?.resources || []);
+    if (campaignResources.length > 0) {
+      campaignResources.forEach((r) => {
+        const displayName = r.name || r.productVariantId;
+        if (r?.productVariantId && !seenIds.has(r.productVariantId) && !seenNames.has(displayName)) {
+          seenIds.add(r.productVariantId);
+          seenNames.add(displayName);
+          variants.push({ productVariantId: r.productVariantId, name: displayName });
+        }
+      });
+      return variants;
+    }
+
+    // Fallback: MDMS defaults when campaign has no delivery rules configured yet
     if (!projectTypeData || !campaignProjectType) return [];
     const projectTypes = projectTypeData?.["HCM-PROJECT-TYPES"]?.projectTypes || [];
     const matchedType = projectTypes.find((pt) => pt?.code === campaignProjectType);
     if (!matchedType?.resources) return [];
-    const variants = [];
-    const seen = new Set();
     matchedType.resources.forEach((r) => {
       if (r?.productVariantId && !seen.has(r.productVariantId)) {
         seen.add(r.productVariantId);
-        variants.push({
-          productVariantId: r.productVariantId,
-          name: r.name || r.productVariantId,
-        });
+        variants.push({ productVariantId: r.productVariantId, name: r.name || r.productVariantId });
       }
     });
     return variants;
-  }, [projectTypeData, campaignProjectType]);
+  }, [campaignData, projectTypeData, campaignProjectType]);
 
   const projectSearchCriteria = useMemo(
     () => ({
@@ -192,8 +225,8 @@ const NewShipmentPopup = ({
     data: projectData,
     isLoading: projectsLoading,
   } = Digit.Hooks.useCustomAPIHook(projectSearchCriteria);
-  const initialProjectIds = projectData?.ids || [];
-  const initialBoundaryMap = projectData?.boundaryMap || {};
+  const initialProjectIds = useMemo(() => projectData?.ids || [], [projectData]);
+  const initialBoundaryMap = useMemo(() => projectData?.boundaryMap || {}, [projectData]);
 
   const sortedHierarchy = useMemo(() => {
     const boundaryHierarchy =
@@ -233,12 +266,6 @@ const NewShipmentPopup = ({
       });
     }
   }, [userBoundary, effectiveHierarchy]);
-
-  // Auto-select the first from facility when the facility list changes (new boundary → new list)
-  useEffect(() => {
-    if (!fromFacilityList?.length) return;
-    setFromFacilityId(fromFacilityList[0].id);
-  }, [fromFacilityList]);
 
   // Build hierarchy filter options from boundary tree
   const hierarchyFilterOptions = useMemo(() => {
@@ -463,8 +490,9 @@ const NewShipmentPopup = ({
   const fromFacilityReqCriteria = useMemo(
     () => ({
       url: `/${projectServicePath}/facility/v1/_search`,
-      params: { tenantId, limit: 1000, offset: 0 },
+      params: { tenantId },
       body: { ProjectFacility: { projectId: fromFilteredProjectIds } },
+      dataKey: "ProjectFacilities",
       config: {
         enabled: !!fromFilteredProjectIds?.length,
         staleTime: 0,
@@ -489,14 +517,22 @@ const NewShipmentPopup = ({
   const {
     data: fromFacilityList,
     isLoading: fromFacilitiesLoading,
-  } = Digit.Hooks.useCustomAPIHook(fromFacilityReqCriteria);
+  } = usePaginatedSearch(fromFacilityReqCriteria);
+
+  // Auto-select the first from facility when the facility list changes (new boundary → new list)
+  // Must be declared AFTER fromFacilityList to avoid temporal dead zone in deps array
+  useEffect(() => {
+    if (!fromFacilityList?.length) return;
+    setFromFacilityId(fromFacilityList[0].id);
+  }, [fromFacilityList]);
 
   // Fetch "To" facilities using filtered project IDs
   const toFacilityReqCriteria = useMemo(
     () => ({
       url: `/${projectServicePath}/facility/v1/_search`,
-      params: { tenantId, limit: 1000, offset: 0 },
+      params: { tenantId },
       body: { ProjectFacility: { projectId: toFilteredProjectIds } },
+      dataKey: "ProjectFacilities",
       config: {
         enabled: !!toFilteredProjectIds?.length,
         select: (data) => {
@@ -519,7 +555,7 @@ const NewShipmentPopup = ({
   const {
     data: rawToFacilityList,
     isLoading: toFacilitiesLoading,
-  } = Digit.Hooks.useCustomAPIHook(toFacilityReqCriteria);
+  } = usePaginatedSearch(toFacilityReqCriteria);
 
   // Collect all unique facility IDs from both lists for name resolution
   const allFacilityIds = useMemo(() => {
@@ -532,8 +568,9 @@ const NewShipmentPopup = ({
   // Fetch facility details to get names
   const facilityNameSearchCriteria = useMemo(() => ({
     url: `/facility/v1/_search`,
-    params: { tenantId, limit: allFacilityIds.length || 10, offset: 0 },
+    params: { tenantId },
     body: { Facility: { id: allFacilityIds } },
+    dataKey: "Facilities",
     config: {
       enabled: !!allFacilityIds.length && !!tenantId,
       select: (data) => {
@@ -546,7 +583,7 @@ const NewShipmentPopup = ({
     },
   }), [tenantId, allFacilityIds]);
 
-  const { data: facilityNameMap = {}, isLoading: facilityNamesLoading } = Digit.Hooks.useCustomAPIHook(facilityNameSearchCriteria);
+  const { data: facilityNameMap = {}, isLoading: facilityNamesLoading } = usePaginatedSearch(facilityNameSearchCriteria);
 
   // Enrich facility lists with resolved names (dedup by id as safety net)
   const enrichedFromFacilityList = useMemo(() => {
@@ -799,12 +836,17 @@ const NewShipmentPopup = ({
   }, [filteredFacilities]);
 
   const getTemplateHeaders = useCallback(() => {
+    // boundaryHeaders stays raw (used as keys into fromHierarchyFilters/facilityAncestors below) —
+    // boundaryHeaderLabels is the translated display text for the actual Excel column titles.
     const boundaryHeaders = effectiveHierarchy.map((item) => item.boundaryType);
+    const boundaryHeaderLabels = effectiveHierarchy.map((item) =>
+      BOUNDARY_HIERARCHY_TYPE ? t(`${BOUNDARY_HIERARCHY_TYPE}_${item.boundaryType}`.toUpperCase()) : item.boundaryType
+    );
     const productHeaders = productVariants.map((pv) => pv.name || pv.productVariantId);
     return {
       boundaryHeaders,
       stockHeaders: [
-        ...boundaryHeaders,
+        ...boundaryHeaderLabels,
         "Campaign Number",
         "Project Name",
         "From (Facility Code)",
@@ -814,7 +856,7 @@ const NewShipmentPopup = ({
         ...productHeaders,
       ],
     };
-  }, [effectiveHierarchy, productVariants]);
+  }, [effectiveHierarchy, productVariants, BOUNDARY_HIERARCHY_TYPE, t]);
 
   const handleDownloadTemplate = useCallback(async () => {
     setIsDownloading(true);
@@ -848,11 +890,11 @@ const NewShipmentPopup = ({
       // --- Stock Data sheet ---
       const ws = wb.addWorksheet("Stock Data");
       // Set column widths before adding data (ExcelJS handles this more reliably)
-      ws.columns = stockHeaders.map((header) => ({ header, width: 30, style: { font: { bold: false, size: 12 } } }));
-      // Style header row: bold, larger font, green background, locked
+      ws.columns = stockHeaders.map((header) => ({ header, width: 30, style: { font: { bold: false, size: 10 } } }));
+      // Style header row: bold, larger font, green background, locked — matches the console unified template's convention
       const headerRow = ws.getRow(1);
-      headerRow.font = { bold: true, size: 14, color: { argb: 'FF000000' } };
-      headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4CAF50' } };
+      headerRow.font = { bold: true, size: 11, color: { argb: 'FF000000' } };
+      headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF93C47D' } };
       headerRow.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
       headerRow.height = 30;
       headerRow.eachCell((cell) => {
@@ -1095,10 +1137,13 @@ const NewShipmentPopup = ({
       // falling back to hidden row 2 for variant IDs
       const productColumns = [];
       const fixedHeaders = new Set(["Campaign Number", "Project Name", "From (Facility Code)", "From (Facility Name)", "To (Facility Code)", "To (Facility Name)"]);
-      const boundaryHeaders = effectiveHierarchy.map((item) => item.boundaryType);
-      const skipHeaders = new Set([...fixedHeaders, ...boundaryHeaders]);
+      // Boundary columns are always the first N columns (N = hierarchy depth), by construction in
+      // getTemplateHeaders — skip by position, not by name. Their header text is a translated label
+      // (varies by hierarchy type/locale), so matching by name here would be fragile; position isn't.
+      const boundaryColumnCount = effectiveHierarchy.length;
       headers.forEach((header, idx) => {
-        if (skipHeaders.has(header)) return;
+        if (idx < boundaryColumnCount) return;
+        if (fixedHeaders.has(header)) return;
         const variantId = variantByName[header] || (variantIdRow && variantIdRow[idx]) || "";
         if (variantId) {
           productColumns.push({ idx, productVariantId: variantId, name: header });
@@ -1307,11 +1352,15 @@ const NewShipmentPopup = ({
     facilityNameMap,
   ]);
 
+  // Only count hierarchy/boundary loading when the queries are actually enabled.
+  // In TQ v4, a disabled query with no cache reports isLoading:true indefinitely;
+  // if BOUNDARY_HIERARCHY_TYPE is null (e.g. campaign has no hierarchyType), those
+  // queries would never enable and the spinner would be stuck forever.
   const isLoadingInitialData =
     campaignLoading ||
-    hierarchyLoading ||
-    boundaryRelLoading ||
-    projectsLoading ||
+    (!!BOUNDARY_HIERARCHY_TYPE && hierarchyLoading) ||
+    (!!BOUNDARY_HIERARCHY_TYPE && boundaryRelLoading) ||
+    (!!projectId && projectsLoading) ||
     projectTypeLoading;
   const allVisibleSelected =
     filteredFacilities.length > 0 &&

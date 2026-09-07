@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment, useReducer, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
+import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import { Button, Card, Dropdown, MultiSelectDropdown, Toast,HeaderComponent } from "@egovernments/digit-ui-components";
 import BoundaryWithDate from "./BoundaryWithDate";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
@@ -134,6 +134,21 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   const BOUNDARY_HIERARCHY_TYPE = campaignId
     ? campaignData?.hierarchyType
     : campaignData?.hierarchyType || storedHierarchy?.name || uploadIdData?.hierarchyType;
+
+  // Load boundary localizations so hierarchy level labels (e.g. NIGERIA_COUNTRY) are translated
+  const stateCode = Digit.ULBService.getStateId();
+  const language = Digit.StoreData.getCurrentLanguage();
+  const boundaryModuleCode = useMemo(
+    () => (BOUNDARY_HIERARCHY_TYPE ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] : []),
+    [BOUNDARY_HIERARCHY_TYPE]
+  );
+  Digit.Services.useStore({
+    stateCode,
+    moduleCode: boundaryModuleCode,
+    language,
+    modulePrefix: "hcm",
+    enabled: boundaryModuleCode.length > 0,
+  });
   const { isLoading, data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,

@@ -13,6 +13,7 @@ import {
 } from "@egovernments/digit-ui-components";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import { useCommodityProject } from "./CommodityProjectContext";
+import usePaginatedSearch from "../../hooks/usePaginatedSearch";
 
 const COMMODITY_KEYS = I18N_KEYS.COMMODITY_MANAGEMENT;
 
@@ -96,8 +97,9 @@ const CommodityShipmentPopup = ({
   const facilityMappingCriteria = useMemo(
     () => ({
       url: `/${projectServicePath}/facility/v1/_search`,
-      params: { tenantId, limit: 1000, offset: 0 },
+      params: { tenantId },
       body: { ProjectFacility: { projectId: toProjectIds } },
+      dataKey: "ProjectFacilities",
       config: {
         enabled: !!toProjectIds?.length,
         select: (data) => {
@@ -120,7 +122,7 @@ const CommodityShipmentPopup = ({
     }),
     [tenantId, toProjectIds],
   );
-  const { data: facilityMappingData, isLoading: facilityMappingLoading } = Digit.Hooks.useCustomAPIHook(
+  const { data: facilityMappingData, isLoading: facilityMappingLoading } = usePaginatedSearch(
     facilityMappingCriteria,
   );
   const facilityToProject = facilityMappingData?.facilityToProject || {};
@@ -130,12 +132,9 @@ const CommodityShipmentPopup = ({
   const facilityDetailsCriteria = useMemo(
     () => ({
       url: `/facility/v1/_search`,
-      params: {
-        tenantId,
-        limit: toFacilityIds.length || 10,
-        offset: 0,
-      },
+      params: { tenantId },
       body: { Facility: { id: toFacilityIds } },
+      dataKey: "Facilities",
       config: {
         enabled: !!toFacilityIds.length && !!tenantId,
         select: (data) => {
@@ -148,7 +147,7 @@ const CommodityShipmentPopup = ({
     }),
     [tenantId, toFacilityIds],
   );
-  const { data: toFacilitiesList = [], isLoading: facilityDetailsLoading } = Digit.Hooks.useCustomAPIHook(
+  const { data: toFacilitiesList = [], isLoading: facilityDetailsLoading } = usePaginatedSearch(
     facilityDetailsCriteria,
   );
 

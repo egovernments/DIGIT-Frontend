@@ -232,9 +232,9 @@ Translation keys are now centralised in `src/utils/i18nKeyConstants.js`, replaci
 | `/filestore/v1/files/url` | GET | FileStore | Fetch file download URL |
 
 **Context path config keys** (from `window.globalConfigs.getConfig()`):
-- `HEALTH_HRMS_CONTEXT_PATH` → HRMS service base (default: `health-hrms`)
-- `HEALTH_ATTENDANCE_CONTEXT_PATH` → Attendance service base (default: `health-attendance`)
-- `HEALTH_INDIVIDUAL_CONTEXT_PATH` → Individual service base (default: `health-individual`)
+- `HRMS_CONTEXT_PATH` → HRMS service base (default: `health-hrms`)
+- `ATTENDANCE_CONTEXT_PATH` → Attendance service base (default: `health-attendance`)
+- `INDIVIDUAL_CONTEXT_PATH` → Individual service base (default: `health-individual`)
 - `PROJECT_SERVICE_PATH` → Project service base (default: `health-project`)
 
 ---

@@ -8,6 +8,8 @@ import { I18N_KEYS } from "../utils/i18nKeyConstants";
 const Tabs = ({ deliveryData, onTabChange }) => {
   const { t } = useTranslation();
 
+  if (!deliveryData || deliveryData.length <= 1) return null;
+
   const activeItem = deliveryData?.find((d) => d.active === true);
   const activeIndex = activeItem ? deliveryData.indexOf(activeItem) : 0;
 

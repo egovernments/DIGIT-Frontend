@@ -1,5 +1,6 @@
-import React, { useState, useMemo, useRef, Fragment, useEffect, useCallback } from "react";
+import React, { useState, useMemo, useRef, Fragment, useEffect, useCallback, useTransition } from "react";
 import { useTranslation } from "react-i18next";
+import { useCampaignSubmitting } from "./CampaignSubmitContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
 // Removed TextBlock and Switch imports - unified campaign toggle card is commented out (controlled by DEFAULT_IS_UNIFIED_CAMPAIGN)
@@ -25,6 +26,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   }, [sessionDataRaw]);
 
   const { t } = useTranslation();
+  const isParentSubmitting = useCampaignSubmitting();
   const location = useLocation();
   const navigate = useNavigate();
   const isDraftCampaign = location.state?.isDraftCampaign;
@@ -64,7 +66,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     () => (hierarchyType ? [`boundary-${hierarchyType}`] : []),
     [hierarchyType]
   );
-  Digit.Services.useStore({
+  const { isLoading: isLocalizationLoading } = Digit.Services.useStore({
     stateCode,
     moduleCode: boundaryModuleCode,
     language,
@@ -94,6 +96,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const [executionCount, setExecutionCount] = useState(0);
   const [currentStep, setCurrentStep] = useState(2);
   const [isLoading, setIsLoading] = useState(true);
+  // useTransition keeps the loader visible while React renders the heavy component tree
+  // (SelectingBoundaryComponent with 16k+ boundary items) in the background.
+  const [isMountPending, startMountTransition] = useTransition();
   const [showPopUp, setShowPopUp] = useState(false);
   const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
@@ -113,7 +118,12 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   //   setCurrentStep(currentKey);
   // }, [currentKey]);
 
-  const reqCriteria = {
+  // Only fetch campaign data when session data is NOT available (first visit to boundary step).
+  // When session data exists (user navigated back), boundaries are already in session — skip the API call.
+  // A session entry with an empty selection (left behind when other setup steps ran in this SPA
+  // session) must not block seeding from the saved draft — treat it as "no session data"
+  const hasSessionData = !!sessionData?.selectedData?.length;
+  const reqCriteria = useMemo(() => ({
     url: `/project-factory/v1/project-type/search`,
     body: {
       CampaignDetails: {
@@ -122,28 +132,41 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       },
     },
     config: {
-      enabled: !!campaignNumber,
+      enabled: !!campaignNumber && !hasSessionData,
       select: (data) => {
         return data?.CampaignDetails?.[0];
       },
+      // No staleTime: the draft changes on every boundary submit, so a cached copy
+      // makes Edit Boundaries reopen with the pre-submit selection. Always refetch.
+      gcTime: 0,
+      staleTime: 0,
     },
-  };
+  }), [tenantId, campaignNumber, hasSessionData]);
 
   const { data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  // Load data from session/API - only run once when API data is ready
+  // Seed local state from session/draft exactly once. The parent rebuilds the session
+  // object (new references) on every save, so re-applying it on each change loops
+  // seed → save → session-change → seed forever; after the first seed the user's local
+  // edits are the source of truth and nothing may overwrite them.
+  const hasSeededRef = useRef(false);
+
+  // Load data from session/API - runs until one source has been applied
   useEffect(() => {
     // Wait for API to finish fetching if campaignNumber exists
     if (campaignNumber && isFetching) return;
 
-    // Only load from campaignData if sessionData is not available
-    if (!sessionData && campaignData?.boundaries) {
+    // Only load from campaignData if sessionData has no boundary selection
+    if (hasSeededRef.current) {
+      // already seeded — local edits own the state now
+    } else if (!hasSessionData && campaignData?.boundaries) {
       setSelectedData(campaignData?.boundaries || []);
+      hasSeededRef.current = true;
       // Commented: isUnifiedCampaign is now always controlled by DEFAULT_IS_UNIFIED_CAMPAIGN, user toggle removed
       // if (campaignData?.additionalDetails?.isUnifiedCampaign !== undefined) {
       //   setIsUnifiedCampaign(campaignData?.additionalDetails?.isUnifiedCampaign);
       // }
-    } else if (sessionData) {
+    } else if (hasSessionData) {
       // Session data takes priority - use reference check to avoid expensive JSON.stringify on 55k items
       if (sessionData?.selectedData && sessionData.selectedData !== selectedData) {
         setSelectedData(sessionData.selectedData);
@@ -151,6 +174,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       if (sessionData?.boundaryData && sessionData.boundaryData !== boundaryOptions) {
         setBoundaryOptions(sessionData.boundaryData);
       }
+      hasSeededRef.current = true;
       // Commented: isUnifiedCampaign is now always controlled by DEFAULT_IS_UNIFIED_CAMPAIGN, user toggle removed
       // if (sessionData?.isUnifiedCampaign !== undefined && sessionData.isUnifiedCampaign !== isUnifiedCampaign) {
       //   setIsUnifiedCampaign(sessionData.isUnifiedCampaign);
@@ -161,14 +185,17 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     if (!isDataLoaded) {
       setIsDataLoaded(true);
     }
-    // Yield to browser so the loader can paint before heavy child components mount.
-    // Use double-rAF to guarantee the loader frame is actually rendered.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setIsLoading(false);
-      });
+    // Use startTransition so React keeps the loader visible while it renders
+    // the heavy SelectingBoundaryComponent tree (16k+ items) in the background.
+    // Unlike rAF, this actually prevents the UI from freezing during computation.
+    startMountTransition(() => {
+      setIsLoading(false);
     });
-  }, [isFetching, campaignNumber]);
+    // sessionData/campaignData are deps because either can arrive after mount (session
+    // hydrates async, and navigating back lets other steps rewrite the session entry);
+    // with only [isFetching, campaignNumber] a late arrival was never applied and the
+    // screen stayed empty. The reference checks above keep re-runs from looping.
+  }, [isFetching, campaignNumber, hasSessionData, sessionData, campaignData]);
 
   // Only save to session after data is loaded to prevent overwriting with empty values
   useEffect(() => {
@@ -289,9 +316,14 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   };
 
   const isBoundaryDataLoading = !!hierarchyType && props?.props?.hierarchyData === undefined;
+  // Wait for boundary localizations to load so dropdown labels render correctly.
+  // Only check when localization is actually needed (hierarchyType is known).
+  const isLocalizationPending = boundaryModuleCode.length > 0 && isLocalizationLoading;
 
-  if (isLoading || isBoundaryDataLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
+  if (isLoading || isMountPending || isBoundaryDataLoading || isLocalizationPending) {
+    // The flow already shows its overlay loader while saving - do not stack a second loader
+    if (isParentSubmitting) return null;
+    return <Loader page={true} variant={"PageLoader"} />
   }
 
   return (
@@ -304,7 +336,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
                 <Tag label={campaignName} type="monochrome" stroke={true} />
                 {hierarchyType && (
                   <Tag
-                    label={`${t(I18N_KEYS.COMPONENTS.HCM_HIERARCHY_TYPE)} : ${hierarchyType}`}
+                    label={`${t(I18N_KEYS.COMPONENTS.HCM_HIERARCHY_TYPE)} : ${t(hierarchyType)}`}
                     type="warning"
                     stroke={true}
                   />

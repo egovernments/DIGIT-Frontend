@@ -2,6 +2,17 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import dummyFieldTypeConfig from "../configs/dummyFieldTypeConfig.json";
 
 // Async thunk with status/error tracking
+// The bundled field-type config, sorted the way the drawer expects it. Used whenever MDMS cannot
+// supply a usable master (fetch failed, or returned no rows).
+const sortFallback = () =>
+  Array.isArray(dummyFieldTypeConfig)
+    ? [...dummyFieldTypeConfig].sort((a, b) => {
+        const typeA = a?.type?.toLowerCase() || "";
+        const typeB = b?.type?.toLowerCase() || "";
+        return typeA.localeCompare(typeB);
+      })
+    : dummyFieldTypeConfig;
+
 export const getFieldMaster = createAsyncThunk(
   "fieldTypeMaster/fetch",
   async ({ tenantId, moduleName = "HCM-ADMIN-CONSOLE", name = "FieldMaster", limit = 1000, mdmsContext }, { getState, rejectWithValue }) => {
@@ -32,19 +43,16 @@ export const getFieldMaster = createAsyncThunk(
         },
       });
       const data = response?.MdmsRes?.[moduleName]?.[name] || [];
+      // An empty master is as unusable as a failed fetch: getComponentName() returns null for every
+      // field, so the preview renders nothing at all. Fall back to the bundled config in that case too.
+      if (!Array.isArray(data) || data.length === 0) {
+        return sortFallback();
+      } 
       return data;
     } catch (err) {
       // Fallback to dummy data on error
       console.error("Failed to fetch from MDMS, using fallback:", err);
-      // Sort the fallback data alphabetically by type
-      const sortedFallback = Array.isArray(dummyFieldTypeConfig)
-        ? [...dummyFieldTypeConfig].sort((a, b) => {
-            const typeA = a?.type?.toLowerCase() || "";
-            const typeB = b?.type?.toLowerCase() || "";
-            return typeA.localeCompare(typeB);
-          })
-        : dummyFieldTypeConfig;
-      return sortedFallback;
+      return sortFallback();
     }
   }
 );
