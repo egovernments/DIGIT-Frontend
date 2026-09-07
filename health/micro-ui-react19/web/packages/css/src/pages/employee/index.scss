@@ -1320,6 +1320,11 @@ tbody {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+
+    &.label-pair-list{
+      gap: 0.25rem;
+    }
+    
     .digit-switch-container {
       .digit-switch-label {
         @include typography-body-s;
@@ -1612,6 +1617,7 @@ tbody {
   .digit-checkbox-container {
     label {
       width: fit-content !important;
+      display: inline !important;
     }
   }
   .app-preview-card-header {

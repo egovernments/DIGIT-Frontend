@@ -1,7 +1,7 @@
 import React, { Fragment, useMemo, useState, useCallback, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
-import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons, Loader } from "@egovernments/digit-ui-components";
+import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons, Loader,HeaderComponent } from "@egovernments/digit-ui-components";
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT } from "./hooks/useCustomT";
@@ -1029,7 +1029,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
         return (
           <>
-            <div ref={labelPairListRef} className="drawer-container-tooltip">
+            <div ref={labelPairListRef} className="drawer-container-tooltip label-pair-list">
               <div style={{ display: "flex" }}>
                 <label>{t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}</label>
                 <span className="mandatory-span">*</span>
@@ -1125,7 +1125,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
               {/* Display selected fields with localization inputs */}
               {selectedData.length > 0 && (
-                <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
+                <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "16px" }}>
                   {selectedData.map((item, index) => {
                     // Computed keys ({{fn:...}} / {{...}} expressions) are resolved at app runtime;
                     // they have no editable localisation, so skip them instead of printing the raw expression
@@ -1269,7 +1269,7 @@ const LocalizationInput = React.memo(
     return (
       <div
         className={isTableColumn ? "drawer-table-column-group" : ""}
-        style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+        style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}
       >
         {/* Label row with toggle for table columns */}
         <div
@@ -1279,7 +1279,7 @@ const LocalizationInput = React.memo(
             justifyContent: "space-between",
           }}
         >
-          <label style={{ fontWeight: "500", fontSize: "14px" }}>{label}</label>
+          <HeaderComponent className="label">{label}</HeaderComponent>
 
           {/* Show toggle only for table columns */}
           {isTableColumn && (
@@ -1321,6 +1321,7 @@ const LocalizationInput = React.memo(
               ...(maxLength && { maxLength }),
             }}
             disabled={viewMode || isColumnHidden}
+            withoutLabel={true}
           />
         </div>
       </div>
