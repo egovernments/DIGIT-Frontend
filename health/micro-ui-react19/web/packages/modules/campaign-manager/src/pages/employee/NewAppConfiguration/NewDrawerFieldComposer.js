@@ -585,7 +585,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             {/* Render Conditional Fields based on condition property */}
             {getConditionalFields().map((cField, index) => (
               <ConditionalField
-                key={`${cField.bindTo}-${index}`}
+                // Key by the selected field too: without it the input survives
+                // switching fields, so its stale local value and pending
+                // debounced write land on the newly selected field.
+                key={`${selectedField?.id ?? selectedField?.fieldName ?? ""}-${cField.bindTo}-${index}`}
                 cField={cField}
                 selectedField={selectedField}
                 onFieldChange={onFieldChange}
@@ -1417,7 +1420,19 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
   const localizedValue = useCustomT(fieldValue);
   const translatedValue = shouldSkipLocalization ? fieldValue : localizedValue;
 
-  const [conditionalLocalValue, setConditionalLocalValue] = useState(translatedValue === true ? "" : translatedValue || "");
+  // Placeholder: campaign-module localization first (where APPCONFIG_* codes
+  // are seeded), then i18next — t() alone shows the raw code because these
+  // codes live in the campaign locale module, not the ones i18next loads.
+  const innerLabelText = useCustomT(cField.innerLabel || "");
+
+  // Pre-fill from the panel config's defaultValue (a localization code, e.g.
+  // "Field is required") when the field has no message of its own. Editing
+  // still generates a per-field code, so the shared default is never mutated.
+  const defaultValueText = useCustomT(cField.defaultValue || "");
+
+  const [conditionalLocalValue, setConditionalLocalValue] = useState(
+    translatedValue === true ? "" : translatedValue || defaultValueText || ""
+  );
   const conditionalDebounceRef = useRef(null);
   // Ref to track if user is actively editing (prevents useEffect from overwriting local value)
   const isEditingRef = useRef(false);
@@ -1448,10 +1463,10 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
   useEffect(() => {
     // Don't overwrite local value while user is actively editing
     if (isEditingRef.current) return;
-    const newVal = translatedValue === true ? "" : translatedValue || "";
+    const newVal = translatedValue === true ? "" : translatedValue || defaultValueText || "";
     setConditionalLocalValue(newVal);
     localValueRef.current = newVal;
-  }, [translatedValue]);
+  }, [translatedValue, defaultValueText]);
 
   const handleConditionalChange = useCallback(
     (value) => {
@@ -1630,7 +1645,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
               handleConditionalChange(newValue);
             }}
             onBlur={handleConditionalBlur}
-            placeholder={cField.innerLabel ? t(cField.innerLabel) : null}
+            placeholder={cField.innerLabel ? (innerLabelText || t(cField.innerLabel)) : null}
             populators={{
               fieldPairClassName: "drawer-toggle-conditional-field",
               validation: {
@@ -1954,7 +1969,8 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
             ) // hide if missing
           );
           return shouldShowToggle ? (
-            <div key={panelItem.id} className="drawer-toggle-field-container">
+            // Keyed by the selected field too — see ConditionalField key note.
+            <div key={`${selectedField?.id ?? selectedField?.fieldName ?? ""}-${panelItem.id}`} className="drawer-toggle-field-container">
               <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} viewMode={viewMode} />
             </div>
           ) : null;
