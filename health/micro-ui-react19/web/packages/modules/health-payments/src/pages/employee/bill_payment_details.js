@@ -376,24 +376,26 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     headCodes = [],
     payableLineItems = [],
     attendance,
-    savedRb = {},
+    snapshotRb = {},
     rateBreakup = {},
   }) => {
+    // amount / days is only invertible while days > 0. At 0 days the amount is 0
+    // and the rate cannot be recovered from it, so read the stored rate instead.
+    const days = Number(attendance);
+    const canDeriveFromAmount = Number.isFinite(days) && days > 0;
     return headCodes.reduce((acc, headCode) => {
-      if (hasPayableHead(payableLineItems, headCode)) {
+      if (canDeriveFromAmount && hasPayableHead(payableLineItems, headCode)) {
         acc[headCode] = perDayFromPayable(
           getPayableAmount(payableLineItems, headCode),
           attendance
         );
       } else {
-        const reviewerValue = savedRb?.[headCode];
-        const defaultValue = rateBreakup?.[headCode];
-        acc[headCode] =
-          reviewerValue != null
-            ? Number(reviewerValue)
-            : defaultValue != null
-              ? Number(defaultValue)
-              : 0;
+        // Fallback chain: UI-persisted snapshot → MDMS rate → 0
+        const stored = [
+          snapshotRb?.[headCode],
+          rateBreakup?.[headCode],
+        ].find((value) => value != null);
+        acc[headCode] = stored != null ? Number(stored) : 0;
       }
       return acc;
     }, {});
@@ -417,7 +419,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         (rate) => rate?.skillCode === matchedSkill?.type);
 
       const rateBreakup = rateObj?.rateBreakup || {};
-      const savedRb = billDetail?.additionalDetails?.reviewerRateBreakup || {};
       const attendance = billDetail?.totalAttendance;
       const payableItems = (billDetail?.payableLineItems || []).filter(
         (p) => p?.type === "PAYABLE"
@@ -428,7 +429,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         headCodes,
         payableLineItems: billDetail?.payableLineItems || [],
         attendance,
-        savedRb,
+        snapshotRb: billDetail?.additionalDetails?.rateBreakup || {},
         rateBreakup,
       });
       const wage = Object.values(ratesByHead).reduce(
@@ -778,6 +779,13 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       payableLineItems: d?.payableLineItems,
       additionalDetails: {
         ...(d?.additionalDetails || {}),
+        rateBreakup: {
+          ...(d?.additionalDetails?.rateBreakup || {}),
+          ...Object.entries(d?.ratesByHead || {}).reduce((acc, [headCode, value]) => {
+            acc[headCode] = Number(value) || 0;
+            return acc;
+          }, {}),
+        },
         editInfo: {
           ...(d?.additionalDetails?.editInfo || {}),
           payablesUpdatedAtEpochMs,
