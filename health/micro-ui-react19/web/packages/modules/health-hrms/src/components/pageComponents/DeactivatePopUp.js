@@ -21,13 +21,17 @@ const DeactivatePopUp = ({
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
+  // reasonMsg=true is the re-activation flow (label switches to "Reason for Re-activation"
+  // below) - it needs the dedicated ReactivationReason master, not DeactivationReason
+  const reasonMasterName = reasonMsg ? "ReactivationReason" : "DeactivationReason";
+
   const {
     isLoading,
     isError,
     errors,
     data,
     ...rest
-  } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "DeactivationReason");
+  } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", reasonMasterName);
   // state variables
   const [comment, setComment] = useState("");
   const [showToast, setShowToast] = useState(null);
@@ -104,7 +108,7 @@ const DeactivatePopUp = ({
             label={t(I18N_KEYS.DEACTIVATE_POPUP.HRMS_SELECT_OPTION)}
             name="genders"
             onChange={(e) => {}}
-            option={data?.["egov-hrms"]?.DeactivationReason.map((ele) => {
+            option={data?.["egov-hrms"]?.[reasonMasterName]?.map((ele) => {
               ele["i18key"] = "EGOV_HRMS_DEACTIVATIONREASON_" + ele.code;
               return ele;
             })}
