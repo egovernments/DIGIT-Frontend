@@ -16,6 +16,7 @@ import {
   perDayFromPayable,
   sumPayableAmounts,
   applyPerDayToPayables,
+  fillMissingPayables,
   FEES_HEAD_CODE,
   getBaseHeadCodes,
   computeFeePercent,
@@ -715,34 +716,31 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       );
       const days = Number(row?.totalAttendance) || 0;
       const origPayables = orig.payableLineItems;
-      let payableLineItems = origPayables;
-      let totalAmount;
-      if (Array.isArray(origPayables) && origPayables.length > 0) {
-        payableLineItems = applyPerDayToPayables(origPayables, rates, days);
-        // Recompute the FEES PAYABLE amount from the (newly) edited per-day
-        // rates and the current fee percent, so the saved totals stay
-        // consistent with what the reviewer sees in the UI.
-        const rowFeePercent = row?.feePercent;
-        if (
-          baseHeadCodes.length > 0 &&
-          rowFeePercent !== "" &&
-          rowFeePercent != null &&
-          Number.isFinite(Number(rowFeePercent))
-        ) {
-          payableLineItems = upsertFeesInPayables(
-            payableLineItems,
-            baseHeadCodes,
-            Number(rowFeePercent)
-          );
-        }
-        totalAmount = truncateTo2Decimals(sumPayableAmounts(payableLineItems));
-      } else {
-        const totalPerDay = Object.values(rates).reduce(
-          (sum, value) => sum + (Number(value) || 0),
-          0
+      // Transform existing PAYABLE rows with the updated rates/days, then
+      // create rows for any head with rate > 0 that has no existing entry.
+      // This covers workers absent at bill creation (no rows at all) and
+      // partial workers missing some heads. The backend rejects a positive
+      // total with no payable breakdown, so both cases must produce rows.
+      let payableLineItems = fillMissingPayables(
+        applyPerDayToPayables(origPayables || [], rates, days),
+        rates,
+        days,
+        tenantId
+      );
+      const rowFeePercent = row?.feePercent;
+      if (
+        baseHeadCodes.length > 0 &&
+        rowFeePercent !== "" &&
+        rowFeePercent != null &&
+        Number.isFinite(Number(rowFeePercent))
+      ) {
+        payableLineItems = upsertFeesInPayables(
+          payableLineItems,
+          baseHeadCodes,
+          Number(rowFeePercent)
         );
-        totalAmount = truncateTo2Decimals(totalPerDay * days);
       }
+      const totalAmount = truncateTo2Decimals(sumPayableAmounts(payableLineItems));
       const {
         givenName,
         mobileNumber,
