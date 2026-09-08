@@ -630,83 +630,24 @@ const ViewAttendance = ({ editAttendance = false }) => {
     downloadFileWithName({ fileStoreId, customName, type });
   };
 
-  const normalizeToken = (value) => String(value || "").trim().toUpperCase();
-
-  const getReportStatus = (report) =>
-    normalizeToken(report?.reportStatus || report?.status || report?.state);
-
-  const getReportFormat = (report) =>
-    normalizeToken(report?.reportFormat || report?.format || report?.fileType);
-
-  const getReportType = (report) =>
-    normalizeToken(report?.reportType || report?.type || report?.name);
-
-  const getReportFileStoreId = (report) =>
-    report?.fileStoreId || report?.filestoreId || report?.reportFileStoreId || report?.excelReportId;
-
-  const getAttendanceExcelReports = () => {
-    const row = data?.[0] || {};
-    console.log("DEBUG - Muster Roll data:", row);
-    console.log("DEBUG - reports:", row?.reports);
-    console.log("DEBUG - reportDetails:", row?.additionalDetails?.reportDetails);
-    const reports = Array.isArray(row?.reports) ? [...row.reports] : [];
-
-    // Some payloads carry report details in additionalDetails instead of reports[].
-    const reportDetails = row?.additionalDetails?.reportDetails;
-    if (reportDetails?.excelReportId || reportDetails?.fileStoreId || reportDetails?.filestoreId) {
-      reports.push({
-        reportType: "ATTENDANCE_REPORT",
-        reportFormat: "EXCEL",
-        reportStatus: reportDetails?.status,
-        fileStoreId: reportDetails?.excelReportId || reportDetails?.fileStoreId || reportDetails?.filestoreId,
-        generatedAt: reportDetails?.generatedAt || reportDetails?.lastModifiedTime || reportDetails?.createdTime,
-      });
-    }
-
-    return reports.filter((report) => {
-      const type = getReportType(report);
-      const format = getReportFormat(report);
-      const isAttendance = !type || type.includes("ATTENDANCE");
-      const isExcel = !format || ["EXCEL", "XLS", "XLSX"].includes(format);
-      return isAttendance && isExcel;
-    });
-  };
-
   const handleDownloadReport = () => {
-    const reports = getAttendanceExcelReports();
-
-    const completedStatuses = new Set(["COMPLETED", "GENERATED", "SUCCESS", "DONE"]);
-    const inProgressStatuses = new Set(["INITIATED", "IN_PROGRESS", "PROCESSING", "PENDING", "QUEUED", "SUBMITTED"]);
-    const failedStatuses = new Set(["FAILED", "ERROR", "REJECTED"]);
+    const reports = data?.[0]?.reports?.filter(
+      (r) => r.reportType === "ATTENDANCE_REPORT" && r.reportFormat === "EXCEL"
+    ) || [];
 
     if (reports.length === 0) {
-      console.warn("No attendance report entries found for register", registerNumber, data?.[0]);
       setShowToast({ key: "error", label: t(I18N_KEYS.PAGES_ATTENDANCE.HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE), transitionTime: 3000 });
       return;
     }
 
-    const completedReport = [...reports].reverse().find((report) => {
-      const status = getReportStatus(report);
-      return completedStatuses.has(status) && !!getReportFileStoreId(report);
-    });
+    const completedReport = reports.find((r) => r.reportStatus === "COMPLETED");
+    const initiatedReport = reports.find((r) => r.reportStatus === "INITIATED");
+    const failedReport = reports.find((r) => r.reportStatus === "FAILED");
 
-    const fallbackFileReport = [...reports].reverse().find((report) => !!getReportFileStoreId(report));
-
-    const initiatedReport = reports.find((report) => inProgressStatuses.has(getReportStatus(report)));
-    const failedReport = reports.find((report) => failedStatuses.has(getReportStatus(report)));
-
-    if (completedReport) {
-      const fileStoreId = getReportFileStoreId(completedReport);
+    if (completedReport?.fileStoreId) {
       downloadFileWithName({
-        fileStoreId,
+        fileStoreId: completedReport.fileStoreId,
         customName: `Attendance_Report_${registerNumber}_${formatTimestampToDate(completedReport.generatedAt)}`,
-        type: "excel",
-      });
-    } else if (fallbackFileReport) {
-      const fileStoreId = getReportFileStoreId(fallbackFileReport);
-      downloadFileWithName({
-        fileStoreId,
-        customName: `Attendance_Report_${registerNumber}`,
         type: "excel",
       });
     } else if (initiatedReport) {

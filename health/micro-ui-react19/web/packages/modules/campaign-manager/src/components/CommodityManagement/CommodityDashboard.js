@@ -392,31 +392,9 @@ const CommodityDashboard = () => {
     useKibana: useKibanaFlag,
   });
 
-  const filteredStockData = useMemo(() => {
-    if (!Array.isArray(rawStockData) || rawStockData.length === 0) return [];
-
-    const startMs = effectiveDateRange?.startDate instanceof Date
-      ? effectiveDateRange.startDate.getTime()
-      : Number(effectiveDateRange?.startDate || 0);
-    const endMs = effectiveDateRange?.endDate instanceof Date
-      ? effectiveDateRange.endDate.getTime()
-      : Number(effectiveDateRange?.endDate || Date.now());
-
-    return rawStockData.filter((record) => {
-      const createdTime =
-        Number(record?.auditDetails?.createdTime) ||
-        Number(record?.createdTime) ||
-        Number(record?.dateOfEntry) ||
-        null;
-
-      if (!createdTime) return false;
-      return createdTime >= startMs && createdTime <= endMs;
-    });
-  }, [rawStockData, effectiveDateRange]);
-
   const stockSummary = useMemo(
-    () => computeStockSummary({ source, metadata, data: filteredStockData }),
-    [source, metadata, filteredStockData]
+    () => computeStockSummary({ source, metadata, data: rawStockData }),
+    [source, metadata, rawStockData]
   );
 
   const { totalManagers, syncedManagers, syncRate, isLoading: syncLoading } = useWarehouseManagerSync({
@@ -687,7 +665,7 @@ const CommodityDashboard = () => {
 
       {activeTab === "transaction" && (
         <TransactionSummaryTab
-          rawStockData={filteredStockData}
+          rawStockData={rawStockData}
           stockLoading={stockLoading}
           stockSummary={enrichedStockSummary}
           tenantId={tenantId}
@@ -700,7 +678,7 @@ const CommodityDashboard = () => {
       )}
       {activeTab === "stock" && (
         <StockSummaryTab
-          rawStockData={filteredStockData}
+          rawStockData={rawStockData}
           stockLoading={stockLoading}
           stockSummary={enrichedStockSummary}
           tenantId={tenantId}
@@ -717,7 +695,7 @@ const CommodityDashboard = () => {
       )}
       {activeTab === "pending" && (
         <PendingTransactionsTab
-          rawStockData={filteredStockData}
+          rawStockData={rawStockData}
           stockLoading={stockLoading}
           tenantId={tenantId}
           campaignId={campaignId}
