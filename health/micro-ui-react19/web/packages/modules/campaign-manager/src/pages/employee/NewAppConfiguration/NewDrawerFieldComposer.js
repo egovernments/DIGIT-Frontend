@@ -579,7 +579,11 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             {/* Render Conditional Fields based on condition property */}
             {getConditionalFields().map((cField, index) => (
               <ConditionalField
-                key={`${cField.bindTo}-${index}`}
+                // Key on the selected field too: the component holds a pending
+                // debounce and refs to the field's localization code, so reusing
+                // one instance across field switches flushed text typed on one
+                // field into the code of the next field selected.
+                key={`${selectedField?.id || selectedField?.key || selectedField?.label || selectedField?.fieldName || "field"}-${cField.bindTo}-${index}`}
                 cField={cField}
                 selectedField={selectedField}
                 onFieldChange={onFieldChange}

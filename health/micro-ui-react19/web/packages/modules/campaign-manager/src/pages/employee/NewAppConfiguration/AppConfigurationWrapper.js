@@ -1012,6 +1012,27 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
         if (response?.mdms && response.mdms.length > 0) {
           const pageConfig = response.mdms[0].data;
           const responseData = response.mdms[0]; // Store full MDMS response for updates
+          // Seeded configs can mark a field required without carrying an error
+          // message; the mandatory-error-message validation then blocks every
+          // navigation away from a page the user never touched. Give such fields
+          // a deterministic localization code here — the default message itself
+          // is seeded in an effect below, after the localization fetch (which
+          // replaces the data array wholesale) has landed.
+          if (pageConfig?.type !== "template" && Array.isArray(pageConfig?.body)) {
+            pageConfig.body.forEach((card, cardIndex) => {
+              (card?.fields || []).forEach((field, fieldIndex) => {
+                if (field?.required === true && (!field.errorMessage || field.errorMessage === "")) {
+                  // field.label is already a unique localization code per field;
+                  // fieldName can repeat across checklist items, which would make
+                  // one field's message edits bleed into its siblings.
+                  const base =
+                    field.label ||
+                    `${cleanedPageName || "PAGE"}_${field.fieldName || field.jsonPath || "FIELD"}_${cardIndex}_${fieldIndex}`;
+                  field.errorMessage = `${String(base).replace(/[^a-zA-Z0-9]+/g, "_").toUpperCase()}_REQUIRED_ERROR`;
+                }
+              });
+            });
+          }
           // Initialize config with the fetched data
           dispatch(initializeConfig({ pageConfig, responseData }));
         } else {
@@ -1074,6 +1095,44 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       );
     }
   }, [dispatch, flow, pageName, campaignNumber, localeModule, tenantId, mdmsContext, sessionLocale]);
+
+  // Seed the default message for the error-message codes backfilled above
+  // (suffix _REQUIRED_ERROR). Runs on localization data so it re-applies after
+  // fetchLocalization replaces the array; scoped to backfilled codes so it never
+  // overwrites a message the user authored under a pre-existing code.
+  useEffect(() => {
+    if (!currentData || localizationStatus === "loading") return;
+    const locale = currentLocale || sessionLocale || "en_IN";
+    // The default text is config-driven: the drawer's Error message input
+    // publishes its suggested text via innerLabel in FieldPropertiesPanelConfig,
+    // so the seeded message matches the placeholder users see in the drawer.
+    let defaultMessage = "";
+    Object.values(panelConfig || {}).some((tabProperties) =>
+      (tabProperties || []).some((panelItem) => {
+        const cField = Array.isArray(panelItem?.conditionalField)
+          ? panelItem.conditionalField.find((c) => c?.bindTo === "errorMessage" && c?.innerLabel)
+          : null;
+        if (!cField) return false;
+        const translated = t(cField.innerLabel);
+        defaultMessage = translated && translated !== cField.innerLabel ? translated : "Field is required";
+        return true;
+      })
+    );
+    if (!defaultMessage) return; // panel config not loaded yet — effect re-runs when it lands
+    const seedDefaultErrorMessage = (field) => {
+      if (
+        field?.required === true &&
+        typeof field?.errorMessage === "string" &&
+        field.errorMessage.endsWith("_REQUIRED_ERROR") &&
+        isLocalizedValueEmpty(field.errorMessage, localizationData, locale)
+      ) {
+        dispatch(updateLocalizationEntry({ code: field.errorMessage, locale, message: defaultMessage }));
+      }
+    };
+    if (currentData?.type !== "template" && Array.isArray(currentData?.body)) {
+      currentData.body.forEach((card) => (card?.fields || []).forEach(seedDefaultErrorMessage));
+    }
+  }, [currentData, localizationData, localizationStatus, currentLocale, sessionLocale, panelConfig, t, dispatch]);
 
   // Auto-close toast after 10 seconds
   useEffect(() => {
