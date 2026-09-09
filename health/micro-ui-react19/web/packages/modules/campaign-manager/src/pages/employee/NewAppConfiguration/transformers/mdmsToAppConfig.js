@@ -430,7 +430,7 @@ const buildValidations = (field) => {
     validations.push({
       type: "required",
       value: true,
-      message: field["required.message"] || "Required field cannot be empty",
+      message: field.errorMessage || field["required.message"] || "CORE_COMMON_REQUIRED",
     });
   }
 

@@ -1,7 +1,7 @@
 import React, { Fragment, useMemo, useState, useCallback, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
-import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons, Loader } from "@egovernments/digit-ui-components";
+import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons, Loader,HeaderComponent } from "@egovernments/digit-ui-components";
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT } from "./hooks/useCustomT";
@@ -73,10 +73,15 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     return getFieldValueByPath(selectedField, bindTo, panelItem.defaultValue || "");
   }, [selectedField, panelItem.bindTo, panelItem.defaultValue]);
 
+  // The app renders the country code from prefixText (it has no
+  // showCountryCodeDropdown), so a seeded "+91" means the code IS shown —
+  // the toggle must read ON even when the flag was never written.
+  const hasCountryCodePrefix = panelItem.bindTo === "showCountryCodeDropdown" && Boolean(selectedField?.prefixText);
+
   // Keep local toggle in sync when selectedField changes from outside
   useEffect(() => {
-    setLocalToggle(Boolean(getFieldValue()));
-  }, [getFieldValue]);
+    setLocalToggle(Boolean(getFieldValue()) || hasCountryCodePrefix);
+  }, [getFieldValue, hasCountryCodePrefix]);
 
   // Check if field should be visible based on field type
   const isFieldVisible = useCallback(() => {
@@ -233,7 +238,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       return [];
     }
 
-    const toggleValue = Boolean(getFieldValue());
+    const toggleValue = Boolean(getFieldValue()) || hasCountryCodePrefix;
 
     return panelItem.conditionalField.filter((cField) => {
       // If no condition specified, show only when toggle is true
@@ -545,10 +550,11 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             }
           }
 
-          // Special handling for showCountryCode toggle
+          // The app shows whatever prefixText holds (there is no
+          // showCountryCodeDropdown on the app side): ON keeps an existing
+          // code or seeds the default, OFF removes the code.
           if (bindTo === "showCountryCodeDropdown") {
-            // Clear prefixText in both directions — ON uses country code dropdown, OFF starts fresh for custom prefix
-            updatedField.prefixText = "";
+            updatedField.prefixText = newToggleValue ? selectedField?.prefixText || "+91" : "";
           }
 
           // isGS1 and scanner regex pattern are mutually exclusive
@@ -579,11 +585,11 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             {/* Render Conditional Fields based on condition property */}
             {getConditionalFields().map((cField, index) => (
               <ConditionalField
-                // Key on the selected field too: the component holds a pending
-                // debounce and refs to the field's localization code, so reusing
-                // one instance across field switches flushed text typed on one
-                // field into the code of the next field selected.
-                key={`${selectedField?.id || selectedField?.key || selectedField?.label || selectedField?.fieldName || "field"}-${cField.bindTo}-${index}`}
+                // Key by the selected field too: without it the input survives
+                // switching fields, so its stale local value and pending
+                // debounced write land on the newly selected field. Fall back to
+                // key/label before fieldName — checklist siblings share a fieldName.
+                key={`${selectedField?.id ?? selectedField?.key ?? selectedField?.label ?? selectedField?.fieldName ?? ""}-${cField.bindTo}-${index}`}
                 cField={cField}
                 selectedField={selectedField}
                 onFieldChange={onFieldChange}
@@ -1024,7 +1030,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
         return (
           <>
-            <div ref={labelPairListRef} className="drawer-container-tooltip">
+            <div ref={labelPairListRef} className="drawer-container-tooltip label-pair-list">
               <div style={{ display: "flex" }}>
                 <label>{t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}</label>
                 <span className="mandatory-span">*</span>
@@ -1120,18 +1126,22 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
               {/* Display selected fields with localization inputs */}
               {selectedData.length > 0 && (
-                <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
+                <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "16px" }}>
                   {selectedData.map((item, index) => {
                     // Computed keys ({{fn:...}} / {{...}} expressions) are resolved at app runtime;
                     // they have no editable localisation, so skip them instead of printing the raw expression
                     if (/\{\{.*\}\}/.test(item.key)) return null;
 
-                    // Find entity name for this field
+                    // Find entity name and fieldKey for this field.
+                    // Items from saved config only carry {key, value}, so fieldKey
+                    // must be resolved from labelPairConfig (which is always loaded here).
                     let entityName = "";
+                    let resolvedFieldKey = item.fieldKey;
                     for (const entity of labelPairConfig) {
                       const field = entity.labelFields?.find((f) => f.name === item.key);
                       if (field) {
                         entityName = entity.entity;
+                        resolvedFieldKey = field.fieldKey || resolvedFieldKey;
                         break;
                       }
                     }
@@ -1141,7 +1151,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                         key={`${item.key}-${index}`}
                         code={item.key}
                         // item={item}
-                        label={`${t(Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_CATEGORY_${entityName}`) || "ENTITY")} - ${t(Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_${item.fieldKey}`))}`}
+                        label={`${t(Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_CATEGORY_${entityName}`) || "ENTITY")} - ${t(Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_${resolvedFieldKey}`))}`}
                         // entityName={entityName}
                         selectedField={selectedField}
                         currentLocale={currentLocale}
@@ -1260,7 +1270,7 @@ const LocalizationInput = React.memo(
     return (
       <div
         className={isTableColumn ? "drawer-table-column-group" : ""}
-        style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+        style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}
       >
         {/* Label row with toggle for table columns */}
         <div
@@ -1270,7 +1280,7 @@ const LocalizationInput = React.memo(
             justifyContent: "space-between",
           }}
         >
-          <label style={{ fontWeight: "500", fontSize: "14px" }}>{label}</label>
+          <HeaderComponent className="label">{label}</HeaderComponent>
 
           {/* Show toggle only for table columns */}
           {isTableColumn && (
@@ -1312,6 +1322,7 @@ const LocalizationInput = React.memo(
               ...(maxLength && { maxLength }),
             }}
             disabled={viewMode || isColumnHidden}
+            withoutLabel={true}
           />
         </div>
       </div>
@@ -1410,7 +1421,19 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
   const localizedValue = useCustomT(fieldValue);
   const translatedValue = shouldSkipLocalization ? fieldValue : localizedValue;
 
-  const [conditionalLocalValue, setConditionalLocalValue] = useState(translatedValue === true ? "" : translatedValue || "");
+  // Placeholder: campaign-module localization first (where APPCONFIG_* codes
+  // are seeded), then i18next — t() alone shows the raw code because these
+  // codes live in the campaign locale module, not the ones i18next loads.
+  const innerLabelText = useCustomT(cField.innerLabel || "");
+
+  // Pre-fill from the panel config's defaultValue (a localization code, e.g.
+  // "Field is required") when the field has no message of its own. Editing
+  // still generates a per-field code, so the shared default is never mutated.
+  const defaultValueText = useCustomT(cField.defaultValue || "");
+
+  const [conditionalLocalValue, setConditionalLocalValue] = useState(
+    translatedValue === true ? "" : translatedValue || defaultValueText || ""
+  );
   const conditionalDebounceRef = useRef(null);
   // Ref to track if user is actively editing (prevents useEffect from overwriting local value)
   const isEditingRef = useRef(false);
@@ -1441,10 +1464,10 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
   useEffect(() => {
     // Don't overwrite local value while user is actively editing
     if (isEditingRef.current) return;
-    const newVal = translatedValue === true ? "" : translatedValue || "";
+    const newVal = translatedValue === true ? "" : translatedValue || defaultValueText || "";
     setConditionalLocalValue(newVal);
     localValueRef.current = newVal;
-  }, [translatedValue]);
+  }, [translatedValue, defaultValueText]);
 
   const handleConditionalChange = useCallback(
     (value) => {
@@ -1623,7 +1646,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
               handleConditionalChange(newValue);
             }}
             onBlur={handleConditionalBlur}
-            placeholder={cField.innerLabel ? t(cField.innerLabel) : null}
+            placeholder={cField.innerLabel ? (innerLabelText || t(cField.innerLabel)) : null}
             populators={{
               fieldPairClassName: "drawer-toggle-conditional-field",
               validation: {
@@ -1947,7 +1970,8 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
             ) // hide if missing
           );
           return shouldShowToggle ? (
-            <div key={panelItem.id} className="drawer-toggle-field-container">
+            // Keyed by the selected field too — see ConditionalField key note.
+            <div key={`${selectedField?.id ?? selectedField?.fieldName ?? ""}-${panelItem.id}`} className="drawer-toggle-field-container">
               <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} viewMode={viewMode} />
             </div>
           ) : null;

@@ -277,6 +277,8 @@ const MapUsersToRegistersScreen = () => {
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_NAME_COLUMN),
       selector: (row) => row.name,
+      grow:2,
+      minWidth:"400px",
       cell: (row) => (
         <span
           title={row.name}
@@ -288,7 +290,8 @@ const MapUsersToRegistersScreen = () => {
             textDecoration: "underline",
             overflow: "hidden",
             textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
+            whiteSpace: "normal",
+            wordBreak:"break-all"
           }}
         >
           {row.name}
@@ -298,6 +301,12 @@ const MapUsersToRegistersScreen = () => {
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_ID_LABEL),
       selector: (row) => row.serviceCode,
+      grow:1.5,
+      cell: (row) => (
+        <span style={{ whiteSpace: "normal", wordBreak: "break-all" }}>
+          {row.serviceCode}
+        </span>
+      ),
     },
     // {
     //   name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_NUMBER_COLUMN),
@@ -314,6 +323,12 @@ const MapUsersToRegistersScreen = () => {
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_ATTENDANCE_OFFICER_COLUMN),
       selector: (row) => getApproverName(row),
+      grow:1.5,
+      cell: (row) => (
+        <span style={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+          {getApproverName(row)}
+        </span>
+      ),
     },
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_NO_OF_USERS_COLUMN),
@@ -323,6 +338,7 @@ const MapUsersToRegistersScreen = () => {
           {row.attendees?.length || 0}
         </span>
       ),
+      grow:0.8
     },
     {
       name: t(I18N_KEYS.COMPONENTS.STATUS),
@@ -347,24 +363,29 @@ const MapUsersToRegistersScreen = () => {
       cell: (row) => (
         <Button
           label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_BUTTON)}
+          title={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_BUTTON)}
           variation="secondary"
           size="small"
           icon="PersonAdd"
           onClick={() => handleMapUsers(row)}
         />
       ),
+      grow:1.2,
+      minWidth:"200px"
     },
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DELETE_REGISTER_BUTTON),
       cell: (row) => (
         <Button
           label={t(I18N_KEYS.COMPONENTS.WBH_DELETE_REGISTER)}
+          title={t(I18N_KEYS.COMPONENTS.WBH_DELETE_REGISTER)}
           variation="secondary"
           size="small"
           icon="DeleteOutline"
           onClick={() => handleDeleteRegister(row)}
         />
       ),
+      grow:1
     },
   ];
 

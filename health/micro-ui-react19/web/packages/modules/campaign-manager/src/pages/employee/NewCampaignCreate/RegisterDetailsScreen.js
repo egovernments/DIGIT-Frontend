@@ -220,10 +220,11 @@ const RegisterDetailsScreen = () => {
     },
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_BOUNDARY_COLUMN),
+      grow:2,
       cell: () => {
         const code = registerData?.localityCode || boundaryCode || NA;
         return (
-          <span title={t(code)} style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          <span title={t(code)} style={{textOverflow: "ellipsis", whiteSpace: "normal",wordBreak: "break-all"  }}>
             {t(code)}
           </span>
         );

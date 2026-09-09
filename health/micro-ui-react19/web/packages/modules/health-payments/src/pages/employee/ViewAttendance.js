@@ -3,15 +3,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Loader,
-  Divider,
   Button,
   PopUp,
   Card,
   Link,
   ViewCardFieldPair,
   Toast,
-  LoaderScreen,
-  LoaderComponent,
   HeaderComponent,
   Footer,
 } from "@egovernments/digit-ui-components";

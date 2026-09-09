@@ -150,7 +150,7 @@ const PopupConfigEditor = ({ selectedField, viewMode }) => {
                       <label
                         style={{ fontWeight: "500", fontSize: "14px" }}
                       >
-                        {t(I18N_KEYS.APP_CONFIGURATION.CONFIGURE_OPTIONS_FOR) + `${bodyItem.label ? (customTranslate(bodyItem.label) || t(bodyItem.format)) : customTranslate(bodyItem.fieldName)}`}
+                        {`${t(I18N_KEYS.APP_CONFIGURATION.CONFIGURE_OPTIONS_FOR)} “${bodyItem.label ? (customTranslate(bodyItem.label) || t(bodyItem.format)) : customTranslate(bodyItem.fieldName)}”`}
                       </label>
                       <PopupFieldConfigurator
                         field={bodyItem}

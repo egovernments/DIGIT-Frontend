@@ -260,7 +260,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
           removeMargin={true}
         >
           <CardLabel style={{width:"100%"}} className="select-hierarchy-search-label">
-            {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH_BY_HIERARCHY_NAME)}
+            {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH)}
           </CardLabel>
           <div className="digit-field select-hierarchy-search-bar-field" style={{ width: "100%" }}>
             <TextInput
@@ -268,6 +268,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={"select-hierarchy-search-bar"}
+              placeholder= {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH_BY_HIERARCHY_NAME)}
             />
           </div>
         </LabelFieldPair>

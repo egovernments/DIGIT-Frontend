@@ -53,14 +53,14 @@ const CreateEmployee = ({ editUser = false }) => {
 
   const mutation = Digit.Hooks.hrms.useHRMSCreate(tenantId);
   const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
-  const { isLoading: isHRMSSearchLoading, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
+  const { isLoading: isHRMSSearchLoading, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId, undefined, undefined, { enabled: !!id });
 
   const { data: mdmsData, isLoading: isHRMSConfigLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CreateEmployeeConfig"], {
     select: (data) => {
       return data?.["egov-hrms"]?.CreateEmployeeConfig?.[0];
     },
     retry: false,
-    enable: false,
+    enabled: false,
   });
 
 
@@ -358,9 +358,11 @@ const CreateEmployee = ({ editUser = false }) => {
   const config = isEdit
     ? updatedConfig?.form?.map((section) => ({
       ...section,
-      body: section.body.filter(
-        (field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword" && field.key !== "Jurisdictions"
-      ),
+      body: section.body
+        .filter(
+          (field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword" && field.key !== "Jurisdictions"
+        )
+        .map((field) => field.key === "SelectEmployeeId" ? { ...field, nonEditable: true } : field),
     }))
     : updatedConfig?.form;
 

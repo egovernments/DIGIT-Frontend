@@ -435,6 +435,25 @@ const CreateCampaign = () => {
       return;
     }
 
+    // Date validation checks - only on HCM_CAMPAIGN_DATE step. This must run BEFORE
+    // setTotalFormData below: committing an invalid (e.g. equal start/end) date pair into
+    // totalFormData here, even briefly, lets a later transformCreateData call read that stale
+    // cached value instead of the corrected one the user actually submits afterward - the
+    // "Next" click looks blocked, but the invalid dates are already poisoning saved state.
+    if (name === "HCM_CAMPAIGN_DATE") {
+      const { startDate, endDate } = formData?.DateSelection || {};
+      if (!startDate || !endDate) {
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_CAMPAIGN_DATE_MISSING) });
+        return;
+      }
+      const start = new Date(startDate).getTime();
+      const end = new Date(endDate).getTime();
+      if (start >= end) {
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE) });
+        return;
+      }
+    }
+
     setTotalFormData((prevData) => ({
       ...prevData,
       [name]: formData,
@@ -463,20 +482,6 @@ const CreateCampaign = () => {
         setShowToast(null);
       }
       setIsValidatingName(false);
-    }
-    // Date validation checks - only on HCM_CAMPAIGN_DATE step
-    if (name === "HCM_CAMPAIGN_DATE") {
-      const { startDate, endDate } = formData?.DateSelection || {};
-      if (!startDate || !endDate) {
-        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_CAMPAIGN_DATE_MISSING) });
-        return;
-      }
-      const start = new Date(startDate).getTime();
-      const end = new Date(endDate).getTime();
-      if (start >= end) {
-        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE) });
-        return;
-      }
     }
 
     // Sync campaignDates (from CampaignDates component) to DateSelection so downstream code reads correct dates

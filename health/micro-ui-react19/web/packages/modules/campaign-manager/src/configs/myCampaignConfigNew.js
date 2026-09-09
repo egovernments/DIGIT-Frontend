@@ -124,7 +124,7 @@ export const myCampaignConfigNew = {
         minParametersForSearchForm: 0,
         minParametersForFilterForm: 0,
         masterName: "commonUiConfig",
-        moduleName: "MyCampaignConfigUpcomingUpdated",
+        moduleName: "MyCampaignConfigUpcoming",
         tableFormJsonPath: "requestBody.inbox",
         filterFormJsonPath: "requestBody.custom",
         searchFormJsonPath: "requestBody.custom",
@@ -211,7 +211,7 @@ export const myCampaignConfigNew = {
       additionalSections: {},
       persistFormData: true,
       showAsRemovableTagsInMobile: true,
-      postProcessResult: true,
+      // postProcessResult: true,
     },
     {
       headerLabel: "CAMPAIGN_SEARCH_TITLE",

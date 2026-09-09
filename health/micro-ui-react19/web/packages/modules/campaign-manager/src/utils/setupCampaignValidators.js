@@ -3,6 +3,7 @@
  */
 import { VALIDATION_FUNCTIONS, allRulesMet } from "./campaignNameValidators";
 import { I18N_KEYS } from "./i18nKeyConstants";
+import { getDeliveryRulesCampaignData } from "../pages/employee/deliveryRule";
 
  const  validateCycleData=(data,t,isBednet)=> {
   const { cycle, deliveries } = data?.cycleConfigure?.cycleConfgureDate;
@@ -395,15 +396,37 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
           setShowToast({ key: "error", label: "HCM_ALL_CYCLE_DATES_MANDATORY" });
           return false;
         }
+
+        // Backstop for chronological order (each cycle ends after it starts, and starts
+        // after the previous cycle ends) - CycleConfiguration.js's own onChange handlers now
+        // reject/clear bad picks as they're entered, but this catches data that reached
+        // cycleData some other way (e.g. a draft saved before those guards existed).
+        const sortedCycles = [...requiredCycles].sort((a, b) => a.key - b.key);
+        const hasDateOrderError = sortedCycles.some((cycle, idx) => {
+          if (new Date(cycle.toDate) <= new Date(cycle.fromDate)) return true;
+          if (idx > 0 && new Date(cycle.fromDate) <= new Date(sortedCycles[idx - 1].toDate)) return true;
+          return false;
+        });
+
+        if (hasDateOrderError) {
+          setShowToast({ key: "error", label: "HCM_ALL_CYCLE_DATES_MANDATORY" });
+          return false;
+        }
       }
 
       setShowToast(null);
       return true;
 
     case "deliveryRule":
-      // Tolerate an absent/malformed value here (this data can arrive via totalFormData instead) -
-      // the payload builder is what guards against overwriting saved rules
       const deliveryRules = Array.isArray(formData?.deliveryRule) ? formData.deliveryRule : [];
+      if (deliveryRules.length === 0) {
+        // Form state may be empty if the component was remounted (e.g., back-and-forward navigation).
+        // Fall back to the Redux store, which always reflects the user's last saved input, to run validation.
+        const reduxRules = getDeliveryRulesCampaignData();
+        const attrError = checkAttributeValidity({ deliveryRule: reduxRules });
+        if (attrError) { setShowToast({ key: "error", label: attrError }); }
+        return false;
+      }
       const validateMaxCondition = hasInvalidMaxCountAttribute(deliveryRules);
       if (validateMaxCondition) {
         setShowToast({ key: "error", label: "INVALID_USE_OF_MAX_COUNT" });
