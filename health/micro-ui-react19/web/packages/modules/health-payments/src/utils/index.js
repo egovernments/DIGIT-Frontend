@@ -173,6 +173,7 @@ export {//todo check
   perDayFromPayable,
   sumPayableAmounts,
   applyPerDayToPayables,
+  fillMissingPayables,
   FEES_HEAD_CODE,
   getFeesFieldConfig,
   getBaseHeadCodes,
