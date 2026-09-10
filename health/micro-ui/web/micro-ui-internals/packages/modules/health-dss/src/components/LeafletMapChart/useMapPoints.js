@@ -11,6 +11,8 @@ const DEFAULT_SCALING = { mode: "boundary", precision: 11 };
 // raw documents, and || would silently turn that into 2000.
 const orDefault = (value, fallback) => (value === undefined || value === null ? fallback : value);
 const DEBOUNCE_MS = 250;
+// Viewport mode plots documents by default; boundary mode does not, so its default is 0.
+const DEFAULT_VIEWPORT_HITS_CAP = 2000;
 // geotile_grid tops out here; beyond ~22 a cell is smaller than GPS error anyway.
 const MAX_GEOTILE_PRECISION = 29;
 
@@ -60,11 +62,24 @@ const snapBounds = (bounds, precision, padding) => {
  *
  * Two modes, chosen per drill depth by the chart's `scaling` array:
  *
- *   boundary  – bbox is the whole world and precision is fixed. Zoom and pan are not inputs,
- *               so panning around a province never refetches.
- *   viewport  – precision follows the zoom and the bbox follows the screen. A refetch happens
+ *   boundary  – bbox is the whole world and precision is fixed. Neither zoom nor pan is an
+ *               input, so the whole boundary costs exactly one request.
+ *   zoom      – bbox is still the whole world, but precision follows the zoom, so clusters
+ *               subdivide as the user zooms in and merge as they zoom out. Pan is not an input
+ *               and precision is an integer, so the only thing that can trigger a request is
+ *               crossing a precision step: at most (maxPrecision - minPrecision + 1) distinct
+ *               requests per boundary, each cached under its own key.
+ *   viewport  – precision follows the zoom AND the bbox follows the screen. A refetch happens
  *               only when the viewport leaves the padded region already fetched, or when the
- *               precision step changes; both are checked before anything is requested.
+ *               precision step changes; both are checked before anything is requested. Use it
+ *               at the deepest levels, where the bbox is the only thing keeping the result set
+ *               small enough to plot individually.
+ *
+ * `hitsCap` is a separate axis from the mode. It sets the count below which the layer draws
+ * individual documents instead of clusters, and either mode may use it: a boundary-mode level
+ * with `hitsCap` set asks for the grid AND up to that many documents in the same request, then
+ * `selectRendering` picks between them from the total. Because boundary mode's request has no
+ * viewport inputs, that costs exactly one fetch per boundary no matter how much the user pans.
  *
  * Returned params are merged into the chart API `filters`, where the backend picks up only the
  * ones the chart declares under queryParams.
@@ -77,18 +92,61 @@ export const useMapPoints = ({ map, scaling, chainIndex, enabled }) => {
   // Last entry repeats for anything deeper, so the hierarchy can grow without a code change.
   const policy = (scaling?.length ? scaling[Math.min(chainIndex, scaling.length - 1)] : null) || DEFAULT_SCALING;
   const isViewport = policy.mode === "viewport";
+  const isZoom = policy.mode === "zoom";
+  // Both of these leave the bbox alone; only viewport mode ties the request to the screen.
+  const isWorldBbox = !isViewport;
+
+  // hitsCap is not a property of the mode — it is the switch between the two renderings, and a
+  // boundary holding few enough households should plot them individually whatever depth it sits
+  // at. It stays out of the request-shaping inputs below on purpose: it is a per-level constant,
+  // so raising it above 0 in boundary mode adds no viewport dependency and therefore no refetch.
+  //
+  // 0 means clusters only, and is still the boundary-mode default: an unconfigured level should
+  // not start dragging back _source payloads it was never going to draw.
+  const hitsCap = orDefault(policy.hitsCap, isViewport ? DEFAULT_VIEWPORT_HITS_CAP : 0);
 
   // Boundary mode has no viewport inputs at all — resolve once and leave it alone.
   useEffect(() => {
-    if (!enabled || isViewport) return;
+    if (!enabled || !isWorldBbox || isZoom) return;
     fetchedRef.current = null;
     setParams({
       precision: orDefault(policy.precision, DEFAULT_SCALING.precision),
-      // 0 hits: boundary mode never plots individual documents, and asking for none keeps a
-      // country-wide query from dragging back thousands of _source payloads it would discard.
-      hitsCap: 0,
+      hitsCap,
+      // Count only far enough to answer "more than hitsCap?" — ES stops there, and an inexact
+      // total is by definition over the cap. Omitted when no documents are wanted at all.
+      ...(hitsCap > 0 ? { trackTotalHitsUpTo: hitsCap + 1 } : {}),
     });
-  }, [enabled, isViewport, policy.precision]);
+  }, [enabled, isWorldBbox, isZoom, policy.precision, hitsCap]);
+
+  // Zoom mode: precision tracks the zoom, the bbox stays the whole world.
+  useEffect(() => {
+    if (!enabled || !isZoom || !map) return;
+
+    const offset = orDefault(policy.zoomOffset, 3);
+    const minPrecision = Math.max(1, orDefault(policy.minPrecision, 1));
+    const maxPrecision = Math.min(orDefault(policy.maxPrecision, 16), MAX_GEOTILE_PRECISION);
+
+    // The whole cost model of this mode: precision is an integer, so a zoom gesture that does
+    // not cross a step asks for nothing, and one that does asks exactly once.
+    let lastPrecision = null;
+    const resolve = () => {
+      const precision = Math.max(minPrecision, Math.min(maxPrecision, Math.round(map.getZoom()) + offset));
+      if (lastPrecision === precision) return;
+      lastPrecision = precision;
+      setParams({
+        precision,
+        hitsCap,
+        ...(hitsCap > 0 ? { trackTotalHitsUpTo: hitsCap + 1 } : {}),
+      });
+    };
+
+    resolve();
+    // zoomend, deliberately not moveend: a pan must never reach this, and zoomend already
+    // fires once per gesture rather than per frame, so no debounce is needed on top.
+    map.on("zoomend", resolve);
+    return () => map.off("zoomend", resolve);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled, isZoom, map, policy.zoomOffset, policy.minPrecision, policy.maxPrecision, hitsCap, chainIndex]);
 
   useEffect(() => {
     if (!enabled || !isViewport || !map) return;
@@ -96,7 +154,6 @@ export const useMapPoints = ({ map, scaling, chainIndex, enabled }) => {
     const offset = orDefault(policy.zoomOffset, 3);
     const maxPrecision = Math.min(orDefault(policy.maxPrecision, 22), MAX_GEOTILE_PRECISION);
     const padding = orDefault(policy.bboxPadding, 1.5);
-    const hitsCap = orDefault(policy.hitsCap, 2000);
 
     const resolve = () => {
       const precision = Math.max(1, Math.min(maxPrecision, Math.round(map.getZoom()) + offset));
@@ -137,14 +194,14 @@ export const useMapPoints = ({ map, scaling, chainIndex, enabled }) => {
       map.off("moveend", onMove);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled, isViewport, map, policy.zoomOffset, policy.maxPrecision, policy.bboxPadding, policy.hitsCap, chainIndex]);
+  }, [enabled, isViewport, map, policy.zoomOffset, policy.maxPrecision, policy.bboxPadding, hitsCap, chainIndex]);
 
   // Drilling to a different boundary invalidates the fetched region.
   useEffect(() => {
     fetchedRef.current = null;
   }, [chainIndex]);
 
-  return { params, mode: policy.mode, hitsCap: isViewport ? orDefault(policy.hitsCap, 2000) : 0 };
+  return { params, mode: policy.mode, hitsCap };
 };
 
 /**

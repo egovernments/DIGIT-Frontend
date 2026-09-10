@@ -1,0 +1,819 @@
+/*
+ * Leaflet map chart styles.
+ *
+ * Deliberately NOT in the shared css package (healthdss.scss): these classes are all new, so
+ * a deployment would have to ship a matching css-package version before the map rendered
+ * correctly. microbundle-crl inlines an imported stylesheet into the module bundle, so
+ * importing this from LeafletHeatMap.js ships the styles with the component that needs them
+ * and decouples the two release trains.
+ *
+ * Anything shared with the older AdvancedMapCharts — .digit-heat-map-recenter and friends —
+ * stays in healthdss.scss, because those already exist in the published package.
+ *
+ * Plain CSS, not SCSS: the module build handles .css (see the leaflet/dist/leaflet.css import
+ * alongside this one) and carries no sass dependency.
+ */
+
+.digit-leaflet-map-chart {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.digit-maps-boundary-filters {
+  -webkit-box-flex: 0;
+  -ms-flex: none;
+  flex: none;
+  width: 100%;
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #d6d5d4;
+  border-radius: 4px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.digit-maps-boundary-filters-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0b0c0c;
+  margin: 0;
+  white-space: nowrap;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  min-height: 2rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.digit-maps-boundary-filters-body {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  min-width: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.digit-maps-boundary-filter-row {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
+.digit-maps-boundary-filter-select {
+  width: 11.25rem;
+  max-width: 100%;
+  padding: 0.375rem 2rem 0.375rem 0.625rem;
+  border: 1px solid #b1b4b6;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  color: #0b0c0c;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23505a5f' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.625rem center;
+  background-size: 10px 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  -webkit-transition: border-color 0.15s;
+  transition: border-color 0.15s;
+}
+
+.digit-maps-boundary-filter-select:hover {
+  border-color: #0b0c0c;
+}
+
+.digit-maps-boundary-filter-select:focus {
+  outline: 3px solid #ffdd00;
+  outline-offset: 0;
+  border-color: #0b0c0c;
+}
+
+.digit-maps-boundary-filter-locked {
+  width: 11.25rem;
+  max-width: 100%;
+  min-height: 2rem;
+  padding: 0.375rem 0.625rem;
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  color: #505a5f;
+  background-color: #f3f2f1;
+  cursor: not-allowed;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.digit-maps-boundary-clear-btn {
+  margin-left: auto;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  min-height: 2rem;
+  background: none;
+  border: none;
+  font-size: 0.8125rem;
+  color: #d4351c;
+  cursor: pointer;
+  padding: 0;
+  font-weight: 600;
+}
+
+.digit-maps-boundary-clear-btn:hover {
+  text-decoration: underline;
+}
+
+.digit-leaflet-heatmap-container {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 0px;
+  flex: 1 1 0;
+  min-width: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.digit-leaflet-map-wrapper {
+  position: relative;
+  width: 100%;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 0px;
+  flex: 1 1 0;
+  min-height: 520px;
+  border: 1px solid #d6d5d4;
+  border-radius: 4px;
+}
+
+.digit-leaflet-map {
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.digit-leaflet-map-controls {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1200;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.digit-leaflet-map-controls .digit-heat-map-recenter {
+  margin: 0;
+}
+
+.digit-leaflet-layers-wrap {
+  position: relative;
+}
+
+.digit-leaflet-layers-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  background: #fff;
+  border: 1px solid #d6d5d4;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #505a5f;
+}
+
+.digit-leaflet-layers-btn:hover,
+.digit-leaflet-layers-btn--active {
+  background: #f0f0f0;
+}
+
+.digit-leaflet-layers-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 10000;
+  background: #fff;
+  border: 1px solid #d6d5d4;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 340px;
+  overflow: hidden;
+}
+
+.digit-leaflet-layers-group-label {
+  padding: 0.5rem 0.75rem 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #505a5f;
+  border-top: 1px solid #ebebeb;
+}
+
+.digit-leaflet-layers-group-label:first-child {
+  border-top: none;
+}
+
+.digit-leaflet-layers-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 18px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  font-size: 14px;
+  color: #0b0c0c;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.digit-leaflet-layers-item:last-child {
+  border-bottom: none;
+}
+
+.digit-leaflet-layers-item:hover {
+  background: #f5f5f5;
+}
+
+.digit-leaflet-loader-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.75);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.digit-leaflet-message-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  z-index: 1000;
+  pointer-events: none;
+  background: transparent;
+}
+
+.digit-leaflet-message-pill {
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #d6d5d4;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-size: 0.875rem;
+  color: #0b0c0c;
+  text-align: center;
+}
+
+.digit-leaflet-coverage-filter {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 0.75rem;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.digit-leaflet-range-track {
+  position: relative;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  height: 14px;
+}
+
+/* the unfilled rail */
+.digit-leaflet-range-track::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #d6d5d4;
+  border-radius: 1px;
+}
+
+.digit-leaflet-range-fill {
+  position: absolute;
+  top: 6px;
+  height: 2px;
+  background: #c84c0e;
+  border-radius: 1px;
+}
+
+/* Two inputs stacked so both thumbs share one rail. The input itself ignores pointer
+   events so the lower one cannot swallow clicks meant for the upper thumb. */
+.digit-leaflet-range-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 14px;
+  margin: 0;
+  background: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  pointer-events: none;
+}
+
+.digit-leaflet-range-input:focus {
+  outline: none;
+}
+
+.digit-leaflet-range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #c84c0e;
+  cursor: pointer;
+}
+
+.digit-leaflet-range-input::-moz-range-thumb {
+  pointer-events: auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #c84c0e;
+  cursor: pointer;
+}
+
+.digit-leaflet-range-input:focus::-webkit-slider-thumb {
+  outline: 3px solid #ffdd00;
+}
+
+.digit-leaflet-range-number {
+  width: 3.5rem;
+  padding: 0.25rem 0.375rem;
+  border: 1px solid #b1b4b6;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: #0b0c0c;
+  text-align: center;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.digit-leaflet-range-number:focus {
+  outline: 3px solid #ffdd00;
+  border-color: #0b0c0c;
+}
+
+.digit-leaflet-range-stepper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 1px;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.digit-leaflet-range-step {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 1.125rem;
+  height: 0.8125rem;
+  padding: 0;
+  background: #f5f5f5;
+  border: 1px solid #d6d5d4;
+  border-radius: 2px;
+  font-size: 0.625rem;
+  line-height: 1;
+  color: #0b0c0c;
+  cursor: pointer;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.digit-leaflet-range-step:hover:not(:disabled) {
+  background: #e8e8e8;
+}
+
+.digit-leaflet-range-step:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* marks that the upper bound is open-ended (100 means 100 and above) */
+.digit-leaflet-range-reset {
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #c84c0e;
+  cursor: pointer;
+  white-space: nowrap;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.digit-leaflet-range-reset:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.digit-leaflet-range-reset:disabled {
+  color: #b1b4b6;
+  cursor: default;
+}
+
+.digit-leaflet-gradient-scale {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 0.75rem;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.digit-leaflet-gradient-bar {
+  height: 12px;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  border-radius: 2px;
+  background: -webkit-gradient(linear, right top, left top, from(#01D66F), color-stop(46.03%, #FFC42E), to(#FF7373));
+  background: linear-gradient(270deg, #01D66F 0%, #FFC42E 46.03%, #FF7373 101.5%);
+}
+
+.digit-leaflet-gradient-label {
+  font-size: 0.75rem;
+  color: #505a5f;
+  white-space: nowrap;
+}
+
+/* Cluster (point) layer — density ramp mirrors CLUSTER_COLOR_RANGE in LeafletHeatMap.js.
+   Keep the two in step; the legend lies otherwise. */
+.digit-leaflet-cluster-legend {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 0.75rem;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  margin-top: 0.5rem;
+}
+
+.digit-leaflet-cluster-legend-bar {
+  height: 12px;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  border-radius: 2px;
+  /* Fallback only. The live gradient is set inline from the point layer's resolved colours, */
+  /* so a ramp configured in ChartApiConfig.json cannot drift out of step with the markers. */
+  background: linear-gradient(90deg, #FFE9A8 0%, #FFA424 40%, #A02C0A 100%);
+}
+
+.digit-leaflet-cluster-legend-caption {
+  font-size: 0.75rem;
+  color: #505a5f;
+  white-space: nowrap;
+}
+
+/* L.divIcon ships a white box with a border; the glyph carries its own fill and white
+   stroke, so strip the chrome and let the SVG sit directly on the map. */
+.digit-leaflet-point-icon {
+  background: transparent;
+  border: none;
+
+}
+
+/* The drop shadow is what separates the glyph from a busy satellite tile. */
+.digit-leaflet-point-icon svg {
+  display: block;
+  filter: drop-shadow(0 0.0625rem 0.0625rem rgba(11, 12, 12, 0.35));
+}
+
+/* Legend swatch when the layer uses an icon shape rather than a circle. */
+.digit-leaflet-cluster-legend-icon {
+  flex-shrink: 0;
+}
+
+/* Individual-household mode: one dot is one household, so there is no ramp to show. */
+.digit-leaflet-cluster-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  /* Fallback only — overridden inline from the layer's configured pointColor. */
+  background: #C84C0E;
+  border: 1px solid #ffffff;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+/* Points refresh without blocking the map, so this sits beside the breadcrumb rather
+   than over the canvas. */
+.digit-leaflet-points-status {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  padding: 0.25rem 0.6rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #d6d5d4;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: #505a5f;
+  pointer-events: none;
+}
+
+.digit-leaflet-breadcrumb {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  max-width: calc(100% - 14rem);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  gap: 0.125rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #d6d5d4;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.digit-leaflet-breadcrumb-sep {
+  margin: 0 0.25rem;
+  color: #b1b4b6;
+  font-size: 0.875rem;
+}
+
+.digit-leaflet-breadcrumb-item {
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #c84c0e;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.digit-leaflet-breadcrumb-item:hover {
+  color: #a33d0b;
+}
+
+.digit-leaflet-breadcrumb-item--current {
+  color: #0b0c0c;
+  font-weight: 700;
+  cursor: default;
+  text-decoration: none;
+}
+
+.digit-leaflet-zoom-control {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #d6d5d4;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.digit-leaflet-zoom-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: #f5f5f5;
+  border: none;
+  font-size: 1.125rem;
+  line-height: 1;
+  color: #0b0c0c;
+  cursor: pointer;
+}
+
+.digit-leaflet-zoom-btn:hover {
+  background: #e8e8e8;
+}
+
+.digit-leaflet-zoom-label {
+  min-width: 3rem;
+  padding: 0 0.5rem;
+  font-size: 0.8125rem;
+  color: #0b0c0c;
+  text-align: center;
+}
+
+/* ── Map hover readout ────────────────────────────────────────────────────── */
+/* Shared by the choropleth polygons and the point/cluster markers, so the two never */
+/* look like different products. Values lead and labels follow: the reader already */
+/* knows what they hovered, so the number carries the contrast and the metric name */
+/* sits in secondary ink. */
+.digit-leaflet-tooltip {
+  padding: 0.5rem 0.625rem;
+  font-size: 0.8125rem;
+  /* Tight enough that a four-row readout stays one glance rather than a list. */
+  line-height: 1.35;
+  color: #0b0c0c;
+  background-color: #ffffff;
+  /* Leaflet ships a 1px white border and a hard 3px corner; replace both rather than */
+  /* layer on top, or the radius below is fighting a square edge underneath. */
+  border: none;
+  border-radius: 0.375rem;
+  box-shadow: 0 0.0625rem 0.125rem rgba(11, 12, 12, 0.14), 0 0.25rem 0.75rem rgba(11, 12, 12, 0.1);
+
+}
+
+/* Boundary name, or the household's own label. */
+.digit-leaflet-tooltip strong {
+  display: block;
+  font-weight: 700;
+  color: #0b0c0c;
+}
+
+/* Which coverage layer the numbers below belong to. Attribution, not a value, so it */
+/* stays small and muted and sits directly under the name it qualifies. */
+.digit-leaflet-tooltip-layer {
+  font-size: 0.6875rem;
+  font-weight: 400;
+  color: #505a5f;
+}
+
+.digit-leaflet-tooltip-table {
+  /* Deliberately not width:100% — a long boundary name would then stretch the table to */
+  /* match it and blow the two columns apart, which is the gap this is trying to close. */
+  margin-top: 0.375rem;
+  padding-top: 0.375rem;
+  /* Hairline separating the heading from the numbers. */
+  border-top: 0.0625rem solid #eceded;
+  border-collapse: collapse;
+
+}
+
+/* Cluster buckets are numbers with no heading above them, so there is nothing to
+   separate — the rule would read as a stray line across the top of the card. */
+.digit-leaflet-tooltip-table:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.digit-leaflet-tooltip-label {
+  /* The only gap that is ours to set: the rest of the space between the two columns */
+  /* is the label column sizing itself to the longest metric name, which is what keeps */
+  /* the numbers on a common right edge. */
+  padding: 0.0625rem 0.875rem 0.0625rem 0;
+  font-weight: 400;
+  color: #505a5f;
+}
+
+.digit-leaflet-tooltip-value {
+  padding: 0.0625rem 0 0.0625rem 0;
+  text-align: right;
+  font-weight: 600;
+  /* Digits share a width, so the columns line up instead of shimmering row to row. */
+  font-variant-numeric: tabular-nums;
+  color: #0b0c0c;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .digit-maps-boundary-filters {
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .digit-maps-boundary-filters-body {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+  }
+
+  .digit-maps-boundary-filter-select,
+  .digit-maps-boundary-filter-locked {
+    width: 100%;
+  }
+
+  .digit-maps-boundary-clear-btn {
+    margin-left: 0;
+    text-align: left;
+  }
+}

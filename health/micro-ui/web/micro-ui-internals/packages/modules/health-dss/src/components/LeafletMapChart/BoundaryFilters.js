@@ -92,6 +92,13 @@ const BoundaryFilters = ({ activeFilter, onSelect, onPathChange }) => {
     return result;
   }, [boundaryTree]);
 
+  // i18next returns the key itself when the bundle has no entry, which showed raw
+  // "DSS_SELECT_BOUNDARY" text in the panel. Same fallback the map component uses.
+  const labelFor = (key, fallback) => {
+    const translated = key ? t(key) : "";
+    return translated && translated !== key ? translated : fallback;
+  };
+
   // Boundary codes double as i18n keys (hcm-boundary-{hierarchyType}); fall back to the
   // boundary service name when the code has no translation.
   const displayLabel = (node) => {
@@ -112,6 +119,9 @@ const BoundaryFilters = ({ activeFilter, onSelect, onPathChange }) => {
   // it are selectable.
   const scopeBoundaryType = getQueryParam("boundaryType");
   const scopeBoundaryValue = getQueryParam("boundaryValue");
+  // Unlocalised boundary code. Preferred over boundaryValue, which is a display name and
+  // therefore language-dependent — "Borno" resolves in English and nowhere else.
+  const scopeBoundaryCode = getQueryParam("boundaryCode");
   const scopeDepth = Math.max(
     0,
     orderedLevels.findIndex((l) => l.boundaryType === scopeBoundaryType?.toLowerCase())
@@ -134,17 +144,23 @@ const BoundaryFilters = ({ activeFilter, onSelect, onPathChange }) => {
     if (!countryDefault) return null;
 
     const next = { [countryLevel.level]: countryDefault };
-    if (!scopeDepth || !scopeBoundaryValue) return next;
+    if (!scopeDepth || (!scopeBoundaryValue && !scopeBoundaryCode)) return next;
 
     const scopeLevel = orderedLevels[scopeDepth];
     const options = boundaryMap[scopeLevel.boundaryType] || [];
-    const wanted = scopeBoundaryValue.toLowerCase();
-    const scopeNode = options.find(
-      (b) =>
-        b.code?.toLowerCase() === wanted ||
-        b.name?.toLowerCase() === wanted ||
-        (t(b.code) !== b.code && t(b.code).toLowerCase() === wanted)
-    );
+    const wantedCode = scopeBoundaryCode?.toLowerCase();
+    const wanted = scopeBoundaryValue?.toLowerCase();
+    // Code first: an exact, language-independent match. The name comparisons below are a
+    // fallback for URLs issued before boundaryCode was added.
+    const scopeNode =
+      (wantedCode && options.find((b) => b.code?.toLowerCase() === wantedCode)) ||
+      (wanted &&
+        options.find(
+          (b) =>
+            b.code?.toLowerCase() === wanted ||
+            b.name?.toLowerCase() === wanted ||
+            (t(b.code) !== b.code && t(b.code).toLowerCase() === wanted)
+        ));
     if (!scopeNode) return next;
 
     next[scopeLevel.level] = { code: scopeNode.code, name: scopeNode.name || scopeNode.code, type: scopeLevel.boundaryType };
@@ -335,7 +351,7 @@ const BoundaryFilters = ({ activeFilter, onSelect, onPathChange }) => {
   if (isLoading) {
     return (
       <div className="digit-maps-boundary-filters">
-        <span className="digit-maps-boundary-filters-title">{t("DSS_SELECT_BOUNDARY")}</span>
+        <span className="digit-maps-boundary-filters-title">{labelFor("DSS_SELECT_BOUNDARY", "Select boundary")}</span>
         <div className="digit-maps-boundary-filters-body">
           <Loader className="digit-center-loader" animationStyles={{ width: "1.5rem", height: "1.5rem" }} />
         </div>
@@ -345,7 +361,7 @@ const BoundaryFilters = ({ activeFilter, onSelect, onPathChange }) => {
 
   return (
     <div className="digit-maps-boundary-filters">
-      <span className="digit-maps-boundary-filters-title">{t("DSS_SELECT_BOUNDARY")}</span>
+      <span className="digit-maps-boundary-filters-title">{labelFor("DSS_SELECT_BOUNDARY", "Select boundary")}</span>
 
       <div className="digit-maps-boundary-filters-body">
         {orderedLevels.map((levelInfo, index) => {
@@ -391,7 +407,7 @@ const BoundaryFilters = ({ activeFilter, onSelect, onPathChange }) => {
 
       {hasSelectableSelection && (
         <button className="digit-maps-boundary-clear-btn" onClick={clearSelectable}>
-          {t("DSS_CLEAR_FILTERS")}
+          {labelFor("DSS_CLEAR_FILTERS", "Clear")}
         </button>
       )}
     </div>

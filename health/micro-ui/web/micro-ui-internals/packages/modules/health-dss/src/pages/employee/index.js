@@ -20,6 +20,8 @@ const ProjectBreadCrumb = ({ location }) => {
   const campaignName = Digit.SessionStorage.get("campaignSelected")?.campaignName;
   const boundaryType = Digit.SessionStorage.get("projectSelected")?.project?.address?.boundaryType?.toLowerCase();
   const boundaryValue = Digit.SessionStorage.get("projectSelected")?.boundaryCodeResponse?.message || t(Digit.SessionStorage.get("projectSelected")?.project?.address?.boundary);
+  // The unlocalised boundary code — safe to match on, unlike the display name above.
+  const boundaryCode = Digit.SessionStorage.get("projectSelected")?.project?.address?.boundary;
   const crumbs = [
     {
       internalLink: `/${window?.contextPath}/employee`,
@@ -59,7 +61,7 @@ const ProjectBreadCrumb = ({ location }) => {
     {
       internalLink: `/${window?.contextPath}/employee/dss/level-one/${dashboardId}`,
       content: t("LEVEL_ONE_DASHBOARD"),
-      query: `campaignNumber=${campaignNumber}&boundaryType=${boundaryType}&boundaryValue=${boundaryValue}`,
+      query: `campaignNumber=${campaignNumber}&boundaryType=${boundaryType}&boundaryValue=${boundaryValue}&boundaryCode=${boundaryCode}`,
       show:
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").slice(-2, -1)[0]) === "LEVEL_ONE" ||
         (Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").slice(-2, -1)[0]) === "LEVEL_TWO" && selectedDashboard?.level === "level-one"),
