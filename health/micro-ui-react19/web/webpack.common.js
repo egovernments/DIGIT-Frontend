@@ -32,6 +32,24 @@ module.exports = {
         },
       },
       {
+        test: /\.mjs$/,
+        include: /pdfjs-dist/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            configFile: false,
+            babelrc: false,
+            presets: [
+              ["@babel/preset-env", {
+                targets: { chrome: "80" },
+                shippedProposals: true,
+                modules: false,
+              }],
+            ],
+          },
+        },
+      },
+      {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
       },

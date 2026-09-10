@@ -201,6 +201,7 @@ const inboxSearchConfig = (tenantId) => {
           rowClassName: "table-row-mdms table-row-mdms-hover", // Table row styles
           tableClassName: "pqm-table", // Table styles
           resultsJsonPath: "Employees", // API response path for results
+          totalCountJsonPath: "TotalCount",
           enableColumnSort: false, // Enables sorting on columns
           enableGlobalSearch: false, // Disables global search
           isPaginationRequired: true, // enables pagination
