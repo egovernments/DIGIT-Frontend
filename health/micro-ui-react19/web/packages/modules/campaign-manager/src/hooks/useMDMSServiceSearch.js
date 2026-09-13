@@ -23,7 +23,7 @@ const fetchServiceDefinition = async (serviceCodes, tenantId, limit) => {
     return res?.ServiceDefinitions;
   } catch (error) {
     console.error("Error fetching service definition:", error);
-    return error;
+    return [];
   }
 };
 
@@ -38,6 +38,9 @@ const mergeData = (mdmsData, campaignName) => {
 
 const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessRequest, changeQueryName = "Random", state, campaignName: campaignNameProp, campaignType: campaignTypeProp, serviceDefinitionLimit, enabled = true }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const isSupervisionAndReportingAdministratorOnly =
+    Digit.Utils.didEmployeeHasAtleastOneRole(["SUPERVISION_AND_REPORTING_ADMINISTRATOR"]) &&
+    !Digit.Utils.didEmployeeHasAtleastOneRole(["CAMPAIGN_MANAGER"]);
   const searchParams = new URLSearchParams(location.search);
   // Using props if provided, otherwise fallback to URL params
   const campaignName = campaignNameProp || searchParams.get("name");
@@ -57,7 +60,9 @@ const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessReque
 
       // Second API Call: Merge MDMS Data with Service Definition
       const final = mergeData(mdmsResponse?.mdms,campaignName);
-      const serviceData = await fetchServiceDefinition(final, tenantId, serviceDefinitionLimit);
+      const serviceData = isSupervisionAndReportingAdministratorOnly
+        ? []
+        : await fetchServiceDefinition(final, tenantId, serviceDefinitionLimit);
 
 
       // Return a promise that resolves after both API calls are complete
