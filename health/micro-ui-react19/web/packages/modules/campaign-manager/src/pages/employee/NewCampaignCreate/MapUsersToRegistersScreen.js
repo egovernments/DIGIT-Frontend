@@ -206,6 +206,12 @@ const MapUsersToRegistersScreen = () => {
     );
   };
 
+  const handleEditBulkAttendance = () => {
+    navigate(
+      `/${window.contextPath}/employee/campaign/bulk-attendance-upload?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+    );
+  };
+  
   const handleDeleteRegister = (register) => {
     setDeletePopup(register);
   };
@@ -337,9 +343,16 @@ const MapUsersToRegistersScreen = () => {
       <Card style={{ padding: "1.5rem", marginBottom: "1.5rem" }}>
         {/* Campaign chip + users alert */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
-          {campaignName && (
-            <TagComponent campaignName={campaignName} />
-          )}
+          {campaignName && <TagComponent campaignName={campaignName} />}
+            <Button
+              label={t(I18N_KEYS.COMMON.HCM_EDIT_BULK_ATTENDANCE)}
+              variation="secondary"
+              size="large"
+              icon="XlsxFile"
+              onClick={handleEditBulkAttendance}
+              isDisabled={!filteredRegisters?.length}
+              type="button"
+            />
         </div>
 
         {/* Page heading */}

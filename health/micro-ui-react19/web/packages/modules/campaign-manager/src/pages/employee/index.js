@@ -146,6 +146,12 @@ const MapAttendeesScreen = lazyWithFallback(
   { loaderText: "Loading Map Attendees..." }
 );
 
+const BulkAttendanceUploadScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "bulk-attendance-upload" */ "./NewCampaignCreate/BulkAttendanceUploadScreen"),
+  () => require("./NewCampaignCreate/BulkAttendanceUploadScreen").default,
+  { loaderText: "Loading Bulk Attendance Upload..." }
+);
+
 const CampaignTemplates = lazyWithFallback(
   () => import(/* webpackChunkName: "campaign-templates" */ "./campaignTemplateScreens/CampaignTemplates"),
   () => require("./campaignTemplateScreens/CampaignTemplates").default,
@@ -247,6 +253,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.includes("map-users-to-registers") ||
         pathVar.includes("register-details") ||
         pathVar.includes("map-attendees-screen") ||
+        pathVar.includes("bulk-attendance-upload") ||
         pathVar.includes("update-dates-boundary") ||
         pathVar.includes("delivery-details-preview") ||
         pathVar.includes("localization-add") ||
@@ -288,12 +295,12 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     },
     {
       internalLink:
-        pathVar.includes("setup-attendance") && !pathVar.includes("create-registers-screen") && !pathVar.includes("map-users-to-registers") && !pathVar.includes("register-details") && !pathVar.includes("map-attendees-screen")
+        pathVar.includes("setup-attendance") && !pathVar.includes("create-registers-screen") && !pathVar.includes("map-users-to-registers") && !pathVar.includes("register-details") && !pathVar.includes("map-attendees-screen") && !pathVar.includes("bulk-attendance-upload")
           ? ""
           : `/${window?.contextPath}/employee/campaign/setup-attendance`,
       content: t(I18N_KEYS.PAGES.SETUP_ATTENDANCE),
       query: `campaignName=${name}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
-      show: pathVar.includes("setup-attendance") || pathVar.includes("create-registers-screen") || pathVar.includes("map-users-to-registers") || pathVar.includes("register-details") || pathVar.includes("map-attendees-screen") ? true : false,
+      show: pathVar.includes("setup-attendance") || pathVar.includes("create-registers-screen") || pathVar.includes("map-users-to-registers") || pathVar.includes("register-details") || pathVar.includes("map-attendees-screen") || pathVar.includes("bulk-attendance-upload") ? true : false,
     },
     {
       internalLink: "",
@@ -301,10 +308,10 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       show: pathVar.includes("create-registers-screen") ? true : false,
     },
     {
-      internalLink: pathVar.includes("map-users-to-registers") && !pathVar.includes("register-details") && !pathVar.includes("map-attendees-screen") ? "" : `/${window?.contextPath}/employee/campaign/map-users-to-registers`,
+      internalLink: pathVar.includes("map-users-to-registers") && !pathVar.includes("register-details") && !pathVar.includes("map-attendees-screen") && !pathVar.includes("bulk-attendance-upload") ? "" : `/${window?.contextPath}/employee/campaign/map-users-to-registers`,
       content: t(I18N_KEYS.PAGES.MAP_USERS_TO_REGISTERS),
       query: `campaignName=${name}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
-      show: pathVar.includes("map-users-to-registers") || pathVar.includes("register-details") || pathVar.includes("map-attendees-screen") ? true : false,
+      show: pathVar.includes("map-users-to-registers") || pathVar.includes("register-details") || pathVar.includes("map-attendees-screen") || pathVar.includes("bulk-attendance-upload") ? true : false,
     },
     {
       internalLink: pathVar.includes("register-details") && !pathVar.includes("map-attendees-screen") ? "" : `/${window?.contextPath}/employee/campaign/register-details`,
@@ -316,6 +323,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       internalLink: "",
       content: t(I18N_KEYS.PAGES.MAP_ATTENDEES),
       show: pathVar.includes("map-attendees-screen") ? true : false,
+    },
+    {
+      internalLink: "",
+      content: t(I18N_KEYS.COMMON.HCM_EDIT_BULK_ATTENDANCE),
+      show: pathVar.includes("bulk-attendance-upload") ? true : false,
     },
     {
       internalLink: pathVar.includes("checklist/view") ? "" : `/${window?.contextPath}/employee/campaign/checklist/view`,
@@ -504,6 +516,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`map-users-to-registers`} element={<MapUsersToRegistersScreen />} />
           <Route path={`register-details`} element={<RegisterDetailsScreen />} />
           <Route path={`map-attendees-screen`} element={<MapAttendeesScreen />} />
+          <Route path={`bulk-attendance-upload`} element={<BulkAttendanceUploadScreen />} />
           <Route path={`app-config-init`} element={<AppConfigInitializer />} />
           <Route path={`localization-add`} element={<LocalisationAdd />} />
           <Route path={`campaign-templates`} element={<CampaignTemplates />} />
