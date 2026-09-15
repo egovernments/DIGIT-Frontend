@@ -2,7 +2,6 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from "rea
 import { useTranslation } from "react-i18next";
 import { scaleQuantile } from "d3-scale";
 import "leaflet/dist/leaflet.css";
-import "./leafletMap.css";
 import L from "leaflet";
 import { Loader, Button, SVG } from "@egovernments/digit-ui-components";
 import FilterContext from "../FilterContext";
