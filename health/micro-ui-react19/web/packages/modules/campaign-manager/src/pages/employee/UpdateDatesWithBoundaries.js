@@ -21,9 +21,6 @@ function UpdateDatesWithBoundaries() {
   const id = searchParams.get("id");
   const campaignName = searchParams.get("campaignName");
   const campaignNumber = searchParams.get("campaignNumber");
-  const isCampaignConfigurationAdministratorOnly =
-    Digit.Utils.didEmployeeHasAtleastOneRole(["CAMPAIGN_CONFIGURATION_ADMINISTRATOR"]) &&
-    !Digit.Utils.didEmployeeHasAtleastOneRole(["CAMPAIGN_MANAGER"]);
   const { isLoading: DateWithBoundaryLoading, data: DateWithBoundary } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
@@ -43,14 +40,6 @@ function UpdateDatesWithBoundaries() {
       setTimeout(closeToast, 5000);
     }
   }, [showToast]);
-
-  useEffect(() => {
-    if (!isCampaignConfigurationAdministratorOnly) return;
-    navigate(
-      `/${window.contextPath}/employee/campaign/setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignNumber}&id=${id}&isDraft=true`,
-      { replace: true }
-    );
-  }, [isCampaignConfigurationAdministratorOnly, navigate, campaignNumber, id]);
 
   const isMultiCycle = (data) => {
     const cycles = data?.additionalDetails?.projectType?.cycles;
@@ -180,7 +169,7 @@ function UpdateDatesWithBoundaries() {
     return;
   };
 
-  if (isCampaignConfigurationAdministratorOnly || DateWithBoundaryLoading || isUpdating) {
+  if (DateWithBoundaryLoading || isUpdating) {
     return <Loader page={true} variant={"PageLoader"}/>;
   }
   return (
