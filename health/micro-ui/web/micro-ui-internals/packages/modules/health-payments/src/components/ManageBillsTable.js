@@ -456,7 +456,16 @@ const ManageBillsTable = ({ ...props }) => {
             try {
               const updatedBill = {
                 ...bill,
-          
+
+                // Sign-off travels as the first-class bill.signatures list; the backend
+                // enriches it (id, signedTime, signedBy, role, action) and persists it.
+                signatures: [
+                  ...(bill?.signatures || []),
+                  ...(data?.signature
+                    ? [{ printedName: data.signature.printedName, fileStoreId: data.signature.fileStoreId }]
+                    : []),
+                ],
+
                 // merge into additionalDetails
                 additionalDetails: {
                   ...(bill?.additionalDetails || {}),

@@ -1222,7 +1222,16 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       tenantId: tenantId,
       type: type,
       hierarchyType: params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
-      id: type === "boundary" ? params?.boundaryId : type === "facility" ? params?.facilityId : params?.userId,
+      id:
+        type === "boundary"
+          ? params?.boundaryId
+          : type === "facility"
+          ? params?.facilityId
+          : type === "attendanceRegisterAttendee"
+          ? registerId
+          : type === "attendanceRegister"
+          ? id
+          : params?.userId,
     },
   };
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
@@ -1467,7 +1476,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           hierarchyType: params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
           campaignId: id,
           status: "completed",
-          id: downloadId?.[type],
+          id: downloadId?.[type] || (type === "attendanceRegisterAttendee" ? registerId : id),
         },
       },
       {

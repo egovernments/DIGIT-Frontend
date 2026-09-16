@@ -262,6 +262,8 @@ const ManageBills = () => {
               comments: `Bulk ${action} triggered`,
               assignes: [],
             },
+            // Sign-off for signature-required workflow actions; the backend clones it
+            // onto each bill and stamps id/signedTime/signedBy/role.
             ...(signature ? { signature } : {}),
           },
         },
@@ -748,7 +750,10 @@ const ManageBills = () => {
           onSubmit={async (signature) => {
             const { action } = signatureFlow;
             setSignatureFlow(null);
-            await triggerBulkUpdateBills(selectedBills, action, signature);
+            await triggerBulkUpdateBills(selectedBills, action, {
+              printedName: signature.printedName,
+              fileStoreId: signature.fileStoreId,
+            });
           }}
         />
       )}
