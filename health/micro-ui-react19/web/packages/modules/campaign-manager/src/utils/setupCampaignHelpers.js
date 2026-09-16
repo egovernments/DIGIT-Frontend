@@ -193,6 +193,10 @@ export const cycleDataRemap=(data)=> {
     return deliveries?.map((delivery, deliveryIndex) => ({
       active: deliveryIndex === 0,
       deliveryIndex: String(deliveryIndex + 1),
+      // Omitted for campaign types that do not use delivery strategies. No default is
+      // substituted, because a campaign that uses no strategies is a different thing from one
+      // that uses a particular strategy - a default would record a choice never made.
+      ...(delivery.deliveryMethod ? { deliveryMethod: delivery.deliveryMethod } : {}),
       deliveryType: delivery.deliveryStrategy || "DIRECT",
       deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria, delivery.deliveryStrategy),
     }));
@@ -210,6 +214,10 @@ export const cycleDataRemap=(data)=> {
 export const processDelivery = (delivery, resourcesMap, ageInfo, type, projectType) => {
   return {
     id: parseInt(delivery.deliveryIndex, 10),
+    // The delivery strategy this delivery belongs to. Not to be confused with deliveryStrategy
+    // on the next line, which is the unrelated DIRECT / INDIRECT observation value. Omitted for
+    // campaign types that do not use delivery strategies.
+    ...(delivery.deliveryMethod ? { deliveryMethod: delivery.deliveryMethod } : {}),
     deliveryStrategy: delivery.deliveryType || "DIRECT",
     mandatoryWaitSinceLastDeliveryInDays: null,
     doseCriteria: delivery.deliveryRules.map((rule) => {

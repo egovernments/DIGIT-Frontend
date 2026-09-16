@@ -8,6 +8,7 @@ import { UICustomizations } from "./configs/UICustomizations";
 import CampaignCard from "./components/CampaignCard";
 import CycleConfiguration from "./pages/employee/CycleConfiguration";
 import DeliverySetup from "./pages/employee/deliveryRule";
+import DeliveryStrategySetup from "./pages/employee/deliverySetup";
 import CampaignDates from "./components/CampaignDates";
 import CampaignType from "./components/CampaignType";
 import CampaignName from "./components/CampaignName";
@@ -200,6 +201,7 @@ const componentsToRegister = {
   CampaignCard: CampaignCard,
   UploadData,
   DeliveryRule: DeliverySetup,
+  DeliveryStrategySetup: DeliveryStrategySetup,
   CycleConfiguration: CycleConfiguration,
   CampaignDates,
   CampaignType,

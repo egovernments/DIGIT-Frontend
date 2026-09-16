@@ -5,7 +5,7 @@ import { Card, FieldV1 } from "@egovernments/digit-ui-components";
 import { DustbinIcon } from "./icons/DustbinIcon";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
-const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDelete, onDeleteCard }) => {
+const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDelete, onDeleteCard, usesDeliveryStrategies }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   // const { t } = useTranslation();
@@ -188,7 +188,10 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
           {cycleDates?.map((item, index) => (
             <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
               <div className="campaign-dates">
-                <p>{`${t(I18N_KEYS.COMPONENTS.CYCLE)} ${item?.cycleIndex}`}</p>
+                {/* A campaign using delivery strategies runs a single round, so its one cycle is
+                    the delivery date range and is labelled as such - the same wording the user
+                    saw when the campaign was set up. */}
+                <p>{usesDeliveryStrategies ? t("HCM_DELIVERY_DATES_LABEL") : `${t(I18N_KEYS.COMPONENTS.CYCLE)} ${item?.cycleIndex}`}</p>
                 <span className="mandatory-date">*</span>
               </div>
               <div className="date-field-container">

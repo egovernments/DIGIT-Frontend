@@ -14,6 +14,7 @@ import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDat
 import QRButton from "../../../components/CreateCampaignComponents/QRButton";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import useCampaignStore from "../../../hooks/useCampaignStore";
+import { getCampaignDeliveryMethods, getDeliveryMethods } from "../../../utils/deliveryMethods";
 import { resetCreateCampaignData, campaignStore } from "../../../store/campaignStore";
 
 function transformCampaignData(inputObj = {}) {
@@ -99,6 +100,10 @@ function transformCampaignData(inputObj = {}) {
       cycleConfigure: {
         cycleConfgureDate: configure,
         cycleData: cycleDataArray,
+        // Chosen delivery strategies, for campaign types that use them. This rebuilds the wizard
+        // session from a saved campaign, so omitting it would lose the selection whenever the
+        // delivery step is reopened from here.
+        deliveryMethods: inputObj.additionalDetails?.cycleData?.deliveryMethods,
       },
     },
     HCM_CAMPAIGN_DELIVERY_DATA: {
@@ -151,6 +156,8 @@ const CampaignDetails = () => {
   const [showToast, setShowToast] = useState(null);
   const isDraft = searchParams.get("draft");
   const [showQRPopUp, setShowQRPopUp] = useState(false);
+  // Holds the pending navigation target while the edit confirmation is on screen.
+  const [pendingStrategyEdit, setPendingStrategyEdit] = useState(null);
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
   const url = getMDMSUrl(true);
 
@@ -246,6 +253,43 @@ const CampaignDetails = () => {
   }, [tenantId, BOUNDARY_HIERARCHY_TYPE]);
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(hierarchyDefinitionReqCriteria);
+
+  // The campaign type declares the delivery strategies it offers, if any. Used below to decide
+  // whether this campaign is gated on the delivery step being completed.
+  const { data: projectTypeMdms } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
+    { enabled: !!campaignData?.projectType },
+    { schemaCode: "HCM-PROJECT-TYPES.projectTypes" }
+  );
+
+  const usesDeliveryStrategies = useMemo(() => {
+    const record = projectTypeMdms?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes?.find((e) => e?.code === campaignData?.projectType);
+    return getDeliveryMethods(record).length > 0;
+  }, [projectTypeMdms, campaignData?.projectType]);
+
+  const deliveryStrategyPending = useMemo(() => {
+    // Campaign types that declare no delivery strategies keep the gating they have today.
+    if (!usesDeliveryStrategies) return false;
+
+    // The strategy selection is saved when the user leaves the first delivery step, while the
+    // conditions and resources are saved on finishing the second. Both steps sit behind the one
+    // "Configure delivery strategy" card, so a draft abandoned between them still counts as
+    // incomplete. Checking only the selection would unlock the later steps too early.
+    const strategiesChosen = getCampaignDeliveryMethods(campaignData).length > 0;
+    const deliveryRulesSaved = campaignData?.deliveryRules?.[0]?.cycles?.length > 0;
+    return !(strategiesChosen && deliveryRulesSaved);
+  }, [usesDeliveryStrategies, campaignData]);
+
+  // True only when the delivery card offers to change an existing strategy, which is the same
+  // condition that makes its button read "Edit delivery strategy". A new or cloned campaign has
+  // nothing configured yet, and a created campaign edits its dates on a different screen - in
+  // both cases there is no earlier configuration to invalidate, so no confirmation is needed.
+  const isEditingDeliveryStrategy = useMemo(
+    () => usesDeliveryStrategies && !deliveryStrategyPending && campaignData?.status !== "created" && !campaignData?.parentId,
+    [usesDeliveryStrategies, deliveryStrategyPending, campaignData?.status, campaignData?.parentId]
+  );
 
   // MDMS call for Form Config to check if all forms are configured
   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.FormConfig`;
@@ -438,6 +482,9 @@ const CampaignDetails = () => {
                   : `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true&projectType=${campaignData?.projectType}`,
               type: campaignData?.deliveryRules?.[0]?.cycles?.length > 0 ? "secondary" : "primary",
               icon: <OutpatientMed />,
+              // Changing the strategy invalidates the app and microplan configuration built on
+              // top of it, so ask for confirmation once that configuration exists.
+              onButtonClick: isEditingDeliveryStrategy && isFormConfigured ? (link) => setPendingStrategyEdit(link) : undefined,
             },
           },
         ],
@@ -468,7 +515,10 @@ const CampaignDetails = () => {
                   : `campaign-details-page-button-setup-mobile-app`,
                 type: isFormConfigured ? "secondary" : "primary",
                 navLink: `new-app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}${isOngoingCampaign ? "&viewMode=true" : ""}`,
-                icon: <AdUnits fill="#C84C0E" />,
+                icon: (
+                  <AdUnits fill={usesDeliveryStrategies && (campaignData?.boundaries?.length <= 0 || deliveryStrategyPending) ? "#c5c5c5" : "#C84C0E"} />
+                ),
+                disabled: usesDeliveryStrategies && (campaignData?.boundaries?.length <= 0 || deliveryStrategyPending),
               };
             })(),
           },
@@ -503,13 +553,13 @@ const CampaignDetails = () => {
                     icon: (
                       <UploadCloud
                         fill={
-                          campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId
+                          campaignData?.boundaries?.length <= 0 || deliveryStrategyPending || campaignData?.status === "created" || campaignData?.parentId
                             ? "#c5c5c5"
                             : "#C84C0E"
                         }
                       />
                     ),
-                    disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
+                    disabled: campaignData?.boundaries?.length <= 0 || deliveryStrategyPending || campaignData?.status === "created" || campaignData?.parentId,
                   },
                 },
               ],
@@ -533,13 +583,13 @@ const CampaignDetails = () => {
                     icon: (
                       <UploadCloud
                         fill={
-                          campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId
+                          campaignData?.boundaries?.length <= 0 || deliveryStrategyPending || campaignData?.status === "created" || campaignData?.parentId
                             ? "#c5c5c5"
                             : "#C84C0E"
                         }
                       />
                     ),
-                    disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
+                    disabled: campaignData?.boundaries?.length <= 0 || deliveryStrategyPending || campaignData?.status === "created" || campaignData?.parentId,
                   },
                 },
               ],
@@ -872,6 +922,43 @@ const CampaignDetails = () => {
         setactionFieldsToRight={true}
       />
       {showQRPopUp && <QRButton setShowQRPopUp={setShowQRPopUp} />}
+      {pendingStrategyEdit && (
+        <PopUp
+          className="hierarchy-change-popup"
+          type="alert"
+          alertHeading={t("HCM_EDIT_DELIVERY_STRATEGY_WARNING_HEADING")}
+          alertMessage={t("HCM_EDIT_DELIVERY_STRATEGY_WARNING_TEXT")}
+          onOverlayClick={() => setPendingStrategyEdit(null)}
+          onClose={() => setPendingStrategyEdit(null)}
+          footerclassName={"hierarchy-change-popup-footer"}
+          equalWidthButtons={true}
+          footerChildren={[
+            <Button
+              key="cancel"
+              type="button"
+              size="large"
+              variation="secondary"
+              label={t(I18N_KEYS.COMMON.CANCEL)}
+              title={t(I18N_KEYS.COMMON.CANCEL)}
+              onClick={() => setPendingStrategyEdit(null)}
+            />,
+            <Button
+              key="confirm"
+              type="button"
+              size="large"
+              variation="primary"
+              label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CAMPAIGN_PROCEED)}
+              title={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CAMPAIGN_PROCEED)}
+              onClick={() => {
+                const link = pendingStrategyEdit;
+                setPendingStrategyEdit(null);
+                navigate(`/${window.contextPath}/employee/campaign/${link}`, { state: { isDraftCampaign: isDraftCampaign } });
+              }}
+            />,
+          ]}
+          showAlertAsSvg={true}
+        />
+      )}
       {showToast && (
         <Toast
           type={

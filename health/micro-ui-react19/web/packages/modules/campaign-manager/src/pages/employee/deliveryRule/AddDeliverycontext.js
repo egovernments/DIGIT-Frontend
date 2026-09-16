@@ -354,7 +354,10 @@ const AddDeliveryRule = React.memo(({
   onDelete 
 }) => {
 
-  const { updateRuleProducts, updateRuleDeliveryType } = useDeliveryRules();
+  const { updateRuleProducts, updateRuleDeliveryType, activeDelivery } = useDeliveryRules();
+  // Delivery strategy tabs are rendered without a card of their own, so this card sits directly
+  // beneath them and drops its top margin. Cycle tabs keep their card and the default spacing.
+  const isMethodMode = !!activeDelivery?.deliveryMethod;
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const prodRef = useRef();
@@ -383,7 +386,7 @@ const AddDeliveryRule = React.memo(({
 
   return (
     <>
-      <Card className="delivery-rule-container">
+      <Card className={`delivery-rule-container${isMethodMode ? " delivery-strategy-rule-container" : ""}`}>
         <CardHeader styles={{ display: "flex", justifyContent: "space-between" }} className="card-header-delivery">
           <p className="title">
             {t(I18N_KEYS.PAGES.CAMPAIGN_DELIVERY_RULE_LABEL)} {rule.ruleKey}

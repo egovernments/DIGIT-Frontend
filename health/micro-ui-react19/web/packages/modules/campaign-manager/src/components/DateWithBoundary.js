@@ -7,6 +7,7 @@ import BoundaryWithDate from "./BoundaryWithDate";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
 import useCampaignStore from "../hooks/useCampaignStore";
+import { getCampaignDeliveryMethods } from "../utils/deliveryMethods";
 
 const initialState = (projectData) => {
   return projectData;
@@ -129,6 +130,9 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
     },
   };
   const { isLoading: campaignDataLoading, data: campaignData } = Digit.Hooks.useCustomAPIHook(reqCriteriaProject);
+
+  // Decides whether each date row below is labelled as a cycle or as the delivery date range.
+  const usesDeliveryStrategies = useMemo(() => getCampaignDeliveryMethods(campaignData).length > 0, [campaignData]);
 
   // Campaign API is the authoritative source; session keys are fallbacks for the create flow
   const BOUNDARY_HIERARCHY_TYPE = campaignId
@@ -352,6 +356,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
         dateReducer?.map((item, index) => (
           <BoundaryWithDate
             project={item}
+            usesDeliveryStrategies={usesDeliveryStrategies}
             dateReducerDispatch={dateReducerDispatch}
             canDelete={dateReducer?.length > 1}
             onDeleteCard={() => onDeleteBoundary(item, index)}

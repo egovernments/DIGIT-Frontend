@@ -1,9 +1,11 @@
+import { useMemo } from "react";
 import { Card, HeaderComponent, Loader, SVG, Button, Footer } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import EqualHeightWrapper from "../../../components/CreateCampaignComponents/WrapperModuleCard";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { getCampaignDeliveryMethods, getDeliveryMethods } from "../../../utils/deliveryMethods";
 
 const NewAppModule = () => {
   const { t } = useTranslation();
@@ -30,6 +32,49 @@ const NewAppModule = () => {
       }
     )
   );
+
+  // The campaign type declares its delivery strategies, each of which may name the app module it
+  // belongs to. Read here to build the module-to-strategy lookup used by isModuleEnabled below.
+  const { data: projectTypeMdms } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
+    { enabled: !!projectType },
+    { schemaCode: "HCM-PROJECT-TYPES.projectTypes" }
+  );
+
+  const { data: campaignData } = Digit.Hooks.useCustomAPIHook({
+    url: `/project-factory/v1/project-type/search`,
+    body: { CampaignDetails: { tenantId, campaignNumber } },
+    config: {
+      enabled: !!campaignNumber,
+      cacheTime: 0,
+      staleTime: 0,
+      select: (d) => d?.CampaignDetails?.[0],
+    },
+  });
+
+  const moduleToMethod = useMemo(() => {
+    const record = projectTypeMdms?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes?.find((e) => e?.code === projectType);
+    return getDeliveryMethods(record).reduce((acc, method) => {
+      if (method?.appModule) acc[method.appModule] = method.code;
+      return acc;
+    }, {});
+  }, [projectTypeMdms, projectType]);
+
+  const chosenMethods = useMemo(() => getCampaignDeliveryMethods(campaignData), [campaignData]);
+
+  /**
+   * A module that belongs to a delivery strategy can only be configured when that strategy was
+   * chosen for the campaign. Modules that no strategy claims - which is every module for a
+   * campaign type that declares no strategies - are left entirely to their own `active` flag.
+   */
+  const isModuleEnabled = (moduleName, active) => {
+    if (active !== true) return false;
+    const requiredMethod = moduleToMethod?.[moduleName];
+    if (!requiredMethod) return true;
+    return chosenMethods.includes(requiredMethod);
+  };
 
   // Sort mdmsData by order
   const sortedMdmsData = mdmsData?.slice().sort((a, b) => {
@@ -59,7 +104,7 @@ const NewAppModule = () => {
       <EqualHeightWrapper deps={[sortedMdmsData]}>
         <div className="modules-container">
           {sortedMdmsData?.map((item, index) => {
-            const isActive = item?.data?.active === true;
+            const isActive = isModuleEnabled(item?.data?.name, item?.data?.active);
             const isVisited = item?.data?.version > 1;
 
             return (

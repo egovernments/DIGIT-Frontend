@@ -1596,3 +1596,47 @@
     min-height: unset;
   }
 }
+
+.digit-checkbox-container{
+  &.deliverymethodselectioncheckbox {
+  gap: 0.75rem !important;
+
+  label {
+    color: #0B4B66 !important;
+    font-weight: 700;
+    font-size: 1rem;
+    font-family: Roboto;
+    font-style: Bold;
+    line-height: 1.5rem;
+  }
+}
+}
+
+.digit-card-text {
+    &.delivery-methods-description {
+      margin-top: 0.25rem;
+      font-family: Roboto;
+      font-weight: 400;
+      font-style: Regular;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      letter-spacing: 0rem;
+      color: #737373;
+      margin-left: 2.25rem;
+    }
+}
+
+.delivery-methods-card-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.delivery-method-card {
+  padding-top: 1rem;
+  padding-right: 1.25rem;
+  padding-bottom: 1rem;
+  padding-left: 1.25rem;
+  border-radius: 0.375rem;
+  border-width: 0.063rem;
+}

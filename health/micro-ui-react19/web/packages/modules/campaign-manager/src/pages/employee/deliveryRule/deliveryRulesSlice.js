@@ -15,7 +15,7 @@ const deliveryRulesSlice = createSlice({
   initialState,
   reducers: {
     initializeCampaignData: (state, action) => {
-      const { cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig, campaignId } = action.payload;
+      const { cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig, campaignId, deliveryMethods } = action.payload;
 
       // Always reset the state to ensure clean initialization
       state.campaignData = [];
@@ -23,6 +23,13 @@ const deliveryRulesSlice = createSlice({
       state.activeTabIndex = 0;
       state.activeSubTabIndex = 0;
       state.error = null;
+
+      // Rules saved before delivery strategies existed carry no strategy code. When the number of
+      // saved deliveries matches the number of chosen strategies they were authored in the same
+      // order, so the codes can be applied by position. When the counts differ the mapping is
+      // unknown, so they are left alone and rebuilt from the chosen strategies instead.
+      const stampMethods =
+        Array.isArray(deliveryMethods) && deliveryMethods.length > 0 && savedData?.[0]?.deliveries?.length === deliveryMethods.length;
 
       if (savedData && savedData.length > 0 && savedData[0]?.deliveries?.length > 0) {
         // Process saved data to ensure proper structure
@@ -32,6 +39,13 @@ const deliveryRulesSlice = createSlice({
           deliveries: cycle.deliveries?.map((delivery, deliveryIndex) => ({
             ...delivery,
             active: deliveryIndex === 0,
+            ...(stampMethods
+              ? {
+                  deliveryMethod: delivery.deliveryMethod || deliveryMethods[deliveryIndex],
+                  // Always DIRECT for a strategy delivery - see syncDeliveryMethods for why.
+                  deliveryType: "DIRECT",
+                }
+              : {}),
             deliveryRules: delivery.deliveryRules?.map(rule => ({
               ...rule,
               attributes: rule.attributes?.map(attr => ({
@@ -46,7 +60,7 @@ const deliveryRulesSlice = createSlice({
           })) || []
         }));
       } else {
-        state.campaignData = generateInitialCampaignData(cycles, deliveries, effectiveDeliveryConfig, attributeConfig, operatorConfig);
+        state.campaignData = generateInitialCampaignData(cycles, deliveries, effectiveDeliveryConfig, attributeConfig, operatorConfig, deliveryMethods);
       }
 
       state.initialized = true;
@@ -315,6 +329,46 @@ const deliveryRulesSlice = createSlice({
       });
     },
 
+    // Rebuild the deliveries from the chosen delivery strategies.
+    //
+    // Deliveries are matched by strategy code, never by position. The user can select any subset
+    // of the strategies on offer, so adding or removing by count alone would move one strategy's
+    // configured rules onto another.
+    syncDeliveryMethods: (state, action) => {
+      const { deliveryMethods, effectiveDeliveryConfig, attributeConfig, operatorConfig } = action.payload;
+      if (!Array.isArray(deliveryMethods)) return;
+
+      state.campaignData.forEach((cycle) => {
+        const existing = cycle.deliveries || [];
+        cycle.deliveries = deliveryMethods.map((code, index) => {
+          const kept = existing.find((d) => d?.deliveryMethod === code);
+          if (kept) {
+            return { ...kept, deliveryIndex: (index + 1).toString(), active: index === 0 };
+          }
+          return {
+            deliveryIndex: (index + 1).toString(),
+            active: index === 0,
+            deliveryMethod: code,
+            // Always DIRECT. The DIRECT / INDIRECT value is the observation strategy, which
+            // describes a position within a sequence of deliveries. Here the position identifies
+            // a delivery strategy instead, so that sequence does not exist and DIRECT applies to
+            // every one of them.
+            deliveryType: "DIRECT",
+            deliveryRules: generateInitialDeliveryRules(effectiveDeliveryConfig, index, attributeConfig, operatorConfig, code),
+          };
+        });
+      });
+
+      if (state.activeSubTabIndex >= deliveryMethods.length) {
+        state.activeSubTabIndex = Math.max(0, deliveryMethods.length - 1);
+      }
+      state.campaignData.forEach((cycle) => {
+        cycle.deliveries?.forEach((delivery, index) => {
+          delivery.active = index === state.activeSubTabIndex;
+        });
+      });
+    },
+
     updateObservationStrategy: (state, action) => {
       const { observationStrategy } = action.payload;
 
@@ -350,7 +404,7 @@ function getDeliveryTypeByStrategy(observationStrategy, deliveryIndex) {
 }
 
 // Helper function to generate initial campaign data
-function generateInitialCampaignData(cycles, deliveries, effectiveDeliveryConfig, attributeConfig = [], operatorConfig = []) {
+function generateInitialCampaignData(cycles, deliveries, effectiveDeliveryConfig, attributeConfig = [], operatorConfig = [], deliveryMethods = null) {
   const observationStrategy = effectiveDeliveryConfig?.observationStrategy || "DOT1";
 
   return Array.from({ length: cycles }, (_, cycleIndex) => ({
@@ -374,11 +428,16 @@ function generateInitialCampaignData(cycles, deliveries, effectiveDeliveryConfig
         deliveryStrategy = getDeliveryTypeByStrategy(observationStrategy, deliveryIndex);
       }
 
+      // When strategies are in use a delivery represents one strategy rather than one step in a
+      // sequence, so it carries the strategy code and is always DIRECT.
+      const methodCode = Array.isArray(deliveryMethods) ? deliveryMethods[deliveryIndex] : null;
+
       return {
         deliveryIndex: (deliveryIndex + 1).toString(),
         active: deliveryIndex === 0,
-        deliveryType: deliveryStrategy,
-        deliveryRules: generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, attributeConfig, operatorConfig),
+        ...(methodCode ? { deliveryMethod: methodCode } : {}),
+        deliveryType: methodCode ? "DIRECT" : deliveryStrategy,
+        deliveryRules: generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, attributeConfig, operatorConfig, methodCode),
       };
     }),
   }));
@@ -488,14 +547,24 @@ function parseConditionString(conditionString) {
   return parsedAttributes;
 }
 
-function generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, attributeConfig = [], operatorConfig = []) {
+function generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, attributeConfig = [], operatorConfig = [], methodCode = null) {
   
   // Priority 1: Check for deliveryConfig (from cycle configuration)
   if (effectiveDeliveryConfig?.deliveryConfig && Array.isArray(effectiveDeliveryConfig.deliveryConfig)) {
     const deliveryConfigArray = effectiveDeliveryConfig.deliveryConfig;
-    
-    if (deliveryConfigArray.length > deliveryIndex) {
-      const deliveryConfig = deliveryConfigArray[deliveryIndex];
+
+    // Every strategy starts from the same default conditions and resources, because a strategy
+    // changes where delivery happens rather than what is delivered. A campaign type that needs
+    // one strategy to start differently can declare a delivery carrying that strategy code,
+    // which is then matched by code and takes precedence.
+    //
+    // The fallback to the first entry matters because a campaign type usually declares a single
+    // delivery. Without it, every tab after the first would open empty.
+    const deliveryConfig = methodCode
+      ? deliveryConfigArray.find((d) => d?.deliveryMethod === methodCode) || deliveryConfigArray[deliveryIndex] || deliveryConfigArray[0]
+      : deliveryConfigArray[deliveryIndex];
+
+    if (deliveryConfig) {
       
       if (deliveryConfig?.conditionConfig && deliveryConfig.conditionConfig.length > 0) {
         const rules = deliveryConfig.conditionConfig.map((condition, index) => {
@@ -672,6 +741,7 @@ export const {
   setError,
   syncCycles,
   syncDeliveries,
+  syncDeliveryMethods,
   updateObservationStrategy,
 } = deliveryRulesSlice.actions;
 

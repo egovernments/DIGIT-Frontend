@@ -364,6 +364,24 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       const cycleNumber = formData?.cycleConfigure?.cycleConfgureDate?.cycle;
       const deliveryNumber = formData?.cycleConfigure?.cycleConfgureDate?.deliveries;
       const cycleData = formData?.cycleConfigure?.cycleData || [];
+
+      // Campaign types that use delivery strategies see a different step: one delivery date range
+      // and a list of strategies, rather than cycle and delivery counts. The checks below describe
+      // fields that step does not have, so they are replaced rather than added to.
+      const chosenMethods = formData?.cycleConfigure?.deliveryMethods;
+      if (Array.isArray(chosenMethods)) {
+        if (chosenMethods.length === 0) {
+          setShowToast({ key: "error", label: "ES__REQUIRED_DELIVERY_METHOD" });
+          return false;
+        }
+        const deliveryRange = cycleData?.[0];
+        if (!deliveryRange?.fromDate || !deliveryRange?.toDate) {
+          setShowToast({ key: "error", label: "ES__REQUIRED_DELIVERY_DATE" });
+          return false;
+        }
+        return true;
+      }
+
       // Bednet (ITN) hides the per-cycle date pickers in CycleConfiguration.js (single-round
       // campaign, cycle dates mirror the overall campaign dates) - the manual-date-entry checks
       // below must not apply to it, since the user has no field to satisfy them with.

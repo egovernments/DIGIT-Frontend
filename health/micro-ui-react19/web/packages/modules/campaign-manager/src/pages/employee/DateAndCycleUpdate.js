@@ -5,6 +5,7 @@ import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components"
 import { Card, FieldV1 } from "@egovernments/digit-ui-components";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import { projectUsesDeliveryMethods } from "../../utils/deliveryMethods";
 
 const initialState = (projectData) => {
   return projectData;
@@ -109,6 +110,9 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
   };
 
   const { isLoading, data: projectData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  // Decides whether each date row below is labelled as a cycle or as the delivery date range.
+  // This screen is the alternative to DateWithBoundary and keeps the same labelling.
+  const usesDeliveryStrategies = projectUsesDeliveryMethods(projectData);
   const [dateReducer, dateReducerDispatch] = useReducer(reducer, initialState(projectData));
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -244,7 +248,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
           {cycleDates?.map((item, index) => (
             <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
               <div className="campaign-dates">
-                <p>{`${t(I18N_KEYS.COMPONENTS.CYCLE)} ${item?.cycleIndex}`}</p>
+                <p>{usesDeliveryStrategies ? t("HCM_DELIVERY_DATES_LABEL") : `${t(I18N_KEYS.COMPONENTS.CYCLE)} ${item?.cycleIndex}`}</p>
                 <span className="mandatory-date">*</span>
               </div>
               <div className="date-field-container">
