@@ -667,28 +667,29 @@ const CampaignDetails = () => {
     ],
   };
 
+  const restrictedNavLinkPrefixes = [];
+
   if (isMobileApplicationConfigurationAdministratorOnly) {
+    restrictedNavLinkPrefixes.push("new-app-modules", "localization-add");
+  }
+  if (isCampaignMappingAndMicroplanningAdministratorOnly) {
+    restrictedNavLinkPrefixes.push("unified-upload-screen");
+  }
+  if (isWorkforceAndAttendanceAdministratorOnly) {
+    restrictedNavLinkPrefixes.push("setup-attendance");
+  }
+  if (isSupervisionAndReportingAdministratorOnly) {
+    restrictedNavLinkPrefixes.push("checklist/search", "reports-configuration");
+  }
+  if (isCampaignConfigurationAdministratorOnly) {
+    restrictedNavLinkPrefixes.push("setup-campaign?key=5", "setup-campaign?key=7", "update-campaign", "update-dates-boundary");
+  }
+
+  if (restrictedNavLinkPrefixes.length > 0) {
     data.cards = data.cards.filter((card) => {
       const navLink = card?.sections?.[0]?.props?.navLink || "";
-      return navLink.startsWith("new-app-modules") || navLink.startsWith("localization-add");
+      return restrictedNavLinkPrefixes.some((prefix) => navLink.startsWith(prefix));
     });
-  } else if (isCampaignMappingAndMicroplanningAdministratorOnly) {
-    data.cards = data.cards.filter((card) => {
-      const navLink = card?.sections?.[0]?.props?.navLink || "";
-      return navLink.startsWith("unified-upload-screen");
-    });
-  } else if (isWorkforceAndAttendanceAdministratorOnly) {
-    data.cards = data.cards.filter((card) => {
-      const navLink = card?.sections?.[0]?.props?.navLink || "";
-      return navLink.startsWith("setup-attendance");
-    });
-  } else if (isSupervisionAndReportingAdministratorOnly) {
-    data.cards = data.cards.filter((card) => {
-      const navLink = card?.sections?.[0]?.props?.navLink || "";
-      return navLink.startsWith("checklist/search") || navLink.startsWith("reports-configuration");
-    });
-  } else if (isCampaignConfigurationAdministratorOnly) {
-    data.cards = data.cards.slice(0, 2);
   }
 
   const reqUpdate = {
