@@ -12,6 +12,8 @@ const DEFAULT_OVERRIDES = {
   buttonRadius: "6px",
   cardRadius: "12px",
   cardBg: "#fffaf7",
+  infoColor: "#0057BD",
+  infoBgColor: "#DEEFFF",
 };
 
 // Each user-facing knob drives every --digitv2-* var listed here.
@@ -38,6 +40,11 @@ const CSS_VAR_MAP = {
   // to assorted near-white orange tints (#fffaf7, #fde9df, #fdf0ea, etc.)
   // independent of theme.
   cardBg: ["--digitv2-lightTheme-primary-bg"],
+  // Info-alert colour/background — consumed by the vendored component
+  // library's Tag/AlertCard/MetricCard/InfoButton (already live), just not
+  // previously overridable per tenant.
+  infoColor: ["--digitv2-lightTheme-alert-info"],
+  infoBgColor: ["--digitv2-lightTheme-alert-infobg"],
 };
 
 // "important" priority is required to win over the `!important` theme <style>
