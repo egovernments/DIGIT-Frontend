@@ -54,10 +54,17 @@ const NewAppModule = () => {
     },
   });
 
+  // Which app module belongs to which delivery strategy.
+  //
+  // A strategy names its module through `appModule`. Where the module is named after the strategy
+  // itself the code is also registered directly, so a campaign type whose module and strategy
+  // share a name needs no `appModule` entry at all.
   const moduleToMethod = useMemo(() => {
     const record = projectTypeMdms?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes?.find((e) => e?.code === projectType);
     return getDeliveryMethods(record).reduce((acc, method) => {
-      if (method?.appModule) acc[method.appModule] = method.code;
+      if (!method?.code) return acc;
+      acc[method.code] = method.code;
+      if (method.appModule) acc[method.appModule] = method.code;
       return acc;
     }, {});
   }, [projectTypeMdms, projectType]);
