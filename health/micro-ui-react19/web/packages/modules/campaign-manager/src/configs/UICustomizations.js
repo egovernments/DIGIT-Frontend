@@ -31,6 +31,53 @@ const businessServiceMap = {};
 
 const inboxModuleNameMap = {};
 
+const ASSIGNMENT_SCOPED_CAMPAIGN_ROLES = [
+  "SUPERVISION_AND_REPORTING_ADMINISTRATOR",
+  "WORKFORCE_AND_ATTENDANCE_ADMINISTRATOR",
+  "CAMPAIGN_MAPPING_AND_MICROPLANNING_ADMINISTRATOR",
+  "MOBILE_APPLICATION_CONFIGURATION_ADMINISTRATOR",
+  "CAMPAIGN_CONFIGURATION_ADMINISTRATOR",
+];
+
+const CREATOR_SCOPED_CAMPAIGN_ROLES = ["CAMPAIGN_MANAGER"];
+
+const shouldUseCreatorScopedCampaignFilter = () => {
+  if (Digit.Utils.didEmployeeHasAtleastOneRole(CREATOR_SCOPED_CAMPAIGN_ROLES)) return true;
+  if (Digit.Utils.didEmployeeHasAtleastOneRole(ASSIGNMENT_SCOPED_CAMPAIGN_ROLES)) return false;
+  return true;
+};
+
+const applyCampaignVisibilityScope = (campaignDetails) => {
+  if (shouldUseCreatorScopedCampaignFilter()) {
+    return {
+      ...campaignDetails,
+      createdBy: Digit.UserService.getUser().info.uuid,
+    };
+  }
+
+  let assignedScope = null;
+  try {
+    assignedScope = JSON.parse(sessionStorage.getItem("HCM_ASSIGNED_CAMPAIGN_SCOPE") || "null");
+  } catch (error) {
+    assignedScope = null;
+  }
+
+  const assignedCampaignIds = assignedScope?.campaignIds || [];
+
+  if (assignedCampaignIds.length > 0) {
+    return {
+      ...campaignDetails,
+      ids: assignedCampaignIds,
+    };
+  }
+
+  // Explicitly force empty result set when assignment-scoped roles have no assignments.
+  return {
+    ...campaignDetails,
+    campaignNumber: "__NO_ASSIGNED_CAMPAIGN__",
+  };
+};
+
 const HCM_MODULE_NAME = "console";
 const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
 
@@ -249,15 +296,14 @@ export const UICustomizations = {
           const tenantId = Digit?.ULBService?.getCurrentTenantId();
           const generateFile = async () => {
             const res = await Digit.CustomService.getResponse({
-              // url: `/project-factory/v1/data/_generate`,
-              url:`/boundary-management/v1/_generate`,
+              url: `/project-factory/v1/data/_generate`,
               body: {},
               params: {
                 tenantId: tenantId,
-                // type: "boundaryManagement",
+                type: "boundaryManagement",
                 forceUpdate: true,
                 hierarchyType: row?.hierarchyType,
-                // campaignId: "default",
+                campaignId: "default",
               },
             });
             return res;
@@ -269,14 +315,13 @@ export const UICustomizations = {
           const generateTemplate = async () => {
             try {
               const res = await Digit.CustomService.getResponse({
-                // url: `/project-factory/v1/data/_download`,
-                url:`/boundary-management/v1/_generate-search`,
+                url: `/project-factory/v1/data/_download`,
                 body: {},
                 params: {
                   tenantId: tenantId,
-                  // type: "boundaryManagement",
+                  type: "boundaryManagement",
                   hierarchyType: row?.hierarchyType,
-                  // campaignId: "default",
+                  campaignId: "default",
                 },
               });
               return res;
@@ -381,12 +426,11 @@ export const UICustomizations = {
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
-      data.body.CampaignDetails = {
+      data.body.CampaignDetails = applyCampaignVisibilityScope({
         tenantId: tenantId,
         status: ["creating", "created"],
         isLikeSearch: true,
         isOverrideDatesFromProject: true,
-        createdBy: Digit.UserService.getUser().info.uuid,
         campaignsIncludeDates: true,
         startDate: Date.now(),
         endDate: Date.now(),
@@ -396,7 +440,7 @@ export const UICustomizations = {
           limit: limit,
           offset: offset,
         },
-      };
+      });
       if (campaignName) {
         data.body.CampaignDetails.campaignName = campaignName;
       }
@@ -583,20 +627,19 @@ export const UICustomizations = {
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
-      data.body.CampaignDetails = {
+      data.body.CampaignDetails = applyCampaignVisibilityScope({
         tenantId: tenantId,
         status: ["creating", "created"],
         isLikeSearch: true,
         isOverrideDatesFromProject: true,
         endDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split("T")[0]),
-        createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
           sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },
-      };
+      });
       if (campaignName) {
         data.body.CampaignDetails.campaignName = campaignName;
       }
@@ -738,12 +781,11 @@ export const UICustomizations = {
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
-      data.body.CampaignDetails = {
+      data.body.CampaignDetails = applyCampaignVisibilityScope({
         tenantId: tenantId,
         status: ["creating", "created"],
         isLikeSearch: true,
         isOverrideDatesFromProject: true,
-        createdBy: Digit.UserService.getUser().info.uuid,
         campaignsIncludeDates: false,
         startDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0], "daystart"),
         pagination: {
@@ -752,7 +794,7 @@ export const UICustomizations = {
           limit: limit,
           offset: offset,
         },
-      };
+      });
       if (campaignName) {
         data.body.CampaignDetails.campaignName = campaignName;
       }
@@ -942,19 +984,18 @@ export const UICustomizations = {
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
-      data.body.CampaignDetails = {
+      data.body.CampaignDetails = applyCampaignVisibilityScope({
         tenantId: tenantId,
         status: ["drafted"],
         isLikeSearch: true,
         isOverrideDatesFromProject: true,
-        createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
           sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },
-      };
+      });
       if (campaignName) {
         data.body.CampaignDetails.campaignName = campaignName;
       }
@@ -1038,19 +1079,18 @@ export const UICustomizations = {
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
-      data.body.CampaignDetails = {
+      data.body.CampaignDetails = applyCampaignVisibilityScope({
         tenantId: tenantId,
         status: ["drafted"],
         isLikeSearch: true,
         isOverrideDatesFromProject: true,
-        createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
           sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },
-      };
+      });
       if (campaignName) {
         data.body.CampaignDetails.campaignName = campaignName;
       }
@@ -1138,19 +1178,18 @@ export const UICustomizations = {
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
-      data.body.CampaignDetails = {
+      data.body.CampaignDetails = applyCampaignVisibilityScope({
         tenantId: tenantId,
         status: ["failed"],
         isLikeSearch: true,
         isOverrideDatesFromProject: true,
-        createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
           sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },
-      };
+      });
       if (campaignName) {
         data.body.CampaignDetails.campaignName = campaignName;
       }

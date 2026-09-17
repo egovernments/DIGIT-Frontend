@@ -152,6 +152,34 @@ const CampaignDetails = () => {
   const [showQRPopUp, setShowQRPopUp] = useState(false);
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
   const url = getMDMSUrl(true);
+  const moduleName = Digit.Utils.campaign.getModuleName();
+  const isCampaignConfigurationAdministratorOnly =
+    Digit.Utils.didEmployeeHasAtleastOneRole(["CAMPAIGN_CONFIGURATION_ADMINISTRATOR"]) &&
+    !Digit.Utils.didEmployeeHasAtleastOneRole(["CAMPAIGN_MANAGER"]);
+  const isMobileApplicationConfigurationAdministratorOnly =
+    Digit.Utils.didEmployeeHasAtleastOneRole(["MOBILE_APPLICATION_CONFIGURATION_ADMINISTRATOR"]) &&
+    !Digit.Utils.didEmployeeHasAtleastOneRole(["CAMPAIGN_MANAGER"]);
+  const isSupervisionAndReportingAdministratorOnly =
+    Digit.Utils.didEmployeeHasAtleastOneRole(["SUPERVISION_AND_REPORTING_ADMINISTRATOR"]) &&
+    !Digit.Utils.didEmployeeHasAtleastOneRole(["CAMPAIGN_MANAGER"]);
+  const isWorkforceAndAttendanceAdministratorOnly =
+    Digit.Utils.didEmployeeHasAtleastOneRole(["WORKFORCE_AND_ATTENDANCE_ADMINISTRATOR"]) &&
+    !Digit.Utils.didEmployeeHasAtleastOneRole(["CAMPAIGN_MANAGER"]);
+  const isCampaignMappingAndMicroplanningAdministratorOnly =
+    Digit.Utils.didEmployeeHasAtleastOneRole(["CAMPAIGN_MAPPING_AND_MICROPLANNING_ADMINISTRATOR"]) &&
+    !Digit.Utils.didEmployeeHasAtleastOneRole(["CAMPAIGN_MANAGER"]);
+  const isRestrictedCampaignDetailsView =
+    isCampaignConfigurationAdministratorOnly ||
+    isMobileApplicationConfigurationAdministratorOnly ||
+    isSupervisionAndReportingAdministratorOnly ||
+    isWorkforceAndAttendanceAdministratorOnly ||
+    isCampaignMappingAndMicroplanningAdministratorOnly;
+  const shouldFetchChecklistConfiguration =
+    !isCampaignConfigurationAdministratorOnly &&
+    !isMobileApplicationConfigurationAdministratorOnly &&
+    !isSupervisionAndReportingAdministratorOnly &&
+    !isWorkforceAndAttendanceAdministratorOnly &&
+    !isCampaignMappingAndMicroplanningAdministratorOnly;
 
   const [, setAdminConsole] = useCampaignStore("HCM_ADMIN_CONSOLE_DATA", {});
   const [, setAdminUpload] = useCampaignStore("HCM_ADMIN_CONSOLE_UPLOAD_DATA", {});
@@ -163,6 +191,39 @@ const CampaignDetails = () => {
   useEffect(() => {
     campaignStore.dispatch(resetCreateCampaignData());
   }, []);
+
+  const BOUNDARY_HIERARCHY_TYPE = campaignData?.hierarchyType;
+  const hierarchyDefinitionReqCriteria = useMemo(() => {
+    return {
+      url: `/boundary-service/boundary-hierarchy-definition/_search`,
+      changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
+      body: {
+        BoundaryTypeHierarchySearchCriteria: {
+          tenantId: tenantId,
+          limit: 2,
+          offset: 0,
+          hierarchyType: BOUNDARY_HIERARCHY_TYPE,
+        },
+      },
+      config: {
+        enabled:
+          !!BOUNDARY_HIERARCHY_TYPE &&
+          !isMobileApplicationConfigurationAdministratorOnly &&
+          !isSupervisionAndReportingAdministratorOnly &&
+          !isWorkforceAndAttendanceAdministratorOnly &&
+          !isCampaignMappingAndMicroplanningAdministratorOnly,
+      },
+    };
+  }, [
+    tenantId,
+    BOUNDARY_HIERARCHY_TYPE,
+    isMobileApplicationConfigurationAdministratorOnly,
+    isSupervisionAndReportingAdministratorOnly,
+    isWorkforceAndAttendanceAdministratorOnly,
+    isCampaignMappingAndMicroplanningAdministratorOnly,
+  ]);
+
+  const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(hierarchyDefinitionReqCriteria);
 
   // useEffect(() => {
   //   window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
@@ -223,27 +284,27 @@ const CampaignDetails = () => {
     };
   }, [afterUpload, isLoading, isFetching, campaignData]);
 
-  const BOUNDARY_HIERARCHY_TYPE = campaignData?.hierarchyType;
+  // const BOUNDARY_HIERARCHY_TYPE = campaignData?.hierarchyType;
 
-  const hierarchyDefinitionReqCriteria = useMemo(() => {
-    return {
-      url: `/boundary-service/boundary-hierarchy-definition/_search`,
-      changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
-      body: {
-        BoundaryTypeHierarchySearchCriteria: {
-          tenantId: tenantId,
-          limit: 2,
-          offset: 0,
-          hierarchyType: BOUNDARY_HIERARCHY_TYPE,
-        },
-      },
-      config: {
-        enabled: !!BOUNDARY_HIERARCHY_TYPE,
-      },
-    };
-  }, [tenantId, BOUNDARY_HIERARCHY_TYPE]);
+  // const hierarchyDefinitionReqCriteria = useMemo(() => {
+  //   return {
+  //     url: `/boundary-service/boundary-hierarchy-definition/_search`,
+  //     changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
+  //     body: {
+  //       BoundaryTypeHierarchySearchCriteria: {
+  //         tenantId: tenantId,
+  //         limit: 2,
+  //         offset: 0,
+  //         hierarchyType: BOUNDARY_HIERARCHY_TYPE,
+  //       },
+  //     },
+  //     config: {
+  //       enabled: !!BOUNDARY_HIERARCHY_TYPE,
+  //     },
+  //   };
+  // }, [tenantId, BOUNDARY_HIERARCHY_TYPE]);
 
-  const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(hierarchyDefinitionReqCriteria);
+  // const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(hierarchyDefinitionReqCriteria);
 
   // MDMS call for Form Config to check if all forms are configured
   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.FormConfig`;
@@ -256,7 +317,12 @@ const CampaignDetails = () => {
       },
       `MDMSDATA-${schemaCode}-${campaignData?.campaignNumber}`,
       {
-        enabled: !!campaignData?.campaignNumber,
+        enabled:
+          !!campaignData?.campaignNumber &&
+          !isCampaignConfigurationAdministratorOnly &&
+          !isSupervisionAndReportingAdministratorOnly &&
+          !isWorkforceAndAttendanceAdministratorOnly &&
+          !isCampaignMappingAndMicroplanningAdministratorOnly,
         cacheTime: 0,
         staleTime: 0,
       }
@@ -286,7 +352,7 @@ const CampaignDetails = () => {
     campaignName: campaignData?.campaignName,
     campaignType: campaignData?.projectType,
     serviceDefinitionLimit: 1,
-    enabled: !!campaignData?.campaignName && !!campaignData?.projectType,
+    enabled: shouldFetchChecklistConfiguration && !!campaignData?.campaignName && !!campaignData?.projectType,
   });
 
   // Checking if any checklists are configured (have ServiceRequest in merged data)
@@ -309,7 +375,10 @@ const CampaignDetails = () => {
       },
     },
     config: {
-      enabled: !!campaignNumber,
+      enabled:
+        !!campaignNumber &&
+        !isWorkforceAndAttendanceAdministratorOnly &&
+        !isCampaignMappingAndMicroplanningAdministratorOnly,
       select: (data) => data?.mdms,
     },
   });
@@ -419,7 +488,9 @@ const CampaignDetails = () => {
               headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DELIVERY_HEADING),
               desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DELIVERY_DESC),
               buttonLabel:
-                campaignData?.status === "created" || campaignData?.parentId
+                isCampaignConfigurationAdministratorOnly
+                  ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DELIVERY_BUTTON)
+                  : campaignData?.status === "created" || campaignData?.parentId
                   ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_EDIT_DELIVERY_DATES)
                   : campaignData?.deliveryRules?.[0]?.cycles?.length > 0
                   ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_EDIT_DELIVERY_BUTTON)
@@ -431,7 +502,9 @@ const CampaignDetails = () => {
                   ? `campaign-details-page-button-edit-delivery-strategy`
                   : `campaign-details-page-button-delivery-strategy`,
               navLink:
-                campaignData?.status === "created" || campaignData?.parentId
+                isCampaignConfigurationAdministratorOnly
+                  ? `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true&projectType=${campaignData?.projectType}`
+                  : campaignData?.status === "created" || campaignData?.parentId
                   ? `update-dates-boundary?id=${campaignData?.id}&campaignName=${campaignData?.campaignName}&projectId=${campaignData?.projectId}&campaignNumber=${campaignData?.campaignNumber}`
                   : `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true&projectType=${campaignData?.projectType}`,
               type: campaignData?.deliveryRules?.[0]?.cycles?.length > 0 ? "secondary" : "primary",
@@ -472,7 +545,7 @@ const CampaignDetails = () => {
           },
         ],
       },
-      ...(campaignData?.additionalDetails?.isUnifiedCampaign
+      ...(campaignData?.additionalDetails?.isUnifiedCampaign || isCampaignMappingAndMicroplanningAdministratorOnly
         ? [
             {
               noCardStyle: true,
@@ -630,6 +703,31 @@ const CampaignDetails = () => {
     ],
   };
 
+  const restrictedNavLinkPrefixes = [];
+
+  if (isMobileApplicationConfigurationAdministratorOnly) {
+    restrictedNavLinkPrefixes.push("new-app-modules", "localization-add");
+  }
+  if (isCampaignMappingAndMicroplanningAdministratorOnly) {
+    restrictedNavLinkPrefixes.push("unified-upload-screen");
+  }
+  if (isWorkforceAndAttendanceAdministratorOnly) {
+    restrictedNavLinkPrefixes.push("setup-attendance");
+  }
+  if (isSupervisionAndReportingAdministratorOnly) {
+    restrictedNavLinkPrefixes.push("checklist/search", "reports-configuration");
+  }
+  if (isCampaignConfigurationAdministratorOnly) {
+    restrictedNavLinkPrefixes.push("setup-campaign?key=5", "setup-campaign?key=7", "update-campaign", "update-dates-boundary");
+  }
+
+  if (restrictedNavLinkPrefixes.length > 0) {
+    data.cards = data.cards.filter((card) => {
+      const navLink = card?.sections?.[0]?.props?.navLink || "";
+      return restrictedNavLinkPrefixes.some((prefix) => navLink.startsWith(prefix));
+    });
+  }
+
   const reqUpdate = {
     url: `/project-factory/v1/project-type/update`,
     params: {},
@@ -749,7 +847,7 @@ const CampaignDetails = () => {
       <div className="campaign-details-header">
         <div style={{ display: "flex", alignItems: "baseline", gap: "1rem" }}>
           <HeaderComponent className={"date-header"}>{campaignData?.campaignName}</HeaderComponent>
-          {campaignData?.status !== "created" && (
+          {campaignData?.status !== "created" && !isRestrictedCampaignDetailsView && (
             <div
               className="hover"
               id={"campaign-details-edit-campaign-name"}
@@ -782,6 +880,7 @@ const CampaignDetails = () => {
           className="hover"
           style={{ height: "20px", width: "20px",display:"flex",alignItems:"center",justifyContent:"center",marginTop:"6px" }}
           onClick={() => {
+            if (isRestrictedCampaignDetailsView) return;
             if (campaignData?.status === "created") {
               navigate(
                 `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${campaignData?.id}&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`
@@ -794,7 +893,7 @@ const CampaignDetails = () => {
           }}
           id={"campaign-details-edit-campaign-dates"}
         >
-          <Edit width={"18"} height={"18"} />
+          {!isRestrictedCampaignDetailsView && <Edit width={"18"} height={"18"} />}
         </div>
         <span style={{ color: "#D6D5D4", fontWeight: "300", fontSize: "32px", lineHeight: 1 }}>|</span>
         <div className="dates" style={{fontSize:"16px"}}>{t(campaignData?.hierarchyType)}</div>
@@ -819,6 +918,9 @@ const CampaignDetails = () => {
       </div>
       <Footer
         actionFields={
+          isRestrictedCampaignDetailsView
+            ? []
+            :
           campaignData?.status !== "created" && !campaignData?.parentId
             ? [
                 <Button

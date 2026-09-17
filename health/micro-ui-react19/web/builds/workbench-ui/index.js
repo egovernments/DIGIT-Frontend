@@ -10,6 +10,93 @@ window.Digit.Hooks = Hooks;
 // Lazy load the core module
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
 
+const CAMPAIGN_MAPPING_AND_MICROPLANNING_ADMINISTRATOR = "CAMPAIGN_MAPPING_AND_MICROPLANNING_ADMINISTRATOR";
+const BOUNDARY_MANAGER = "BOUNDARY_MANAGER";
+const PRIVILEGED_BOUNDARY_ACCESS_ROLES = [
+  "BOUNDARY_MANAGER",
+  "CAMPAIGN_MANAGER",
+  "SUPERUSER",
+  "SYSTEM_ADMINISTRATOR",
+  "CAMPAIGN_MAPPING_AND_MICROPLANNING_ADMINISTRATOR",
+];
+
+const getCurrentUserRoles = () => {
+  try {
+    const employeeInfo = window.localStorage.getItem("Employee.user-info");
+    const parsedInfo = employeeInfo ? JSON.parse(employeeInfo) : null;
+    const roleObjects = parsedInfo?.info?.roles || parsedInfo?.roles || [];
+    return roleObjects.map((role) => role?.code).filter(Boolean);
+  } catch (error) {
+    return [];
+  }
+};
+
+const hasAnyRole = (roleCodes = []) => {
+  try {
+    if (window?.Digit?.Utils?.didEmployeeHasAtleastOneRole) {
+      return window.Digit.Utils.didEmployeeHasAtleastOneRole(roleCodes);
+    }
+  } catch (error) {
+    // Fallback to local parsing when utility is unavailable.
+  }
+
+  const roles = getCurrentUserRoles();
+  return roleCodes.some((roleCode) => roles.includes(roleCode));
+};
+
+const isRestrictedBoundaryAccess = () => {
+  const hasCampaignMicroplanningRole = hasAnyRole([CAMPAIGN_MAPPING_AND_MICROPLANNING_ADMINISTRATOR]);
+  const hasPrivilegedBoundaryRole = hasAnyRole(PRIVILEGED_BOUNDARY_ACCESS_ROLES);
+
+  if (!hasCampaignMicroplanningRole || hasPrivilegedBoundaryRole) {
+    return false;
+  }
+
+  return window.location.pathname.includes("/employee/workbench/boundary/data");
+};
+
+const getContextPathPrefix = () => {
+  const firstSegment = window.location.pathname.split("/").filter(Boolean)[0];
+  if (firstSegment) {
+    return firstSegment;
+  }
+  return window?.contextPath || "workbench-ui";
+};
+
+const enforceWorkbenchBoundaryRoleGuard = () => {
+  if (!isRestrictedBoundaryAccess()) {
+    return;
+  }
+
+  const contextPath = getContextPathPrefix();
+  const redirectUrl = `/${contextPath}/employee/campaign/campaign-home`;
+  if (window.location.pathname !== redirectUrl) {
+    window.location.replace(redirectUrl);
+  }
+};
+
+const setupBoundaryAccessGuard = () => {
+  const checkAndRedirect = () => enforceWorkbenchBoundaryRoleGuard();
+
+  const originalPushState = window.history.pushState;
+  const originalReplaceState = window.history.replaceState;
+
+  window.history.pushState = function pushStateGuard(...args) {
+    const result = originalPushState.apply(this, args);
+    checkAndRedirect();
+    return result;
+  };
+
+  window.history.replaceState = function replaceStateGuard(...args) {
+    const result = originalReplaceState.apply(this, args);
+    checkAndRedirect();
+    return result;
+  };
+
+  window.addEventListener("popstate", checkAndRedirect);
+  checkAndRedirect();
+};
+
 // Enabled modules for workbench variant
 const enabledModules = ["assignment", "Workbench", "Utilities", "Campaign"];
 
@@ -42,6 +129,7 @@ const initTokens = (stateCode) => {
 
 const initDigitUI = () => {
   window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+  setupBoundaryAccessGuard();
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
 
   const root = ReactDOM.createRoot(document.getElementById("root"));
