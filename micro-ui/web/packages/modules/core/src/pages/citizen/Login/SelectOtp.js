@@ -25,7 +25,18 @@ const SelectOtp = ({ config, otp, onOtpChange, onResend, onSelect, t, error, use
         {timeLeft > 0 ? (
           <CardText>{`${t("CS_RESEND_ANOTHER_OTP")} ${timeLeft} ${t("CS_RESEND_SECONDS")}`}</CardText>
         ) : (
-          <p className="card-text-button resend-otp" onClick={handleResendOtp}>
+          <p
+            className="card-text-button resend-otp"
+            role="button"
+            tabIndex={0}
+            onClick={handleResendOtp}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleResendOtp();
+              }
+            }}
+          >
             {t("CS_RESEND_OTP")}
           </p>
         )}
@@ -40,7 +51,18 @@ const SelectOtp = ({ config, otp, onOtpChange, onResend, onSelect, t, error, use
       {timeLeft > 0 ? (
         <CardText>{`${t("CS_RESEND_ANOTHER_OTP")} ${timeLeft} ${t("CS_RESEND_SECONDS")}`}</CardText>
       ) : (
-        <p className="card-text-button" onClick={handleResendOtp}>
+        <p
+          className="card-text-button"
+          role="button"
+          tabIndex={0}
+          onClick={handleResendOtp}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleResendOtp();
+            }
+          }}
+        >
           {t("CS_RESEND_OTP")}
         </p>
       )}

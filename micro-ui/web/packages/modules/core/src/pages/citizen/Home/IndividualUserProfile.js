@@ -248,7 +248,10 @@ const IndividualUserProfile = ({ stateCode, userType, cityDetails }) => {
     }
   };
 
-  const setUserCurrentPassword = (value) => {
+  const setUserCurrentPassword = (eventOrValue) => {
+    // The TextInput eye-toggle calls onChange with the raw value prop instead of an event
+    const value = typeof eventOrValue === "string" ? eventOrValue : eventOrValue?.target?.value ?? "";
+    setCurrentPassword(value);
     if (!validationConfig?.password.test(value)) {
       setErrors({
         ...errors,
@@ -262,7 +265,8 @@ const IndividualUserProfile = ({ stateCode, userType, cityDetails }) => {
     }
   };
 
-  const setUserNewPassword = (value) => {
+  const setUserNewPassword = (eventOrValue) => {
+    const value = typeof eventOrValue === "string" ? eventOrValue : eventOrValue?.target?.value ?? "";
     setNewPassword(value);
     if (!validationConfig?.password.test(value)) {
       setErrors({
@@ -277,7 +281,8 @@ const IndividualUserProfile = ({ stateCode, userType, cityDetails }) => {
     }
   };
 
-  const setUserConfirmPassword = (value) => {
+  const setUserConfirmPassword = (eventOrValue) => {
+    const value = typeof eventOrValue === "string" ? eventOrValue : eventOrValue?.target?.value ?? "";
     setConfirmPassword(value);
 
     if (!validationConfig?.password.test(value)) {
@@ -333,9 +338,9 @@ const IndividualUserProfile = ({ stateCode, userType, cityDetails }) => {
         });
       }
 
-      const trimmedCurrentPassword = currentPassword.trim();
-      const trimmedNewPassword = newPassword.trim();
-      const trimmedConfirmPassword = confirmPassword.trim();
+      const trimmedCurrentPassword = (currentPassword || "").trim();
+      const trimmedNewPassword = (newPassword || "").trim();
+      const trimmedConfirmPassword = (confirmPassword || "").trim();
 
       setCurrentPassword(trimmedCurrentPassword);
       setNewPassword(trimmedNewPassword);
@@ -403,11 +408,9 @@ const IndividualUserProfile = ({ stateCode, userType, cityDetails }) => {
           Individual: individualPayload,
         },
       });
-      responseInfo = response?.responseInfo;
-      
+      responseInfo = response?.ResponseInfo;
 
-
-      if (responseInfo && responseInfo.status === "200") {
+      if (responseInfo && responseInfo.status === "successful") {
         const user = Digit.UserService.getUser();
 
         if (user) {
@@ -446,9 +449,13 @@ const IndividualUserProfile = ({ stateCode, userType, cityDetails }) => {
               throw "";
             }
           } catch (error) {
+            console.error("Change password failed:", error);
             throw JSON.stringify({
               type: "error",
-              message: error.Errors?.at(0)?.description ? error.Errors.at(0).description : "CORE_COMMON_PROFILE_UPDATE_ERROR_WITH_PASSWORD",
+              message:
+                error?.Errors?.[0]?.description ||
+                error?.response?.data?.Errors?.[0]?.description ||
+                "CORE_COMMON_PROFILE_UPDATE_ERROR_WITH_PASSWORD",
             });
           }
         } else {
@@ -457,17 +464,21 @@ const IndividualUserProfile = ({ stateCode, userType, cityDetails }) => {
             message: "CORE_COMMON_PROFILE_ERROR_PASSWORD_NOT_MATCH",
           });
         }
-      } else if (responseInfo?.status && responseInfo.status === "200") {
+      } else if (responseInfo?.status && responseInfo.status === "successful") {
         showToast("success", t("CORE_COMMON_PROFILE_UPDATE_SUCCESS"), 5000);
       }
     } catch (error) {
+      console.error("Profile update failed:", error);
       let errorObj;
       try {
         errorObj = JSON.parse(error);
       } catch (e) {
         errorObj = {
           type: "error",
-          message: error?.response?.data?.Errors?.[0]?.description || "CORE_COMMON_PROFILE_UPDATE_ERROR",
+          message:
+            error?.response?.data?.Errors?.[0]?.description ||
+            error?.Errors?.[0]?.description ||
+            "CORE_COMMON_PROFILE_UPDATE_ERROR",
         };
       }
       showToast(errorObj.type, t(errorObj.message), 5000);
@@ -701,7 +712,7 @@ const IndividualUserProfile = ({ stateCode, userType, cityDetails }) => {
                 onClick={updateProfile}
                 style={{
                   marginTop: "24px",
-                  backgroundColor: "#c84c0e",
+                  backgroundColor: "var(--digitv2-lightTheme-primary, #008080)",
                   width: "100%",
                   height: "40px",
                   color: "white",
@@ -882,7 +893,8 @@ const IndividualUserProfile = ({ stateCode, userType, cityDetails }) => {
                               mdmsValidationData?.UserProfileValidationConfig?.[0]?.password ||
                               defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password
                             }
-                            onChange={(e) => setUserCurrentPassword(e?.target?.value)}
+                            value={currentPassword}
+                            onChange={setUserCurrentPassword}
                             disabled={editScreen}
                           />
                           {errors?.currentPassword && (
@@ -913,7 +925,8 @@ const IndividualUserProfile = ({ stateCode, userType, cityDetails }) => {
                               mdmsValidationData?.UserProfileValidationConfig?.[0]?.password ||
                               defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password
                             }
-                            onChange={(e) => setUserNewPassword(e?.target?.value)}
+                            value={newPassword}
+                            onChange={setUserNewPassword}
                             disabled={editScreen}
                           />
                           {errors?.newPassword && (
@@ -944,7 +957,8 @@ const IndividualUserProfile = ({ stateCode, userType, cityDetails }) => {
                               mdmsValidationData?.UserProfileValidationConfig?.[0]?.password ||
                               defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password
                             }
-                            onChange={(e) => setUserConfirmPassword(e?.target?.value)}
+                            value={confirmPassword}
+                            onChange={setUserConfirmPassword}
                             disabled={editScreen}
                           />
                           {errors?.confirmPassword && (
@@ -970,7 +984,7 @@ const IndividualUserProfile = ({ stateCode, userType, cityDetails }) => {
                   onClick={updateProfile}
                   style={{
                     marginTop: "24px",
-                    backgroundColor: "#c84c0e",
+                    backgroundColor: "var(--digitv2-lightTheme-primary, #008080)",
                     width: "100%",
                     height: "40px",
                     color: "white",
