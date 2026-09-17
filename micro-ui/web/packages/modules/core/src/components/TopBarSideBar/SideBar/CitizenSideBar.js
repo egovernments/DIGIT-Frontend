@@ -71,6 +71,7 @@ export const CitizenSideBar = ({
   userProfile,
 }) => {
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+  const isDigitStudio = window.location.href.includes("digit-studio");
   const { data: storeData, isFetched } = Digit.Hooks.useStore.getInitData();
   const selectedLanguage = Digit.StoreData.getCurrentLanguage();
   const [profilePic, setProfilePic] = useState(null);
@@ -229,18 +230,22 @@ export const CitizenSideBar = ({
   let configEmployeeSideBar = {};
 
   if (!isEmployee) {
-    Object.keys(linkData)
-      ?.sort((x, y) => y.localeCompare(x))
-      ?.map((key) => {
-        if (linkData[key][0]?.sidebar === "digit-ui-links")
-          menuItems.splice(1, 0, {
-            type: linkData[key][0]?.sidebarURL?.includes(window?.contextPath) ? "link" : "external-link",
-            text: t(`ACTION_TEST_${Digit.Utils.locale.getTransformedLocale(key)}`),
-            links: linkData[key],
-            icon: linkData[key][0]?.leftIcon,
-            link: linkData[key][0]?.sidebarURL,
-          });
-      });
+    // DIGIT Studio: citizen services are reached from the home/landing tiles —
+    // module links are dropped from the sidebar (web parity: CitizenSideNav).
+    if (!isDigitStudio) {
+      Object.keys(linkData)
+        ?.sort((x, y) => y.localeCompare(x))
+        ?.map((key) => {
+          if (linkData[key][0]?.sidebar === "digit-ui-links")
+            menuItems.splice(1, 0, {
+              type: linkData[key][0]?.sidebarURL?.includes(window?.contextPath) ? "link" : "external-link",
+              text: t(`ACTION_TEST_${Digit.Utils.locale.getTransformedLocale(key)}`),
+              links: linkData[key],
+              icon: linkData[key][0]?.leftIcon,
+              link: linkData[key][0]?.sidebarURL,
+            });
+        });
+    }
   } else {
     data?.actions
       .filter((e) => e.url === "url" && e.displayName !== "Home")
@@ -428,11 +433,17 @@ export const CitizenSideBar = ({
         },
       ]
     : []),
-    {
-      label: t("Modules"),
-      icon: "DriveFileMove",
-      children: transformedMenuItems,
-    },
+    // DIGIT Studio: no "Modules" group — remaining entries (e.g. Login) surface
+    // as top-level items instead.
+    ...(isDigitStudio
+      ? transformedMenuItems || []
+      : [
+          {
+            label: t("Modules"),
+            icon: "DriveFileMove",
+            children: transformedMenuItems,
+          },
+        ]),
   ];
   return isMobile ? (
     <Hamburger
