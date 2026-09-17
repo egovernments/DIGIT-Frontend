@@ -542,6 +542,14 @@ const AddDeliveryRuleWrapper = React.memo(({
     const directOption = filteredDeliveryTypeConfig?.find(opt => opt.code === "DIRECT");
     const indirectOption = filteredDeliveryTypeConfig?.find(opt => opt.code === "INDIRECT");
 
+    // A delivery that represents a delivery strategy is always DIRECT, whatever its position -
+    // the observation strategy describes a sequence of doses, which does not apply here. Offering
+    // INDIRECT would also let the selection fall back to it, since this list is what the selected
+    // value is resolved against.
+    if (activeDelivery?.deliveryMethod) {
+      return directOption ? [directOption] : [];
+    }
+
     if (isDOT1) {
       // For DOT1: First delivery = DIRECT only, 2nd+ delivery = INDIRECT only
       if (isFirstDelivery) {
@@ -553,7 +561,14 @@ const AddDeliveryRuleWrapper = React.memo(({
       // For non-DOT1: All deliveries = DIRECT only
       return directOption ? [directOption] : [];
     }
-  }, [activeDelivery?.deliveryIndex, activeDelivery?.deliveryNumber, activeDelivery?.key, filteredDeliveryTypeConfig, projectConfig?.observationStrategy]);
+  }, [
+    activeDelivery?.deliveryIndex,
+    activeDelivery?.deliveryNumber,
+    activeDelivery?.key,
+    activeDelivery?.deliveryMethod,
+    filteredDeliveryTypeConfig,
+    projectConfig?.observationStrategy,
+  ]);
 
   const handleAddRule = useCallback(() => {
     addRule();

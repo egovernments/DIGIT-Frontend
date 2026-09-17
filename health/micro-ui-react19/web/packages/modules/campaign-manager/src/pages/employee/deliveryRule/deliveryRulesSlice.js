@@ -24,10 +24,12 @@ const deliveryRulesSlice = createSlice({
       state.activeSubTabIndex = 0;
       state.error = null;
 
-      // Rules saved before delivery strategies existed carry no strategy code. When the number of
-      // saved deliveries matches the number of chosen strategies they were authored in the same
-      // order, so the codes can be applied by position. When the counts differ the mapping is
-      // unknown, so they are left alone and rebuilt from the chosen strategies instead.
+      // Whether a code may be applied to a saved delivery by position. Rules saved before delivery
+      // strategies existed carry no code of their own; when the number of saved deliveries matches
+      // the number of chosen strategies they were authored in the same order, so position is a
+      // safe mapping. When the counts differ the mapping is unknown, so they are left alone and
+      // rebuilt from the chosen strategies instead. A delivery that already carries a code keeps
+      // it either way.
       const stampMethods =
         Array.isArray(deliveryMethods) && deliveryMethods.length > 0 && savedData?.[0]?.deliveries?.length === deliveryMethods.length;
 
@@ -36,28 +38,31 @@ const deliveryRulesSlice = createSlice({
         state.campaignData = savedData.map((cycle, cycleIndex) => ({
           ...cycle,
           active: cycleIndex === 0,
-          deliveries: cycle.deliveries?.map((delivery, deliveryIndex) => ({
-            ...delivery,
-            active: deliveryIndex === 0,
-            ...(stampMethods
-              ? {
-                  deliveryMethod: delivery.deliveryMethod || deliveryMethods[deliveryIndex],
-                  // Always DIRECT for a strategy delivery - see syncDeliveryMethods for why.
-                  deliveryType: "DIRECT",
-                }
-              : {}),
-            deliveryRules: delivery.deliveryRules?.map(rule => ({
-              ...rule,
-              attributes: rule.attributes?.map(attr => ({
-                ...attr,
-                // Ensure attribute and operator objects have proper structure
-                attribute: attr.attribute && typeof attr.attribute === 'object' ? attr.attribute :
-                          attr.attribute ? { code: attr.attribute, name: attr.attribute } : null,
-                operator: attr.operator && typeof attr.operator === 'object' ? attr.operator :
-                         attr.operator ? { code: attr.operator, name: attr.operator } : null,
-              })) || [{ key: 1, attribute: null, operator: null, value: "" }]
-            })) || []
-          })) || []
+          deliveries: cycle.deliveries?.map((delivery, deliveryIndex) => {
+            // A delivery already carrying a code keeps it; a code is applied by position only when
+            // stampMethods allows it.
+            const methodCode = delivery.deliveryMethod || (stampMethods ? deliveryMethods[deliveryIndex] : undefined);
+
+            return {
+              ...delivery,
+              active: deliveryIndex === 0,
+              // A strategy delivery is always DIRECT - see syncDeliveryMethods for why. Forcing it
+              // here also corrects a campaign saved before that was enforced, the next time it is
+              // opened and saved.
+              ...(methodCode ? { deliveryMethod: methodCode, deliveryType: "DIRECT" } : {}),
+              deliveryRules: delivery.deliveryRules?.map(rule => ({
+                ...rule,
+                attributes: rule.attributes?.map(attr => ({
+                  ...attr,
+                  // Ensure attribute and operator objects have proper structure
+                  attribute: attr.attribute && typeof attr.attribute === 'object' ? attr.attribute :
+                            attr.attribute ? { code: attr.attribute, name: attr.attribute } : null,
+                  operator: attr.operator && typeof attr.operator === 'object' ? attr.operator :
+                           attr.operator ? { code: attr.operator, name: attr.operator } : null,
+                })) || [{ key: 1, attribute: null, operator: null, value: "" }]
+              })) || []
+            };
+          }) || []
         }));
       } else {
         state.campaignData = generateInitialCampaignData(cycles, deliveries, effectiveDeliveryConfig, attributeConfig, operatorConfig, deliveryMethods);
@@ -377,6 +382,13 @@ const deliveryRulesSlice = createSlice({
       state.campaignData = state.campaignData.map((cycle, cycleIdx) => ({
         ...cycle,
         deliveries: cycle.deliveries?.map((delivery, deliveryIndex) => {
+          // A delivery that carries a strategy code is left alone. The observation strategy derives
+          // its value from the delivery's position in a sequence of doses; when the position
+          // identifies a delivery strategy instead there is no sequence, and every one of them is
+          // DIRECT. Enforced here rather than only at the call sites so the value cannot be
+          // overwritten by whatever order the effects happen to run in.
+          if (delivery?.deliveryMethod) return delivery;
+
           const newDeliveryType = getDeliveryTypeByStrategy(observationStrategy, deliveryIndex);
           return {
             ...delivery,
