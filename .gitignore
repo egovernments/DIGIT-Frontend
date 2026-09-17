@@ -3,27 +3,3 @@ accelerators/frontend/micro-ui-internals/node_modules/*
 .idea
 index.lock
 utilities/project-factory/
-
-# React19 local changes
-health/micro-ui-react19/web/builds/core-ui/public/index.html
-health/micro-ui-react19/web/public/index.html
-health/micro-ui-react19/web/webpack.common.js
-health/micro-ui-react19/web/webpack.dev.js
-
-# Micro UI internals local config
-health/micro-ui/web/micro-ui-internals/example/.env-unifieddev
-health/micro-ui/web/micro-ui-internals/example/public/index.html
-health/micro-ui/web/micro-ui-internals/example/src/setupProxy.js
-health/micro-ui/web/micro-ui-internals/package.json
-health/micro-ui/web/micro-ui-internals/packages/css/package.json
-
-# Local workbench changes
-health/micro-ui/web/package.json
-health/micro-ui/web/src/App.js
-health/micro-ui/web/webpack.config.js
-
-# Duplicate setupProxy
-micro-ui/web/micro-ui-internals/example/src/setupProxy.js
-
-# Local test file
-micro-ui/web/micro-ui-internals/test.js
