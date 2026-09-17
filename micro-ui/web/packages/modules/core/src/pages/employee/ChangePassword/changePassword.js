@@ -10,7 +10,10 @@ import ImageComponent from "../../../components/ImageComponent";
 
 const ChangePasswordComponent = ({ config: propsConfig, t }) => {
   const [user, setUser] = useState(null);
-  const { mobile_number: mobileNumber, tenantId } = Digit.Hooks.useQueryParams();
+  // Forgot-password navigates here with ?USERNAME=...; mobile_number is kept
+  // as a fallback for any older links that still use it.
+  const { mobile_number: mobileNumber, USERNAME: userName, tenantId } = Digit.Hooks.useQueryParams();
+  const userIdentifier = userName || mobileNumber;
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
   const [isOtpValid, setIsOtpValid] = useState(true);
@@ -33,7 +36,8 @@ const ChangePasswordComponent = ({ config: propsConfig, t }) => {
   const onResendOTP = async () => {
     const requestData = {
       otp: {
-        mobileNumber,
+        userName: userIdentifier,
+        mobileNumber: userIdentifier,
         userType: getUserType().toUpperCase(),
         type: "passwordreset",
         tenantId,
