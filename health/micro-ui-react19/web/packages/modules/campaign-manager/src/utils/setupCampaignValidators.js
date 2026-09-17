@@ -436,13 +436,29 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       return true;
 
     case "deliveryRule":
-      const deliveryRules = Array.isArray(formData?.deliveryRule) ? formData.deliveryRule : [];
+      // Validate the rules that will actually be submitted.
+      //
+      // The step publishes its value as the user edits, so the form value is empty for as long as
+      // the step has been remounted without being touched - after moving back a step, or leaving
+      // the wizard and returning. The session still holds the configuration in that window, and it
+      // is what the payload is built from, so it is the fallback.
+      //
+      // The step's own store is not used as a fallback. It can hold rules the session does not,
+      // and passing validation on rules the payload will not read would submit an empty
+      // deliveryRules and discard the configuration.
+      const formDeliveryRules = Array.isArray(formData?.deliveryRule) ? formData.deliveryRule : [];
+      const sessionDeliveryRules = Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)
+        ? totalFormData.HCM_CAMPAIGN_DELIVERY_DATA.deliveryRule
+        : [];
+      const deliveryRules = formDeliveryRules.length > 0 ? formDeliveryRules : sessionDeliveryRules;
+
       if (deliveryRules.length === 0) {
-        // Form state may be empty if the component was remounted (e.g., back-and-forward navigation).
-        // Fall back to the Redux store, which always reflects the user's last saved input, to run validation.
-        const reduxRules = getDeliveryRulesCampaignData();
-        const attrError = checkAttributeValidity({ deliveryRule: reduxRules });
-        if (attrError) { setShowToast({ key: "error", label: attrError }); }
+        // Nothing to submit, so the step cannot be completed. The store is still worth reading
+        // here to name what is wrong with the configuration on screen, if anything is.
+        const attrError = checkAttributeValidity({ deliveryRule: getDeliveryRulesCampaignData() });
+        if (attrError) {
+          setShowToast({ key: "error", label: attrError });
+        }
         return false;
       }
       const validateMaxCondition = hasInvalidMaxCountAttribute(deliveryRules);
@@ -450,7 +466,8 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
         setShowToast({ key: "error", label: "INVALID_USE_OF_MAX_COUNT" });
         return false;
       }
-      const isAttributeValid = checkAttributeValidity(formData);
+      // Checked against the rules resolved above rather than formData, which may be the empty one.
+      const isAttributeValid = checkAttributeValidity({ deliveryRule: deliveryRules });
       if (isAttributeValid) {
         setShowToast({ key: "error", label: isAttributeValid });
         return false;

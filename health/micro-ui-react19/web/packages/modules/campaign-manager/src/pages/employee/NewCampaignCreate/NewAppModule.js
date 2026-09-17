@@ -83,6 +83,20 @@ const NewAppModule = () => {
     return chosenMethods.includes(requiredMethod);
   };
 
+  /**
+   * Whether a module is disabled because the delivery strategy it belongs to was not chosen.
+   *
+   * A card can be disabled for two different reasons and the user needs to be able to tell them
+   * apart: a module that MDMS has not switched on is not available to anyone yet, whereas this one
+   * is available and simply not part of this campaign. Used for wording only - whether the card is
+   * disabled at all is decided by isModuleEnabled above.
+   */
+  const isStrategyNotSelected = (moduleName, active) => {
+    if (active !== true) return false;
+    const requiredMethod = moduleToMethod?.[moduleName];
+    return !!requiredMethod && !chosenMethods.includes(requiredMethod);
+  };
+
   // Sort mdmsData by order
   const sortedMdmsData = mdmsData?.slice().sort((a, b) => {
     const orderA = a?.data?.order ?? Number.MAX_SAFE_INTEGER;
@@ -114,6 +128,19 @@ const NewAppModule = () => {
             const isActive = isModuleEnabled(item?.data?.name, item?.data?.active);
             const isVisited = item?.data?.version > 1;
 
+            // Checked before the configured states on purpose: a module whose strategy was removed
+            // may well have been configured earlier, and offering to edit configuration that is no
+            // longer part of the campaign would be misleading.
+            const buttonLabel = isStrategyNotSelected(item?.data?.name, item?.data?.active)
+              ? t(I18N_KEYS.CAMPAIGN_CREATE.STRATEGY_NOT_SELECTED_MODULE)
+              : viewMode && isVisited
+              ? t(I18N_KEYS.CAMPAIGN_CREATE.VIEW_CONFIGURATION)
+              : isVisited
+              ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION)
+              : isActive
+              ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE)
+              : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE);
+
             return (
               <Card
                 key={item?.id || index}
@@ -141,14 +168,16 @@ const NewAppModule = () => {
                 <hr style={{ border: "1px solid #D6D5D4", width: "100%", margin: "0" }} />
                 <p className="module-description">{item?.data?.description || t(`MODULE_DESCRIPTION_${item?.data?.name}`)}</p>
 
+                {/* The edit icon and the primary styling both follow the button being usable, so a
+                    module that was configured earlier but is disabled now does not invite a click. */}
                 <Button
                   type="button"
                   size="medium"
                   variation={isVisited ? "secondary" : isActive ? "primary" : "secondary"}
-                  icon={isVisited && !viewMode ? "Edit" : null}
-                  className={`campaign-module-button ${isVisited || isActive ? "primaryButton" : "secondButton"}`}
-                  label={viewMode && isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.VIEW_CONFIGURATION) : isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION) : isActive ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE) : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE)}
-                  title={viewMode && isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.VIEW_CONFIGURATION) : isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION) : isActive ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE) : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE)}
+                  icon={isVisited && !viewMode && isActive ? "Edit" : null}
+                  className={`campaign-module-button ${isActive ? "primaryButton" : "secondButton"}`}
+                  label={buttonLabel}
+                  title={buttonLabel}
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent card click
                     if (isActive) {
