@@ -1,5 +1,13 @@
 # Changelog 
 
+## ["2.0.0-dev-36"] [17-Sep-2026]
+- Fixed 400 error on forgot-password OTP resend: change-password screen now reads the USERNAME query param (with mobile_number fallback) and OTP requests send both userName and mobileNumber fields
+- Fixed broken change-password in citizen profile pages (UserProfile & IndividualUserProfile): current password was never stored in state, password eye-toggle cleared the typed value, and success response check used wrong key/status (ResponseInfo / "successful")
+- Improved profile update error handling: non-JSON errors no longer crash the toast flow, backend error descriptions are surfaced to the user
+- DIGIT Studio: removed module links from citizen sidebar in web and mobile views; added city and language switchers to web sidebar for parity with mobile hamburger with a gated studio check.
+- Accessibility: "Resend OTP" action on OTP screen is now keyboard accessible (role button, Enter/Space support)
+- UI theming: forgot-password heading and profile update button now use theme primary color variable instead of hardcoded colors; forgot-password description text styling fixed
+
 ## ["2.0.0-dev-24"] [29-Jun-2026]
 - Three new conditional routes added for three 3 pages which works pre-login and post-login.
 
