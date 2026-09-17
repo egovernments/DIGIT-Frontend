@@ -37,6 +37,10 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const id = searchParams.get("id") || props?.props?.campaignData?.id;
   const parentId = searchParams.get("parentId");
   const registerId = searchParams.get("registerId") || props?.props?.campaignData?.registerId;
+  const bulkTemplateType = props?.props?.bulkTemplateType;
+  const isBulkTemplateOverride = bulkTemplateType === "attendanceRegisterUserBulkMapping";
+  const bulkRegisterCreationReady = props?.props?.bulkRegisterCreationReady;
+  const bulkRegisterCreationStatus = props?.props?.bulkRegisterCreationStatus;
   const [showExitWarning, setShowExitWarning] = useState(false);
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName");
   const [uploadLoader, setUploadLoader] = useState(false);
@@ -78,6 +82,19 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [projectType, setprojectType] = useState(props?.props?.projectType);
   const baseKey = 10;
+  const locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || Digit?.Utils?.getDefaultLanguage();
+
+  const buildRequestInfo = (prefix = "upload") => {
+    const user = Digit.UserService.getUser();
+    const userInfo = user?.info || user?.userInfo || {};
+    return {
+      apiId: "Rainmaker",
+      authToken: user?.access_token,
+      msgId: `${prefix}-${Date.now()}|${locale}`,
+      userInfo,
+      plainAccessRequest: {},
+    };
+  };
   // const projectType = props?.props?.projectType;
 
   useEffect(() => {
@@ -1038,10 +1055,15 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       const customFileName = `${campaignName}_${t(
         "HCM_FILLED",
       )}_Unified_Template`;
-      downloadExcelWithCustomName({
+      const isDownloaded = await downloadExcelWithCustomName({
         fileStoreId,
         customName: customFileName,
+        tenantId,
       });
+      if (!isDownloaded) {
+        setDownloadError(true);
+        setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+      }
     } catch (error) {
       setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
     }
@@ -1061,10 +1083,15 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       const downloadId = (type === "attendanceRegister" || type === "attendanceRegisterAttendee")
         ? (file?.processedFileStoreId || file?.filestoreId)
         : file?.filestoreId;
-      downloadExcelWithCustomName({
+      const isDownloaded = await downloadExcelWithCustomName({
         fileStoreId: downloadId,
         customName: fileNameWithoutExtension,
+        tenantId,
       });
+      if (!isDownloaded) {
+        setDownloadError(true);
+        setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+      }
     }
   };
   useEffect(() => {
@@ -1094,14 +1121,24 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         const validationType = type === "unified-console" ? "unified-console-validation" : type === "attendanceRegister" ? "attendanceRegister-validation" : type === "attendanceRegisterAttendee" ? "attendanceRegisterAttendee-validation" : `${type}Validation`;
 
         try {
+          const isAttendeeValidation = type === "attendanceRegisterAttendee";
+          const isBulkAttendeeValidation = isAttendeeValidation && isBulkTemplateOverride;
+          const validationReferenceId = isBulkAttendeeValidation ? id : isAttendeeValidation ? registerId : id;
+          const validationAdditionalDetails = isAttendeeValidation
+            ? {
+                campaignId: id,
+                ...(isBulkAttendeeValidation ? {} : { registerId }),
+              }
+            : {};
+
           const temp = await Digit.Hooks.campaign.useProcessData(
             uploadedFile,
             params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
             validationType,
             tenantId,
-            type === "attendanceRegisterAttendee" ? registerId : id, //TODO CHECK
+            validationReferenceId,
             baseTimeOut?.[CONSOLE_MDMS_MODULENAME],
-            type === "attendanceRegisterAttendee" ? { registerId } : {}
+            validationAdditionalDetails
           );
           if (temp?.isError) {
             setLoader(false);
@@ -1293,7 +1330,12 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         // Download the file directly using fileStoreId
         setDownloadError(false);
         const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_Unified_Template` : `${campaignName}_Unified_Template`;
-        downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName });
+        const isDownloaded = await downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName, tenantId });
+        if (!isDownloaded) {
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          return;
+        }
         setDownloadedTemplates((prev) => ({
           ...prev,
           [type]: true,
@@ -1312,11 +1354,180 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       return;
     }
 
+    if (isBulkTemplateOverride) {
+      if (!bulkRegisterCreationReady) {
+        setDownloadError(true);
+        if (bulkRegisterCreationStatus === "failed") {
+          setShowToast({ key: "error", label: t("HCM_REGISTER_CREATION_FAILED") });
+        } else if (bulkRegisterCreationStatus === "creating" || bulkRegisterCreationStatus === "toCreate") {
+          setShowToast({ key: "warning", label: t("HCM_REGISTER_CREATION_IN_PROGRESS") });
+        } else {
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+        }
+        return;
+      }
+
+      const pollRetryInterval = 2000;
+      const maxPollTime = 60000;
+      const generationType = bulkTemplateType;
+      const generationReferenceId = id;
+      const generationReferenceType = "campaign";
+      const bulkLocalityCode =
+        searchParams.get("localityCode") ||
+        searchParams.get("boundaryCode") ||
+        props?.props?.campaignData?.additionalDetails?.localityCode ||
+        props?.props?.campaignData?.additionalDetails?.boundaryCode ||
+        props?.props?.campaignData?.boundaryCode;
+      const hierarchyType = params?.hierarchyType || props?.props?.campaignData?.hierarchyType || "ADMIN";
+
+      const searchGenerationById = async (generationId) => {
+        if (!generationId) return null;
+        const response = await Digit.CustomService.getResponse({
+          url: "/excel-ingestion/v1/data/generate/_search",
+          body: {
+            GenerationSearchCriteria: {
+              tenantId: tenantId,
+              ids: [generationId],
+            },
+            RequestInfo: buildRequestInfo("bulk-template-search"),
+          },
+        });
+
+        return response?.GenerationDetails?.[0] || null;
+      };
+
+      const pollUntilDone = async (generationId) => {
+        const startTime = Date.now();
+        while (Date.now() - startTime < maxPollTime) {
+          await new Promise((resolve) => setTimeout(resolve, pollRetryInterval));
+          const resource = await searchGenerationById(generationId);
+          const fileStoreId = resource?.fileStoreid || resource?.fileStoreId;
+          if (resource?.status === "completed" || resource?.status === "failed" || fileStoreId) {
+            return resource;
+          }
+        }
+        return null;
+      };
+
+      const downloadFromResource = async (resource) => {
+        const fileStoreId = resource?.fileStoreid || resource?.fileStoreId;
+        if (!fileStoreId) {
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          return false;
+        }
+        setDownloadError(false);
+        const templateLabel = "Bulk_Attendance_Template";
+        const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_${templateLabel}` : `${campaignName}_${templateLabel}`;
+        const isDownloaded = await downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName, tenantId });
+        if (!isDownloaded) {
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          return false;
+        }
+        setDownloadedTemplates((prev) => ({
+          ...prev,
+          [type]: true,
+        }));
+        return true;
+      };
+
+      try {
+        setLoaderText("CAMPAIGN_DOWNLOADING_TEMPLATE");
+        setLoader(true);
+        if (!generationReferenceId) {
+          setLoader(false);
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          return;
+        }
+        if (!bulkLocalityCode) {
+          setLoader(false);
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          return;
+        }
+
+        const initResponse = await Digit.CustomService.getResponse({
+          url: "/excel-ingestion/v1/data/generate/_init",
+          body: {
+            GenerateResource: {
+              tenantId: tenantId,
+              type: generationType,
+              hierarchyType: hierarchyType,
+              referenceId: generationReferenceId,
+              referenceType: generationReferenceType,
+              additionalDetails: {
+                localityCode: bulkLocalityCode,
+                forceUpdate: true,
+              },
+            },
+            RequestInfo: buildRequestInfo("bulk-template-init"),
+          },
+        });
+
+        const initResource = initResponse?.GenerateResource || initResponse?.GenerationDetails?.[0];
+        const initFileStoreId = initResource?.fileStoreid || initResource?.fileStoreId;
+        if (initResource?.status === "completed" && initFileStoreId) {
+          setLoader(false);
+          await downloadFromResource(initResource);
+          return;
+        }
+        if (initResource?.status === "failed") {
+          setLoader(false);
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          return;
+        }
+
+        const generationId = initResponse?.GenerateResource?.id || initResponse?.GenerationDetails?.[0]?.id;
+        if (!generationId) {
+          setLoader(false);
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          return;
+        }
+
+        const resource = await pollUntilDone(generationId);
+
+        setLoader(false);
+
+        if (resource?.status === "completed") {
+          await downloadFromResource(resource);
+          return;
+        }
+
+        // If failed or timeout after generate, stop
+        if (resource?.status === "failed") {
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+        } else {
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+        }
+      } catch (error) {
+        setLoader(false);
+        console.error("Error in attendanceRegister download:", error);
+        const errorCode = error?.response?.data?.Errors?.[0]?.code;
+        if (errorCode === "NativeIoException") {
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+        } else {
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+        }
+      }
+      return;
+    }
+
     // For attendanceRegister / attendanceRegisterAttendee type, use generation search API with polling and generate fallback
     if (type === "attendanceRegister" || type === "attendanceRegisterAttendee") {
       const locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || Digit?.Utils?.getDefaultLanguage();
       const pollRetryInterval = 2000;
       const maxPollTime = 60000;
+      const generationType = type;
+      const generationReferenceId = type === "attendanceRegisterAttendee" ? registerId : id;
+      const generationReferenceType = type === "attendanceRegisterAttendee" ? "attendanceRegister" : "campaign";
 
       // Helper: search for generated resource
       const searchGeneration = async () => {
@@ -1325,16 +1536,19 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           body: {
             GenerationSearchCriteria: {
               tenantId: tenantId,
-              referenceIds: [type === "attendanceRegisterAttendee" ? registerId : id],
+              referenceIds: [generationReferenceId],
               statuses: ["completed", "failed", "pending", "inprogress"],
               limit: 5,
               offset: 0,
               locale: locale,
-              types: [type],
-              referenceTypes: [type === "attendanceRegisterAttendee" ? "attendanceRegister" : "campaign"],
-              additionalDetails: type === "attendanceRegisterAttendee" ? {
-                campaignId: id
-              } : undefined,
+              types: [generationType],
+              referenceTypes: [generationReferenceType],
+              additionalDetails:
+                type === "attendanceRegisterAttendee"
+                  ? {
+                      campaignId: id,
+                    }
+                  : undefined,
             },
           },
         });
@@ -1375,14 +1589,14 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           body: {
             GenerateResource: {
               tenantId: tenantId,
-              type: type,
+              type: generationType,
               hierarchyType: params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
-              referenceId: type === "attendanceRegisterAttendee" ? registerId : id,
-              referenceType: type === "attendanceRegisterAttendee" ? "attendanceRegister" : "campaign",
+              referenceId: generationReferenceId,
+              referenceType: generationReferenceType,
               locale: locale,
               additionalDetails: {
                 campaignName: campaignName,
-                campaignId: id
+                campaignId: id,
               },
             },
           },
@@ -1390,21 +1604,27 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       };
 
       // Helper: download from a completed resource
-      const downloadFromResource = (resource) => {
+      const downloadFromResource = async (resource) => {
         const fileStoreId = resource?.fileStoreid || resource?.fileStoreId;
         if (!fileStoreId) {
           setDownloadError(true);
           setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-          return;
+          return false;
         }
         setDownloadError(false);
         const templateLabel = type === "attendanceRegisterAttendee" ? "Attendee_Template" : "Attendance_Register_Template";
         const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_${templateLabel}` : `${campaignName}_${templateLabel}`;
-        downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName });
+        const isDownloaded = await downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName, tenantId });
+        if (!isDownloaded) {
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          return false;
+        }
         setDownloadedTemplates((prev) => ({
           ...prev,
           [type]: true,
         }));
+        return true;
       };
 
       try {
@@ -1416,7 +1636,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         // If completed, download directly
         if (resource?.status === "completed") {
           setLoader(false);
-          downloadFromResource(resource);
+          await downloadFromResource(resource);
           return;
         }
 
@@ -1425,7 +1645,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           resource = await pollUntilDone();
           if (resource?.status === "completed") {
             setLoader(false);
-            downloadFromResource(resource);
+            await downloadFromResource(resource);
             return;
           }
           // If still not completed after polling, treat as failed
@@ -1440,7 +1660,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         setLoader(false);
 
         if (resource?.status === "completed") {
-          downloadFromResource(resource);
+          await downloadFromResource(resource);
           return;
         }
 
@@ -1514,7 +1734,12 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               const customFileName = parentId
                 ? `${campaignName}_${t("HCM_FILLED")}_${fileData[0].filename}`
                 : `${campaignName}_${fileData[0].filename}`;
-              downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: customFileName });
+              const isDownloaded = await downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: customFileName, tenantId });
+              if (!isDownloaded) {
+                setDownloadError(true);
+                setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+                return;
+              }
               setDownloadedTemplates((prev) => ({
                 ...prev,
                 [type]: true,
@@ -1542,7 +1767,10 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     const processedFileStoreId = props?.props?.resourceDetails?.[0]?.processedFileStoreId;
     if (!processedFileStoreId) return;
     try {
-      downloadExcelWithCustomName({ fileStoreId: processedFileStoreId, customName: `${campaignName}_${suffix}` });
+      const isDownloaded = await downloadExcelWithCustomName({ fileStoreId: processedFileStoreId, customName: `${campaignName}_${suffix}`, tenantId });
+      if (!isDownloaded) {
+        setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+      }
     } catch (error) {
       setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
     }
@@ -1762,8 +1990,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 icon={"FileDownload"}
                 label={getDownloadLabel()}
                 title={getDownloadLabel() || t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
-                onClick={() => {
-                  downloadTemplate(), setShowPopUp(false);
+                onClick={async () => {
+                  await downloadTemplate();
+                  setShowPopUp(false);
                 }}
                 id={"file-download-template-popup"}
               />,

@@ -11,7 +11,21 @@ import axios from "axios";
  *
  */
 
-export const downloadExcelWithCustomName = ({ fileStoreId = null, customName = null }) => {
+const normalizeToken = (value) => {
+  if (!value || typeof value !== "string") return value;
+  return value.replace(/^"|"$/g, "");
+};
+
+const getAuthToken = () => {
+  return (
+    normalizeToken(Digit.UserService.getUser()?.["access_token"]) ||
+    normalizeToken(window?.localStorage?.getItem("Employee.token")) ||
+    normalizeToken(window?.localStorage?.getItem("Citizen.token")) ||
+    normalizeToken(window?.localStorage?.getItem("token"))
+  );
+};
+
+export const downloadExcelWithCustomName = async ({ fileStoreId = null, customName = null, tenantId = null }) => {
   const downloadExcel = (blob, fileName) => {
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -23,24 +37,32 @@ export const downloadExcelWithCustomName = ({ fileStoreId = null, customName = n
   };
 
   if (fileStoreId) {
-    axios
-      .get("/filestore/v1/files/id", {
+    try {
+      const authToken = getAuthToken();
+      const res = await axios.get("/filestore/v1/files/id", {
         responseType: "arraybuffer",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          "auth-token": Digit.UserService.getUser()?.["access_token"],
+          ...(authToken ? { "auth-token": authToken } : {}),
         },
         params: {
-          tenantId: Digit.ULBService.getCurrentTenantId(),
+          tenantId: tenantId || Digit.ULBService.getCurrentTenantId(),
           fileStoreId: fileStoreId,
         },
-      })
-      .then(async (res) => {
-        downloadExcel(
-          new Blob([res.data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
-          customName ? customName : "download"
-        );
       });
+
+      downloadExcel(
+        new Blob([res.data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
+        customName ? customName : "download"
+      );
+
+      return true;
+    } catch (error) {
+      console.error("Error downloading excel file:", error);
+      return false;
+    }
   }
+
+  return false;
 };
