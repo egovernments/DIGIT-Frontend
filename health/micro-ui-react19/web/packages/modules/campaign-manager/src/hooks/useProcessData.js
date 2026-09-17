@@ -7,6 +7,16 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
         error: {},
     };
     let response;
+    const locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || Digit?.Utils?.getDefaultLanguage();
+    const user = Digit.UserService.getUser();
+    const userInfo = user?.info || user?.userInfo || {};
+    const requestInfo = {
+        apiId: "Rainmaker",
+        authToken: user?.access_token,
+        msgId: `${Date.now()}|${locale}`,
+        userInfo,
+        plainAccessRequest: {},
+    };
     try {
         // For unified-console-validation and attendanceRegisterValidation, use different API and referenceId instead of campaignId
         const isUnifiedConsole = type === "unified-console-validation";
@@ -21,11 +31,20 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
         };
 
         if (useExcelIngestion) { //TODO CHECK
-            resourceDetails.locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || Digit?.Utils?.getDefaultLanguage();
+            resourceDetails.locale = locale;
             if (type === "attendanceRegisterAttendee-validation") {
                 resourceDetails.type = "attendanceRegisterAttendee-validation";
-                resourceDetails.referenceId = additionalDetails?.registerId || id;
-                resourceDetails.referenceType = "attendanceRegister";
+                const campaignId = additionalDetails?.campaignId;
+                const registerId = additionalDetails?.registerId;
+                const isCampaignScopedValidation = !!campaignId && id === campaignId;
+
+                if (isCampaignScopedValidation) {
+                    resourceDetails.referenceId = campaignId;
+                    resourceDetails.referenceType = "campaign";
+                } else {
+                    resourceDetails.referenceId = registerId || id;
+                    resourceDetails.referenceType = "attendanceRegister";
+                }
             } else if (type === "attendanceRegister-validation") {
                 resourceDetails.type = "attendanceRegister-validation";
                 resourceDetails.referenceId = id;
@@ -45,6 +64,7 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
         const responseTemp = await Digit.CustomService.getResponse({
             url: apiUrl,
             body: {
+                RequestInfo: useExcelIngestion ? requestInfo : undefined,
                 ResourceDetails: resourceDetails,
             },
         });
@@ -103,6 +123,7 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
                             limit: 5,
                             offset: 0,
                         },
+                        RequestInfo: requestInfo,
                     },
                 });
                 status = searchResponse?.ProcessingDetails?.[0]?.status;

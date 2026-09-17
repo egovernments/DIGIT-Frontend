@@ -225,6 +225,12 @@ const MapUsersToRegistersScreen = () => {
     );
   };
 
+  const handleEditBulkAttendance = () => {
+    navigate(
+      `/${window.contextPath}/employee/campaign/bulk-attendance-upload?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+    );
+  };
+
   const handleDeleteRegister = (register) => {
     setDeletePopup(register);
   };
@@ -389,14 +395,17 @@ const MapUsersToRegistersScreen = () => {
       {/* ── Search Card (contains page heading + filters) ── */}
       <Card style={{ marginBottom: "1.5rem" }}>
         {/* Campaign chip + users alert */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
           {campaignName && <TagComponent campaignName={campaignName} />}
+            <Button
+              label={t(I18N_KEYS.COMMON.HCM_EDIT_BULK_ATTENDANCE)}
+              variation="secondary"
+              size="large"
+              icon="XlsxFile"
+              onClick={handleEditBulkAttendance}
+              isDisabled={!filteredRegisters?.length}
+              type="button"
+            />
         </div>
 
       <div className="map-users-heading">
@@ -571,5 +580,23 @@ const MapUsersToRegistersScreen = () => {
     </div>
   );
 };
+
+const labelStyle = {
+  fontSize: "0.8125rem",
+  fontWeight: "600",
+  color: "#0b0c0c",
+};
+
+const inputStyle = {
+  padding: "0.5rem 0.75rem",
+  border: "1px solid #adb5bd",
+  borderRadius: "4px",
+  fontSize: "0.875rem",
+  color: "#0b0c0c",
+  background: "#fff",
+  outline: "none",
+  boxSizing: "border-box",
+};
+
 
 export default MapUsersToRegistersScreen;
