@@ -1432,7 +1432,11 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         props?.props?.campaignData?.additionalDetails?.localityCode ||
         props?.props?.campaignData?.additionalDetails?.boundaryCode ||
         props?.props?.campaignData?.boundaryCode;
-      const hierarchyType = "ADMIN";
+      const hierarchyType =
+        searchParams.get("hierarchyType") ||
+        params?.hierarchyType ||
+        props?.props?.campaignData?.hierarchyType ||
+        "ADMIN";
 
       const requestBulkTemplate = async () => {
         const response = await Digit.CustomService.getResponse({
