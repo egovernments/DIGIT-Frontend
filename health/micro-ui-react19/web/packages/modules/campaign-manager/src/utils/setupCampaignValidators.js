@@ -473,6 +473,38 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
         return false;
       }
 
+      // The delivery strategies this campaign type offers, each with its own label. Absent for
+      // campaign types that do not use them.
+      const deliveryMethodMeta = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.deliveryConfig?.deliveryMethods;
+
+      /**
+       * Build the message naming the delivery condition that needs fixing.
+       *
+       * Two wordings are needed because a delivery means different things depending on the campaign
+       * type. A cycle campaign locates a condition by cycle and delivery number, which is what its
+       * screen shows. A campaign using delivery strategies has tabs named after the strategies and
+       * nothing called "cycle 1 delivery 2", so its message has to name the strategy instead - the
+       * label is read from the campaign type, the same source the tabs are labelled from, so the
+       * message and the tab always agree.
+       *
+       * @param {string} cycleKey    message for a delivery belonging to a cycle
+       * @param {string} strategyKey message for a delivery representing a delivery strategy
+       */
+      const describeRule = (cycleKey, strategyKey, cycle, delivery, rule) => {
+        if (!delivery?.deliveryMethod) {
+          return t(cycleKey, {
+            CONDITION_NO: rule?.ruleKey,
+            DELIVERY_NO: delivery?.deliveryIndex,
+            CYCLE_NO: cycle?.cycleIndex,
+          });
+        }
+        const meta = Array.isArray(deliveryMethodMeta) ? deliveryMethodMeta.find((m) => m?.code === delivery.deliveryMethod) : null;
+        return t(strategyKey, {
+          STRATEGY: t(meta?.i18nKey || delivery.deliveryMethod),
+          CONDITION_NO: rule?.ruleKey,
+        });
+      };
+
       // Validate that all attribute fields are filled
       let attributeFieldsEmpty = false;
       let attributeErrorMessage = "";
@@ -500,32 +532,38 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
               // Determine if there's an error
               if (isAttributeEmpty || isOperatorEmpty) {
                 attributeFieldsEmpty = true;
-                attributeErrorMessage = t("CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_ERROR", {
-                  CONDITION_NO: rule?.ruleKey,
-                  DELIVERY_NO: delivery?.deliveryIndex,
-                  CYCLE_NO: cycle?.cycleIndex,
-                });
+                attributeErrorMessage = describeRule(
+                  "CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_ERROR",
+                  "CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_STRATEGY_ERROR",
+                  cycle,
+                  delivery,
+                  rule
+                );
                 break;
               } else if (isRangeOperator) {
                 // For range operator, both from and to must be filled
                 if (isFromEmpty || isToEmpty) {
                   attributeFieldsEmpty = true;
-                  attributeErrorMessage = t("CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_ERROR", {
-                    CONDITION_NO: rule?.ruleKey,
-                    DELIVERY_NO: delivery?.deliveryIndex,
-                    CYCLE_NO: cycle?.cycleIndex,
-                  });
+                  attributeErrorMessage = describeRule(
+                    "CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_ERROR",
+                    "CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_STRATEGY_ERROR",
+                    cycle,
+                    delivery,
+                    rule
+                  );
                   break;
                 }
               } else {
                 // For non-range operators, value must be filled
                 if (isValueEmpty) {
                   attributeFieldsEmpty = true;
-                  attributeErrorMessage = t("CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_ERROR", {
-                    CONDITION_NO: rule?.ruleKey,
-                    DELIVERY_NO: delivery?.deliveryIndex,
-                    CYCLE_NO: cycle?.cycleIndex,
-                  });
+                  attributeErrorMessage = describeRule(
+                    "CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_ERROR",
+                    "CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_STRATEGY_ERROR",
+                    cycle,
+                    delivery,
+                    rule
+                  );
                   break;
                 }
               }
@@ -551,11 +589,13 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
           for (const rule of delivery.deliveryRules || []) {
             if (!rule.products || rule.products.length === 0) {
               productValidationFailed = true;
-              productErrorMessage = t("CAMPAIGN_SUMMARY_PRODUCT_MISSING_ERROR", {
-                CONDITION_NO: rule?.ruleKey,
-                DELIVERY_NO: delivery?.deliveryIndex,
-                CYCLE_NO: cycle?.cycleIndex,
-              });
+              productErrorMessage = describeRule(
+                "CAMPAIGN_SUMMARY_PRODUCT_MISSING_ERROR",
+                "CAMPAIGN_SUMMARY_PRODUCT_MISSING_STRATEGY_ERROR",
+                cycle,
+                delivery,
+                rule
+              );
               break;
             }
           }
