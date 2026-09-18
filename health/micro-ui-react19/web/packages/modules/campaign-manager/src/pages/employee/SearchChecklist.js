@@ -32,7 +32,7 @@ const SearchChecklist = () => {
   const createNewChecklist = () => {
     localStorage.removeItem("questions");
     navigate(
-      `/${window.contextPath}/employee/campaign/checklist/create?checklistType=${list?.list}&campaignName=${stateData?.name}&role=${code?.code}&campaignType=${stateData?.campaignType}`
+      `/${window.contextPath}/employee/campaign/checklist/create?checklistType=${list?.list}&campaignName=${stateData?.name}&role=${code?.code}&campaignType=${stateData?.campaignType}&campaignId=${id}&campaignNumber=${campaignNumber || ""}`
     );
     const navEvent1 = new PopStateEvent("popstate");
     window.dispatchEvent(navEvent1);

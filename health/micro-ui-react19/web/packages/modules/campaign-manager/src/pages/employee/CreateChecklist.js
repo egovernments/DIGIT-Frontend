@@ -34,6 +34,24 @@ const CreateChecklist = () => {
   const rlTranslated = t(`${roleLocal}`);
   const campaignName = searchParams.get("campaignName");
   const campaignNumber = searchParams.get("campaignNumber");
+  const campaignSearchCriteria = {
+    url: "/project-factory/v1/project-type/search",
+    body: {
+      CampaignDetails: campaignNumber
+        ? { tenantId, campaignNumber }
+        : campaignId
+        ? { tenantId, ids: [campaignId] }
+        : { tenantId },
+    },
+    config: {
+      enabled: !!campaignNumber || !!campaignId,
+      select: (data) => data?.CampaignDetails?.[0],
+      staleTime: 0,
+      cacheTime: 0,
+    },
+  };
+  const { data: campaignIdentityData } = Digit.Hooks.useCustomAPIHook(campaignSearchCriteria);
+  const effectiveCampaignName = campaignIdentityData?.campaignName || campaignName;
   let module = `hcm-checklist-${campaignNumber}`;
   const [showPopUp, setShowPopUp] = useState(false);
   const [tempFormData, setTempFormData] = useState([]);
@@ -63,8 +81,12 @@ const CreateChecklist = () => {
   let processedData = [];
 
   useEffect(() => {
-    setServiceCode(`${campaignName}.${checklistType}.${role}`);
-  }, [campaignName, checklistType, role]);
+    if (!effectiveCampaignName || !checklistType || !role) {
+      setServiceCode(null);
+      return;
+    }
+    setServiceCode(`${effectiveCampaignName}.${checklistType}.${role}`);
+  }, [effectiveCampaignName, checklistType, role]);
 
   const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
@@ -238,13 +260,13 @@ const CreateChecklist = () => {
     // Add the new static entries to localization data
     local.push(
       {
-        code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
+        code: `${effectiveCampaignName}.${checklistTypeTemp}.${roleTemp}`,
         locale: locale,
         message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
         module: module,
       },
       {
-        code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
+        code: `${effectiveCampaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
         locale: locale,
         message: helpText || "",
         module: module,
@@ -287,7 +309,7 @@ const CreateChecklist = () => {
       if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
 
       // Format the final string with the code (generate for all questions)
-      let formattedString = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${code}`;
+      let formattedString = `${effectiveCampaignName}.${checklistTypeTemp}.${roleTemp}.${code}`;
 
       // Only add message with numbering for active questions
       if (question.isActive) {
@@ -309,7 +331,7 @@ const CreateChecklist = () => {
           const transformedString = upperCaseString.replace(/ /g, "_");
 
           if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
-          let formattedStringTemp = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${transformedString}`;
+          let formattedStringTemp = `${effectiveCampaignName}.${checklistTypeTemp}.${roleTemp}.${transformedString}`;
 
           // Generate codes for options regardless of question's active status
           const obj = {
@@ -479,7 +501,7 @@ const CreateChecklist = () => {
     let checklistTypeTemp = LocalisationCodeUpdate(checklistType);
     let roleTemp = LocalisationCodeUpdate(role);
     if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
-    let code_of_checklist = `${campaignName}.${checklistTypeTemp}.${roleTemp}`;
+    let code_of_checklist = `${effectiveCampaignName}.${checklistTypeTemp}.${roleTemp}`;
     return {
       tenantId: tenantId,
       // code: role,

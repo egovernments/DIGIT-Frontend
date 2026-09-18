@@ -172,6 +172,7 @@ const CampaignDetails = () => {
     isSupervisionAndReportingAdministratorOnly ||
     isWorkforceAndAttendanceAdministratorOnly ||
     isCampaignMappingAndMicroplanningAdministratorOnly;
+  const canEditDeliveryDates = !isRestrictedCampaignDetailsView || isCampaignConfigurationAdministratorOnly;
   const shouldFetchChecklistConfiguration =
     !isCampaignConfigurationAdministratorOnly &&
     !isMobileApplicationConfigurationAdministratorOnly &&
@@ -848,7 +849,7 @@ const CampaignDetails = () => {
             alignSelf: "self-end",
           }}
           onClick={() => {
-            if (isRestrictedCampaignDetailsView) return;
+            if (!canEditDeliveryDates) return;
             if (campaignData?.status === "created") {
               navigate(
                 `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${campaignData?.id}&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`
@@ -861,7 +862,7 @@ const CampaignDetails = () => {
           }}
           id={"campaign-details-edit-campaign-dates"}
         >
-          {!isRestrictedCampaignDetailsView && <Edit width={"18"} height={"18"} />}
+          {canEditDeliveryDates && <Edit width={"18"} height={"18"} />}
         </div>
       </div>
       <div className="detail-desc">{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_VIEW_DETAILS_DESCRIPTION)}</div>
