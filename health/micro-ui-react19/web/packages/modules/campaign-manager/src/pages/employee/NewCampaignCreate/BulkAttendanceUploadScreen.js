@@ -155,7 +155,11 @@ const BulkAttendanceUploadScreen = () => {
       type: BULK_TEMPLATE_TYPE,
       fileStoreId: filestoreId,
       filename: uploadedData?.uploadedFile?.[0]?.filename,
-      hierarchyType: campaignData?.hierarchyType || "ADMIN",
+      hierarchyType:
+        searchParams.get("hierarchyType") ||
+        params?.hierarchyType ||
+        campaignData?.hierarchyType ||
+        "ADMIN",
       parentResourceId: null,
     };
     setLoader(true);
