@@ -174,6 +174,7 @@ const CampaignDetails = () => {
     isSupervisionAndReportingAdministratorOnly ||
     isWorkforceAndAttendanceAdministratorOnly ||
     isCampaignMappingAndMicroplanningAdministratorOnly;
+  const canEditDeliveryDates = !isRestrictedCampaignDetailsView || isCampaignConfigurationAdministratorOnly;
   const shouldFetchChecklistConfiguration =
     !isCampaignConfigurationAdministratorOnly &&
     !isMobileApplicationConfigurationAdministratorOnly &&
@@ -880,7 +881,7 @@ const CampaignDetails = () => {
           className="hover"
           style={{ height: "20px", width: "20px",display:"flex",alignItems:"center",justifyContent:"center",marginTop:"6px" }}
           onClick={() => {
-            if (isRestrictedCampaignDetailsView) return;
+            if (!canEditDeliveryDates) return;
             if (campaignData?.status === "created") {
               navigate(
                 `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${campaignData?.id}&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`
@@ -893,7 +894,7 @@ const CampaignDetails = () => {
           }}
           id={"campaign-details-edit-campaign-dates"}
         >
-          {!isRestrictedCampaignDetailsView && <Edit width={"18"} height={"18"} />}
+          {canEditDeliveryDates && <Edit width={"18"} height={"18"} />}
         </div>
         <span style={{ color: "#D6D5D4", fontWeight: "300", fontSize: "32px", lineHeight: 1 }}>|</span>
         <div className="dates" style={{fontSize:"16px"}}>{t(campaignData?.hierarchyType)}</div>

@@ -15,6 +15,24 @@ const UpdateChecklist = () => {
   const searchParams = new URLSearchParams(location.search);
   const campaignName = searchParams.get("campaignName");
   const campaignNumber = searchParams.get("campaignNumber");
+  const campaignSearchCriteria = {
+    url: "/project-factory/v1/project-type/search",
+    body: {
+      CampaignDetails: campaignNumber
+        ? { tenantId, campaignNumber }
+        : campaignId
+        ? { tenantId, ids: [campaignId] }
+        : { tenantId },
+    },
+    config: {
+      enabled: !!campaignNumber || !!campaignId,
+      select: (data) => data?.CampaignDetails?.[0],
+      staleTime: 0,
+      cacheTime: 0,
+    },
+  };
+  const { data: campaignIdentityData } = Digit.Hooks.useCustomAPIHook(campaignSearchCriteria);
+  const effectiveCampaignName = campaignIdentityData?.campaignName || campaignName;
   const module = `hcm-checklist-${campaignNumber}`;
   const role = searchParams.get("role");
   const rlt = searchParams.get("role");
@@ -28,7 +46,7 @@ const UpdateChecklist = () => {
   const [config, setConfig] = useState(null);
   const [checklistTypeCode, setChecklistTypeCode] = useState(null);
   const [roleCode, setRoleCode] = useState(null);
-  const serviceCode = `${campaignName}.${checklistType}.${role}`;
+  const serviceCode = `${effectiveCampaignName}.${checklistType}.${role}`;
   const [searching, setSearching] = useState(true);
   const [viewData, setViewData] = useState(null);
   let locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
@@ -207,13 +225,13 @@ const UpdateChecklist = () => {
     // Add the new static entries to localization data
     local.push(
       {
-        code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
+        code: `${effectiveCampaignName}.${checklistTypeTemp}.${roleTemp}`,
         locale: locale,
         message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
         module: module,
       },
       {
-        code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
+        code: `${effectiveCampaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
         locale: locale,
         message: helpText || ".",
         module: module,
@@ -255,7 +273,7 @@ const UpdateChecklist = () => {
       if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
 
       // Format the final string with the code (generate for all questions)
-      let formattedString = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${code}`;
+      let formattedString = `${effectiveCampaignName}.${checklistTypeTemp}.${roleTemp}.${code}`;
 
       // Only add message with numbering for active questions
       if (question.isActive) {
@@ -277,7 +295,7 @@ const UpdateChecklist = () => {
           const transformedString = upperCaseString.replace(/ /g, "_");
 
           if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
-          let formattedStringTemp = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${transformedString}`;
+          let formattedStringTemp = `${effectiveCampaignName}.${checklistTypeTemp}.${roleTemp}.${transformedString}`;
 
           // Generate codes for options regardless of question's active status
           const obj = {
@@ -463,7 +481,7 @@ const UpdateChecklist = () => {
     let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
     let roleTemp = role.toUpperCase().replace(/ /g, "_");
     if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
-    let code_of_checklist = `${campaignName}.${checklistTypeTemp}.${roleTemp}`;
+    let code_of_checklist = `${effectiveCampaignName}.${checklistTypeTemp}.${roleTemp}`;
     return {
       tenantId: tenantId,
       // code: role,

@@ -26,6 +26,11 @@ const MyCampaignNew = ({ showDashboardLink }) => {
     "CAMPAIGN_CONFIGURATION_ADMINISTRATOR",
   ];
   const shouldUseAssignmentScopedCampaigns = Digit.Utils.didEmployeeHasAtleastOneRole(ASSIGNMENT_SCOPED_CAMPAIGN_ROLES);
+  const ASSIGNED_SCOPE_STATES = {
+    LOADING: "loading",
+    READY: "ready",
+    STALE: "stale",
+  };
 
   const [config, setConfig] = useState(null);
   const [selectedTabIndex, setSelectedTabIndex] = useState(null);
@@ -89,6 +94,23 @@ const MyCampaignNew = ({ showDashboardLink }) => {
         return;
       }
 
+      let previousScope = null;
+      try {
+        previousScope = JSON.parse(sessionStorage.getItem("HCM_ASSIGNED_CAMPAIGN_SCOPE") || "null");
+      } catch (error) {
+        previousScope = null;
+      }
+
+      sessionStorage.setItem(
+        "HCM_ASSIGNED_CAMPAIGN_SCOPE",
+        JSON.stringify({
+          ...(previousScope || {}),
+          state: ASSIGNED_SCOPE_STATES.LOADING,
+          sourceUserUuid: userUuid,
+          lastSyncedAt: Date.now(),
+        })
+      );
+
       if (isProjectStaffLoading || isAssignedProjectsLoading) {
         return;
       }
@@ -96,7 +118,14 @@ const MyCampaignNew = ({ showDashboardLink }) => {
       if (assignedProjectIds.length === 0) {
         sessionStorage.setItem(
           "HCM_ASSIGNED_CAMPAIGN_SCOPE",
-          JSON.stringify({ projectIds: assignedProjectIds, campaignNumbers: [], campaignIds: [] })
+          JSON.stringify({
+            state: ASSIGNED_SCOPE_STATES.READY,
+            sourceUserUuid: userUuid,
+            projectIds: assignedProjectIds,
+            campaignNumbers: [],
+            campaignIds: [],
+            lastSyncedAt: Date.now(),
+          })
         );
         if (!cancelled) setIsAssignmentScopeReady(true);
         return;
@@ -111,6 +140,20 @@ const MyCampaignNew = ({ showDashboardLink }) => {
               entry?.referenceId,
               entry?.projectNumber,
               entry?.additionalDetails?.campaignNumber,
+              entry?.additionalDetails?.referenceID,
+              entry?.additionalDetails?.referenceId,
+            ])
+            .filter(Boolean)
+        ),
+      ];
+      const staffDerivedCampaignIds = [
+        ...new Set(
+          projectStaff
+            .flatMap((entry) => [
+              entry?.campaignId,
+              entry?.referenceID,
+              entry?.referenceId,
+              entry?.additionalDetails?.campaignId,
               entry?.additionalDetails?.referenceID,
               entry?.additionalDetails?.referenceId,
             ])
@@ -164,20 +207,42 @@ const MyCampaignNew = ({ showDashboardLink }) => {
 
       const resolvedCampaignIds = [...new Set(scopedCampaigns.map((campaign) => campaign?.id).filter(Boolean))];
       const resolvedCampaignNumbers = [...new Set(scopedCampaigns.map((campaign) => campaign?.campaignNumber).filter(Boolean))];
+      const finalCampaignIds = [...new Set([...resolvedCampaignIds, ...staffDerivedCampaignIds])];
+      const finalCampaignNumbers = [...new Set([...resolvedCampaignNumbers, ...staffDerivedCampaignNumbers])];
 
       sessionStorage.setItem(
         "HCM_ASSIGNED_CAMPAIGN_SCOPE",
         JSON.stringify({
+          state: ASSIGNED_SCOPE_STATES.READY,
+          sourceUserUuid: userUuid,
           projectIds: assignedProjectIds,
-          campaignNumbers: [...new Set(resolvedCampaignNumbers)],
-          campaignIds: [...new Set(resolvedCampaignIds)],
+          campaignNumbers: finalCampaignNumbers,
+          campaignIds: finalCampaignIds,
+          lastSyncedAt: Date.now(),
         })
       );
 
       if (!cancelled) setIsAssignmentScopeReady(true);
     };
 
-    hydrateAssignmentScope();
+    hydrateAssignmentScope().catch(() => {
+      let staleScope = null;
+      try {
+        staleScope = JSON.parse(sessionStorage.getItem("HCM_ASSIGNED_CAMPAIGN_SCOPE") || "null");
+      } catch (error) {
+        staleScope = null;
+      }
+      sessionStorage.setItem(
+        "HCM_ASSIGNED_CAMPAIGN_SCOPE",
+        JSON.stringify({
+          ...(staleScope || {}),
+          state: ASSIGNED_SCOPE_STATES.STALE,
+          sourceUserUuid: userUuid,
+          lastSyncedAt: Date.now(),
+        })
+      );
+      if (!cancelled) setIsAssignmentScopeReady(true);
+    });
 
     return () => {
       cancelled = true;

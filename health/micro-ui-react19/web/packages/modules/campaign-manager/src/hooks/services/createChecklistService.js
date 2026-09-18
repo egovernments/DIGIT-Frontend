@@ -10,8 +10,28 @@ const getServiceRequestContextCandidates = () => {
 const isLocalProxyCannotPost = (error) => {
   const responseData = error?.response?.data;
   if (typeof responseData === "string") {
-    return responseData.includes("Cannot POST");
+    return responseData.includes("Cannot POST") || responseData.includes("Cannot GET");
   }
+  return false;
+};
+
+const shouldTryNextContext = (error) => {
+  const status = error?.response?.status;
+
+  // Transport-level failures can be retried against alternate context paths.
+  if (!error?.response) return true;
+  if (isLocalProxyCannotPost(error)) return true;
+
+  // Path/method mismatch in one context path can succeed in the other.
+  if (status === 404 || status === 405) return true;
+
+  // Do not retry validation/authz/client errors across contexts.
+  if (status === 401 || status === 403) return false;
+  if (status >= 400 && status < 500) return false;
+
+  // Retry server-side temporary failures once on the alternate context.
+  if (status >= 500) return true;
+
   return false;
 };
 
@@ -31,7 +51,7 @@ const createChecklistService = async (req, tenantId) => {
         return { success: true, data: response };
       } catch (error) {
         lastError = error;
-        if (!isLocalProxyCannotPost(error)) break;
+        if (!shouldTryNextContext(error)) break;
       }
     }
 

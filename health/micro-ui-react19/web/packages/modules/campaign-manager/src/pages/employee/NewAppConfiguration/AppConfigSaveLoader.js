@@ -7,6 +7,37 @@ import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
+const toNumber = (value, defaultValue = 0) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : defaultValue;
+};
+
+const getLastModifiedTime = (record) => {
+  return toNumber(record?.auditDetails?.lastModifiedTime, 0);
+};
+
+const getMatchingFormConfigRecords = (records, campaignNumber, flowModule) => {
+  return (records || []).filter((record) => {
+    return record?.data?.project === campaignNumber && record?.data?.name === flowModule;
+  });
+};
+
+const selectLatestFormConfigRecord = (records) => {
+  const sorted = [...records].sort((a, b) => {
+    const versionDiff = toNumber(b?.data?.version, 0) - toNumber(a?.data?.version, 0);
+    if (versionDiff !== 0) return versionDiff;
+
+    const auditDiff = getLastModifiedTime(b) - getLastModifiedTime(a);
+    if (auditDiff !== 0) return auditDiff;
+
+    const idA = String(a?.id || "");
+    const idB = String(b?.id || "");
+    return idB.localeCompare(idA);
+  });
+
+  return sorted[0] || null;
+};
+
 const AppConfigSaveLoader = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -54,24 +85,28 @@ const AppConfigSaveLoader = () => {
           },
         });
 
-        const fullData = response?.mdms && response?.mdms?.map((item) => item.data);
-        
-        const transformedData = transformMdmsToAppConfig(fullData, appConfigResponse.mdms?.[0].data?.version, appConfigResponse.mdms?.[0]?.data?.flows);
+        const fullData = response?.mdms?.map((item) => item?.data)?.filter(Boolean) || [];
+
+        const matchingRecords = getMatchingFormConfigRecords(appConfigResponse?.mdms || [], campaignNumber, flowModule);
+        const selectedRecord = selectLatestFormConfigRecord(matchingRecords);
+
         // Step 3: Update the existing config's mdms property with transformedData
-        if (appConfigResponse?.mdms && appConfigResponse.mdms.length > 0) {
-          const existingConfig = appConfigResponse.mdms?.[0].data;
+        if (selectedRecord?.data && fullData.length > 0) {
+          const existingConfig = selectedRecord.data;
+          const currentVersion = toNumber(existingConfig?.version, 0);
+          const transformedData = transformMdmsToAppConfig(fullData, currentVersion, existingConfig?.flows);
 
           // Update the mdms property with transformed data
           const updatedConfig = {
             ...existingConfig,
             flows: transformedData,
-            version: existingConfig?.version + 1,
+            version: currentVersion + 1,
           };
 
           // Update the MDMS record
           const updatePayload = {
             Mdms: {
-              ...appConfigResponse.mdms?.[0],
+              ...selectedRecord,
               data: updatedConfig,
             },
           };
@@ -81,13 +116,40 @@ const AppConfigSaveLoader = () => {
             body: updatePayload,
           });
 
+          const verifyResponse = await Digit.CustomService.getResponse({
+            url: `/${mdmsContext}/v2/_search`,
+            body: {
+              MdmsCriteria: {
+                tenantId: tenantId,
+                schemaCode: "HCM-ADMIN-CONSOLE.FormConfig",
+                filters: {
+                  project: campaignNumber,
+                  name: flowModule,
+                },
+                limit: 1000,
+                isActive: true,
+              },
+            },
+          });
+
+          const verifiedRecord = (verifyResponse?.mdms || []).find((row) => row?.id === selectedRecord?.id);
+          const expectedVersion = currentVersion + 1;
+          const verifiedVersion = toNumber(verifiedRecord?.data?.version, -1);
+          const isVersionUpdated = verifiedVersion === expectedVersion;
+          const isFlowsUpdated =
+            JSON.stringify(verifiedRecord?.data?.flows || []) === JSON.stringify(updatedConfig?.flows || []);
+
+          if (!verifiedRecord || !isVersionUpdated || !isFlowsUpdated) {
+            throw new Error("APP_CONFIG_WRITE_VERIFICATION_FAILED");
+          }
+
           // Show success message and redirect after 3 seconds
           setLoaderText(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_SUBMITTED_REDIRECTING);
           setTimeout(() => {
             navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
           }, 3000);
         } else {
-          console.error("No existing FormConfig found for campaignNumber and flow");
+          console.error("No matching FormConfig found for campaignNumber and flow");
           setShowToast({ key: "error", label: "APP_CONFIG_UPDATE_FAILED" });
           // Navigate back after showing error
           setTimeout(() => {

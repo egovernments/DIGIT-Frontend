@@ -18,12 +18,30 @@ const ViewChecklist = () => {
   const rlt = searchParams.get("role");
   const projectType = searchParams.get("projectType");
   const campaignId = searchParams.get("campaignId");
+  const campaignSearchCriteria = {
+    url: "/project-factory/v1/project-type/search",
+    body: {
+      CampaignDetails: campaignNumber
+        ? { tenantId, campaignNumber }
+        : campaignId
+        ? { tenantId, ids: [campaignId] }
+        : { tenantId },
+    },
+    config: {
+      enabled: !!campaignNumber || !!campaignId,
+      select: (data) => data?.CampaignDetails?.[0],
+      staleTime: 0,
+      cacheTime: 0,
+    },
+  };
+  const { data: campaignIdentityData } = Digit.Hooks.useCustomAPIHook(campaignSearchCriteria);
+  const effectiveCampaignName = campaignIdentityData?.campaignName || campaignName;
   const roleLocal = !rlt.startsWith("ACCESSCONTROL_ROLES_ROLES_") ? "ACCESSCONTROL_ROLES_ROLES_" + rlt : rlt;
   const checklistType = searchParams.get("checklistType");
   let clt = searchParams.get("checklistType");
   const checklistTypeLocal = !clt.startsWith("HCM_CHECKLIST_TYPE_") ? "HCM_CHECKLIST_TYPE_" + clt : clt;
   const navigate = useNavigate(); // Get history object for navigation
-  const serviceCode = `${campaignName}.${checklistType}.${role}`;
+  const serviceCode = `${effectiveCampaignName}.${checklistType}.${role}`;
   const [config, setConfig] = useState(null);
   const [showPopUp, setShowPopUp] = useState(false);
   const [previewData, setPreviewData] = useState([]);

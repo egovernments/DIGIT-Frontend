@@ -39,6 +39,12 @@ const ASSIGNMENT_SCOPED_CAMPAIGN_ROLES = [
   "CAMPAIGN_CONFIGURATION_ADMINISTRATOR",
 ];
 
+const ASSIGNED_SCOPE_STATES = {
+  LOADING: "loading",
+  READY: "ready",
+  STALE: "stale",
+};
+
 const CREATOR_SCOPED_CAMPAIGN_ROLES = ["CAMPAIGN_MANAGER"];
 
 const shouldUseCreatorScopedCampaignFilter = () => {
@@ -62,7 +68,12 @@ const applyCampaignVisibilityScope = (campaignDetails) => {
     assignedScope = null;
   }
 
-  const assignedCampaignIds = assignedScope?.campaignIds || [];
+  const assignedCampaignIds = Array.isArray(assignedScope?.campaignIds) ? assignedScope.campaignIds : [];
+  const assignedCampaignNumbers = Array.isArray(assignedScope?.campaignNumbers) ? assignedScope.campaignNumbers : [];
+  const scopeState = assignedScope?.state;
+
+  // Legacy scope objects (without a state field) are treated as ready snapshots.
+  const isReadySnapshot = scopeState === ASSIGNED_SCOPE_STATES.READY || !scopeState;
 
   if (assignedCampaignIds.length > 0) {
     return {
@@ -71,10 +82,39 @@ const applyCampaignVisibilityScope = (campaignDetails) => {
     };
   }
 
-  // Explicitly force empty result set when assignment-scoped roles have no assignments.
+  if (assignedCampaignNumbers.length === 1) {
+    return {
+      ...campaignDetails,
+      campaignNumber: assignedCampaignNumbers[0],
+    };
+  }
+
+  if (scopeState === ASSIGNED_SCOPE_STATES.LOADING) {
+    // Distinguish "scope still loading" from "no assignments" with a unique sentinel.
+    return {
+      ...campaignDetails,
+      campaignNumber: "__ASSIGNED_SCOPE_LOADING__",
+    };
+  }
+
+  if (scopeState === ASSIGNED_SCOPE_STATES.STALE) {
+    return {
+      ...campaignDetails,
+      campaignNumber: "__ASSIGNED_SCOPE_STALE__",
+    };
+  }
+
+  // Explicitly force empty result set when assignment-scoped roles are ready and have no assignments.
+  if (isReadySnapshot) {
+    return {
+      ...campaignDetails,
+      campaignNumber: "__NO_ASSIGNED_CAMPAIGN__",
+    };
+  }
+
   return {
     ...campaignDetails,
-    campaignNumber: "__NO_ASSIGNED_CAMPAIGN__",
+    campaignNumber: "__ASSIGNED_SCOPE_UNKNOWN__",
   };
 };
 
@@ -524,7 +564,7 @@ export const UICustomizations = {
                 projectId: row?.projectId,
               },
               "",
-              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}&projectType=${row?.projectType}`
+              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}&projectType=${row?.projectType}&campaignNumber=${row?.campaignNumber}`
             );
             const navEvent1 = new PopStateEvent("popstate");
             window.dispatchEvent(navEvent1);
@@ -891,7 +931,7 @@ export const UICustomizations = {
                 campaignType: row?.projectType,
               },
               "",
-              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}&projectType=${row?.projectType}`
+              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}&projectType=${row?.projectType}&campaignNumber=${row?.campaignNumber}`
             );
             const navEvent1 = new PopStateEvent("popstate");
             window.dispatchEvent(navEvent1);

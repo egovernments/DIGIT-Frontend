@@ -10,8 +10,21 @@ const getServiceRequestContextCandidates = () => {
 const isLocalProxyCannotPost = (error) => {
   const responseData = error?.response?.data;
   if (typeof responseData === "string") {
-    return responseData.includes("Cannot POST");
+    return responseData.includes("Cannot POST") || responseData.includes("Cannot GET");
   }
+  return false;
+};
+
+const shouldTryNextContext = (error) => {
+  const status = error?.response?.status;
+
+  if (!error?.response) return true;
+  if (isLocalProxyCannotPost(error)) return true;
+  if (status === 404 || status === 405) return true;
+  if (status === 401 || status === 403) return false;
+  if (status >= 400 && status < 500) return false;
+  if (status >= 500) return true;
+
   return false;
 };
 
@@ -31,7 +44,7 @@ const updateChecklistService = async (req, tenantId) => {
           return { success: true, data: response };
         } catch (error) {
           lastError = error;
-          if (!isLocalProxyCannotPost(error)) break;
+          if (!shouldTryNextContext(error)) break;
         }
       }
 

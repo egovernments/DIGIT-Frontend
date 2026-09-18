@@ -1,49 +1,121 @@
 import { useQuery } from "@tanstack/react-query";
 const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
 
-const fetchServiceDefinition = async (serviceCodes, tenantId, limit) => {
+const getServiceRequestContextCandidates = () => {
+  const configured = (SERVICE_REQUEST_CONTEXT_PATH || "").replace(/^\/+|\/+$/g, "");
+  const defaults = ["health-service-request", "service-request"];
+  return [...new Set(configured ? [configured, ...defaults] : defaults)];
+};
+
+const isLocalProxyMethodFailure = (error) => {
+  const responseData = error?.response?.data;
+  if (typeof responseData !== "string") return false;
+  return responseData.includes("Cannot POST") || responseData.includes("Cannot GET");
+};
+
+const shouldTryNextContext = (error) => {
+  const status = error?.response?.status;
+  if (!error?.response) return true;
+  if (isLocalProxyMethodFailure(error)) return true;
+  if (status === 404 || status === 405) return true;
+  if (status === 401 || status === 403) return false;
+  if (status >= 400 && status < 500) return false;
+  if (status >= 500) return true;
+  return false;
+};
+
+const toChecklistTypeCode = (value = "") => String(value).replace("HCM_CHECKLIST_TYPE_", "");
+const toRoleCode = (value = "") => String(value).replace("ACCESSCONTROL_ROLES_ROLES_", "");
+
+const buildServiceCode = (campaignName, checklistType, role) => {
+  return `${campaignName}.${toChecklistTypeCode(checklistType)}.${toRoleCode(role)}`;
+};
+
+const resolveCampaignName = async ({ tenantId, campaignNumber, campaignId, fallbackCampaignName }) => {
+  if (!tenantId) return fallbackCampaignName;
   try {
-    // Second API Call: Fetch Service Definitions
-    const body = {
-      ServiceDefinitionCriteria: {
-        tenantId: tenantId,
-        code: serviceCodes,
-      },
-      includeDeleted: true,
-    };
-    // Adding pagination if limit is provided
-    if (limit) {
-      body.Pagination = { limit, offset: 0 };
+    const criteria = { tenantId };
+    if (campaignNumber) {
+      criteria.campaignNumber = campaignNumber;
+    } else if (campaignId) {
+      criteria.ids = [campaignId];
+    } else {
+      return fallbackCampaignName;
     }
-    const res = await Digit.CustomService.getResponse({
-      url: `/${SERVICE_REQUEST_CONTEXT_PATH}/service/definition/v1/_search`,
-      params: {},
-      body,
+
+    const response = await Digit.CustomService.getResponse({
+      url: "/project-factory/v1/project-type/search",
+      body: { CampaignDetails: criteria },
     });
-    return res?.ServiceDefinitions;
+
+    return response?.CampaignDetails?.[0]?.campaignName || fallbackCampaignName;
   } catch (error) {
-    console.error("Error fetching service definition:", error);
-    return [];
+    return fallbackCampaignName;
   }
 };
 
-const mergeData = (mdmsData, campaignName) => {
-  return mdmsData.map((item) => {
-    const cl_code = item.data.checklistType.replace("HCM_CHECKLIST_TYPE_", "");
-    const role_code = item.data.role.replace("ACCESSCONTROL_ROLES_ROLES_", "");
-    const serviceCode = `${campaignName}.${cl_code}.${role_code}`;
-    return serviceCode;
-  });
+const fetchServiceDefinition = async (serviceCodes, tenantId, limit) => {
+  const body = {
+    ServiceDefinitionCriteria: {
+      tenantId: tenantId,
+      code: serviceCodes,
+    },
+    includeDeleted: true,
+  };
+  if (limit) {
+    body.Pagination = { limit, offset: 0 };
+  }
+
+  const contexts = getServiceRequestContextCandidates();
+  let lastError = null;
+
+  for (const contextPath of contexts) {
+    try {
+      const res = await Digit.CustomService.getResponse({
+        url: `/${contextPath}/service/definition/v1/_search`,
+        params: {},
+        body,
+      });
+      return res?.ServiceDefinitions || [];
+    } catch (error) {
+      lastError = error;
+      if (!shouldTryNextContext(error)) break;
+    }
+  }
+
+  console.error("Error fetching service definition:", lastError);
+  return [];
 };
 
-const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessRequest, changeQueryName = "Random", state, campaignName: campaignNameProp, campaignType: campaignTypeProp, serviceDefinitionLimit, enabled = true }) => {
+const mapExpectedServiceCodes = (mdmsData, campaignName) => {
+  const expected = new Map();
+  (mdmsData || []).forEach((item) => {
+    const serviceCode = buildServiceCode(campaignName, item?.data?.checklistType, item?.data?.role);
+    expected.set(item?.id, serviceCode);
+  });
+  return expected;
+};
+
+const useMDMSServiceSearch = ({
+  url,
+  params,
+  body,
+  config = {},
+  plainAccessRequest,
+  changeQueryName = "Random",
+  state,
+  campaignName: campaignNameProp,
+  campaignType: campaignTypeProp,
+  campaignNumber: campaignNumberProp,
+  campaignId: campaignIdProp,
+  serviceDefinitionLimit,
+  enabled = true,
+}) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const isSupervisionAndReportingAdministratorOnly =
-    Digit.Utils.didEmployeeHasAtleastOneRole(["SUPERVISION_AND_REPORTING_ADMINISTRATOR"]) &&
-    !Digit.Utils.didEmployeeHasAtleastOneRole(["CAMPAIGN_MANAGER"]);
   const searchParams = new URLSearchParams(location.search);
-  // Using props if provided, otherwise fallback to URL params
   const campaignName = campaignNameProp || searchParams.get("name");
+  const campaignNumber = campaignNumberProp || searchParams.get("campaignNumber");
+  const campaignId = campaignIdProp || searchParams.get("campaignId");
   const campaignType = campaignTypeProp || searchParams.get("projectType");
   const updatedMdmsCriteria = body?.MdmsCriteria;
   updatedMdmsCriteria.filters = { ...body?.MdmsCriteria?.filters, 
@@ -60,32 +132,34 @@ const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessReque
   updatedMdmsCriteria.offset = pageOffset;
   const fetchMDMSData = async () => {
     try {
-      // First API Call: Fetch MDMS Data
       const mdmsResponse = await Digit.CustomService.getResponse({
         url: url,
         body: { MdmsCriteria: updatedMdmsCriteria },
         params: params,
       });
 
-      // Second API Call: Merge MDMS Data with Service Definition
-      const final = mergeData(mdmsResponse?.mdms,campaignName);
-      const serviceData = isSupervisionAndReportingAdministratorOnly
-        ? []
-        : await fetchServiceDefinition(final, tenantId, serviceDefinitionLimit);
-
-
-      // Return a promise that resolves after both API calls are complete
-      return new Promise((resolve) => {
-        // Once the second call (`mergeData`) is done, resolve the final data
-
-        // Merge the MDMS data with the service data
-        const mergedData = mdmsResponse?.mdms.map((alldata) => ({
-          ...alldata,
-          ServiceRequest: serviceData?.filter((e) => e?.code?.includes(alldata?.data?.checklistType) && e?.code?.includes(alldata?.data?.role)),
-        }));
-
-        resolve(mergedData);
+      const effectiveCampaignName = await resolveCampaignName({
+        tenantId,
+        campaignNumber,
+        campaignId,
+        fallbackCampaignName: campaignName,
       });
+
+      const expectedCodeByMdmsId = mapExpectedServiceCodes(mdmsResponse?.mdms, effectiveCampaignName);
+      const serviceCodes = [...new Set([...expectedCodeByMdmsId.values()].filter(Boolean))];
+      const serviceData = await fetchServiceDefinition(serviceCodes, tenantId, serviceDefinitionLimit);
+      const serviceByCode = new Map((serviceData || []).map((serviceDef) => [serviceDef?.code, serviceDef]));
+
+      const mergedData = (mdmsResponse?.mdms || []).map((item) => {
+        const expectedCode = expectedCodeByMdmsId.get(item?.id);
+        const matchedService = expectedCode ? serviceByCode.get(expectedCode) : null;
+        return {
+          ...item,
+          ServiceRequest: matchedService ? [matchedService] : [],
+        };
+      });
+
+      return mergedData;
     } catch (error) {
       console.error("Error fetching MDMS data:", error);
       return [];
@@ -93,9 +167,9 @@ const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessReque
   };
 
   const { data: mdmsData, isFetching, refetch, isLoading: isMDMSLoading, error: mdmsError } = useQuery({
-    queryKey:["mdmsData", tenantId, updatedMdmsCriteria, campaignName, pageLimit, pageOffset],
-    queryFn:fetchMDMSData,
-    gcTime:0,
+    queryKey: ["mdmsData", tenantId, updatedMdmsCriteria, campaignName, campaignNumber, campaignId, serviceDefinitionLimit],
+    queryFn: fetchMDMSData,
+    gcTime: 0,
     enabled,
   });
 
