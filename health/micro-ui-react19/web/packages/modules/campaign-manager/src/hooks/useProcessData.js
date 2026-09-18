@@ -18,10 +18,11 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
         plainAccessRequest: {},
     };
     try {
-        // For unified-console-validation and attendanceRegisterValidation, use different API and referenceId instead of campaignId
+        // Bulk attendance validation must use project-factory process flow.
+        // Keep excel-ingestion path only for unified-console validation.
         const isUnifiedConsole = type === "unified-console-validation";
         const isAttendanceRegister = type === "attendanceRegister-validation" || type === "attendanceRegisterAttendee-validation";
-        const useExcelIngestion = isUnifiedConsole || isAttendanceRegister;
+        const useExcelIngestion = isUnifiedConsole;
         const resourceDetails = {
             type,
             hierarchyType: hierarchyType,
@@ -64,7 +65,7 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
         const responseTemp = await Digit.CustomService.getResponse({
             url: apiUrl,
             body: {
-                RequestInfo: useExcelIngestion ? requestInfo : undefined,
+                RequestInfo: requestInfo,
                 ResourceDetails: resourceDetails,
             },
         });
@@ -92,13 +93,13 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
     const maxTime = baseTimeOut?.baseTimeout?.[0]?.maxTime;
     let retryInterval = 2000;
 
-    // For unified-console and attendanceRegister, use different search API and response structure
+    // For unified-console, use excel-ingestion search API and response structure.
+    // Attendance/bulk attendance polling should always happen via project-factory resource-details search.
     const isUnifiedConsole = type === "unified-console-validation";
-    const isAttendanceRegister = type === "attendanceRegister-validation" || type === "attendanceRegisterAttendee-validation";
-    const useExcelIngestion = isUnifiedConsole || isAttendanceRegister;
+    const useExcelIngestion = isUnifiedConsole;
     const searchUrl = useExcelIngestion
         ? "/excel-ingestion/v1/data/process/_search"
-        : "/project-factory/v1/data/_search";
+        : "/project-factory/v1/resource-details/_search";
 
     // Get the ID from the response - different field for excel-ingestion 
     const processId = useExcelIngestion
@@ -107,9 +108,10 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
 
     await new Promise((resolve) => setTimeout(resolve, retryInterval));
 
-    // Retry until a response is received
-    // For unified-console, status can be "pending" instead of "inprogress"
-    const isStatusPending = (s) => s === "inprogress" || s === "pending";
+    // Retry until a terminal status is received.
+    // Project-factory bulk flow can return creating/toCreate while processing.
+    const inProgressStatuses = ["inprogress", "pending", "creating", "toCreate", "created", "processing"];
+    const isStatusPending = (s) => inProgressStatuses.includes(s);
 
     while (isStatusPending(status)) {
         try {
@@ -131,11 +133,13 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
                 searchResponse = await Digit.CustomService.getResponse({
                     url: searchUrl,
                     body: {
-                        SearchCriteria: {
-                            id: [processId],
+                        RequestInfo: requestInfo,
+                        ResourceDetailsCriteria: {
+                            ids: [processId],
                             tenantId: tenantId,
-                            type,
+                            campaignId: additionalDetails?.campaignId || id,
                         },
+                        Pagination: { limit: 5, offset: 0 },
                     },
                 });
                 status = searchResponse?.ResourceDetails?.[0]?.status;

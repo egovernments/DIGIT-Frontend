@@ -8,23 +8,18 @@ import {
 } from "@egovernments/digit-ui-components";
 import { mapAttendeesConfig } from "../../../configs/mapAttendeesConfig";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
-
 const BULK_TEMPLATE_TYPE = "attendanceRegisterUserBulkMapping";
-
 const BulkAttendanceUploadScreen = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const campaignName = searchParams.get("campaignName");
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
-
   const [showToast, setShowToast] = useState(null);
   const [loader, setLoader] = useState(false);
   const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ATTENDANCE_ATTENDEE_DATA", {});
-
   const campaignReqCriteria = {
     url: `/project-factory/v1/project-type/search`,
     body: { CampaignDetails: { tenantId, campaignNumber } },
@@ -36,7 +31,6 @@ const BulkAttendanceUploadScreen = () => {
     },
   };
   const { data: campaignData, isLoading: isCampaignLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
-
   const registerResourceCriteria = {
     url: `/project-factory/v1/resource-details/_search`,
     body: {
@@ -55,8 +49,36 @@ const BulkAttendanceUploadScreen = () => {
     },
     changeQueryName: `bulkAttendanceRegisterResource_${campaignData?.id || "none"}`,
   };
-
   const { data: registerResourceDetails = [], isLoading: isRegisterResourceLoading } = Digit.Hooks.useCustomAPIHook(registerResourceCriteria);
+  const localityCodeFromRegisterResource =
+    registerResourceDetails?.find((item) => item?.localityCode)?.localityCode ||
+    registerResourceDetails?.find((item) => item?.additionalDetails?.localityCode)?.additionalDetails?.localityCode;
+  const attendanceSearchCriteria = {
+    url: `/attendance/v1/_search`,
+    params: {
+      tenantId,
+      campaignNumber,
+      limit: 10,
+      offset: 0,
+    },
+    body: {},
+    config: {
+      enabled: !!campaignNumber && !localityCodeFromRegisterResource,
+      select: (data) => data?.attendanceRegister || [],
+      staleTime: 0,
+      cacheTime: 0,
+    },
+    changeQueryName: `bulkAttendanceLocality_${campaignNumber || "none"}`,
+  };
+  const { data: attendanceRegisters = [], isLoading: isAttendanceSearchLoading } = Digit.Hooks.useCustomAPIHook(attendanceSearchCriteria);
+  const localityCodeFromAttendance = localityCodeFromRegisterResource || attendanceRegisters?.[0]?.localityCode;
+  const resolvedBulkLocalityCode =
+    localityCodeFromAttendance ||
+    searchParams.get("localityCode") ||
+    searchParams.get("boundaryCode") ||
+    campaignData?.additionalDetails?.localityCode ||
+    campaignData?.additionalDetails?.boundaryCode ||
+    campaignData?.boundaryCode;
   const registerStatuses = registerResourceDetails
     ?.map((item) => item?.status)
     ?.filter(Boolean);
@@ -64,7 +86,6 @@ const BulkAttendanceUploadScreen = () => {
   const hasInProgressRegister = registerStatuses?.some((status) => status === "creating" || status === "toCreate");
   const registerCreationStatus = hasFailedRegister ? "failed" : hasInProgressRegister ? "creating" : undefined;
   const isBulkRegisterCreationReady = !hasFailedRegister && !hasInProgressRegister;
-
   useEffect(() => {
     if (!registerCreationStatus) return;
     if (registerCreationStatus === "creating" || registerCreationStatus === "toCreate") {
@@ -74,14 +95,11 @@ const BulkAttendanceUploadScreen = () => {
     }
   }, [registerCreationStatus]);
   const resourceDetails = [];
-
   const enrichedCampaignData = useMemo(() => campaignData, [campaignData]);
-
   const formConfig = useMemo(
     () => mapAttendeesConfig({ totalFormData: params, campaignData: enrichedCampaignData, resourceDetails }),
     [params, enrichedCampaignData, resourceDetails]
   );
-
   const bulkFormConfig = useMemo(() => {
     return formConfig?.map((section) => ({
       ...section,
@@ -96,6 +114,7 @@ const BulkAttendanceUploadScreen = () => {
                 bulkTemplateType: BULK_TEMPLATE_TYPE,
                 bulkRegisterCreationReady: isBulkRegisterCreationReady,
                 bulkRegisterCreationStatus: registerCreationStatus,
+                bulkAttendanceLocalityCode: resolvedBulkLocalityCode,
               },
             };
           }
@@ -104,7 +123,6 @@ const BulkAttendanceUploadScreen = () => {
       })),
     }));
   }, [formConfig]);
-
   const reqUpdate = {
     url: `/project-factory/v1/resource-details/_create`,
     params: {},
@@ -112,32 +130,25 @@ const BulkAttendanceUploadScreen = () => {
     config: { enabled: false },
   };
   const mutationUpdate = Digit.Hooks.useCustomAPIMutationHook(reqUpdate);
-
   const showErrorToast = (messageKeyOrText) => {
     setShowToast({ key: "error", label: messageKeyOrText });
     setTimeout(() => setShowToast(null), 3000);
   };
-
   const onSubmit = async (formData) => {
     const uploadedData =
       formData?.HCM_CAMPAIGN_UPLOAD_ATTENDEE_DATA?.uploadAttendanceRegisterAttendee ||
       formData?.uploadAttendanceRegisterAttendee;
-
     if (!uploadedData?.uploadedFile?.length) {
       return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.PLEASE_UPLOAD_FILE));
     }
-
     if (uploadedData?.isError || uploadedData?.apiError) {
       const toastKey = uploadedData?.validationStatus?.toastLabel;
       return showErrorToast(toastKey ? t(toastKey) : t(I18N_KEYS.CAMPAIGN_CREATE.ENTER_VALID_FILE));
     }
-
     const filestoreId = uploadedData?.uploadedFile?.[0]?.filestoreId || uploadedData?.uploadedFile?.[0]?.fileStoreId;
-
     if (!filestoreId) {
       return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.PLEASE_UPLOAD_FILE));
     }
-
     const resourcePayload = {
       tenantId: campaignData?.tenantId,
       campaignId: campaignData?.id,
@@ -147,7 +158,6 @@ const BulkAttendanceUploadScreen = () => {
       hierarchyType: campaignData?.hierarchyType || "ADMIN",
       parentResourceId: null,
     };
-
     setLoader(true);
     await mutationUpdate.mutate(
       {
@@ -178,21 +188,18 @@ const BulkAttendanceUploadScreen = () => {
       }
     );
   };
-
   const goBackToMapUsers = () => {
     navigate(
       `/${window.contextPath}/employee/campaign/map-users-to-registers?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`
     );
   };
-
-  if (loader || isCampaignLoading || isRegisterResourceLoading) {
+  if (loader || isCampaignLoading || isRegisterResourceLoading || isAttendanceSearchLoading) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh", width: "100%" }}>
         <Loader page={true} variant={loader ? "OverlayLoader" : undefined} loaderText={t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />
       </div>
     );
   }
-
   return (
     <>
       <FormComposerV2
@@ -207,7 +214,6 @@ const BulkAttendanceUploadScreen = () => {
         label={t(I18N_KEYS.COMMON.HCM_SUBMIT)}
         secondaryActionIcon={"ArrowBack"}
       />
-
       {showToast && (
         <Toast
           style={{ zIndex: 10001 }}
@@ -222,5 +228,4 @@ const BulkAttendanceUploadScreen = () => {
     </>
   );
 };
-
 export default BulkAttendanceUploadScreen;

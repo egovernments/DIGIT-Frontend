@@ -1120,14 +1120,42 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const getProcessFailureLabel = (processResponse) => {
+        const sheetErrorKey = processResponse?.additionalDetails?.sheetErrors?.[0]?.errorDetails;
+        if (sheetErrorKey) return sheetErrorKey;
+
+        const description = processResponse?.additionalDetails?.error?.description;
+        if (description) {
+          try {
+            const parsed = JSON.parse(description);
+            const parsedSheetErrorKey = parsed?.[0]?.errorDetails;
+            if (parsedSheetErrorKey) return parsedSheetErrorKey;
+          } catch (e) {
+            // Ignore parse failures and fall through to code/default handling.
+          }
+        }
+
+        return processResponse?.additionalDetails?.error?.code || "HCM_VALIDATION_FAILED";
+      };
+
       if ((!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) || notValid == 1) {
         setIsValidation(true);
         setValidationStatus(null);
         setIsError(true);
         setLoaderText("CAMPAIGN_VALIDATION_INPROGRESS");
         setLoader(true);
-        // For unified-console and attendanceRegister, use hyphenated validation type; for others use camelCase
-        const validationType = type === "unified-console" ? "unified-console-validation" : type === "attendanceRegister" ? "attendanceRegister-validation" : type === "attendanceRegisterAttendee" ? "attendanceRegisterAttendee-validation" : `${type}Validation`;
+        // Bulk attendance attendee upload must use the PF bulk type end-to-end.
+        // For non-bulk flows keep existing validation type conventions.
+        const validationType =
+          type === "unified-console"
+            ? "unified-console-validation"
+            : type === "attendanceRegister"
+            ? "attendanceRegister-validation"
+            : type === "attendanceRegisterAttendee"
+            ? isBulkTemplateOverride
+              ? "attendanceRegisterUserBulkMapping"
+              : "attendanceRegisterAttendee-validation"
+            : `${type}Validation`;
 
         try {
           const isAttendeeValidation = type === "attendanceRegisterAttendee";
@@ -1163,9 +1191,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           if (temp?.additionalDetails?.error?.code) {
             setLoader(false);
             setIsValidation(false);
-            // const errorMessage = temp?.error.replaceAll(":", "-");
-            setShowToast({ key: "error", label: temp?.additionalDetails?.error?.code ? t(temp.additionalDetails.error.code) : t(I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR), transitionTime: 5000000 });
-            setValidationStatus({ type: "error", label: temp?.additionalDetails?.error?.code || I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR, toastLabel: temp?.additionalDetails?.error?.code || I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR });
+            const errorMessage = temp?.additionalDetails?.error?.description || temp?.additionalDetails?.error?.message || temp?.additionalDetails?.error?.code;
+            setShowToast({ key: "error", label: getProcessFailureLabel(temp), transitionTime: 5000000 });
             setIsError(true);
             setApiError(errorMessage);
             setNotValid(2);
@@ -1200,8 +1227,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               // Handle both casing: processedFilestoreId (old) and processedFileStoreId (unified-console API)
               const processedFileStore = temp?.processedFilestoreId || temp?.processedFileStoreId;
               if (!processedFileStore) {
-                setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED) });
-                setValidationStatus({ type: "error", label: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD, toastLabel: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED });
+                setShowToast({ key: "error", label: t(getProcessFailureLabel(temp)) });
                 // setIsValidation(true);
                 return;
               } else {
@@ -1241,8 +1267,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             // Handle both casing: processedFilestoreId (old) and processedFileStoreId (unified-console API)
             const processedFileStore = temp?.processedFilestoreId || temp?.processedFileStoreId;
             if (!processedFileStore) {
-              setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED), transitionTime: 5000000 });
-              setValidationStatus({ type: "error", label: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD, toastLabel: I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED });
+              setShowToast({ key: "error", label: t(getProcessFailureLabel(temp)), transitionTime: 5000000 });
               return;
             } else {
               setIsError(true);
@@ -1397,38 +1422,41 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
       const pollRetryInterval = 2000;
       const maxPollTime = 60000;
+      const generationTenantId = searchParams.get("tenantId") || props?.props?.campaignData?.tenantId || tenantId;
       const generationType = bulkTemplateType;
       const generationReferenceId = id;
-      const generationReferenceType = "campaign";
       const bulkLocalityCode =
+        props?.props?.bulkAttendanceLocalityCode ||
         searchParams.get("localityCode") ||
         searchParams.get("boundaryCode") ||
         props?.props?.campaignData?.additionalDetails?.localityCode ||
         props?.props?.campaignData?.additionalDetails?.boundaryCode ||
         props?.props?.campaignData?.boundaryCode;
-      const hierarchyType = params?.hierarchyType || props?.props?.campaignData?.hierarchyType || "ADMIN";
+      const hierarchyType = "ADMIN";
 
-      const searchGenerationById = async (generationId) => {
-        if (!generationId) return null;
+      const requestBulkTemplate = async () => {
         const response = await Digit.CustomService.getResponse({
-          url: "/excel-ingestion/v1/data/generate/_search",
+          url: "/project-factory/v1/data/_download",
+          params: {
+            type: generationType,
+            tenantId: generationTenantId,
+            hierarchyType,
+            campaignId: generationReferenceId,
+            localityCode: bulkLocalityCode,
+          },
           body: {
-            GenerationSearchCriteria: {
-              tenantId: tenantId,
-              ids: [generationId],
-            },
-            RequestInfo: buildRequestInfo("bulk-template-search"),
+            RequestInfo: buildRequestInfo("bulk-template-download"),
           },
         });
 
-        return response?.GenerationDetails?.[0] || null;
+        return response?.GeneratedResource?.[0] || null;
       };
 
-      const pollUntilDone = async (generationId) => {
+      const pollUntilDone = async () => {
         const startTime = Date.now();
         while (Date.now() - startTime < maxPollTime) {
           await new Promise((resolve) => setTimeout(resolve, pollRetryInterval));
-          const resource = await searchGenerationById(generationId);
+          const resource = await requestBulkTemplate();
           const fileStoreId = resource?.fileStoreid || resource?.fileStoreId;
           if (resource?.status === "completed" || resource?.status === "failed" || fileStoreId) {
             return resource;
@@ -1447,7 +1475,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         const templateLabel = "Bulk_Attendance_Template";
         const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_${templateLabel}` : `${campaignName}_${templateLabel}`;
-        const isDownloaded = await downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName, tenantId });
+        const isDownloaded = await downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName, tenantId: generationTenantId });
         if (!isDownloaded) {
           setDownloadError(true);
           setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
@@ -1476,25 +1504,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           return;
         }
 
-        const initResponse = await Digit.CustomService.getResponse({
-          url: "/excel-ingestion/v1/data/generate/_init",
-          body: {
-            GenerateResource: {
-              tenantId: tenantId,
-              type: generationType,
-              hierarchyType: hierarchyType,
-              referenceId: generationReferenceId,
-              referenceType: generationReferenceType,
-              additionalDetails: {
-                localityCode: bulkLocalityCode,
-                forceUpdate: true,
-              },
-            },
-            RequestInfo: buildRequestInfo("bulk-template-init"),
-          },
-        });
-
-        const initResource = initResponse?.GenerateResource || initResponse?.GenerationDetails?.[0];
+        const initResource = await requestBulkTemplate();
         const initFileStoreId = initResource?.fileStoreid || initResource?.fileStoreId;
         if (initResource?.status === "completed" && initFileStoreId) {
           setLoader(false);
@@ -1508,15 +1518,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           return;
         }
 
-        const generationId = initResponse?.GenerateResource?.id || initResponse?.GenerationDetails?.[0]?.id;
-        if (!generationId) {
-          setLoader(false);
-          setDownloadError(true);
-          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
-          return;
-        }
-
-        const resource = await pollUntilDone(generationId);
+        const resource = await pollUntilDone();
 
         setLoader(false);
 
