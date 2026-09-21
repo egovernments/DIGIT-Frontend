@@ -428,7 +428,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                   <TagComponent campaignName={`${startFormatted} - ${endFormatted}`} />
                 ) : null;
               })()}
-              <HeaderComponent className="cycle-configuration-heading">
+              <HeaderComponent className="cycle-configuration-heading heading-l">
                 {t(`CAMPAIGN_PROJECT_${selectedProjectType.toUpperCase()}`)}
               </HeaderComponent>
               <LabelFieldPair>
@@ -454,7 +454,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           </div>
           <div style={{ marginBottom: "1.5rem" }}>
             <Card>
-              <HeaderComponent className="cycle-configuration-heading">
+              <HeaderComponent className="cycle-configuration-heading heading-l">
                 {t(I18N_KEYS.PAGES.CAMPAIGN_OBSERVATION_STRATEGY_HEADING)}
               </HeaderComponent>
               <CardText style={{fontSize:"16px",color:"#505a5f", marginBottom: "1rem"}}>
@@ -485,7 +485,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           </div>
           {!isBednet && (
           <Card className="campaign-counter-container">
-            <HeaderComponent className="cycle-configuration-heading" style={{ marginBottom: "1.5rem" }}>
+            <HeaderComponent className="cycle-configuration-heading heading-l" style={{ marginBottom: "1.5rem" }}>
               {t(I18N_KEYS.PAGES.CAMPAIGN_ADD_START_END_DATE_TEXT)}
             </HeaderComponent>
             {[...Array(cycleConfgureDate.cycle)].map((_, index) => (

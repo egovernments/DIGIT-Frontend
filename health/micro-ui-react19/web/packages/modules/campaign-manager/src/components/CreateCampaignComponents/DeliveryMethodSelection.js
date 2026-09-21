@@ -21,7 +21,7 @@ const DeliveryMethodSelection = ({ methods = [], selected = [], onChange, disabl
 
   return (
     <React.Fragment>
-      <HeaderComponent className="cycle-configuration-heading">{t("HCM_DELIVERY_SETUP_HEADING")}</HeaderComponent>
+      <HeaderComponent className="cycle-configuration-heading heading-l">{t("HCM_DELIVERY_SETUP_HEADING")}</HeaderComponent>
       <CardText style={{ fontSize: "16px", color: "#505a5f", marginBottom: "0rem" }}>{t("HCM_DELIVERY_SETUP_DESC")}</CardText>
 
       <div className="delivery-methods-card-group" role="group" aria-label={t("HCM_DELIVERY_SETUP_HEADING")}>

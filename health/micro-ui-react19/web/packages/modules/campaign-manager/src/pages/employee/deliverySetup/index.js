@@ -209,7 +209,7 @@ const DeliveryStrategySetup = ({ onSelect, formData, control, ...props }) => {
 
         <div style={{ marginBottom: "1.5rem" }}>
           <Card>
-            <HeaderComponent className="cycle-configuration-heading">{t("HCM_DELIVERY_DATES_HEADING")}</HeaderComponent>
+            <HeaderComponent className="cycle-configuration-heading heading-l">{t("HCM_DELIVERY_DATES_HEADING")}</HeaderComponent>
             <CardText style={{ fontSize: "16px", color: "#505a5f", marginBottom: "0rem" }}>{t("HCM_DELIVERY_DATES_DESC")}</CardText>
             <LabelFieldPair>
               <CardLabel className="cycleBold" style={{ fontWeight: "700", width: "40%" }}>

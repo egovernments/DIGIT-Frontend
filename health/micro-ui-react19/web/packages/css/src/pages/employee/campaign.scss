@@ -959,6 +959,25 @@
   color: var(--digitv2-lightTheme-primary-2) !important;
 }
 
+.cycle-configuration-heading {
+  &.heading-l {
+    font-family: var(--digitv2-fontFamily-sans);
+    font-style: var(--digitv2-fontStyle-normal);
+    font-weight: var(--digitv2-fontWeight-bold);
+
+    @media (max-aspect-ratio: 9/16) {
+      font-size: var(--digitv2-fontSize-heading-l-mobile);
+    }
+
+    @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+      font-size: var(--digitv2-fontSize-heading-l-tablet);
+    }
+
+    @media (min-aspect-ratio: 3/4) {
+      font-size: var(--digitv2-fontSize-heading-l-desktop);
+    }
+  }
+}
 .appConfigLabelField-toggleVisibility {
   position: absolute;
   cursor: pointer;
