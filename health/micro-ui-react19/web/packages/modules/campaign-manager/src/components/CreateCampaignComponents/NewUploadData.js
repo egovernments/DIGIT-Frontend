@@ -1855,8 +1855,16 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
              <div style={{ display: "flex", gap: "0.75rem" }}>
                 {type === "attendanceRegisterAttendee" && props?.props?.resourceDetails?.[0]?.processedFileStoreId && (
                   <Button
-                    label={t(I18N_KEYS.COMPONENTS.HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE)}
-                    title={t(I18N_KEYS.COMPONENTS.HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE)}
+                    label={
+                      isBulkTemplateOverride
+                        ? t(I18N_KEYS.COMPONENTS.HCM_DOWNLOAD_CURRENT_REGISTER_FILE)
+                        : t(I18N_KEYS.COMPONENTS.HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE)
+                    }
+                    title={
+                      isBulkTemplateOverride
+                        ? t(I18N_KEYS.COMPONENTS.HCM_DOWNLOAD_CURRENT_REGISTER_FILE)
+                        : t(I18N_KEYS.COMPONENTS.HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE)
+                    }
                     variation="secondary"
                     icon={"FileDownload"}
                     type="button"
@@ -1896,7 +1904,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   : type === "attendanceRegister"
                   ? t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_ATTENDANCE_REGISTER)
                   : type === "attendanceRegisterAttendee"
-                  ? t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_ATTENDANCE_REGISTER_ATTENDEE)
+                  ? isBulkTemplateOverride
+                    ? t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_ATTENDANCE_REGISTER)
+                    : t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_ATTENDANCE_REGISTER_ATTENDEE)
                   : t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_USER)}
               </HeaderComponent>
             </div>
@@ -1911,7 +1921,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   : type === "attendanceRegister"
                   ? t(I18N_KEYS.COMPONENTS.HCM_ATTENDANCE_REGISTER_MESSAGE)
                   : type === "attendanceRegisterAttendee"
-                  ? t(I18N_KEYS.COMPONENTS.HCM_ATTENDANCE_REGISTER_ATTENDEE_MESSAGE)
+                  ? isBulkTemplateOverride
+                    ? t(I18N_KEYS.COMPONENTS.HCM_ATTENDANCE_REGISTER_MESSAGE)
+                    : t(I18N_KEYS.COMPONENTS.HCM_ATTENDANCE_REGISTER_ATTENDEE_MESSAGE)
                   : t(I18N_KEYS.COMPONENTS.HCM_USER_MESSAGE)}
               </div>
             )}
@@ -2012,7 +2024,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 : type === "attendanceRegister"
                 ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_HEADER)
                 : type === "attendanceRegisterAttendee"
-                ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_ATTENDEE_MODAL_HEADER)
+                ? isBulkTemplateOverride
+                  ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_BULK_ATTENDANCE_REGISTER_MODAL_HEADER)
+                  : t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_ATTENDEE_MODAL_HEADER)
                 : t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER)
             }
             children={[
@@ -2026,7 +2040,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   : type === "attendanceRegister"
                   ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_TEXT)
                   : type === "attendanceRegisterAttendee"
-                  ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_ATTENDEE_MODAL_TEXT)
+                  ? isBulkTemplateOverride
+                    ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_TEXT)
+                    : t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_ATTENDEE_MODAL_TEXT)
                   : t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT)}
               </div>,
             ]}
@@ -2049,8 +2065,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 size={"large"}
                 variation={"primary"}
                 icon={"FileDownload"}
-                label={getDownloadLabel()}
-                title={getDownloadLabel() || t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
+                label={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_DOWNLOAD_TEMPLATE)}
+                title={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_DOWNLOAD_TEMPLATE)}
                 onClick={async () => {
                   await downloadTemplate();
                   setShowPopUp(false);

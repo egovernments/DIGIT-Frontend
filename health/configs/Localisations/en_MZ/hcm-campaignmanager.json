@@ -177,6 +177,12 @@
             "message": "Edit Display Logic",
             "module": "hcm-campaignmanager",
             "locale": "en_MZ"
+        },
+        {
+            "code": "ES_CAMPAIGN_UPLOAD_BULK_ATTENDANCE_REGISTER_MODAL_HEADER",
+            "message": "Generate Attendance Registers",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
         }
         
     ]
