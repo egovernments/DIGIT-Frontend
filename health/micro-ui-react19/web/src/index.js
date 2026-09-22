@@ -39,6 +39,87 @@ const initTokens = (stateCode) => {
   }
 };
 
+// --- Per-deployment locale ---------------------------------------------------------
+// Every tenant deployment (hcm-digit-ui, chaduat/hcm-digit-ui, zambia/hcm-digit-ui, ...)
+// is served from the SAME origin, so sessionStorage is shared between them. The core
+// libraries keep the active locale in a single unscoped key ("Digit.locale"), which
+// therefore leaks across deployments: a locale picked on the shared login (en_AFRO)
+// survives the redirect into chaduat, and LocalizationService then appends this
+// deployment's LOCALE_REGION to it (en_AFRO + CHADUAT -> en_AFROCHADUAT), so the
+// localisation search returns nothing and the UI renders raw keys.
+//
+// Fix: keep a locale per deployment, and seed the unscoped key from it on every boot.
+// Everything downstream (i18next, Request.js msgId, each module's useStore, the pdf
+// utils, campaign-manager) still reads the unscoped key, so nothing else changes.
+
+const SESSION_TTL_SECONDS = 86400; // matches the Digit.SessionStorage default
+
+// Digit.SessionStorage prefixes keys with "Digit." and wraps values as {value, ttl, expiry}.
+// Reimplemented here because these run before initLibraries(), so Digit isn't up yet.
+const readSessionValue = (key) => {
+  try {
+    const raw = window.sessionStorage.getItem(`Digit.${key}`);
+    if (!raw || raw === "undefined") return null;
+    const item = JSON.parse(raw);
+    if (item?.expiry && Date.now() > item.expiry) {
+      window.sessionStorage.removeItem(`Digit.${key}`);
+      return null;
+    }
+    return item?.value ?? null;
+  } catch (e) {
+    return null;
+  }
+};
+
+const writeSessionValue = (key, value) => {
+  const item = { value, ttl: SESSION_TTL_SECONDS, expiry: Date.now() + SESSION_TTL_SECONDS * 1000 };
+  window.sessionStorage.setItem(`Digit.${key}`, JSON.stringify(item));
+};
+
+const removeSessionValue = (key) => window.sessionStorage.removeItem(`Digit.${key}`);
+
+const currentDeployment = () => window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "default";
+const tenantLocaleKey = () => `locale.${currentDeployment()}`;
+
+// Seed the unscoped locale from this deployment's own value. When there is none (first
+// visit here, or we just arrived from another deployment) the unscoped key is dropped so
+// StoreService.digitInitData falls through to initData.languages[0].value - i.e. this
+// tenant's first configured language is auto-selected.
+const applyTenantLocale = () => {
+  const scoped = readSessionValue(tenantLocaleKey());
+  if (scoped) writeSessionValue("locale", scoped);
+  else removeSessionValue("locale");
+};
+
+// initData is cached under one unscoped key too, so arriving from another deployment can
+// render that deployment's stateInfo (logo, banner, language list) for a paint before
+// digitInitData overwrites it. Drop it whenever the deployment changes.
+const clearInitDataOnDeploymentChange = () => {
+  const current = currentDeployment();
+  const previous = readSessionValue("lastDeployment");
+  if (previous && previous !== current) removeSessionValue("initData");
+  writeSessionValue("lastDeployment", current);
+};
+
+// Record an explicit language switch against this deployment. LocalizationService only
+// writes Employee.locale / Citizen.locale, which nothing ever reads back.
+let tenantLocalePatched = false;
+const persistTenantLocaleOnSwitch = () => {
+  if (tenantLocalePatched) return; // StrictMode invokes effects twice in dev
+  const service = window?.Digit?.LocalizationService;
+  if (!service?.changeLanguage) return;
+
+  const original = service.changeLanguage;
+  service.changeLanguage = async (locale, tenantId) => {
+    const result = await original(locale, tenantId);
+    // Keyed on the deployment, not the tenantId argument: that one comes from MDMS
+    // stateInfo and must stay consistent with what applyTenantLocale() reads at boot.
+    writeSessionValue(tenantLocaleKey(), locale);
+    return result;
+  };
+  tenantLocalePatched = true;
+};
+
 // Cross-deployment tenant redirect: this build (this contextPath) is the shared/common
 // login instance. Each tenant (chad, congo, ...) is a SEPARATE deployment at its own
 // base path (same origin), configured via globalConfigs.TENANT_DEPLOYMENT_MAP. Since the
@@ -65,6 +146,11 @@ const initDigitUI = () => {
   window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "payments-ui";
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
 
+  // Must run before initLibraries() (which initialises i18next from the unscoped locale)
+  // and before digitInitData reads it.
+  clearInitDataOnDeploymentChange();
+  applyTenantLocale();
+
   ["pushState", "replaceState"].forEach((method) => {
     const original = window.history[method];
     window.history[method] = function (...args) {
@@ -86,6 +172,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   useEffect(() => {
     initLibraries().then(async () => {
+      persistTenantLocaleOnSwitch();
       // Use Promise.allSettled so each module is independent — one failure won't block others
       const results = await Promise.allSettled([
         import(/* webpackChunkName: "campaign-manager" */ "@egovernments/digit-ui-module-campaign-manager"),
