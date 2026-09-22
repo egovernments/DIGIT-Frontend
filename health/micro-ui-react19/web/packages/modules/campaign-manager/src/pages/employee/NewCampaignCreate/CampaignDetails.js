@@ -819,7 +819,7 @@ const CampaignDetails = () => {
         <div style={{ display: "flex", alignItems: "baseline", gap: "1rem" }}>
           {/* h1: the campaign name is the page heading (axe page-has-heading-one) */}
           <HeaderComponent className={"date-header"}>
-            <h1 style={{ margin: 0 }}>{campaignData?.campaignName}</h1>
+            <h1 style={{ margin: 0 }} className={"date-header-h1"}>{campaignData?.campaignName}</h1>
           </HeaderComponent>
           {campaignData?.status !== "created" && (
             <div
