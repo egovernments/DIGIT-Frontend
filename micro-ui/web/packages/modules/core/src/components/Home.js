@@ -223,10 +223,27 @@ const CitizenHome = ({ getCitizenMenu, fetchedCitizen, isLoading }) => {
   );
 };
 
+// Visually hidden but exposed to assistive technology (same recipe as the common .sr-only utility)
+const srOnlyStyle = {
+  position: "absolute",
+  width: "1px",
+  height: "1px",
+  padding: 0,
+  margin: "-1px",
+  overflow: "hidden",
+  clip: "rect(0, 0, 0, 0)",
+  whiteSpace: "nowrap",
+  border: 0,
+};
+
 const EmployeeHome = ({ modules, additionalComponent }) => {
+  const { t } = useTranslation();
   return (
     <>
       <div className="employee-app-container digit-home-employee-app">
+        {/* Every page needs one h1 (axe page-has-heading-one); the landing page has no visible title,
+            so expose one to screen readers only */}
+        <h1 style={srOnlyStyle}>{t("CORE_COMMON_HOME")}</h1>
         {/* <div className="ground-container moduleCardWrapper gridModuleWrapper digit-home-moduleCardWrapper"> */}
         <LandingPageWrapper>
           {modules?.map(({ code }, index) => {

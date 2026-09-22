@@ -166,7 +166,9 @@ const EmployeeApp = ({
                   />
                 </ErrorBoundary>
               </div>
-              <div className="employee-home-footer">
+              {/* <footer> = contentinfo landmark, so the "Powered by DIGIT" strip no longer sits
+                  outside every landmark (axe region) */}
+              <footer className="employee-home-footer">
                 <ImageComponent
                   alt="Powered by DIGIT"
                   src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
@@ -175,7 +177,7 @@ const EmployeeApp = ({
                     window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
                   }}
                 />
-              </div>
+              </footer>
             </div>
           </>
         }/>
