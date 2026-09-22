@@ -811,11 +811,16 @@ const CampaignDetails = () => {
   };
 
   return (
-    <>
+    // <main> with display: contents: the employee layout has no main landmark (axe landmark-one-main /
+    // region); display: contents keeps the layout exactly as before
+    <main style={{ display: "contents" }}>
       {isMutationLoading && <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_CREATION_PROGRESS)}/>}
       <div className="campaign-details-header">
         <div style={{ display: "flex", alignItems: "baseline", gap: "1rem" }}>
-          <HeaderComponent className={"date-header"}>{campaignData?.campaignName}</HeaderComponent>
+          {/* h1: the campaign name is the page heading (axe page-has-heading-one) */}
+          <HeaderComponent className={"date-header"}>
+            <h1 style={{ margin: 0 }}>{campaignData?.campaignName}</h1>
+          </HeaderComponent>
           {campaignData?.status !== "created" && (
             <div
               className="hover"
@@ -969,7 +974,7 @@ const CampaignDetails = () => {
           onClose={closeToast}
         />
       )}
-    </>
+    </main>
   );
 };
 

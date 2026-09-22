@@ -123,7 +123,9 @@ const SearchChecklist = () => {
   if (isFetching) return <div></div>;
   else {
     return (
-      <React.Fragment>
+      // <main> with display: contents: the employee layout has no main landmark (axe landmark-one-main /
+      // region); display: contents keeps the layout exactly as before
+      <main style={{ display: "contents" }}>
         {/* <Stepper
           customSteps={[
             "HCM_CAMPAIGN_SETUP_DETAILS",
@@ -139,7 +141,8 @@ const SearchChecklist = () => {
           // className={"campaign-flow-stepper"}
         /> */}
         <TagComponent campaignName={campaignName} />
-        <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed", marginTop: "1.5rem",color:"#0b4b66" }}>{t(I18N_KEYS.PAGES.CONFIGURE_CHECKLIST)}</div>
+        {/* h1: the page heading for assistive tech (axe page-has-heading-one); same inline styling */}
+        <h1 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed", margin: "1.5rem 0 0", color: "#0b4b66" }}>{t(I18N_KEYS.PAGES.CONFIGURE_CHECKLIST)}</h1>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
           {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t(I18N_KEYS.COMMON.ACTION_LABEL_CONFIGURE_APP)}</Header> */}
           {/* <Button
@@ -268,7 +271,7 @@ const SearchChecklist = () => {
             onClose={closeToast}
           />
         )}
-      </React.Fragment>
+      </main>
     );
   }
 };

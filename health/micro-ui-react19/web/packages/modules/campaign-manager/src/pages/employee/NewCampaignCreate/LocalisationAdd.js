@@ -485,7 +485,9 @@ const LocalisationBulkUpload = () => {
   }, [showToast]);
 
   return (
-    <React.Fragment>
+    // <main> with display: contents: the employee layout has no main landmark (axe landmark-one-main /
+    // region); display: contents keeps the card layout exactly as before
+    <main style={{ display: "contents" }}>
       {/* <HeaderComponent className="summary-header select-boundary-screen-heading" styles={{ marginBottom: "1.5rem" }}>
         {t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_BULK_UPLOAD_XLS)}
       </HeaderComponent> */}
@@ -549,7 +551,9 @@ const LocalisationBulkUpload = () => {
         {/* Header */}
         <div className="campaign-bulk-upload">
           <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
-            {t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_BULK_UPLOAD_XLS)}
+            {/* h1: page heading for assistive tech (axe page-has-heading-one); health CSS resets
+                heading font-size/weight so the visual is unchanged */}
+            <h1 style={{ margin: 0 }}>{t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_BULK_UPLOAD_XLS)}</h1>
           </HeaderComponent>
         </div>
 
@@ -616,7 +620,7 @@ const LocalisationBulkUpload = () => {
           onClose={() => setShowToast(null)}
         />
       )}
-    </React.Fragment>
+    </main>
   );
 };
 
