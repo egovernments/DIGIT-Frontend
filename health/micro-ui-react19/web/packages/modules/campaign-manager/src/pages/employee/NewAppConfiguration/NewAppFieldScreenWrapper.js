@@ -333,6 +333,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
               <Switch
                 key={currentCard?.conditions?.infoCardText ? "infocard-on" : "infocard-off"}
                 label=""
+                ariaLabel={t("INFO_CARD_TEXT")}
                 isCheckedInitially={!!currentCard?.conditions?.infoCardText}
                 disable={viewMode}
                 shapeOnOff
@@ -526,6 +527,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
         <Switch
           className={"app-config-drawer-subheader"}
           isLabelFirst={true}
+          ariaLabel={t(I18N_KEYS.APP_CONFIGURATION.PREVENT_SCREEN_CAPTURE)}
           isCheckedInitially={currentCard?.preventScreenCapture || false}
           onToggle={handleTogglePreventScreenCapture}
           disable={viewMode}

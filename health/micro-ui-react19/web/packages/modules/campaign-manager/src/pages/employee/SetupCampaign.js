@@ -1248,7 +1248,9 @@ const SetupCampaign = () => {
 
   return (
     <CampaignSubmitContext.Provider value={submitStatus}>
-    <React.Fragment>
+    {/* <main> with display: contents: the employee layout has no main landmark (axe landmark-one-main,
+        region); display: contents keeps the stepper and cards laid out exactly as before */}
+    <main style={{ display: "contents" }}>
       {(loader || isUpdating) && <Loader page={true} variant={"OverlayLoader"} loaderText={currentKey == 6 ? t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_ADDING_BOUNDARIES) : t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />}
       {/* {noAction !== "false" && (
         <Stepper
@@ -1333,7 +1335,7 @@ const SetupCampaign = () => {
           onClose={closeToast}
         />
       )}
-    </React.Fragment>
+    </main>
     </CampaignSubmitContext.Provider>
   );
 };

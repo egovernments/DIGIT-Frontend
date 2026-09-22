@@ -114,7 +114,9 @@ const MultiTab = React.memo(({ projectConfig, attributeConfig, operatorConfig, d
 
         {projectTitle && (
           <HeaderComponent styles={{ marginTop: "1.5rem",marginBottom: "1.5rem" }} className="select-boundary-screen-heading">
-            {t(projectTitle)}
+            {/* h1: the delivery step's page heading for assistive tech (axe page-has-heading-one);
+                health CSS resets heading font-size/weight so the visual is unchanged */}
+            <h1 style={{ margin: 0 }}>{t(projectTitle)}</h1>
           </HeaderComponent>
         )}
 

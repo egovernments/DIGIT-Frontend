@@ -16,6 +16,16 @@ import AppHelpTutorial from "../../../components/AppHelpTutorial";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
+// Lets the clickable <div role="button"> controls in this screen (menu items, flow/page tabs,
+// preview arrows, field-type cards) be operated from the keyboard: Enter or Space re-dispatches
+// the element's own click handler, so the behaviour stays defined in one place.
+const activateOnKey = (e) => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    e.currentTarget.click();
+  }
+};
+
 const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -352,7 +362,10 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const previousRoute = currentPage?.previousRoute || null;
 
   return (
-    <React.Fragment>
+    // The core employee layout renders no <main>, so this screen declares its own. display: contents
+    // keeps the wrapper out of the layout (header bar + container stay direct flex children of the
+    // parent) while still exposing a main landmark (axe: landmark-one-main, region).
+    <main className="full-config-wrapper__main" style={{ display: "contents" }}>
       {/* Header Bar with Back Button and Flow Name */}
       <div className="full-config-wrapper__header-bar">
         <Button
@@ -366,10 +379,12 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
           }}
           size={"medium"}
         />
-        <div className="full-config-wrapper__flow-name-header">
+        {/* h1 so the page exposes a main heading to assistive tech; health CSS resets heading sizes,
+            so the visual styling still comes from the class */}
+        <h1 className="full-config-wrapper__flow-name-header" style={{ margin: 0 }}>
           {campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flowModule}`))}
           <span style={{fontSize: "0.75rem", marginTop: "0.375rem"}}> ({`${t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_VERSION)} ${version}`})</span>
-        </div>
+        </h1>
         <AppHelpTutorial appPath={path} location={propsLocation} buttonLabel="CAMP_HELP_TEXT" />
       </div>
       <div
@@ -381,7 +396,11 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             className={`full-config-wrapper__sidebar-menu-item ${
               activeSidePanel === "flows" ? "full-config-wrapper__sidebar-menu-item--active" : ""
             }`}
+            role="button"
+            tabIndex={0}
+            aria-pressed={activeSidePanel === "flows"}
             onClick={() => handleToggleSidePanel("flows")}
+            onKeyDown={activateOnKey}
           >
             {/* <Earbuds fill="#0B4B66" /> */}
             {activeSidePanel === "flows" ? <FlowFilled/> : <FlowUnfilled/>}
@@ -391,10 +410,15 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             className={`full-config-wrapper__sidebar-menu-item ${currentPageType === "template" || viewMode ? "roles-disabled" : ""} ${
               activeSidePanel === "formelements" ? "full-config-wrapper__sidebar-menu-item--active" : ""
             }`}
+            role="button"
+            tabIndex={currentPageType === "template" || viewMode ? -1 : 0}
+            aria-pressed={activeSidePanel === "formelements"}
+            aria-disabled={currentPageType === "template" || viewMode}
             onClick={() => {
               if (currentPageType === "template" || viewMode) return;
               handleToggleSidePanel("formelements");
             }}
+            onKeyDown={activateOnKey}
           >
             {activeSidePanel === "formelements" ? <CustomSVG.VariableAddFilled fill={"#0B4B66"} width={"24px"} height={"24px"} /> : <CustomSVG.VariableAdd fill={currentPageType === "template" || viewMode ? "#C5C5C5" : "#0B4B66"} width={"24px"} height={"24px"}/>}
             <span>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FORMELEMENTS)}</span>
@@ -403,6 +427,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             className={`full-config-wrapper__sidebar-menu-item roles-disabled ${
               activeSidePanel === "roles" ? "full-config-wrapper__sidebar-menu-item--active" : ""
             }`}
+            role="button"
+            aria-disabled="true"
           >
             {activeSidePanel === "roles" ? <SVG.Person fill="#C5C5C5" /> : <SVG.PersonOutline fill="#C5C5C5" />}
 
@@ -425,8 +451,13 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             >
               <div className="full-config-wrapper__slide-panel-header">
                 <div className="full-config-wrapper__slide-panel-title disabled">{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ROLES)}</div>
-                <button className="full-config-wrapper__close-button" onClick={handleCloseSidePanel}>
-                  <SVG.Close fill="#787878" />
+                <button
+                  type="button"
+                  className="full-config-wrapper__close-button"
+                  onClick={handleCloseSidePanel}
+                  aria-label={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_CLOSE_PANEL)}
+                >
+                  <SVG.Close fill="#787878" aria-hidden="true" />
                 </button>
               </div>
               <div className="full-config-wrapper__slide-panel-items-wrapper">
@@ -459,8 +490,13 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             >
               <div className="full-config-wrapper__slide-panel-header">
                 <div className="full-config-wrapper__slide-panel-title">{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FLOWS)}</div>
-                <button className="full-config-wrapper__close-button" onClick={handleCloseSidePanel}>
-                  <SVG.Close fill="#787878" />
+                <button
+                  type="button"
+                  className="full-config-wrapper__close-button"
+                  onClick={handleCloseSidePanel}
+                  aria-label={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_CLOSE_PANEL)}
+                >
+                  <SVG.Close fill="#787878" aria-hidden="true" />
                 </button>
               </div>
               <div className="full-config-wrapper__slide-panel-items-wrapper">
@@ -468,7 +504,9 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                   <div className="full-config-wrapper__flow-search-container">
                     <SVG.Search fill="#787878" />
                     <input
+                      type="search"
                       className="full-config-wrapper__flow-search-input"
+                      aria-label={t(I18N_KEYS.COMPONENTS.SEARCH_FLOW)}
                       placeholder={t(I18N_KEYS.COMPONENTS.SEARCH_FLOW)}
                       value={flowSearchQuery}
                       onChange={(e) => setFlowSearchQuery(e.target.value)}
@@ -488,7 +526,11 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                             className={`full-config-wrapper__flow-item ${
                               selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
                             }`}
+                            role="button"
+                            tabIndex={0}
+                            aria-pressed={selectedFlow === flow.id}
                             onClick={() => handleFlowClick(flow)}
+                            onKeyDown={activateOnKey}
                           >
                             {campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
                           </div>
@@ -503,7 +545,11 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                     <div key={group.category} className="full-config-wrapper__category-group">
                       <div
                         className="full-config-wrapper__category-header"
+                        role="button"
+                        tabIndex={0}
+                        aria-expanded={isExpanded}
                         onClick={() => !flowSearchQuery && toggleCategory(group.category)}
+                        onKeyDown={activateOnKey}
                       >
                         <span className="full-config-wrapper__category-title">
                           {campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_CATEGORY_${group.category}`))}
@@ -524,7 +570,11 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                               className={`full-config-wrapper__flow-item ${
                                 selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
                               }`}
+                              role="button"
+                              tabIndex={0}
+                              aria-pressed={selectedFlow === flow.id}
                               onClick={() => handleFlowClick(flow)}
+                              onKeyDown={activateOnKey}
                             >
                               {campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
                             </div>
@@ -554,8 +604,13 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             >
               <div className="full-config-wrapper__slide-panel-header">
                 <div className="full-config-wrapper__slide-panel-title">{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FORMELEMENTS)}</div>
-                <button className="full-config-wrapper__close-button" onClick={handleCloseSidePanel}>
-                  <SVG.Close fill="#787878" />
+                <button
+                  type="button"
+                  className="full-config-wrapper__close-button"
+                  onClick={handleCloseSidePanel}
+                  aria-label={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_CLOSE_PANEL)}
+                >
+                  <SVG.Close fill="#787878" aria-hidden="true" />
                 </button>
               </div>
               <div className="full-config-wrapper__slide-panel-items-wrapper">
@@ -564,7 +619,9 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                   <div className="form-elements__search-input-container">
                     <SVG.Search fill="#787878" />
                     <input
+                      type="search"
                       className="form-elements__search-input"
+                      aria-label={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_SEARCH_FORM_FIELDS)}
                       placeholder={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_SEARCH_FORM_FIELDS)}
                       value={formElementSearch}
                       onChange={(e) => setFormElementSearch(e.target.value)}
@@ -647,7 +704,14 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                           const iconName = FIELD_TYPE_ICON_MAP[item.type];
                           const IconComponent = iconName ? (SVG[iconName] || CustomSVG[iconName]) : null;
                           return (
-                            <div key={item.type} className="form-elements__type-card" onClick={() => window.__appConfig_openAddFieldPopup?.(item)}>
+                            <div
+                              key={item.type}
+                              className="form-elements__type-card"
+                              role="button"
+                              tabIndex={0}
+                              onClick={() => window.__appConfig_openAddFieldPopup?.(item)}
+                              onKeyDown={activateOnKey}
+                            >
                               <div className="form-elements__type-card-icon">
                                 {IconComponent ? (
                                   <IconComponent fill="#0B4B66" width={"24px"} height={"24px"} />
@@ -681,7 +745,11 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               <div
                 key={index}
                 className={`full-config-wrapper__page-tab ${selectedPageName === page.name ? "full-config-wrapper__page-tab--active" : ""}`}
+                role="button"
+                tabIndex={0}
+                aria-pressed={selectedPageName === page.name}
                 onClick={() => handlePageClick(page)}
+                onKeyDown={activateOnKey}
               >
                 {campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_PAGE_${page.name}`))}
               </div>
@@ -702,6 +770,11 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               className={`full-config-wrapper__nav-arrow ${
                 !previousRoute ? "full-config-wrapper__nav-arrow--disabled" : "full-config-wrapper__nav-arrow--enabled"
               }`}
+              role="button"
+              tabIndex={previousRoute ? 0 : -1}
+              aria-label={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_PREVIOUS_PAGE)}
+              aria-disabled={!previousRoute}
+              onKeyDown={activateOnKey}
               onClick={() => {
                 if (previousRoute) {
                   // Reset selected field when navigating backwards
@@ -710,7 +783,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                 }
               }}
             >
-              <SVG.ArrowBack />
+              <SVG.ArrowBack aria-hidden="true" />
             </div>
 
             {/* App Preview with Page Type Tag */}
@@ -786,6 +859,11 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               className={`full-config-wrapper__nav-arrow ${
                 !nextRoute ? "full-config-wrapper__nav-arrow--disabled" : "full-config-wrapper__nav-arrow--enabled"
               }`}
+              role="button"
+              tabIndex={nextRoute ? 0 : -1}
+              aria-label={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_NEXT_PAGE)}
+              aria-disabled={!nextRoute}
+              onKeyDown={activateOnKey}
               onClick={async () => {
                 if (nextRoute) {
                   if (!viewMode) {
@@ -808,7 +886,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                 }
               }}
             >
-              <SVG.ArrowForward />
+              <SVG.ArrowForward aria-hidden="true" />
             </div>
           </div>
         </div>
@@ -851,7 +929,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
       {showToast && (
         <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />
       )}
-    </React.Fragment>
+    </main>
   );
 };
 

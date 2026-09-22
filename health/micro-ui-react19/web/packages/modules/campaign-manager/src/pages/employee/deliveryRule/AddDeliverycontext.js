@@ -204,6 +204,7 @@ const AddAttributeField = React.memo(({
         <Dropdown
           className="form-field"
           showToolTip
+          ariaLabel={t(I18N_KEYS.COMPONENTS.CAMPAIGN_ATTRIBUTE_LABEL)}
           selected={selectedAttribute}
           disable={false}
           isMandatory
@@ -220,6 +221,7 @@ const AddAttributeField = React.memo(({
         </CardLabel>
         <Dropdown
           className="form-field"
+          ariaLabel={t(I18N_KEYS.COMPONENTS.CAMPAIGN_OPERATOR_LABEL)}
           selected={selectedOperator}
           isMandatory
           option={allowedOperators}
@@ -235,6 +237,7 @@ const AddAttributeField = React.memo(({
           <LabelFieldPair style={{ marginBottom: "0rem" }} className="add-attribute-field">
             <CardLabel className="card-label-smaller add-attribute-field-label">{t(I18N_KEYS.PAGES.CAMPAIGN_FROM_LABEL)}</CardLabel>
             <TextInput
+              label={t(I18N_KEYS.PAGES.CAMPAIGN_FROM_LABEL)}
               value={attribute?.fromValue || ""}
               onChange={(e) => handleRangeValueChange(e, "from")}
               disable={false}
@@ -243,6 +246,7 @@ const AddAttributeField = React.memo(({
           <LabelFieldPair style={{ marginBottom: "0rem" }} className="add-attribute-field">
             <CardLabel className="card-label-smaller add-attribute-field-label">{t(I18N_KEYS.PAGES.CAMPAIGN_TO_LABEL)}</CardLabel>
             <TextInput
+              label={t(I18N_KEYS.PAGES.CAMPAIGN_TO_LABEL)}
               value={attribute?.toValue || ""}
               onChange={(e) => handleRangeValueChange(e, "to")}
               disable={false}
@@ -259,6 +263,7 @@ const AddAttributeField = React.memo(({
               ) : (
                 <Dropdown
                   className="form-field"
+                  ariaLabel={t(I18N_KEYS.COMPONENTS.CAMPAIGN_VALUE_LABEL)}
                   selected={selectedDropdownValue}
                   disable={false}
                   isMandatory
@@ -271,6 +276,7 @@ const AddAttributeField = React.memo(({
             ) : (
               <TextInput
                 textInputStyle={{ width: "100%" }}
+                label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_VALUE_LABEL)}
                 value={attribute?.value || ""}
                 onChange={handleValueChange}
                 disable={false}
