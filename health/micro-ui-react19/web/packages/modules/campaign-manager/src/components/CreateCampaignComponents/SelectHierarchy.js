@@ -251,7 +251,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
         >
           {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SELECT_HIERARCHY_HEADER)}
         </HeaderComponent>
-        <p className="dates-description digit-header-content SubHeadingClass" style={{marginBottom:"1rem"}}>
+        <p className="dates-description digit-header-content SubHeadingClass" style={{marginBottom:"1rem",width:"100%"}}>
           {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SELECT_HIERARCHY_DESC)}
         </p>
         <LabelFieldPair
