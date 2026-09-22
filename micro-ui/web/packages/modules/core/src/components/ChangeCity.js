@@ -71,6 +71,7 @@ const ChangeCity = (prop) => {
         option={selectCityData}
         selected={selectCityData.find((cityValue) => cityValue.value === dropDownData?.value)}
         optionKey={"label"}
+        showArrow={true}
         select={handleChangeCity}
         freeze={true}
         customSelector={

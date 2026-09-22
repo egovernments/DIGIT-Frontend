@@ -45,6 +45,7 @@ const ForgotPassword = ({ config: propsConfig, t, stateCode }) => {
     const requestData = {
       otp: {
         userName: data.username,
+        mobileNumber: data.username,
         userType: getUserType().toUpperCase(),
         type: "passwordreset",
         tenantId: data.city.code,
@@ -111,8 +112,8 @@ const ForgotPassword = ({ config: propsConfig, t, stateCode }) => {
               onSecondayActionClick={navigateToLogin}
               heading={propsConfig.texts.header}
               description={propsConfig.texts.description}
-              headingStyle={{ textAlign: "center", fontWeight: "bold", color: "#363636" }}
-              descriptionStyles={{ color: "#787878", textAlign: "center" }}
+              headingStyle={{ textAlign: "center", fontWeight: "bold", color: "var(--digitv2-lightTheme-primary, #363636)" }}
+              descriptionStyles={{ color: "#787878", textAlign: "center", fontWeight: "normal", fontSize: "18px" }}
               cardStyle={{ maxWidth: "408px", margin: "auto" }}
               className="employeeForgotPassword"
               secondaryActionId={"employeeForgotPassword"}
@@ -149,8 +150,8 @@ const ForgotPassword = ({ config: propsConfig, t, stateCode }) => {
           onSecondayActionClick={navigateToLogin}
           heading={propsConfig.texts.header}
           description={propsConfig.texts.description}
-          headingStyle={{ textAlign: "center", fontWeight: "bold", color: "#363636" }}
-          descriptionStyles={{ color: "#787878", textAlign: "center" }}
+          headingStyle={{ textAlign: "center", fontWeight: "bold", color: "var(--digitv2-lightTheme-primary, #363636)" }}
+          descriptionStyles={{ color: "#787878", textAlign: "center", fontWeight: "normal", fontSize: "18px" }}
           cardStyle={{ maxWidth: "408px", margin: "auto" }}
           className="employeeForgotPassword"
           secondaryActionId={"employeeForgotPassword"}

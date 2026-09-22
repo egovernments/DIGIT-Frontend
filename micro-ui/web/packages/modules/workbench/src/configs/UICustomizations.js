@@ -730,10 +730,10 @@ export const UICustomizations = {
   },
   SearchLocalisationConfig: {
     customValidationCheck: (data) => {
-      //checking locale must be present 
-      const { locale } = data;
-      if (locale === "")
-        return { type:"warning", label: "WBH_LOC_WARNING_LOCALE_MUST_BE_PRESENT" };
+      //checking locale and module must be present
+      const { locale, module } = data;
+      if (locale === "" || module === "")
+        return { type:"warning", label: "WBH_LOC_WARNING_LOCALE_MODULE_MUST_BE_PRESENT" };
 
       return false;
     },
@@ -815,26 +815,16 @@ export const UICustomizations = {
     },
     combineData: ({ isLoading, isFetching, data, defaultData, refetch, refetchDefault }) => {
       //for every message in data we need to query defaultData , if same code is there then populate a field in data and return data
-      // data?.messages?.forEach((message,idx) => {
-      //   message.defaultMessage = ""
-      //   defaultData?.messages?.forEach((defaultMessage,defaultIdx)=> {
-      //     if(message.code === defaultMessage.code){
-      //       message.defaultMessage = defaultMessage.message
-      //     }
-      //   })
-      // })
-      // return data
-      //TODO: Revisit this logic
-      defaultData?.messages?.forEach((message, idx) => {
+      data?.messages?.forEach((message, idx) => {
         message.defaultMessage = ""
-        data?.messages?.forEach((defaultMessage, defaultIdx) => {
+        defaultData?.messages?.forEach((defaultMessage, defaultIdx) => {
           if (message.code === defaultMessage.code) {
             message.defaultMessage = defaultMessage.message
             message.originalLocale = defaultMessage.locale
           }
         })
       })
-      return defaultData
+      return data
 
     }
   },

@@ -26,6 +26,7 @@ const ChangeLanguage = (prop) => {
           optionKey={"label"}
           select={handleChangeLanguage}
           freeze={true}
+          showArrow={true}
           customSelector={<label className="cp">{t(languages?.find((language) => language?.value === selected)?.label)}</label>}
         />
       </div>

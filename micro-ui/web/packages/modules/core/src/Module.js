@@ -35,7 +35,8 @@ const createQueryClient = () => new QueryClient({
 });
 
 const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding,allowedUserTypes }) => {
-  const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
+  const modulePrefix = window?.globalConfigs?.getConfig("CORE_UI_MODULE_LOCALE_PREFIX") || "rainmaker";
+  const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules, modulePrefix);
   if (isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
