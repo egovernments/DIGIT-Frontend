@@ -101,23 +101,31 @@ const clearInitDataOnDeploymentChange = () => {
   writeSessionValue("lastDeployment", current);
 };
 
-// Record an explicit language switch against this deployment. LocalizationService only
-// writes Employee.locale / Citizen.locale, which nothing ever reads back.
-let tenantLocalePatched = false;
-const persistTenantLocaleOnSwitch = () => {
-  if (tenantLocalePatched) return; // StrictMode invokes effects twice in dev
-  const service = window?.Digit?.LocalizationService;
-  if (!service?.changeLanguage) return;
+// Mirror every write of the unscoped locale into this deployment's own key, so the next
+// boot can restore it. Both writers go through the global Digit.SessionStorage:
+// LocalizationService.changeLanguage (explicit switch) and StoreService.digitInitData
+// (boot auto-select). Intercepting the storage rather than wrapping changeLanguage keeps
+// this independent of which code path changed the language, and SessionStorage is the
+// first thing initLibraries() registers, so it is always available here.
+let localeMirrorInstalled = false;
+const mirrorLocaleToTenantKey = () => {
+  const storage = window?.Digit?.SessionStorage;
+  if (localeMirrorInstalled || !storage?.set) return;
 
-  const original = service.changeLanguage;
-  service.changeLanguage = async (locale, tenantId) => {
-    const result = await original(locale, tenantId);
-    // Keyed on the deployment, not the tenantId argument: that one comes from MDMS
-    // stateInfo and must stay consistent with what applyTenantLocale() reads at boot.
-    writeSessionValue(tenantLocaleKey(), locale);
+  const originalSet = storage.set;
+  storage.set = function (key, value, ttl) {
+    const result = originalSet.call(this, key, value, ttl);
+    // Mirror after the real write, and never let a failure here break it: this now sits in
+    // the path of every session write, not just the locale one.
+    try {
+      // originalSet, not the patched set, so this cannot recurse.
+      if (key === "locale" && value) originalSet.call(this, tenantLocaleKey(), value, ttl);
+    } catch (e) {
+      // no-op
+    }
     return result;
   };
-  tenantLocalePatched = true;
+  localeMirrorInstalled = true;
 };
 
 // Cross-deployment tenant redirect: this build (this contextPath) is the shared/common
@@ -172,7 +180,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   useEffect(() => {
     initLibraries().then(async () => {
-      persistTenantLocaleOnSwitch();
+      mirrorLocaleToTenantKey();
       // Use Promise.allSettled so each module is independent — one failure won't block others
       const results = await Promise.allSettled([
         import(/* webpackChunkName: "campaign-manager" */ "@egovernments/digit-ui-module-campaign-manager"),
