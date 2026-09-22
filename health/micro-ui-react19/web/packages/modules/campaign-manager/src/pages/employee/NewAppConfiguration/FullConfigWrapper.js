@@ -362,7 +362,10 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const previousRoute = currentPage?.previousRoute || null;
 
   return (
-    <React.Fragment>
+    // The core employee layout renders no <main>, so this screen declares its own. display: contents
+    // keeps the wrapper out of the layout (header bar + container stay direct flex children of the
+    // parent) while still exposing a main landmark (axe: landmark-one-main, region).
+    <main className="full-config-wrapper__main" style={{ display: "contents" }}>
       {/* Header Bar with Back Button and Flow Name */}
       <div className="full-config-wrapper__header-bar">
         <Button
@@ -926,7 +929,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
       {showToast && (
         <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />
       )}
-    </React.Fragment>
+    </main>
   );
 };
 
