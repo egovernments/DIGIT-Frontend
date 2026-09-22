@@ -97,6 +97,22 @@ const LocalisationBulkUpload = () => {
               ? `hcm-base-insidemonitoring-${projectTypeSuffix}`
               : null,
           },
+          {
+            name: t(
+              I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_TRANSIT_POST_POLIO_MODULE,
+            ),
+            value: `hcm-transitpost-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-transitpost-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_CLF_POLIO_MODULE),
+            value: `hcm-clf-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-clf-${projectTypeSuffix}`
+              : null,
+          },
         ]
       : [
           {

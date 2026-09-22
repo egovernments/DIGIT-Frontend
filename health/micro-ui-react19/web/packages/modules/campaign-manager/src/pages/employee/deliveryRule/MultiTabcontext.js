@@ -34,22 +34,49 @@ const Tabs = React.memo(() => {
   );
 });
 
-const SubTabs = React.memo(() => {
+const SubTabs = React.memo(({ deliveryMethods }) => {
   const { activeCycle, activeSubTabIndex, changeSubTab } = useDeliveryRules();
   const { t } = useTranslation();
 
-  if (!activeCycle?.deliveries || activeCycle.deliveries.length <= 1) {
+  const deliveries = activeCycle?.deliveries || [];
+  if (deliveries.length <= 1) {
     return null;
   }
 
-  const toggleOptions = activeCycle.deliveries.map((delivery, index) => ({
-    code: String(index),
-    name: `${t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELIVERY)} ${index + 1}`,
-  }));
+  // A delivery carrying a strategy code represents a delivery strategy rather than a dose, so it
+  // is labelled with the strategy name. Labels come from each strategy's own i18nKey in MDMS
+  // rather than a key built from the code, so a strategy added in MDMS needs no frontend change.
+  const isMethodMode = deliveries.some((delivery) => delivery?.deliveryMethod);
+
+  const options = deliveries.map((delivery, index) => {
+    const meta = deliveryMethods?.find((m) => m?.code === delivery?.deliveryMethod);
+    return {
+      code: String(index),
+      name: delivery?.deliveryMethod
+        ? t(meta?.i18nKey || delivery.deliveryMethod)
+        : `${t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELIVERY)} ${index + 1}`,
+    };
+  });
+
+  if (isMethodMode) {
+    return (
+      <Tab
+        activeLink={String(activeSubTabIndex)}
+        configItemKey="code"
+        configDisplayKey="name"
+        configNavItems={options}
+        setActiveLink={(code) => {
+          changeSubTab(Number(code));
+        }}
+        showNav={true}
+        style={{}}
+      />
+    );
+  }
 
   return (
     <Toggle
-      options={toggleOptions}
+      options={options}
       optionsKey="name"
       selectedOption={String(activeSubTabIndex)}
       onSelect={(code) => {
@@ -60,7 +87,7 @@ const SubTabs = React.memo(() => {
   );
 });
 
-const TabContent = React.memo(({ project }) => {
+const TabContent = React.memo(({ project, deliveryMethods }) => {
   const { activeCycle, campaignData } = useDeliveryRules();
   const { t } = useTranslation();
 
@@ -69,9 +96,19 @@ const TabContent = React.memo(({ project }) => {
 
   if (!hasMultipleCycles && !hasMultipleDeliveries) return null;
 
+  // The sub-text explains what a delivery within a cycle is. It adds nothing when the tabs are
+  // delivery strategies, because the tab label already says what each one is.
+  const isMethodMode = (activeCycle?.deliveries || []).some((delivery) => delivery?.deliveryMethod);
+
+  // Strategy tabs are rendered without a card of their own so that the delivery condition card
+  // attaches directly beneath them. Cycle tabs keep their card and its sub-text.
+  if (isMethodMode) {
+    return <SubTabs deliveryMethods={deliveryMethods} />;
+  }
+
   return (
     <Card className="sub-tab-container">
-      <SubTabs />
+      <SubTabs deliveryMethods={deliveryMethods} />
       <div>
         <CardText>{t(`CAMPAIGN_DELIVERY_TAB_SUB_TEXT_${project?.code ? project.code.toUpperCase() : project?.toUpperCase()}`)}</CardText>
       </div>
@@ -125,7 +162,7 @@ const MultiTab = React.memo(({ projectConfig, attributeConfig, operatorConfig, d
             <Tabs />
           </div>
 
-          <TabContent project={projectType} />
+          <TabContent project={projectType} deliveryMethods={projectConfig?.deliveryMethods} />
 
           <AddDeliveryRuleWrapper
             projectConfig={projectConfig}

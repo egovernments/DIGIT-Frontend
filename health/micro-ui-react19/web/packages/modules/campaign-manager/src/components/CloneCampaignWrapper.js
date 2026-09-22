@@ -43,6 +43,35 @@ const CloneCampaignWrapper = (props) => {
     return res?.CampaignDetails;
   };
 
+  /**
+   * Read the campaign that is being copied in full.
+   *
+   * The row handed in by the listing is a search result and is not guaranteed to carry every
+   * field of the campaign - boundaries in particular are not part of it. Copying straight from
+   * the row would therefore create a campaign with no boundaries, so the source is read back by
+   * campaign number first and used as the base for the copy.
+   */
+  const fetchCampaignToClone = async (tenantId, campaignNumber) => {
+    if (!campaignNumber) return null;
+    try {
+      const res = await Digit.CustomService.getResponse({
+        url: `/project-factory/v1/project-type/search`,
+        body: {
+          CampaignDetails: {
+            tenantId: tenantId,
+            campaignNumber: campaignNumber,
+          },
+        },
+      });
+      return res?.CampaignDetails?.[0] || null;
+    } catch (error) {
+      // Fall back to the row rather than blocking the copy - the campaign is still created, and
+      // anything the row is missing can be filled in from the wizard afterwards.
+      console.error("Failed to read the campaign being cloned:", error);
+      return null;
+    }
+  };
+
   const onNextClick = async () => {
     let hasError = false;
 
@@ -93,12 +122,15 @@ const CloneCampaignWrapper = (props) => {
       setIsValidatingName(false);
       return;
     }
+
+    // Copy from the full campaign, falling back to the listing row if it could not be read.
+    const sourceCampaign = (await fetchCampaignToClone(tenantId, props?.row?.campaignNumber)) || props?.row;
     setIsValidatingName(false);
 
     // Prepare modified campaign payload
     // Preserve original additionalDetails (including file upload info) and add cloneFrom
     const modifiedCampaign = {
-      ...props?.row,
+      ...sourceCampaign,
       campaignName: name,
       deliveryRules: [],
       parentId: null,
@@ -111,9 +143,9 @@ const CloneCampaignWrapper = (props) => {
       action: "draft",
       status: "drafted",
       additionalDetails: {
-        ...props?.row?.additionalDetails,
-        cloneFrom: props?.row?.campaignNumber,
-        clonedCampaignId:props?.row?.id
+        ...sourceCampaign?.additionalDetails,
+        cloneFrom: sourceCampaign?.campaignNumber,
+        clonedCampaignId: sourceCampaign?.id,
       },
     };
 

@@ -1949,7 +1949,7 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
 
       {/* Field Properties */}
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        {visibleTabProperties.map((panelItem) => {
+        {visibleTabProperties.map((panelItem, panelItemIndex) => {
           const bindTo = panelItem?.bindTo || "";
 
           // If bindTo has ".", take the first part (parent key), otherwise use the whole bindTo
@@ -1971,8 +1971,17 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
             ) // hide if missing
           );
           return shouldShowToggle ? (
-            // Keyed by the selected field too — see ConditionalField key note.
-            <div key={`${selectedField?.id ?? selectedField?.fieldName ?? ""}-${panelItem.id}`} className="drawer-toggle-field-container">
+            // Keyed by the selected field too - see ConditionalField key note.
+            //
+            // The panel item part has to stay unique within a render: not every entry in the
+            // master carries an id, and two entries without one produced the same key. React
+            // matches children by key, so the duplicates could not be paired up and the stale
+            // one was left behind on the next selection, stacking up another copy of that
+            // property each time a different field was picked.
+            <div
+              key={`${selectedField?.id ?? selectedField?.fieldName ?? ""}-${panelItem.id ?? panelItem.label ?? panelItemIndex}`}
+              className="drawer-toggle-field-container"
+            >
               <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} viewMode={viewMode} />
             </div>
           ) : null;

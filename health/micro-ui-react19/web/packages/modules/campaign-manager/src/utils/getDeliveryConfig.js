@@ -159,6 +159,8 @@ const generateConfig = (data) => {
       taskProcedure: data?.taskProcedure,
       resources: data?.resources,
       IsCycleDisable: data?.IsCycleDisable,
+      // Delivery strategies this campaign type offers, used to label the delivery rules tabs.
+      deliveryMethods: data?.deliveryMethods,
       cycleConfig: {
         cycle: data?.cycles?.length || 1,
         deliveries: data?.cycles?.[0]?.deliveries?.length || 1,

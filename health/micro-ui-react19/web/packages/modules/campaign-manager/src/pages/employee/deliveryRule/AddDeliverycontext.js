@@ -360,7 +360,10 @@ const AddDeliveryRule = React.memo(({
   onDelete 
 }) => {
 
-  const { updateRuleProducts, updateRuleDeliveryType } = useDeliveryRules();
+  const { updateRuleProducts, updateRuleDeliveryType, activeDelivery } = useDeliveryRules();
+  // Delivery strategy tabs are rendered without a card of their own, so this card sits directly
+  // beneath them and drops its top margin. Cycle tabs keep their card and the default spacing.
+  const isMethodMode = !!activeDelivery?.deliveryMethod;
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const prodRef = useRef();
@@ -389,7 +392,7 @@ const AddDeliveryRule = React.memo(({
 
   return (
     <>
-      <Card className="delivery-rule-container">
+      <Card className={`delivery-rule-container${isMethodMode ? " delivery-strategy-rule-container" : ""}`}>
         <CardHeader styles={{ display: "flex", justifyContent: "space-between" }} className="card-header-delivery">
           <p className="title">
             {t(I18N_KEYS.PAGES.CAMPAIGN_DELIVERY_RULE_LABEL)} {rule.ruleKey}
@@ -545,6 +548,14 @@ const AddDeliveryRuleWrapper = React.memo(({
     const directOption = filteredDeliveryTypeConfig?.find(opt => opt.code === "DIRECT");
     const indirectOption = filteredDeliveryTypeConfig?.find(opt => opt.code === "INDIRECT");
 
+    // A delivery that represents a delivery strategy is always DIRECT, whatever its position -
+    // the observation strategy describes a sequence of doses, which does not apply here. Offering
+    // INDIRECT would also let the selection fall back to it, since this list is what the selected
+    // value is resolved against.
+    if (activeDelivery?.deliveryMethod) {
+      return directOption ? [directOption] : [];
+    }
+
     if (isDOT1) {
       // For DOT1: First delivery = DIRECT only, 2nd+ delivery = INDIRECT only
       if (isFirstDelivery) {
@@ -556,7 +567,14 @@ const AddDeliveryRuleWrapper = React.memo(({
       // For non-DOT1: All deliveries = DIRECT only
       return directOption ? [directOption] : [];
     }
-  }, [activeDelivery?.deliveryIndex, activeDelivery?.deliveryNumber, activeDelivery?.key, filteredDeliveryTypeConfig, projectConfig?.observationStrategy]);
+  }, [
+    activeDelivery?.deliveryIndex,
+    activeDelivery?.deliveryNumber,
+    activeDelivery?.key,
+    activeDelivery?.deliveryMethod,
+    filteredDeliveryTypeConfig,
+    projectConfig?.observationStrategy,
+  ]);
 
   const handleAddRule = useCallback(() => {
     addRule();

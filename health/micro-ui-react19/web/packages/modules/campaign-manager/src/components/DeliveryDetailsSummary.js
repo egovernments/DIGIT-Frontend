@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useCampaignSubmitting } from "./CampaignSubmitContext";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import { getCampaignDeliveryMethods, getDeliveryMethods } from "../utils/deliveryMethods";
 import useCampaignStore from "../hooks/useCampaignStore";
 
 function mergeObjects(item) {
@@ -425,7 +426,72 @@ const DeliveryDetailsSummary = (props) => {
     }
   }, [data]);
 
-  const updatedObject = { ...data };
+  // Supplies the display name of each delivery strategy, used by the summary built below.
+  const { data: projectTypeMdms } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
+    { enabled: !!data?.data?.projectType },
+    { schemaCode: "HCM-PROJECT-TYPES.projectTypes" }
+  );
+
+  // A campaign that uses delivery strategies is summarised by strategy rather than by cycles and
+  // deliveries: the cycle and delivery counts are replaced by the list of chosen strategies, and
+  // each strategy gets a card of its own instead of sharing one behind a delivery toggle. Every
+  // other campaign type keeps the summary unchanged.
+  const updatedObject = useMemo(() => {
+    const base = { ...data };
+    const cycleCard = base?.cards?.[1];
+    const cycle = cycleCard?.sections?.[0]?.props?.data;
+    const deliveries = cycle?.deliveries || [];
+
+    const chosen = getCampaignDeliveryMethods(data?.data);
+
+    // Prefer the code stamped on the delivery. Campaigns saved before that field existed still
+    // hold the chosen strategies at campaign level, in the order the deliveries were built, so
+    // position is a safe fallback for display when the counts match.
+    const codeAt = (delivery, index) => delivery?.deliveryMethod || (chosen.length === deliveries.length ? chosen[index] : undefined);
+
+    const isStrategyCampaign = deliveries.some((d, i) => !!codeAt(d, i));
+    if (!isStrategyCampaign) return base;
+
+    const record = projectTypeMdms?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes?.find((e) => e?.code === data?.data?.projectType);
+    const methodMeta = getDeliveryMethods(record);
+    const labelFor = (code) => (code ? t(methodMeta.find((m) => m?.code === code)?.i18nKey || code) : t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA));
+
+    const summaryCard = {
+      sections: [
+        {
+          type: "DATA",
+          cardHeader: { value: t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELIVERY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem", marginBottom: "1rem" } },
+          values: [
+            {
+              key: "CAMPAIGN_CHOSEN_DELIVERY_STRATEGIES",
+              value: chosen.length > 0 ? chosen.map(labelFor).join(", ") : t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
+            },
+          ],
+        },
+      ],
+    };
+
+    const strategyCards = deliveries.map((delivery, index) => ({
+      name: `DELIVERY_${index + 1}`,
+      errorName: "deliveryErrors",
+      sections: [
+        {
+          name: `DELIVERY_${index + 1}`,
+          type: "COMPONENT",
+          cardHeader: { value: labelFor(codeAt(delivery, index)), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+          component: "CycleDataPreview",
+          // One delivery per card, so CycleDataPreview renders no delivery toggle. It displays
+          // whichever delivery is marked active, so the single delivery here must be marked so.
+          props: { data: { ...cycle, deliveries: [{ ...delivery, active: true }] } },
+        },
+      ],
+    }));
+
+    return { ...base, cards: [summaryCard, ...strategyCards] };
+  }, [data, projectTypeMdms, t]);
 
   const onStepClick = (currentStep) => {
     if (currentStep === 0) {

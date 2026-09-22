@@ -6,6 +6,7 @@ import deliveryRulesReducer from './deliveryRulesSlice';
 import { useDeliveryRules, useDeliveryRuleData } from './useDeliveryRules';
 import MultiTab from "./MultiTabcontext";
 import { useCampaignSubmitting } from "../../../components/CampaignSubmitContext";
+import { getSelectedMethodCodes } from "../../../utils/deliveryMethods";
 
 // Configure Redux store
 const store = configureStore({
@@ -47,6 +48,7 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     resetData,
     syncCycleCount,
     syncDeliveryCount,
+    syncDeliveryMethodsAction,
     updateObservationStrategyAction,
   } = useDeliveryRules();
 
@@ -67,6 +69,12 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     const data = sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure || config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure;
     return data;
   }, [config, sessionData]);
+
+  // Delivery strategies chosen for this campaign. Each becomes one delivery inside a single
+  // cycle. Empty for campaign types that do not use strategies, which leaves every cycle-based
+  // branch below untouched. Must stay below cycleData, which it reads.
+  const deliveryMethods = useMemo(() => getSelectedMethodCodes(cycleData), [cycleData]);
+  const isMethodMode = deliveryMethods.length > 0;
 
   // Get effective delivery configuration - prioritize cycle data over project config
   const effectiveDeliveryConfig = useMemo(() => {
@@ -168,7 +176,16 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     }
 
     try {
-      initializeData(cycles, deliveries, effectiveDeliveryConfig, savedDeliveryRules, attributeConfigRef.current, operatorConfigRef.current, currentCampaignId);
+      initializeData(
+        cycles,
+        deliveries,
+        effectiveDeliveryConfig,
+        savedDeliveryRules,
+        attributeConfigRef.current,
+        operatorConfigRef.current,
+        currentCampaignId,
+        isMethodMode ? deliveryMethods : undefined
+      );
     } catch (error) {
       console.error('Error initializing campaign data:', error);
       setErrorState(error.message);
@@ -178,6 +195,14 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
   // Perform initial sync after initialization to handle saved data with different counts
   useEffect(() => {
     if (!initialized || hasInitialSyncRef.current || !cycleData?.cycleConfgureDate || !effectiveDeliveryConfig || !campaignData.length) {
+      return;
+    }
+
+    // Deliveries are reconciled by strategy code in a separate effect further below, and the
+    // observation strategy that drives the count-based sync does not apply here - see the note
+    // on syncDeliveryMethods in deliveryRulesSlice.
+    if (isMethodMode) {
+      hasInitialSyncRef.current = true;
       return;
     }
 
@@ -239,6 +264,8 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
       return;
     }
 
+    if (isMethodMode) return;
+
     const currentObservationStrategy = cycleData.cycleConfgureDate.observationStrategy || "DOT1";
 
     // Check if observation strategy has changed after initial sync
@@ -260,6 +287,8 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     if (!initialized || !hasInitialSyncRef.current || !cycleData?.cycleConfgureDate || !effectiveDeliveryConfig) {
       return;
     }
+
+    if (isMethodMode) return;
 
     const currentCycles = cycleData.cycleConfgureDate.cycle;
     const currentDeliveries = cycleData.cycleConfgureDate.deliveries;
@@ -288,6 +317,17 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     prevCycleCountRef.current = currentCycles;
     prevDeliveryCountRef.current = currentDeliveries;
   }, [cycleData?.cycleConfgureDate?.cycle, cycleData?.cycleConfgureDate?.deliveries, initialized, effectiveDeliveryConfig, syncCycleCount, syncDeliveryCount, setErrorState]);
+
+  // Rebuild the deliveries whenever the chosen strategies change. Deliveries are matched by
+  // strategy code rather than by position, so removing one strategy cannot shift another
+  // strategy's configured rules onto it.
+  const methodsKey = deliveryMethods.join(",");
+  useEffect(() => {
+    if (!initialized || !isMethodMode || !effectiveDeliveryConfig) return;
+    const current = (campaignData?.[0]?.deliveries || []).map((d) => d?.deliveryMethod).join(",");
+    if (current === methodsKey) return;
+    syncDeliveryMethodsAction(deliveryMethods, effectiveDeliveryConfig, attributeConfigRef.current, operatorConfigRef.current);
+  }, [initialized, isMethodMode, methodsKey, campaignData, effectiveDeliveryConfig, syncDeliveryMethodsAction]);
 
   // Wrap onSelect in useCallback to prevent dependency issues
   const handleDataUpdate = useCallback((data) => {
