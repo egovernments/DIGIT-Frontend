@@ -1657,7 +1657,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             </div>
             <div className="campaign-bulk-upload">
               <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
-                {type === "boundary"
+                <h1 style={{margin:0}}>
+                  {type === "boundary"
                   ? t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_TARGET)
                   : type === "facility"
                   ? t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_FACILITY)
@@ -1668,6 +1669,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   : type === "attendanceRegisterAttendee"
                   ? t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_ATTENDANCE_REGISTER_ATTENDEE)
                   : t(I18N_KEYS.COMPONENTS.WBH_UPLOAD_USER)}
+                </h1>
               </HeaderComponent>
             </div>
             {uploadedFile.length === 0 && (

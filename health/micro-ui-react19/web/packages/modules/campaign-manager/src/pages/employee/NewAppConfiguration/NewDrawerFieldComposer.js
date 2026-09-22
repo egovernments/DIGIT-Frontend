@@ -978,15 +978,33 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const isEnabledForModuleAndPage = (modules = [], module, page) =>
           modules.some((m) => m?.[module]?.enabledPages?.includes(page));
 
+        /**
+         * Whether a label field belongs on the page currently being configured.
+         *
+         * A field normally names the flows it serves itself. An entity can also be shared by
+         * several flows that reuse the same page, and declares those flows on the entity rather
+         * than repeating them on every one of its fields. Reading only the field level hid every
+         * field of a shared entity from the flows that were declared that way, leaving the
+         * selector with nothing to offer.
+         *
+         * The entity-level route is a fallback, and still requires the page to match, so a field
+         * can only appear on a page some flow of that entity already enables it for.
+         */
+        const isFieldEnabled = (entity, field) => {
+          const module = currentData?.module;
+          const page = currentData?.page;
+
+          if (isEnabledForModuleAndPage(field?.modules, module, page)) return true;
+
+          const entityModules = Array.isArray(entity?.modules) ? entity.modules : [];
+          if (!entityModules.includes(module)) return false;
+
+          return entityModules.some((entityModule) => isEnabledForModuleAndPage(field?.modules, entityModule, page));
+        };
+
         const labelPairConfig = allLabelPairConfig
           .map((entity) => {
-            const labelFields = (entity.labelFields || []).filter((field) =>
-              isEnabledForModuleAndPage(
-                field.modules,
-                currentData?.module,
-                currentData?.page
-              )
-            );
+            const labelFields = (entity.labelFields || []).filter((field) => isFieldEnabled(entity, field));
 
             return labelFields.length
               ? { ...entity, labelFields }
@@ -1086,6 +1104,13 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                   });
                 }}
                 onClose={(selectedArray) => {
+                  // Nothing to choose from means the options could not be resolved - a flow the
+                  // config does not cover, or a failed fetch. That is not the user clearing the
+                  // selection, and writing the empty result back would erase the saved label
+                  // pairs simply because the field was opened. Individual removal still goes
+                  // through onChipClose, which is unaffected.
+                  if (nestedOptions.length === 0) return;
+
                   const extractedOptions =
                     selectedArray?.map((arr) => arr?.[1]) || [];
                   const mappedData = extractedOptions

@@ -553,7 +553,7 @@ const LocalisationBulkUpload = () => {
           <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
             {/* h1: page heading for assistive tech (axe page-has-heading-one); health CSS resets
                 heading font-size/weight so the visual is unchanged */}
-            <h1 style={{ margin: 0 }}>{t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_BULK_UPLOAD_XLS)}</h1>
+            <h1 style={{ margin: 0 }} className="update-boundary-header">{t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_BULK_UPLOAD_XLS)}</h1>
           </HeaderComponent>
         </div>
 

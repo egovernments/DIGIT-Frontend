@@ -631,29 +631,31 @@ return (
           </LabelFieldPair>
         </Card>
       )}
-      {activeDeliveryRules.map((rule) => (
-        <AddDeliveryRule
-          key={rule.ruleKey}
-          rule={rule}
-          attributeConfig={attributeConfig}
-          operatorConfig={operatorConfig}
-          deliveryTypeConfig={deliveryTypeConfig}
-          projectConfig={projectConfig}
-          canDelete={activeDeliveryRules.length > 1}
-          onDelete={() => handleRemoveRule(rule.ruleKey)}
-        />
-      ))}
-      
-      {canAddMore && (
-        <Button
-          variation="secondary"
-          label={t(I18N_KEYS.PAGES.CAMPAIGN_ADD_MORE_DELIVERY_BUTTON)}
-          title={t(I18N_KEYS.PAGES.CAMPAIGN_ADD_MORE_DELIVERY_BUTTON)}
-          className="add-rule-btn hover"
-          icon="AddIcon"
-          onClick={handleAddRule}
-        />
-      )}
+      <Card className="delivery-conditions-wrapper" type="secondary">
+        {activeDeliveryRules.map((rule) => (
+          <AddDeliveryRule
+            key={rule.ruleKey}
+            rule={rule}
+            attributeConfig={attributeConfig}
+            operatorConfig={operatorConfig}
+            deliveryTypeConfig={deliveryTypeConfig}
+            projectConfig={projectConfig}
+            canDelete={activeDeliveryRules.length > 1}
+            onDelete={() => handleRemoveRule(rule.ruleKey)}
+          />
+        ))}
+
+        {canAddMore && (
+          <Button
+            variation="secondary"
+            label={t(I18N_KEYS.PAGES.CAMPAIGN_ADD_MORE_DELIVERY_BUTTON)}
+            title={t(I18N_KEYS.PAGES.CAMPAIGN_ADD_MORE_DELIVERY_BUTTON)}
+            className="add-rule-btn hover"
+            icon="AddIcon"
+            onClick={handleAddRule}
+          />
+        )}
+      </Card>
     </>
   );
 });
