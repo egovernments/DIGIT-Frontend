@@ -269,6 +269,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
             cardIndex={0}
             fieldKey="heading"
             viewMode={viewMode}
+            maxLength={64}
           />
           {/* Description Field */}
           <HeaderFieldWrapper
