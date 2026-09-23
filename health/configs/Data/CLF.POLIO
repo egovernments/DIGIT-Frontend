@@ -27,6 +27,7 @@
                                             "value": "{{item.UserActionModel.additionalFields.fields.locationName}}",
                                             "format": "textTemplate",
                                             "fieldName": "sessionLocationName",
+                                            "mandatory": true,
                                             "properties": {
                                                 "style": "headingL",
                                                 "bottomGap": 4
@@ -34,30 +35,17 @@
                                         },
                                         {
                                             "type": "template",
-                                            "format": "row",
-                                            "children": [
-                                                {
-                                                    "type": "template",
-                                                    "value": "{{item.UserActionModel.additionalFields.fields.clfLocationType}}",
-                                                    "format": "textTemplate",
-                                                    "fieldName": "sessionTypeText"
-                                                },
-                                                {
-                                                    "type": "template",
-                                                    "value": "{{fn:formatDate(item.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}",
-                                                    "format": "textTemplate",
-                                                    "fieldName": "sessionDateText"
-                                                }
-                                            ],
+                                            "value": "{{item.UserActionModel.additionalFields.fields.clfLocationType}}",
+                                            "format": "textTemplate",
                                             "fieldName": "sessionSubtitle",
+                                            "mandatory": true,
                                             "properties": {
-                                                "bottomGap": 12,
-                                                "mainAxisAlignment": "start"
+                                                "bottomGap": 12
                                             }
                                         },
                                         {
                                             "type": "template",
-                                            "value": "{{item.children.length}} vaccinated · {{item.malesChildren.length}}M · {{item.femaleChildren.length}}F",
+                                            "value": "{{item.children.length}} vaccinated · {{item.malesChildren.length}}M | {{item.femaleChildren.length}}F",
                                             "format": "textTemplate",
                                             "fieldName": "vaccinatedInline",
                                             "properties": {
@@ -306,6 +294,70 @@
                                 "properties": [
                                     {
                                         "type": "string",
+                                        "label": "GV_SESSION_DATE_LABEL",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "date",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": true,
+                                        "fieldName": "sessionDate",
+                                        "mandatory": true,
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": true,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "GV_LOCATION_CAPTURED_LABEL",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "latLng",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "GV_GPS_START_HELPTEXT",
+                                        "infoText": "",
+                                        "readOnly": true,
+                                        "fieldName": "gpsStart",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "GV_VALIDATION_GPS_REQUIRED"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "GV_SESSION_AREA_LABEL",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "locality",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": true,
+                                        "fieldName": "sessionArea",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
                                         "enums": [
                                             {
                                                 "code": "SCHOOL",
@@ -329,7 +381,7 @@
                                             }
                                         ],
                                         "label": "GV_CLF_LOCATION_TYPE_LABEL",
-                                        "order": 1,
+                                        "order": 4,
                                         "value": "",
                                         "format": "dropdown",
                                         "hidden": false,
@@ -338,6 +390,7 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "clfLocationType",
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
@@ -354,7 +407,7 @@
                                     {
                                         "type": "string",
                                         "label": "GV_LOCATION_NAME_LABEL",
-                                        "order": 2,
+                                        "order": 5,
                                         "value": "",
                                         "format": "text",
                                         "hidden": false,
@@ -363,9 +416,15 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "locationName",
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
+                                        "lengthRange": {
+                                            "maxLength": "200",
+                                            "minLength": "1",
+                                            "errorMessage": "GV_VALIDATION_MAX_200"
+                                        },
                                         "validations": [
                                             {
                                                 "type": "required",
@@ -374,7 +433,7 @@
                                             },
                                             {
                                                 "type": "maxLength",
-                                                "value": 200,
+                                                "value": "200",
                                                 "message": "GV_VALIDATION_MAX_200"
                                             }
                                         ],
@@ -384,7 +443,7 @@
                                     {
                                         "type": "string",
                                         "label": "GV_RESPONSIBLE_PERSON_LABEL",
-                                        "order": 3,
+                                        "order": 6,
                                         "value": "",
                                         "format": "text",
                                         "hidden": false,
@@ -396,10 +455,15 @@
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
+                                        "lengthRange": {
+                                            "maxLength": "200",
+                                            "minLength": "1",
+                                            "errorMessage": "GV_VALIDATION_MAX_200"
+                                        },
                                         "validations": [
                                             {
                                                 "type": "maxLength",
-                                                "value": 200,
+                                                "value": "200",
                                                 "message": "GV_VALIDATION_MAX_200"
                                             }
                                         ],
@@ -409,7 +473,7 @@
                                     {
                                         "type": "string",
                                         "label": "GV_CONTACT_NUMBER_LABEL",
-                                        "order": 4,
+                                        "order": 7,
                                         "value": "",
                                         "format": "mobileNumber",
                                         "hidden": false,
@@ -448,49 +512,11 @@
                                     },
                                     {
                                         "type": "string",
-                                        "label": "GV_SESSION_DATE_LABEL",
-                                        "order": 5,
-                                        "value": "",
-                                        "format": "date",
-                                        "hidden": true,
-                                        "tooltip": "",
-                                        "helpText": "",
-                                        "infoText": "",
-                                        "readOnly": true,
-                                        "fieldName": "sessionDate",
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": true,
-                                        "validations": [],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "string",
-                                        "label": "GV_SESSION_AREA_LABEL",
-                                        "order": 6,
-                                        "value": "",
-                                        "format": "locality",
-                                        "hidden": true,
-                                        "tooltip": "",
-                                        "helpText": "",
-                                        "infoText": "",
-                                        "readOnly": true,
-                                        "fieldName": "sessionArea",
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "string",
                                         "label": "GV_WORKER_NAME_LABEL",
-                                        "order": 7,
+                                        "order": 8,
                                         "value": "",
                                         "format": "text",
-                                        "hidden": true,
+                                        "hidden": false,
                                         "tooltip": "",
                                         "helpText": "",
                                         "infoText": "",
@@ -512,10 +538,10 @@
                                     {
                                         "type": "string",
                                         "label": "GV_WORKER_PHONE_LABEL",
-                                        "order": 8,
+                                        "order": 9,
                                         "value": "",
-                                        "format": "phone",
-                                        "hidden": true,
+                                        "format": "mobileNumber",
+                                        "hidden": false,
                                         "tooltip": "",
                                         "helpText": "",
                                         "infoText": "",
@@ -533,31 +559,6 @@
                                                 "expression": "true==true"
                                             }
                                         ]
-                                    },
-                                    {
-                                        "type": "string",
-                                        "label": "GV_LOCATION_CAPTURED_LABEL",
-                                        "order": 9,
-                                        "value": "",
-                                        "format": "latLng",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "GV_GPS_START_HELPTEXT",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "gpsStart",
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [
-                                            {
-                                                "type": "required",
-                                                "value": true,
-                                                "message": "GV_VALIDATION_GPS_REQUIRED"
-                                            }
-                                        ],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
                                     }
                                 ],
                                 "systemDate": null,
@@ -647,6 +648,7 @@
                                         "value": "{{contextData.0.UserActionModel.additionalFields.fields.locationName}}",
                                         "format": "textTemplate",
                                         "fieldName": "sessionLocationName",
+                                        "mandatory": true,
                                         "properties": {
                                             "style": "headingL",
                                             "bottomGap": 4
@@ -654,30 +656,12 @@
                                     },
                                     {
                                         "type": "template",
-                                        "format": "row",
-                                        "children": [
-                                            {
-                                                "type": "template",
-                                                "value": "{{contextData.0.UserActionModel.additionalFields.fields.clfLocationType}}",
-                                                "format": "textTemplate",
-                                                "fieldName": "sessionTypeText",
-                                                "properties": {
-                                                    "style": "captionS"
-                                                }
-                                            },
-                                            {
-                                                "type": "template",
-                                                "value": "{{fn:formatDate(contextData.0.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}",
-                                                "format": "textTemplate",
-                                                "fieldName": "sessionDateText",
-                                                "properties": {
-                                                    "style": "captionS"
-                                                }
-                                            }
-                                        ],
+                                        "value": "{{contextData.0.UserActionModel.additionalFields.fields.clfLocationType}} · {{fn:formatDate(contextData.0.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}",
+                                        "format": "textTemplate",
                                         "fieldName": "sessionSubtitle",
+                                        "mandatory": true,
                                         "properties": {
-                                            "mainAxisAlignment": "start"
+                                            "style": "captionS"
                                         }
                                     }
                                 ],
@@ -695,6 +679,7 @@
                                         "value": "GV_METRIC_VACCINATED_TODAY",
                                         "format": "textTemplate",
                                         "fieldName": "vaccinatedLabel",
+                                        "mandatory": true,
                                         "properties": {
                                             "style": "bodyS",
                                             "bottomGap": 4
@@ -705,6 +690,7 @@
                                         "value": "{{contextData.0.children.length}}",
                                         "format": "textTemplate",
                                         "fieldName": "vaccinatedCount",
+                                        "mandatory": true,
                                         "properties": {
                                             "style": "headingXl",
                                             "bottomGap": 4
@@ -712,7 +698,7 @@
                                     },
                                     {
                                         "type": "template",
-                                        "value": "{{contextData.0.malesChildren.length}} male · {{contextData.0.femaleChildren.length}} female",
+                                        "value": "{{contextData.0.malesChildren.length}} male | {{contextData.0.femaleChildren.length}} female",
                                         "format": "textTemplate",
                                         "fieldName": "vaccinatedSplit",
                                         "properties": {
@@ -734,6 +720,7 @@
                                         "value": "GV_METRIC_CHILDREN_REFERRED",
                                         "format": "textTemplate",
                                         "fieldName": "referredLabel",
+                                        "mandatory": true,
                                         "properties": {
                                             "style": "bodyS",
                                             "bottomGap": 4
@@ -744,6 +731,7 @@
                                         "value": "{{contextData.0.referrals.length}}",
                                         "format": "textTemplate",
                                         "fieldName": "referredCount",
+                                        "mandatory": true,
                                         "properties": {
                                             "style": "headingXl"
                                         }
@@ -811,6 +799,7 @@
                                     }
                                 ],
                                 "fieldName": "addReferral",
+                                "mandatory": true,
                                 "properties": {
                                     "size": "large",
                                     "type": "secondary",
@@ -972,8 +961,33 @@
                                 "properties": [
                                     {
                                         "type": "string",
-                                        "label": "GV_CHILD_NAME_LABEL",
+                                        "label": "GV_LOCATION_CAPTURED_LABEL",
                                         "order": 1,
+                                        "value": "",
+                                        "format": "latLng",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "GV_GPS_START_HELPTEXT",
+                                        "infoText": "",
+                                        "readOnly": true,
+                                        "fieldName": "gpsChild",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "GV_VALIDATION_GPS_REQUIRED"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "GV_CHILD_NAME_LABEL",
+                                        "order": 2,
                                         "value": "",
                                         "format": "text",
                                         "hidden": false,
@@ -987,6 +1001,11 @@
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
+                                        "lengthRange": {
+                                            "maxLength": "200",
+                                            "minLength": "1",
+                                            "errorMessage": "GV_VALIDATION_MAX_200"
+                                        },
                                         "validations": [
                                             {
                                                 "type": "required",
@@ -995,7 +1014,7 @@
                                             },
                                             {
                                                 "type": "maxLength",
-                                                "value": 200,
+                                                "value": "200",
                                                 "message": "GV_VALIDATION_MAX_200"
                                             }
                                         ],
@@ -1004,18 +1023,8 @@
                                     },
                                     {
                                         "type": "string",
-                                        "enums": [
-                                            {
-                                                "code": "MALE",
-                                                "name": "GV_ENUM_MALE"
-                                            },
-                                            {
-                                                "code": "FEMALE",
-                                                "name": "GV_ENUM_FEMALE"
-                                            }
-                                        ],
                                         "label": "GV_CHILD_SEX_LABEL",
-                                        "order": 2,
+                                        "order": 3,
                                         "value": "",
                                         "format": "select",
                                         "hidden": false,
@@ -1028,6 +1037,7 @@
                                         "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
+                                        "schemaCode": "common-masters.GenderType",
                                         "systemDate": false,
                                         "validations": [
                                             {
@@ -1052,7 +1062,7 @@
                                             }
                                         ],
                                         "label": "GV_AGE_BAND_LABEL",
-                                        "order": 3,
+                                        "order": 4,
                                         "value": "",
                                         "format": "select",
                                         "hidden": false,
@@ -1071,33 +1081,6 @@
                                                 "type": "required",
                                                 "value": true,
                                                 "message": "GV_AGE_BAND_LABEL_VALIDATION_REQUIRED"
-                                            }
-                                        ],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "string",
-                                        "label": "GV_LOCATION_CAPTURED_LABEL",
-                                        "order": 4,
-                                        "value": "",
-                                        "format": "latLng",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "",
-                                        "infoText": "",
-                                        "readOnly": true,
-                                        "required": true,
-                                        "fieldName": "gpsChild",
-                                        "mandatory": true,
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [
-                                            {
-                                                "type": "required",
-                                                "value": true,
-                                                "message": "GV_VALIDATION_GPS_REQUIRED"
                                             }
                                         ],
                                         "errorMessage": "",
@@ -1135,17 +1118,17 @@
                                         "order": 1,
                                         "value": true,
                                         "format": "checkbox",
-                                        "hidden": false,
+                                        "hidden": true,
                                         "tooltip": "",
                                         "helpText": "",
                                         "infoText": "",
                                         "readOnly": true,
-                                        "required": false,
                                         "fieldName": "twoDropsAdministered",
                                         "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
+                                        "validations": [],
                                         "errorMessage": "",
                                         "includeInForm": true,
                                         "isMultiSelect": false,
@@ -1157,17 +1140,16 @@
                                         "order": 2,
                                         "value": true,
                                         "format": "checkbox",
-                                        "hidden": false,
+                                        "hidden": true,
                                         "tooltip": "",
                                         "helpText": "",
                                         "infoText": "",
                                         "readOnly": true,
-                                        "required": false,
                                         "fieldName": "fingerMarked",
-                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
+                                        "validations": [],
                                         "errorMessage": "",
                                         "includeInForm": true,
                                         "isMultiSelect": false,
@@ -1289,6 +1271,7 @@
                                         }
                                     ],
                                     "fieldName": "recordAnother",
+                                    "mandatory": true,
                                     "properties": {
                                         "type": "primary"
                                     }
@@ -1361,9 +1344,15 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "contactPerson",
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
+                                        "lengthRange": {
+                                            "maxLength": "200",
+                                            "minLength": "1",
+                                            "errorMessage": "GV_VALIDATION_MAX_200"
+                                        },
                                         "validations": [
                                             {
                                                 "type": "required",
@@ -1372,7 +1361,7 @@
                                             },
                                             {
                                                 "type": "maxLength",
-                                                "value": 200,
+                                                "value": "200",
                                                 "message": "GV_VALIDATION_MAX_200"
                                             }
                                         ],
@@ -1391,6 +1380,7 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "contactNumber",
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
@@ -1431,13 +1421,19 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "address",
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
+                                        "lengthRange": {
+                                            "maxLength": "300",
+                                            "minLength": "1",
+                                            "errorMessage": "GV_VALIDATION_MAX_300"
+                                        },
                                         "validations": [
                                             {
                                                 "type": "maxLength",
-                                                "value": 300,
+                                                "value": "300",
                                                 "message": "GV_VALIDATION_MAX_300"
                                             }
                                         ],
@@ -1456,9 +1452,15 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "referralReason",
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
+                                        "lengthRange": {
+                                            "maxLength": "500",
+                                            "minLength": "1",
+                                            "errorMessage": "GV_VALIDATION_MAX_500"
+                                        },
                                         "validations": [
                                             {
                                                 "type": "required",
@@ -1467,7 +1469,7 @@
                                             },
                                             {
                                                 "type": "maxLength",
-                                                "value": 500,
+                                                "value": "500",
                                                 "message": "GV_VALIDATION_MAX_500"
                                             }
                                         ],
@@ -1480,14 +1482,13 @@
                                         "order": 5,
                                         "value": "",
                                         "format": "latLng",
-                                        "hidden": false,
+                                        "hidden": true,
                                         "tooltip": "",
-                                        "helpText": "",
+                                        "helpText": "GV_GPS_START_HELPTEXT",
                                         "infoText": "",
                                         "readOnly": true,
                                         "required": true,
                                         "fieldName": "gpsReferral",
-                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
@@ -1607,6 +1608,7 @@
                                         }
                                     ],
                                     "fieldName": "recordAnotherReferral",
+                                    "mandatory": true,
                                     "properties": {
                                         "type": "primary"
                                     }
@@ -1628,6 +1630,7 @@
                                         }
                                     ],
                                     "fieldName": "backToDashboard",
+                                    "mandatory": true,
                                     "properties": {
                                         "type": "secondary"
                                     }
@@ -1660,6 +1663,6 @@
                 "createdBy": "e1c370db-8f61-4460-8bea-3b85c7373124",
                 "lastModifiedBy": "961ad45f-5a9c-44df-affa-ced9831ffdeb",
                 "createdTime": 1789628239245,
-                "lastModifiedTime": 1790062100527
+                "lastModifiedTime": 1790164218008
             }
         }
