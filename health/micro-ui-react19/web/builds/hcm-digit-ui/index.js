@@ -52,6 +52,10 @@ const initTokens = (stateCode) => {
 // Everything downstream (i18next, Request.js msgId, each module's useStore, the pdf
 // utils, campaign-manager) still reads the unscoped key, so nothing else changes.
 
+// Build marker. Bumped whenever this locale logic changes, so "which bundle is live?"
+// is a single console read (window.__tenantLocale) instead of decoding minified source.
+const TENANT_LOCALE_BUILD = "v2-mirror";
+
 const SESSION_TTL_SECONDS = 86400; // matches the Digit.SessionStorage default
 
 // Digit.SessionStorage prefixes keys with "Digit." and wraps values as {value, ttl, expiry}.
@@ -107,15 +111,17 @@ const clearInitDataOnDeploymentChange = () => {
 // (boot auto-select). Intercepting the storage rather than wrapping changeLanguage keeps
 // this independent of which code path changed the language, and SessionStorage is the
 // first thing initLibraries() registers, so it is always available here.
-let localeMirrorInstalled = false;
+// Self-healing: the marker lives on the patched function, not in a module flag, so if
+// anything replaces window.Digit.SessionStorage (initLibraries/setupLibraries running
+// again, HMR, ...) we re-install rather than silently staying unpatched.
 const mirrorLocaleToTenantKey = () => {
   const storage = window?.Digit?.SessionStorage;
-  if (localeMirrorInstalled || !storage?.set) return;
+  if (!storage?.set || storage.set.__tenantLocaleMirror) return;
 
   const originalSet = storage.set;
-  storage.set = function (key, value, ttl) {
+  const patched = function (key, value, ttl) {
     const result = originalSet.call(this, key, value, ttl);
-    // Mirror after the real write, and never let a failure here break it: this now sits in
+    // Mirror after the real write, and never let a failure here break it: this sits in
     // the path of every session write, not just the locale one.
     try {
       // originalSet, not the patched set, so this cannot recurse.
@@ -125,7 +131,29 @@ const mirrorLocaleToTenantKey = () => {
     }
     return result;
   };
-  localeMirrorInstalled = true;
+  patched.__tenantLocaleMirror = true;
+  storage.set = patched;
+  if (window.__tenantLocale) window.__tenantLocale.mirrorInstalled = true;
+};
+
+// Belt and braces. The mirror only fires if a locale write actually goes through
+// Digit.SessionStorage.set, which has proven unreliable in practice. This copies whatever
+// currently sits in the unscoped key into the deployment-scoped one, independent of who
+// wrote it or how, and re-arms the mirror on the way past.
+const syncTenantLocale = () => {
+  mirrorLocaleToTenantKey();
+  const current = readSessionValue("locale");
+  if (current) writeSessionValue(tenantLocaleKey(), current);
+  if (window.__tenantLocale) window.__tenantLocale.lastSync = current || null;
+};
+
+// Run the sync at every point the page can go away or change: reload, tab close, tab
+// switch, and the cross-deployment location.replace all fire pagehide.
+const installTenantLocaleSync = () => {
+  window.addEventListener("pagehide", syncTenantLocale);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") syncTenantLocale();
+  });
 };
 
 // Cross-deployment tenant redirect: this build (this contextPath) is the shared/common
@@ -169,15 +197,26 @@ const initDigitUI = () => {
   clearInitDataOnDeploymentChange();
   applyTenantLocale();
 
+  window.__tenantLocale = {
+    build: TENANT_LOCALE_BUILD,
+    deployment: currentDeployment(),
+    region: window?.globalConfigs?.getConfig("LOCALE_REGION"),
+    contextPath: window.contextPath,
+    scopedKey: `Digit.${tenantLocaleKey()}`,
+    mirrorInstalled: false, // flipped by mirrorLocaleToTenantKey() once the hook is on
+  };
+
   ["pushState", "replaceState"].forEach((method) => {
     const original = window.history[method];
     window.history[method] = function (...args) {
       const result = original.apply(this, args);
+      syncTenantLocale();
       redirectToTenantDeploymentIfNeeded();
       return result;
     };
   });
   window.addEventListener("popstate", redirectToTenantDeploymentIfNeeded);
+  installTenantLocaleSync();
   redirectToTenantDeploymentIfNeeded(); // handles page refresh with a tenant already logged in
 
   const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -190,7 +229,8 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   useEffect(() => {
     initLibraries().then(async () => {
-      mirrorLocaleToTenantKey();
+      syncTenantLocale();
+      console.info("[tenant-locale]", window.__tenantLocale);
       // Use Promise.allSettled so each module is independent — one failure won't block others
       const results = await Promise.allSettled([
         import(/* webpackChunkName: "campaign-manager" */ "@egovernments/digit-ui-module-campaign-manager"),
