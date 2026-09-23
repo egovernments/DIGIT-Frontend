@@ -35,9 +35,13 @@ const TopBarSideBar = ({
     localStorage.removeItem("sso-logout-redirect-param");
   };
 
-  const getSSOPostLogoutRedirectUri = () => `${window.location.origin}/${window?.contextPath || ""}/employee`;
+  /* Deployment the user logged in through, recorded at login. Must be read before
+     UserService.logout(), which clears all of localStorage. */
+  const getLoginSource = () => localStorage.getItem("login.source") || window?.contextPath || "";
 
-  const handleSSOLogout = async () => {
+  const getSSOPostLogoutRedirectUri = (source) => `${window.location.origin}/${source}/employee`;
+
+  const handleSSOLogout = async (source) => {
     const provider = localStorage.getItem("sso-provider");
     const normalizedProvider = provider?.toUpperCase();
     const logoutUrlFromConfig = localStorage.getItem("sso-logout-url");
@@ -68,7 +72,7 @@ const TopBarSideBar = ({
 
     // Generic SSO logout handler
     if (logoutUrlFromConfig) {
-      const postLogoutRedirectUri = getSSOPostLogoutRedirectUri();
+      const postLogoutRedirectUri = getSSOPostLogoutRedirectUri(source);
       clearSSOLogoutMarkers();
 
       try {
@@ -90,9 +94,14 @@ const TopBarSideBar = ({
   };
 
   const handleOnSubmit = async () => {
-    const handledBySSO = await handleSSOLogout();
+    const source = getLoginSource();
+    const handledBySSO = await handleSSOLogout(source);
     if (!handledBySSO) {
-      Digit.UserService.logout();
+      await Digit.UserService.logout();
+      /* UserService.logout() redirects to the CURRENT contextPath. Send the user back to
+         the deployment they logged in through instead - same override the SSO branch above
+         already relies on. */
+      window.location.replace(`/${source}/employee/user/language-selection`);//TODO check
     }
     setShowDialog(false);
   };

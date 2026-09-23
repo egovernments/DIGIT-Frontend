@@ -139,6 +139,11 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     if (user?.info?.roles?.length > 0) user.info.roles = filteredRoles;
     Digit.UserService.setUser(user);
     setEmployeeDetail(user?.info, user?.access_token);
+    /* Remember which deployment the user logged in through (the shared/common login, or a
+       tenant-specific one) so logout can return them there. This has to be captured here:
+       after the cross-deployment redirect window.contextPath is the TARGET tenant, not the
+       deployment the login actually happened on. */
+    localStorage.setItem("login.source", window?.contextPath || "");
     let redirectPath = `/${window?.contextPath}/employee`;
 
     /* logic to redirect back to same screen where we left off */

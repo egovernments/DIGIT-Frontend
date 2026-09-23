@@ -100,6 +100,8 @@ const Otp = ({ isLogin = false }) => {
     if (user?.info?.roles?.length > 0) user.info.roles = filteredRoles;
     Digit.UserService.setUser(user);
     setEmployeeDetail(user?.info, user?.access_token);
+    /* See Login/login.js: remember the deployment the login happened on, for logout. */
+    localStorage.setItem("login.source", window?.contextPath || "");
     let redirectPath = `/${window?.globalPath}/user/setup`;
 
     const getRedirectPathOtpLogin = (locationPathname, user, MdmsRes, RoleLandingUrl) => {

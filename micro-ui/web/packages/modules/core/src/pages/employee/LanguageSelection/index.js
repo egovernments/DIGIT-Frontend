@@ -36,16 +36,11 @@ const LanguageSelection = () => {
     ]);
     setIsChangingLanguage(false);
   };
-  function getContextPath(contextPath) {
-    if (!contextPath || typeof contextPath !== "string") return "";
-    return contextPath.split("/")[0];
-  }
-  
   const hasMultipleLanguages = languages?.length > 1;
 
   const handleSubmit = (event) => {
         if (isChangingLanguage) return;
-        navigate(`/${getContextPath(window.contextPath)}/user/login?ts=${Date.now()}`);
+        navigate(`/${window?.contextPath}/employee/user/login?ts=${Date.now()}`);
   };
 
   if (isLoading) return <Loader />;
