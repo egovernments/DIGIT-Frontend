@@ -286,6 +286,7 @@ const L2Main = ({}) => {
     const userInfo = Digit.UserService.getUser()?.info;
     const boundaryType = new URLSearchParams(location.search).get("boundaryType");
     const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
+    const campaignNumber = new URLSearchParams(location.search).get("campaignNumber");
     const eligibleRolesForFilter = {
       NATIONAL_SUPERVISOR: true,
       PROVINCIAL_SUPERVISOR: true,
@@ -297,6 +298,13 @@ const L2Main = ({}) => {
       let updatedFilters = {
         ...data.filters,
       };
+
+      if (campaignNumber) {
+        updatedFilters = {
+          ...updatedFilters,
+          campaignNumber,
+        };
+      }
 
       if (boundaryValue && campaignInfo?.[projectType]?.boundaries?.[boundaryType]?.includes(boundaryValue)) {
         updatedFilters = {
@@ -310,6 +318,17 @@ const L2Main = ({}) => {
         filters: updatedFilters,
       };
     }
+
+    if (!userRoles?.length && campaignNumber) {
+      updatedData = {
+        ...updatedData,
+        filters: {
+          ...updatedData?.filters,
+          campaignNumber,
+        },
+      };
+    }
+
     let descendantDateRange = Digit.SessionStorage.get("descendantDateRange");
     if (updatedData?.filters && descendantDateRange?.[boundaryValue]) {
       updatedData["filters"]["campaignStartDate"] = descendantDateRange?.[boundaryValue]?.startDate?.toString();

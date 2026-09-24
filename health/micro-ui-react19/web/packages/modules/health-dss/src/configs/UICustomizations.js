@@ -59,17 +59,19 @@ const renderText = (value, t) => {
 export const UICustomizations = {
   IframeInterfaceConfig: {
     addAdditionalFilters: (url, filters) => {
-      const { boundaryType, campaignNumber } = filters || {};
+      const { boundaryType } = filters || {};
+      const campaignNumber = filters?.campaignNumber || Digit.SessionStorage.get("campaignSelected")?.campaignNumber;
       const boundaryValue = filters?.[boundaryType];
+      const campaignField = "additionalDetails.campaignNumber";
       let filter = "";
       if (boundaryType && boundaryValue && campaignNumber) {
-        filter = `(query:(match_phrase:(Data.boundaryHierarchy.${boundaryType}.keyword:'${boundaryValue}'))),(query:(match_phrase:(Data.campaignNumber.keyword:'${campaignNumber}')))`;
+        filter = `(query:(match_phrase:(Data.boundaryHierarchy.${boundaryType}.keyword:'${boundaryValue}'))),(query:(match_phrase:(Data.${campaignField}.keyword:'${campaignNumber}')))`;
       } else {
         filter =
           boundaryType && boundaryValue
             ? `(query:(match_phrase:(Data.boundaryHierarchy.${boundaryType}.keyword:'${boundaryValue}')))`
             : campaignNumber
-            ? `(query:(match_phrase:(Data.campaignNumber.keyword:'${campaignNumber}')))`
+            ? `(query:(match_phrase:(Data.${campaignField}.keyword:'${campaignNumber}')))`
             : null;
       }
       const gParamMatch = /_g=\((.*?)\)/.exec(url);
