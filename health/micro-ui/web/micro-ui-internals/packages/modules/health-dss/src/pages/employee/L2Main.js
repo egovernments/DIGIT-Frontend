@@ -160,6 +160,7 @@ const L2Main = ({}) => {
   const campaignData = Digit.SessionStorage.get("campaignSelected");
   const projectData= Digit.SessionStorage.get("projectSelected");
   const campaignNumber = new URLSearchParams(location.search).get("campaignNumber");
+  const resolvedCampaignNumber = campaignNumber || campaignData?.campaignNumber;
   const [filters, setFilters] = useState(() => {
     const {
       startDate,
@@ -188,7 +189,7 @@ const L2Main = ({}) => {
         campaignStartDate: startDate?.getTime()?.toString(),
         campaignEndDate: endDate?.getTime()?.toString(),
         projectTypeId: projectTypeId,
-        campaignNumber : campaignNumber,
+        campaignNumber : resolvedCampaignNumber,
         ...dynamicBoundaryFilter,
    
       },
@@ -319,6 +320,23 @@ const L2Main = ({}) => {
       updatedData["filters"]["campaignStartDate"] = descendantDateRange?.[boundaryValue]?.startDate?.toString();
       updatedData["filters"]["campaignEndDate"] = descendantDateRange?.[boundaryValue]?.endDate?.toString();
     }
+
+    const resolvedBoundaryType = updatedData?.filters?.boundaryType || filters?.filters?.boundaryType || boundaryType;
+    const resolvedBoundaryValue = resolvedBoundaryType
+      ? updatedData?.filters?.[resolvedBoundaryType] || filters?.filters?.[resolvedBoundaryType] || boundaryValue
+      : null;
+    const resolvedFilterCampaignNumber =
+      updatedData?.filters?.campaignNumber || filters?.filters?.campaignNumber || campaignNumber || campaignData?.campaignNumber;
+
+    updatedData = {
+      ...updatedData,
+      filters: {
+        ...updatedData?.filters,
+        ...(resolvedBoundaryType && resolvedBoundaryValue ? { [resolvedBoundaryType]: resolvedBoundaryValue, boundaryType: resolvedBoundaryType } : {}),
+        ...(resolvedFilterCampaignNumber ? { campaignNumber: resolvedFilterCampaignNumber } : {}),
+      },
+    };
+
     Digit.SessionStorage.set(key, updatedData);
     setFilters(updatedData);
     const sessionCampaignDates = JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.filters;

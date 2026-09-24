@@ -65,16 +65,18 @@ export const UICustomizations = {
     addAdditionalFilters: (url, filters) => {
       const { boundaryType, campaignNumber } = filters || {};
       const boundaryValue = filters?.[boundaryType];
-      let filter = "";
-      if (boundaryType && boundaryValue && campaignNumber) {
-        filter = `(query:(match_phrase:(Data.boundaryHierarchy.${boundaryType}.keyword:'${boundaryValue}'))),(query:(match_phrase:(Data.campaignNumber.keyword:'${campaignNumber}')))`;
-      } else {
-        filter = boundaryType && boundaryValue
-          ? `(query:(match_phrase:(Data.boundaryHierarchy.${boundaryType}.keyword:'${boundaryValue}')))`
-          : campaignNumber
-          ? `(query:(match_phrase:(Data.campaignNumber.keyword:'${campaignNumber}')))`
-          : null;
+      const campaignField = "additionalDetails.campaignNumber";
+      const sessionCampaignNumber = Digit?.SessionStorage?.get("campaignSelected")?.campaignNumber;
+      const resolvedCampaignNumber = campaignNumber || sessionCampaignNumber;
+
+      const filterClauses = [];
+      if (boundaryType && boundaryValue) {
+        filterClauses.push(`(query:(match_phrase:(Data.boundaryHierarchy.${boundaryType}.keyword:'${boundaryValue}')))`);
       }
+      if (resolvedCampaignNumber) {
+        filterClauses.push(`(query:(match_phrase:(Data.${campaignField}.keyword:'${resolvedCampaignNumber}')))`);
+      }
+      const filter = filterClauses.length ? filterClauses.join(",") : null;
       // Extract existing _g values for refreshInterval and time
       const gParamMatch = /_g=\((.*?)\)/.exec(url);
       let gParamContent = gParamMatch && gParamMatch[1] ? gParamMatch[1] : "";
