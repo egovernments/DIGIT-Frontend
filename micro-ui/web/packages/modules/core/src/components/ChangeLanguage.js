@@ -1,6 +1,7 @@
 import { Button, Dropdown } from "@egovernments/digit-ui-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { rememberChosenLanguage } from "../utils/tenantLocale";
 
 const ChangeLanguage = (prop) => {
   const isDropdown = prop.dropdown || false;
@@ -11,6 +12,9 @@ const ChangeLanguage = (prop) => {
   const [selected, setselected] = useState(selectedLanguage);
   const handleChangeLanguage = (language) => {
     setselected(language.value);
+    /* A deliberate choice: remember it for this deployment, and leave a pending marker so
+       it carries into whichever tenant the user opens next. */
+    rememberChosenLanguage(language.value);
     Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
   };
 

@@ -7,6 +7,7 @@ import Background from "../../../components/Background";
 import ImageComponent from "../../../components/ImageComponent";
 import { loginConfig as defaultLoginConfig } from "../Login/config";
 import { useLoginConfig } from "../../../hooks/useLoginConfig";
+import { rememberChosenLanguage } from "../../../utils/tenantLocale";
 
 const DEFAULT_LOCALE=Digit?.Utils?.getDefaultLanguage?.();
 
@@ -29,6 +30,9 @@ const LanguageSelection = () => {
   const [isChangingLanguage, setIsChangingLanguage] = useState(false);
   const handleChangeLanguage = async (language) => {
     setselected(language.value);
+    /* A deliberate choice - see ChangeLanguage. Written before the fetch so the preference
+       survives even if the user navigates away mid-load. */
+    rememberChosenLanguage(language.value);
     setIsChangingLanguage(true);
     await Promise.all([
       Digit.LocalizationService.getLocale({ modules: ["digit-ui", "digit-privacy-policy"], locale: language.value, tenantId: stateInfo.code }),

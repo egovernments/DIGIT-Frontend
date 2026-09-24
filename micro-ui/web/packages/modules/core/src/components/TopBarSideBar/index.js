@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import SideBar from "./SideBar";
 import LogoutDialog from "../Dialog/LogoutDialog";
 import { clearIdpToken } from "../../utils/idpToken";
+import { restoreLanguagePreferences, snapshotLanguagePreferences } from "../../utils/tenantLocale";
 const TopBarSideBar = ({
   t,
   stateInfo,
@@ -40,9 +41,11 @@ const TopBarSideBar = ({
      UserService.logout(), which clears all of localStorage. */
   const getLoginSource = () => localStorage.getItem("login.source") || window?.contextPath || "";
 
-  const getSSOPostLogoutRedirectUri = (source) => `${window.location.origin}/${source}/employee`;
+  /* Straight to login, not the language picker: the remembered language is preserved across
+     logout, so there is nothing to ask. Same target as the password path below. */
+  const getSSOPostLogoutRedirectUri = (source) => `${window.location.origin}/${source}/employee/user/login`;
 
-  const handleSSOLogout = async (source) => {
+  const handleSSOLogout = async (source, preservedLanguages) => {
     const provider = localStorage.getItem("sso-provider");
     const normalizedProvider = provider?.toUpperCase();
     const logoutUrlFromConfig = localStorage.getItem("sso-logout-url");
@@ -79,6 +82,7 @@ const TopBarSideBar = ({
       try {
         await Digit.UserService.logout();
       } finally {
+        restoreLanguagePreferences(preservedLanguages);
         try {
           const url = new URL(logoutUrlFromConfig);
           url.searchParams.set(redirectParamName, postLogoutRedirectUri);
@@ -96,16 +100,20 @@ const TopBarSideBar = ({
 
   const handleOnSubmit = async () => {
     const source = getLoginSource();
+    /* logout() wipes all of localStorage, which would take the remembered languages with it.
+       Snapshot now, put them back once the wipe has happened. */
+    const preservedLanguages = snapshotLanguagePreferences();
     /* UserService.logout() clears localStorage and sessionStorage but not cookies, so the
        IdP token has to be dropped explicitly - on both the SSO and password paths. */
     clearIdpToken();
-    const handledBySSO = await handleSSOLogout(source);
+    const handledBySSO = await handleSSOLogout(source, preservedLanguages);
     if (!handledBySSO) {
       await Digit.UserService.logout();
+      restoreLanguagePreferences(preservedLanguages);
       /* UserService.logout() redirects to the CURRENT contextPath. Send the user back to
          the deployment they logged in through instead - same override the SSO branch above
          already relies on. */
-      window.location.replace(`/${source}/employee/user/language-selection`);//TODO check
+      window.location.replace(`/${source}/employee/user/login`);
     }
     setShowDialog(false);
   };
