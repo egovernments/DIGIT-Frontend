@@ -14,6 +14,7 @@ import {
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import useBoundaryLocalization from "../../hooks/useBoundaryLocalization";
 
 const NewShipmentPopup = ({
   campaignNumber,
@@ -72,6 +73,10 @@ const NewShipmentPopup = ({
 
   // Derive BOUNDARY_HIERARCHY_TYPE from the campaign's actual hierarchyType
   const BOUNDARY_HIERARCHY_TYPE = campaignData?.hierarchyType;
+
+  // Boundary codes are rendered as i18n keys in the hierarchy filters below, so the
+  // hcm-boundary-<hierarchyType> module must be loaded before the dropdowns show up
+  const { isLoading: boundaryLocalizationLoading } = useBoundaryLocalization(BOUNDARY_HIERARCHY_TYPE);
 
   const hierarchyDefinitionReqCriteria = useMemo(
     () => ({
@@ -1312,7 +1317,8 @@ const NewShipmentPopup = ({
     hierarchyLoading ||
     boundaryRelLoading ||
     projectsLoading ||
-    projectTypeLoading;
+    projectTypeLoading ||
+    boundaryLocalizationLoading;
   const allVisibleSelected =
     filteredFacilities.length > 0 &&
     filteredFacilities.every((f) => selectedFacilityIds.has(f.id));
