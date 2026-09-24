@@ -54,7 +54,7 @@ const initTokens = (stateCode) => {
 
 // Build marker. Bumped whenever this locale logic changes, so "which bundle is live?"
 // is a single console read (window.__tenantLocale) instead of decoding minified source.
-const TENANT_LOCALE_BUILD = "v2-mirror";
+const TENANT_LOCALE_BUILD = "v3-resolve";
 
 const SESSION_TTL_SECONDS = 86400; // matches the Digit.SessionStorage default
 
@@ -85,14 +85,92 @@ const removeSessionValue = (key) => window.sessionStorage.removeItem(`Digit.${ke
 const currentDeployment = () => window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "default";
 const tenantLocaleKey = () => `locale.${currentDeployment()}`;
 
-// Seed the unscoped locale from this deployment's own value. When there is none (first
-// visit here, or we just arrived from another deployment) the unscoped key is dropped so
-// StoreService.digitInitData falls through to initData.languages[0].value - i.e. this
-// tenant's first configured language is auto-selected.
-const applyTenantLocale = () => {
-  const scoped = readSessionValue(tenantLocaleKey());
-  if (scoped) writeSessionValue("locale", scoped);
+// Language preferences are written by digit-ui-module-core (utils/tenantLocale.js) into
+// localStorage, in the Digit.PersistantStorage wrapper format:
+//
+//   Digit.locale.<tenant>    locale last used on this deployment, e.g. fr_CHADUAT
+//   Digit.language.pending   a language the user JUST picked, region-free, e.g. "fr"
+//
+// Read here rather than written: core owns the writes, because it is the only place a user
+// deliberately picks a language. Reimplemented instead of using Digit.PersistantStorage so
+// the format stays explicit on this side of the boundary.
+const PENDING_LANGUAGE_KEY = "Digit.language.pending";
+
+const readPersistentValue = (key) => {
+  try {
+    const raw = window.localStorage.getItem(key);
+    if (!raw || raw === "undefined") return null;
+    const item = JSON.parse(raw);
+    if (item?.expiry && Date.now() > item.expiry) {
+      window.localStorage.removeItem(key);
+      return null;
+    }
+    return item?.value ?? null;
+  } catch (e) {
+    return null;
+  }
+};
+
+// The locale strings encode the deployment (fr_AFRO vs fr_CHADUAT), so a language chosen on
+// the shared login cannot be carried across as-is - only its language part can, re-stamped
+// with this deployment's region.
+const localeForThisDeployment = (languageSubtag) => {
+  const region = window?.globalConfigs?.getConfig("LOCALE_REGION");
+  return languageSubtag && region ? `${languageSubtag}_${region}` : null;
+};
+
+// Languages this deployment actually offers. Needed to validate a carried-over choice before
+// applying it: an unavailable locale means no messages AND no loaded fallback, i.e. raw keys.
+// MdmsService.init is memoised in Digit.RequestCache, so digitInitData's own call later reuses
+// this response - no extra request.
+const getConfiguredLanguages = async (stateCode) => {
+  try {
+    const { MdmsRes } = await window.Digit.MDMSService.init(stateCode);
+    const stateInfo = MdmsRes?.["common-masters"]?.StateInfo?.[0] || {};
+    return (stateInfo.hasLocalisation ? stateInfo.languages : [])?.map((l) => l?.value).filter(Boolean) || [];
+  } catch (e) {
+    console.warn("[tenant-locale] could not read the configured languages", e);
+    return [];
+  }
+};
+
+// Decide the active locale for this deployment, in priority order:
+//   1. a language the user just picked elsewhere, re-stamped and validated -> then consumed
+//   2. the locale last used on this deployment
+//   3. nothing: clear the unscoped key so digitInitData falls through to languages[0]
+//
+// The unscoped Digit.locale stays in sessionStorage - it is what i18next, RequestInfo.msgId,
+// the per-module useStore calls and the pdf utils read.
+const applyTenantLocale = async (stateCode) => {
+  const pending = readPersistentValue(PENDING_LANGUAGE_KEY);
+  const scoped = readPersistentValue(`Digit.${tenantLocaleKey()}`);
+  const languages = pending || scoped ? await getConfiguredLanguages(stateCode) : [];
+
+  let resolved = null;
+  let via = "default";
+
+  if (pending) {
+    const candidate = localeForThisDeployment(pending);
+    // Consume it either way: a one-shot handoff must not linger and override a later choice.
+    window.localStorage.removeItem(PENDING_LANGUAGE_KEY);
+    if (candidate && languages.includes(candidate)) {
+      resolved = candidate;
+      via = "pending";
+    }
+  }
+
+  if (!resolved && scoped && languages.includes(scoped)) {
+    resolved = scoped;
+    via = "scoped";
+  }
+
+  if (resolved) writeSessionValue("locale", resolved);
   else removeSessionValue("locale");
+
+  if (window.__tenantLocale) {
+    window.__tenantLocale.resolvedLocale = resolved;
+    window.__tenantLocale.resolvedVia = via;
+  }
 };
 
 // initData is cached under one unscoped key too, so arriving from another deployment can
@@ -103,57 +181,6 @@ const clearInitDataOnDeploymentChange = () => {
   const previous = readSessionValue("lastDeployment");
   if (previous && previous !== current) removeSessionValue("initData");
   writeSessionValue("lastDeployment", current);
-};
-
-// Mirror every write of the unscoped locale into this deployment's own key, so the next
-// boot can restore it. Both writers go through the global Digit.SessionStorage:
-// LocalizationService.changeLanguage (explicit switch) and StoreService.digitInitData
-// (boot auto-select). Intercepting the storage rather than wrapping changeLanguage keeps
-// this independent of which code path changed the language, and SessionStorage is the
-// first thing initLibraries() registers, so it is always available here.
-// Self-healing: the marker lives on the patched function, not in a module flag, so if
-// anything replaces window.Digit.SessionStorage (initLibraries/setupLibraries running
-// again, HMR, ...) we re-install rather than silently staying unpatched.
-const mirrorLocaleToTenantKey = () => {
-  const storage = window?.Digit?.SessionStorage;
-  if (!storage?.set || storage.set.__tenantLocaleMirror) return;
-
-  const originalSet = storage.set;
-  const patched = function (key, value, ttl) {
-    const result = originalSet.call(this, key, value, ttl);
-    // Mirror after the real write, and never let a failure here break it: this sits in
-    // the path of every session write, not just the locale one.
-    try {
-      // originalSet, not the patched set, so this cannot recurse.
-      if (key === "locale" && value) originalSet.call(this, tenantLocaleKey(), value, ttl);
-    } catch (e) {
-      // no-op
-    }
-    return result;
-  };
-  patched.__tenantLocaleMirror = true;
-  storage.set = patched;
-  if (window.__tenantLocale) window.__tenantLocale.mirrorInstalled = true;
-};
-
-// Belt and braces. The mirror only fires if a locale write actually goes through
-// Digit.SessionStorage.set, which has proven unreliable in practice. This copies whatever
-// currently sits in the unscoped key into the deployment-scoped one, independent of who
-// wrote it or how, and re-arms the mirror on the way past.
-const syncTenantLocale = () => {
-  mirrorLocaleToTenantKey();
-  const current = readSessionValue("locale");
-  if (current) writeSessionValue(tenantLocaleKey(), current);
-  if (window.__tenantLocale) window.__tenantLocale.lastSync = current || null;
-};
-
-// Run the sync at every point the page can go away or change: reload, tab close, tab
-// switch, and the cross-deployment location.replace all fire pagehide.
-const installTenantLocaleSync = () => {
-  window.addEventListener("pagehide", syncTenantLocale);
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") syncTenantLocale();
-  });
 };
 
 // Cross-deployment tenant redirect: this build (this contextPath) is the shared/common
@@ -195,7 +222,7 @@ const initDigitUI = () => {
   // Must run before initLibraries() (which initialises i18next from the unscoped locale)
   // and before digitInitData reads it.
   clearInitDataOnDeploymentChange();
-  applyTenantLocale();
+  /* applyTenantLocale needs Digit (MDMS + storage), so it runs after initLibraries() below. */
 
   window.__tenantLocale = {
     build: TENANT_LOCALE_BUILD,
@@ -203,20 +230,19 @@ const initDigitUI = () => {
     region: window?.globalConfigs?.getConfig("LOCALE_REGION"),
     contextPath: window.contextPath,
     scopedKey: `Digit.${tenantLocaleKey()}`,
-    mirrorInstalled: false, // flipped by mirrorLocaleToTenantKey() once the hook is on
+    resolvedLocale: null, // filled in by applyTenantLocale() once it has run
+    resolvedVia: null,
   };
 
   ["pushState", "replaceState"].forEach((method) => {
     const original = window.history[method];
     window.history[method] = function (...args) {
       const result = original.apply(this, args);
-      syncTenantLocale();
       redirectToTenantDeploymentIfNeeded();
       return result;
     };
   });
   window.addEventListener("popstate", redirectToTenantDeploymentIfNeeded);
-  installTenantLocaleSync();
   redirectToTenantDeploymentIfNeeded(); // handles page refresh with a tenant already logged in
 
   const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -229,7 +255,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   useEffect(() => {
     initLibraries().then(async () => {
-      syncTenantLocale();
+      await applyTenantLocale(stateCode);
       console.info("[tenant-locale]", window.__tenantLocale);
       // Use Promise.allSettled so each module is independent — one failure won't block others
       const results = await Promise.allSettled([
