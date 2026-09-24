@@ -1,0 +1,1040 @@
+[
+  {
+    "code": "ACTION_TEST_MY_CAMPAIGN",
+    "message": "Minha campanha",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_MY_CAMPIAGN",
+    "message": "Minha campanha",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_PREVIEW_CAMPAIGN",
+    "message": "Pré-visualizar campanha",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_PREVIEW_CAMPIAGN",
+    "message": "Pré-visualizar campanha",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_UPLOAD_BOUNDARY",
+    "message": "Gerenciar limites",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ADD_HIERARCHY_LEVEL",
+    "message": "Adicionar nível de hierarquia",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BACK_TO_PAGE_PROPERTIES",
+    "message": "Voltar às propriedades da página",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BACK_TO__CAMPAIGN_HOME",
+    "message": "Voltar para a página inicial da campanha",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BAD_REQUEST",
+    "message": "Erro interno. Por favor, tente novamente.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BATCH_NUMBER",
+    "message": "Número do lote",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BEDNET",
+    "message": "Rede mosquiteira",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY",
+    "message": "Beneficiário",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARYLOCATION_CORRESPONDENCE",
+    "message": "Correspondência",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARYLOCATION_OTHER",
+    "message": "Outro",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARYLOCATION_PERMANENT",
+    "message": "Permanente",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "Beneficiário Ausente",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_BACK",
+    "message": "Voltar",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_DETAILS_DESC",
+    "message": "Visão geral da entrega do beneficiário",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_DETAILS_HEADING",
+    "message": "Detalhes do beneficiário",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFERRED",
+    "message": "Beneficiário Indicado",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Beneficiário recusado",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_complaintNumber_LABEL",
+    "message": "Etiquetas de número de campanha",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_complaintType_LABEL",
+    "message": "Etiqueta de tipo de reclamação",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_locality_LABEL",
+    "message": "Etiqueta da Aldeia",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BODY_ITEM_mobileNumber_LABEL",
+    "message": "Etiquetas de números de celular",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY",
+    "message": "Limite",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_COLUMN",
+    "message": "Coluna",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_CONFIRMATION_FAILED",
+    "message": "Falha ao confirmar a criação e persistência do limite.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DATA_FROM_GEOPODE",
+    "message": "Dados de limite do GeoPoDe.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DATA_MANAGEMENT",
+    "message": "Gerenciamento de limites",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DATA_NOT_FOUND",
+    "message": "Ocorreu um problema ao processar os dados de limite. Verifique e tente novamente.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DATA_UPDATE",
+    "message": "Editar dados de limite",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DATA_VIEW",
+    "message": "Visualização de dados de limite",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DOWNLOADED",
+    "message": "Dados de limite baixados",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_DOWNLOAD_MESSAGE",
+    "message": "Baixe o modelo Excel que contém os dados de limite selecionados. Depois de fazer o download, preencha o modelo com os dados de destino corretos e carregue a planilha.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_EMPTY",
+    "message": "está vazio.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_EMPTY_SHEET",
+    "message": "A planilha está vazia ou não possui cabeçalhos.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_ENTITY_CREATE_ERROR",
+    "message": "Ocorreu um erro ao criar a entidade limite.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_EXCEL",
+    "message": "Excel",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_FILLED",
+    "message": "está cheio, mas",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_GEOJSON",
+    "message": "GeoJson",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_HIERARCHY_INFO_MSG",
+    "message": "Adicione seus níveis de hierarquia de limite clicando no botão “Adicionar novo nível de hierarquia de limite”. Se quiser remover um nível, clique no ícone de exclusão próximo ao nível que deseja excluir.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_HIERARCHY_INSERT_ERROR",
+    "message": "Erro ao inserir hierarquia de limites.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_LOCALISATION_ERROR",
+    "message": "Falha na criação do limite. Erro de localização.!",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_MANAGEMENT",
+    "message": "Gerenciamento de limites",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_NAME",
+    "message": "Nome do limite",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_NOT_FOUND",
+    "message": "O limite especificado não foi encontrado.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_NO_VALID_ROWS",
+    "message": "Planilha inválida, baixe e adicione os dados",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_README_HEADER_3_DESC_2",
+    "message": "As validações são apenas para a coluna Código de limite e Alvo na coluna de nível de limite selecionado.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_RELATIONSHIP_CREATE_ERROR",
+    "message": "Falha ao criar relacionamento de limite.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_RELATION_CREATE",
+    "message": "Criação de relação de limite",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_ROW",
+    "message": "Linha",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_SEARCH_ERROR",
+    "message": "Erro ao procurar limite.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_SHEET_FIRST_COLUMN_INVALID_ERROR",
+    "message": "A primeira coluna da folha limite deve ser exclusiva.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_SHEET_HEADER_ERROR",
+    "message": "O cabeçalho da folha limite é inválido.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_SHEET_UPLOADED_INVALID_ERROR",
+    "message": "Um ou mais limites não possuem um pai mapeado",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_SYNC_ERROR",
+    "message": "Falha ao sincronizar limites do banco de dados.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BOUNDARY_TARGET_ERROR",
+    "message": "O destino está ausente ou tem um valor inválido.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CANCEL",
+    "message": "Cancelar",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CHOOSE_MEANS_TO_CREATE_BOUNDARY",
+    "message": "Escolha sua opção para criar limite",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CMN_BOUNDARY_REL_CREATE",
+    "message": "Criar tipo de hierarquia",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CMN_FILLORDELETE_CREATED_HIERARCHY",
+    "message": "Por favor preencha todos os campos",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "COMMON_BACK",
+    "message": "Voltar",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_CANCEL",
+    "message": "Cancelar",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_MESSAGE",
+    "message": "Sair?",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_WEB_CONFIRMATION_MESSAGE",
+    "message": "Tem certeza que quer",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_WEB_HEADER",
+    "message": "Sair",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CORE_LOGOUT_WEB_YES",
+    "message": "Sim",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CREATE",
+    "message": "Criar",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CREATE_BOUNDARY_HIERARCHY",
+    "message": "Criar hierarquia de limites",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CREATE_BOUNDARY_HIERARCHY_TYPE",
+    "message": "Gerenciar limites",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CREATE_MY_OWN_BOUNDARY_DATA",
+    "message": "Crie meus próprios dados de limite",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CREATE_NEW_BOUNDARY_DATA",
+    "message": "Criar novos dados de limite",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CREATE_NEW_CAMPAIGN",
+    "message": "Criar",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CURRENT_HIERARCHIES",
+    "message": "Lista de Limites",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "CURRENT_HIERARCHY_TYPE_IS",
+    "message": "A hierarquia atual é",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DATA_SYNC_WITH_SERVER",
+    "message": "Criando limites",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DELETE_LEVEL",
+    "message": "Excluir nível",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DOWNLOAD",
+    "message": "Download",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "DOWNLOAD_EXCEL_TEMPLATE",
+    "message": "Baixe o modelo do Excel",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "EDIT_BOUNDARY_DATA",
+    "message": "Editar dados de limite",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "EDIT_PROFILE",
+    "message": "Editar perfil",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ES_BOUNDARY_DATA_CREATED_SUCCESS_RESPONSE",
+    "message": "Limite criado com sucesso!",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ES_COMMON_PLEASE_ENTER_ALL_MANDATORY_FIELDS",
+    "message": "Por favor preencha os campos obrigatórios.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FILE_UPLOADED_SUCCESSFULLY",
+    "message": "Arquivo enviado com sucesso",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "GET_BOUNDARY_DATA_FROM_GEOPODE",
+    "message": "Dados de limite do GeoPoDe",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "GO_BACK_TO_HOME",
+    "message": "Volte para casa",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG_CODE",
+    "message": "código",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG_I18NKEY",
+    "message": "i18nKey",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG_KEY",
+    "message": "chave",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_AM_ERROR_MESSAGE",
+    "message": "Há algum erro.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BACK",
+    "message": "Voltar",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_BENEFICIARY_TYPE",
+    "message": "Tipo de beneficiário",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CAMPAIGN_TYPE",
+    "message": "Tipo de campanha",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CAMPAIGN_TYPE_DESCRIPTION",
+    "message": "O tipo de campanha determinará o tipo de beneficiário da sua campanha. Suas regras de entrega serão pré-carregadas com base no tipo de campanha selecionado.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CAMPAIGN_TYPE_HEADER",
+    "message": "Qual é o tipo de campanha que você deseja realizar?",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CREATE_BOUNDARY_HIERARCHY",
+    "message": "Crie uma nova hierarquia de limites",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_CREATE_BOUNDARY_HIERARCHY_DESCRIPTION",
+    "message": "Você pode criar uma nova hierarquia de limites definindo o número de níveis na hierarquia e nomeando os níveis",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_FACILITY_MESSAGE",
+    "message": "Preencha o modelo baixado com dados de limite e carregue a planilha.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_FILE_VALIDATION_ERROR",
+    "message": "O arquivo enviado não está de acordo com o modelo",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_LEVEL",
+    "message": "Nível",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_LEVEL_IS_MANDATORY",
+    "message": "Por favor preencha os campos obrigatórios.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HCM_UPLOAD_BOUNDARY",
+    "message": "Gerenciar limites",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HIERARCHY_CREATED_ON",
+    "message": "Hierarquia criada em",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HIERARCHY_CREATED_SUCCESSFULLY",
+    "message": "Hierarquia criada com sucesso",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HIERARCHY_CREATION_FAILED",
+    "message": "Falha na criação da hierarquia",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HIERARCHY_LAST_MODIFIED_ON",
+    "message": "Hierarquia modificada pela última vez em",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HIERARCHY_NAME",
+    "message": "Nome da hierarquia",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HIERARCHY_PLEASE_WAIT",
+    "message": "Aguarde alguns minutos enquanto a hierarquia de limites está sendo criada",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HIERARCHY_PLEASE_WAIT ",
+    "message": "Criando hierarquia",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD",
+    "message": "Doméstico",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INDIVIDUAL",
+    "message": "Individual",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INFO",
+    "message": "Informações",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INFO_CARD_TEXT",
+    "message": "Texto do cartão de informações",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "MANAGE_MASTER_DATA",
+    "message": "Gerenciar dados mestre",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "NEWLY_ADDED_BOUNDARY_DATA",
+    "message": "Novo nível de hierarquia",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME",
+    "message": "Aguarde e tente novamente depois de algum tempo",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "PREVIEW_ON_MAP",
+    "message": "Pré-visualização no mapa",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCHEMA_HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG",
+    "message": "atributoConfig",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SIERRALEON",
+    "message": "Serra Leoa – ITN",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SIERRALEONE",
+    "message": "Serra Leoa – ITN",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SUBMIT_EXCEL",
+    "message": "Enviar",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "TEMPLATE_GENERATION_IN_PROGRESS",
+    "message": "A geração do modelo está em andamento",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "UPLOAD_BOUNDARY",
+    "message": "Gerenciar limite",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "UPLOAD_DATA_MAPPING",
+    "message": "Carregar mapeamento de dados",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "UPLOAD_EXCEL",
+    "message": "Carregar Excel",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "UPLOAD_EXCEL_DESCRIPTION",
+    "message": "Carregar Excel",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "UPLOAD_EXCEL_FOR_ALL_BOUNDARIES",
+    "message": "Carregar Excel para todos os limites",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "UPLOAD_FILE",
+    "message": "Carregar arquivo",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "UPLOAD_GEOJSONS",
+    "message": "Carregar geojson",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "USER_DETAILS",
+    "message": "Detalhes do usuário",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "VIEW_EXISTING_BOUNDARY_DATA",
+    "message": "Ver todos os limites",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_ADD_LEVEL",
+    "message": "Adicionar nível",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_BOUNDARY_CREATION_FAIL",
+    "message": "A criação do limite falhou",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_BOUNDARY_CREATION_FAIL: DUPLICATE_RECORD.",
+    "message": "Ops! Parece que você já inseriu isso. Insira um nome de hierarquia diferente.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_BOUNDARY_CREATION_FAIL: INTERNAL_SERVER_ERROR.",
+    "message": "O arquivo enviado não está de acordo com o modelo",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_BOUNDARY_UPSERT_SUCCESS",
+    "message": "Hierarquia de limite criada com sucesso.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_BULK_BROWSE_FILES",
+    "message": "Navegue em meus arquivos",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_CAMPAIGN_CREATED",
+    "message": "Arquivo enviado com sucesso.",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_CONFIRM_UPLOAD",
+    "message": "Confirmar upload",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_CREATE_HIERARCHY",
+    "message": "Criar hierarquia",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_DELETE",
+    "message": "Excluir",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_DOWNLOAD",
+    "message": "Download",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_DOWNLOAD_TEMPLATE",
+    "message": "Baixar modelo",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_DRAG_DROP",
+    "message": "Arraste e solte sua planilha Excel preenchida ou",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_HIERARCHY_DETAILS",
+    "message": "Detalhes da hierarquia",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_HIERARCHY_NAME",
+    "message": "Nome da hierarquia",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_HIERARCHY_TYPE",
+    "message": "Selecione o tipo de hierarquia",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_LOC_BULK_UPLOAD_XLS",
+    "message": "Limites de upload em massa",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MASTER_NAME",
+    "message": "Nome Mestre",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_ADMINSCHEMA",
+    "message": "Esquema de administração",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_ATTRIBUTECONFIG",
+    "message": "Configuração de atributos",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_BASETIMEOUT",
+    "message": "Tempo limite base",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_BOUNDARY",
+    "message": "Limite",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_DELIVERYCONFIG",
+    "message": "Configuração de entrega",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_DELIVERYTYPECONFIG",
+    "message": "Configuração do tipo de entrega",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_FACILITYSCHEMA",
+    "message": "Esquema de instalações",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_GENDERCONFIG",
+    "message": "Configuração de gênero",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_HIERARCHYCONFIG",
+    "message": "Configuração de hierarquia",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_MAILCONFIG",
+    "message": "Configuração de correio",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_OPERATORCONFIG",
+    "message": "Configuração do operador",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_PRODUCTTYPE",
+    "message": "Tipo de produto",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_READMECONFIG",
+    "message": "Leia-me configuração",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_STRUCTURETYPE",
+    "message": "Tipo de estrutura",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_HCM_ADMIN_CONSOLE_USERSCHEMA",
+    "message": "Esquema do usuário",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MDMS_MASTER_HCM_ADMIN_CONSOLE",
+    "message": "Console de administração",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_MODULE_NAME",
+    "message": "Nome do módulo",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_RESPONSE",
+    "message": "Tela de sucesso",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_UNABLE_TO_FIND_HIERARCHY_TYPE",
+    "message": "Criar novo tipo de hierarquia",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_UPLOAD_BOUNDARY",
+    "message": "Limite de upload",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WBH_UPLOAD_Facility",
+    "message": "Carregar dados da instalação",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "WORKBENCH_HOME",
+    "message": "Lar",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "YOU_WON'T_BE_ABLE_TO_UNDO_THIS_STEP_OF_CREATING_HIERARCHY",
+    "message": "Você não poderá desfazer esta etapa de criação de hierarquia",
+    "module": "hcm-workbench",
+    "locale": "pt_DEMO"
+  }
+]

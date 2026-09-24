@@ -1,0 +1,194 @@
+[
+  {
+    "code": "CONNECTED_TO",
+    "message": "Connected to",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_GO_HOME",
+    "message": "Go Home",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_RECEIVED_FOR_BOUNDARIES",
+    "message": "Data received for the following boundaries",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_SHARING_LABEL",
+    "message": "Send or Receive Data?",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_TRANSFER_COMPLETED",
+    "message": "Data Sent Successfully!",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATA_UN_SYNCED_DESCRIPTION",
+    "message": "Your data is not completely downloaded, are you sure you want to download the remaining data?",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FAILED_TO_RECEIVE",
+    "message": "Data transfer has failed!",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FAILED_TO_RECEIVE_DESCRIPTION",
+    "message": "An error occurred, please try again later.",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FAILED_TO_TRANSFER",
+    "message": "Data transfer has failed!",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FAILED_TO_TRANSFER_DESCRIPTION",
+    "message": "An error occurred, please try again later.",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FILE_NOT_FOUND_ERROR",
+    "message": "File not found",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INVALID_FILE_FORMAT_ERROR",
+    "message": "Invalid file format, unable to read the file.",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_BOUNDARIES_MATCHED_ERROR_DESCRIPTION",
+    "message": "No matching boundaries received from sender",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_BOUNDARIES_MATCHED_ERROR_TITLE",
+    "message": "No Matching Boundaries Found",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_DEVICES_CONNECTED",
+    "message": "No devices connected",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROJECT_MISMATCH_ERROR",
+    "message": "Project mismatch error",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RECEIVED_SUCCESS_MESSAGE",
+    "message": "Data Received Successfully!",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RECEIVER",
+    "message": "Receiver",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RECEIVER_DIALOG_DESCRIPTION",
+    "message": "Are you sure you want to receive data from {}? Once you receive the data, your application will be populated with the records shared by the sender.",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RECEIVER_DIALOG_TITLE",
+    "message": "{} wants share data",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RECEIVE_ACTION",
+    "message": "Receive Data",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RECEIVE_ACTION_DESCRIPTION",
+    "message": "Receive beneficiary records for boundaries assigned to you",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RECEIVE_ACTION_MESSAGE",
+    "message": "Waiting for someone to share data",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RECEIVING_ACTION_MESSAGE",
+    "message": "Receiving Data",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SELECT_RECIPIENTS",
+    "message": "Select your recipients",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SENDER",
+    "message": "Sender",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SENDER_DIALOG_DESCRIPTION",
+    "message": "Data once shared will ovcverride and populate the receivers local database. Please make sure that you have selected the right set of users to share data with.",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SENDER_DIALOG_TITLE",
+    "message": "Are you sure you want to share data ?",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SENDING_ACTION_MESSAGE",
+    "message": "Sending Data to Recipient",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SEND_ACTION",
+    "message": "Send Data",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SEND_ACTION_DESCRIPTION",
+    "message": "Send beneficiary records for boundaries assigned to you",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SEND_ACTION_MESSAGE",
+    "message": "Searching for receiver’s around you",
+    "module": "hcm-peer-to-peer",
+    "locale": "en_DEMO"
+  }
+]

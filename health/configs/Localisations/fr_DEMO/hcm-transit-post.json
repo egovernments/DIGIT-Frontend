@@ -1,0 +1,230 @@
+[
+  {
+    "code": "BARCODE_BATCH_NO_REQUIRED",
+    "message": "Le numéro de lot est requis",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BARCODE_BATCH_NUMBER",
+    "message": "Numéro de lot",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BARCODE_EXPIRY_DATE",
+    "message": "Date d'expiration",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BARCODE_SERIAL_NO_REQUIRED",
+    "message": "Le numéro de série est requis",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BARCODE_SERIAL_NUMBER",
+    "message": "Numéro de série",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BUS_STOP",
+    "message": "Arrêt de bus",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GS1_00",
+    "message": "Code du conteneur d'expédition en série",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GS1_01",
+    "message": "Numéro d'article du commerce mondial",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GS1_10",
+    "message": "Numéro de lot ou de lot",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GS1_11",
+    "message": "Date de production",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GS1_17",
+    "message": "Date d'expiration",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GS1_21",
+    "message": "Numéro de série",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RAILWAY_STATION",
+    "message": "Gare",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SCHOOL",
+    "message": "École",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_ALERT_POPUP_DESCRIPTION",
+    "message": "Vous numérisez un nouveau flacon. Veuillez vous assurer d'avoir terminé le flacon précédent avant de scanner l'autre.",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_ALERT_POPUP_TITLE",
+    "message": "Attention!",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_BATCH_NUMBER_LABEL",
+    "message": "Numéro de lot",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_BENEFICIARY_AGE_DESCRIPTION",
+    "message": "L'âge doit être dans la fourchette",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_BENEFICIARY_AGE_LABEL",
+    "message": "Âge du bénéficiaire",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_CLOSE_DELIVERY_LABEL",
+    "message": "Fermer la livraison",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_COUNT_ALERT_POPUP_PREFIX_DESCRIPTION",
+    "message": "Vous approchez",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_COUNT_ALERT_POPUP_SUFFIX_DESCRIPTION",
+    "message": "egovio/produit:v1.1.0-00a7accbda-31",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_DATE_LABEL",
+    "message": "Date",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_DELIVERY_SUCCESSFUL_DESCRIPTION",
+    "message": "La livraison a été enregistrée avec succès.",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_DELIVERY_SUCCESSFUL_LABEL",
+    "message": "Livraison réussie !",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_NAME_LABEL",
+    "message": "Nom du poste de transit",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_RECORD_DELIVERY_LABEL",
+    "message": "Livraison d'enregistrement",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_RESOURCE_CODE_LABEL",
+    "message": "Code ressource",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_RESOURCE_DELIVERED_LABEL",
+    "message": "Ressource à livrer",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_RESOURCE_SCANNED_LABEL",
+    "message": "Ressource en main",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_SCAN_RESOURCE_LABEL",
+    "message": "Ressource d'analyse",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TABLE_HEADER_DOSE_LABEL",
+    "message": "Dose",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TABLE_HEADER_RESOURCE_LABEL",
+    "message": "Ressource",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TODAY_DELIVERIES_DESCRIPTION",
+    "message": "Livraisons effectuées aujourd'hui par l'utilisateur",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TOTAL_DELIVERIES_DESCRIPTION",
+    "message": "Total des livraisons effectuées par l'utilisateur",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TYPE_LABEL",
+    "message": "Type de poste de transit",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TYPE_SELECTION_LABEL",
+    "message": "Sélectionnez le type de poste de transit",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_VACCINATION_DETAILS_LABEL",
+    "message": "Détails de la vaccination",
+    "module": "hcm-transit-post",
+    "locale": "fr_DEMO"
+  }
+]

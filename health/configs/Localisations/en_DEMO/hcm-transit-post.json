@@ -1,0 +1,230 @@
+[
+  {
+    "code": "BARCODE_BATCH_NO_REQUIRED",
+    "message": "Batch number is required",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_BATCH_NUMBER",
+    "message": "Batch number",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_EXPIRY_DATE",
+    "message": "Expiration date",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_SERIAL_NO_REQUIRED",
+    "message": "Serial number is required",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BARCODE_SERIAL_NUMBER",
+    "message": "Serial number",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BUS_STOP",
+    "message": "Bus Stop",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GS1_00",
+    "message": "Serial Shipping Container Code",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GS1_01",
+    "message": "Global Trade Item Number",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GS1_10",
+    "message": "Batch or Lot Number",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GS1_11",
+    "message": "Production date ",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GS1_17",
+    "message": "Expiration date",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GS1_21",
+    "message": "Serial number",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RAILWAY_STATION",
+    "message": "Railway Station",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCHOOL",
+    "message": "School",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_ALERT_POPUP_DESCRIPTION",
+    "message": "You are scanning a new vial. Please make sure you have finished the previous vial before scanning the another one.",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_ALERT_POPUP_TITLE",
+    "message": "Attention!",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_BATCH_NUMBER_LABEL",
+    "message": "Batch number",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_BENEFICIARY_AGE_DESCRIPTION",
+    "message": "Age should be in the range",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_BENEFICIARY_AGE_LABEL",
+    "message": "Beneficiary age",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_CLOSE_DELIVERY_LABEL",
+    "message": "Close Delivery",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_COUNT_ALERT_POPUP_PREFIX_DESCRIPTION",
+    "message": "You are nearing",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_COUNT_ALERT_POPUP_SUFFIX_DESCRIPTION",
+    "message": "egovio/product:v1.1.0-00a7accbda-31",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_DATE_LABEL",
+    "message": "Date",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_DELIVERY_SUCCESSFUL_DESCRIPTION",
+    "message": "Delivery has been recorded successfully.",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_DELIVERY_SUCCESSFUL_LABEL",
+    "message": "Delivery successful !",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_NAME_LABEL",
+    "message": "Transit post name",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_RECORD_DELIVERY_LABEL",
+    "message": "Record Delivery",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_RESOURCE_CODE_LABEL",
+    "message": "Resource code",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_RESOURCE_DELIVERED_LABEL",
+    "message": "Resource to be delivered",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_RESOURCE_SCANNED_LABEL",
+    "message": "Resource in hand",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_SCAN_RESOURCE_LABEL",
+    "message": "Scan Resource",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TABLE_HEADER_DOSE_LABEL",
+    "message": "Dose",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TABLE_HEADER_RESOURCE_LABEL",
+    "message": "Resource",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TODAY_DELIVERIES_DESCRIPTION",
+    "message": "Deliveries completed today by the user",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TOTAL_DELIVERIES_DESCRIPTION",
+    "message": "Total Deliveries completed by the user",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TYPE_LABEL",
+    "message": "Transit post type",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_TYPE_SELECTION_LABEL",
+    "message": "Select the type of transit post",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TRANSIT_POST_VACCINATION_DETAILS_LABEL",
+    "message": "Vaccination details",
+    "module": "hcm-transit-post",
+    "locale": "en_DEMO"
+  }
+]
