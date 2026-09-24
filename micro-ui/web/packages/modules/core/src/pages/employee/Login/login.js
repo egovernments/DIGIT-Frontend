@@ -9,6 +9,8 @@ import ImageComponent from "../../../components/ImageComponent";
 import ForgotPasswordDialog from "../../../components/Dialog/ForgotPasswordDialog";
 // import SkipToMainContent from "../SkipToMainContent/SkipToMainContent";
 import withAutoFocusMain from "../../../hoc/withAutoFocusMain";
+import { clearIdpToken, setIdpToken } from "../../../utils/idpToken";
+import { filterDeployable, isSharedLoginDeployment, lookupTenants, sortByTenantId, storeSSOTenants } from "../../../utils/ssoTenants";
 
 // Used only if forgotPasswordScreen.mode is "popup" but popupFields isn't fully specified.
 const DEFAULT_FORGOT_PASSWORD_POPUP = {
@@ -105,7 +107,10 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
 
     if ((idToken || code) && !user && !disable) {
       if (idToken) {
-        handleDigitLogin(idToken, accessToken);
+        /* Keep the IdP token past this exchange: the tenant lookup
+           (/user/oauth/tenants) and later tenant switching both re-use it. */
+        setIdpToken(idToken);
+        handleSSOCallback(idToken, accessToken);
       } else if (code) {
         setDisable(true);
         setLoginLoader(true);
@@ -170,8 +175,82 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     navigate(redirectPath, { replace: true });
   }, [user]);
 
+  /* Surface a terminal SSO failure. Clearing the token out of the URL stops the callback
+     effect re-firing with the same id_token, and the stored token is dropped because it is
+     valid but unusable here. */
+  const failSSOLogin = (messageCode) => {
+    clearIdpToken();
+    setShowToast(messageCode);
+    setTimeout(closeToast, 5000);
+    try {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } catch (e) {
+      // no-op
+    }
+  };
+
+  /* Decide which tenantId to exchange against.
+     - shared login  : auto-select the first mapped tenant
+     - tenant deploy : confirm the subject is mapped to THIS tenant
+     Returns null when login cannot continue (a toast has already been shown). */
+  const resolveTenantForLogin = async (idToken) => {
+    const deploymentTenant = Digit.ULBService.getStateId();
+
+    let tenants;
+    try {
+      tenants = await lookupTenants(idToken);
+      storeSSOTenants(tenants);
+    } catch (error) {
+      /* The endpoint is only registered when auth.oidc.enabled=true, so a failure here must
+         not block login - fall back to the pre-lookup behaviour of exchanging against this
+         deployment's own tenant. */
+      console.warn("[sso] tenant lookup unavailable, falling back to", deploymentTenant, error);
+      return deploymentTenant;
+    }
+
+    /* Sort explicitly: response order is not guaranteed, and "the first tenant" has to be the
+       same one on every login. */
+    const sorted = sortByTenantId(tenants);
+
+    if (isSharedLoginDeployment()) {
+      if (!sorted.length) {
+        failSSOLogin("SSO_NO_TENANTS_MAPPED");
+        return null;
+      }
+      /* No keepTenantId: the shared-login tenant is not somewhere we can leave the user. */
+      const deployable = filterDeployable(sorted);
+      if (!deployable.length) {
+        failSSOLogin("SSO_NO_DEPLOYABLE_TENANT");
+        return null;
+      }
+      return deployable[0]?.tenantId;
+    }
+
+    if (!sorted.some((tenant) => tenant?.tenantId === deploymentTenant)) {
+      failSSOLogin("SSO_NO_ACCESS_TO_THIS_TENANT");
+      return null;
+    }
+    return deploymentTenant;
+  };
+
+  /* Resolve the tenant, then exchange. disable/loader are set here rather than only in
+     handleDigitLogin so the callback effect cannot re-enter while the lookup is in flight. */
+  const handleSSOCallback = async (idToken, accessToken = null) => {
+    setDisable(true);
+    setLoginLoader(true);
+
+    const tenantId = await resolveTenantForLogin(idToken);
+    if (!tenantId) {
+      setDisable(false);
+      setLoginLoader(false);
+      return;
+    }
+
+    await handleDigitLogin(idToken, accessToken, tenantId);
+  };
+
   /* Generic Token Exchange with DIGIT Backend */
-  const handleDigitLogin = async (idToken, accessToken = null) => {
+  const handleDigitLogin = async (idToken, accessToken = null, tenantId = stateInfo?.code) => {
     setDisable(true);
     setLoginLoader(true);
     try {
@@ -190,7 +269,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
           userType: "EMPLOYEE",
           assertion: idToken,
           ...(accessToken && { access_token: accessToken }),
-          tenantId: stateInfo?.code,
+          tenantId,
         }),
       });
 

@@ -3,6 +3,7 @@ import TopBar from "./TopBar";
 import { useNavigate } from "react-router-dom";
 import SideBar from "./SideBar";
 import LogoutDialog from "../Dialog/LogoutDialog";
+import { clearIdpToken } from "../../utils/idpToken";
 const TopBarSideBar = ({
   t,
   stateInfo,
@@ -95,6 +96,9 @@ const TopBarSideBar = ({
 
   const handleOnSubmit = async () => {
     const source = getLoginSource();
+    /* UserService.logout() clears localStorage and sessionStorage but not cookies, so the
+       IdP token has to be dropped explicitly - on both the SSO and password paths. */
+    clearIdpToken();
     const handledBySSO = await handleSSOLogout(source);
     if (!handledBySSO) {
       await Digit.UserService.logout();

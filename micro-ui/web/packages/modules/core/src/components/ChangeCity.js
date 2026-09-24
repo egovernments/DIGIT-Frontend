@@ -1,6 +1,8 @@
-import { CardText, Dropdown } from "@egovernments/digit-ui-components";
+import { CardText, Dropdown, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getIdpToken } from "../utils/idpToken";
+import { getSwitchableTenantIds, switchTenant } from "../utils/ssoTenants";
 
 const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
   if (searcher == "") return str;
@@ -18,8 +20,36 @@ const ChangeCity = (prop) => {
   const isDropdown = prop.dropdown || false;
   let selectedCities = [];
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+  const [switchError, setSwitchError] = useState(null);
+
+  /* SSO tenant switching, when the session came from an IdP and the subject is mapped to more
+     than one deployable tenant. Everything else - citizen sidebars, password logins, single
+     tenant users - keeps the original role-filter-and-reload behaviour below.
+     The tenant list comes from /user/oauth/tenants (stored at login) rather than from the
+     user's roles, because that endpoint is authoritative about what the subject may log in to
+     whereas roles only describe the tenant currently exchanged for. */
+  const currentTenantId = Digit.SessionStorage.get("Employee.tenantId");
+  const ssoTenantIds = getSwitchableTenantIds(currentTenantId);
+  const ssoMode = Digit?.UserService?.getType?.() === "employee" && Boolean(getIdpToken()) && ssoTenantIds.length > 1;
+
+  const handleSwitchTenant = async (city) => {
+    if (!city?.value || city.value === currentTenantId) return;
+    try {
+      /* Navigates on success, so nothing after this runs. */
+      await switchTenant(city.value);
+    } catch (error) {
+      console.error("[sso] tenant switch failed", error);
+      setSwitchError(error?.code || "SSO_TENANT_SWITCH_FAILED");
+      if (error?.code === "SSO_SESSION_EXPIRED") {
+        /* The ID token is gone or rejected, so there is no way to re-exchange. Let the toast
+           be read, then send the user back through login. */
+        setTimeout(() => Digit.UserService.logout(), 4000);
+      }
+    }
+  };
 
   const handleChangeCity = (city) => {
+    if (ssoMode) return handleSwitchTenant(city);
     const loggedInData = Digit.SessionStorage.get("citizen.userRequestObject");
     const filteredRoles = Digit.SessionStorage.get("citizen.userRequestObject")?.info?.roles?.filter((role) => role.tenantId === city.value);
     if (filteredRoles?.length > 0) {
@@ -44,6 +74,15 @@ const ChangeCity = (prop) => {
   };
 
   useEffect(() => {
+    if (ssoMode) {
+      setSelectCityData(
+        ssoTenantIds.map((tenantId) => ({
+          label: `TENANT_TENANTS_${stringReplaceAll(tenantId, ".", "_")?.toUpperCase()}`,
+          value: tenantId,
+        }))
+      );
+      return;
+    }
     const userloggedValues = Digit.SessionStorage.get("citizen.userRequestObject");
     let teantsArray = [],
       filteredArray = [];
@@ -81,6 +120,7 @@ const ChangeCity = (prop) => {
         }
       />
 }
+      {switchError && <Toast type="error" label={prop?.t(switchError)} onClose={() => setSwitchError(null)} />}
     </div>
   );
   // } else {
