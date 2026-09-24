@@ -120,9 +120,18 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
   }, [fieldPanelConfig, fieldType, field?.value]);
 
 
+  // A dynamic country code is free-typed text with no country behind it, so it
+  // renders through the plain prefix instead of the country picker.
+  const showCountryPicker = Boolean(field?.showCountryCodeDropdown) && field?.countryCodeMode !== "DYNAMIC";
+
   return (
     <div ref={fieldRef}>
       <FieldV1
+        // The country picker reads its default only while mounting, so a code
+        // chosen in the properties panel would not reach an already mounted
+        // preview. Keying on the code remounts it. Every other field type gets
+        // a stable key and so is unaffected.
+        key={showCountryPicker ? `countryCode-${field?.prefixText || ""}` : undefined}
         charCount={field?.charCount}
         component={component}
         config={{
@@ -151,9 +160,9 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
           optionsKey: optionsKey,
           showToolTip: true,
           optionsCustomStyle:{maxHeight:"8vh"},
-          showCountryCodeDropdown: field?.showCountryCodeDropdown || false,
-          countryCodeConfig: field?.showCountryCodeDropdown
-            ? { moduleName: "common-masters", masterName: "CountryCodes", defaultCountryCode: "+91" }
+          showCountryCodeDropdown: showCountryPicker,
+          countryCodeConfig: showCountryPicker
+            ? { moduleName: "common-masters", masterName: "CountryCodes", defaultCountryCode: field?.prefixText || "+91" }
             : null
         }}
         withoutLabel={field?.format === "checkbox" || !resolvedLabel}

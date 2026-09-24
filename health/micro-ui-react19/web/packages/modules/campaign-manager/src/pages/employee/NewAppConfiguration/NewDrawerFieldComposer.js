@@ -582,20 +582,34 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 className={"digit-sidepanel-switch-wrap sidepanel"}
               />
             </div>
-            {/* Render Conditional Fields based on condition property */}
-            {getConditionalFields().map((cField, index) => (
-              <ConditionalField
-                // Key by the selected field too: without it the input survives
-                // switching fields, so its stale local value and pending
-                // debounced write land on the newly selected field. Fall back to
-                // key/label before fieldName — checklist siblings share a fieldName.
-                key={`${selectedField?.id ?? selectedField?.key ?? selectedField?.label ?? selectedField?.fieldName ?? ""}-${cField.bindTo}-${index}`}
-                cField={cField}
-                selectedField={selectedField}
-                onFieldChange={onFieldChange}
-                viewMode={viewMode}
-              />
-            ))}
+            {/* The country code prefix offers a choice of editors rather than a
+                single input, so it renders its own control in place of the
+                generic conditional field list. Visibility follows the toggle
+                directly: the master's per-field condition flag is not consulted,
+                because that control replaces the fields it would apply to. */}
+            {panelItem.bindTo === "showCountryCodeDropdown"
+              ? localToggle && (
+                  <CountryCodePrefixField
+                    key={`${selectedField?.id || selectedField?.key || selectedField?.label || selectedField?.fieldName || ""}-countryCodePrefix`}
+                    panelItem={panelItem}
+                    selectedField={selectedField}
+                    onFieldChange={onFieldChange}
+                    viewMode={viewMode}
+                  />
+                )
+              : getConditionalFields().map((cField, index) => (
+                  <ConditionalField
+                    // Key by the selected field too: without it the input survives
+                    // switching fields, so its stale local value and pending
+                    // debounced write land on the newly selected field. Fall back to
+                    // key/label before fieldName — checklist siblings share a fieldName.
+                    key={`${selectedField?.id ?? selectedField?.key ?? selectedField?.label ?? selectedField?.fieldName ?? ""}-${cField.bindTo}-${index}`}
+                    cField={cField}
+                    selectedField={selectedField}
+                    onFieldChange={onFieldChange}
+                    viewMode={viewMode}
+                  />
+                ))}
           </>
         );
       }
@@ -1775,6 +1789,104 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
     default:
       return null;
   }
+});
+
+// `mode` is the stored value and the one the preview reads; `code` is only the
+// localisation key for the label. Keeping them separate means renaming a label
+// cannot quietly change stored behaviour.
+const COUNTRY_CODE_MODES = [
+  { mode: "FIXED", code: "APPCONFIG_FIXED_COUNTRY_CODE" },
+  { mode: "DYNAMIC", code: "APPCONFIG_DYNAMIC_COUNTRY_CODE" },
+];
+
+// Editor for a mobile number field's country code prefix.
+//
+// Both modes write the same prefixText and differ only in how it is entered:
+// Fixed picks from the country list, Dynamic accepts any typed string. Neither
+// the mode nor showCountryCodeDropdown survives the config transforms, so a
+// reopened configuration re-derives the mode from prefixText alone.
+const CountryCodePrefixField = React.memo(({ panelItem, selectedField, onFieldChange, viewMode }) => {
+  const { t } = useTranslation();
+  const [modeOverride, setModeOverride] = useState(null);
+  const prefixText = selectedField?.prefixText || "";
+  const stateId = Digit.ULBService.getStateId();
+
+  // Read from the same master the preview's own picker uses, so the panel can
+  // never offer a code the preview is unable to render.
+  const { data: countries, isLoading } = Digit.Hooks.useCustomMDMS(
+    stateId,
+    "common-masters",
+    [{ name: "CountryCodes" }],
+    {
+      select: (data) =>
+        (data?.["common-masters"]?.["CountryCodes"] || [])
+          .filter((country) => !country.hasOwnProperty("active") || country.active)
+          .map((country) => ({ ...country, displayLabel: `${country.dialCode} ${country.name}` })),
+      enabled: Boolean(stateId),
+      staleTime: 300000,
+    }
+  );
+
+  const matchedCountry = (countries || []).find((country) => country.dialCode === prefixText) || null;
+  // Assume Fixed unless there is positive evidence otherwise: only a code that
+  // is present yet missing from the list can have been typed by hand. An empty
+  // code, or a list that has not loaded yet, proves nothing either way.
+  const looksFixed = !prefixText || isLoading || !countries?.length || Boolean(matchedCountry);
+  const mode = modeOverride || selectedField?.countryCodeMode || (looksFixed ? "FIXED" : "DYNAMIC");
+
+  // The mode is stored separately from showCountryCodeDropdown because that
+  // flag also signals that the toggle itself is on. Reusing it would switch the
+  // whole toggle off as soon as the prefix box was cleared in Dynamic mode.
+  const selectMode = (option) => {
+    setModeOverride(option?.mode);
+    onFieldChange({ ...selectedField, countryCodeMode: option?.mode, showCountryCodeDropdown: true });
+  };
+
+  // Reuse the master's own text config so the prefix input keeps the
+  // constraints already defined for it rather than duplicating them here.
+  const dynamicField = panelItem?.conditionalField?.[0];
+
+  return (
+    <>
+      <RadioButtons
+        options={COUNTRY_CODE_MODES}
+        additionalWrapperClass="app-config-radio"
+        selectedOption={COUNTRY_CODE_MODES.find((option) => option.mode === mode)}
+        onSelect={selectMode}
+        optionsKey="code"
+        disabled={viewMode}
+      />
+      {mode === "FIXED" ? (
+        <div className="drawer-container-tooltip" style={{ marginTop: "8px" }}>
+          <FieldV1
+            type="dropdown"
+            label={t("APPCONFIG_CHOOSE_FIXED_COUNTRY_CODE")}
+            value={matchedCountry}
+            onChange={(country) =>
+              onFieldChange({
+                ...selectedField,
+                prefixText: country?.dialCode || "",
+                countryCodeMode: "FIXED",
+                showCountryCodeDropdown: true,
+              })
+            }
+            disabled={viewMode || isLoading}
+            populators={{
+              options: countries || [],
+              optionsKey: "displayLabel",
+              fieldPairClassName: "drawer-toggle-conditional-field",
+              disablePortal: true,
+              optionsCustomStyle: { maxHeight: "10vh" },
+            }}
+          />
+        </div>
+      ) : (
+        dynamicField && (
+          <ConditionalField cField={dynamicField} selectedField={selectedField} onFieldChange={onFieldChange} viewMode={viewMode} />
+        )
+      )}
+    </>
+  );
 });
 
 // Simple tabs component - exported for use in SidePanelApp header
