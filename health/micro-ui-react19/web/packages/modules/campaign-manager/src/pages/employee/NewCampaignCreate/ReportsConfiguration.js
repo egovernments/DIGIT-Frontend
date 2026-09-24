@@ -460,11 +460,13 @@ const ReportsConfiguration = () => {
   if (isReportsLoading || (isEditMode && isExistingConfigLoading)) return <Loader />;
 
   return (
-    <div className="reports-configuration">
+    // <main>: the employee layout has no main landmark (axe landmark-one-main / region); the class
+    // keeps all existing styling
+    <main className="reports-configuration">
       {currentStep === STEP_SELECTION && (
         <Card>
           <HeaderComponent className="reports-configuration__heading">
-            {t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION)}
+            <h1 style={{ margin: 0 }}>{t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION)}</h1>
           </HeaderComponent>
           <p className="reports-configuration__description">
             {t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION_DESC)}
@@ -507,7 +509,7 @@ const ReportsConfiguration = () => {
       {currentStep === STEP_FREQUENCY && (
         <Card>
           <HeaderComponent className="reports-configuration__heading">
-            {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY)}
+            <h1 style={{ margin: 0 }}>{t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY)}</h1>
           </HeaderComponent>
           <p className="reports-configuration__description">
             {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY_DESC)}
@@ -671,7 +673,7 @@ const ReportsConfiguration = () => {
           onClose={() => setShowToast(null)}
         />
       )}
-    </div>
+    </main>
   );
 };
 
