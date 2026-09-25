@@ -407,9 +407,12 @@ const CommodityDashboard = () => {
     const startMs = effectiveDateRange?.startDate instanceof Date
       ? effectiveDateRange.startDate.getTime()
       : Number(effectiveDateRange?.startDate || 0);
-    const endMs = effectiveDateRange?.endDate instanceof Date
-      ? effectiveDateRange.endDate.getTime()
-      : Number(effectiveDateRange?.endDate || Date.now());
+    // Keep cumulative view anchored to "now" so new records appear immediately after refetch.
+    const endMs = dateRange?.preset === "cumulative"
+      ? Date.now()
+      : (effectiveDateRange?.endDate instanceof Date
+          ? effectiveDateRange.endDate.getTime()
+          : Number(effectiveDateRange?.endDate || Date.now()));
 
     return rawStockData.filter((record) => {
       const createdTime =
@@ -421,7 +424,7 @@ const CommodityDashboard = () => {
       if (!createdTime) return false;
       return createdTime >= startMs && createdTime <= endMs;
     });
-  }, [rawStockData, effectiveDateRange]);
+  }, [rawStockData, effectiveDateRange, dateRange?.preset]);
 
   const stockSummary = useMemo(
     () => computeStockSummary({ source, metadata, data: filteredStockData }),
