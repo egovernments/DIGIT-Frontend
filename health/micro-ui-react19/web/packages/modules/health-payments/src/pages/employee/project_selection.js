@@ -75,6 +75,7 @@ const ProjectSelect = ({ nextScreen }) => {
 
   const AGGREGATION_LEVEL_OPTIONS = boundaryHierarchyOrder
     ?.filter((item) => item.order <= boundaryHierarchyOrder?.find((d) => d.code === lowestLevelBoundaryType)?.order)
+    ?.filter((item) => String(item?.code || "").trim().toUpperCase() !== "STATE")
     ?.map((b) => ({
       name: `HCM_AM_${b?.code}_LEVEL`,
       code: b?.code,
@@ -83,7 +84,8 @@ const ProjectSelect = ({ nextScreen }) => {
 
   useEffect(() => {
     if (selectedProject) {
-      const boundaryTypeOrder = AGGREGATION_LEVEL_OPTIONS.find((option) => option.code === selectedProject?.address?.boundaryType)?.order;
+      const selectedBoundaryType = String(selectedProject?.address?.boundaryType || "").trim().toUpperCase();
+      const boundaryTypeOrder = boundaryHierarchyOrder?.find((item) => String(item?.code || "").trim().toUpperCase() === selectedBoundaryType)?.order;
 
       if (boundaryTypeOrder) {
         setFilteredAggregationOptions(AGGREGATION_LEVEL_OPTIONS.filter((option) => option.order >= boundaryTypeOrder));
@@ -93,7 +95,7 @@ const ProjectSelect = ({ nextScreen }) => {
     } else {
       setFilteredAggregationOptions(AGGREGATION_LEVEL_OPTIONS);
     }
-  }, [selectedProject]);
+  }, [selectedProject, boundaryHierarchyOrder]);
 
     // Load project data if not already loaded
     useEffect(() => {
