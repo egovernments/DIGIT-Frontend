@@ -1121,8 +1121,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setLoader(false);
             setIsValidation(false);
             const errorMessage = temp?.error.replaceAll(":", "-");
-            setShowToast({ key: "error", label: temp?.additionalDetails?.error?.code ? t(temp.additionalDetails.error.code) : t(I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR), transitionTime: 5000000 });
-            setValidationStatus({ type: "error", label: temp?.additionalDetails?.error?.code || I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR, toastLabel: temp?.additionalDetails?.error?.code || I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR });
+            const backendErrorLabel = temp?.additionalDetails?.error?.message || (temp?.additionalDetails?.error?.code ? t(temp.additionalDetails.error.code) : t(I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR));
+            setShowToast({ key: "error", label: backendErrorLabel, transitionTime: 5000000 });
+            setValidationStatus({ type: "error", label: backendErrorLabel, toastLabel: backendErrorLabel });
             setIsError(true);
             setApiError(errorMessage);
             setNotValid(2);
@@ -1132,8 +1133,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setLoader(false);
             setIsValidation(false);
             // const errorMessage = temp?.error.replaceAll(":", "-");
-            setShowToast({ key: "error", label: temp?.additionalDetails?.error?.code ? t(temp.additionalDetails.error.code) : t(I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR), transitionTime: 5000000 });
-            setValidationStatus({ type: "error", label: temp?.additionalDetails?.error?.code || I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR, toastLabel: temp?.additionalDetails?.error?.code || I18N_KEYS.COMPONENTS.HCM_PROCESS_ERROR });
+            const backendErrorLabel = temp?.additionalDetails?.error?.message || t(temp.additionalDetails.error.code);
+            setShowToast({ key: "error", label: backendErrorLabel, transitionTime: 5000000 });
+            setValidationStatus({ type: "error", label: backendErrorLabel, toastLabel: backendErrorLabel });
             setIsError(true);
             setApiError(errorMessage);
             setNotValid(2);
@@ -1169,12 +1171,14 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               const processedFileStore = temp?.processedFilestoreId || temp?.processedFileStoreId;
               if (!processedFileStore) {
                 const errorCode = temp?.additionalDetails?.errorCode;
-                setShowToast({ key: "error", label: errorCode ? t(errorCode) : t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED) });
+                const backendErrorMessage = temp?.additionalDetails?.errorMessage;
+                const errorLabel = backendErrorMessage || (errorCode ? t(errorCode) : t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED));
+                setShowToast({ key: "error", label: errorLabel });
                 setValidationStatus({
                   type: "error",
-                  label: errorCode || I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD,
-                  text: errorCode ? I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD : undefined,
-                  toastLabel: errorCode || I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED,
+                  label: errorLabel,
+                  text: errorCode || backendErrorMessage ? I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD : undefined,
+                  toastLabel: errorLabel,
                 });
                 return;
               } else {
@@ -1215,12 +1219,14 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             const processedFileStore = temp?.processedFilestoreId || temp?.processedFileStoreId;
             if (!processedFileStore) {
               const errorCode = temp?.additionalDetails?.errorCode;
-              setShowToast({ key: "error", label: errorCode ? t(errorCode) : t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED), transitionTime: 5000000 });
+              const backendErrorMessage = temp?.additionalDetails?.errorMessage;
+              const errorLabel = backendErrorMessage || (errorCode ? t(errorCode) : t(I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED));
+              setShowToast({ key: "error", label: errorLabel, transitionTime: 5000000 });
               setValidationStatus({
                 type: "error",
-                label: errorCode || I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD,
-                text: errorCode ? I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD : undefined,
-                toastLabel: errorCode || I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED,
+                label: errorLabel,
+                text: errorCode || backendErrorMessage ? I18N_KEYS.COMPONENTS.HCM_VALIDATION_FAILED_ALERTCARD : undefined,
+                toastLabel: errorLabel,
               });
               return;
             } else {
