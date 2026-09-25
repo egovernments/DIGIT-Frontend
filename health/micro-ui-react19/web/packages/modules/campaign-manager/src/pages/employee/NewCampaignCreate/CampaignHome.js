@@ -161,13 +161,9 @@ const CampaignHome = () => {
   }
 
   return (
-    // <main> with display: contents: the employee layout has no main landmark, so declare one here
-    // without affecting layout (axe landmark-one-main / region). The h1 gives the page its heading
-    // (page-has-heading-one); health CSS resets heading font-size/weight so visuals are unchanged.
-    <main style={{ display: "contents" }}>
     <Card className="digit-campaign-home-card-wrapper">
       <HeaderComponent className="campaign-header-style">
-        <h1 style={{ margin: 0 }}>{t(I18N_KEYS.PAGES.HCM_HOW_DO_YOU_WANT_TO_CREATE)}</h1>
+        {t(I18N_KEYS.PAGES.HCM_HOW_DO_YOU_WANT_TO_CREATE)}
       </HeaderComponent>
       <p className="name-description">{t(I18N_KEYS.PAGES.HCM_CREATE_CAMPAIGN_DESCRIPTION)}</p>
       <div className={"containerStyle"}>
@@ -178,12 +174,6 @@ const CampaignHome = () => {
             navigate(
               `/${window.contextPath}/employee/campaign/campaign-templates?from=home`
             );
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              navigate(`/${window.contextPath}/employee/campaign/campaign-templates?from=home`);
-            }
           }}
           id={"campaign-home-card-campaign-create-methods-campaign-templates"}
         >
@@ -205,18 +195,11 @@ const CampaignHome = () => {
         </Card>
         <Card
           className="digit-campaign-home-card"
-          // tabIndex 0 for all three cards: positive values force an artificial tab order (axe tabindex)
-          tabIndex={0}
+          tabIndex={1}
           onClick={() => {
             navigate(
               `/${window.contextPath}/employee/campaign/my-campaign-new?from=home`
             );
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              navigate(`/${window.contextPath}/employee/campaign/my-campaign-new?from=home`);
-            }
           }}
           id={"campaign-home-card-campaign-create-methods-my-campaigns-screen"}
         >
@@ -235,13 +218,12 @@ const CampaignHome = () => {
         </Card>
         <Card
           className="digit-campaign-home-card"
-          tabIndex={0}
+          tabIndex={2}
           onClick={() => {
             setShowPopUp(true);
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
               setShowPopUp(true);
             }
           }}
@@ -298,7 +280,6 @@ const CampaignHome = () => {
         </PopUp>
       )}
     </Card>
-    </main>
   );
 };
 

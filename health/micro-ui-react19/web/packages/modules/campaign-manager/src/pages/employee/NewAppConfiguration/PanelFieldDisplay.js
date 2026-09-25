@@ -10,7 +10,6 @@ import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 // Component to toggle visibility of a field if it is not mandatory and not marked for deletion
 const ToggleVisibilityControl = ({ config, onToggle, resetKey }) => {
-  const { t } = useTranslation();
   if (config?.deleteFlag || config?.mandatory) return null;
 
   return (
@@ -25,36 +24,18 @@ const ToggleVisibilityControl = ({ config, onToggle, resetKey }) => {
       className="appConfigLabelField-toggleVisibility"
     >
       {/* Switch keeps its own state, so key it on the real value (plus a reset counter bumped when a
-          toggle is refused) - otherwise a blocked click leaves the switch showing the wrong state.
-          No visible label here, so give the switch an accessible name explicitly. */}
-      <Switch
-        key={`${config?.hidden === true ? "off" : "on"}-${resetKey || 0}`}
-        label=""
-        ariaLabel={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_TOGGLE_FIELD_VISIBILITY)}
-        isCheckedInitially={config?.hidden !== true}
-        disable={onToggle == null}
-      />
+          toggle is refused) - otherwise a blocked click leaves the switch showing the wrong state. */}
+      <Switch key={`${config?.hidden === true ? "off" : "on"}-${resetKey || 0}`} label="" isCheckedInitially={config?.hidden !== true} disable={onToggle == null}/>
     </div>
   );
 };
 
 // Component to render a delete button (dustbin icon) if deletion is allowed
 const DeleteFieldControl = ({ isDelete, onDelete }) => {
-  const { t } = useTranslation();
   if (!isDelete) return null;
 
   return (
     <div
-      role="button"
-      tabIndex={0}
-      aria-label={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_DELETE_FIELD)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          e.stopPropagation();
-          if (onDelete != null) onDelete();
-        }
-      }}
       onClick={(e) => {
         e.stopPropagation();
         if(onDelete != null)

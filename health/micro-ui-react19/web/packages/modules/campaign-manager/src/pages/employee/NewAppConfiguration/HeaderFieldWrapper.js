@@ -98,7 +98,6 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
             type="textarea"
             className="appConfigLabelField-Input"
             name=""
-            label={t(label)}
             value={localValue}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -109,7 +108,6 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
           <TextInput
             className="appConfigLabelField-Input"
             name=""
-            label={t(label)}
             value={localValue}
             onChange={handleChange}
             onBlur={handleBlur}

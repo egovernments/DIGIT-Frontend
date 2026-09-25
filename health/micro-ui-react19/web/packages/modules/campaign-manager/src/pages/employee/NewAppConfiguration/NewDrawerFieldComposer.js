@@ -1287,7 +1287,6 @@ const LocalizationInput = React.memo(
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <Switch
                 label=""
-                ariaLabel={typeof label === "string" ? label : undefined}
                 onToggle={handleToggle}
                 disable={viewMode || isLastVisible}
                 isCheckedInitially={toggleState}

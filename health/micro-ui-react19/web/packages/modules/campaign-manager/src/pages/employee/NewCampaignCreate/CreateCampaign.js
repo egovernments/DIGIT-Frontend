@@ -588,9 +588,7 @@ const CreateCampaign = () => {
     } else return;
   };
   return (
-    // <main> with display: contents: the employee layout has no main landmark (axe landmark-one-main,
-    // region); display: contents keeps the stepper and cards laid out exactly as before
-    <main style={{ display: "contents" }}>
+    <React.Fragment>
       {(loader || isValidatingName) && (
         <Loader
           page={true}
@@ -683,7 +681,7 @@ const CreateCampaign = () => {
           onClose={closeToast}
         />
       )}
-    </main>
+    </React.Fragment>
   );
 };
 
