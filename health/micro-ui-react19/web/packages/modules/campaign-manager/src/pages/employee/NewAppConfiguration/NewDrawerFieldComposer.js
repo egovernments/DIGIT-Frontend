@@ -1,7 +1,7 @@
 import React, { Fragment, useMemo, useState, useCallback, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
-import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons, Loader,HeaderComponent } from "@egovernments/digit-ui-components";
+import { AlertCard, FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons, Loader,HeaderComponent } from "@egovernments/digit-ui-components";
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT } from "./hooks/useCustomT";
@@ -1251,6 +1251,20 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           </>
         );
       }
+      // A note about the selected field, for behaviour the panel cannot show as a control.
+      // Read only: it has no bindTo and never writes anything to the field.
+      case "infoCard":
+        return (
+          <AlertCard
+            populators={{ name: "infocard" }}
+            variant="default"
+            className="cmn-help-info-card"
+            label={panelItem?.label ? t(panelItem.label) : ""}
+            text={panelItem?.description ? t(panelItem.description) : ""}
+            style={{ margin: "0rem", width: "100%", maxWidth: "100%" }}
+          />
+        );
+
       default:
         return null;
     }
@@ -1933,6 +1947,15 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
   // Filter properties based on field type visibility
   const visibleTabProperties = useMemo(() => {
     return currentTabProperties.filter((panelItem) => {
+      // A property can also name the individual fields it applies to. Scoping by field type alone
+      // is too broad for something that describes one field in particular - a note about the age
+      // field would otherwise appear on every field of the same type, in every flow. Optional:
+      // a property that does not list any fields is not narrowed and behaves exactly as before.
+      const enabledFields = panelItem?.visibilityEnabledForFields;
+      if (Array.isArray(enabledFields) && enabledFields.length > 0 && !enabledFields.includes(selectedField?.fieldName)) {
+        return false;
+      }
+
       // If visibilityEnabledFor is empty, the field is always visible
       if (!panelItem?.visibilityEnabledFor || panelItem.visibilityEnabledFor.length === 0) {
         return true;
@@ -1940,7 +1963,7 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
       // Check if current field type matches any of the enabled types
       return panelItem.visibilityEnabledFor.includes(fieldType) && panelItem?.isPopupProperty !== true;
     });
-  }, [currentTabProperties, fieldType]);
+  }, [currentTabProperties, fieldType, selectedField?.fieldName]);
 
   // Function to collect validation errors for the selected field (group validations only)
   // Note: Mandatory conditional field validation is now handled in AppConfigurationWrapper for ALL fields
@@ -2107,21 +2130,31 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
               selectedField?.[parentKey] === undefined
             ) // hide if missing
           );
-          return shouldShowToggle ? (
-            // Keyed by the selected field too - see ConditionalField key note.
-            //
-            // The panel item part has to stay unique within a render: not every entry in the
-            // master carries an id, and two entries without one produced the same key. React
-            // matches children by key, so the duplicates could not be paired up and the stale
-            // one was left behind on the next selection, stacking up another copy of that
-            // property each time a different field was picked.
-            <div
-              key={`${selectedField?.id ?? selectedField?.fieldName ?? ""}-${panelItem.id ?? panelItem.label ?? panelItemIndex}`}
-              className="drawer-toggle-field-container"
-            >
-              <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} viewMode={viewMode} />
+          if (!shouldShowToggle) return null;
+
+          // Keyed by the selected field too - see ConditionalField key note.
+          //
+          // The panel item part has to stay unique within a render: not every entry in the
+          // master carries an id, and two entries without one produced the same key. React
+          // matches children by key, so the duplicates could not be paired up and the stale
+          // one was left behind on the next selection, stacking up another copy of that
+          // property each time a different field was picked.
+          const panelItemKey = `${selectedField?.id ?? selectedField?.fieldName ?? ""}-${panelItem.id ?? panelItem.label ?? panelItemIndex}`;
+          const renderedField = (
+            <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} viewMode={viewMode} />
+          );
+
+          // An info card is a note about the field rather than a property to edit, so it stands on
+          // its own instead of sitting inside the container the editable properties share.
+          if (panelItem?.fieldType === "infoCard") {
+            return <Fragment key={panelItemKey}>{renderedField}</Fragment>;
+          }
+
+          return (
+            <div key={panelItemKey} className="drawer-toggle-field-container">
+              {renderedField}
             </div>
-          ) : null;
+          );
         })}
 
         {/* No properties message */}
