@@ -88,7 +88,7 @@ const RegisterDetailsScreen = () => {
   useEffect(() => {
     if (isAttendeeResourceLoading || isAttendeeResourceFetching || attendeeResourceDetails.length === 0) return;
     if (attendeeMappingStatus === "creating" || attendeeMappingStatus === "toCreate") {
-      setShowToast({ key: "warning", label: t(I18N_KEYS.PAGES.HCM_ATTENDEE_MAPPING_IN_PROGRESS) });
+      setShowToast({ key: "info", label: t(I18N_KEYS.PAGES.HCM_ATTENDEE_MAPPING_IN_PROGRESS) });
     } else if (attendeeMappingStatus === "failed") {
       setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_ATTENDEE_MAPPING_FAILED) });
     } 
