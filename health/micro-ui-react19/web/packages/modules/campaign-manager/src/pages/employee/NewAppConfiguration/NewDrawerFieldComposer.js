@@ -587,8 +587,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               <ConditionalField
                 // Key by the selected field too: without it the input survives
                 // switching fields, so its stale local value and pending
-                // debounced write land on the newly selected field.
-                key={`${selectedField?.id ?? selectedField?.fieldName ?? ""}-${cField.bindTo}-${index}`}
+                // debounced write land on the newly selected field. Fall back to
+                // key/label before fieldName — checklist siblings share a fieldName.
+                key={`${selectedField?.id ?? selectedField?.key ?? selectedField?.label ?? selectedField?.fieldName ?? ""}-${cField.bindTo}-${index}`}
                 cField={cField}
                 selectedField={selectedField}
                 onFieldChange={onFieldChange}

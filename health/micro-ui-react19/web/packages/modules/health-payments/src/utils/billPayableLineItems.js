@@ -48,8 +48,31 @@ export function applyPerDayToPayables(originalPayables, rates, days) {
       return item;
     }
     const perDay = Number(rateByHead[item.headCode]) || 0;
-    return { ...item, amount: Math.round(perDay * d) };
+    return { ...item, amount: Math.round(perDay * d * 100) / 100 };
   });
+}
+
+// Create PAYABLE line items for heads that have a rate > 0 but no existing
+// row. Used when a worker was absent at bill creation (no rows at all) or
+// when only some heads were seeded. Skips heads with rate = 0 so zero rows
+// are not littered. New items carry no id — the backend assigns one on merge.
+export function fillMissingPayables(payableLineItems, rates, days, tenantId) {
+  const d = Number(days) || 0;
+  const rateByHead = rates || {};
+  const result = Array.isArray(payableLineItems) ? [...payableLineItems] : [];
+  Object.entries(rateByHead).forEach(([headCode, rate]) => {
+    const perDay = Number(rate) || 0;
+    if (perDay <= 0) return;
+    if (hasPayableHead(result, headCode)) return;
+    result.push({
+      type: "PAYABLE",
+      headCode,
+      tenantId,
+      amount: Math.round(perDay * d * 100) / 100,
+      status: "ACTIVE",
+    });
+  });
+  return result;
 }
 
 // ---------------------------------------------------------------------------

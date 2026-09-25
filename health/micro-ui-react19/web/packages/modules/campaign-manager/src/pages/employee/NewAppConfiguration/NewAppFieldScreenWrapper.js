@@ -15,6 +15,7 @@ import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale, dispatch, t, viewMode }) => {
   const localizedLabel = useCustomT(footerButtonConfig?.label);
   const [localValue, setLocalValue] = useState(localizedLabel || "");
+  const [isEditing, setIsEditing] = useState(false);
   const debounceTimerRef = useRef(null);
 
   // Sync local value when localizedLabel changes
@@ -79,23 +80,50 @@ const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale,
     link: t(I18N_KEYS.APP_CONFIGURATION.Link),
   }
 
+  const typeLabel = `${labelMap[footerButtonConfig?.properties?.type] || ""} ${t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ACTION_BUTTON_LABEL)}`;
+
   return (
-    // Card wrapper matching the element rows in template pages' Buttons sections, so
-    // form pages' footer button doesn't render as a bare label + input
-    <div className="draggableField-cont app-config-field-wrapper" style={{ padding: "0.75rem", marginBottom: "1rem" }}>
-      <LabelFieldPair key={`footer-${index}`} className="app-preview-app-config-drawer-action-button" removeMargin={true}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "0.5rem" }}>
-          <span>{`${labelMap[footerButtonConfig?.properties?.type] || ""} ${t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ACTION_BUTTON_LABEL)}`}</span>
-          <Tag icon="" label={t("Button")} className="app-config-field-tag normal" showIcon={false} />
-        </div>
-        <TextInput
-          name={`footerLabel-${index}`}
-          value={localValue}
-          onChange={(event) => handleChange(event.target.value)}
-          onBlur={handleBlur}
-          disabled={viewMode}
-        />
-      </LabelFieldPair>
+    // Same card anatomy as the PanelFieldDisplay rows in template pages' Buttons
+    // sections: button label as the card title with a Button tag beneath it. The
+    // label input only appears once the card is clicked, mirroring how field rows
+    // open their editor on click instead of exposing inputs inline.
+    <div className="draggableField-cont" key={`footer-${index}`} style={{ display: "flex", alignItems: "center" }}>
+      <div
+        className="app-config-field-wrapper"
+        onClick={() => {
+          if (!viewMode) setIsEditing(true);
+        }}
+      >
+        <LabelFieldPair className="appConfigLabelField">
+          <div className="appConfigLabelField-label-container" style={{ width: "100%" }}>
+            <div className="appConfigLabelField-label">
+              <span>{localValue || typeLabel}</span>
+            </div>
+            <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap" }}>
+              <Tag icon="" label={t("Button")} className="app-config-field-tag normal" showIcon={false} />
+            </div>
+          </div>
+        </LabelFieldPair>
+        {isEditing && !viewMode && (
+          <div onClick={(e) => e.stopPropagation()} style={{ marginTop: "0.5rem" }}>
+            <LabelFieldPair className="app-preview-app-config-drawer-action-button" removeMargin={true}>
+              <div className="">
+                <span>{typeLabel}</span>
+              </div>
+              <TextInput
+                name={`footerLabel-${index}`}
+                value={localValue}
+                onChange={(event) => handleChange(event.target.value)}
+                onBlur={() => {
+                  handleBlur();
+                  setIsEditing(false);
+                }}
+                autoFocus={true}
+              />
+            </LabelFieldPair>
+          </div>
+        )}
+      </div>
     </div>
   );
 });

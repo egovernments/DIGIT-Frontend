@@ -10,7 +10,7 @@ import DSSCampaignRowCard from "./components/DSSCampaignRowCard";
 
 export const DSSModule = ({ stateCode, userType, tenants }) => {
   const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
-  const moduleCode = ["hcm-campaignmanager", "hcm-dss", `hcm-boundary-${hierarchyType}`, "rainmaker-hcm-dss"];
+  const moduleCode = ["hcm-campaignmanager", "hcm-dss", `hcm-boundary-${hierarchyType}`];
   const modulePrefix = "";
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({

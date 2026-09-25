@@ -117,7 +117,7 @@ const MapUsersToRegistersScreen = () => {
       registerCreationStatus === "toCreate"
     ) {
       setShowToast({
-        key: "warning",
+        key: "info",
         label: t(I18N_KEYS.PAGES.HCM_REGISTER_CREATION_IN_PROGRESS),
       });
     } else if (registerCreationStatus === "failed") {

@@ -16,6 +16,7 @@ import {
   perDayFromPayable,
   sumPayableAmounts,
   applyPerDayToPayables,
+  fillMissingPayables,
   FEES_HEAD_CODE,
   getBaseHeadCodes,
   computeFeePercent,
@@ -376,24 +377,26 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     headCodes = [],
     payableLineItems = [],
     attendance,
-    savedRb = {},
+    snapshotRb = {},
     rateBreakup = {},
   }) => {
+    // amount / days is only invertible while days > 0. At 0 days the amount is 0
+    // and the rate cannot be recovered from it, so read the stored rate instead.
+    const days = Number(attendance);
+    const canDeriveFromAmount = Number.isFinite(days) && days > 0;
     return headCodes.reduce((acc, headCode) => {
-      if (hasPayableHead(payableLineItems, headCode)) {
+      if (canDeriveFromAmount && hasPayableHead(payableLineItems, headCode)) {
         acc[headCode] = perDayFromPayable(
           getPayableAmount(payableLineItems, headCode),
           attendance
         );
       } else {
-        const reviewerValue = savedRb?.[headCode];
-        const defaultValue = rateBreakup?.[headCode];
-        acc[headCode] =
-          reviewerValue != null
-            ? Number(reviewerValue)
-            : defaultValue != null
-              ? Number(defaultValue)
-              : 0;
+        // Fallback chain: UI-persisted snapshot → MDMS rate → 0
+        const stored = [
+          snapshotRb?.[headCode],
+          rateBreakup?.[headCode],
+        ].find((value) => value != null);
+        acc[headCode] = stored != null ? Number(stored) : 0;
       }
       return acc;
     }, {});
@@ -417,7 +420,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         (rate) => rate?.skillCode === matchedSkill?.type);
 
       const rateBreakup = rateObj?.rateBreakup || {};
-      const savedRb = billDetail?.additionalDetails?.reviewerRateBreakup || {};
       const attendance = billDetail?.totalAttendance;
       const payableItems = (billDetail?.payableLineItems || []).filter(
         (p) => p?.type === "PAYABLE"
@@ -428,7 +430,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         headCodes,
         payableLineItems: billDetail?.payableLineItems || [],
         attendance,
-        savedRb,
+        snapshotRb: billDetail?.additionalDetails?.rateBreakup || {},
         rateBreakup,
       });
       const wage = Object.values(ratesByHead).reduce(
@@ -714,34 +716,31 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       );
       const days = Number(row?.totalAttendance) || 0;
       const origPayables = orig.payableLineItems;
-      let payableLineItems = origPayables;
-      let totalAmount;
-      if (Array.isArray(origPayables) && origPayables.length > 0) {
-        payableLineItems = applyPerDayToPayables(origPayables, rates, days);
-        // Recompute the FEES PAYABLE amount from the (newly) edited per-day
-        // rates and the current fee percent, so the saved totals stay
-        // consistent with what the reviewer sees in the UI.
-        const rowFeePercent = row?.feePercent;
-        if (
-          baseHeadCodes.length > 0 &&
-          rowFeePercent !== "" &&
-          rowFeePercent != null &&
-          Number.isFinite(Number(rowFeePercent))
-        ) {
-          payableLineItems = upsertFeesInPayables(
-            payableLineItems,
-            baseHeadCodes,
-            Number(rowFeePercent)
-          );
-        }
-        totalAmount = truncateTo2Decimals(sumPayableAmounts(payableLineItems));
-      } else {
-        const totalPerDay = Object.values(rates).reduce(
-          (sum, value) => sum + (Number(value) || 0),
-          0
+      // Transform existing PAYABLE rows with the updated rates/days, then
+      // create rows for any head with rate > 0 that has no existing entry.
+      // This covers workers absent at bill creation (no rows at all) and
+      // partial workers missing some heads. The backend rejects a positive
+      // total with no payable breakdown, so both cases must produce rows.
+      let payableLineItems = fillMissingPayables(
+        applyPerDayToPayables(origPayables || [], rates, days),
+        rates,
+        days,
+        tenantId
+      );
+      const rowFeePercent = row?.feePercent;
+      if (
+        baseHeadCodes.length > 0 &&
+        rowFeePercent !== "" &&
+        rowFeePercent != null &&
+        Number.isFinite(Number(rowFeePercent))
+      ) {
+        payableLineItems = upsertFeesInPayables(
+          payableLineItems,
+          baseHeadCodes,
+          Number(rowFeePercent)
         );
-        totalAmount = truncateTo2Decimals(totalPerDay * days);
       }
+      const totalAmount = truncateTo2Decimals(sumPayableAmounts(payableLineItems));
       const {
         givenName,
         mobileNumber,
@@ -778,6 +777,13 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       payableLineItems: d?.payableLineItems,
       additionalDetails: {
         ...(d?.additionalDetails || {}),
+        rateBreakup: {
+          ...(d?.additionalDetails?.rateBreakup || {}),
+          ...Object.entries(d?.ratesByHead || {}).reduce((acc, [headCode, value]) => {
+            acc[headCode] = Number(value) || 0;
+            return acc;
+          }, {}),
+        },
         editInfo: {
           ...(d?.additionalDetails?.editInfo || {}),
           payablesUpdatedAtEpochMs,
