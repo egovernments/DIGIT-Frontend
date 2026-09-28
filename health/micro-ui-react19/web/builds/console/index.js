@@ -11,7 +11,7 @@ window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
 
 // Enabled modules for console variant.
-const enabledModules = ["assignment", "Workbench", "Utilities", "Campaign", "DSS", "Payments", "PGR", "HRMS"];
+const enabledModules = ["assignment", "Workbench", "Utilities", "Campaign", "DSS", "PGR", "HRMS"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "EMPLOYEE";
@@ -61,7 +61,6 @@ const MainApp = ({ stateCode, enabledModules }) => {
           import(/* webpackChunkName: "campaign-manager" */ "@egovernments/digit-ui-module-campaign-manager"),
           import(/* webpackChunkName: "workbench" */ "@egovernments/digit-ui-module-workbench"),
           import(/* webpackChunkName: "health-dss" */ "@egovernments/digit-ui-module-health-dss"),
-          import(/* webpackChunkName: "health-payments" */ "@egovernments/digit-ui-module-health-payments"),
           import(/* webpackChunkName: "pgr" */ "@egovernments/digit-ui-module-health-pgr"),
           import(/* webpackChunkName: "health-hrms" */ "@egovernments/digit-ui-module-health-hrms"),
         ]);
@@ -74,9 +73,6 @@ const MainApp = ({ stateCode, enabledModules }) => {
         }
         if (dssModule?.initDSSComponents) {
           dssModule.initDSSComponents();
-        }
-        if (paymentsModule?.initPaymentComponents) {
-          paymentsModule.initPaymentComponents();
         }
         if (pgrModule?.initPGRComponents) {
           pgrModule.initPGRComponents();
