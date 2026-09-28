@@ -2,6 +2,7 @@ import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { Hooks } from "@egovernments/digit-ui-libraries";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
+import { Loader } from "@egovernments/digit-ui-components";
 
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks;
@@ -9,8 +10,8 @@ window.Digit.Hooks = Hooks;
 // Lazy load the core module
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
 
-// Console variant with admin modules
-const enabledModules = ["assignment", "Utilities", "Admin", "Console"];
+// Enabled modules for console variant.
+const enabledModules = ["assignment", "Workbench", "Utilities", "Campaign", "DSS", "PGR", "HRMS"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "EMPLOYEE";
@@ -40,7 +41,7 @@ const initTokens = (stateCode) => {
 };
 
 const initDigitUI = () => {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "workbench-ui";
+  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "console";
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
 
   const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -54,38 +55,52 @@ const MainApp = ({ stateCode, enabledModules }) => {
   useEffect(() => {
     initLibraries().then(async () => {
       try {
-        // Load admin/console modules if available
-        const consoleModule = await import(/* webpackChunkName: "console" */ "@egovernments/digit-ui-module-hcmadmin")
-          .catch(() => null);
-        
-        if (consoleModule?.initConsoleComponents) {
-          consoleModule.initConsoleComponents();
+        // Every module named in enabledModules has to be registered here too -
+        // listing it alone only exposes the route, with nothing behind it.
+        const [campaignModule, workbenchModule, dssModule, paymentsModule, pgrModule, hrmsModule] = await Promise.all([
+          import(/* webpackChunkName: "campaign-manager" */ "@egovernments/digit-ui-module-campaign-manager"),
+          import(/* webpackChunkName: "workbench" */ "@egovernments/digit-ui-module-workbench"),
+          import(/* webpackChunkName: "health-dss" */ "@egovernments/digit-ui-module-health-dss"),
+          import(/* webpackChunkName: "pgr" */ "@egovernments/digit-ui-module-health-pgr"),
+          import(/* webpackChunkName: "health-hrms" */ "@egovernments/digit-ui-module-health-hrms"),
+        ]);
+
+        if (campaignModule?.initCampaignComponents) {
+          campaignModule.initCampaignComponents();
+        }
+        if (workbenchModule?.initWorkbenchComponents) {
+          workbenchModule.initWorkbenchComponents();
+        }
+        if (dssModule?.initDSSComponents) {
+          dssModule.initDSSComponents();
+        }
+        if (pgrModule?.initPGRComponents) {
+          pgrModule.initPGRComponents();
+        }
+        if (hrmsModule?.initHRMSComponents) {
+          hrmsModule.initHRMSComponents();
         }
       } catch (error) {
-        console.log("Console modules not available:", error);
+        console.log("Error loading modules:", error);
       }
       setIsReady(true);
     });
   }, []);
 
   useEffect(() => {
+    if (!isReady) return;
     initTokens(stateCode);
     setLoaded(true);
   }, [stateCode, isReady]);
 
   if (!loaded) {
-    return <div>Loading...</div>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loader page={true} variant={"PageLoader"} />}>
       {window.Digit && (
-        <DigitUILazy 
-          stateCode={stateCode} 
-          enabledModules={enabledModules} 
-          allowedUserTypes={["employee"]} 
-          defaultLanding="console" 
-        />
+        <DigitUILazy stateCode={stateCode} enabledModules={enabledModules} allowedUserTypes={["employee"]} defaultLanding="employee" />
       )}
     </Suspense>
   );
