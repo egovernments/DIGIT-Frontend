@@ -64,6 +64,25 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     "DynamicLoginComponent",
   );
 
+  // Detects whether this page load is Google/Microsoft SSO redirecting back with a
+  // result (a token on success, an error on failure/denial), by checking the URL once
+  // when the component mounts. Used below to hide the login form behind a loader for
+  // as long as that SSO result is still being processed, so the form never flashes on
+  // screen while we're mid-way through signing the user in.
+  const isSSOCallback = useMemo(() => {
+    const hash = new URLSearchParams(window.location.hash.slice(1));
+    const search = new URLSearchParams(window.location.search);
+    return Boolean(
+      hash.get("id_token") || search.get("id_token") ||
+      search.get("code") ||
+      hash.get("error") || search.get("error")
+    );
+  }, []);
+  // Starts true only for an actual SSO callback; false (and never touched) for every
+  // other flow, so password/OTP login are provably unaffected. Cleared on failure only —
+  // on success there's nothing to hand back to, since `navigate()` unmounts this page next.
+  const [ssoInProgress, setSsoInProgress] = useState(isSSOCallback);
+
   /* Generic SSO Callback Handler - runs on mount / when disable/user/stateInfo change */
   useEffect(() => {
     const hashParams = new URLSearchParams(window.location.hash.slice(1));
@@ -95,6 +114,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       setTimeout(closeToast, 5000);
       setLoginLoader(false);
       setDisable(false);
+      setSsoInProgress(false);
       return;
     }
 
@@ -123,11 +143,23 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
             setTimeout(closeToast, 5000);
             setDisable(false);
             setLoginLoader(false);
+            setSsoInProgress(false);
           });
       }
     }
 
   }, [user, disable, stateInfo, loginLoader, showToast]);
+
+  // Safety net for the SSO loader above: if the app's tenant/store info fails to
+  // load while we're waiting on an SSO login, don't leave the user stuck on a
+  // spinner forever -- bring back the login form with an error so they can retry.
+  useEffect(() => {
+    if (ssoInProgress && !isStoreLoading && !stateInfo?.code) {
+      setSsoInProgress(false);
+      setShowToast("Unable to load tenant information. Please try again.");
+      setTimeout(closeToast, 5000);
+    }
+  }, [ssoInProgress, isStoreLoading, stateInfo]);
 
   /* Post-login redirect and user setup */
   useEffect(() => {
@@ -231,9 +263,13 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       } catch (e) {
         // no-op
       }
+
+      setDisable(false);
+      setLoginLoader(false);
+      setSsoInProgress(false);
     }
-    setDisable(false);
-    setLoginLoader(false);
+    // On success, deliberately leave disable/loginLoader/ssoInProgress as-is — `setUser`
+    // above triggers the [user] effect's navigate(), which unmounts this page next.
   };
 
   const buildOIDCAuthorizeUrl = (uiConfig) => {
@@ -566,7 +602,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     </div>
   );
 
-  if (isLoading || isStoreLoading) {
+  if (isLoading || isStoreLoading || ssoInProgress) {
     return <Loader page={true} variant="PageLoader" />;
   }
   return propsConfig?.bannerImages ? (
