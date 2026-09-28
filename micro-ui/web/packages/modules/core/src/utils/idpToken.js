@@ -19,8 +19,8 @@
  * localStorage; if that matters, the backend has to set the cookie instead.
  */
 
-const COOKIE_NAME = "sso-id-token";
-const FALLBACK_KEY = "sso-id-token";
+const COOKIE_NAME = "x-id-token"; //sso-id-token
+const FALLBACK_KEY = "x-id-token";  //sso-id-token
 /* Browsers drop cookies above ~4096 bytes, counting name, value and attributes. */
 const MAX_COOKIE_BYTES = 4000;
 
