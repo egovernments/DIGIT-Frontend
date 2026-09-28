@@ -1848,12 +1848,30 @@ const CountryCodePrefixField = React.memo(({ panelItem, selectedField, onFieldCh
   const looksFixed = !prefixText || isLoading || !countries?.length || Boolean(matchedCountry);
   const mode = modeOverride || selectedField?.countryCodeMode || (looksFixed ? "FIXED" : "DYNAMIC");
 
+  // What each mode last held. Both modes write the same prefixText, so without this a country
+  // picked under Fixed would show up already typed into Dynamic. Kept only while the panel is
+  // open: a saved field stores prefixText alone, and its mode is worked out from that on reopen.
+  const lastValueByMode = useRef({ FIXED: "", DYNAMIC: "" });
+
   // The mode is stored separately from showCountryCodeDropdown because that
   // flag also signals that the toggle itself is on. Reusing it would switch the
   // whole toggle off as soon as the prefix box was cleared in Dynamic mode.
   const selectMode = (option) => {
-    setModeOverride(option?.mode);
-    onFieldChange({ ...selectedField, countryCodeMode: option?.mode, showCountryCodeDropdown: true });
+    const nextMode = option?.mode;
+    // Picking the mode already in use changes nothing, and swapping values would discard what
+    // the user has just entered.
+    if (!nextMode || nextMode === mode) return;
+
+    // Put the current value aside and bring back whatever the mode being opened last held,
+    // which is nothing until that mode has been used.
+    lastValueByMode.current[mode] = prefixText;
+    setModeOverride(nextMode);
+    onFieldChange({
+      ...selectedField,
+      countryCodeMode: nextMode,
+      showCountryCodeDropdown: true,
+      prefixText: lastValueByMode.current[nextMode] || "",
+    });
   };
 
   // Reuse the master's own text config so the prefix input keeps the
