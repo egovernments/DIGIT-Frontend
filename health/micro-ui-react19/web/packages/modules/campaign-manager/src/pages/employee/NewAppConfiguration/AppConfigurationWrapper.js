@@ -11,7 +11,7 @@ import IntermediateWrapper from "./IntermediateWrapper";
 import { useCustomT, useCustomTranslate, useFieldDataLabel } from "./hooks/useCustomT";
 import fullParentConfig from "./configs/fullParentConfig.json";
 import { getPageFromConfig } from "./utils/configUtils";
-import { getFieldTypeFromMasterData, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData } from "./helpers";
+import { getFieldTypeFromMasterData, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData, isPanelItemEnabledForField } from "./helpers";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 // Helper function to check if a value is empty (null, undefined, empty string, or empty array)
@@ -204,8 +204,9 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
             panelItem.visibilityEnabledFor.length === 0 ||
             panelItem.visibilityEnabledFor.includes(fieldType);
 
-          // Field must be visible for this field type AND field must not be hidden
-          const isVisible = isFieldTypeVisible && field.hidden !== true;
+          // Field must be visible for this field type, field must not be hidden, and the property
+          // must not be one the config has scoped to other fields by name
+          const isVisible = isFieldTypeVisible && field.hidden !== true && isPanelItemEnabledForField(panelItem, field?.fieldName);
           if (!isVisible) {
             return;
           }          // Validation for mandatory localisable fields

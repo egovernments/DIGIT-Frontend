@@ -5,7 +5,13 @@ import { AlertCard, FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdow
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT } from "./hooks/useCustomT";
-import { getFieldTypeFromMasterData, getFieldValueByPath, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData } from "./helpers";
+import {
+  getFieldTypeFromMasterData,
+  getFieldValueByPath,
+  getFieldTypeFromMasterData2,
+  getFieldTypeOptionFromMasterData,
+  isPanelItemEnabledForField,
+} from "./helpers";
 import { TextInput, Button } from "@egovernments/digit-ui-components";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
@@ -1965,12 +1971,8 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
   // Filter properties based on field type visibility
   const visibleTabProperties = useMemo(() => {
     return currentTabProperties.filter((panelItem) => {
-      // A property can also name the individual fields it applies to. Scoping by field type alone
-      // is too broad for something that describes one field in particular - a note about the age
-      // field would otherwise appear on every field of the same type, in every flow. Optional:
-      // a property that does not list any fields is not narrowed and behaves exactly as before.
-      const enabledFields = panelItem?.visibilityEnabledForFields;
-      if (Array.isArray(enabledFields) && enabledFields.length > 0 && !enabledFields.includes(selectedField?.fieldName)) {
+      // Skip properties the config has scoped to other fields by name
+      if (!isPanelItemEnabledForField(panelItem, selectedField?.fieldName)) {
         return false;
       }
 
@@ -2000,6 +2002,10 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
           panelItem.visibilityEnabledFor.includes(fieldType);
 
         if (!isVisible) return;
+
+        // A property that is not shown for this field is not validated for it either, so hiding
+        // one can never raise an error with no control on screen to clear it
+        if (!isPanelItemEnabledForField(panelItem, selectedField?.fieldName)) return;
 
         // Check group fields with validation expressions
         if (panelItem.fieldType === "group" && panelItem.validationExpression) {
