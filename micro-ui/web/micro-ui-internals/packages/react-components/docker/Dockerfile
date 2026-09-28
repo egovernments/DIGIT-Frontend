@@ -13,7 +13,7 @@ RUN yarn config set network-timeout 600000
 RUN yarn install
 RUN yarn build-storybook
 
-FROM nginx:mainline-alpine
+FROM nginx:1-alpine3.20
 ENV WORK_DIR=/var/web/storybook
 
 RUN mkdir -p ${WORK_DIR}
