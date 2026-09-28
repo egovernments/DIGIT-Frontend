@@ -117,18 +117,31 @@ const UserActivitySummaryTable = ({ data }) => {
       lastSync: formatSyncTime(user.latestSyncTime),
       recordsToday: user.totalRecords != null ? user.totalRecords : 0,
       status: user.active === "ACTIVE" ? "ONLINE" : "OFFLINE",
-      province: user.province,
-      district: user.district,
+      province: user.province || user.state,
+      district: user.district || user.lga,
       provinceCode: user.provinceCode,
       districtCode: user.districtCode,
       campaign: user.campaignName || "",
     }));
   }, [response]);
 
-  // Derive parent boundary code from response data (provinceCode from first row)
+  // Derive parent boundary code from response data
   const parentBoundaryCode = useMemo(() => {
     if (!usersSummary || usersSummary.length === 0) return "";
-    return usersSummary[0].provinceCode || "";
+
+    const codeFrequency = usersSummary.reduce((acc, row) => {
+      if (!row?.provinceCode) return acc;
+      acc[row.provinceCode] = (acc[row.provinceCode] || 0) + 1;
+      return acc;
+    }, {});
+
+    const preferredCode = Object.entries(codeFrequency)
+      .filter(([code]) => code.startsWith("ITN_NI_"))
+      .sort((a, b) => b[1] - a[1])[0]?.[0];
+
+    if (preferredCode) return preferredCode;
+
+    return usersSummary.find((row) => row?.provinceCode)?.provinceCode || "";
   }, [usersSummary]);
 
   // Fetch child boundaries under the parent boundary from boundary API
@@ -185,7 +198,12 @@ const UserActivitySummaryTable = ({ data }) => {
         || (row.userId && row.userId.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesStatus = statusFilter === "ALL" || row.status === statusFilter;
       const matchesRole = roleFilter === "ALL" || row.role === roleFilter;
-      const matchesBoundary = selectedBoundaries.length === 0 || selectedBoundaries.some((b) => row.district === b.code || row.district === t(b.code));
+      const matchesBoundary = selectedBoundaries.length === 0
+        || selectedBoundaries.some((b) =>
+          row.districtCode === b.code
+          || row.district === b.code
+          || row.district === t(b.code)
+        );
       return matchesSearch && matchesStatus && matchesRole && matchesBoundary;
     });
   }, [searchQuery, statusFilter, roleFilter, selectedBoundaries, usersSummary]);

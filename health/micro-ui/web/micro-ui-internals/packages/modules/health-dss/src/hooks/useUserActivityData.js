@@ -132,8 +132,8 @@ var useUserActivityData = function (params) {
         active: user.active === true,
         // TODO: backend will send inactive status explicitly when active is null
         status: user.active === true || user.active === "ACTIVE" ? "ONLINE" : "OFFLINE",
-        province: user.province,
-        district: user.district,
+        province: user.province || user.state,
+        district: user.district || user.lga,
       };
     });
   }, [usersSummaryRaw]);
