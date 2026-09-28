@@ -150,6 +150,17 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
 
   }, [user, disable, stateInfo, loginLoader, showToast]);
 
+  // Safety net for the SSO loader above: if the app's tenant/store info fails to
+  // load while we're waiting on an SSO login, don't leave the user stuck on a
+  // spinner forever -- bring back the login form with an error so they can retry.
+  useEffect(() => {
+    if (ssoInProgress && !isStoreLoading && !stateInfo?.code) {
+      setSsoInProgress(false);
+      setShowToast("Unable to load tenant information. Please try again.");
+      setTimeout(closeToast, 5000);
+    }
+  }, [ssoInProgress, isStoreLoading, stateInfo]);
+
   /* Post-login redirect and user setup */
   useEffect(() => {
     if (!user) {
