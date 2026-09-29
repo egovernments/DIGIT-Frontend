@@ -180,9 +180,13 @@
 }
 
 .payment-screen-headers{
-  color: var(--digitv2-lightTheme-primary-2);
-  font-size: var(--digitv2-fontSize-heading-xl-desktop);
   white-space: nowrap;
+  line-height: normal;
+  font-family: var(--digitv2-fontFamily-rc);
+  font-weight: var(--digitv2-fontWeight-bold);
+  font-style: Bold;
+  font-size: var(--digitv2-fontSize-heading-xl-desktop);
+  color: var(--digitv2-lightTheme-primary-2) !important;
 }
 
 .edit-attendance-mangement-table{
