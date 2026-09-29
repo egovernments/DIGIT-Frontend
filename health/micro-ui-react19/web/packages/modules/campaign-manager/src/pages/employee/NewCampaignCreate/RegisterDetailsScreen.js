@@ -377,7 +377,7 @@ const RegisterDetailsScreen = () => {
       {showToast && (
         <Toast
           style={{ zIndex: 10001 }}
-          type={showToast.key === "error" ? "error" : showToast.key === "warning" ? "warning" : "success"}
+          type={showToast.key === "error" ? "error" : showToast.key === "warning" ? "warning" : showToast.key === "info" ? "info" : "success"}
           label={showToast.label}
           onClose={() => setShowToast(null)}
         />
