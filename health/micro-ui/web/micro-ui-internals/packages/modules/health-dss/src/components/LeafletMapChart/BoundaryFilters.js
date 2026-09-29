@@ -343,7 +343,8 @@ const BoundaryFilters = ({ activeFilter, onSelect, onPathChange }) => {
     if (levelIndex === 0) return all;
     const parentSel = selections[orderedLevels[levelIndex - 1].level];
     if (!parentSel) return [];
-    return all.filter((b) => b.parentCode === parentSel.code);
+    const selectedParentCode = parentSel.code?.toLowerCase();
+    return all.filter((b) => b.parentCode?.toLowerCase() === selectedParentCode);
   };
 
   // Same shell in both states, and the spinner is shrunk from Loader's 6.25rem default,

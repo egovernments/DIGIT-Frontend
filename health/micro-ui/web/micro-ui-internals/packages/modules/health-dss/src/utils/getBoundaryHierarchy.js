@@ -1,4 +1,4 @@
-const DEFAULT_BOUNDARY_DEPTH = 4;
+const DEFAULT_BOUNDARY_DEPTH = 5;
 
 // The legacy "level-N" vocabulary is confined to toLevelMap below; this array is the
 // representation the maps tab actually works with.
