@@ -480,7 +480,7 @@ const LeafletHeatMap = ({
     // rawCode = feature.properties.name — the boundary code, used for parent-chain lookup in BoundaryFilters
     // displayName — human-readable name resolved from boundary data, sent to the chart API filter
     if (!hasCoordinatesDown) {
-      if (level === 4 || level === 5) setFilterFeature({ finalFilter: locationName });
+      if (level === 5) setFilterFeature({ finalFilter: locationName });
       else return;
     }
 
@@ -501,11 +501,8 @@ const LeafletHeatMap = ({
       || (displayName && nameToServiceCodeRef.current[displayName.toLowerCase()])
       || rawCode;
 
-    const applyBoundaryDrill = (targetLevel, targetLevelWord) => {
-      if (level !== targetLevel) return;
-      const bl = getBoundaryTypeByLevel(`level-${targetLevelWord}`, boundaryLevelMap);
-      if (!bl) return;
-
+    if (level === 2) {
+      const bl = getBoundaryTypeByLevel("level-two", boundaryLevelMap);
       // Mirror the activeFilter effect: base on baseFilterRef so all context filters
       // (campaign dates, tenantId, etc.) are preserved and parent boundary names stay clean.
       setFilterStack({
@@ -520,12 +517,45 @@ const LeafletHeatMap = ({
       });
       setBoundaryLevel(toFilterCase(bl));
       internalDrillRef.current = true;
-      onDrillDown?.({ type: bl, code: serviceCode || locationName, name: displayName, level: `level-${targetLevelWord}` });
-    };
+      onDrillDown?.({ type: bl, code: serviceCode || locationName, name: displayName, level: "level-two" });
+    }
+    if (level === 3) {
+      const bl = getBoundaryTypeByLevel("level-three", boundaryLevelMap);
+      // Mirror the activeFilter effect: base on baseFilterRef so the state filter
+      // always uses the URL-resolved name ("Oyo") not whatever code may be in live filterStack.
+      setFilterStack({
+        value: {
+          ...baseFilterRef.current,
+          filters: {
+            ...(baseFilterRef.current?.filters || {}),
+            boundaryType: bl,
+            [bl]: displayName,
+          },
+        },
+      });
+      setBoundaryLevel(toFilterCase(bl));
+      internalDrillRef.current = true;
+      onDrillDown?.({ type: bl, code: serviceCode || locationName, name: displayName, level: "level-three" });
+    }
+    if (level === 4) {
+      const bl = getBoundaryTypeByLevel("level-four", boundaryLevelMap);
+      // Mirror the activeFilter effect: base on baseFilterRef so the state filter
+      // always uses the URL-resolved name ("Oyo") not whatever code may be in live filterStack.
+      setFilterStack({
+        value: {
+          ...baseFilterRef.current,
+          filters: {
+            ...(baseFilterRef.current?.filters || {}),
+            boundaryType: bl,
+            [bl]: displayName,
+          },
+        },
+      });
+      setBoundaryLevel(toFilterCase(bl));
+      internalDrillRef.current = true;
+      onDrillDown?.({ type: bl, code: serviceCode || locationName, name: displayName, level: "level-four" });
+    }
 
-    applyBoundaryDrill(2, "two");
-    applyBoundaryDrill(3, "three");
-    applyBoundaryDrill(4, "four");
 
   };
 
@@ -669,7 +699,7 @@ const LeafletHeatMap = ({
     setCoverageRange([0, COVERAGE_MAX]);
   }, [activeCoverageIndex]);
 
-  // Moving to a different boundary invalidates any deepest-level feature filter. This used to be
+  // Moving to a different boundary invalidates any level-4 feature filter. This used to be
   // done by the drill-down chips' remove handler, which no longer exists.
   useEffect(() => {
     setFilterFeature(null);
@@ -698,7 +728,7 @@ const LeafletHeatMap = ({
     if (!layer) return;
     layer.eachLayer((featureLayer) => {
       const name = getTitleHeading(featureLayer.feature?.properties?.name);
-      // leave features hidden by the deepest-level feature filter alone
+      // leave features hidden by a level-4 feature filter alone
       if (filterFeature?.finalFilter && filterFeature.finalFilter !== name) return;
       featureLayer.setStyle(styleForValue(chartData[name]?.value));
       // The tooltip carries the metric values, so it goes stale with the colours.
