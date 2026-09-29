@@ -587,6 +587,8 @@ const MapUsersToRegistersScreen = () => {
               ? "error"
               : showToast.key === "warning"
               ? "warning"
+              : showToast.key === "info"
+              ? "info"
               : "success"
           }
           label={showToast.label}
