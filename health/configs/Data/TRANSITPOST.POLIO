@@ -1,4 +1,4 @@
-        {
+{
             "id": "856b0d77-50cc-4928-aa4e-88229c3c4a4f",
             "tenantId": "mz",
             "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
@@ -925,14 +925,12 @@
                                         "order": 2,
                                         "value": "",
                                         "format": "text",
-                                        "hidden": false,
+                                        "hidden": true,
                                         "tooltip": "",
                                         "helpText": "GV_CHILD_NAME_HELPTEXT",
                                         "infoText": "",
                                         "readOnly": false,
-                                        "required": true,
                                         "fieldName": "childName",
-                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
@@ -1590,12 +1588,11 @@
                                         "order": 5,
                                         "value": "",
                                         "format": "latLng",
-                                        "hidden": true,
+                                        "hidden": false,
                                         "tooltip": "",
                                         "helpText": "GV_GPS_START_HELPTEXT",
                                         "infoText": "",
                                         "readOnly": true,
-                                        "required": true,
                                         "fieldName": "gpsReferral",
                                         "deleteFlag": false,
                                         "innerLabel": "",
@@ -1771,6 +1768,6 @@
                 "createdBy": "e1c370db-8f61-4460-8bea-3b85c7373124",
                 "lastModifiedBy": "961ad45f-5a9c-44df-affa-ced9831ffdeb",
                 "createdTime": 1789645567189,
-                "lastModifiedTime": 1790163936916
+                "lastModifiedTime": 1790335155040
             }
         }
