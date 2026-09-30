@@ -83,6 +83,11 @@ const TopBarSideBar = ({
         await Digit.UserService.logout();
       } finally {
         restoreLanguagePreferences(preservedLanguages);
+        /* Only now that /user/_logout has been sent. The browser attaches this cookie
+           automatically, so dropping it any earlier makes logout the one request in the
+           session without it - which the gateway rejects with a 401. And it has to happen
+           before the IdP redirect below, because that navigation abandons the page. */
+        clearIdpToken();
         try {
           const url = new URL(logoutUrlFromConfig);
           url.searchParams.set(redirectParamName, postLogoutRedirectUri);
@@ -103,13 +108,15 @@ const TopBarSideBar = ({
     /* logout() wipes all of localStorage, which would take the remembered languages with it.
        Snapshot now, put them back once the wipe has happened. */
     const preservedLanguages = snapshotLanguagePreferences();
-    /* UserService.logout() clears localStorage and sessionStorage but not cookies, so the
-       IdP token has to be dropped explicitly - on both the SSO and password paths. */
-    clearIdpToken();
+    /* Note: the IdP cookie is deliberately NOT cleared here. logout() does not touch
+       cookies, so it has to be dropped explicitly - but only once /user/_logout has gone
+       out, since the browser sends it on every request and its absence is a 401. Both
+       branches below do that at the right moment. */
     const handledBySSO = await handleSSOLogout(source, preservedLanguages);
     if (!handledBySSO) {
       await Digit.UserService.logout();
       restoreLanguagePreferences(preservedLanguages);
+      clearIdpToken();
       /* UserService.logout() redirects to the CURRENT contextPath. Send the user back to
          the deployment they logged in through instead - same override the SSO branch above
          already relies on. */
