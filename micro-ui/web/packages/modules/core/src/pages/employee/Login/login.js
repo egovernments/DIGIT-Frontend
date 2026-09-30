@@ -537,17 +537,35 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     ),
   };
 
+  /* "oidc-google" -> "Google", "MICROSOFT" -> "Microsoft". Used only when the provider has
+     no localisation entry, so the button shows a readable name instead of a raw key. */
+  const prettifyProviderName = (value = "") =>
+    String(value)
+      .replace(/^(oidc|sso)[-_]/i, "")
+      .replace(/[-_]+/g, " ")
+      .trim()
+      .toLowerCase()
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+
+  /* t() returns the key unchanged when there is no message for it, which would put
+     "SSO_PROVIDER_OIDC-GOOGLE" on the button. Detect that and use the provider name. */
+  const resolveProviderLabel = (sso) => {
+    const key = `SSO_PROVIDER_${sso.ui?.name || sso.id}`;
+    const translated = t(key);
+    if (translated && translated !== key) return translated;
+    return prettifyProviderName(sso.ui?.provider || sso.ui?.name || sso.provider || sso.id);
+  };
+
   const ssoConfigs = ssoMDMSData?.map((sso) => ({
     ...sso,
     provider: sso.ui?.provider || sso.provider || "sso",
-    label: t(`SSO_PROVIDER_${sso.ui?.name || sso.id}`),
-    icon: sso.ui?.logo ? (
-      <img
-        src={sso.ui.logo}
-        alt={sso.ui?.name}
-        className="employee-login-sso-logo"
-      />
-    ) : sso.ui?.provider === "MICROSOFT" ? "Microsoft" : sso.ui?.icon,
+    /* Already localised - EmployeeSSOLoginOptions must not translate it again. */
+    label: resolveProviderLabel(sso),
+    /* The logo URL, deliberately NOT a React element. Button-style `icon` props are
+       resolved by NAME against digit-ui-svg-components, so passing an <img> here rendered
+       as null and left the button blank. EmployeeSSOLoginOptions renders this itself and
+       falls back to `label` when the URL is missing or fails to load. */
+    logo: sso.ui?.logo || null,
     onLogin: (ssoConfig) => {
       onSSOLogin(ssoConfig);
     },
