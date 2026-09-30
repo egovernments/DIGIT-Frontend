@@ -27,39 +27,48 @@
                                             "value": "{{item.UserActionModel.additionalFields.fields.locationName}}",
                                             "format": "textTemplate",
                                             "fieldName": "sessionLocationName",
-                                            "mandatory": true,
                                             "properties": {
                                                 "style": "headingL",
-                                                "bottomGap": 4
+                                                "bottomGap": 8
                                             }
                                         },
                                         {
                                             "type": "template",
-                                            "value": "{{item.UserActionModel.additionalFields.fields.clfLocationType}}",
-                                            "format": "textTemplate",
-                                            "fieldName": "sessionSubtitle",
-                                            "mandatory": true,
+                                            "label": "GV_SESSION_LAST_USED_ON {{fn:formatDate(item.lastActivityTs, 'date', 'dd MMM yyyy HH:mm')}}",
+                                            "format": "tag",
+                                            "fieldName": "lastUsedChip",
                                             "properties": {
+                                                "icon": "Schedule",
+                                                "tagType": "monochrome",
                                                 "bottomGap": 12
                                             }
                                         },
                                         {
+                                            "data": [
+                                                {
+                                                    "key": "GV_SUMMARY_LOCATION_TYPE",
+                                                    "value": "{{item.UserActionModel.additionalFields.fields.clfLocationType}}"
+                                                },
+                                                {
+                                                    "key": "GV_SUMMARY_SESSION_DATE",
+                                                    "value": "{{fn:formatDate(item.UserActionModel.clientAuditDetails.createdTime, 'date', 'dd MMM yyyy')}}"
+                                                },
+                                                {
+                                                    "key": "GV_METRIC_VACCINATED_TODAY",
+                                                    "value": "{{item.children.length}}"
+                                                },
+                                                {
+                                                    "key": "GV_METRIC_VACCINATED_BY_GENDER",
+                                                    "value": "{{item.malesChildren.length}}M | {{item.femaleChildren.length}}F"
+                                                },
+                                                {
+                                                    "key": "GV_METRIC_CHILDREN_REFERRED",
+                                                    "value": "{{item.referrals.length}}"
+                                                }
+                                            ],
                                             "type": "template",
-                                            "value": "{{item.children.length}} vaccinated · {{item.malesChildren.length}}M | {{item.femaleChildren.length}}F",
-                                            "format": "textTemplate",
-                                            "fieldName": "vaccinatedInline",
-                                            "properties": {
-                                                "bottomGap": 4
-                                            }
-                                        },
-                                        {
-                                            "type": "template",
-                                            "value": "{{item.referrals.length}} referred",
-                                            "format": "textTemplate",
-                                            "fieldName": "referredInline",
-                                            "properties": {
-                                                "bottomGap": 12
-                                            }
+                                            "format": "labelPairList",
+                                            "fieldName": "sessionSummary"
                                         },
                                         {
                                             "type": "template",
@@ -192,6 +201,52 @@
                                     "equals": "CLF"
                                 }
                             ],
+                            "computed": {
+                                "_maxChildTs": {
+                                    "from": "children",
+                                    "order": 1,
+                                    "reduce": {
+                                        "field": "clientAuditDetails.createdTime",
+                                        "fallback": 0,
+                                        "operation": "max"
+                                    }
+                                },
+                                "_maxActivityTs": {
+                                    "order": 3,
+                                    "fallback": 0,
+                                    "condition": {
+                                        "if": {
+                                            "left": "{{_maxChildTs}}",
+                                            "right": "{{_maxReferralTs}}",
+                                            "operator": "gt"
+                                        },
+                                        "else": "{{_maxReferralTs}}",
+                                        "then": "{{_maxChildTs}}"
+                                    }
+                                },
+                                "_maxReferralTs": {
+                                    "from": "referrals",
+                                    "order": 2,
+                                    "reduce": {
+                                        "field": "clientAuditDetails.createdTime",
+                                        "fallback": 0,
+                                        "operation": "max"
+                                    }
+                                },
+                                "lastActivityTs": {
+                                    "order": 4,
+                                    "fallback": "{{UserActionModel.clientAuditDetails.createdTime}}",
+                                    "condition": {
+                                        "if": {
+                                            "left": "{{_maxActivityTs}}",
+                                            "right": 0,
+                                            "operator": "gt"
+                                        },
+                                        "else": "{{UserActionModel.clientAuditDetails.createdTime}}",
+                                        "then": "{{_maxActivityTs}}"
+                                    }
+                                }
+                            },
                             "relations": [
                                 {
                                     "name": "children",
@@ -335,7 +390,8 @@
                                             }
                                         ],
                                         "errorMessage": "",
-                                        "isMultiSelect": false
+                                        "isMultiSelect": false,
+                                        "includeInSummary": false
                                     },
                                     {
                                         "type": "string",
@@ -349,6 +405,7 @@
                                         "infoText": "",
                                         "readOnly": true,
                                         "fieldName": "sessionArea",
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
@@ -438,7 +495,8 @@
                                             }
                                         ],
                                         "errorMessage": "",
-                                        "isMultiSelect": false
+                                        "isMultiSelect": false,
+                                        "textCapitalization": "words"
                                     },
                                     {
                                         "type": "string",
@@ -607,6 +665,24 @@
                             {
                                 "actionType": "NAVIGATION",
                                 "properties": {
+                                    "data": [],
+                                    "name": "clfSessionsList",
+                                    "type": "TEMPLATE",
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "GV_ERROR_NAVIGATION"
+                                            }
+                                        }
+                                    ],
+                                    "navigationMode": "popUntilAndReplace",
+                                    "popUntilPageName": "clfSessionsList"
+                                }
+                            },
+                            {
+                                "actionType": "NAVIGATION",
+                                "properties": {
                                     "data": [
                                         {
                                             "key": "SessionClientReferenceId",
@@ -618,17 +694,7 @@
                                         }
                                     ],
                                     "name": "clfSessionOverview",
-                                    "type": "TEMPLATE",
-                                    "onError": [
-                                        {
-                                            "actionType": "SHOW_TOAST",
-                                            "properties": {
-                                                "message": "GV_ERROR_NAVIGATION"
-                                            }
-                                        }
-                                    ],
-                                    "navigationMode": "popUntilAndPush",
-                                    "popUntilPageName": "clfSessionsList"
+                                    "type": "TEMPLATE"
                                 }
                             }
                         ],
@@ -644,25 +710,19 @@
                                 "format": "card",
                                 "children": [
                                     {
+                                        "data": [
+                                            {
+                                                "key": "GV_SUMMARY_LOCATION_NAME",
+                                                "value": "{{contextData.0.UserActionModel.additionalFields.fields.locationName}}"
+                                            },
+                                            {
+                                                "key": "GV_SUMMARY_LOCATION_TYPE",
+                                                "value": "{{contextData.0.UserActionModel.additionalFields.fields.clfLocationType}}"
+                                            }
+                                        ],
                                         "type": "template",
-                                        "value": "{{contextData.0.UserActionModel.additionalFields.fields.locationName}}",
-                                        "format": "textTemplate",
-                                        "fieldName": "sessionLocationName",
-                                        "mandatory": true,
-                                        "properties": {
-                                            "style": "headingL",
-                                            "bottomGap": 4
-                                        }
-                                    },
-                                    {
-                                        "type": "template",
-                                        "value": "{{contextData.0.UserActionModel.additionalFields.fields.clfLocationType}} · {{fn:formatDate(contextData.0.UserActionModel.timestamp, 'date', 'dd MMM yyyy')}}",
-                                        "format": "textTemplate",
-                                        "fieldName": "sessionSubtitle",
-                                        "mandatory": true,
-                                        "properties": {
-                                            "style": "captionS"
-                                        }
+                                        "format": "labelPairList",
+                                        "fieldName": "sessionDetails"
                                     }
                                 ],
                                 "fieldName": "sessionCard",
@@ -672,8 +732,28 @@
                             },
                             {
                                 "type": "template",
+                                "value": "GV_SESSION_OVERVIEW_TODAY",
+                                "format": "textTemplate",
+                                "fieldName": "todaysProgressTitle",
+                                "properties": {
+                                    "style": "headingS",
+                                    "bottomGap": 4
+                                }
+                            },
+                            {
+                                "type": "template",
                                 "format": "card",
                                 "children": [
+                                    {
+                                        "type": "template",
+                                        "value": "{{contextData.0.children.length}}",
+                                        "format": "textTemplate",
+                                        "fieldName": "vaccinatedCount",
+                                        "properties": {
+                                            "style": "headingXl",
+                                            "bottomGap": 4
+                                        }
+                                    },
                                     {
                                         "type": "template",
                                         "value": "GV_METRIC_VACCINATED_TODAY",
@@ -687,22 +767,102 @@
                                     },
                                     {
                                         "type": "template",
-                                        "value": "{{contextData.0.children.length}}",
-                                        "format": "textTemplate",
-                                        "fieldName": "vaccinatedCount",
-                                        "mandatory": true,
-                                        "properties": {
-                                            "style": "headingXl",
-                                            "bottomGap": 4
-                                        }
-                                    },
-                                    {
-                                        "type": "template",
-                                        "value": "{{contextData.0.malesChildren.length}} male | {{contextData.0.femaleChildren.length}} female",
-                                        "format": "textTemplate",
+                                        "format": "row",
+                                        "children": [
+                                            {
+                                                "flex": 1,
+                                                "type": "template",
+                                                "format": "card",
+                                                "children": [
+                                                    {
+                                                        "type": "template",
+                                                        "format": "row",
+                                                        "children": [
+                                                            {
+                                                                "type": "template",
+                                                                "value": "{{contextData.0.femaleChildren.length}}",
+                                                                "format": "textTemplate",
+                                                                "fieldName": "femaleCount",
+                                                                "properties": {
+                                                                    "color": "primary",
+                                                                    "style": "headingS"
+                                                                }
+                                                            },
+                                                            {
+                                                                "type": "template",
+                                                                "value": "GV_ENUM_FEMALE",
+                                                                "format": "textTemplate",
+                                                                "fieldName": "femaleLabel",
+                                                                "properties": {
+                                                                    "color": "primary",
+                                                                    "style": "bodyS"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "fieldName": "femalePillRow",
+                                                        "properties": {
+                                                            "gap": 4,
+                                                            "mainAxisSize": "max",
+                                                            "mainAxisAlignment": "center",
+                                                            "crossAxisAlignment": "center"
+                                                        }
+                                                    }
+                                                ],
+                                                "fieldName": "femalePill",
+                                                "properties": {
+                                                    "type": "secondary",
+                                                    "radius": "radius4"
+                                                }
+                                            },
+                                            {
+                                                "flex": 1,
+                                                "type": "template",
+                                                "format": "card",
+                                                "children": [
+                                                    {
+                                                        "type": "template",
+                                                        "format": "row",
+                                                        "children": [
+                                                            {
+                                                                "type": "template",
+                                                                "value": "{{contextData.0.malesChildren.length}}",
+                                                                "format": "textTemplate",
+                                                                "fieldName": "maleCount",
+                                                                "properties": {
+                                                                    "color": "primary",
+                                                                    "style": "headingS"
+                                                                }
+                                                            },
+                                                            {
+                                                                "type": "template",
+                                                                "value": "GV_ENUM_MALE",
+                                                                "format": "textTemplate",
+                                                                "fieldName": "maleLabel",
+                                                                "properties": {
+                                                                    "color": "primary",
+                                                                    "style": "bodyS"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "fieldName": "malePillRow",
+                                                        "properties": {
+                                                            "gap": 4,
+                                                            "mainAxisSize": "max",
+                                                            "mainAxisAlignment": "center",
+                                                            "crossAxisAlignment": "center"
+                                                        }
+                                                    }
+                                                ],
+                                                "fieldName": "malePill",
+                                                "properties": {
+                                                    "type": "secondary",
+                                                    "radius": "radius4"
+                                                }
+                                            }
+                                        ],
                                         "fieldName": "vaccinatedSplit",
                                         "properties": {
-                                            "style": "captionS"
+                                            "gap": 8
                                         }
                                     }
                                 ],
@@ -717,23 +877,21 @@
                                 "children": [
                                     {
                                         "type": "template",
-                                        "value": "GV_METRIC_CHILDREN_REFERRED",
+                                        "value": "{{contextData.0.referrals.length}}",
                                         "format": "textTemplate",
-                                        "fieldName": "referredLabel",
-                                        "mandatory": true,
+                                        "fieldName": "referredCount",
                                         "properties": {
-                                            "style": "bodyS",
+                                            "style": "headingXl",
                                             "bottomGap": 4
                                         }
                                     },
                                     {
                                         "type": "template",
-                                        "value": "{{contextData.0.referrals.length}}",
+                                        "value": "GV_METRIC_CHILDREN_REFERRED",
                                         "format": "textTemplate",
-                                        "fieldName": "referredCount",
-                                        "mandatory": true,
+                                        "fieldName": "referredLabel",
                                         "properties": {
-                                            "style": "headingXl"
+                                            "style": "bodyS"
                                         }
                                     }
                                 ],
@@ -828,7 +986,6 @@
                         "heading": "GV_SESSION_OVERVIEW_HEADING",
                         "category": "CLF_SESSIONS",
                         "screenType": "TEMPLATE",
-                        "description": "GV_SESSION_OVERVIEW_TODAY",
                         "initActions": [
                             {
                                 "actionType": "SEARCH_EVENT",
@@ -982,7 +1139,8 @@
                                             }
                                         ],
                                         "errorMessage": "",
-                                        "isMultiSelect": false
+                                        "isMultiSelect": false,
+                                        "includeInSummary": false
                                     },
                                     {
                                         "type": "string",
@@ -1017,7 +1175,8 @@
                                             }
                                         ],
                                         "errorMessage": "",
-                                        "isMultiSelect": false
+                                        "isMultiSelect": false,
+                                        "textCapitalization": "words"
                                     },
                                     {
                                         "type": "string",
@@ -1048,22 +1207,14 @@
                                         "isMultiSelect": false
                                     },
                                     {
-                                        "type": "string",
-                                        "enums": [
-                                            {
-                                                "code": "0_11_MONTHS",
-                                                "name": "GV_ENUM_AGE_0_11_MONTHS"
-                                            },
-                                            {
-                                                "code": "12_59_MONTHS",
-                                                "name": "GV_ENUM_AGE_12_59_MONTHS"
-                                            }
-                                        ],
+                                        "type": "dynamic",
+                                        "enums": [],
                                         "label": "GV_AGE_BAND_LABEL",
                                         "order": 4,
                                         "value": "",
-                                        "format": "select",
+                                        "format": "custom",
                                         "hidden": false,
+                                        "isMdms": false,
                                         "tooltip": "",
                                         "helpText": "",
                                         "infoText": "",
@@ -1498,7 +1649,8 @@
                                             }
                                         ],
                                         "errorMessage": "",
-                                        "isMultiSelect": false
+                                        "isMultiSelect": false,
+                                        "includeInSummary": false
                                     }
                                 ],
                                 "systemDate": null,
@@ -1661,6 +1813,6 @@
                 "createdBy": "e1c370db-8f61-4460-8bea-3b85c7373124",
                 "lastModifiedBy": "961ad45f-5a9c-44df-affa-ced9831ffdeb",
                 "createdTime": 1789628239245,
-                "lastModifiedTime": 1790335204234
+                "lastModifiedTime": 1790760453587
             }
         }
