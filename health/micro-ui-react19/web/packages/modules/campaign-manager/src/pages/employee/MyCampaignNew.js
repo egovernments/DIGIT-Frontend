@@ -2,6 +2,20 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { InboxSearchComposer, Loader } from "@egovernments/digit-ui-components";
 import { myCampaignConfigNew } from "../../configs/myCampaignConfigNew";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+
+// Visually hidden but exposed to assistive technology (same recipe as the common .sr-only utility)
+const srOnlyStyle = {
+  position: "absolute",
+  width: "1px",
+  height: "1px",
+  padding: 0,
+  margin: "-1px",
+  overflow: "hidden",
+  clip: "rect(0, 0, 0, 0)",
+  whiteSpace: "nowrap",
+  border: 0,
+};
 
 /**
  * The `MyCampaignNew` function is a React component that displays a header with a campaign search title
@@ -79,11 +93,14 @@ const MyCampaignNew = ({ showDashboardLink }) => {
     return <Loader page={true} variant={"PageLoader"} />;
   }
   return (
-    <React.Fragment>
+    // <main> with display: contents: the employee layout has no main landmark (axe landmark-one-main /
+    // region). The page has no visible title, so expose a screen-reader-only h1 (page-has-heading-one).
+    <main style={{ display: "contents" }}>
+      <h1 style={srOnlyStyle}>{t(I18N_KEYS.COMPONENTS.ACTION_TEST_MY_CAMPAIGN)}</h1>
       <div className="digit-inbox-search-wrapper">
         <InboxSearchComposer configs={config} showTab={true} tabData={tabData} onTabChange={onTabChange} />
       </div>
-    </React.Fragment>
+    </main>
   );
 };
 

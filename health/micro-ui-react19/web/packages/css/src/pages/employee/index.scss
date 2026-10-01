@@ -1621,7 +1621,12 @@ tbody {
     }
   }
   .app-preview-card-header {
-    color: #0b4b66;
+      color: var(--digitv2-lightTheme-primary-2);
+      line-height: normal;
+      font-family: var(--digitv2-fontFamily-rc);
+      font-weight: var(--digitv2-fontWeight-bold);
+      font-style: Bold;
+      font-size: var(--digitv2-fontSize-heading-xl-desktop);
   }
   // Checklist questions follow Heading S - Mobile: 16px, bold, black
   // (px on purpose: the app root font-size is 90%, so 1rem computes to 14.4px)

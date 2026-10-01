@@ -1032,7 +1032,7 @@ const MultiSelectDropdown = ({
             {variant === "treemultiselect" ? (
               <p>
                 {alreadyQueuedSelectedState.length > 0
-                  ? `${countFinalChildOptions(alreadyQueuedSelectedState)} ${defaultUnit} Selected`
+                  ? `${countFinalChildOptions(alreadyQueuedSelectedState)} ${defaultUnit} ${t("MULTISELECT_SELECTED")}`
                   : defaultLabel}
               </p>
             ) : (
@@ -1041,9 +1041,9 @@ const MultiSelectDropdown = ({
               // )}
               <p>
                 {selectedNumber
-                  ? `${selectedNumber} ${defaultUnit} Selected`
+                  ? `${selectedNumber} ${defaultUnit} ${t("MULTISELECT_SELECTED")}`
                   : alreadyQueuedSelectedState.length > 0
-                  ? `${alreadyQueuedSelectedState.length} ${defaultUnit} Selected`
+                  ? `${alreadyQueuedSelectedState.length} ${defaultUnit} ${t("MULTISELECT_SELECTED")}`
                   : defaultLabel}
               </p>
             )}

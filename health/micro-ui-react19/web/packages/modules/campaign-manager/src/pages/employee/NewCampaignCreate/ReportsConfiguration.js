@@ -460,139 +460,158 @@ const ReportsConfiguration = () => {
   if (isReportsLoading || (isEditMode && isExistingConfigLoading)) return <Loader />;
 
   return (
-    <div className="reports-configuration">
-      {currentStep === STEP_SELECTION && (
-        <Card>
-          <HeaderComponent className="reports-configuration__heading">
-            {t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION)}
-          </HeaderComponent>
-          <p className="reports-configuration__description">
-            {t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION_DESC)}
-          </p>
+    // <main>: the employee layout has no main landmark (axe landmark-one-main / region); the class
+    // keeps all existing styling
+    <main className="reports-configuration">
+      <div className="reports-configuration">
+        {currentStep === STEP_SELECTION && (
+          <Card>
+            <HeaderComponent className="reports-configuration__heading">
+              <h1 style={{ margin: 0 }}>
+                {t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION)}
+              </h1>
+            </HeaderComponent>
+            <p className="reports-configuration__description">
+              {t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION_DESC)}
+            </p>
 
-          <div className="reports-configuration__count">
-            {t(I18N_KEYS.PAGES.HCM_REPORTS_AVAILABLE_REPORTS)} ({selectedCount}{" "}
-            {t(I18N_KEYS.PAGES.HCM_REPORT_SELECTED_LABEL)})
-          </div>
+            <div className="reports-configuration__count">
+              {t(I18N_KEYS.PAGES.HCM_REPORTS_AVAILABLE_REPORTS)} (
+              {selectedCount} {t(I18N_KEYS.PAGES.HCM_REPORT_SELECTED_LABEL)})
+            </div>
 
-          <div className="reports-configuration__grid">
-            {applicableReports.map((report) => (
-              <div
-                key={report.code}
-                className={`reports-configuration__checkbox-item ${
-                  !report.isApplicable
-                    ? "reports-configuration__checkbox-item--disabled"
-                    : ""
-                }`}
-              >
-                <CheckBox
-                  label={t(report.label)}
-                  checked={!!selectedReports[report.code]}
-                  onChange={() =>
-                    handleCheckboxChange(report.code, report.isApplicable)
-                  }
-                  disabled={!report.isApplicable}
-                />
-                {!report.isApplicable && (
-                  <span className="reports-configuration__not-applicable">
-                    {t(I18N_KEYS.PAGES.HCM_REPORT_NOT_APPLICABLE)}
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
-        </Card>
-      )}
-
-      {currentStep === STEP_FREQUENCY && (
-        <Card>
-          <HeaderComponent className="reports-configuration__heading">
-            {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY)}
-          </HeaderComponent>
-          <p className="reports-configuration__description">
-            {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY_DESC)}
-          </p>
-
-          <div className="reports-configuration__count">
-            {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY_COUNT)} ({selectedCount}{" "}
-            {t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTED_SUFFIX)})
-          </div>
-
-          <Card
-            className="reports-configuration__frequency-card"
-            type="secondary"
-          >
-            {selectedReportsList.map((report, index) => {
-              const selectedFrequencies = getSelectedFrequencies(report.code);
-              // TODO: Uncomment when CUSTOM frequency is re-enabled
-              // const hasCustom = selectedFrequencies.includes("CUSTOM");
-              const frequencyOptions = getFrequencyOptionsForReport(
-                report.code,
-              );
-
-              return (
+            <div className="reports-configuration__grid">
+              {applicableReports.map((report) => (
                 <div
                   key={report.code}
-                  className={`reports-configuration__frequency-row ${
-                    index < selectedReportsList.length - 1
-                      ? "reports-configuration__frequency-row--bordered"
+                  className={`reports-configuration__checkbox-item ${
+                    !report.isApplicable
+                      ? "reports-configuration__checkbox-item--disabled"
                       : ""
                   }`}
                 >
-                  <div className="reports-configuration__frequency-row-label">
-                    {t(report.label)}
-                  </div>
-                  <div className="reports-configuration__frequency-row-controls">
-                    <LabelFieldPair
-                      removeMargin={true}
-                      vertical={true}
-                      className={`digit-formcomposer-fieldpair`}
-                    >
-                      <HeaderComponent className={`label`} styles={{width:"100%"}}>
-                        <div className={`label-container`}>
-                          <label className={`label-styles`}>
-                            {t(I18N_KEYS.PAGES.HCM_SELECT_FREQUENCIES)}
-                            {frequencyOptions.length > 1 && (
-                              <span style={{ color: "#B91900", marginLeft: "2px" }}>*</span>
-                            )}
-                          </label>
-                        </div>
-                      </HeaderComponent>
-                      <div className="digit-field">
-                        <div style={{ width: "25rem" }}>
-                          {frequencyOptions.length === 1 ? (
-                            <Dropdown
-                              t={t}
-                              option={frequencyOptions}
-                              optionKey="label"
-                              selected={frequencyOptions[0]}
-                              select={() => {}}
-                              disabled={true}
-                              style={{ width: "100%" }}
-                            />
-                          ) : (
-                            <MultiSelectDropdown
-                              props={{ className: "reports-frequency-dropdown" }}
-                              t={t}
-                              options={frequencyOptions}
-                              optionsKey="label"
-                              selected={frequencyOptions.filter((o) =>
-                                selectedFrequencies.includes(o.code),
-                              )}
-                              onSelect={(value) =>
-                                handleFrequencyChange(report.code, value)
-                              }
-                              style={{ width: "100%" }}
-                              disablePortal={true}
-                              chipsKey="name"
-                              config={{ isDropdownWithChip: true }}
-                            />
-                          )}
-                        </div>
-                      </div>
-                    </LabelFieldPair>
+                  <CheckBox
+                    label={t(report.label)}
+                    checked={!!selectedReports[report.code]}
+                    onChange={() =>
+                      handleCheckboxChange(report.code, report.isApplicable)
+                    }
+                    disabled={!report.isApplicable}
+                  />
+                  {!report.isApplicable && (
+                    <span className="reports-configuration__not-applicable">
+                      {t(I18N_KEYS.PAGES.HCM_REPORT_NOT_APPLICABLE)}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
 
-                    {/* TODO: Uncomment when CUSTOM frequency is re-enabled
+        {currentStep === STEP_FREQUENCY && (
+          <Card>
+            <HeaderComponent className="reports-configuration__heading">
+              <h1 style={{ margin: 0 }}>
+                {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY)}
+              </h1>
+            </HeaderComponent>
+            <p className="reports-configuration__description">
+              {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY_DESC)}
+            </p>
+
+            <div className="reports-configuration__count">
+              {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY_COUNT)} (
+              {selectedCount} {t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTED_SUFFIX)})
+            </div>
+
+            <Card
+              className="reports-configuration__frequency-card"
+              type="secondary"
+            >
+              {selectedReportsList.map((report, index) => {
+                const selectedFrequencies = getSelectedFrequencies(report.code);
+                // TODO: Uncomment when CUSTOM frequency is re-enabled
+                // const hasCustom = selectedFrequencies.includes("CUSTOM");
+                const frequencyOptions = getFrequencyOptionsForReport(
+                  report.code,
+                );
+
+                return (
+                  <div
+                    key={report.code}
+                    className={`reports-configuration__frequency-row ${
+                      index < selectedReportsList.length - 1
+                        ? "reports-configuration__frequency-row--bordered"
+                        : ""
+                    }`}
+                  >
+                    <div className="reports-configuration__frequency-row-label">
+                      {t(report.label)}
+                    </div>
+                    <div className="reports-configuration__frequency-row-controls">
+                      <LabelFieldPair
+                        removeMargin={true}
+                        vertical={true}
+                        className={`digit-formcomposer-fieldpair`}
+                      >
+                        <HeaderComponent
+                          className={`label`}
+                          styles={{ width: "100%" }}
+                        >
+                          <div className={`label-container`}>
+                            <label className={`label-styles`}>
+                              {t(I18N_KEYS.PAGES.HCM_SELECT_FREQUENCIES)}
+                              {frequencyOptions.length > 1 && (
+                                <span
+                                  style={{
+                                    color: "#B91900",
+                                    marginLeft: "2px",
+                                  }}
+                                >
+                                  *
+                                </span>
+                              )}
+                            </label>
+                          </div>
+                        </HeaderComponent>
+                        <div className="digit-field">
+                          <div style={{ width: "25rem" }}>
+                            {frequencyOptions.length === 1 ? (
+                              <Dropdown
+                                t={t}
+                                option={frequencyOptions}
+                                optionKey="label"
+                                selected={frequencyOptions[0]}
+                                select={() => {}}
+                                disabled={true}
+                                style={{ width: "100%" }}
+                              />
+                            ) : (
+                              <MultiSelectDropdown
+                                props={{
+                                  className: "reports-frequency-dropdown",
+                                }}
+                                t={t}
+                                options={frequencyOptions}
+                                optionsKey="label"
+                                selected={frequencyOptions.filter((o) =>
+                                  selectedFrequencies.includes(o.code),
+                                )}
+                                onSelect={(value) =>
+                                  handleFrequencyChange(report.code, value)
+                                }
+                                style={{ width: "100%" }}
+                                disablePortal={true}
+                                chipsKey="name"
+                                config={{ isDropdownWithChip: true }}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </LabelFieldPair>
+
+                      {/* TODO: Uncomment when CUSTOM frequency is re-enabled
                     {hasCustom && (
                       <div className="reports-configuration__custom-dates">
                         <FieldV1
@@ -622,56 +641,57 @@ const ReportsConfiguration = () => {
                       </div>
                     )}
                     */}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </Card>
           </Card>
-        </Card>
-      )}
+        )}
 
-      <Footer
-        actionFields={[
-          <Button
-            key="back"
-            label={t(I18N_KEYS.COMMON.HCM_BACK)}
-            onClick={handleBack}
-            variation="secondary"
-            icon="ArrowBack"
-            style={{
-              marginLeft: "3rem",
-              minWidth: "12.5rem",
-            }}
-          />,
-          <Button
-            key="next"
-            label={
-              currentStep === STEP_FREQUENCY
-                ? t(I18N_KEYS.PAGES.HCM_SAVE_CONFIGURATION)
-                : t(I18N_KEYS.COMMON.HCM_NEXT)
-            }
-            onClick={handleNext}
-            variation="primary"
-            icon={
-              currentStep === STEP_FREQUENCY ? "CheckCircle" : "ArrowForward"
-            }
-            isDisabled={selectedCount === 0 || isSaving}
-            style={{
-              minWidth: "12.5rem",
-            }}
-            isSuffix={true}
-          />,
-        ]}
-        maxActionFieldsAllowed={5}
-      />
-      {showToast && (
-        <Toast
-          type={showToast.key === "error" ? "error" : "success"}
-          label={showToast.label}
-          onClose={() => setShowToast(null)}
+        <Footer
+          actionFields={[
+            <Button
+              key="back"
+              label={t(I18N_KEYS.COMMON.HCM_BACK)}
+              onClick={handleBack}
+              variation="secondary"
+              icon="ArrowBack"
+              style={{
+                marginLeft: "3rem",
+                minWidth: "12.5rem",
+              }}
+            />,
+            <Button
+              key="next"
+              label={
+                currentStep === STEP_FREQUENCY
+                  ? t(I18N_KEYS.PAGES.HCM_SAVE_CONFIGURATION)
+                  : t(I18N_KEYS.COMMON.HCM_NEXT)
+              }
+              onClick={handleNext}
+              variation="primary"
+              icon={
+                currentStep === STEP_FREQUENCY ? "CheckCircle" : "ArrowForward"
+              }
+              isDisabled={selectedCount === 0 || isSaving}
+              style={{
+                minWidth: "12.5rem",
+              }}
+              isSuffix={true}
+            />,
+          ]}
+          maxActionFieldsAllowed={5}
         />
-      )}
-    </div>
+        {showToast && (
+          <Toast
+            type={showToast.key === "error" ? "error" : "success"}
+            label={showToast.label}
+            onClose={() => setShowToast(null)}
+          />
+        )}
+      </div>
+    </main>
   );
 };
 
