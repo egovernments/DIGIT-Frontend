@@ -52,8 +52,8 @@ const SetupAttendanceScreen = () => {
 
   return (
     <div>
-      <HeaderComponent className={"campaign-header-style"}>
-        {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_PAGE_HEADING)}
+      <HeaderComponent className="campaign-header-style">
+        <h1 style={{ margin: 0 }}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_PAGE_HEADING)}</h1>
       </HeaderComponent>
       <p className="name-description" style={{ marginTop: "1rem" }}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_PAGE_DESC)}</p>
       <div className="containerStyle" style={{ marginTop: "1.5rem" }}>

@@ -144,7 +144,24 @@ const UnifiedUploadScreen = () => {
   const closeToast = () => setShowToast(null);
 
   return (
-    <>
+    // <main> with display: contents: the employee layout has no main landmark (axe landmark-one-main /
+    // region). The form has no page-level title, so expose a screen-reader-only h1 (page-has-heading-one).
+    <main style={{ display: "contents" }}>
+      <h1
+        style={{
+          position: "absolute",
+          width: "1px",
+          height: "1px",
+          padding: 0,
+          margin: "-1px",
+          overflow: "hidden",
+          clip: "rect(0, 0, 0, 0)",
+          whiteSpace: "nowrap",
+          border: 0,
+        }}
+      >
+        {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_DATA_HEADING)}
+      </h1>
       <FormComposerV2
         config={config?.[0]?.form.map((cfg) => ({ ...cfg, body: cfg?.body.filter((a) => !a.hideInEmployee) }))}
         onSubmit={onSubmit}
@@ -168,7 +185,7 @@ const UnifiedUploadScreen = () => {
           onClose={closeToast}
         />
       )}
-    </>
+    </main>
   );
 };
 

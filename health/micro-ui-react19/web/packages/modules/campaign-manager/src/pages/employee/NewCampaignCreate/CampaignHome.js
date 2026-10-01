@@ -163,7 +163,7 @@ const CampaignHome = () => {
   return (
     <Card className="digit-campaign-home-card-wrapper">
       <HeaderComponent className="campaign-header-style">
-        {t(I18N_KEYS.PAGES.HCM_HOW_DO_YOU_WANT_TO_CREATE)}
+        <h1 style={{ margin: 0 }}>{t(I18N_KEYS.PAGES.HCM_HOW_DO_YOU_WANT_TO_CREATE)}</h1>
       </HeaderComponent>
       <p className="name-description">{t(I18N_KEYS.PAGES.HCM_CREATE_CAMPAIGN_DESCRIPTION)}</p>
       <div className={"containerStyle"}>
