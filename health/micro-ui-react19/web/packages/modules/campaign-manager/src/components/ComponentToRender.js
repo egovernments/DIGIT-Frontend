@@ -160,6 +160,8 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
           optionsKey: optionsKey,
           showToolTip: true,
           optionsCustomStyle:{maxHeight:"8vh"},
+          disablePortal:true,
+          allowMultiselect: field?.isMultiSelect === true,
           showCountryCodeDropdown: showCountryPicker,
           countryCodeConfig: showCountryPicker
             ? { moduleName: "common-masters", masterName: "CountryCodes", defaultCountryCode: field?.prefixText || "+91" }
@@ -171,6 +173,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
         value={previewValue}
         disabled={field?.readOnly || false}
         showToolTip={true}
+        disablePortal={true}
       />
     </div>
   );

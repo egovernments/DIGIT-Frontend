@@ -642,6 +642,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                     radio: "RadioButtonChecked",
                     text: "FontDownload",
                     textarea: "TextAd",
+                    multiSelectDropdown: "FactCheck", 
                     // Advanced
                     idPopulator: "Badge",
                     latLng: "LocateIcon",
