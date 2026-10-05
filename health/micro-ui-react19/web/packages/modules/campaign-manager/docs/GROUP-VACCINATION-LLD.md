@@ -364,16 +364,3 @@ Regression
 The three in the HLD (two now resolved), plus one for design:
 
 * With a single strategy ticked, does the tab row render or disappear? The existing guard hides a single tab.
-
-## Changes in 0.2
-
-- Strategy code TRANSIT_POST -> TRANSITPOST (5 places). The i18n keys keep the underscore and were already correct
-- Strategy code HOUSEHOLD -> HOUSEHOLDSTRATEGY (5 places)
-- S7 payload: the chosen list is saved under additionalDetails.cycleData.deliveryMethods, not additionalDetails.deliveryMethods
-- S8 config block: replaced with the live POLIO record. Order is Household 1, Transit Post 2, CLF 3; the S3, S5 and S7 samples follow that same order
-- S8: attrAddDisable and deliveryAddDisable are both false on the live record
-- S8: the Transit Post and CLF module templates now exist
-- S16: the HLD has three open questions, not six
-- S13 file list: ConfigChangeWarningPopUp.js does not exist - the edit strategy warning is rendered inline in CampaignDetails.js
-- S10: HCM_DELIVERY_METHOD_REMOVE_CONFIRM and HCM_CONFIG_CHANGE_AFTER_APP_SETUP were never added; replaced with the seven keys that were
-- S2: the warning popup is rendered inline in CampaignDetails.js
