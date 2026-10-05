@@ -75,7 +75,8 @@
             "locality",
             "infoCard",
             "dropdownTemplate",
-            "evaluationFacility"
+            "evaluationFacility",
+            "multiSelectDropdown"
           ]
         },
         {
@@ -103,7 +104,8 @@
             "latLng",
             "mobileNumber",
             "locality",
-            "evaluationFacility"
+            "evaluationFacility",
+            "multiSelectDropdown"
           ]
         },
         {
@@ -136,7 +138,8 @@
             "text",
             "administrativeArea",
             "radio",
-            "searchableDropdown"
+            "searchableDropdown",
+            "multiSelectDropdown"
           ]
         },
         {
@@ -271,7 +274,8 @@
             "number",
             "mobileNumber",
             "latLng",
-            "locality"
+            "locality",
+            "multiSelectDropdown"
           ]
         },
         {
@@ -360,7 +364,8 @@
             "idPopulator",
             "select",
             "radio",
-            "searchableDropdown"
+            "searchableDropdown",
+            "multiSelectDropdown"
           ]
         },
         {
@@ -621,7 +626,8 @@
             "latLng",
             "radio",
             "administrativeArea",
-            "searchableDropdown"
+            "searchableDropdown",
+            "multiSelectDropdown"
           ],
           "visibilityDisabledForFields": ["ageBand"]
         },
@@ -818,7 +824,7 @@
       "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
       "lastModifiedBy": "961ad45f-5a9c-44df-affa-ced9831ffdeb",
       "createdTime": 1766989523531,
-      "lastModifiedTime": 1790590877432
+      "lastModifiedTime": 1791191376856
     }
   }
 ]
