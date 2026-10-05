@@ -1,6 +1,6 @@
 [
   {
-    "id": "2384c96f-8c59-46e3-a930-a5addec99a5b",
+    "id": "e1a32b92-59d7-4bb5-a6c7-b55a75692bbf",
     "tenantId": "mz",
     "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
     "uniqueIdentifier": "NewPanelConfig",
@@ -44,16 +44,20 @@
           "order": 2,
           "bindTo": "label",
           "fieldType": "text",
+          "isMandatory": true,
           "defaultValue": "",
           "conditionalField": [],
           "showFieldOnToggle": false,
           "visibilityEnabledFor": [
-            "Image",
             "latLng",
+            "textarea",
+            "idPopulator",
             "text",
             "date",
             "dropdown",
+            "select",
             "checkbox",
+            "dob",
             "radio",
             "number",
             "numeric",
@@ -61,14 +65,13 @@
             "button",
             "filter",
             "buttonTemplate",
-            "searchByProximity",
+            "proximitySearch",
             "searchByID",
             "PrimaryButton",
             "qrScanner",
             "scanner",
             "switch",
             "searchBar",
-            "actionPopup",
             "locality",
             "infoCard",
             "dropdownTemplate",
@@ -84,19 +87,18 @@
           "defaultValue": "",
           "conditionalField": [
             {
-              "type": "text",
+              "type": "textarea",
               "bindTo": "helpText"
             }
           ],
           "showFieldOnToggle": true,
           "visibilityEnabledFor": [
             "text",
-            "checkbox",
-            "radio",
+            "textarea",
             "numeric",
-            "Image",
             "date",
             "dropdown",
+            "idPopulator",
             "number",
             "latLng",
             "mobileNumber",
@@ -127,15 +129,14 @@
             "date",
             "select",
             "dropdown",
+            "idPopulator",
             "mobileNumber",
             "number",
-            "textArea",
+            "textarea",
             "text",
-            "latLng",
             "administrativeArea",
             "radio",
-            "searchableDropdown",
-            "locality"
+            "searchableDropdown"
           ]
         },
         {
@@ -149,6 +150,25 @@
             {
               "type": "text",
               "bindTo": "prefixText",
+              "isLocalisable": false
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["number"]
+        },
+        {
+          "id": "showCountryCode",
+          "label": "showCountryCode",
+          "order": 5,
+          "bindTo": "showCountryCodeDropdown",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [
+            {
+              "type": "text",
+              "label": "APPCONFIG_CUSTOM_PREFIX",
+              "bindTo": "prefixText",
+              "condition": true,
               "isLocalisable": false
             }
           ],
@@ -183,6 +203,18 @@
           "conditionalField": [],
           "showFieldOnToggle": true,
           "visibilityEnabledFor": ["searchBar"]
+        },
+        {
+          "id": "proximityRadius",
+          "label": "proximityRadius",
+          "order": 7,
+          "bindTo": "proximityRadius",
+          "fieldType": "number",
+          "defaultValue": 5,
+          "isLocalisable": false,
+          "conditionalField": [],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["proximitySearch"]
         },
         {
           "id": "filter",
@@ -228,7 +260,19 @@
             }
           ],
           "showFieldOnToggle": true,
-          "visibilityEnabledFor": ["text", "date", "numeric", "dropdown", "number", "mobileNumber", "Image", "latLng", "locality"]
+          "visibilityEnabledFor": [
+            "text",
+            "textarea",
+            "date",
+            "numeric",
+            "dropdown",
+            "idPopulator",
+            "select",
+            "number",
+            "mobileNumber",
+            "latLng",
+            "locality"
+          ]
         },
         {
           "id": "readOnly",
@@ -239,7 +283,7 @@
           "defaultValue": false,
           "conditionalField": [],
           "showFieldOnToggle": false,
-          "visibilityEnabledFor": ["text", "date", "dropdown", "number", "mobileNumber", "numeric"]
+          "visibilityEnabledFor": ["text", "date", "textarea", "numeric"]
         },
         {
           "id": "hidden",
@@ -257,6 +301,7 @@
           "order": 12,
           "bindTo": "isMdms",
           "fieldType": "toggle",
+          "isMandatory": true,
           "defaultValue": false,
           "conditionalField": [
             {
@@ -310,7 +355,13 @@
             }
           ],
           "showFieldOnToggle": true,
-          "visibilityEnabledFor": ["dropdown", "radio", "searchableDropdown"]
+          "visibilityEnabledFor": [
+            "dropdown",
+            "idPopulator",
+            "select",
+            "radio",
+            "searchableDropdown"
+          ]
         },
         {
           "id": "min",
@@ -375,6 +426,7 @@
           "bindTo": "label",
           "fieldType": "text",
           "defaultValue": "",
+          "isLocalisable": true,
           "conditionalField": [],
           "showFieldOnToggle": false,
           "visibilityEnabledFor": ["panelCard"]
@@ -433,27 +485,7 @@
           "isLocalisable": false,
           "conditionalField": [
             {
-              "type": "text",
-              "label": "APPCONFIG_DEFAULT_VALUE",
-              "bindTo": "value",
-              "isLocalisable": false
-            }
-          ],
-          "showFieldOnToggle": true,
-          "visibilityEnabledFor": ["text"]
-        },
-        {
-          "id": "defaultValue",
-          "label": "defaultValue",
-          "order": 2,
-          "bindTo": "value",
-          "fieldType": "toggle",
-          "defaultValue": false,
-          "isLocalisable": false,
-          "conditionalField": [
-            {
               "type": "number",
-              "label": "APPCONFIG_DEFAULT_VALUE",
               "bindTo": "value",
               "isLocalisable": false
             }
@@ -475,7 +507,7 @@
             }
           ],
           "showFieldOnToggle": true,
-          "visibilityEnabledFor": ["text"]
+          "visibilityEnabledFor": ["text", "textarea"]
         },
         {
           "id": "isMultiSelect",
@@ -492,11 +524,21 @@
       ],
       "validation": [
         {
+          "id": "deliveryStrategyAgeInfo",
+          "label": "APPCONFIG_AGE_DYNAMIC_INFO_TITLE",
+          "order": 1,
+          "fieldType": "infoCard",
+          "description": "APPCONFIG_AGE_DYNAMIC_INFO_TEXT",
+          "visibilityEnabledFor": [],
+          "visibilityEnabledForFields": ["ageBand"]
+        },
+        {
           "id": "scannerRegex",
           "label": "ScannerRegexPattern",
           "order": 1,
           "bindTo": "pattern",
           "fieldType": "toggle",
+          "isMandatory": true,
           "conditionalField": [
             {
               "type": "text",
@@ -537,7 +579,8 @@
               "validation": {
                 "pattern": "^(0|[1-9]\\d*)$"
               },
-              "defaultValue": 1
+              "defaultValue": 1,
+              "isLocalisable": false
             },
             {
               "type": "text",
@@ -566,19 +609,21 @@
           "visibilityEnabledFor": [
             "checkbox",
             "numeric",
-            "dob",
             "date",
+            "dob",
             "select",
             "dropdown",
+            "idPopulator",
             "mobileNumber",
             "number",
-            "textArea",
+            "textarea",
             "text",
             "latLng",
             "radio",
             "administrativeArea",
             "searchableDropdown"
-          ]
+          ],
+          "visibilityDisabledForFields": ["ageBand"]
         },
         {
           "id": "regex",
@@ -586,6 +631,7 @@
           "order": 3,
           "bindTo": "pattern",
           "fieldType": "toggle",
+          "isMandatory": true,
           "conditionalField": [
             {
               "type": "radioOptions",
@@ -732,15 +778,47 @@
           "validationMessage": "APPCONFIG_MIN_DATE_LESS_EQUAL_MAX",
           "validationExpression": "dateRange.startDate <= dateRange.endDate",
           "visibilityEnabledFor": ["date"]
+        },
+        {
+          "id": "ageRange",
+          "label": "ageRange",
+          "order": 4,
+          "children": [
+            {
+              "id": "minAge",
+              "label": "minimumAge",
+              "bindTo": "ageRange.minAge",
+              "fieldType": "number",
+              "isLocalisable": false
+            },
+            {
+              "id": "maxAge",
+              "label": "maximumAge",
+              "bindTo": "ageRange.maxAge",
+              "fieldType": "number",
+              "isLocalisable": false
+            },
+            {
+              "id": "errorMessage",
+              "label": "errorMessage",
+              "bindTo": "ageRange.errorMessage",
+              "fieldType": "text",
+              "isLocalisable": true
+            }
+          ],
+          "fieldType": "group",
+          "validationMessage": "APPCONFIG_MIN_AGE_LESS_EQUAL_MAX_AGE",
+          "validationExpression": "ageRange.minAge <= ageRange.maxAge",
+          "visibilityEnabledFor": ["dob"]
         }
       ]
     },
     "isActive": true,
     "auditDetails": {
-      "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
-      "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
-      "createdTime": 1761299753683,
-      "lastModifiedTime": 1764933573787
+      "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
+      "lastModifiedBy": "961ad45f-5a9c-44df-affa-ced9831ffdeb",
+      "createdTime": 1766989523531,
+      "lastModifiedTime": 1790590877432
     }
   }
 ]
