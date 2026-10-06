@@ -35,6 +35,30 @@ const setEmployeeDetail = (userObject, token) => {
   localStorage.setItem("Employee.user-info", JSON.stringify(userObject));
 };
 
+/**
+ * Is this page load the IdP redirecting back to us?
+ *
+ * Knowable synchronously from the URL, which matters: the callback effect cannot run until
+ * `stateInfo` has arrived from MDMS, and the moment the page-level `isStoreLoading` gate
+ * clears, the login form paints. The user has already authenticated with the IdP by then, so
+ * being shown the login form again mid-sign-in reads as the login having failed.
+ *
+ * An `error` in the callback is excluded deliberately - that path shows a toast on the form,
+ * so the form is what should be visible.
+ */
+const isSSOCallbackUrl = () => {
+  try {
+    const hashParams = new URLSearchParams(window.location.hash.slice(1));
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get("error") || hashParams.get("error")) return false;
+    return Boolean(
+      hashParams.get("id_token") || searchParams.get("id_token") || searchParams.get("code") || hashParams.get("code"),
+    );
+  } catch (e) {
+    return false;
+  }
+};
+
 const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
   const {
@@ -58,7 +82,11 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
-  const [loginLoader, setLoginLoader] = useState(false);
+  /* Lazy initialiser, so the overlay is already up on the FIRST render of a callback rather
+     than only once the effect below gets to run. The effect clears it when the URL carries no
+     callback, so a plain visit to /user/login is unaffected and a bfcache restore of the
+     pre-redirect page cannot inherit a stale loader. */
+  const [loginLoader, setLoginLoader] = useState(isSSOCallbackUrl);
   const [showForgotPasswordPopup, setShowForgotPasswordPopup] = useState(false);
   const forgotScreenConfig = propsConfig?.forgotPasswordScreen;
   const navigate = useNavigate();
@@ -671,9 +699,33 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   if (isLoading || isStoreLoading) {
     return <Loader page={true} variant="PageLoader" />;
   }
+
+  /* Shared by both layouts below. It used to live only in the non-banner branch, so a
+     deployment configured with bannerImages showed no loader at all while the SSO callback
+     was being exchanged. */
+  const ssoOverlay = loginLoader && (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        background: "rgba(0,0,0,0.35)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 9999,
+      }}
+    >
+      <Loader />
+    </div>
+  );
+
   return propsConfig?.bannerImages ? (
     <div className="login-container">
       {/* <SkipToMainContent class_name={".login-form-container"}/> */}
+      {ssoOverlay}
       <Carousel bannerImages={propsConfig?.bannerImages} />
       <div className="login-form-container">
         {renderLoginForm("login-form-container", "", loginOTPBased ? "sandbox-onboarding-wrapper" : "")}
@@ -692,24 +744,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     </div>
   ) : (
     <Background>
-      {loginLoader && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            background: "rgba(0,0,0,0.35)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 9999,
-          }}
-        >
-          <Loader />
-        </div>
-      )}
+      {ssoOverlay}
       <div className="employeeBackbuttonAlign">
         <BackLink onClick={() => window.history.back()} />
       </div>
