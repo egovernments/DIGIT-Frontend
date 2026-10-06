@@ -11,6 +11,7 @@ import {
   getFieldTypeFromMasterData2,
   getFieldTypeOptionFromMasterData,
   isPanelItemEnabledForField,
+  toSentenceCase,
 } from "./helpers";
 import { TextInput, Button } from "@egovernments/digit-ui-components";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
@@ -638,6 +639,12 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               isEditingRef.current = true;
               let newValue = event.target.value;
               if (maxLength && newValue.length > maxLength) return;
+              // Capitalise a label as it is typed, so it reads the same as one written when the
+              // field was first added. Done here rather than when the user leaves the box because
+              // this input is not given a blur handler.
+              if (panelItem.bindTo === "label") {
+                newValue = toSentenceCase(newValue);
+              }
               setLocalValue(newValue);
               localValueRef.current = newValue;
               // If isLocalisable is false, save directly without localization

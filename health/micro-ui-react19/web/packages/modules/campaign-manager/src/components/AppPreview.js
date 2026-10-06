@@ -217,7 +217,9 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
                   variation={footer_item?.properties?.type || "primary"}
                   label={t(footer_item?.label)}
                   title={t(footer_item?.label)}
-                  onClick={() => {}}
+                  // Selectable like the fields above it, so clicking the action button opens its
+                  // properties in the side panel
+                  onClick={() => onFieldClick && onFieldClick(footer_item, data, null, 0, index)}
                 />
               );
             })}

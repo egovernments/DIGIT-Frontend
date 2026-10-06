@@ -11,7 +11,7 @@ import IntermediateWrapper from "./IntermediateWrapper";
 import { useCustomT, useCustomTranslate, useFieldDataLabel } from "./hooks/useCustomT";
 import fullParentConfig from "./configs/fullParentConfig.json";
 import { getPageFromConfig } from "./utils/configUtils";
-import { getFieldTypeFromMasterData, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData, isPanelItemEnabledForField } from "./helpers";
+import { getFieldTypeFromMasterData, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData, isPanelItemEnabledForField, withoutFooterButtonTypes, toSentenceCase} from "./helpers";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 // Helper function to check if a value is empty (null, undefined, empty string, or empty array)
@@ -924,7 +924,8 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           tenantId: responseData.tenantId,
           schemaCode: responseData.schemaCode,
           uniqueIdentifier: responseData.uniqueIdentifier,
-          data: currentData, // Replace with updated config
+          // Saved without the button type the store added on load, so the page keeps its own shape
+          data: withoutFooterButtonTypes(currentData),
           isActive: responseData.isActive,
           auditDetails: responseData.auditDetails,
         },
@@ -1174,7 +1175,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       updateLocalizationEntry({
         code: locVal,
         locale: currentLocale || "en_IN",
-        message: value,
+        message: toSentenceCase(value),
       })
     );
     // Replace spaces with underscores and convert to lowercase

@@ -237,11 +237,12 @@ function NewAppFieldScreenWrapper({viewMode}) {
     );
   }
 
-  // True when a body section renders its own Buttons subheader (button-format rows) — the footer
-  // label inputs then join that section instead of opening a second "Buttons" heading
+  // True when the page already lists its buttons as rows, in the Buttons section. The plain label
+  // inputs below are the fallback for a page whose buttons cannot be listed that way, and the two
+  // must never show at once.
   const hasBodyButtonRows = (currentCard?.body || []).some((section) => {
     const sectionBodyFields = currentCard?.type === "template" ? extractTemplateFields(section?.fields) : (section?.fields || []);
-    const sectionFooterFields = currentCard?.type === "template" && currentCard?.footer ? extractTemplateFields(currentCard.footer) : [];
+    const sectionFooterFields = currentCard?.footer ? extractTemplateFields(currentCard.footer) : [];
     // Footer rows always join the Buttons section, whatever their format (qrScanner, actionPopup, …)
     return (
       sectionBodyFields.filter(isFieldEditable).some((f) => ["button", "actionPopup", "qrScanner"].includes(f?.format)) ||
@@ -361,10 +362,8 @@ function NewAppFieldScreenWrapper({viewMode}) {
             ? extractTemplateFields(section?.fields)
             : section?.fields || [];
 
-        const footerFields =
-          currentCard?.type === "template" && currentCard?.footer
-            ? extractTemplateFields(currentCard.footer)
-            : [];
+        // Action buttons are listed as field rows on both kinds of screen
+        const footerFields = currentCard?.footer ? extractTemplateFields(currentCard.footer) : [];
 
         // Filter editable fields only
         const editableBodyFields = bodyFields.filter(isFieldEditable);
@@ -378,7 +377,8 @@ function NewAppFieldScreenWrapper({viewMode}) {
         // (primary/secondary buttons, listed here as separate rows) keep theirs.
 
         // Every screen needs a CTA. A lone button therefore has no toggle at all, and where there are
-        // several, the last visible one cannot be switched off either.
+        // several, the last visible one cannot be switched off either. On a form screen the action
+        // buttons are not part of the field list, so none of them can be hidden.
         // Footer entries all render in the app's bottom action bar, so every footer row is an
         // action button regardless of format (qrScanner "Scan QR", actionPopup "Download IDs", …)
         // Popup-opening actions (actionPopup, qrScanner) render as buttons in the app,
@@ -387,6 +387,9 @@ function NewAppFieldScreenWrapper({viewMode}) {
         const buttonFields = fields.filter((f, i) => isButtonRow(f, i));
         const visibleButtonCount = buttonFields.filter((f) => f?.hidden !== true).length;
         const isOnlyButton = buttonFields.length === 1;
+
+        // Footer rows on a form screen, which are its action buttons
+        const isFormActionButton = (i) => currentCard?.type !== "template" && i >= bodyFieldsCount;
 
         // A menu screen (e.g. Manage Stock) with every menu card hidden would be a dead end
         // in the app, so the last visible menu card cannot be switched off either
@@ -446,7 +449,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
                   cardIndex={actualCardIndex}
                   indexOfCard={index}
                   moveField={viewMode ? null : type !== "template" ? moveField : null}
-                  hideToggle={rest?.format === "panelCard" || rest?.format === "labelPairList" || (rest?.format === "button" && isOnlyButton)}
+                  hideToggle={rest?.format === "panelCard" || rest?.format === "labelPairList" || (rest?.format === "button" && (isOnlyButton || isFormActionButton(i)))}
                   toggleResetKey={toggleResetKey}
                   fields={c}
                   isTemplate={currentCard?.type === "template"}

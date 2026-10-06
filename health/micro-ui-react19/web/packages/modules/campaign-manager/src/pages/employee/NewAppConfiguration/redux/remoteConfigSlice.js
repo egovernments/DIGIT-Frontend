@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import dummyConfig from "../configs/dummyConfig.json";
+import { withFooterButtonTypes } from "../helpers";
 
 // Helper function to check if all children of a node are hidden
 const areAllChildrenHidden = (node) => {
@@ -92,8 +93,11 @@ const remoteConfigSlice = createSlice({
     initializeConfig(state, action) {
       const { pageConfig, responseData } = action.payload;
       if (pageConfig) {
-        state.remoteData = pageConfig;
-        state.currentData = pageConfig;
+        // Every page enters the store here, so it is also where a form screen's action button
+        // gets the type it is missing. Taken off again when the page is saved.
+        const config = withFooterButtonTypes(pageConfig);
+        state.remoteData = config;
+        state.currentData = config;
         state.pageType = pageConfig.type || "object"; // Extract pageType from config
         state.responseData = responseData || null; // Store full MDMS response
       } else {
