@@ -2,7 +2,7 @@ import { CardText, Dropdown, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getIdpToken } from "../utils/idpToken";
-import { getSwitchableTenantIds, switchTenant } from "../utils/ssoTenants";
+import { getStoredSSOTenants, getSwitchableTenantIds, lookupTenants, storeSSOTenants, switchTenant } from "../utils/ssoTenants";
 
 const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
   if (searcher == "") return str;
@@ -22,15 +22,18 @@ const ChangeCity = (prop) => {
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const [switchError, setSwitchError] = useState(null);
 
-  /* SSO tenant switching, when the session came from an IdP and the subject is mapped to more
-     than one deployable tenant. Everything else - citizen sidebars, password logins, single
-     tenant users - keeps the original role-filter-and-reload behaviour below.
-     The tenant list comes from /user/oauth/tenants (stored at login) rather than from the
-     user's roles, because that endpoint is authoritative about what the subject may log in to
-     whereas roles only describe the tenant currently exchanged for. */
+  /* SSO tenant switching, when the session came from an IdP. Everything else - citizen
+     sidebars, password logins - keeps the original role-filter-and-reload behaviour below.
+     The tenant list comes from /user/oauth/tenants rather than from the user's roles, because
+     that endpoint is authoritative about what the subject may log in to whereas roles only
+     describe the tenant currently exchanged for.
+
+     Decided in the effect below rather than during render, and keyed on the session rather
+     than on how many tenants came back. Previously a short list flipped the whole component
+     to the role-derived data source, which silently showed a DIFFERENT and smaller set of
+     tenants with nothing to indicate the switcher had been disabled. */
   const currentTenantId = Digit.SessionStorage.get("Employee.tenantId");
-  const ssoTenantIds = getSwitchableTenantIds(currentTenantId);
-  const ssoMode = Digit?.UserService?.getType?.() === "employee" && Boolean(getIdpToken()) && ssoTenantIds.length > 1;
+  const [ssoMode, setSsoMode] = useState(false);
 
   const handleSwitchTenant = async (city) => {
     if (!city?.value || city.value === currentTenantId) return;
@@ -73,16 +76,69 @@ const ChangeCity = (prop) => {
     }
   };
 
+  const toOptions = (tenantIds) =>
+    tenantIds.map((tenantId) => ({
+      label: `TENANT_TENANTS_${stringReplaceAll(tenantId, ".", "_")?.toUpperCase()}`,
+      value: tenantId,
+    }));
+
   useEffect(() => {
-    if (ssoMode) {
-      setSelectCityData(
-        ssoTenantIds.map((tenantId) => ({
-          label: `TENANT_TENANTS_${stringReplaceAll(tenantId, ".", "_")?.toUpperCase()}`,
-          value: tenantId,
-        }))
-      );
-      return;
-    }
+    let cancelled = false;
+
+    const applySSOTenants = async () => {
+      const isSSOSession = Digit?.UserService?.getType?.() === "employee" && Boolean(getIdpToken());
+      if (!isSSOSession) return false;
+
+      let tenantIds = getSwitchableTenantIds(currentTenantId);
+
+      /* The list is written to sessionStorage at login, on whichever deployment handled the
+         SSO callback. Switching tenant lands the user on a DIFFERENT deployment, and if that
+         list did not come across the switcher would quietly collapse to the single tenant the
+         new session has roles for. Re-fetch instead - the ID token is still valid, which is
+         what makes the switch possible in the first place. Only when the list is genuinely
+         absent, so the normal path costs no extra request. */
+      if (!getStoredSSOTenants().length) {
+        try {
+          const tenants = await lookupTenants(getIdpToken());
+          if (cancelled) return true;
+          storeSSOTenants(tenants);
+          tenantIds = getSwitchableTenantIds(currentTenantId);
+        } catch (error) {
+          console.warn("[sso] could not re-fetch the tenant list", error);
+        }
+      }
+
+      if (cancelled) return true;
+
+      if (tenantIds.length) {
+        setSsoMode(true);
+        setSelectCityData(toOptions(tenantIds));
+        return true;
+      }
+
+      /* An SSO session with no usable tenant list at all. Falling through to roles is still
+         better than an empty dropdown, but it is never expected - log the inputs so this does
+         not have to be diagnosed from the symptom again. */
+      console.warn("[sso] tenant switcher falling back to roles", {
+        storedTenants: getStoredSSOTenants(),
+        deploymentMapKeys: Object.keys(window?.globalConfigs?.getConfig("TENANT_DEPLOYMENT_MAP") || {}),
+        currentTenantId,
+      });
+      return false;
+    };
+
+    applySSOTenants().then((handled) => {
+      if (cancelled || handled) return;
+      setSsoMode(false);
+      buildRoleBasedOptions();
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [dropDownData]);
+
+  function buildRoleBasedOptions() {
     const userloggedValues = Digit.SessionStorage.get("citizen.userRequestObject");
     let teantsArray = [],
       filteredArray = [];
@@ -96,7 +152,7 @@ const ChangeCity = (prop) => {
     });
     selectedCities = filteredArray?.filter((select) => select.value == Digit.SessionStorage.get("Employee.tenantId"));
     setSelectCityData(filteredArray);
-  }, [dropDownData]);
+  }
 
   // if (isDropdown) {
   return (
