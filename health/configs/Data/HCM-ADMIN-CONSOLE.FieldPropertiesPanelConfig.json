@@ -524,7 +524,7 @@
           "conditionalField": [],
           "showFieldOnToggle": true,
           "disableForRequired": true,
-          "visibilityEnabledFor": ["dropdown"]
+          "visibilityEnabledFor": [""]
         }
       ],
       "validation": [
@@ -824,7 +824,7 @@
       "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
       "lastModifiedBy": "961ad45f-5a9c-44df-affa-ced9831ffdeb",
       "createdTime": 1766989523531,
-      "lastModifiedTime": 1791191376856
+      "lastModifiedTime": 1791264500923
     }
   }
 ]
