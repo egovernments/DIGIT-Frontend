@@ -463,7 +463,10 @@ const CustomHorizontalBarChart = ({
                     var topIndex = 0;
                     var i = 0;
                     for (let properties in chartData[index]) {
-                      if (Number.isInteger(chartData[index][properties])) {
+                      // Percentage mode plots one-decimal floats, which
+                      // Number.isInteger rejects - leaving topIndex at 0 so the
+                      // radius landed on the bottom segment instead of the top.
+                      if (typeof chartData[index][properties] === "number") {
                         if (chartData[index][properties] !== 0) {
                           topIndex = i;
                         }
