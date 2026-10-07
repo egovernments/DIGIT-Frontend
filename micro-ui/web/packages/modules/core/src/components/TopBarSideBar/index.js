@@ -3,7 +3,7 @@ import TopBar from "./TopBar";
 import { useNavigate } from "react-router-dom";
 import SideBar from "./SideBar";
 import LogoutDialog from "../Dialog/LogoutDialog";
-import { clearIdpToken } from "../../utils/idpToken";
+import { clearIdpToken, getIdpToken } from "../../utils/idpToken";
 import { restoreLanguagePreferences, snapshotLanguagePreferences } from "../../utils/tenantLocale";
 const TopBarSideBar = ({
   t,
@@ -87,13 +87,21 @@ const TopBarSideBar = ({
            automatically, so dropping it any earlier makes logout the one request in the
            session without it - which the gateway rejects with a 401. And it has to happen
            before the IdP redirect below, because that navigation abandons the page. */
+        /* Captured before clearing. Without it the IdP cannot tell WHICH session is being
+           ended, so Azure stops on a "Pick an account" screen instead of signing the user
+           out and returning. It is the parameter OIDC defines for exactly this. */
+        const idTokenHint = getIdpToken();
         clearIdpToken();
         try {
           const url = new URL(logoutUrlFromConfig);
           url.searchParams.set(redirectParamName, postLogoutRedirectUri);
-          window.location.href = url.toString();
+          if (idTokenHint) url.searchParams.set("id_token_hint", idTokenHint);
+          /* replace, not href: the page behind us is a logged-out app screen whose storage
+             has just been wiped. Leaving it in history means Back lands the user on it. */
+          window.location.replace(url.toString());
         } catch (error) {
-          window.location.href = `${logoutUrlFromConfig}?${redirectParamName}=${encodeURIComponent(postLogoutRedirectUri)}`;
+          const hint = idTokenHint ? `&id_token_hint=${encodeURIComponent(idTokenHint)}` : "";
+          window.location.replace(`${logoutUrlFromConfig}?${redirectParamName}=${encodeURIComponent(postLogoutRedirectUri)}${hint}`);
         }
       }
 
