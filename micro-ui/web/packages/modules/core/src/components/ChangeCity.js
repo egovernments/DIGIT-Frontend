@@ -1,8 +1,28 @@
 import { CardText, Dropdown, Toast } from "@egovernments/digit-ui-components";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getIdpToken } from "../utils/idpToken";
 import { getStoredSSOTenants, getSwitchableTenantIds, lookupTenants, storeSSOTenants, switchTenant } from "../utils/ssoTenants";
+
+/**
+ * Diagnostics that survive a production build.
+ *
+ * The app's webpack.prod.js sets terser `drop_console: true`, so every console.* call - and
+ * the string literals inside it - is removed from the deployed bundle. Anything written for
+ * diagnosis therefore has to be state, not logging. Read it in the browser as
+ * `window.__ssoDebug`.
+ */
+const ssoDebug = (event, data) => {
+  try {
+    if (typeof window === "undefined") return;
+    window.__ssoDebug = window.__ssoDebug || [];
+    window.__ssoDebug.push({ at: new Date().toISOString(), event, ...data });
+  } catch (e) {
+    /* diagnostics must never break the component */
+  }
+};
+
+let mountCounter = 0;
 
 const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
   if (searcher == "") return str;
@@ -34,6 +54,12 @@ const ChangeCity = (prop) => {
      tenants with nothing to indicate the switcher had been disabled. */
   const currentTenantId = Digit.SessionStorage.get("Employee.tenantId");
   const [ssoMode, setSsoMode] = useState(false);
+  /* Mirrored in a ref because handleChangeCity is handed to <Dropdown> as a prop. If that
+     component holds on to the callback it received on its first render, the closure it calls
+     still sees the INITIAL ssoMode (false) however many times the state has updated since -
+     which routes an SSO session down the legacy reload path. Reading the ref makes the
+     handler independent of which render it was captured in. */
+  const ssoModeRef = useRef(false);
 
   const handleSwitchTenant = async (city) => {
     if (!city?.value || city.value === currentTenantId) return;
@@ -52,7 +78,8 @@ const ChangeCity = (prop) => {
   };
 
   const handleChangeCity = (city) => {
-    if (ssoMode) return handleSwitchTenant(city);
+    ssoDebug("click", { selected: city?.value, ssoModeState: ssoMode, ssoModeRef: ssoModeRef.current, currentTenantId });
+    if (ssoModeRef.current) return handleSwitchTenant(city);
     const loggedInData = Digit.SessionStorage.get("citizen.userRequestObject");
     const filteredRoles = Digit.SessionStorage.get("citizen.userRequestObject")?.info?.roles?.filter((role) => role.tenantId === city.value);
     if (filteredRoles?.length > 0) {
@@ -84,10 +111,38 @@ const ChangeCity = (prop) => {
 
   useEffect(() => {
     let cancelled = false;
+    /* Identifies which mount each entry came from, so a remount (which resets ssoMode to its
+       initial false) is distinguishable from a single mount that simply decided wrongly. */
+    const mountId = ++mountCounter;
+    ssoDebug("effect:mount", { mount: mountId });
 
     const applySSOTenants = async () => {
-      const isSSOSession = Digit?.UserService?.getType?.() === "employee" && Boolean(getIdpToken());
-      if (!isSSOSession) return false;
+      const userType = Digit?.UserService?.getType?.();
+      const hasToken = Boolean(getIdpToken());
+      const isSSOSession = userType === "employee" && hasToken;
+      const stored = getStoredSSOTenants();
+
+      /* Everything is computed BEFORE the gates so the snapshot shows why a gate rejected,
+         not merely that it did. chaduat and chad run identical code against what looks like
+         identical state, so the difference has to be in one of these values. */
+      ssoDebug("effect:start", {
+        mount: mountId,
+        deployment: { stateId: Digit?.ULBService?.getStateId?.(), contextPath: window?.contextPath },
+        userType,
+        hasToken,
+        isSSOSession,
+        currentTenantId,
+        storedCount: stored?.length,
+        storedTenants: stored?.map?.((tenant) => tenant?.tenantId),
+        storedRaw: stored,
+        deploymentMapKeys: Object.keys(window?.globalConfigs?.getConfig("TENANT_DEPLOYMENT_MAP") || {}),
+        switchableIds: getSwitchableTenantIds(currentTenantId),
+      });
+
+      if (!isSSOSession) {
+        ssoDebug("effect:gate-failed", { mount: mountId, reason: "not an SSO session", userType, hasToken });
+        return false;
+      }
 
       let tenantIds = getSwitchableTenantIds(currentTenantId);
 
@@ -104,37 +159,48 @@ const ChangeCity = (prop) => {
           storeSSOTenants(tenants);
           tenantIds = getSwitchableTenantIds(currentTenantId);
         } catch (error) {
-          console.warn("[sso] could not re-fetch the tenant list", error);
+          ssoDebug("effect:refetch-failed", { mount: mountId, status: error?.status, message: error?.message });
         }
       }
 
       if (cancelled) return true;
 
       if (tenantIds.length) {
+        ssoModeRef.current = true;
         setSsoMode(true);
         setSelectCityData(toOptions(tenantIds));
+        ssoDebug("effect:sso-mode", { mount: mountId, tenantIds });
         return true;
       }
 
       /* An SSO session with no usable tenant list at all. Falling through to roles is still
          better than an empty dropdown, but it is never expected - log the inputs so this does
          not have to be diagnosed from the symptom again. */
-      console.warn("[sso] tenant switcher falling back to roles", {
-        storedTenants: getStoredSSOTenants(),
+      ssoDebug("effect:fallback-to-roles", {
+        mount: mountId,
+        storedTenants: getStoredSSOTenants()?.map?.((tenant) => tenant?.tenantId),
         deploymentMapKeys: Object.keys(window?.globalConfigs?.getConfig("TENANT_DEPLOYMENT_MAP") || {}),
         currentTenantId,
       });
       return false;
     };
 
-    applySSOTenants().then((handled) => {
-      if (cancelled || handled) return;
-      setSsoMode(false);
-      buildRoleBasedOptions();
-    });
+    applySSOTenants()
+      .then((handled) => {
+        if (cancelled || handled) return;
+        ssoModeRef.current = false;
+        setSsoMode(false);
+        buildRoleBasedOptions();
+      })
+      /* An exception here used to leave the component with neither list - silently, because
+         an unhandled rejection in an effect shows nothing in production. */
+      .catch((error) => {
+        ssoDebug("effect:threw", { mount: mountId, message: error?.message, stack: error?.stack });
+      });
 
     return () => {
       cancelled = true;
+      ssoDebug("effect:cleanup", { mount: mountId });
     };
   }, [dropDownData]);
 
@@ -156,7 +222,13 @@ const ChangeCity = (prop) => {
 
   // if (isDropdown) {
   return (
-    <div style={prop?.mobileView ? { color: "#767676" } : {}}>
+    /* data-sso-* are diagnostics: readable in the Elements panel on a production build,
+       where console output is stripped. Harmless to leave, trivial to remove. */
+    <div
+      style={prop?.mobileView ? { color: "#767676" } : {}}
+      data-sso-mode={String(ssoMode)}
+      data-sso-options={selectCityData.map((option) => option?.value).join(",")}
+    >
       {
         (isMultiRootTenant && selectCityData.length==1) ? 
         <CardText style={{color:"#363636"}}>{selectCityData?.[0]?.value}</CardText>
