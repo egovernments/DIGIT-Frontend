@@ -1,7 +1,8 @@
 import { CardText, Dropdown, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getIdpToken } from "../utils/idpToken";
+import { clearIdpToken, getIdpToken } from "../utils/idpToken";
+import { restoreLanguagePreferences, snapshotLanguagePreferences } from "../utils/tenantLocale";
 import { getStoredSSOTenants, getSwitchableTenantIds, lookupTenants, storeSSOTenants, switchTenant } from "../utils/ssoTenants";
 
 /**
@@ -60,6 +61,13 @@ const ChangeCity = (prop) => {
      which routes an SSO session down the legacy reload path. Reading the ref makes the
      handler independent of which render it was captured in. */
   const ssoModeRef = useRef(false);
+  /* An SSO session whose IdP token has lapsed. The cookie carries Max-Age from the token's
+     own `exp` - about an hour for Azure - so this is the ordinary end state of any session
+     left open, not an edge case. Tracked separately from ssoMode: the user still has a valid
+     DIGIT session (so they stay logged in), they just cannot re-exchange for another tenant
+     until they re-authenticate. */
+  const [ssoExpired, setSsoExpired] = useState(false);
+  const ssoExpiredRef = useRef(false);
 
   const handleSwitchTenant = async (city) => {
     if (!city?.value || city.value === currentTenantId) return;
@@ -72,14 +80,54 @@ const ChangeCity = (prop) => {
       if (error?.code === "SSO_SESSION_EXPIRED") {
         /* The ID token is gone or rejected, so there is no way to re-exchange. Let the toast
            be read, then send the user back through login. */
-        setTimeout(() => Digit.UserService.logout(), 4000);
+        setTimeout(forceReLogin, 4000);
       }
     }
   };
 
+  /**
+   * End the session and put the user back on a login page they can actually use.
+   *
+   * NOT a bare Digit.UserService.logout(), which is wrong here in three ways:
+   *   - it redirects by userType, and getType() answers "citizen" whenever the marker is
+   *     unset, sending an employee to /<contextPath>/citizen - a route this app may not
+   *     serve at all, i.e. a blank screen;
+   *   - otherwise it lands on employee/user/language-selection rather than the login page,
+   *     and on the CURRENT contextPath instead of the deployment the user logged in through;
+   *   - it clears all of localStorage, taking the remembered per-tenant languages with it.
+   * Mirrors what TopBarSideBar does on a deliberate logout.
+   */
+  const forceReLogin = async () => {
+    const source = localStorage.getItem("login.source") || window?.contextPath || "";
+    const preserved = snapshotLanguagePreferences();
+    try {
+      await Digit.UserService.logout();
+    } finally {
+      /* logout() has already started its own navigation; this replace supersedes it. */
+      restoreLanguagePreferences(preserved);
+      clearIdpToken();
+      window.location.replace(`/${source}/employee/user/login`);
+    }
+  };
+
+  /* Same outcome as switchTenant's SSO_SESSION_EXPIRED branch, reached without a request:
+     there is no ID token to exchange, so the only way forward is to log in again. */
+  const handleExpiredSession = (city) => {
+    if (!city?.value || city.value === currentTenantId) return;
+    setSwitchError("SSO_SESSION_EXPIRED");
+    setTimeout(forceReLogin, 4000);
+  };
+
   const handleChangeCity = (city) => {
-    ssoDebug("click", { selected: city?.value, ssoModeState: ssoMode, ssoModeRef: ssoModeRef.current, currentTenantId });
+    ssoDebug("click", {
+      selected: city?.value,
+      ssoModeState: ssoMode,
+      ssoModeRef: ssoModeRef.current,
+      ssoExpired: ssoExpiredRef.current,
+      currentTenantId,
+    });
     if (ssoModeRef.current) return handleSwitchTenant(city);
+    if (ssoExpiredRef.current) return handleExpiredSession(city);
     const loggedInData = Digit.SessionStorage.get("citizen.userRequestObject");
     const filteredRoles = Digit.SessionStorage.get("citizen.userRequestObject")?.info?.roles?.filter((role) => role.tenantId === city.value);
     if (filteredRoles?.length > 0) {
@@ -163,6 +211,21 @@ const ChangeCity = (prop) => {
       });
 
       if (!isSSOSession) {
+        /* Employee session, SSO tenant list from this session, but no usable ID token: the
+           token lapsed. Keep showing the SSO option list instead of silently swapping in the
+           role-derived one - a user whose tenants quietly disappear has no way to tell that
+           their session needs renewing. handleExpiredSession explains it on click.
+           A password login has no stored tenant list, so it still gets the legacy behaviour. */
+        if (isEmployeeSession && stored.length) {
+          ssoExpiredRef.current = true;
+          setSsoExpired(true);
+          setSelectCityData(toOptions(getSwitchableTenantIds(currentTenantId)));
+          ssoDebug("effect:sso-expired", {
+            mount: mountId,
+            storedTenants: stored.map((tenant) => tenant?.tenantId),
+          });
+          return true;
+        }
         ssoDebug("effect:gate-failed", { mount: mountId, reason: "not an SSO session", userType, hasToken, employeeMarkers });
         return false;
       }
@@ -190,7 +253,9 @@ const ChangeCity = (prop) => {
 
       if (tenantIds.length) {
         ssoModeRef.current = true;
+        ssoExpiredRef.current = false;
         setSsoMode(true);
+        setSsoExpired(false);
         setSelectCityData(toOptions(tenantIds));
         ssoDebug("effect:sso-mode", { mount: mountId, tenantIds });
         return true;
@@ -212,7 +277,9 @@ const ChangeCity = (prop) => {
       .then((handled) => {
         if (cancelled || handled) return;
         ssoModeRef.current = false;
+        ssoExpiredRef.current = false;
         setSsoMode(false);
+        setSsoExpired(false);
         buildRoleBasedOptions();
       })
       /* An exception here used to leave the component with neither list - silently, because
@@ -250,6 +317,7 @@ const ChangeCity = (prop) => {
     <div
       style={prop?.mobileView ? { color: "#767676" } : {}}
       data-sso-mode={String(ssoMode)}
+      data-sso-expired={String(ssoExpired)}
       data-sso-options={selectCityData.map((option) => option?.value).join(",")}
     >
       {

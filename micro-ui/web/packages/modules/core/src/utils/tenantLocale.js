@@ -33,6 +33,11 @@ const PENDING_KEY = "language.pending";
 
 const currentDeployment = () => window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "default";
 
+/* Same derivation as ssoTenants.isSharedLoginDeployment, repeated rather than imported to
+   keep this module free of SSO dependencies - it is used on password logins too. */
+const isSharedLoginDeployment = () =>
+  currentDeployment() === (window?.globalConfigs?.getConfig("SSO_LOOKUP_TENANT_ID") || "public");
+
 export const tenantLocaleKey = () => `locale.${currentDeployment()}`;
 
 /* "fr_CHADUAT" -> "fr". Locales are <language>_<REGION>, region varying per deployment. */
@@ -73,7 +78,17 @@ export const rememberChosenLanguage = (locale) => {
   if (!locale) return;
   try {
     Digit?.PersistantStorage?.set(tenantLocaleKey(), locale, ONE_YEAR_IN_SECONDS);
-    Digit?.PersistantStorage?.set(PENDING_KEY, toLanguageSubtag(locale), ONE_YEAR_IN_SECONDS);
+    /**
+     * The pending marker is a shared-login -> tenant handoff and nothing else.
+     *
+     * Writing it from a TENANT deployment made a language picked on, say, chaduat get
+     * applied to whichever deployment the user next landed on - a tenant switch consumes
+     * the marker on arrival - which is exactly the cross-tenant bleed the scoped key above
+     * exists to prevent. On a tenant deployment the scoped key alone is the whole story.
+     */
+    if (isSharedLoginDeployment()) {
+      Digit?.PersistantStorage?.set(PENDING_KEY, toLanguageSubtag(locale), ONE_YEAR_IN_SECONDS);
+    }
   } catch (e) {
     /* a lost preference just means the default is used next time */
   }

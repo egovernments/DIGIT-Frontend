@@ -115,12 +115,18 @@ export const getTenantBasePath = (tenantId) => {
 const persistEmployeeSession = (userObject, token) => {
   if (Digit.Utils.getMultiRootTenant() && process.env.NODE_ENV !== "development") return;
 
-  const locale = JSON.parse(sessionStorage.getItem("Digit.locale"))?.value || Digit.Utils.getDefaultLanguage();
+  /* Deliberately NOT writing `locale` / `Employee.locale` here, unlike the copies of this in
+     Login/login.js and Otp/index.js.
+     Those run at login, where sessionStorage's Digit.locale genuinely belongs to the
+     deployment being written. This one runs mid-switch, still on the deployment being LEFT,
+     so it captured the source tenant's locale (fr_CHADUAT) and left it on the target (chad) -
+     the one value that still crossed tenants after the per-tenant work. Nothing reads these
+     keys (verified across libraries, core and every health module: writes only), so dropping
+     them removes the stale copy rather than changing behaviour, and leaves applyTenantLocale
+     as the single owner of locale on arrival. */
   localStorage.setItem("Employee.tenant-id", userObject?.tenantId);
   localStorage.setItem("tenant-id", userObject?.tenantId);
   localStorage.setItem("citizen.userRequestObject", JSON.stringify(userObject));
-  localStorage.setItem("locale", locale);
-  localStorage.setItem("Employee.locale", locale);
   localStorage.setItem("token", token);
   localStorage.setItem("Employee.token", token);
   localStorage.setItem("user-info", JSON.stringify(userObject));
