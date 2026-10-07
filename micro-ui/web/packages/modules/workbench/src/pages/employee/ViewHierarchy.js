@@ -305,7 +305,20 @@ const ViewHierarchy = () => {
       } else {
         // Initialize the label with a failure message
         label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
-        if (error?.message) label += `${t(error?.message)}`; // the message here is sent from the polling mechnism which sendds the error code from backend.
+        // If the initial _process call itself failed (e.g. a 400), error.message is
+        // just axios's generic "Request failed with status code ..." text. Prefer the
+        // backend's own error code/message when the response actually included one.
+        const backendError = error?.response?.data?.Errors?.[0];
+        if (backendError?.code) {
+          label += t(backendError.code);
+        } else if (backendError?.message) {
+          label += backendError.message;
+        } else if (error?.message) {
+          // Otherwise this was thrown by pollForStatusCompletion, whose message is
+          // already a backend error code/description (see that function) -- translate
+          // it the same way as before.
+          label += t(error?.message);
+        }
       }
 
       setShowToast({ label, isError: "error" });
