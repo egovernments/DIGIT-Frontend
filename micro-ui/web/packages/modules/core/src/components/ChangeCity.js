@@ -119,8 +119,29 @@ const ChangeCity = (prop) => {
     const applySSOTenants = async () => {
       const userType = Digit?.UserService?.getType?.();
       const hasToken = Boolean(getIdpToken());
-      const isSSOSession = userType === "employee" && hasToken;
       const stored = getStoredSSOTenants();
+
+      /**
+       * Do NOT gate on getType() alone.
+       *
+       * It is `Storage.get("userType") || "citizen"`, so "citizen" is equally its value for
+       * "an actual citizen" and for "nobody has set this yet". On a cold boot of a tenant
+       * deployment - which is exactly how switchTenant arrives, via location.replace - this
+       * effect runs before the session type is established and gets the default, so an
+       * employee was treated as a citizen and the switcher silently fell back to the
+       * role-derived list. Arriving on the login deployment hid it, because there the app is
+       * already booted (client-side navigate) or sessionStorage survived an F5.
+       *
+       * These keys are written only for an employee session, so their presence is positive
+       * evidence rather than an absence-of-evidence default.
+       */
+      const employeeMarkers = {
+        userTypeIsEmployee: userType === "employee",
+        hasEmployeeTenantId: Boolean(currentTenantId),
+        hasEmployeeToken: Boolean(window?.localStorage?.getItem?.("Employee.token")),
+      };
+      const isEmployeeSession = Object.values(employeeMarkers).some(Boolean);
+      const isSSOSession = isEmployeeSession && hasToken;
 
       /* Everything is computed BEFORE the gates so the snapshot shows why a gate rejected,
          not merely that it did. chaduat and chad run identical code against what looks like
@@ -130,6 +151,8 @@ const ChangeCity = (prop) => {
         deployment: { stateId: Digit?.ULBService?.getStateId?.(), contextPath: window?.contextPath },
         userType,
         hasToken,
+        employeeMarkers,
+        isEmployeeSession,
         isSSOSession,
         currentTenantId,
         storedCount: stored?.length,
@@ -140,7 +163,7 @@ const ChangeCity = (prop) => {
       });
 
       if (!isSSOSession) {
-        ssoDebug("effect:gate-failed", { mount: mountId, reason: "not an SSO session", userType, hasToken });
+        ssoDebug("effect:gate-failed", { mount: mountId, reason: "not an SSO session", userType, hasToken, employeeMarkers });
         return false;
       }
 
