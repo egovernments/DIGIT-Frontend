@@ -975,6 +975,13 @@
   &.customTable {
     margin: 0rem;
     margin-bottom: 1.5rem;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  &.digit-pie-chart-tags {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }
 
