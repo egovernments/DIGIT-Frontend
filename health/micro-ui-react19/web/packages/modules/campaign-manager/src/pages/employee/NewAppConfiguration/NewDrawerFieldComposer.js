@@ -1,7 +1,7 @@
 import React, { Fragment, useMemo, useState, useCallback, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
-import { AlertCard, FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons, Loader,HeaderComponent } from "@egovernments/digit-ui-components";
+import { AlertCard, FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons, Loader,HeaderComponent,Card,SVG } from "@egovernments/digit-ui-components";
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT } from "./hooks/useCustomT";
@@ -14,7 +14,6 @@ import {
   toSentenceCase,
 } from "./helpers";
 import { TextInput, Button } from "@egovernments/digit-ui-components";
-import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
 import { getLabelFieldPairConfig } from "./redux/labelFieldPairSlice";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
@@ -576,6 +575,21 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
           onFieldChange(updatedField);
         };
+        // Where options come from is an either/or choice, not an on/off state,
+        // so this property replaces the switch entirely rather than sitting
+        // under one.
+        if (bindTo === "isMdms") {
+          return (
+            <OptionsSourceField
+              key={`${selectedField?.id || selectedField?.key || selectedField?.label || selectedField?.fieldName || ""}-optionsSource`}
+              panelItem={panelItem}
+              selectedField={selectedField}
+              onFieldChange={onFieldChange}
+              viewMode={viewMode}
+            />
+          );
+        }
+
         return (
           <>
             <div id={`digit-sidepanel-switch-wrap-${panelItem.label}`}>
@@ -1398,7 +1412,7 @@ const LocalizationInput = React.memo(
 );
 
 // Separate component for option items to avoid hooks violations
-const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onDelete, viewMode }) => {
+const OptionItem = React.memo(({ item, index, canDelete, cField, selectedField, onFieldChange, onDelete, viewMode }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
@@ -1440,30 +1454,34 @@ const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onD
       return;
     }
 
-    // Update the option with the localization code
-    const updated = (selectedField[cField.bindTo] || []).map((i) => (i.code === item.code ? { ...i, name: localizationCode } : i));
+    // The first row is rendered before it exists in the data, so typing into it
+    // has to append rather than map - otherwise the value would be dropped.
+    const current = selectedField[cField.bindTo] || [];
+    const updated = current.some((i) => i.code === item.code)
+      ? current.map((i) => (i.code === item.code ? { ...i, name: localizationCode } : i))
+      : [...current, { ...item, name: localizationCode }];
     onFieldChange({ ...selectedField, [cField.bindTo]: updated });
   };
 
   return (
-    <div style={{ display: "flex", gap: "1rem" }}>
-      <TextInput type="text" value={translatedOptionValue || ""} placeholder={t(I18N_KEYS.APP_CONFIGURATION.OPTION_PLACEHOLDER)} onChange={handleChange} disabled={viewMode} />
-      {!viewMode && (<div
-        onClick={onDelete}
-        style={{
-          cursor: "pointer",
-          fontWeight: "600",
-          marginLeft: "1rem",
-          fontSize: "1rem",
-          color: "#c84c0e",
-          display: "flex",
-          gap: "0.5rem",
-          alignItems: "center",
-          marginTop: "1rem",
-        }}
-      >
-        <DustbinIcon />
-      </div>)}
+    <div className="app-config-option-item">
+      <div className="app-config-option-item-label">{`${t(
+        "APPCONFIG_OPTION_LABEL",
+      )} ${index + 1}`}</div>
+      <div style={{ display: "flex", gap: "0.5rem",alignItems:"center",justifyContent:"center" }}>
+        <TextInput
+          type="text"
+          value={translatedOptionValue || ""}
+          placeholder={t(I18N_KEYS.APP_CONFIGURATION.OPTION_PLACEHOLDER)}
+          onChange={handleChange}
+          disabled={viewMode}
+        />
+        {!viewMode && canDelete && (
+          <div onClick={onDelete}>
+            <SVG.DeleteOutline />
+          </div>
+        )}
+      </div>
     </div>
   );
 });
@@ -1471,6 +1489,9 @@ const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onD
 // Separate component for conditional fields to avoid hooks violations
 const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, viewMode }) => {
   const { t } = useTranslation();
+  // The manual editor always offers a first row, even before any option exists.
+  // Its identity must survive re-renders or typing would restart each keystroke.
+  const placeholderOption = useMemo(() => ({ code: crypto.randomUUID(), name: "" }), []);
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
 
@@ -1729,20 +1750,17 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
       );
     case "options":
       return (
-        <div
-          style={{
-            padding: "1.5rem",
-            border: "1px solid #c84c0e",
-            borderRadius: "1rem",
-            display: "flex",
-            flexDirection: "column",
-            gap: "1.5rem",
-          }}
-        >
-          {(selectedField[cField.bindTo] || [])?.map((item, index) => (
+        // Framing lives in CSS so that nesting this editor inside an options
+        // source card can drop the duplicate border.
+        <div className="app-config-options-editor">
+          {(((selectedField[cField.bindTo] || []).length ? selectedField[cField.bindTo] : [placeholderOption]) || [])?.map((item, index) => (
             <OptionItem
               key={item?.code || index}
               item={item}
+              index={index}
+              // The last option cannot be removed - a field with no options at
+              // all is not a valid state to leave the configurer in.
+              canDelete={(selectedField[cField.bindTo] || []).length > 1}
               cField={cField}
               selectedField={selectedField}
               onFieldChange={onFieldChange}
@@ -1757,17 +1775,19 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
           {!viewMode && (<Button
             type="button"
             icon="AddIcon"
-            size="small"
-            variation="tertiary"
+            size="medium"
+            variation="secondary"
             label={t(I18N_KEYS.APP_CONFIGURATION.ADD_OPTIONS_SIDEPANEL)}
             title={t(I18N_KEYS.APP_CONFIGURATION.ADD_OPTIONS_SIDEPANEL)}
             className={`app-config-add-option-button`}
-            style={{ color: "#c84c0e", height: "1.5rem", width: "fit-content" }}
-            textStyles={{ color: "#c84c0e", fontSize: "0.875rem" }}
+            style={{width:"100%"}}
             onClick={() => {
-              const newOption = { code: crypto.randomUUID(), name: "" };
-              const updated = selectedField[cField.bindTo] ? [...selectedField[cField.bindTo], newOption] : [newOption];
-              onFieldChange({ ...selectedField, [cField.bindTo]: updated });
+              const current = selectedField[cField.bindTo] || [];
+              // The first row is on screen before it exists in the data, so adding
+              // has to materialise it as well - appending to the data alone would
+              // make the new row take the place of the one already shown.
+              const base = current.length ? current : [placeholderOption];
+              onFieldChange({ ...selectedField, [cField.bindTo]: [...base, { code: crypto.randomUUID(), name: "" }] });
             }}
           />)}
         </div>
@@ -1931,6 +1951,64 @@ const CountryCodePrefixField = React.memo(({ panelItem, selectedField, onFieldCh
         )
       )}
     </>
+  );
+});
+
+// Where a field's options come from. isMdms already models exactly this choice,
+// so the radio only moves the decision into the open - nothing new is stored.
+const OPTION_SOURCE_MODES = [
+  { mode: "EXISTING", code: "APPCONFIG_PULL_FROM_EXISTING_DATA" },
+  { mode: "MANUAL", code: "APPCONFIG_ENTER_OPTIONS_MANUALLY" },
+];
+
+// Picks the source of a dropdown/select/radio field's options. The two editors
+// come from the panel master's own conditionalField entries, keyed on the
+// condition flag, so the schema list and the manual rows stay master-driven.
+const OptionsSourceField = React.memo(({ panelItem, selectedField, onFieldChange, viewMode }) => {
+  const { t } = useTranslation();
+  const isExisting = Boolean(selectedField?.isMdms);
+  const editors = Array.isArray(panelItem?.conditionalField) ? panelItem.conditionalField : [];
+  const activeEditor = editors.find((editor) => Boolean(editor?.condition) === isExisting);
+
+  // Both cards belong to one radio group, so the group name has to be unique per
+  // field - otherwise two fields' panels would share a selection.
+  const groupName = `optionsSource-${selectedField?.id || selectedField?.key || selectedField?.fieldName || panelItem?.label}`;
+
+  // Only the mode is written. Whatever the other mode held is left untouched, so
+  // switching back and forth does not discard a schema choice or typed options.
+  const selectMode = (option) => {
+    onFieldChange({ ...selectedField, isMdms: option?.mode === "EXISTING" });
+  };
+
+  return (
+    <div className="app-config-options-source">
+      {/* The section keeps its heading; only the on/off control is replaced,
+          so the master's existing label still names this group. */}
+      <div className="app-config-options-source-label digit-switch-label">
+        {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
+      </div>
+      {OPTION_SOURCE_MODES.map((option) => {
+        const isSelected = option.mode === (isExisting ? "EXISTING" : "MANUAL");
+        return (
+          <Card key={option.mode} className={`app-config-options-source-card${isSelected ? " selected" : ""}`}>
+            <RadioButtons
+              options={[option]}
+              name={groupName}
+              additionalWrapperClass="app-config-radio"
+              selectedOption={isSelected ? option : null}
+              onSelect={() => selectMode(option)}
+              optionsKey="code"
+              disabled={viewMode}
+            />
+            {/* The editor belongs to the choice, so it renders inside that card
+                rather than below both. */}
+            {isSelected && activeEditor && (
+              <ConditionalField cField={activeEditor} selectedField={selectedField} onFieldChange={onFieldChange} viewMode={viewMode} />
+            )}
+          </Card>
+        );
+      })}
+    </div>
   );
 });
 
