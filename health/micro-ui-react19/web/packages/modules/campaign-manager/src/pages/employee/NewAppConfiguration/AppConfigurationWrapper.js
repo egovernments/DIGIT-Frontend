@@ -951,7 +951,10 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
 
   // Handle adding new field
   const handleAddNewField = () => {
-    if (!newFieldType?.label || !newFieldType?.field) {
+    // Guard on the entered text, matching the Add button. newFieldType.label is a
+    // localisation code that survives clearing the box, so it cannot stand in for
+    // "a label was given".
+    if (!fieldDataLabel?.trim() || !newFieldType?.label || !newFieldType?.field) {
       return; // Validation: ensure required fields are present
     }
 
@@ -1276,7 +1279,10 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 variation="primary"
                 label={t(I18N_KEYS.APP_CONFIGURATION.ADD)}
                 title={t(I18N_KEYS.APP_CONFIGURATION.ADD)}
-                isDisabled={!newFieldType?.label || !newFieldType?.field}
+                // Validate the text in the box, not newFieldType.label - that holds a
+                // localisation code which is generated on the first keystroke and
+                // stays truthy after the label is cleared, leaving Add enabled.
+                isDisabled={!fieldDataLabel?.trim() || !newFieldType?.field}
                 onClick={handleAddNewField}
                 id={"save-add-field-popup"}
               />
