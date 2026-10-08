@@ -40,7 +40,11 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
     }
   }, [isFieldSelected]);
 
-  const shouldCustomTranslate = !field?.isMdms && (fieldType === "dropdown" || fieldType === "radio" || fieldType === "checkbox");
+  // Controls whose manually entered labels and options are localisation codes:
+  // this module's translator resolves them, so the raw codes are handed over and
+  // FieldV1 translates both the label and the option names with it.
+  const CODE_LABELLED_TYPES = ["dropdown", "multiselectdropdown", "radio", "checkbox"];
+  const shouldCustomTranslate = !field?.isMdms && CODE_LABELLED_TYPES.includes(String(fieldType || "").toLowerCase());
 
   // Fields that carry their own label (scanner button, checkbox) render a blank label,
   // so hide the label row altogether - otherwise a required field shows an orphan asterisk

@@ -46,7 +46,7 @@
     "@egovernments/digit-ui-module-core": "2.0.0-dev-38",
     "@egovernments/digit-ui-react-components": "2.0.0-dev-21",
     "@egovernments/digit-ui-svg-components": "2.0.0-dev-11",
-    "@egovernments/digit-ui-components": "2.0.0-dev-68",
+    "@egovernments/digit-ui-components": "2.0.0-dev-69",
     "@egovernments/digit-ui-module-workbench": "2.0.0-dev-28",
     "@egovernments/digit-ui-module-campaign-manager": "1.0.0",
     "@egovernments/digit-ui-module-health-dss": "1.0.0",
