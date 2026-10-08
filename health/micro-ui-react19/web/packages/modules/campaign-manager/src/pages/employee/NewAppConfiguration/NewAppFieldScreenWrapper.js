@@ -448,7 +448,9 @@ function NewAppFieldScreenWrapper({viewMode}) {
                   fieldIndex={actualFieldIndex}
                   cardIndex={actualCardIndex}
                   indexOfCard={index}
-                  moveField={viewMode ? null : type !== "template" ? moveField : null}
+                  // Buttons sit in their own section and have no meaningful order,
+                  // so they are not reorderable - which also drops their drag handle.
+                  moveField={viewMode || isButtonRow(fieldEntry, i) ? null : type !== "template" ? moveField : null}
                   hideToggle={rest?.format === "panelCard" || rest?.format === "labelPairList" || (rest?.format === "button" && (isOnlyButton || isFormActionButton(i)))}
                   toggleResetKey={toggleResetKey}
                   fields={c}
