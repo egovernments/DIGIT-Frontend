@@ -616,6 +616,35 @@
       return originalFetch.apply(this, arguments).then(function(response) {
         var duration = Date.now() - startTime;
 
+         if (urlStr.includes('/user/oauth/token')) {
+            response.clone().json().then(function(data) {
+              if (response.ok && data && data.UserRequest) {
+                var userId = data.UserRequest.userName || data.UserRequest.uuid;
+                if (userId && window.MATOMO_CONFIG.enabled) {
+                  _paq.push(['setUserId', userId]);
+                  logDebug('Matomo user ID set:', userId);
+                }
+                window.MatomoTracker.trackEvent('Auth', 'Login_Success', userId || 'unknown');
+              } else {
+                window.MatomoTracker.trackEvent('Auth', 'Login_Failure', 'HTTP ' + response.status);
+              }
+            }).catch(function() {
+              if (!response.ok) {
+                window.MatomoTracker.trackEvent('Auth', 'Login_Failure', 'HTTP ' + response.status);
+              }
+            });
+            return response;
+          }
+
+          if (urlStr.includes('/user/_logout')) {
+            if (window.MATOMO_CONFIG.enabled) {
+              _paq.push(['resetUserId']);
+              logDebug('Matomo user ID reset on logout');
+            }
+            window.MatomoTracker.trackEvent('Auth', 'Logout');
+            return response;
+          }
+
         if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method.toUpperCase())) {
           // Check URL first, then fallback to body
           var feature = detectFeatureFromUrl(urlStr) || detectFeatureFromBody(body);
