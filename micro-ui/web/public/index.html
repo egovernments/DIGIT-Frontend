@@ -605,6 +605,52 @@
       return null;
     }
 
+     var OriginalXHR = window.XMLHttpRequest;
+      var originalXHROpen = OriginalXHR.prototype.open;
+      var originalXHRSend = OriginalXHR.prototype.send;
+
+      OriginalXHR.prototype.open = function(method, url) {
+        this._matomoUrl = url;
+        return originalXHROpen.apply(this, arguments);
+      };
+
+      OriginalXHR.prototype.send = function(body) {
+        var xhr = this;
+        var urlStr = typeof xhr._matomoUrl === 'string' ? xhr._matomoUrl : String(xhr._matomoUrl || '');
+
+        if (urlStr.includes('/user/oauth/token') || urlStr.includes('/user/_logout')) {
+          xhr.addEventListener('load', function() {
+            if (urlStr.includes('/user/oauth/token')) {
+              try {
+                var data = JSON.parse(xhr.responseText);
+                if (xhr.status >= 200 && xhr.status < 300 && data && data.UserRequest) {
+                  var userId = data.UserRequest.userName || data.UserRequest.uuid;
+                  if (userId && window.MATOMO_CONFIG.enabled) {
+                    _paq.push(['setUserId', userId]);
+                    logDebug('Matomo user ID set (XHR):', userId);
+                  }
+                  window.MatomoTracker.trackEvent('Auth', 'Login_Success', userId || 'unknown');
+                } else {
+                  window.MatomoTracker.trackEvent('Auth', 'Login_Failure', 'HTTP ' + xhr.status);
+                }
+              } catch (e) {
+                if (!(xhr.status >= 200 && xhr.status < 300)) {
+                  window.MatomoTracker.trackEvent('Auth', 'Login_Failure', 'HTTP ' + xhr.status);
+                }
+              }
+            } else if (urlStr.includes('/user/_logout')) {
+              if (window.MATOMO_CONFIG.enabled) {
+                _paq.push(['resetUserId']);
+                logDebug('Matomo user ID reset on logout (XHR)');
+              }
+              window.MatomoTracker.trackEvent('Auth', 'Logout');
+            }
+          });
+        }
+
+        return originalXHRSend.apply(this, arguments);
+      };
+
     // Intercept Fetch API
     var originalFetch = window.fetch;
     window.fetch = function(url, options) {
