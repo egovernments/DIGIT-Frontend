@@ -220,6 +220,24 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
 
   return (
     <>
+      {/* Every page needs one h1 (axe page-has-heading-one). The role-based landing page has no
+          visible title, so expose one to screen readers only. Same recipe as EmployeeHome / the
+          common .sr-only utility. */}
+      <h1
+        style={{
+          position: "absolute",
+          width: "1px",
+          height: "1px",
+          padding: 0,
+          margin: "-1px",
+          overflow: "hidden",
+          clip: "rect(0, 0, 0, 0)",
+          whiteSpace: "nowrap",
+          border: 0,
+        }}
+      >
+        {t("CORE_COMMON_HOME")}
+      </h1>
       <LandingPageWrapper>{React.Children.map(children, (child) => React.cloneElement(child))}</LandingPageWrapper>
     </>
   );
