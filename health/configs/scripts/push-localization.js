@@ -1,0 +1,263 @@
+#!/usr/bin/env node
+/**
+ * Pushes localization messages from health/configs/Localisations/<locale>/<module>.json
+ * to the DIGIT localization service (/localization/messages/v1/_upsert).
+ *
+ * Usage:
+ *   node push-localization.js [--dry-run] [file1.json file2.json ...]
+ *
+ * With no file arguments, every *.json under health/configs/Localisations is pushed.
+ * --dry-run validates the files and prints what would be pushed without calling the API.
+ *
+ * Required environment variables (unless --dry-run):
+ *   DIGIT_BASE_URL   e.g. https://unified-dev.digit.org
+ *   DIGIT_USERNAME   employee user with localization upsert access
+ *   DIGIT_PASSWORD
+ * Optional:
+ *   DIGIT_TENANT_ID       state tenant the messages are upserted under (default: mz)
+ *   DIGIT_AUTH_TENANT_ID  tenant the login user belongs to (default: DIGIT_TENANT_ID)
+ *   DIGIT_USER_TYPE       default: EMPLOYEE
+ *   LOCALE_FILTER    comma-separated locales to push (e.g. en_MZ,pt_MZ); others skipped
+ *
+ * Requires Node 18+ (uses global fetch).
+ */
+
+const fs = require("fs");
+const path = require("path");
+
+const LOCALISATIONS_DIR = path.resolve(__dirname, "..", "Localisations");
+const UPSERT_PATH = "/localization/messages/v1/_upsert";
+const SEARCH_PATH = "/localization/messages/v1/_search";
+const OAUTH_PATH = "/user/oauth/token";
+// Standard DIGIT client id "egov-user-client" with empty secret, base64 encoded
+const OAUTH_BASIC_AUTH = "Basic ZWdvdi11c2VyLWNsaWVudDo=";
+const CHUNK_SIZE = 300;
+
+const args = process.argv.slice(2);
+const dryRun = args.includes("--dry-run");
+const fileArgs = args.filter((a) => a !== "--dry-run");
+
+const baseUrl = (process.env.DIGIT_BASE_URL || "").replace(/\/+$/, "");
+const tenantId = process.env.DIGIT_TENANT_ID || "mz";
+const authTenantId = process.env.DIGIT_AUTH_TENANT_ID || tenantId;
+const localeFilter = (process.env.LOCALE_FILTER || "")
+  .split(",")
+  .map((l) => l.trim())
+  .filter(Boolean);
+
+function listJsonFiles(dir) {
+  const out = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...listJsonFiles(full));
+    else if (entry.isFile() && entry.name.endsWith(".json")) out.push(full);
+  }
+  return out;
+}
+
+function loadMessages(file) {
+  let parsed;
+  try {
+    parsed = JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch (err) {
+    throw new Error(`${file}: invalid JSON - ${err.message}`);
+  }
+  if (!Array.isArray(parsed)) {
+    throw new Error(`${file}: expected a top-level array of messages`);
+  }
+  parsed.forEach((msg, i) => {
+    for (const key of ["code", "message", "module", "locale"]) {
+      if (typeof msg?.[key] !== "string" || msg[key] === "") {
+        throw new Error(`${file}: entry ${i} is missing a non-empty "${key}"`);
+      }
+    }
+  });
+  return parsed;
+}
+
+async function authenticate() {
+  const username = process.env.DIGIT_USERNAME;
+  const password = process.env.DIGIT_PASSWORD;
+  if (!baseUrl || !username || !password) {
+    throw new Error(
+      "DIGIT_BASE_URL, DIGIT_USERNAME and DIGIT_PASSWORD must be set (or use --dry-run)"
+    );
+  }
+  const body = new URLSearchParams({
+    grant_type: "password",
+    scope: "read",
+    username,
+    password,
+    tenantId: authTenantId,
+    userType: process.env.DIGIT_USER_TYPE || "EMPLOYEE",
+  });
+  const res = await fetch(baseUrl + OAUTH_PATH, {
+    method: "POST",
+    headers: {
+      Authorization: OAUTH_BASIC_AUTH,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body,
+  });
+  if (!res.ok) {
+    throw new Error(`Authentication failed: HTTP ${res.status} ${await res.text()}`);
+  }
+  const data = await res.json();
+  if (!data.access_token) {
+    throw new Error("Authentication response did not contain an access_token");
+  }
+  return { authToken: data.access_token, userInfo: data.UserRequest };
+}
+
+async function upsert(auth, module, locale, messages) {
+  const res = await fetch(baseUrl + UPSERT_PATH, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      RequestInfo: {
+        apiId: "Rainmaker",
+        ver: ".01",
+        action: "_upsert",
+        msgId: `localization-push|${locale}`,
+        authToken: auth.authToken,
+        userInfo: auth.userInfo,
+      },
+      tenantId,
+      module,
+      locale,
+      messages,
+    }),
+  });
+  if (!res.ok) {
+    throw new Error(
+      `Upsert failed for ${module}/${locale}: HTTP ${res.status} ${await res.text()}`
+    );
+  }
+}
+
+// Fetch what the service currently stores for a module/locale as code -> message.
+async function fetchStored(auth, module, locale) {
+  const query = `?tenantId=${encodeURIComponent(tenantId)}&locale=${encodeURIComponent(locale)}&module=${encodeURIComponent(module)}`;
+  const res = await fetch(baseUrl + SEARCH_PATH + query, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      RequestInfo: {
+        apiId: "Rainmaker",
+        ver: ".01",
+        action: "_search",
+        msgId: `localization-push|${locale}`,
+        authToken: auth.authToken,
+        userInfo: auth.userInfo,
+      },
+    }),
+  });
+  if (!res.ok) {
+    throw new Error(
+      `Search failed for ${module}/${locale}: HTTP ${res.status} ${await res.text()}`
+    );
+  }
+  const stored = new Map();
+  for (const m of (await res.json()).messages || []) stored.set(m.code, m.message);
+  return stored;
+}
+
+// Compare desired messages against what the service stores.
+// A 200 from _upsert alone is not proof of persistence.
+function diffAgainstStored(stored, messages) {
+  const missing = [];
+  const mismatched = [];
+  for (const m of messages) {
+    if (!stored.has(m.code)) missing.push(m.code);
+    else if (stored.get(m.code) !== m.message) mismatched.push(m.code);
+  }
+  return { missing, mismatched, verified: messages.length - missing.length - mismatched.length };
+}
+
+async function main() {
+  const files = fileArgs.length ? fileArgs.map((f) => path.resolve(f)) : listJsonFiles(LOCALISATIONS_DIR);
+  if (!files.length) {
+    console.log("No localization files to push.");
+    return;
+  }
+
+  // Validate everything up front so a bad file aborts before any partial push
+  const groups = new Map(); // "module|locale" -> messages[]
+  let skipped = 0;
+  for (const file of files) {
+    for (const msg of loadMessages(file)) {
+      if (localeFilter.length && !localeFilter.includes(msg.locale)) {
+        skipped++;
+        continue;
+      }
+      const key = `${msg.module}|${msg.locale}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(msg);
+    }
+  }
+
+  console.log(`Validated ${files.length} file(s):`);
+  for (const [key, messages] of groups) {
+    const [module, locale] = key.split("|");
+    console.log(`  ${module} [${locale}]: ${messages.length} message(s)`);
+  }
+  if (skipped) console.log(`  (skipped ${skipped} message(s) outside LOCALE_FILTER)`);
+
+  if (dryRun) {
+    console.log("Dry run - nothing pushed.");
+    return;
+  }
+
+  const auth = await authenticate();
+  const failures = [];
+  let pushedTotal = 0;
+  for (const [key, messages] of groups) {
+    const [module, locale] = key.split("|");
+
+    // Delta: only upsert codes that are new or whose message changed
+    const before = await fetchStored(auth, module, locale);
+    const delta = messages.filter(
+      (m) => !before.has(m.code) || before.get(m.code) !== m.message
+    );
+    if (!delta.length) {
+      console.log(`  SKIP ${module} [${locale}]: all ${messages.length} message(s) already up to date`);
+      continue;
+    }
+    console.log(
+      `  ${module} [${locale}]: ${delta.length} of ${messages.length} message(s) new or changed`
+    );
+
+    for (let i = 0; i < delta.length; i += CHUNK_SIZE) {
+      const chunk = delta.slice(i, i + CHUNK_SIZE);
+      await upsert(auth, module, locale, chunk);
+      console.log(
+        `    pushed ${Math.min(i + CHUNK_SIZE, delta.length)}/${delta.length}`
+      );
+    }
+    pushedTotal += delta.length;
+
+    // Read back and confirm the whole file is now persisted, not just accepted
+    const after = diffAgainstStored(await fetchStored(auth, module, locale), messages);
+    if (after.missing.length || after.mismatched.length) {
+      failures.push({ module, locale });
+      console.error(
+        `  FAIL ${module} [${locale}]: ${after.verified} ok, ${after.missing.length} missing, ${after.mismatched.length} mismatched after push`
+      );
+      for (const code of after.missing.slice(0, 10)) console.error(`    missing: ${code}`);
+      for (const code of after.mismatched.slice(0, 10)) console.error(`    mismatched: ${code}`);
+    } else {
+      console.log(`  OK ${module} [${locale}]: all ${messages.length} message(s) verified in the service`);
+    }
+  }
+  if (failures.length) {
+    throw new Error(
+      `Verification failed for ${failures.length} module(s) - the service did not persist everything it accepted.`
+    );
+  }
+  console.log(`Localization push complete and verified (${pushedTotal} message(s) upserted).`);
+}
+
+main().catch((err) => {
+  console.error(err.message || err);
+  process.exit(1);
+});

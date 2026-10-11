@@ -1,0 +1,680 @@
+[
+  {
+    "code": "ABSENT",
+    "message": "Absent",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACTION_REQUIRED",
+    "message": "Action Required",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACTIVE",
+    "message": "Active",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APPLY_FILTER",
+    "message": "Apply Filter",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "APP_CRASH",
+    "message": "App crash during scanning",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_COMPLETION_LABEL",
+    "message": "Attendance completion",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_MANUAL_SCAN",
+    "message": "Couldn't scan the QR Code?",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_OPEN_REGISTER",
+    "message": "Open Register",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_REGISTAR_LABEL",
+    "message": "Manage Attendance",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_SUBMITTED_SUCCESS_MSG",
+    "message": "Attendance has been recorded successfully",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ATTENDANCE_UNMARKED",
+    "message": "Attendance Unmarked",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ATTENDEE_NOT_FOUND",
+    "message": "Attendee not found",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Attendance",
+    "message": "Attendance",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BACK_TO_ATTENDANCE_MANAGER",
+    "message": "Back to Attendance Manager",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BUTTON_MARK_ATTENDANCE",
+    "message": "Mark Attendance",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "BUTTON_VIEW_ATTENDANCE",
+    "message": "View Attendance",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CAMERA_PERMISSION_DENIED",
+    "message": "Camera permission denied",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CAMPAIGN_NAME_LABEL",
+    "message": "Campaign name",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CHECK_ATTENDANCE_MARK",
+    "message": "Manage Attendance",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLEAR",
+    "message": "Clear",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CLOSE_BUTTON",
+    "message": "Close",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMMENT_KEY",
+    "message": "Add comments",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMMENT_VALIDATION_REQUIRED_ERROR",
+    "message": "Required field cannot be empty",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CONFIRMATION_DESCRIPTION",
+    "message": "The Attendance details for the session have been pre-populated based on the previous sessions. Please confirm before submitting.",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CONFIRMATION_DESCRIPTION_NOTE",
+    "message": "Note: You cannot edit attendance details after submitting",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CONFIRMATION_LABEL",
+    "message": "Please confirm attendance before submitting",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_NULL",
+    "message": "N/A",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_OR",
+    "message": "Or",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_SEARCH_BY_NAME_OR_ID",
+    "message": "Search by Name / ID Number",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Comment_key",
+    "message": "Comment",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DATE_CHANGE_PROCEED",
+    "message": "Proceed To Change Date",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DEVICE_CAMERA_NOT_WORKING",
+    "message": "Device camera not working",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DEVICE_NOT_SUPPORTING_SCANNING",
+    "message": "Device not supporting scan functionality",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DRAFT_SAVED_MESSAGE",
+    "message": "Attendance has been submitted as draft",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "END_DATE_LABEL",
+    "message": "End date",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ENTER_UNIQUE_CODE",
+    "message": "Enter Unique ID",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "EVENING_SESSION",
+    "message": "Evening session",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "EVENT_TYPE_LABEL",
+    "message": "Event type",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GO_BACK_BUTTON",
+    "message": "Go Back",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "GO_TO_ATTENDANCE_REGISTERS",
+    "message": "Back to Attendance Manager",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HALF_DAY",
+    "message": "Half Day",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_MANAGE_ATTENDANCE_LABEL",
+    "message": "Manage Attendance",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HOME_VIEW_ATTENDANCE_LABEL",
+    "message": "View Attendance",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "INDIVIDUAL_ID_NUMBER",
+    "message": "Individual ID",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LABEL_MARK_ATTENDANCE",
+    "message": "Mark Attendance",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LOCATION_LABEL",
+    "message": "Location",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "LOW_LIGHT",
+    "message": "Low light / poor visibility",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARKED_AS_ABSENT",
+    "message": "Marked as Absent",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARKED_AS_PRESENT",
+    "message": "Marked as Present",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_AS_ABSENT",
+    "message": "Mark As Absent",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_AS_PRESENT",
+    "message": "Marked as Present",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_ABSENT_SIGNATURE_LABEL",
+    "message": "Absent Signature",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_ACTUAL_SIGNATURE_LABEL",
+    "message": "Actual Signature",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_CAPTURE_SIGNATURE_LABEL",
+    "message": "Capture Signature",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_CLEAR_LABEL",
+    "message": "Clear",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_CLEAR_SIGNATURE_LABEL",
+    "message": "Clear Signature",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_COMPARE_SIGNATURE_LABEL",
+    "message": "Compare Signature",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_CONFIRM_LABEL",
+    "message": "Confirm",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_DATE",
+    "message": "Date",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_FILTER_TITLE",
+    "message": "Filter",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_INFO_DESC",
+    "message": "All attendees are marked for this date",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_INFO_TITLE",
+    "message": "Already Marked",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_MANUALLY",
+    "message": "Mark Attendance Manually",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_PRESENT_SIGNATURE_LABEL",
+    "message": "Present Signature",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_REFERENCE_SIGNATURE_LABEL",
+    "message": "Reference Signature",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_SAVE_SIGNATURE_LABEL",
+    "message": "Save Signature",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MARK_ATTENDANCE_SIGNATURE_REQUIRED_LABEL",
+    "message": "Signature Required",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MATCHED",
+    "message": "Matches",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MISSED_ATTENDANCE_DESC",
+    "message": "Please ensure you mark attendance for the missing dates.",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MISSED_ATTENDANCE_DESCRIPTION",
+    "message": "Please ensure you mark attendance for the missing dates.",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MISSED_ATTENDANCE_HEADER",
+    "message": "Missed Attendance",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MISSED_ATTENDANCE_INFO",
+    "message": "Missed Attendance!",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MORNING_SESSION",
+    "message": "Morning session",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NOT_MATCHED",
+    "message": "Doesn't Match",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_ATTENDEES_ENROLLED_TO_THE_REGISTER",
+    "message": "No attendees have been enrolled yet to the register",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PLEASE_TRY_AGAIN",
+    "message": "Please try again",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PLZ_MARK_ATTENDANCE_FOR_INDIVIDUALS",
+    "message": "Please mark attendance for the staffs",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PLZ_SELECT_THE_SESSION",
+    "message": "Please select the session",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PRESENT",
+    "message": "Present",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROCEED_BUTTON",
+    "message": "Proceed",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QR_CREATED_TIME",
+    "message": "QR created time",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QR_NOT_RECOGNIZED",
+    "message": "Qr code not recognized",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "QR_NOT_VISIBLE",
+    "message": "QR code not visible",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REASON_FOR_MARKING_ATTENDANCE_MANUALLY",
+    "message": "Reason for Marking Attendance Manually",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REASON_FOR_MARKING_ATTENDANCE_MANUALLY_DESC",
+    "message": "Please select the reason for marking the attendance manually",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REGISTER_NOT_STARTED_MSG",
+    "message": "Register has not been started yet. Please wait till the start date.",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RETRY_BUTTON",
+    "message": "Retry",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SAVE_AND_MARK_LATER_LABEL",
+    "message": "Save and mark later",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SAVE_AND_SUBMIT",
+    "message": "Save and Submit",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_NOT_AVAILABLE_DESCRIPTION",
+    "message": "Scanner will not be available to mark attendance for past dates.",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_NOT_AVAILABLE_TITLE",
+    "message": "Scanner Unavailable",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCANNER_NOT_OPENING",
+    "message": "Scanner not opening or unresponsive",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCAN_ANOTHER_QR",
+    "message": "Scan Another QR Code",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SCAN_QR_CODE",
+    "message": "Scan Qr Code",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SELECT_REASON",
+    "message": "Select Reason",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SESSION_DATE_OF_SESSION",
+    "message": "Date of Session",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SESSION_RADIO_INFO",
+    "message": "Select the session you have marked attendance for",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SESSION_SELECTION_HEADER",
+    "message": "Select Session",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SOMETHING_WENT_WRONG",
+    "message": "Something went wrong",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SORT_BY",
+    "message": "Sort By",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STAFF_COUNT_LABEL",
+    "message": "Staff count",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "START_DATE_LABEL",
+    "message": "Start date",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STATUS_LABEL",
+    "message": "Status",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TABLE_HEADER_ATTENDANCE",
+    "message": "Attendance",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TABLE_HEADER_NAME",
+    "message": "Name",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TABLE_HEADER_USERID",
+    "message": "Identification",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UNIQUE_CODE_LABEL",
+    "message": "Unique ID",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UNMARKED_ATTENDANCE_ONLY",
+    "message": "Unmarked Attendance Only",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UN_MARKED",
+    "message": "Attendance Unmarked",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "USER_QR_ALREADY_SCANNED",
+    "message": "User already scanned",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "USER_QR_TIME_EXPIRED_ERROR",
+    "message": "QR time expired",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "USER_SKIPPED_SCANNING",
+    "message": "User skipped scanning",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "VIEW_ATTENDANCE",
+    "message": "View Attendance",
+    "module": "hcm-attendance",
+    "locale": "en_DEMO"
+  }
+]

@@ -1,0 +1,344 @@
+ [
+        {
+            "code": "DISTRICT_SUPERVISOR",
+            "message": "Supervisor Distrital",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_BANK_SORT_CODE_DESC",
+            "message": "Isso é usado para representar o nome do banco beneficiário e o método de roteamento de pagamento. Deixe em branco para beneficiários Zenith. Use os primeiros 3 dígitos para transferência instantânea via InterSwitch. Use 9 dígitos para transferência não instantânea via NEFT",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_BANK_SORT_CODE_MANDATORY",
+            "message": "(Campo Obrigatório)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_BANK_SORT_CODE_TITLE",
+            "message": "CÓDIGO DE CLASSIFICAÇÃO DO BANCO BENEFICIÁRIO",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_BENEFICIARY_ACCOUNT_NO_DESC",
+            "message": "Numérico (10 dígitos)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_BENEFICIARY_ACCOUNT_NO_MANDATORY",
+            "message": "(Campo Obrigatório)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_BENEFICIARY_ACCOUNT_NO_TITLE",
+            "message": "NÚMERO DA CONTA DO BENEFICIÁRIO",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_BENEFICIARY_CODE_DESC",
+            "message": "Código único atribuído pelo Pagador ao beneficiário. Alfanumérico, por exemplo número do pessoal. RC não. ou nome (máx. 35 caracteres)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_BENEFICIARY_CODE_MANDATORY",
+            "message": "(Campo Obrigatório)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_BENEFICIARY_CODE_TITLE",
+            "message": "CÓDIGO DO BENEFICIÁRIO",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_BENEFICIARY_NAME_DESC",
+            "message": "Formato de texto. Alfanumérico (máx. 100 caracteres)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_BENEFICIARY_NAME_MANDATORY",
+            "message": "(Campo Obrigatório)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_BENEFICIARY_NAME_TITLE",
+            "message": "NOME DO BENEFICIÁRIO",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_DEBIT_ACCOUNT_NO_DESC",
+            "message": "Este é o número da conta a ser debitada. Formato numérico (máx. 10 dígitos)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_DEBIT_ACCOUNT_NO_MANDATORY",
+            "message": "(Campo Obrigatório)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_DEBIT_ACCOUNT_NO_TITLE",
+            "message": "NÚMERO DA CONTA DE DÉBITO",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_PAYMENT_AMOUNT_DESC",
+            "message": "Formato numérico com 2 dígitos decimais. Não deve conter vírgulas, ponto e vírgula, apóstrofo ou espaços",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_PAYMENT_AMOUNT_MANDATORY",
+            "message": "(Campo Obrigatório)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_PAYMENT_AMOUNT_TITLE",
+            "message": "VALOR DO PAGAMENTO",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_PAYMENT_DUE_DATE_DESC",
+            "message": "Esta é a data efetiva do pagamento. O formato é DD/MM/AAAA (máx. 10 caracteres)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_PAYMENT_DUE_DATE_MANDATORY",
+            "message": "(Campo Obrigatório)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_PAYMENT_DUE_DATE_TITLE",
+            "message": "DATA DE VENCIMENTO DO PAGAMENTO",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_TRANSACTION_REF_NO_DESC",
+            "message": "Esta é uma referência única criada pelo pagador e usada para identificar um pagamento. Não deve conter vírgulas, ponto e vírgula, apóstrofo ou espaço. Formato de texto. Alfanumérico (máx. 30 caracteres)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_TRANSACTION_REF_NO_MANDATORY",
+            "message": "(Campo Obrigatório)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_PAYMENT_ADVISORY_COL_TRANSACTION_REF_NO_TITLE",
+            "message": "NÚMERO DE REFERÊNCIA DA TRANSAÇÃO",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_BANK_ACCOUNT",
+            "message": "Conta bancária",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_BANK_CODE",
+            "message": "Código do Banco",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_BENEFICIARY_CODE",
+            "message": "Código do Beneficiário",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_MOBILE_NUMBER",
+            "message": "Número de telemóvel",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_NAME",
+            "message": "Nome",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_PAYEE_NAME",
+            "message": "Nome do beneficiário",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_PAYEE_PHONE",
+            "message": "Número de telefone do beneficiário",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_ROLE",
+            "message": "Papel",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_TOTAL_AMOUNT",
+            "message": "Montante total",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_TOTAL_ATTENDANCE",
+            "message": "Presença total",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_USERNAME",
+            "message": "Nome de usuário",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_WAGE_BASIC",
+            "message": "Salário básico por dia",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_WAGE_FOOD",
+            "message": "Subsídio Alimentar",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_WAGE_PER_DAY",
+            "message": "Taxa salarial",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_WAGE_SEMI_SKILLED",
+            "message": "Salário por dia semiqualificado",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_WAGE_SKILLED",
+            "message": "Salário por dia qualificado",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_WAGE_TRAVEL",
+            "message": "Transporte",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_WAGE_UNSKILLED",
+            "message": "Salário não qualificado por dia",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_COL_WORKER_ID",
+            "message": "ID do trabalhador",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_ROLE_DISTRIBUTOR",
+            "message": "Distribuidor",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_ROLE_HEALTH_FACILITY_WORKER",
+            "message": "Trabalhador de estabelecimento de saúde",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_ROLE_REGISTRAR",
+            "message": "Registrador",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_ROLE_SEMI_SKILLED_WORKER",
+            "message": "Trabalhador Semiqualificado",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_ROLE_SKILLED_WORKER",
+            "message": "Trabalhador Qualificado",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "EXPENSE_TEMPLATE_ROLE_UNSKILLED_WORKER",
+            "message": "Trabalhador não qualificado",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "FIELD_SUPPORT",
+            "message": "Suporte de campo",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "PDF_STATIC_LABEL_BILL_TABLE_FEES",
+            "message": "Tarifas (%)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "PDF_STATIC_LABEL_BILL_TABLE_FOOD",
+            "message": "Auxílio Alimentação ($)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "PDF_STATIC_LABEL_BILL_TABLE_PER_DAY",
+            "message": "Por dia ($)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "PDF_STATIC_LABEL_BILL_TABLE_TRANSPORTATION",
+            "message": "Transporte ($)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "PDF_STATIC_LABEL_BILL_TABLE_WAGE",
+            "message": "Taxa salarial ($)",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        },
+        {
+            "code": "WAREHOUSE_MANAGER",
+            "message": "Gerente de armazém",
+            "module": "expense",
+            "locale": "pt_DEMO"
+        }
+    ]

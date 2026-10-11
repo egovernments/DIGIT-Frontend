@@ -1,0 +1,284 @@
+[
+  {
+    "code": "ADMINISTRATION_FAILED",
+    "message": "Échec de l'administration",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_headname_length_error",
+    "message": "La longueur doit être comprise entre 2 et 200 caractères",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_ABSENT",
+    "message": "Bénéficiaire absent",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BENEFICIARY_REFUSED",
+    "message": "Bénéficiaire refusé",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CEMENT",
+    "message": "Ciment",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLAY",
+    "message": "Argile",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_ACTION_LABEL",
+    "message": "Suivant",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
+    "message": "Capturez les détails du ménage que vous marquez comme fermé.",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
+    "message": "Détails du ménage fermé",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
+    "message": "Nom du village",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
+    "message": "Nom du chef de ménage",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_MIN_LENGTH_ERROR",
+    "message": "La longueur minimale doit être d'au moins 3",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_LABEL",
+    "message": "Précision des coordonnées GPS",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_REQUIRED_ERROR",
+    "message": "Ce champ est obligatoire",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_name_REQUIRED_ERROR",
+    "message": "C'est un champ obligatoire.",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_scanner_LABEL",
+    "message": "Scanner le bon",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
+    "message": "Les données ont été enregistrées avec succès",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION1",
+    "message": "Les données ont été enregistrées avec succès",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
+    "message": "Données enregistrées avec succès",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING1",
+    "message": "Données enregistrées avec succès",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL",
+    "message": "Retourner",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL1",
+    "message": "Retourner",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_CC",
+    "message": "Effet secondaire du médicament du cycle en cours",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DRUG_SE_PC",
+    "message": "Effet secondaire du médicament du cycle précédent",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FEMALE",
+    "message": "Femelle",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FEVER",
+    "message": "Fièvre",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GLASS",
+    "message": "Verre",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INSUFFICIENT_RESOURCES",
+    "message": "Ressources insuffisantes",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MALE",
+    "message": "Mâle",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "METAL",
+    "message": "Métal",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOTENOUGHSTOCK",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Pas assez de stock",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Autre",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OTHERS",
+    "message": "Autre",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Autre",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "PROBLEME DE PERFORMANCE",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "REEDS",
+    "message": "Roseaux",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SICK",
+    "message": "Malade",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SUCCESSFUL_DELIVERY",
+    "message": "Livraison réussie",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SYNCNOTWORKING",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "QUESTIONS DE SÉCURITÉ",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "La synchronisation ne fonctionne pas",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "QUESTIONS TECHNIQUES",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "UTILISATEURCOMTEPROBLÈMES",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Étiquette",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+    "message": " ",
+    "module": "hcm-base-closehousehold-default",
+    "locale": "fr_DEMO"
+  }
+]
