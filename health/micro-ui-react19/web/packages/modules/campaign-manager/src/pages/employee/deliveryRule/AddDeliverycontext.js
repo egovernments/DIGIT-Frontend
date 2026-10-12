@@ -614,7 +614,7 @@ const AddDeliveryRuleWrapper = React.memo(({
 return (
     <>
      {radioDeliveryTypeOptions && radioDeliveryTypeOptions?.length > 0 && (
-        <Card className="delivery-type-container">
+        <Card className="delivery-type-container" style={{marginBottom:"1.5rem"}}>
           <LabelFieldPair style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} className="delivery-type-radio">
             <div className="deliveryType-labelfield">
               <span className="bold">{t(I18N_KEYS.PAGES.HCM_DELIVERY_TYPE)}</span>

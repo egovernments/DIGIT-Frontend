@@ -186,6 +186,7 @@ const AddProducts = React.memo(({
                 <label>{t(I18N_KEYS.PAGES.CAMPAIGN_ADD_PRODUCTS_LABEL)}</label>
                 <Dropdown
                   t={t}
+                  ariaLabel={t(I18N_KEYS.PAGES.CAMPAIGN_ADD_PRODUCTS_LABEL)}
                   style={{ width: "100%", minWidth: "100%", marginBottom: 0 }}
                   className="form-field"
                   selected={product?.value}
@@ -206,11 +207,16 @@ const AddProducts = React.memo(({
                   alignItems: "flex-start",
                   gap: "4px"
                 }}>
-                  <label>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_COUNT_LABEL)}</label>
                   <TextInput
                     type="numeric"
+                    ariaLabel={t(I18N_KEYS.COMPONENTS.CAMPAIGN_COUNT_LABEL)}
                     value={product?.quantity}
                     onChange={(value) => updateQuantity(product.key, value)}
+                    label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_COUNT_LABEL)}
+                    showLabel
+                    populators={{
+                      "alignFieldPairVerically":true
+                    }}
                   />
                 </LabelFieldPair>
               )}
