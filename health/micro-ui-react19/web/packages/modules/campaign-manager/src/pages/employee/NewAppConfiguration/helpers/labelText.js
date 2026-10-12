@@ -1,6 +1,22 @@
 /**
- * Helper for the wording of field labels
+ * Helpers for the wording a user types into the panel - field labels and option text
  */
+
+// Pictographs, flag pairs, keycap marks and the joiners that build the longer emoji out of them.
+// Letters are matched by none of these, so wording in any language is left alone.
+const EMOJI = /[\p{Extended_Pictographic}\p{Regional_Indicator}\u{FE0F}\u{20E3}]|‍/gu;
+
+/**
+ * Remove emojis from text.
+ *
+ * What is typed here ends up on a health worker's screen and in the data they collect, where an
+ * emoji may not render at all. Removing rather than refusing lets the rest of a pasted phrase
+ * through instead of dropping the whole thing.
+ *
+ * @param {string} text - text as typed
+ * @returns {string} the text with any emojis taken out
+ */
+export const withoutEmojis = (text) => (typeof text === "string" ? text.replace(EMOJI, "") : text);
 
 /**
  * Capitalise the first letter of a label.

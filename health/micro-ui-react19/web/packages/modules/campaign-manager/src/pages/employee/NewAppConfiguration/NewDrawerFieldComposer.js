@@ -12,6 +12,7 @@ import {
   getFieldTypeOptionFromMasterData,
   isPanelItemEnabledForField,
   toSentenceCase,
+  withoutEmojis,
 } from "./helpers";
 import { TextInput, Button } from "@egovernments/digit-ui-components";
 import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
@@ -1421,7 +1422,7 @@ const OptionItem = React.memo(({ item, index, canDelete, cField, selectedField, 
   const translatedOptionValue = useCustomT(item.name);
 
   const handleChange = (e) => {
-    const newValue = e.target.value;
+    const newValue = withoutEmojis(e.target.value);
 
     // Handle localization for the option name
     let localizationCode = item.name;

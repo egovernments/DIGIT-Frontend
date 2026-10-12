@@ -128,14 +128,32 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
   // renders through the plain prefix instead of the country picker.
   const showCountryPicker = Boolean(field?.showCountryCodeDropdown) && field?.countryCodeMode !== "DYNAMIC";
 
+  // The option codes, which change only when an option is added or removed. Renaming one keeps
+  // its code, so editing a name does not disturb the preview.
+  const optionCodes = useMemo(() => (options || []).map((option) => option?.code).join("|"), [options]);
+
+  // TEMPORARY diagnostic - remove once the stale selection count is confirmed fixed
+  if (typeof window !== "undefined" && window.__appConfig_debugOptions) {
+    // eslint-disable-next-line no-console
+    console.log("[preview]", field?.fieldName, "optionCount=", (options || []).length, "key=", optionCodes);
+  }
+
   return (
     <div ref={fieldRef}>
       <FieldV1
-        // The country picker reads its default only while mounting, so a code
-        // chosen in the properties panel would not reach an already mounted
-        // preview. Keying on the code remounts it. Every other field type gets
-        // a stable key and so is unaffected.
-        key={showCountryPicker ? `countryCode-${field?.prefixText || ""}` : undefined}
+        // Two controls hold on to state of their own that no change of props can reach, so they
+        // are remounted instead by keying on what they hold:
+        //  - the country picker reads its code only while mounting
+        //  - a dropdown remembers what was picked in the preview without checking it against the
+        //    options it is given, leaving an option deleted in the panel still counted
+        // A field with neither has no key, as before.
+        key={
+          showCountryPicker
+            ? `countryCode-${field?.prefixText || ""}`
+            : optionCodes
+            ? `options-${optionCodes}`
+            : undefined
+        }
         charCount={field?.charCount}
         component={component}
         config={{
