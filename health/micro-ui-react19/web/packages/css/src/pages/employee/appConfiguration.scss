@@ -1425,6 +1425,17 @@
         }
       }
     }
+
+    .drawer-container-tooltip-label{
+      font-size: 14px;
+      font-weight: 700;
+      font-family: Roboto;
+      color: #363636;
+
+      &.false{
+        color: #787878;
+      }
+    }
   }
 }
 .app-config-privacy-controls-container{

@@ -221,7 +221,7 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
   const label = itemType === "column" ? `${labelPrefix}: ${translatedFieldName}` : translatedFieldName;
 
   return (
-    <div className="drawer-container-tooltip" style={{gap:"0.25rem"}}>
+    <div className="drawer-container-tooltip" style={{gap:"1rem"}}>
       {/* Label row with toggle */}
       <div
         style={{
@@ -231,7 +231,7 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
           marginBottom: "0px",
         }}
       >
-        <label style={{ fontWeight: "500", fontSize: "14px" }}>{label}</label>
+        <label className={`drawer-container-tooltip-label ${toggleState}`}>{label}</label>
 
         {/* Toggle switch - hidden if only 1 item exists or if this is the last active item */}
         {!hideToggle && !isLastActive && (

@@ -35,6 +35,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
           </div>
 
           <TextInput
+            label={column.description}
             isRequired={true}
             className="tetxinput-example"
             type={"number"}
@@ -125,6 +126,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
               {column?.isRequired && <span className="mandatory-span">*</span>}
             </div>
             <TextInput
+              label={column.description}
               isRequired={true}
               className="tetxinput-example"
               type={"text"}

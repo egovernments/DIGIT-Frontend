@@ -458,6 +458,7 @@ const MapUsersToRegistersScreen = () => {
             </CardLabel>
             <div className="digit-field" style={{ width: "100%" }}>
               <TextInput
+                label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_ID_LABEL)}
                 type="text"
                 value={registerIdFilter}
                 onChange={(e) => setRegisterIdFilter(e.target.value)}

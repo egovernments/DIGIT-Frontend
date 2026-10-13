@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
-import { Tag, Divider, FieldV1 } from "@egovernments/digit-ui-components";
+import { Tag, FieldV1 } from "@egovernments/digit-ui-components";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
@@ -67,12 +67,11 @@ const PopupConfigEditor = ({ selectedField, viewMode }) => {
 
   return (
     <>
-      <Divider />
       <div className="app-config-drawer-subheader">
         <div className={"app-config-drawer-subheader-text"}>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_POPUP_PROPERTIES)}</div>
-        <span className="icon-wrapper new">
+        {/* <span className="icon-wrapper new">
           <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_POPUP_PROPERTIES)} />
-        </span>
+        </span> */}
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>

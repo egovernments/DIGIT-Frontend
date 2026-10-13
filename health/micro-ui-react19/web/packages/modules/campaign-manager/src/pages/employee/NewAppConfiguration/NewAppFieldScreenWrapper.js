@@ -111,6 +111,7 @@ const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale,
                 <span>{typeLabel}</span>
               </div>
               <TextInput
+                label={typeLabel}
                 name={`footerLabel-${index}`}
                 value={localValue}
                 onChange={(event) => handleChange(event.target.value)}

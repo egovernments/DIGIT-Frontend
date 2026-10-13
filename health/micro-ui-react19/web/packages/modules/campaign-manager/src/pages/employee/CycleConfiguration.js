@@ -436,7 +436,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                   {t(I18N_KEYS.PAGES.CAMPAIGN_NO_OF_CYCLE)}
                   <span className="mandatory-span">*</span>
                 </CardLabel>
-                <TextInput type="numeric" value={cycleConfgureDate?.cycle} onChange={(d) => updateCycle(d)} disabled={cycleConfgureDate?.isDisable} />
+                <TextInput label={t(I18N_KEYS.PAGES.CAMPAIGN_NO_OF_CYCLE)} type="numeric" value={cycleConfgureDate?.cycle} onChange={(d) => updateCycle(d)} disabled={cycleConfgureDate?.isDisable} />
               </LabelFieldPair>
               <LabelFieldPair>
                 <CardLabel className="cycleBold" style={{ fontWeight: "700" ,width:"40%"}}>
