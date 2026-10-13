@@ -76,32 +76,32 @@ const PopupConfigEditor = ({ selectedField, viewMode }) => {
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        {/* Each property sits in its own card, the same as a field's properties, so the spacing
+            between them does the separating and no rules are needed */}
         {/* Popup Title */}
         {popupConfig.title !== undefined && (
-          <>
-          <PopupLabelField
-            label="POPUP_TITLE"
-            path="title"
-            value={popupConfig.title}
-            selectedField={selectedField}
-            viewMode={viewMode}
-          />
-          <Divider/>
-          </>
+          <div className="drawer-toggle-field-container">
+            <PopupLabelField
+              label="POPUP_TITLE"
+              path="title"
+              value={popupConfig.title}
+              selectedField={selectedField}
+              viewMode={viewMode}
+            />
+          </div>
         )}
 
         {/* Popup Description */}
         {popupConfig.description !== undefined && (
-          <>
-          <PopupLabelField
-            label="POPUP_DESCRIPTION"
-            path="description"
-            value={popupConfig.description}
-            selectedField={selectedField}
-            viewMode={viewMode}
-          />
-          <Divider/>
-          </>
+          <div className="drawer-toggle-field-container">
+            <PopupLabelField
+              label="POPUP_DESCRIPTION"
+              path="description"
+              value={popupConfig.description}
+              selectedField={selectedField}
+              viewMode={viewMode}
+            />
+          </div>
         )}
 
         {/* Body Fields - Show section if there are items with labels OR configurable items */}
@@ -132,37 +132,46 @@ const PopupConfigEditor = ({ selectedField, viewMode }) => {
               }
 
               return (
-                <div key={`body-${index}`} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                // The label and the options are separate properties of the field, so each gets its
+                // own card rather than sharing one
+                <React.Fragment key={`body-${index}`}>
                   {/* Show label field if it exists */}
                   {hasLabel && (
-                    <PopupLabelField
-                      label={`BODY_ITEM_${bodyItem?.fieldName || index + 1}_LABEL`}
-                      path={`body.${index}.label`}
-                      value={bodyItem.label}
-                      selectedField={selectedField}
-                      viewMode={viewMode}
-                    />
+                    <div className="drawer-toggle-field-container">
+                      <PopupLabelField
+                        label={`BODY_ITEM_${bodyItem?.fieldName || index + 1}_LABEL`}
+                        path={`body.${index}.label`}
+                        value={bodyItem.label}
+                        selectedField={selectedField}
+                        viewMode={viewMode}
+                      />
+                    </div>
                   )}
 
                   {/* Show PopupFieldConfigurator if field is configurable */}
                   {canConfigure && (
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                      <label
-                        style={{ fontWeight: "500", fontSize: "14px" }}
-                      >
-                        {`${t(I18N_KEYS.APP_CONFIGURATION.CONFIGURE_OPTIONS_FOR)} “${bodyItem.label ? (customTranslate(bodyItem.label) || t(bodyItem.format)) : customTranslate(bodyItem.fieldName)}”`}
-                      </label>
-                      <PopupFieldConfigurator
+                    // Heading only - the options below bring their own cards
+                    // <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                    //   {/* <label
+                    //     style={{ fontWeight: "500", fontSize: "14px" }}
+                    //   >
+                    //     {`${t(I18N_KEYS.APP_CONFIGURATION.CONFIGURE_OPTIONS_FOR)} “${bodyItem.label ? (customTranslate(bodyItem.label) || t(bodyItem.format)) : customTranslate(bodyItem.fieldName)}”`}
+                    //   </label> */}
+                    //   <PopupFieldConfigurator
+                    //     field={bodyItem}
+                    //     t={t}
+                    //     disabled={viewMode || false}
+                    //   />
+                    // </div>
+                    <PopupFieldConfigurator
                         field={bodyItem}
                         t={t}
                         disabled={viewMode || false}
-                      />
-                    </div>
+                    />
                   )}
-                </div>
+                </React.Fragment>
               );
             })}
-            <Divider/>
           </>
         )}
 
@@ -182,14 +191,15 @@ const PopupConfigEditor = ({ selectedField, viewMode }) => {
             {popupConfig.footerActions.map((footerAction, index) => {
               if (footerAction.label !== undefined) {
                 return (
-                  <PopupLabelField
-                    key={`footer-${index}`}
-                    label={`FOOTER_ACTION_${footerAction?.fieldName || index + 1}_LABEL`}
-                    path={`footerActions.${index}.label`}
-                    value={footerAction.label}
-                    selectedField={selectedField}
-                    viewMode={viewMode}
-                  />
+                  <div key={`footer-${index}`} className="drawer-toggle-field-container">
+                    <PopupLabelField
+                      label={`FOOTER_ACTION_${footerAction?.fieldName || index + 1}_LABEL`}
+                      path={`footerActions.${index}.label`}
+                      value={footerAction.label}
+                      selectedField={selectedField}
+                      viewMode={viewMode}
+                    />
+                  </div>
                 );
               }
               return null;
@@ -235,9 +245,9 @@ const PopupLabelField = ({ label, path, value, selectedField, viewMode }) => {
   }, [localizedValue]);
 
   return (
-    <div className="drawer-container-tooltip">
+    <div className="drawer-container-tooltip" style={{gap:"0.25rem"}}>
       {/* Label on top */}
-      <div style={{ display: "flex", marginBottom: "8px" }}>
+      <div style={{ display: "flex", marginBottom: "0px" }}>
         <label style={{ fontWeight: "500", fontSize: "14px" }}>{t(label)}</label>
       </div>
 

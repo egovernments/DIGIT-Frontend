@@ -8,6 +8,7 @@ import { downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import TimelineComponent from "./TimelineComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import { activateOnKey } from "../utils";
 
 function mergeObjects(item) {
   const arr = item;
@@ -399,7 +400,7 @@ const CampaignSummary = (props) => {
                         }}
                       />
                     ) : (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
+                      <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(4)}>
                         <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>
@@ -439,7 +440,7 @@ const CampaignSummary = (props) => {
                     // cardHeader: { value: t("item?.boundaries?.type") },
                     component: "BoundaryDetailsSummary",
                     cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
+                      <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(5)}>
                         <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>
@@ -459,7 +460,7 @@ const CampaignSummary = (props) => {
                   type: "DATA",
                   cardHeader: { value: t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELIVERY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
+                    <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(7)}>
                       <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                       <EditIcon />
                     </div>
@@ -496,7 +497,7 @@ const CampaignSummary = (props) => {
                     type: "COMPONENT",
                     cardHeader: { value: `${t(I18N_KEYS.COMPONENTS.CYCLE)} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
+                      <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(8)}>
                         <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>
@@ -523,7 +524,7 @@ const CampaignSummary = (props) => {
                         },
                         cardHeader: { value: t(I18N_KEYS.COMPONENTS.FACILITY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                         cardSecondaryAction: noAction !== "false" && (
-                          <div className="campaign-preview-edit-container" onClick={() => handleRedirect(10)}>
+                          <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(10)}>
                             <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                             <EditIcon />
                           </div>
@@ -545,7 +546,7 @@ const CampaignSummary = (props) => {
                         },
                         cardHeader: { value: t(I18N_KEYS.COMPONENTS.FACILITY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                         cardSecondaryAction: noAction !== "false" && (
-                          <div className="campaign-preview-edit-container" onClick={() => handleRedirect(10)}>
+                          <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(10)}>
                             <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                             <EditIcon />
                           </div>
@@ -565,7 +566,7 @@ const CampaignSummary = (props) => {
                         },
                         cardHeader: { value: t(I18N_KEYS.COMPONENTS.USER_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                         cardSecondaryAction: noAction !== "false" && (
-                          <div className="campaign-preview-edit-container" onClick={() => handleRedirect(11)}>
+                          <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(11)}>
                             <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                             <EditIcon />
                           </div>
@@ -585,7 +586,7 @@ const CampaignSummary = (props) => {
                         },
                         cardHeader: { value: t(I18N_KEYS.COMPONENTS.TARGET_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                         cardSecondaryAction: noAction !== "false" && (
-                          <div className="campaign-preview-edit-container" onClick={() => handleRedirect(12)}>
+                          <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(12)}>
                             <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                             <EditIcon />
                           </div>

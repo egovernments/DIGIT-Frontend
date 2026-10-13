@@ -125,18 +125,20 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
         // Check if this is the last active item (applies to all field types)
         const isLastActive = activeItemsCount === 1 && item.isActive !== false;
         return (
-          <ItemLocalizationInput
-            key={`${item.code || item.header || item.name}-${index}`}
-            item={item}
-            itemIndex={index}
-            itemType={itemType}
-            field={field}
-            propertyPath={propertyPath}
-            t={t}
-            disabled={disabled}
-            isLastActive={isLastActive}
-            hideToggle={hideToggles}
-          />
+          // Each option is a card of its own, the same as every other property in the panel
+          <div key={`${item.code || item.header || item.name}-${index}`} className="drawer-toggle-field-container">
+            <ItemLocalizationInput
+              item={item}
+              itemIndex={index}
+              itemType={itemType}
+              field={field}
+              propertyPath={propertyPath}
+              t={t}
+              disabled={disabled}
+              isLastActive={isLastActive}
+              hideToggle={hideToggles}
+            />
+          </div>
         );
       })}
     </div>
@@ -219,14 +221,14 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
   const label = itemType === "column" ? `${labelPrefix}: ${translatedFieldName}` : translatedFieldName;
 
   return (
-    <div className="drawer-container-tooltip">
+    <div className="drawer-container-tooltip" style={{gap:"0.25rem"}}>
       {/* Label row with toggle */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: "8px",
+          marginBottom: "0px",
         }}
       >
         <label style={{ fontWeight: "500", fontSize: "14px" }}>{label}</label>

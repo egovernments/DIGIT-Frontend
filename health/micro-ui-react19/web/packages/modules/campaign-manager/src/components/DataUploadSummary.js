@@ -8,6 +8,7 @@ import { downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import TagComponent from "./TagComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import { activateOnKey } from "../utils";
 
 function mergeObjects(item) {
   const arr = item;
@@ -206,7 +207,7 @@ const DataUploadSummary = (props) => {
                     },
                     cardHeader: { value: t(I18N_KEYS.COMPONENTS.FACILITY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(facilityKey)}>
+                      <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(facilityKey)}>
                         <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>
@@ -227,7 +228,7 @@ const DataUploadSummary = (props) => {
                     },
                     cardHeader: { value: t(I18N_KEYS.COMPONENTS.USER_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(userKey)}>
+                      <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(userKey)}>
                         <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>
@@ -248,7 +249,7 @@ const DataUploadSummary = (props) => {
                     },
                     cardHeader: { value: t(I18N_KEYS.COMPONENTS.TARGET_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(targetKey)}>
+                      <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(targetKey)}>
                         <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>

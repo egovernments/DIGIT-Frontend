@@ -148,6 +148,9 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
                 }}
               >
                 <Dropdown
+                  // The visible label is a sibling span with no htmlFor, so the
+                  // combobox has no programmatic name without this.
+                  ariaLabel={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_TYPE)}
                   style={!showBeneficiary ? { width: "40rem", paddingBottom: 0, marginBottom: 0 } : { width: "40rem", paddingBottom: "1rem" }}
                   variant={error ? "error" : ""}
                   t={t}

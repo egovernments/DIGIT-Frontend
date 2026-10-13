@@ -8,6 +8,7 @@ import TagComponent from "./TagComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
 import { getCampaignDeliveryMethods, getDeliveryMethods } from "../utils/deliveryMethods";
 import useCampaignStore from "../hooks/useCampaignStore";
+import { activateOnKey } from "../utils";
 
 function mergeObjects(item) {
   const arr = item;
@@ -301,7 +302,7 @@ const DeliveryDetailsSummary = (props) => {
                   type: "DATA",
                   cardHeader: { value: t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELIVERY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" ,marginBottom:"1rem"} },
                   // cardSecondaryAction: noAction !== "false" && (
-                  //   <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
+                  //   <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(7)}>
                   //     <span>{t(`CAMPAIGN_EDIT`)}</span>
                   //     <EditIcon />
                   //   </div>
@@ -333,7 +334,7 @@ const DeliveryDetailsSummary = (props) => {
                     type: "COMPONENT",
                     cardHeader: { value: `${t(I18N_KEYS.COMPONENTS.CYCLE)} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     // cardSecondaryAction: noAction !== "false" && (
-                    //   <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
+                    //   <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(8)}>
                     //     <span>{t(`CAMPAIGN_EDIT`)}</span>
                     //     <EditIcon />
                     //   </div>

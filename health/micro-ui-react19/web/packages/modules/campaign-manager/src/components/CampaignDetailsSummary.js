@@ -7,6 +7,7 @@ import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egove
 import TagComponent from "./TagComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
 import useCampaignStore from "../hooks/useCampaignStore";
+import { activateOnKey } from "../utils";
 
 const CampaignDetailsSummary = (props) => {
   const { t } = useTranslation();
@@ -70,7 +71,7 @@ const CampaignDetailsSummary = (props) => {
                   type: "DATA",
                   cardHeader: { value: t(I18N_KEYS.COMPONENTS.CAMPAIGN_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
+                    <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(1)}>
                       <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                       <EditIcon />
                     </div>

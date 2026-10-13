@@ -388,6 +388,13 @@ function NewAppFieldScreenWrapper({viewMode}) {
         const visibleButtonCount = buttonFields.filter((f) => f?.hidden !== true).length;
         const isOnlyButton = buttonFields.length === 1;
 
+        // Popups are listed apart from the buttons. A scanner stays with the buttons: it is one of
+        // them on screen, even though it opens something. The counts above still take in both, so
+        // the rule that a screen keeps one visible action is unchanged.
+        const isPopupRow = (f) => f?.format === "actionPopup";
+        const popupFields = buttonFields.filter(isPopupRow);
+        const actionButtonFields = buttonFields.filter((f) => !isPopupRow(f));
+
         // Footer rows on a form screen, which are its action buttons
         const isFormActionButton = (i) => currentCard?.type !== "template" && i >= bodyFieldsCount;
 
@@ -462,9 +469,25 @@ function NewAppFieldScreenWrapper({viewMode}) {
 
         return (
           <Fragment key={`card-${index}`}>
+            {/* Each pass walks the whole list and renders only the rows belonging to its section.
+                The index has to stay the one the field holds in the list, since that is what an
+                edit is written back by, so the rows are picked out here rather than beforehand. */}
             {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) ? null : renderFieldRow(fieldEntry, i, c)))}
+
+            {/* A popup is set up on the screen but opened by a button, so it is listed on its own */}
+            {popupFields.length > 0 && (
+              <>
+                <Divider className="app-config-drawer-action-divider" />
+                <div className="app-config-drawer-subheader">
+                  <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_POPUPS)}</div>
+                  <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_POPUPS)} />
+                </div>
+              </>
+            )}
+            {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) && isPopupRow(fieldEntry) ? renderFieldRow(fieldEntry, i, c) : null))}
+
             {/* Body/template buttons get their own section, consistent with pages whose buttons live in the footer */}
-            {buttonFields.length > 0 && (
+            {actionButtonFields.length > 0 && (
               <>
                 <Divider className="app-config-drawer-action-divider" />
                 <div className="app-config-drawer-subheader">
@@ -473,7 +496,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
                 </div>
               </>
             )}
-            {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) ? renderFieldRow(fieldEntry, i, c) : null))}
+            {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) && !isPopupRow(fieldEntry) ? renderFieldRow(fieldEntry, i, c) : null))}
             {currentCard?.type !== "template" && !viewMode && (<Button
               className={"app-config-drawer-button add-field"}
               type={"button"}
