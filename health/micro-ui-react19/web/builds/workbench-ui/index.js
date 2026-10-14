@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import { Hooks } from "@egovernments/digit-ui-libraries";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { Loader } from "@egovernments/digit-ui-components";
-import UserSessionPage from "../../src/workbench/user-session/UserSessionPage";
-import UserSessionCard from "../../src/workbench/user-session/UserSessionCard";
+import UserSessionPage from "./workbench/user-session/UserSessionPage";
+import UserSessionCard from "./workbench/user-session/UserSessionCard";
 
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks;
