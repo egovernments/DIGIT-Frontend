@@ -126,7 +126,9 @@ const NewAppModule = () => {
   }
 
   return (
-    <div className="app-modules-select-wrapper">
+    // The employee layout has no main landmark, so this screen marks its own (axe landmark-one-main,
+    // region). The wrapper keeps its class and layout; only the tag changes.
+    <main className="app-modules-select-wrapper">
       <div>
         <HeaderComponent className="campaign-header-module-style" style={{ marginBottom: "1rem" }}>
           <h1 style={{ margin: 0 }}>{t(I18N_KEYS.PAGES.HCM_CHOOSE_MODULE)}</h1>
@@ -230,7 +232,7 @@ const NewAppModule = () => {
         ]}
         maxActionFieldsAllowed={5}
       />
-    </div>
+    </main>
   );
 };
 

@@ -8,6 +8,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { transformCreateData } from "../../../utils/transformCreateData";
 import { handleCreateValidate } from "../../../utils/handleCreateValidate";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { srOnlyStyle } from "../../../utils";
 import useCampaignStore from "../../../hooks/useCampaignStore";
 import { resetAllCampaignData, resetCreateCampaignData, clearSelectedHierarchy, clearSelectedHierarchyCode, campaignStore } from "../../../store/campaignStore";
 import { useLocation } from "react-router-dom";
@@ -591,6 +592,9 @@ const CreateCampaign = () => {
     // <main> with display: contents: the employee layout has no main landmark (axe landmark-one-main,
     // region); display: contents keeps the stepper and cards laid out exactly as before
     <main style={{ display: "contents" }}>
+      {/* The stepper carries the step name, not the page name, so the page has no visible
+          heading of its own. Expose one to screen readers only (axe page-has-heading-one). */}
+      <h1 style={srOnlyStyle}>{t(I18N_KEYS.PAGES.CREATE_CAMPAIGN)}</h1>
       {(loader || isValidatingName) && (
         <Loader
           page={true}

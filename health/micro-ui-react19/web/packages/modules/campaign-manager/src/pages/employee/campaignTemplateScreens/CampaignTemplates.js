@@ -2,6 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { InboxSearchComposer, Loader } from "@egovernments/digit-ui-components";
 import { campaignTemplateConfig } from "./campaignTemplateConfig";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+
+const srOnlyStyle = {
+  position: "absolute",
+  width: "1px",
+  height: "1px",
+  padding: 0,
+  margin: "-1px",
+  overflow: "hidden",
+  clip: "rect(0, 0, 0, 0)",
+  whiteSpace: "nowrap",
+  border: 0,
+};
 
 const CampaignTemplates = () => {
   const { t } = useTranslation();
@@ -18,11 +31,14 @@ const CampaignTemplates = () => {
   }
 
   return (
-    <React.Fragment>
+    // <main> with display: contents: the employee layout has no main landmark (axe landmark-one-main /
+    // region). The page has no visible title, so expose a screen-reader-only h1 (page-has-heading-one).
+    <main style={{ display: "contents" }}>
+      <h1 style={srOnlyStyle}>{t(I18N_KEYS.COMMON.CAMPAIGN_TEMPLATES)}</h1>
       <div className="digit-inbox-search-wrapper">
         <InboxSearchComposer configs={config} showTab={false} />
       </div>
-    </React.Fragment>
+    </main>
   );
 };
 

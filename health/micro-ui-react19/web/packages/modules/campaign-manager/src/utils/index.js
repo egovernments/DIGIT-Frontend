@@ -126,3 +126,17 @@ export const activateOnKey = (e) => {
     e.currentTarget.click();
   }
 };
+
+/* Hides an element from sight while leaving it on the accessibility tree.
+   Use it to give a screen reader a heading or a name that the design has no room to show. */
+export const srOnlyStyle = {
+  position: "absolute",
+  width: "1px",
+  height: "1px",
+  padding: 0,
+  margin: "-1px",
+  overflow: "hidden",
+  clip: "rect(0, 0, 0, 0)",
+  whiteSpace: "nowrap",
+  border: 0,
+};

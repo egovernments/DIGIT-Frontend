@@ -726,6 +726,7 @@ const SelectingBoundaryComponent = ({
                       <MultiSelectDropdown
                         disablePortal={true}
                         t={t}
+                        ariaLabel={t((hierarchyType + "_" + bType).toUpperCase())}
                         props={{ className: "selecting-boundaries-dropdown" }}
                         options={options}
                         onSelect={() => {}}
@@ -757,6 +758,7 @@ const SelectingBoundaryComponent = ({
                       <MultiSelectDropdown
                         disablePortal={true}
                         t={t}
+                        ariaLabel={t((hierarchyType + "_" + bType).toUpperCase())}
                         props={{ className: "selecting-boundaries-dropdown" }}
                         options={options}
                         onSelect={() => {}}
@@ -804,6 +806,7 @@ const SelectingBoundaryComponent = ({
                     </CardLabel>
                     <Dropdown
                       t={t}
+                      ariaLabel={t((hierarchyType + "_" + bType).toUpperCase())}
                       props={{ className: "selecting-boundaries-dropdown" }}
                       option={options}
                       select={(value) => {

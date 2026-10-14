@@ -17,6 +17,7 @@ import {
 import { handleValidate } from "../../utils/setupCampaignValidators";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import { srOnlyStyle } from "../../utils";
 import useCampaignStore from "../../hooks/useCampaignStore";
 import CampaignSubmitContext from "../../components/CampaignSubmitContext";
 import { useDispatch } from "react-redux";
@@ -1251,6 +1252,9 @@ const SetupCampaign = () => {
     {/* <main> with display: contents: the employee layout has no main landmark (axe landmark-one-main,
         region); display: contents keeps the stepper and cards laid out exactly as before */}
     <main style={{ display: "contents" }}>
+      {/* The stepper carries the step name, not the page name, so the page has no visible
+          heading of its own. Expose one to screen readers only (axe page-has-heading-one). */}
+      <h1 style={srOnlyStyle}>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_SETUP_DETAILS)}</h1>
       {(loader || isUpdating) && <Loader page={true} variant={"OverlayLoader"} loaderText={currentKey == 6 ? t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_ADDING_BOUNDARIES) : t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />}
       {/* {noAction !== "false" && (
         <Stepper
