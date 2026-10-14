@@ -12,6 +12,7 @@ import { downloadExcelWithCustomName } from "../../../utils";
 import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDateFormat";
 import QRButton from "../../../components/CreateCampaignComponents/QRButton";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+export const HCMCONSOLE_APPCONFIG_MODULENAME = "FormConfig";
 
 function transformCampaignData(inputObj = {}) {
   const deliveryRule = inputObj.deliveryRules?.[0] || {};
