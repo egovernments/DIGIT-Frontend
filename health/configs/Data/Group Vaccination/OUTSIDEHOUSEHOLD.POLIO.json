@@ -1,0 +1,3151 @@
+{
+  "id": "1503ceca-9745-44be-8e05-bc7ef8d894fb",
+  "tenantId": "qa",
+  "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
+  "uniqueIdentifier": "OUTSIDEHOUSEHOLD.POLIO",
+  "data": {
+    "name": "OUTSIDEHOUSEHOLD",
+    "flows": [
+      {
+        "body": [
+          {
+            "icon": "DirectionsBus",
+            "type": "template",
+            "format": "menu_card",
+            "heading": "GV_LOCATION_TRANSIT_POST_HEADING",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [],
+                  "name": "transitSessionsList",
+                  "type": "TEMPLATE"
+                }
+              }
+            ],
+            "fieldName": "transitPostOption",
+            "properties": {
+              "icon": "DirectionsBus"
+            },
+            "description": "GV_LOCATION_TRANSIT_POST_DESCRIPTION"
+          },
+          {
+            "icon": "Groups",
+            "type": "template",
+            "format": "menu_card",
+            "heading": "GV_LOCATION_CLF_HEADING",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [],
+                  "name": "clfSessionsList",
+                  "type": "TEMPLATE"
+                }
+              }
+            ],
+            "fieldName": "clfOption",
+            "properties": {
+              "icon": "Groups"
+            },
+            "description": "GV_LOCATION_CLF_DESCRIPTION"
+          }
+        ],
+        "name": "selectVaccinationLocation",
+        "order": 1,
+        "canPop": true,
+        "footer": [],
+        "header": [
+          {
+            "type": "template",
+            "label": "GV_BACK_LABEL",
+            "format": "backLink",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {
+                  "name": "HOME",
+                  "type": "HOME"
+                }
+              }
+            ],
+            "fieldName": "backLink"
+          }
+        ],
+        "heading": "GV_SELECT_VACCINATION_LOCATION_HEADING",
+        "category": "VACCINATION_LOCATION",
+        "screenType": "TEMPLATE",
+        "description": "GV_SELECT_VACCINATION_LOCATION_DESCRIPTION",
+        "initActions": [],
+        "wrapperConfig": {}
+      },
+      {
+        "body": [
+          {
+            "type": "template",
+            "label": "GV_SESSIONS_EMPTY_MESSAGE",
+            "format": "infoCard",
+            "visible": "{{fn:isEmpty(contextData)}}",
+            "fieldName": "emptyState",
+            "description": "GV_SESSIONS_EMPTY_DESCRIPTION"
+          },
+          {
+            "type": "template",
+            "child": {
+              "type": "template",
+              "format": "card",
+              "children": [
+                {
+                  "type": "template",
+                  "value": "{{item.UserActionModel.additionalFields.fields.locationName}}",
+                  "format": "textTemplate",
+                  "fieldName": "sessionLocationName",
+                  "properties": {
+                    "style": "headingL",
+                    "bottomGap": 8
+                  }
+                },
+                {
+                  "type": "template",
+                  "label": "GV_SESSION_LAST_USED_ON",
+                  "format": "tag",
+                  "fieldName": "lastUsedChip",
+                  "labelArgs": [
+                    "{{fn:formatDate(item.lastActivityTs, 'date', 'dd MMM yyyy HH:mm')}}"
+                  ],
+                  "properties": {
+                    "icon": "Schedule",
+                    "tagType": "monochrome",
+                    "bottomGap": 12
+                  }
+                },
+                {
+                  "data": [
+                    {
+                      "key": "GV_SUMMARY_LOCATION_TYPE",
+                      "value": "{{item.UserActionModel.additionalFields.fields.transitLocationType}}"
+                    },
+                    {
+                      "key": "GV_SUMMARY_SESSION_DATE",
+                      "value": "{{fn:formatDate(item.UserActionModel.clientAuditDetails.createdTime, 'date', 'dd MMM yyyy')}}"
+                    },
+                    {
+                      "key": "GV_METRIC_VACCINATED_TODAY",
+                      "value": "{{item.children.length}}"
+                    },
+                    {
+                      "key": "GV_METRIC_VACCINATED_BY_GENDER",
+                      "value": "{{item.malesChildren.length}}M | {{item.femaleChildren.length}}F"
+                    },
+                    {
+                      "key": "GV_METRIC_CHILDREN_REFERRED",
+                      "value": "{{item.referrals.length}}"
+                    }
+                  ],
+                  "type": "template",
+                  "format": "labelPairList",
+                  "fieldName": "sessionSummary"
+                },
+                {
+                  "type": "template",
+                  "label": "GV_RESUME_SESSION_BUTTON",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "NAVIGATION",
+                      "properties": {
+                        "data": [
+                          {
+                            "key": "SessionClientReferenceId",
+                            "value": "{{item.UserActionModel.clientReferenceId}}"
+                          },
+                          {
+                            "key": "SessionType",
+                            "value": "TRANSIT"
+                          }
+                        ],
+                        "name": "transitSessionOverview",
+                        "type": "TEMPLATE"
+                      }
+                    }
+                  ],
+                  "fieldName": "resumeSession",
+                  "mandatory": true,
+                  "properties": {
+                    "size": "medium",
+                    "type": "secondary",
+                    "mainAxisSize": "max",
+                    "mainAxisAlignment": "center"
+                  }
+                }
+              ],
+              "fieldName": "sessionCard",
+              "properties": {
+                "type": "secondary",
+                "spacing": 0,
+                "cardType": "secondary"
+              }
+            },
+            "format": "listView",
+            "fieldName": "listViewSessions",
+            "properties": {
+              "spacing": "spacer4"
+            }
+          }
+        ],
+        "name": "transitSessionsList",
+        "order": 1,
+        "canPop": true,
+        "footer": [
+          {
+            "type": "template",
+            "label": "GV_START_SESSION_BUTTON",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "name": "transitSessionSetup",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "startSession",
+            "mandatory": true,
+            "properties": {
+              "size": "large",
+              "type": "primary",
+              "mainAxisSize": "max",
+              "mainAxisAlignment": "center"
+            }
+          }
+        ],
+        "header": [
+          {
+            "type": "template",
+            "label": "GV_BACK_LABEL",
+            "format": "backLink",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {
+                  "name": "HOME",
+                  "type": "HOME"
+                }
+              }
+            ],
+            "fieldName": "backLink"
+          }
+        ],
+        "heading": "GV_TRANSIT_SESSIONS_HEADING",
+        "category": "TRANSITPOST",
+        "screenType": "TEMPLATE",
+        "description": "GV_TRANSIT_SESSIONS_DESCRIPTION",
+        "initActions": [
+          {
+            "actionType": "SEARCH_EVENT",
+            "properties": {
+              "data": [
+                {
+                  "key": "tenantId",
+                  "root": "userAction",
+                  "value": "{{singleton.selectedProject.tenantId}}",
+                  "operation": "equals"
+                },
+                {
+                  "key": "projectId",
+                  "root": "userAction",
+                  "value": "{{singleton.selectedProject.id}}",
+                  "operation": "equals"
+                },
+                {
+                  "key": "boundaryCode",
+                  "root": "userAction",
+                  "value": "{{singleton.boundary.code}}",
+                  "operation": "equals"
+                }
+              ],
+              "name": "sessions",
+              "type": "SEARCH_EVENT"
+            }
+          }
+        ],
+        "wrapperConfig": {
+          "filters": [
+            {
+              "field": "additionalFields.fields.sessionType",
+              "equals": "TRANSIT"
+            }
+          ],
+          "computed": {
+            "_maxChildTs": {
+              "from": "children",
+              "order": 1,
+              "reduce": {
+                "field": "clientAuditDetails.createdTime",
+                "fallback": 0,
+                "operation": "max"
+              }
+            },
+            "_maxActivityTs": {
+              "order": 3,
+              "fallback": 0,
+              "condition": {
+                "if": {
+                  "left": "{{_maxChildTs}}",
+                  "right": "{{_maxReferralTs}}",
+                  "operator": "gt"
+                },
+                "else": "{{_maxReferralTs}}",
+                "then": "{{_maxChildTs}}"
+              }
+            },
+            "_maxReferralTs": {
+              "from": "referrals",
+              "order": 2,
+              "reduce": {
+                "field": "clientAuditDetails.createdTime",
+                "fallback": 0,
+                "operation": "max"
+              }
+            },
+            "lastActivityTs": {
+              "order": 4,
+              "fallback": "{{UserActionModel.clientAuditDetails.createdTime}}",
+              "condition": {
+                "if": {
+                  "left": "{{_maxActivityTs}}",
+                  "right": 0,
+                  "operator": "gt"
+                },
+                "else": "{{UserActionModel.clientAuditDetails.createdTime}}",
+                "then": "{{_maxActivityTs}}"
+              }
+            }
+          },
+          "relations": [
+            {
+              "name": "children",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                }
+              ]
+            },
+            {
+              "name": "malesChildren",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
+                {
+                  "field": "additionalFields.fields.childSex",
+                  "equals": "MALE"
+                }
+              ]
+            },
+            {
+              "name": "femaleChildren",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
+                {
+                  "field": "additionalFields.fields.childSex",
+                  "equals": "FEMALE"
+                }
+              ]
+            },
+            {
+              "name": "referrals",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_REFERRAL"
+                }
+              ]
+            }
+          ],
+          "rootEntity": "UserActionModel",
+          "wrapperName": "TransitSessionsListWrapper",
+          "searchConfig": {
+            "select": ["userAction"],
+            "orderBy": {
+              "field": "clientCreatedTime",
+              "order": "DESC"
+            },
+            "primary": "userAction"
+          }
+        }
+      },
+      {
+        "name": "transitSessionSetup",
+        "pages": [
+          {
+            "page": "sessionSetup",
+            "type": "object",
+            "label": "GV_TRANSIT_SESSION_SETUP_LABEL",
+            "order": 1,
+            "value": null,
+            "hidden": null,
+            "endDate": null,
+            "tooltip": null,
+            "helpText": null,
+            "readOnly": null,
+            "required": null,
+            "charCount": null,
+            "startDate": null,
+            "autoEnable": null,
+            "innerLabel": null,
+            "properties": [
+              {
+                "type": "string",
+                "label": "GV_SESSION_DATE_LABEL",
+                "order": 1,
+                "value": "",
+                "format": "date",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "sessionDate",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": true,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_LOCATION_CAPTURED_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "latLng",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "GV_GPS_START_HELPTEXT",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "gpsStart",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_GPS_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "includeInSummary": false
+              },
+              {
+                "type": "string",
+                "label": "GV_SESSION_AREA_LABEL",
+                "order": 3,
+                "value": "",
+                "format": "locality",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "sessionArea",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "enums": [
+                  {
+                    "code": "BUS_STATION",
+                    "name": "GV_ENUM_BUS_STATION"
+                  },
+                  {
+                    "code": "BORDER_CROSSING",
+                    "name": "GV_ENUM_BORDER_CROSSING"
+                  },
+                  {
+                    "code": "CHECKPOINT",
+                    "name": "GV_ENUM_CHECKPOINT"
+                  },
+                  {
+                    "code": "FERRY_TERMINAL",
+                    "name": "GV_ENUM_FERRY_TERMINAL"
+                  },
+                  {
+                    "code": "OTHER",
+                    "name": "GV_ENUM_OTHER"
+                  }
+                ],
+                "label": "GV_TRANSIT_LOCATION_TYPE_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "dropdown",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "transitLocationType",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_TRANSIT_SITE_LANDMARK_LABEL",
+                "order": 5,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "GV_TRANSIT_SITE_LANDMARK_HELPTEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "locationName",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "200",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_200"
+                },
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_REQUIRED"
+                  },
+                  {
+                    "type": "maxLength",
+                    "value": "200",
+                    "message": "GV_VALIDATION_MAX_200"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "textCapitalization": "words"
+              },
+              {
+                "type": "string",
+                "label": "GV_WORKER_NAME_LABEL",
+                "order": 6,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "workerName",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "autoFillCondition": [
+                  {
+                    "value": "{{loggedInUserName}}",
+                    "expression": "true==true"
+                  }
+                ]
+              },
+              {
+                "type": "string",
+                "label": "GV_WORKER_PHONE_LABEL",
+                "order": 7,
+                "value": "",
+                "format": "mobileNumber",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "workerPhone",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "autoFillCondition": [
+                  {
+                    "value": "{{loggedInUserMobileNumber}}",
+                    "expression": "true==true"
+                  }
+                ]
+              }
+            ],
+            "systemDate": null,
+            "actionLabel": "GV_ACTION_START_SESSION",
+            "description": "GV_TRANSIT_SESSION_SETUP_DESC",
+            "validations": null,
+            "includeInForm": null,
+            "isMultiSelect": null,
+            "includeInSummary": null
+          }
+        ],
+        "project": "POLIO-SIA",
+        "version": 1,
+        "category": "TRANSITPOST",
+        "disabled": false,
+        "onAction": [
+          {
+            "actionType": "FETCH_TRANSFORMER_CONFIG",
+            "properties": {
+              "data": [],
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "GV_ERROR_FETCH_CONFIG"
+                  }
+                }
+              ],
+              "configName": "transitSession"
+            }
+          },
+          {
+            "actionType": "CREATE_EVENT",
+            "properties": {
+              "entity": "USERACTION",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "GV_ERROR_RECORD_DATA"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "data": [],
+              "name": "transitSessionsList",
+              "type": "TEMPLATE",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "GV_ERROR_NAVIGATION"
+                  }
+                }
+              ],
+              "navigationMode": "popUntilAndReplace",
+              "popUntilPageName": "transitSessionsList"
+            }
+          },
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "data": [
+                {
+                  "key": "SessionClientReferenceId",
+                  "value": "{{contextData.entities.UserActionModel.clientReferenceId}}"
+                },
+                {
+                  "key": "SessionType",
+                  "value": "TRANSIT"
+                }
+              ],
+              "name": "transitSessionOverview",
+              "type": "TEMPLATE"
+            }
+          }
+        ],
+        "isSelected": true,
+        "screenType": "FORM",
+        "initActions": [],
+        "wrapperConfig": {}
+      },
+      {
+        "body": [
+          {
+            "type": "template",
+            "format": "card",
+            "children": [
+              {
+                "data": [
+                  {
+                    "key": "GV_SUMMARY_LOCATION_NAME",
+                    "value": "{{contextData.0.UserActionModel.additionalFields.fields.locationName}}"
+                  },
+                  {
+                    "key": "GV_SUMMARY_LOCATION_TYPE",
+                    "value": "{{contextData.0.UserActionModel.additionalFields.fields.transitLocationType}}"
+                  }
+                ],
+                "type": "template",
+                "format": "labelPairList",
+                "fieldName": "sessionDetails"
+              }
+            ],
+            "fieldName": "sessionCard",
+            "properties": {
+              "type": "primary"
+            }
+          },
+          {
+            "type": "template",
+            "value": "GV_SESSION_OVERVIEW_TODAY",
+            "format": "textTemplate",
+            "fieldName": "todaysProgressTitle",
+            "properties": {
+              "style": "headingS",
+              "bottomGap": 4
+            }
+          },
+          {
+            "type": "template",
+            "format": "card",
+            "children": [
+              {
+                "type": "template",
+                "value": "{{contextData.0.children.length}}",
+                "format": "textTemplate",
+                "fieldName": "vaccinatedCount",
+                "properties": {
+                  "style": "headingXl",
+                  "bottomGap": 4
+                }
+              },
+              {
+                "type": "template",
+                "value": "GV_METRIC_VACCINATED_TODAY",
+                "format": "textTemplate",
+                "fieldName": "vaccinatedLabel",
+                "properties": {
+                  "style": "bodyS",
+                  "bottomGap": 4
+                }
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "children": [
+                  {
+                    "flex": 1,
+                    "type": "template",
+                    "format": "card",
+                    "children": [
+                      {
+                        "type": "template",
+                        "format": "row",
+                        "children": [
+                          {
+                            "type": "template",
+                            "value": "{{contextData.0.femaleChildren.length}}",
+                            "format": "textTemplate",
+                            "fieldName": "femaleCount",
+                            "properties": {
+                              "color": "primary",
+                              "style": "headingM"
+                            }
+                          },
+                          {
+                            "type": "template",
+                            "value": "GV_ENUM_FEMALE",
+                            "format": "textTemplate",
+                            "fieldName": "femaleLabel",
+                            "properties": {
+                              "color": "primary",
+                              "style": "bodyS"
+                            }
+                          }
+                        ],
+                        "fieldName": "femalePillRow",
+                        "properties": {
+                          "gap": 4,
+                          "mainAxisSize": "max",
+                          "mainAxisAlignment": "center",
+                          "crossAxisAlignment": "center"
+                        }
+                      }
+                    ],
+                    "fieldName": "femalePill",
+                    "properties": {
+                      "type": "secondary",
+                      "radius": "radius4"
+                    }
+                  },
+                  {
+                    "flex": 1,
+                    "type": "template",
+                    "format": "card",
+                    "children": [
+                      {
+                        "type": "template",
+                        "format": "row",
+                        "children": [
+                          {
+                            "type": "template",
+                            "value": "{{contextData.0.malesChildren.length}}",
+                            "format": "textTemplate",
+                            "fieldName": "maleCount",
+                            "properties": {
+                              "color": "primary",
+                              "style": "headingM"
+                            }
+                          },
+                          {
+                            "type": "template",
+                            "value": "GV_ENUM_MALE",
+                            "format": "textTemplate",
+                            "fieldName": "maleLabel",
+                            "properties": {
+                              "color": "primary",
+                              "style": "bodyS"
+                            }
+                          }
+                        ],
+                        "fieldName": "malePillRow",
+                        "properties": {
+                          "gap": 4,
+                          "mainAxisSize": "max",
+                          "mainAxisAlignment": "center",
+                          "crossAxisAlignment": "center"
+                        }
+                      }
+                    ],
+                    "fieldName": "malePill",
+                    "properties": {
+                      "type": "secondary",
+                      "radius": "radius4"
+                    }
+                  }
+                ],
+                "fieldName": "vaccinatedSplit",
+                "properties": {
+                  "gap": 8
+                }
+              }
+            ],
+            "fieldName": "vaccinatedTile",
+            "properties": {
+              "type": "primary"
+            }
+          },
+          {
+            "type": "template",
+            "format": "card",
+            "children": [
+              {
+                "type": "template",
+                "value": "{{contextData.0.referrals.length}}",
+                "format": "textTemplate",
+                "fieldName": "referredCount",
+                "properties": {
+                  "style": "headingXl",
+                  "bottomGap": 4
+                }
+              },
+              {
+                "type": "template",
+                "value": "GV_METRIC_CHILDREN_REFERRED",
+                "format": "textTemplate",
+                "fieldName": "referredLabel",
+                "properties": {
+                  "style": "bodyS"
+                }
+              }
+            ],
+            "fieldName": "referredTile",
+            "properties": {
+              "type": "primary"
+            }
+          }
+        ],
+        "name": "transitSessionOverview",
+        "order": 3,
+        "canPop": true,
+        "footer": [
+          {
+            "type": "template",
+            "label": "GV_ADD_VACCINATION_BUTTON",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "SessionClientReferenceId",
+                      "value": "{{contextData.0.UserActionModel.clientReferenceId}}"
+                    },
+                    {
+                      "key": "SessionType",
+                      "value": "TRANSIT"
+                    },
+                    {
+                      "key": "TransitLocationType",
+                      "value": "{{contextData.0.UserActionModel.additionalFields.fields.transitLocationType}}"
+                    }
+                  ],
+                  "name": "ADD_TRANSIT_CHILD",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "addVaccination",
+            "mandatory": true,
+            "properties": {
+              "size": "large",
+              "type": "primary",
+              "mainAxisSize": "max",
+              "mainAxisAlignment": "center"
+            }
+          },
+          {
+            "type": "template",
+            "label": "GV_ADD_REFERRAL_BUTTON",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "SessionClientReferenceId",
+                      "value": "{{contextData.0.UserActionModel.clientReferenceId}}"
+                    }
+                  ],
+                  "name": "ADD_TRANSIT_REFERRAL",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "addReferral",
+            "mandatory": true,
+            "properties": {
+              "size": "large",
+              "type": "secondary",
+              "mainAxisSize": "max",
+              "mainAxisAlignment": "center"
+            }
+          }
+        ],
+        "header": [
+          {
+            "type": "template",
+            "label": "GV_BACK_LABEL",
+            "format": "backLink",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {
+                  "name": "transitSessionsList",
+                  "type": "TEMPLATE"
+                }
+              }
+            ],
+            "fieldName": "backLink"
+          }
+        ],
+        "heading": "GV_SESSION_OVERVIEW_HEADING",
+        "category": "TRANSITPOST",
+        "screenType": "TEMPLATE",
+        "initActions": [
+          {
+            "actionType": "SEARCH_EVENT",
+            "properties": {
+              "data": [
+                {
+                  "key": "resourceTag",
+                  "root": "userAction",
+                  "value": "{{navigation.SessionClientReferenceId}}",
+                  "operation": "equals"
+                }
+              ],
+              "name": "session",
+              "type": "SEARCH_EVENT"
+            }
+          }
+        ],
+        "wrapperConfig": {
+          "filters": [
+            {
+              "field": "additionalFields.fields.sessionType",
+              "equals": "TRANSIT"
+            }
+          ],
+          "relations": [
+            {
+              "name": "children",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                }
+              ],
+              "relations": [
+                {
+                  "name": "child",
+                  "match": {
+                    "field": "clientReferenceId",
+                    "equalsFrom": "clientReferenceId"
+                  },
+                  "entity": "UserActionModel"
+                }
+              ]
+            },
+            {
+              "name": "malesChildren",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
+                {
+                  "field": "additionalFields.fields.childSex",
+                  "equals": "MALE"
+                }
+              ]
+            },
+            {
+              "name": "femaleChildren",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
+                {
+                  "field": "additionalFields.fields.childSex",
+                  "equals": "FEMALE"
+                }
+              ]
+            },
+            {
+              "name": "referrals",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_REFERRAL"
+                }
+              ]
+            }
+          ],
+          "rootEntity": "UserActionModel",
+          "wrapperName": "TransitSessionWrapper",
+          "searchConfig": {
+            "select": ["userAction"],
+            "primary": "userAction"
+          }
+        }
+      },
+      {
+        "name": "ADD_TRANSIT_CHILD",
+        "pages": [
+          {
+            "page": "childDetails",
+            "type": "object",
+            "label": "GV_CHILD_DETAILS_LABEL",
+            "order": 1,
+            "value": null,
+            "hidden": null,
+            "endDate": null,
+            "tooltip": null,
+            "helpText": null,
+            "readOnly": null,
+            "required": null,
+            "charCount": null,
+            "startDate": null,
+            "autoEnable": null,
+            "innerLabel": null,
+            "properties": [
+              {
+                "type": "string",
+                "label": "GV_LOCATION_CAPTURED_LABEL",
+                "order": 1,
+                "value": "",
+                "format": "latLng",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "GV_GPS_START_HELPTEXT",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "gpsChild",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_GPS_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "includeInSummary": false
+              },
+              {
+                "type": "string",
+                "label": "GV_CHILD_NAME_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "text",
+                "hidden": true,
+                "tooltip": "",
+                "helpText": "GV_CHILD_NAME_HELPTEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "childName",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "HCM_GV_CHILD_NAME_LABEL_REQUIRED_MESSAGE"
+                  },
+                  {
+                    "type": "maxLength",
+                    "value": "200",
+                    "message": "GV_VALIDATION_MAX_200"
+                  }
+                ],
+                "isMultiSelect": false,
+                "textCapitalization": "words"
+              },
+              {
+                "type": "string",
+                "label": "GV_CHILD_SEX_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "select",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "required": true,
+                "fieldName": "childSex",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "schemaCode": "common-masters.GenderType",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_CHILD_SEX_LABEL_VALIDATION_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "dynamic",
+                "enums": [],
+                "label": "GV_AGE_BAND_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "custom",
+                "hidden": false,
+                "isMdms": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "required": true,
+                "fieldName": "ageBand",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_AGE_BAND_LABEL_VALIDATION_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "includeInSummary": true
+              },
+              {
+                "type": "string",
+                "label": "GV_VACCINE_LABEL",
+                "order": 10,
+                "value": "",
+                "format": "text",
+                "hidden": true,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "ageBandVaccine",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "includeInSummary": true
+              },
+              {
+                "type": "string",
+                "enums": [
+                  {
+                    "code": "CHAD",
+                    "name": "GV_ENUM_CHAD"
+                  },
+                  {
+                    "code": "NIGERIA",
+                    "name": "GV_ENUM_NIGERIA"
+                  },
+                  {
+                    "code": "CAMEROON",
+                    "name": "GV_ENUM_CAMEROON"
+                  },
+                  {
+                    "code": "CAR",
+                    "name": "GV_ENUM_CAR"
+                  },
+                  {
+                    "code": "SUDAN",
+                    "name": "GV_ENUM_SUDAN"
+                  },
+                  {
+                    "code": "NIGER",
+                    "name": "GV_ENUM_NIGER"
+                  },
+                  {
+                    "code": "OTHER",
+                    "name": "GV_ENUM_OTHER"
+                  }
+                ],
+                "label": "GV_NATIONALITY_LABEL",
+                "order": 5,
+                "value": "",
+                "format": "dropdown",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "nationality",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "visibilityCondition": {
+                  "expression": [
+                    {
+                      "type": "custom",
+                      "condition": "navigation.TransitLocationType=='BORDER_CROSSING'"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "string",
+                "enums": [
+                  {
+                    "code": "ENTERING",
+                    "name": "GV_ENUM_ENTERING"
+                  },
+                  {
+                    "code": "EXITING",
+                    "name": "GV_ENUM_EXITING"
+                  }
+                ],
+                "label": "GV_DIRECTION_OF_TRAVEL_LABEL",
+                "order": 6,
+                "value": "",
+                "format": "select",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "directionOfTravel",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "visibilityCondition": {
+                  "expression": [
+                    {
+                      "type": "custom",
+                      "condition": "navigation.TransitLocationType=='BORDER_CROSSING'"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "string",
+                "enums": [
+                  {
+                    "code": "YES",
+                    "name": "GV_ENUM_YES"
+                  },
+                  {
+                    "code": "NO",
+                    "name": "GV_ENUM_NO"
+                  }
+                ],
+                "label": "GV_OPV_PRIOR_LABEL",
+                "order": 7,
+                "value": "",
+                "format": "radio",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "opvPrior",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "visibilityCondition": {
+                  "expression": [
+                    {
+                      "type": "custom",
+                      "condition": "navigation.TransitLocationType=='BORDER_CROSSING'"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "string",
+                "enums": [
+                  {
+                    "code": "YES",
+                    "name": "GV_ENUM_YES"
+                  },
+                  {
+                    "code": "NO",
+                    "name": "GV_ENUM_NO"
+                  }
+                ],
+                "label": "GV_IPV_PRIOR_LABEL",
+                "order": 8,
+                "value": "",
+                "format": "radio",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "ipvPrior",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "visibilityCondition": {
+                  "expression": [
+                    {
+                      "type": "custom",
+                      "condition": "navigation.TransitLocationType=='BORDER_CROSSING'"
+                    }
+                  ]
+                }
+              }
+            ],
+            "systemDate": null,
+            "actionLabel": "GV_ACTION_CONTINUE",
+            "description": "GV_CHILD_STEP_1_OF_2",
+            "validations": null,
+            "includeInForm": null,
+            "isMultiSelect": null,
+            "includeInSummary": null
+          },
+          {
+            "page": "confirmVaccination",
+            "type": "object",
+            "label": "GV_CONFIRM_VACCINATION_LABEL",
+            "order": 2,
+            "value": null,
+            "hidden": null,
+            "endDate": null,
+            "tooltip": null,
+            "helpText": null,
+            "readOnly": null,
+            "required": null,
+            "charCount": null,
+            "startDate": null,
+            "autoEnable": null,
+            "innerLabel": null,
+            "properties": [
+              {
+                "type": "boolean",
+                "label": "GV_TWO_DROPS_LABEL",
+                "order": 1,
+                "value": true,
+                "format": "checkbox",
+                "hidden": true,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "twoDropsAdministered",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "includeInSummary": true
+              },
+              {
+                "type": "boolean",
+                "label": "GV_FINGER_MARKED_LABEL",
+                "order": 2,
+                "value": true,
+                "format": "checkbox",
+                "hidden": true,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "fingerMarked",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "includeInSummary": true
+              }
+            ],
+            "systemDate": null,
+            "actionLabel": "GV_ACTION_CONFIRM_VACCINATION",
+            "description": "GV_CONFIRM_VACCINATION_DESC",
+            "validations": null,
+            "includeInForm": null,
+            "isMultiSelect": null,
+            "includeInSummary": null
+          }
+        ],
+        "project": "POLIO-SIA",
+        "summary": true,
+        "version": 1,
+        "category": "TRANSITPOST",
+        "disabled": false,
+        "onAction": [
+          {
+            "actionType": "FETCH_TRANSFORMER_CONFIG",
+            "properties": {
+              "data": [
+                {
+                  "key": "SessionClientReferenceId",
+                  "value": "{{navigation.SessionClientReferenceId}}"
+                }
+              ],
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "GV_ERROR_FETCH_CONFIG"
+                  }
+                }
+              ],
+              "configName": "groupVacChild"
+            }
+          },
+          {
+            "actionType": "CREATE_EVENT",
+            "properties": {
+              "entity": "USERACTION",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "GV_ERROR_RECORD_DATA"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "data": [
+                {
+                  "key": "SessionClientReferenceId",
+                  "value": "{{navigation.SessionClientReferenceId}}"
+                },
+                {
+                  "key": "SessionType",
+                  "value": "TRANSIT"
+                },
+                {
+                  "key": "TransitLocationType",
+                  "value": "{{navigation.TransitLocationType}}"
+                }
+              ],
+              "name": "transitVaccinationSuccess",
+              "type": "TEMPLATE",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "GV_ERROR_NAVIGATION"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "isSelected": true,
+        "screenType": "FORM",
+        "initActions": [],
+        "wrapperConfig": {}
+      },
+      {
+        "body": [
+          {
+            "type": "template",
+            "label": "GV_VACCINATION_SUCCESS_HEADING",
+            "format": "panelCard",
+            "properties": {
+              "type": "success"
+            },
+            "description": "GV_VACCINATION_SUCCESS_MESSAGE",
+            "primaryAction": {
+              "type": "template",
+              "label": "GV_SUCCESS_RECORD_ANOTHER",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "SessionClientReferenceId",
+                        "value": "{{navigation.SessionClientReferenceId}}"
+                      },
+                      {
+                        "key": "SessionType",
+                        "value": "TRANSIT"
+                      },
+                      {
+                        "key": "TransitLocationType",
+                        "value": "{{navigation.TransitLocationType}}"
+                      }
+                    ],
+                    "name": "ADD_TRANSIT_CHILD",
+                    "type": "FORM"
+                  }
+                }
+              ],
+              "fieldName": "recordAnother",
+              "mandatory": true,
+              "properties": {
+                "type": "primary"
+              }
+            },
+            "secondaryAction": {
+              "type": "template",
+              "label": "GV_SUCCESS_BACK_TO_DASHBOARD",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [],
+                    "name": "transitSessionsList",
+                    "type": "TEMPLATE",
+                    "navigationMode": "popUntilAndReplace",
+                    "popUntilPageName": "transitSessionsList"
+                  }
+                }
+              ],
+              "fieldName": "backToDashboard",
+              "mandatory": true,
+              "properties": {
+                "type": "secondary"
+              }
+            }
+          }
+        ],
+        "name": "transitVaccinationSuccess",
+        "order": 5,
+        "canPop": false,
+        "footer": [],
+        "header": [],
+        "heading": "",
+        "category": "TRANSITPOST",
+        "screenType": "TEMPLATE",
+        "description": "",
+        "initActions": [],
+        "isSuccessorErrorScreen": true
+      },
+      {
+        "body": [
+          {
+            "type": "template",
+            "label": "GV_SESSIONS_EMPTY_MESSAGE",
+            "format": "infoCard",
+            "visible": "{{fn:isEmpty(contextData)}}",
+            "fieldName": "emptyState",
+            "description": "GV_SESSIONS_EMPTY_DESCRIPTION"
+          },
+          {
+            "type": "template",
+            "child": {
+              "type": "template",
+              "format": "card",
+              "children": [
+                {
+                  "type": "template",
+                  "value": "{{item.UserActionModel.additionalFields.fields.locationName}}",
+                  "format": "textTemplate",
+                  "fieldName": "sessionLocationName",
+                  "properties": {
+                    "style": "headingL",
+                    "bottomGap": 8
+                  }
+                },
+                {
+                  "type": "template",
+                  "label": "GV_SESSION_LAST_USED_ON",
+                  "format": "tag",
+                  "fieldName": "lastUsedChip",
+                  "labelArgs": [
+                    "{{fn:formatDate(item.lastActivityTs, 'date', 'dd MMM yyyy HH:mm')}}"
+                  ],
+                  "properties": {
+                    "icon": "Schedule",
+                    "tagType": "monochrome",
+                    "bottomGap": 12
+                  }
+                },
+                {
+                  "data": [
+                    {
+                      "key": "GV_SUMMARY_LOCATION_TYPE",
+                      "value": "{{item.UserActionModel.additionalFields.fields.clfLocationType}}"
+                    },
+                    {
+                      "key": "GV_SUMMARY_SESSION_DATE",
+                      "value": "{{fn:formatDate(item.UserActionModel.clientAuditDetails.createdTime, 'date', 'dd MMM yyyy')}}"
+                    },
+                    {
+                      "key": "GV_METRIC_VACCINATED_TODAY",
+                      "value": "{{item.children.length}}"
+                    },
+                    {
+                      "key": "GV_METRIC_VACCINATED_BY_GENDER",
+                      "value": "{{item.malesChildren.length}}M | {{item.femaleChildren.length}}F"
+                    },
+                    {
+                      "key": "GV_METRIC_CHILDREN_REFERRED",
+                      "value": "{{item.referrals.length}}"
+                    }
+                  ],
+                  "type": "template",
+                  "format": "labelPairList",
+                  "fieldName": "sessionSummary"
+                },
+                {
+                  "type": "template",
+                  "label": "GV_RESUME_SESSION_BUTTON",
+                  "format": "button",
+                  "onAction": [
+                    {
+                      "actionType": "NAVIGATION",
+                      "properties": {
+                        "data": [
+                          {
+                            "key": "SessionClientReferenceId",
+                            "value": "{{item.UserActionModel.clientReferenceId}}"
+                          },
+                          {
+                            "key": "SessionType",
+                            "value": "CLF"
+                          }
+                        ],
+                        "name": "clfSessionOverview",
+                        "type": "TEMPLATE"
+                      }
+                    }
+                  ],
+                  "fieldName": "resumeSession",
+                  "mandatory": true,
+                  "properties": {
+                    "size": "medium",
+                    "type": "secondary",
+                    "mainAxisSize": "max",
+                    "mainAxisAlignment": "center"
+                  }
+                }
+              ],
+              "fieldName": "sessionCard",
+              "properties": {
+                "type": "secondary",
+                "spacing": 0,
+                "cardType": "secondary"
+              }
+            },
+            "format": "listView",
+            "fieldName": "listViewSessions",
+            "properties": {
+              "spacing": "spacer4"
+            }
+          }
+        ],
+        "name": "clfSessionsList",
+        "order": 1,
+        "canPop": true,
+        "footer": [
+          {
+            "type": "template",
+            "label": "GV_START_SESSION_BUTTON",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "name": "clfSessionSetup",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "startSession",
+            "mandatory": true,
+            "properties": {
+              "size": "large",
+              "type": "primary",
+              "mainAxisSize": "max",
+              "mainAxisAlignment": "center"
+            }
+          }
+        ],
+        "header": [
+          {
+            "type": "template",
+            "label": "GV_BACK_LABEL",
+            "format": "backLink",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {
+                  "name": "HOME",
+                  "type": "HOME"
+                }
+              }
+            ],
+            "fieldName": "backLink"
+          }
+        ],
+        "heading": "GV_CLF_SESSIONS_HEADING",
+        "category": "COMMUNAL_LIVING_FACILITY",
+        "screenType": "TEMPLATE",
+        "description": "GV_CLF_SESSIONS_DESCRIPTION",
+        "initActions": [
+          {
+            "actionType": "SEARCH_EVENT",
+            "properties": {
+              "data": [
+                {
+                  "key": "tenantId",
+                  "root": "userAction",
+                  "value": "{{singleton.selectedProject.tenantId}}",
+                  "operation": "equals"
+                },
+                {
+                  "key": "projectId",
+                  "root": "userAction",
+                  "value": "{{singleton.selectedProject.id}}",
+                  "operation": "equals"
+                },
+                {
+                  "key": "boundaryCode",
+                  "root": "userAction",
+                  "value": "{{singleton.boundary.code}}",
+                  "operation": "equals"
+                }
+              ],
+              "name": "sessions",
+              "type": "SEARCH_EVENT"
+            }
+          }
+        ],
+        "wrapperConfig": {
+          "filters": [
+            {
+              "field": "additionalFields.fields.sessionType",
+              "equals": "CLF"
+            }
+          ],
+          "computed": {
+            "_maxChildTs": {
+              "from": "children",
+              "order": 1,
+              "reduce": {
+                "field": "clientAuditDetails.createdTime",
+                "fallback": 0,
+                "operation": "max"
+              }
+            },
+            "_maxActivityTs": {
+              "order": 3,
+              "fallback": 0,
+              "condition": {
+                "if": {
+                  "left": "{{_maxChildTs}}",
+                  "right": "{{_maxReferralTs}}",
+                  "operator": "gt"
+                },
+                "else": "{{_maxReferralTs}}",
+                "then": "{{_maxChildTs}}"
+              }
+            },
+            "_maxReferralTs": {
+              "from": "referrals",
+              "order": 2,
+              "reduce": {
+                "field": "clientAuditDetails.createdTime",
+                "fallback": 0,
+                "operation": "max"
+              }
+            },
+            "lastActivityTs": {
+              "order": 4,
+              "fallback": "{{UserActionModel.clientAuditDetails.createdTime}}",
+              "condition": {
+                "if": {
+                  "left": "{{_maxActivityTs}}",
+                  "right": 0,
+                  "operator": "gt"
+                },
+                "else": "{{UserActionModel.clientAuditDetails.createdTime}}",
+                "then": "{{_maxActivityTs}}"
+              }
+            }
+          },
+          "relations": [
+            {
+              "name": "children",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                }
+              ]
+            },
+            {
+              "name": "malesChildren",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
+                {
+                  "field": "additionalFields.fields.childSex",
+                  "equals": "MALE"
+                }
+              ]
+            },
+            {
+              "name": "femaleChildren",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
+                {
+                  "field": "additionalFields.fields.childSex",
+                  "equals": "FEMALE"
+                }
+              ]
+            },
+            {
+              "name": "referrals",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_REFERRAL"
+                }
+              ]
+            }
+          ],
+          "rootEntity": "UserActionModel",
+          "wrapperName": "ClfSessionsListWrapper",
+          "searchConfig": {
+            "select": ["userAction"],
+            "orderBy": {
+              "field": "clientCreatedTime",
+              "order": "DESC"
+            },
+            "primary": "userAction"
+          }
+        }
+      },
+      {
+        "name": "clfSessionSetup",
+        "pages": [
+          {
+            "page": "sessionSetup",
+            "type": "object",
+            "label": "GV_CLF_SESSION_SETUP_LABEL",
+            "order": 1,
+            "value": null,
+            "hidden": null,
+            "endDate": null,
+            "tooltip": null,
+            "helpText": null,
+            "readOnly": null,
+            "required": null,
+            "charCount": null,
+            "startDate": null,
+            "autoEnable": null,
+            "innerLabel": null,
+            "properties": [
+              {
+                "type": "string",
+                "label": "GV_SESSION_DATE_LABEL",
+                "order": 1,
+                "value": "",
+                "format": "date",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "sessionDate",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": true,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_LOCATION_CAPTURED_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "latLng",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "GV_GPS_START_HELPTEXT",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "gpsStart",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_GPS_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "includeInSummary": false
+              },
+              {
+                "type": "string",
+                "label": "GV_SESSION_AREA_LABEL",
+                "order": 3,
+                "value": "",
+                "format": "locality",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "sessionArea",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "enums": [
+                  {
+                    "code": "SCHOOL",
+                    "name": "GV_ENUM_SCHOOL"
+                  },
+                  {
+                    "code": "MARKET",
+                    "name": "GV_ENUM_MARKET"
+                  },
+                  {
+                    "code": "HEALTH_POST",
+                    "name": "GV_ENUM_HEALTH_POST"
+                  },
+                  {
+                    "code": "COMMUNITY_CENTRE",
+                    "name": "GV_ENUM_COMMUNITY_CENTRE"
+                  },
+                  {
+                    "code": "OTHER",
+                    "name": "GV_ENUM_OTHER"
+                  }
+                ],
+                "label": "GV_CLF_LOCATION_TYPE_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "dropdown",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "clfLocationType",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_LOCATION_NAME_LABEL",
+                "order": 5,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "GV_LOCATION_NAME_HELPTEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "locationName",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "200",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_200"
+                },
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_REQUIRED"
+                  },
+                  {
+                    "type": "maxLength",
+                    "value": "200",
+                    "message": "GV_VALIDATION_MAX_200"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "textCapitalization": "words"
+              },
+              {
+                "type": "string",
+                "label": "GV_RESPONSIBLE_PERSON_LABEL",
+                "order": 6,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "responsiblePerson",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "200",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_200"
+                },
+                "validations": [
+                  {
+                    "type": "maxLength",
+                    "value": "200",
+                    "message": "GV_VALIDATION_MAX_200"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_CONTACT_NUMBER_LABEL",
+                "order": 7,
+                "value": "",
+                "format": "mobileNumber",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "contactNumber",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "lengthRange": {
+                  "maxLength": 10,
+                  "minLength": 10,
+                  "errorMessage": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                },
+                "validations": [
+                  {
+                    "type": "pattern",
+                    "message": "HCM_VALIDATION_MOBILE_NO_LEADING_ZERO"
+                  },
+                  {
+                    "type": "minLength",
+                    "value": 10,
+                    "message": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                  },
+                  {
+                    "type": "maxLength",
+                    "value": 10,
+                    "message": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_WORKER_NAME_LABEL",
+                "order": 8,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "workerName",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "autoFillCondition": [
+                  {
+                    "value": "{{loggedInUserName}}",
+                    "expression": "true==true"
+                  }
+                ]
+              },
+              {
+                "type": "string",
+                "label": "GV_WORKER_PHONE_LABEL",
+                "order": 9,
+                "value": "",
+                "format": "mobileNumber",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "workerPhone",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "autoFillCondition": [
+                  {
+                    "value": "{{loggedInUserMobileNumber}}",
+                    "expression": "true==true"
+                  }
+                ]
+              }
+            ],
+            "systemDate": null,
+            "actionLabel": "GV_ACTION_START_SESSION",
+            "description": "GV_CLF_SESSION_SETUP_DESC",
+            "validations": null,
+            "includeInForm": null,
+            "isMultiSelect": null,
+            "includeInSummary": null
+          }
+        ],
+        "project": "POLIO",
+        "version": 1,
+        "category": "COMMUNAL_LIVING_FACILITY",
+        "disabled": false,
+        "onAction": [
+          {
+            "actionType": "FETCH_TRANSFORMER_CONFIG",
+            "properties": {
+              "data": [],
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "GV_ERROR_FETCH_CONFIG"
+                  }
+                }
+              ],
+              "configName": "clfSession"
+            }
+          },
+          {
+            "actionType": "CREATE_EVENT",
+            "properties": {
+              "entity": "USERACTION",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "GV_ERROR_RECORD_DATA"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "data": [],
+              "name": "clfSessionsList",
+              "type": "TEMPLATE",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "GV_ERROR_NAVIGATION"
+                  }
+                }
+              ],
+              "navigationMode": "popUntilAndReplace",
+              "popUntilPageName": "clfSessionsList"
+            }
+          },
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "data": [
+                {
+                  "key": "SessionClientReferenceId",
+                  "value": "{{contextData.entities.UserActionModel.clientReferenceId}}"
+                },
+                {
+                  "key": "SessionType",
+                  "value": "CLF"
+                }
+              ],
+              "name": "clfSessionOverview",
+              "type": "TEMPLATE"
+            }
+          }
+        ],
+        "isSelected": true,
+        "screenType": "FORM",
+        "initActions": [],
+        "wrapperConfig": {}
+      },
+      {
+        "body": [
+          {
+            "type": "template",
+            "format": "card",
+            "children": [
+              {
+                "data": [
+                  {
+                    "key": "GV_SUMMARY_LOCATION_NAME",
+                    "value": "{{contextData.0.UserActionModel.additionalFields.fields.locationName}}"
+                  },
+                  {
+                    "key": "GV_SUMMARY_LOCATION_TYPE",
+                    "value": "{{contextData.0.UserActionModel.additionalFields.fields.clfLocationType}}"
+                  }
+                ],
+                "type": "template",
+                "format": "labelPairList",
+                "fieldName": "sessionDetails"
+              }
+            ],
+            "fieldName": "sessionCard",
+            "properties": {
+              "type": "primary"
+            }
+          },
+          {
+            "type": "template",
+            "value": "GV_SESSION_OVERVIEW_TODAY",
+            "format": "textTemplate",
+            "fieldName": "todaysProgressTitle",
+            "properties": {
+              "style": "headingS",
+              "bottomGap": 4
+            }
+          },
+          {
+            "type": "template",
+            "format": "card",
+            "children": [
+              {
+                "type": "template",
+                "value": "{{contextData.0.children.length}}",
+                "format": "textTemplate",
+                "fieldName": "vaccinatedCount",
+                "properties": {
+                  "style": "headingXl",
+                  "bottomGap": 4
+                }
+              },
+              {
+                "type": "template",
+                "value": "GV_METRIC_VACCINATED_TODAY",
+                "format": "textTemplate",
+                "fieldName": "vaccinatedLabel",
+                "mandatory": true,
+                "properties": {
+                  "style": "bodyS",
+                  "bottomGap": 4
+                }
+              },
+              {
+                "type": "template",
+                "format": "row",
+                "children": [
+                  {
+                    "flex": 1,
+                    "type": "template",
+                    "format": "card",
+                    "children": [
+                      {
+                        "type": "template",
+                        "format": "row",
+                        "children": [
+                          {
+                            "type": "template",
+                            "value": "{{contextData.0.femaleChildren.length}}",
+                            "format": "textTemplate",
+                            "fieldName": "femaleCount",
+                            "properties": {
+                              "color": "primary",
+                              "style": "headingS"
+                            }
+                          },
+                          {
+                            "type": "template",
+                            "value": "GV_ENUM_FEMALE",
+                            "format": "textTemplate",
+                            "fieldName": "femaleLabel",
+                            "properties": {
+                              "color": "primary",
+                              "style": "bodyS"
+                            }
+                          }
+                        ],
+                        "fieldName": "femalePillRow",
+                        "properties": {
+                          "gap": 4,
+                          "mainAxisSize": "max",
+                          "mainAxisAlignment": "center",
+                          "crossAxisAlignment": "center"
+                        }
+                      }
+                    ],
+                    "fieldName": "femalePill",
+                    "properties": {
+                      "type": "secondary",
+                      "radius": "radius4"
+                    }
+                  },
+                  {
+                    "flex": 1,
+                    "type": "template",
+                    "format": "card",
+                    "children": [
+                      {
+                        "type": "template",
+                        "format": "row",
+                        "children": [
+                          {
+                            "type": "template",
+                            "value": "{{contextData.0.malesChildren.length}}",
+                            "format": "textTemplate",
+                            "fieldName": "maleCount",
+                            "properties": {
+                              "color": "primary",
+                              "style": "headingS"
+                            }
+                          },
+                          {
+                            "type": "template",
+                            "value": "GV_ENUM_MALE",
+                            "format": "textTemplate",
+                            "fieldName": "maleLabel",
+                            "properties": {
+                              "color": "primary",
+                              "style": "bodyS"
+                            }
+                          }
+                        ],
+                        "fieldName": "malePillRow",
+                        "properties": {
+                          "gap": 4,
+                          "mainAxisSize": "max",
+                          "mainAxisAlignment": "center",
+                          "crossAxisAlignment": "center"
+                        }
+                      }
+                    ],
+                    "fieldName": "malePill",
+                    "properties": {
+                      "type": "secondary",
+                      "radius": "radius4"
+                    }
+                  }
+                ],
+                "fieldName": "vaccinatedSplit",
+                "properties": {
+                  "gap": 8
+                }
+              }
+            ],
+            "fieldName": "vaccinatedTile",
+            "properties": {
+              "type": "primary"
+            }
+          },
+          {
+            "type": "template",
+            "format": "card",
+            "children": [
+              {
+                "type": "template",
+                "value": "{{contextData.0.referrals.length}}",
+                "format": "textTemplate",
+                "fieldName": "referredCount",
+                "properties": {
+                  "style": "headingXl",
+                  "bottomGap": 4
+                }
+              },
+              {
+                "type": "template",
+                "value": "GV_METRIC_CHILDREN_REFERRED",
+                "format": "textTemplate",
+                "fieldName": "referredLabel",
+                "properties": {
+                  "style": "bodyS"
+                }
+              }
+            ],
+            "fieldName": "referredTile",
+            "properties": {
+              "type": "primary"
+            }
+          }
+        ],
+        "name": "clfSessionOverview",
+        "order": 3,
+        "canPop": true,
+        "footer": [
+          {
+            "type": "template",
+            "label": "GV_ADD_VACCINATION_BUTTON",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "SessionClientReferenceId",
+                      "value": "{{contextData.0.UserActionModel.clientReferenceId}}"
+                    },
+                    {
+                      "key": "SessionType",
+                      "value": "CLF"
+                    }
+                  ],
+                  "name": "ADD_CLF_CHILD",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "addVaccination",
+            "mandatory": true,
+            "properties": {
+              "size": "large",
+              "type": "primary",
+              "mainAxisSize": "max",
+              "mainAxisAlignment": "center"
+            }
+          },
+          {
+            "type": "template",
+            "label": "GV_ADD_REFERRAL_BUTTON",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "SessionClientReferenceId",
+                      "value": "{{contextData.0.UserActionModel.clientReferenceId}}"
+                    }
+                  ],
+                  "name": "ADD_CLF_REFERRAL",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "addReferral",
+            "mandatory": true,
+            "properties": {
+              "size": "large",
+              "type": "secondary",
+              "mainAxisSize": "max",
+              "mainAxisAlignment": "center"
+            }
+          }
+        ],
+        "header": [
+          {
+            "type": "template",
+            "label": "GV_BACK_LABEL",
+            "format": "backLink",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {
+                  "name": "clfSessionsList",
+                  "type": "TEMPLATE"
+                }
+              }
+            ],
+            "fieldName": "backLink"
+          }
+        ],
+        "heading": "GV_SESSION_OVERVIEW_HEADING",
+        "category": "COMMUNAL_LIVING_FACILITY",
+        "screenType": "TEMPLATE",
+        "initActions": [
+          {
+            "actionType": "SEARCH_EVENT",
+            "properties": {
+              "data": [
+                {
+                  "key": "resourceTag",
+                  "root": "userAction",
+                  "value": "{{navigation.SessionClientReferenceId}}",
+                  "operation": "equals"
+                }
+              ],
+              "name": "session",
+              "type": "SEARCH_EVENT"
+            }
+          }
+        ],
+        "wrapperConfig": {
+          "filters": [
+            {
+              "field": "additionalFields.fields.sessionType",
+              "equals": "CLF"
+            }
+          ],
+          "relations": [
+            {
+              "name": "children",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                }
+              ],
+              "relations": [
+                {
+                  "name": "child",
+                  "match": {
+                    "field": "clientReferenceId",
+                    "equalsFrom": "clientReferenceId"
+                  },
+                  "entity": "UserActionModel"
+                }
+              ]
+            },
+            {
+              "name": "malesChildren",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
+                {
+                  "field": "additionalFields.fields.childSex",
+                  "equals": "MALE"
+                }
+              ]
+            },
+            {
+              "name": "femaleChildren",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_CHILD"
+                },
+                {
+                  "field": "additionalFields.fields.childSex",
+                  "equals": "FEMALE"
+                }
+              ]
+            },
+            {
+              "name": "referrals",
+              "match": {
+                "field": "resourceTag",
+                "equalsFrom": "clientReferenceId"
+              },
+              "entity": "UserActionModel",
+              "filters": [
+                {
+                  "field": "additionalFields.fields.formType",
+                  "equals": "GROUP_VAC_REFERRAL"
+                }
+              ]
+            }
+          ],
+          "rootEntity": "UserActionModel",
+          "wrapperName": "ClfSessionWrapper",
+          "searchConfig": {
+            "select": ["userAction"],
+            "primary": "userAction"
+          }
+        }
+      },
+      {
+        "name": "ADD_CLF_CHILD",
+        "pages": [
+          {
+            "page": "childDetails",
+            "type": "object",
+            "label": "GV_CHILD_DETAILS_LABEL",
+            "order": 1,
+            "value": null,
+            "hidden": null,
+            "endDate": null,
+            "tooltip": null,
+            "helpText": null,
+            "readOnly": null,
+            "required": null,
+            "charCount": null,
+            "startDate": null,
+            "autoEnable": null,
+            "innerLabel": null,
+            "properties": [
+              {
+                "type": "string",
+                "label": "GV_LOCATION_CAPTURED_LABEL",
+                "order": 1,
+                "value": "",
+                "format": "latLng",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "GV_GPS_START_HELPTEXT",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "gpsChild",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_GPS_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "includeInSummary": false
+              },
+              {
+                "type": "string",
+                "label": "GV_CHILD_NAME_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "text",
+                "hidden": true,
+                "tooltip": "",
+                "helpText": "GV_CHILD_NAME_HELPTEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "childName",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "lengthRange": {
+                  "maxLength": "200",
+                  "minLength": "1",
+                  "errorMessage": "GV_VALIDATION_MAX_200"
+                },
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "HCM_GV_CHILD_NAME_LABEL_REQUIRED_MESSAGE"
+                  },
+                  {
+                    "type": "maxLength",
+                    "value": "200",
+                    "message": "GV_VALIDATION_MAX_200"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "textCapitalization": "words"
+              },
+              {
+                "type": "string",
+                "label": "GV_CHILD_SEX_LABEL",
+                "order": 3,
+                "value": "",
+                "format": "select",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "required": true,
+                "fieldName": "childSex",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "schemaCode": "common-masters.GenderType",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_CHILD_SEX_LABEL_VALIDATION_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "dynamic",
+                "enums": [],
+                "label": "GV_AGE_BAND_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "custom",
+                "hidden": false,
+                "isMdms": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "required": true,
+                "fieldName": "ageBand",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_AGE_BAND_LABEL_VALIDATION_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "includeInSummary": true
+              },
+              {
+                "type": "string",
+                "label": "GV_VACCINE_LABEL",
+                "order": 10,
+                "value": "",
+                "format": "text",
+                "hidden": true,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "ageBandVaccine",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "includeInSummary": true
+              }
+            ],
+            "systemDate": null,
+            "actionLabel": "GV_ACTION_CONFIRM_VACCINATION",
+            "description": "GV_CHILD_STEP_1_OF_2",
+            "validations": null,
+            "includeInForm": null,
+            "isMultiSelect": null,
+            "includeInSummary": null
+          },
+          {
+            "page": "confirmVaccination",
+            "type": "object",
+            "label": "GV_CONFIRM_VACCINATION_LABEL",
+            "order": 2,
+            "value": null,
+            "hidden": null,
+            "endDate": null,
+            "tooltip": null,
+            "helpText": null,
+            "readOnly": null,
+            "required": null,
+            "charCount": null,
+            "startDate": null,
+            "autoEnable": null,
+            "innerLabel": null,
+            "properties": [
+              {
+                "type": "boolean",
+                "label": "GV_TWO_DROPS_LABEL",
+                "order": 1,
+                "value": true,
+                "format": "checkbox",
+                "hidden": true,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "twoDropsAdministered",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "includeInSummary": true
+              },
+              {
+                "type": "boolean",
+                "label": "GV_FINGER_MARKED_LABEL",
+                "order": 2,
+                "value": true,
+                "format": "checkbox",
+                "hidden": true,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "fingerMarked",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "includeInSummary": true
+              }
+            ],
+            "systemDate": null,
+            "actionLabel": "GV_ACTION_CONFIRM_VACCINATION",
+            "description": "GV_CONFIRM_VACCINATION_DESC",
+            "validations": null,
+            "includeInForm": null,
+            "isMultiSelect": null,
+            "includeInSummary": null
+          }
+        ],
+        "project": "POLIO",
+        "summary": true,
+        "version": 1,
+        "category": "COMMUNAL_LIVING_FACILITY",
+        "disabled": false,
+        "onAction": [
+          {
+            "actionType": "FETCH_TRANSFORMER_CONFIG",
+            "properties": {
+              "data": [
+                {
+                  "key": "SessionClientReferenceId",
+                  "value": "{{navigation.SessionClientReferenceId}}"
+                }
+              ],
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "GV_ERROR_FETCH_CONFIG"
+                  }
+                }
+              ],
+              "configName": "groupVacChild"
+            }
+          },
+          {
+            "actionType": "CREATE_EVENT",
+            "properties": {
+              "entity": "USERACTION",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "GV_ERROR_RECORD_DATA"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "data": [
+                {
+                  "key": "SessionClientReferenceId",
+                  "value": "{{navigation.SessionClientReferenceId}}"
+                },
+                {
+                  "key": "SessionType",
+                  "value": "CLF"
+                }
+              ],
+              "name": "clfVaccinationSuccess",
+              "type": "TEMPLATE",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "GV_ERROR_NAVIGATION"
+                  }
+                }
+              ],
+              "category": "COMMUNAL_LIVING_FACILITY"
+            }
+          }
+        ],
+        "isSelected": true,
+        "screenType": "FORM",
+        "initActions": [],
+        "wrapperConfig": {}
+      },
+      {
+        "body": [
+          {
+            "type": "template",
+            "label": "GV_VACCINATION_SUCCESS_HEADING",
+            "format": "panelCard",
+            "properties": {
+              "type": "success"
+            },
+            "description": "GV_VACCINATION_SUCCESS_MESSAGE",
+            "primaryAction": {
+              "type": "template",
+              "label": "GV_SUCCESS_RECORD_ANOTHER",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "SessionClientReferenceId",
+                        "value": "{{navigation.SessionClientReferenceId}}"
+                      },
+                      {
+                        "key": "SessionType",
+                        "value": "CLF"
+                      }
+                    ],
+                    "name": "ADD_CLF_CHILD",
+                    "type": "FORM"
+                  }
+                }
+              ],
+              "fieldName": "recordAnother",
+              "mandatory": true,
+              "properties": {
+                "type": "primary"
+              }
+            },
+            "secondaryAction": {
+              "type": "template",
+              "label": "GV_SUCCESS_BACK_TO_DASHBOARD",
+              "format": "button",
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [],
+                    "name": "clfSessionsList",
+                    "type": "TEMPLATE",
+                    "navigationMode": "popUntilAndReplace",
+                    "popUntilPageName": "clfSessionsList"
+                  }
+                }
+              ],
+              "fieldName": "backToDashboard",
+              "mandatory": true,
+              "properties": {
+                "type": "secondary"
+              }
+            }
+          }
+        ],
+        "name": "clfVaccinationSuccess",
+        "order": 5,
+        "canPop": false,
+        "footer": [],
+        "header": [],
+        "heading": "",
+        "category": "COMMUNAL_LIVING_FACILITY",
+        "screenType": "TEMPLATE",
+        "description": "",
+        "initActions": [],
+        "isSuccessorErrorScreen": true
+      }
+    ],
+    "order": 2,
+    "active": true,
+    "project": "POLIO",
+    "version": 1,
+    "disabled": false,
+    "isSelected": true,
+    "initialPage": "clfSessionsList"
+  },
+  "isActive": true,
+  "auditDetails": {
+    "createdBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
+    "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
+    "createdTime": 1791788949610,
+    "lastModifiedTime": 1791889986327
+  }
+}
