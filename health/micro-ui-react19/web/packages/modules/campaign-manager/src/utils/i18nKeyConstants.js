@@ -1,3 +1,5 @@
+import i18next from "i18next";
+
 /**
  * Centralized i18n Translation Key Constants
  *
@@ -814,4 +816,112 @@ export const I18N_KEYS = {
     HCM_SHIPMENT_FAILED: "HCM_SHIPMENT_FAILED",
     HCM_WAYBILL_NUMBER_SIZE: "HCM_WAYBILL_NUMBER_SIZE",
   },
+};
+
+export const USER_SESSION_I18N_KEYS = {
+  USER_SESSION: "USER_SESSION",
+  USER_SESSION_CARD_DESCRIPTION: "USER_SESSION_CARD_DESCRIPTION",
+  USER_SESSION_REVOKE: "USER_SESSION_REVOKE",
+  USER_SESSION_REVOKE_CONFIRMATION: "USER_SESSION_REVOKE_CONFIRMATION",
+  USER_SESSION_REVOKE_SUCCESS: "USER_SESSION_REVOKE_SUCCESS",
+  USER_SESSION_REVOKE_FAILED: "USER_SESSION_REVOKE_FAILED",
+  USER_SESSION_UUID_MISSING: "USER_SESSION_UUID_MISSING",
+  USER_SESSION_FETCH_FAILED: "USER_SESSION_FETCH_FAILED",
+  USER_SESSION_EMPLOYEE_LOOKUP_NOT_FOUND: "USER_SESSION_EMPLOYEE_LOOKUP_NOT_FOUND",
+  USER_SESSION_EMPLOYEE_LOOKUP_AMBIGUOUS: "USER_SESSION_EMPLOYEE_LOOKUP_AMBIGUOUS",
+  USER_SESSION_CAMPAIGN_FILTER_NOT_SUPPORTED: "USER_SESSION_CAMPAIGN_FILTER_NOT_SUPPORTED",
+  HCM_CAMPAIGN_NAME: "HCM_CAMPAIGN_NAME",
+  HR_COMMON_BUTTON_HOME: "HR_COMMON_BUTTON_HOME",
+  HR_COMMON_TABLE_COL_ROLE: "HR_COMMON_TABLE_COL_ROLE",
+  HR_EMP_STATUS_LABEL: "HR_EMP_STATUS_LABEL",
+  HR_ACTIVATE_HEAD: "HR_ACTIVATE_HEAD",
+  HR_DEACTIVATE_HEAD: "HR_DEACTIVATE_HEAD",
+  HRMS_APPLY_FILTERS: "HRMS_APPLY_FILTERS",
+  HRMS_CLEAR_FILTER: "HRMS_CLEAR_FILTER",
+  HR_NAME_LABEL: "HR_NAME_LABEL",
+  HR_USERNAME_LABEL: "HR_USERNAME_LABEL",
+  HR_MOB_NO_LABEL: "HR_MOB_NO_LABEL",
+  HR_EMP_NAME_LABEL: "HR_EMP_NAME_LABEL",
+  DEVICE_ID: "DEVICE_ID",
+  CS_COMMON_ACTION: "CS_COMMON_ACTION",
+  ES_COMMON_SEARCH: "ES_COMMON_SEARCH",
+  CS_COMMON_SEARCHING: "CS_COMMON_SEARCHING",
+  ES_COMMON_NO_DATA: "ES_COMMON_NO_DATA",
+  CS_COMMON_PAGE: "CS_COMMON_PAGE",
+  CS_COMMON_PREVIOUS: "CS_COMMON_PREVIOUS",
+  CS_COMMON_NEXT: "CS_COMMON_NEXT",
+  CS_COMMON_CANCEL: "CS_COMMON_CANCEL",
+  CS_COMMON_SUBMITTING: "CS_COMMON_SUBMITTING",
+};
+
+export const USER_SESSION_TRANSLATIONS = {
+  [USER_SESSION_I18N_KEYS.USER_SESSION]: "User Session",
+  [USER_SESSION_I18N_KEYS.USER_SESSION_CARD_DESCRIPTION]: "Manage and view active user sessions",
+  [USER_SESSION_I18N_KEYS.USER_SESSION_REVOKE]: "Revoke",
+  [USER_SESSION_I18N_KEYS.USER_SESSION_REVOKE_CONFIRMATION]: "Are you sure you want to revoke sessions for {{userName}}?",
+  [USER_SESSION_I18N_KEYS.USER_SESSION_REVOKE_SUCCESS]: "Session revoked successfully",
+  [USER_SESSION_I18N_KEYS.USER_SESSION_REVOKE_FAILED]: "Failed to revoke session",
+  [USER_SESSION_I18N_KEYS.USER_SESSION_UUID_MISSING]: "Unable to revoke: user UUID is missing",
+  [USER_SESSION_I18N_KEYS.USER_SESSION_FETCH_FAILED]: "Unable to fetch user sessions",
+  [USER_SESSION_I18N_KEYS.USER_SESSION_EMPLOYEE_LOOKUP_NOT_FOUND]: "Unable to find employee for session revocation",
+  [USER_SESSION_I18N_KEYS.USER_SESSION_EMPLOYEE_LOOKUP_AMBIGUOUS]: "Multiple employees matched. Please verify the employee and try again",
+  [USER_SESSION_I18N_KEYS.USER_SESSION_CAMPAIGN_FILTER_NOT_SUPPORTED]: "Campaign Name filter is not supported by the current API",
+  [USER_SESSION_I18N_KEYS.HCM_CAMPAIGN_NAME]: "Campaign Name",
+  [USER_SESSION_I18N_KEYS.HR_COMMON_BUTTON_HOME]: "Home",
+  [USER_SESSION_I18N_KEYS.HR_COMMON_TABLE_COL_ROLE]: "Role",
+  [USER_SESSION_I18N_KEYS.HR_EMP_STATUS_LABEL]: "Status",
+  [USER_SESSION_I18N_KEYS.HR_ACTIVATE_HEAD]: "Active",
+  [USER_SESSION_I18N_KEYS.HR_DEACTIVATE_HEAD]: "Inactive",
+  [USER_SESSION_I18N_KEYS.HRMS_APPLY_FILTERS]: "Apply Filters",
+  [USER_SESSION_I18N_KEYS.HRMS_CLEAR_FILTER]: "Clear Filter",
+  [USER_SESSION_I18N_KEYS.HR_NAME_LABEL]: "Employee Name",
+  [USER_SESSION_I18N_KEYS.HR_USERNAME_LABEL]: "Username",
+  [USER_SESSION_I18N_KEYS.HR_MOB_NO_LABEL]: "Mobile Number",
+  [USER_SESSION_I18N_KEYS.HR_EMP_NAME_LABEL]: "Name",
+  [USER_SESSION_I18N_KEYS.DEVICE_ID]: "Device ID",
+  [USER_SESSION_I18N_KEYS.CS_COMMON_ACTION]: "Action",
+  [USER_SESSION_I18N_KEYS.ES_COMMON_SEARCH]: "Search",
+  [USER_SESSION_I18N_KEYS.CS_COMMON_SEARCHING]: "Searching",
+  [USER_SESSION_I18N_KEYS.ES_COMMON_NO_DATA]: "No Data Found",
+  [USER_SESSION_I18N_KEYS.CS_COMMON_PAGE]: "Page",
+  [USER_SESSION_I18N_KEYS.CS_COMMON_PREVIOUS]: "Previous",
+  [USER_SESSION_I18N_KEYS.CS_COMMON_NEXT]: "Next",
+  [USER_SESSION_I18N_KEYS.CS_COMMON_CANCEL]: "Cancel",
+  [USER_SESSION_I18N_KEYS.CS_COMMON_SUBMITTING]: "Submitting...",
+};
+
+const USER_SESSION_FALLBACK_LANGUAGES = ["en_IN", "en_MZ", "en"];
+const USER_SESSION_TRANSLATION_NAMESPACES = ["translations", "translation"];
+
+const getUserSessionI18nInstances = () => {
+  const instances = [i18next, window?.i18next].filter(Boolean);
+  return Array.from(new Set(instances));
+};
+
+const addUserSessionResourcesToInstance = (instance) => {
+  const activeLang = instance?.language;
+  const languages = new Set([...USER_SESSION_FALLBACK_LANGUAGES, ...(activeLang ? [activeLang] : [])]);
+
+  languages.forEach((lang) => {
+    if (!lang || !instance?.addResourceBundle) return;
+    USER_SESSION_TRANSLATION_NAMESPACES.forEach((namespace) => {
+      instance.addResourceBundle(lang, namespace, USER_SESSION_TRANSLATIONS, true, true);
+    });
+  });
+};
+
+let userSessionLanguageListenerRegistered = false;
+
+export const ensureUserSessionI18n = () => {
+  const instances = getUserSessionI18nInstances();
+  instances.forEach(addUserSessionResourcesToInstance);
+
+  if (!userSessionLanguageListenerRegistered) {
+    instances.forEach((instance) => {
+      if (instance?.on) {
+        instance.on("languageChanged", () => addUserSessionResourcesToInstance(instance));
+      }
+    });
+    userSessionLanguageListenerRegistered = true;
+  }
 };
