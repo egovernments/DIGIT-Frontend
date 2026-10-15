@@ -157,7 +157,10 @@ const NewAppModule = () => {
               <Card
                 key={item?.id || index}
                 className={`module-card ${isActive ? "selected-card" : ""}`}
-                onClick={() => {}}
+                // No onClick: Card turns itself into a role="button" whenever it gets one, which
+                // made this card a button wrapping the focusable button below (axe
+                // nested-interactive). The handler was empty anyway - the card never did anything,
+                // so dropping it also removes a tab stop that announced as a button and did nothing.
                 id={`setup-mobile-app-card-${item?.data?.name}`}
                 style={{
                   cursor: "pointer",

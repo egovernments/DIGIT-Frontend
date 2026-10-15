@@ -9,78 +9,10 @@
       {
         "body": [
           {
+            "icon": "DirectionsBus",
             "type": "template",
-            "format": "card",
-            "children": [
-              {
-                "type": "template",
-                "format": "row",
-                "children": [
-                  {
-                    "type": "template",
-                    "value": "DirectionsBus",
-                    "format": "icon",
-                    "fieldName": "transitPostIcon",
-                    "properties": {
-                      "size": 32,
-                      "color": "primary"
-                    }
-                  }
-                ],
-                "fieldName": "transitPostIconRow",
-                "properties": {
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "center"
-                }
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "children": [
-                  {
-                    "flex": 1,
-                    "type": "template",
-                    "value": "GV_LOCATION_TRANSIT_POST_HEADING",
-                    "format": "textTemplate",
-                    "maxLines": 0,
-                    "fieldName": "transitPostHeading",
-                    "properties": {
-                      "color": "primary",
-                      "style": "headingM",
-                      "textAlign": "center"
-                    }
-                  }
-                ],
-                "fieldName": "transitPostHeadingRow",
-                "properties": {
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "center"
-                }
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "children": [
-                  {
-                    "flex": 1,
-                    "type": "template",
-                    "value": "GV_LOCATION_TRANSIT_POST_DESCRIPTION",
-                    "format": "textTemplate",
-                    "maxLines": 0,
-                    "fieldName": "transitPostDescription",
-                    "properties": {
-                      "style": "bodyS",
-                      "textAlign": "center"
-                    }
-                  }
-                ],
-                "fieldName": "transitPostDescriptionRow",
-                "properties": {
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "center"
-                }
-              }
-            ],
+            "format": "menu_card",
+            "heading": "GV_LOCATION_TRANSIT_POST_HEADING",
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -93,82 +25,16 @@
             ],
             "fieldName": "transitPostOption",
             "properties": {
-              "spacing": 12
-            }
+              "icon": "DirectionsBus"
+            },
+            "schemaCode": null,
+            "description": "GV_LOCATION_TRANSIT_POST_DESCRIPTION"
           },
           {
+            "icon": "Groups",
             "type": "template",
-            "format": "card",
-            "children": [
-              {
-                "type": "template",
-                "format": "row",
-                "children": [
-                  {
-                    "type": "template",
-                    "value": "Groups",
-                    "format": "icon",
-                    "fieldName": "clfIcon",
-                    "properties": {
-                      "size": 32,
-                      "color": "primary"
-                    }
-                  }
-                ],
-                "fieldName": "clfIconRow",
-                "properties": {
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "center"
-                }
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "children": [
-                  {
-                    "flex": 1,
-                    "type": "template",
-                    "value": "GV_LOCATION_CLF_HEADING",
-                    "format": "textTemplate",
-                    "maxLines": 0,
-                    "fieldName": "clfHeading",
-                    "properties": {
-                      "color": "primary",
-                      "style": "headingM",
-                      "textAlign": "center"
-                    }
-                  }
-                ],
-                "fieldName": "clfHeadingRow",
-                "properties": {
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "center"
-                }
-              },
-              {
-                "type": "template",
-                "format": "row",
-                "children": [
-                  {
-                    "flex": 1,
-                    "type": "template",
-                    "value": "GV_LOCATION_CLF_DESCRIPTION",
-                    "format": "textTemplate",
-                    "maxLines": 0,
-                    "fieldName": "clfDescription",
-                    "properties": {
-                      "style": "bodyS",
-                      "textAlign": "center"
-                    }
-                  }
-                ],
-                "fieldName": "clfDescriptionRow",
-                "properties": {
-                  "mainAxisSize": "max",
-                  "mainAxisAlignment": "center"
-                }
-              }
-            ],
+            "format": "menu_card",
+            "heading": "GV_LOCATION_CLF_HEADING",
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -181,8 +47,10 @@
             ],
             "fieldName": "clfOption",
             "properties": {
-              "spacing": 12
-            }
+              "icon": "Groups"
+            },
+            "schemaCode": null,
+            "description": "GV_LOCATION_CLF_DESCRIPTION"
           }
         ],
         "name": "selectVaccinationLocation",
@@ -243,14 +111,6 @@
                 "value": 2
               }
             ]
-          },
-          {
-            "type": "template",
-            "label": "GV_SESSIONS_EMPTY_MESSAGE",
-            "format": "infoCard",
-            "visible": "{{fn:isEmpty(contextData)}}",
-            "fieldName": "emptyState",
-            "description": "GV_SESSIONS_EMPTY_DESCRIPTION"
           },
           {
             "type": "template",
@@ -492,6 +352,7 @@
       },
       {
         "name": "transitSessionSetup",
+        "order": 2,
         "pages": [
           {
             "page": "sessionSetup",
@@ -512,122 +373,8 @@
             "properties": [
               {
                 "type": "string",
-                "label": "GV_SESSION_DATE_LABEL",
-                "order": 1,
-                "value": "",
-                "format": "date",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": true,
-                "fieldName": "sessionDate",
-                "mandatory": true,
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": true,
-                "validations": [],
-                "errorMessage": "",
-                "isMultiSelect": false
-              },
-              {
-                "type": "string",
-                "label": "GV_LOCATION_CAPTURED_LABEL",
-                "order": 2,
-                "value": "",
-                "format": "latLng",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "GV_GPS_START_HELPTEXT",
-                "infoText": "",
-                "readOnly": true,
-                "fieldName": "gpsStart",
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_GPS_REQUIRED"
-                  }
-                ],
-                "errorMessage": "",
-                "isMultiSelect": false,
-                "includeInSummary": false
-              },
-              {
-                "type": "string",
-                "label": "GV_SESSION_AREA_LABEL",
-                "order": 3,
-                "value": "",
-                "format": "locality",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": true,
-                "fieldName": "sessionArea",
-                "mandatory": true,
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "validations": [],
-                "errorMessage": "",
-                "isMultiSelect": false
-              },
-              {
-                "type": "string",
-                "enums": [
-                  {
-                    "code": "BUS_STATION",
-                    "name": "GV_ENUM_BUS_STATION"
-                  },
-                  {
-                    "code": "BORDER_CROSSING",
-                    "name": "GV_ENUM_BORDER_CROSSING"
-                  },
-                  {
-                    "code": "CHECKPOINT",
-                    "name": "GV_ENUM_CHECKPOINT"
-                  },
-                  {
-                    "code": "FERRY_TERMINAL",
-                    "name": "GV_ENUM_FERRY_TERMINAL"
-                  },
-                  {
-                    "code": "OTHER",
-                    "name": "GV_ENUM_OTHER"
-                  }
-                ],
-                "label": "GV_TRANSIT_LOCATION_TYPE_LABEL",
-                "order": 4,
-                "value": "",
-                "format": "dropdown",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": false,
-                "fieldName": "transitLocationType",
-                "mandatory": true,
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_REQUIRED"
-                  }
-                ],
-                "errorMessage": "",
-                "isMultiSelect": false
-              },
-              {
-                "type": "string",
                 "label": "GV_TRANSIT_SITE_LANDMARK_LABEL",
-                "order": 5,
+                "order": 1,
                 "value": "",
                 "format": "text",
                 "hidden": false,
@@ -663,11 +410,99 @@
               },
               {
                 "type": "string",
+                "enums": [
+                  {
+                    "code": "BUS_STATION",
+                    "name": "GV_ENUM_BUS_STATION"
+                  },
+                  {
+                    "code": "BORDER_CROSSING",
+                    "name": "GV_ENUM_BORDER_CROSSING"
+                  },
+                  {
+                    "code": "CHECKPOINT",
+                    "name": "GV_ENUM_CHECKPOINT"
+                  },
+                  {
+                    "code": "FERRY_TERMINAL",
+                    "name": "GV_ENUM_FERRY_TERMINAL"
+                  },
+                  {
+                    "code": "OTHER",
+                    "name": "GV_ENUM_OTHER"
+                  }
+                ],
+                "label": "GV_TRANSIT_LOCATION_TYPE_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "dropdown",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "transitLocationType",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_TRANSIT_SESSION_AREA_LABEL",
+                "order": 3,
+                "value": "",
+                "format": "locality",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "sessionArea",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_SESSION_DATE_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "date",
+                "hidden": true,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "sessionDate",
+                "mandatory": false,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": true,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
                 "label": "GV_WORKER_NAME_LABEL",
-                "order": 6,
+                "order": 5,
                 "value": "",
                 "format": "text",
-                "hidden": false,
+                "hidden": true,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -689,10 +524,10 @@
               {
                 "type": "string",
                 "label": "GV_WORKER_PHONE_LABEL",
-                "order": 7,
+                "order": 6,
                 "value": "",
                 "format": "mobileNumber",
-                "hidden": false,
+                "hidden": true,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -710,6 +545,32 @@
                     "expression": "true==true"
                   }
                 ]
+              },
+              {
+                "type": "string",
+                "label": "GV_LOCATION_CAPTURED_LABEL",
+                "order": 7,
+                "value": "",
+                "format": "latLng",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "gpsStart",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_GPS_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "includeInSummary": false
               }
             ],
             "systemDate": null,
@@ -723,7 +584,6 @@
         ],
         "project": "POLIO",
         "version": 1,
-        "order":2,
         "category": "TRANSITPOST",
         "disabled": false,
         "onAction": [
@@ -1131,6 +991,7 @@
       },
       {
         "name": "ADD_TRANSIT_CHILD",
+        "order": 4,
         "pages": [
           {
             "page": "childDetails",
@@ -1151,34 +1012,8 @@
             "properties": [
               {
                 "type": "string",
-                "label": "GV_LOCATION_CAPTURED_LABEL",
-                "order": 1,
-                "value": "",
-                "format": "latLng",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "GV_GPS_START_HELPTEXT",
-                "infoText": "",
-                "readOnly": true,
-                "fieldName": "gpsChild",
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_GPS_REQUIRED"
-                  }
-                ],
-                "errorMessage": "",
-                "isMultiSelect": false,
-                "includeInSummary": false
-              },
-              {
-                "type": "string",
                 "label": "GV_CHILD_NAME_LABEL",
-                "order": 2,
+                "order": 1,
                 "value": "",
                 "format": "text",
                 "hidden": false,
@@ -1186,18 +1021,13 @@
                 "helpText": "GV_CHILD_NAME_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
-                "required": true,
+                "required": false,
                 "fieldName": "childName",
-                "mandatory": true,
+                "mandatory": false,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
                 "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "HCM_GV_CHILD_NAME_LABEL_REQUIRED_MESSAGE"
-                  },
                   {
                     "type": "maxLength",
                     "value": "200",
@@ -1209,46 +1039,8 @@
               },
               {
                 "type": "string",
-                "enums": [
-                  {
-                    "code": "MALE",
-                    "name": "GV_ENUM_MALE"
-                  },
-                  {
-                    "code": "FEMALE",
-                    "name": "GV_ENUM_FEMALE"
-                  }
-                ],
-                "label": "GV_CHILD_SEX_LABEL",
-                "order": 4,
-                "value": "",
-                "format": "select",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": false,
-                "required": true,
-                "fieldName": "childSex",
-                "mandatory": true,
-                "deleteFlag": false,
-                "innerLabel": "",
-                "schemaCode": "common-masters.GenderType",
-                "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_CHILD_SEX_LABEL_VALIDATION_REQUIRED"
-                  }
-                ],
-                "errorMessage": "",
-                "isMultiSelect": false
-              },
-              {
-                "type": "string",
                 "label": "GV_CHILD_DOB_LABEL",
-                "order": 3,
+                "order": 2,
                 "value": "",
                 "format": "dob",
                 "hidden": false,
@@ -1292,8 +1084,46 @@
               },
               {
                 "type": "string",
+                "enums": [
+                  {
+                    "code": "MALE",
+                    "name": "GV_ENUM_MALE"
+                  },
+                  {
+                    "code": "FEMALE",
+                    "name": "GV_ENUM_FEMALE"
+                  }
+                ],
+                "label": "GV_CHILD_SEX_LABEL",
+                "order": 3,
+                "value": "",
+                "format": "select",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "required": true,
+                "fieldName": "childSex",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "schemaCode": "common-masters.GenderType",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_CHILD_SEX_LABEL_VALIDATION_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
                 "label": "GV_VACCINE_LABEL",
-                "order": 10,
+                "order": 4,
                 "value": "",
                 "format": "text",
                 "hidden": true,
@@ -1302,7 +1132,7 @@
                 "infoText": "",
                 "readOnly": true,
                 "fieldName": "ageBandVaccine",
-                "mandatory": true,
+                "mandatory": false,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -1348,7 +1178,7 @@
                 "order": 5,
                 "value": "",
                 "format": "dropdown",
-                "hidden": false,
+                "hidden": true,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -1385,7 +1215,7 @@
                 "order": 6,
                 "value": "",
                 "format": "select",
-                "hidden": false,
+                "hidden": true,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -1422,7 +1252,7 @@
                 "order": 7,
                 "value": "",
                 "format": "radio",
-                "hidden": false,
+                "hidden": true,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -1442,6 +1272,32 @@
                     }
                   ]
                 }
+              },
+              {
+                "type": "string",
+                "label": "GV_LOCATION_CAPTURED_LABEL",
+                "order": 8,
+                "value": "",
+                "format": "latLng",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "gpsChild",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_GPS_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "includeInSummary": false
               }
             ],
             "systemDate": null,
@@ -1523,7 +1379,6 @@
         ],
         "project": "POLIO",
         "summary": false,
-        "order":4,
         "version": 1,
         "category": "TRANSITPOST",
         "disabled": false,
@@ -1717,14 +1572,6 @@
           },
           {
             "type": "template",
-            "label": "GV_SESSIONS_EMPTY_MESSAGE",
-            "format": "infoCard",
-            "visible": "{{fn:isEmpty(contextData)}}",
-            "fieldName": "emptyState",
-            "description": "GV_SESSIONS_EMPTY_DESCRIPTION"
-          },
-          {
-            "type": "template",
             "child": {
               "type": "template",
               "format": "card",
@@ -1748,18 +1595,6 @@
                     {
                       "key": "GV_SUMMARY_LOCATION_AREA",
                       "value": "{{item.UserActionModel.boundaryCode}}"
-                    },
-                    {
-                      "key": "GV_SUMMARY_SESSION_DATE",
-                      "value": "{{fn:formatDate(item.UserActionModel.clientAuditDetails.createdTime, 'date', 'dd MMM yyyy')}}"
-                    },
-                    {
-                      "key": "GV_METRIC_VACCINATED_TODAY",
-                      "value": "{{item.children.length}}"
-                    },
-                    {
-                      "key": "GV_METRIC_VACCINATED_BY_GENDER",
-                      "value": "{{item.malesChildren.length}}M | {{item.femaleChildren.length}}F"
                     }
                   ],
                   "type": "template",
@@ -1975,6 +1810,7 @@
       },
       {
         "name": "clfSessionSetup",
+        "order": 2,
         "pages": [
           {
             "page": "sessionSetup",
@@ -1995,122 +1831,8 @@
             "properties": [
               {
                 "type": "string",
-                "label": "GV_SESSION_DATE_LABEL",
-                "order": 1,
-                "value": "",
-                "format": "date",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": true,
-                "fieldName": "sessionDate",
-                "mandatory": true,
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": true,
-                "validations": [],
-                "errorMessage": "",
-                "isMultiSelect": false
-              },
-              {
-                "type": "string",
-                "label": "GV_LOCATION_CAPTURED_LABEL",
-                "order": 2,
-                "value": "",
-                "format": "latLng",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "GV_GPS_START_HELPTEXT",
-                "infoText": "",
-                "readOnly": true,
-                "fieldName": "gpsStart",
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_GPS_REQUIRED"
-                  }
-                ],
-                "errorMessage": "",
-                "isMultiSelect": false,
-                "includeInSummary": false
-              },
-              {
-                "type": "string",
-                "label": "GV_SESSION_AREA_LABEL",
-                "order": 3,
-                "value": "",
-                "format": "locality",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": true,
-                "fieldName": "sessionArea",
-                "mandatory": true,
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "validations": [],
-                "errorMessage": "",
-                "isMultiSelect": false
-              },
-              {
-                "type": "string",
-                "enums": [
-                  {
-                    "code": "SCHOOL",
-                    "name": "GV_ENUM_SCHOOL"
-                  },
-                  {
-                    "code": "MARKET",
-                    "name": "GV_ENUM_MARKET"
-                  },
-                  {
-                    "code": "HEALTH_POST",
-                    "name": "GV_ENUM_HEALTH_POST"
-                  },
-                  {
-                    "code": "COMMUNITY_CENTRE",
-                    "name": "GV_ENUM_COMMUNITY_CENTRE"
-                  },
-                  {
-                    "code": "OTHER",
-                    "name": "GV_ENUM_OTHER"
-                  }
-                ],
-                "label": "GV_CLF_LOCATION_TYPE_LABEL",
-                "order": 4,
-                "value": "",
-                "format": "dropdown",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": false,
-                "fieldName": "clfLocationType",
-                "mandatory": true,
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_REQUIRED"
-                  }
-                ],
-                "errorMessage": "",
-                "isMultiSelect": false
-              },
-              {
-                "type": "string",
                 "label": "GV_LOCATION_NAME_LABEL",
-                "order": 5,
+                "order": 1,
                 "value": "",
                 "format": "text",
                 "hidden": false,
@@ -2146,11 +1868,99 @@
               },
               {
                 "type": "string",
+                "enums": [
+                  {
+                    "code": "SCHOOL",
+                    "name": "GV_ENUM_SCHOOL"
+                  },
+                  {
+                    "code": "MARKET",
+                    "name": "GV_ENUM_MARKET"
+                  },
+                  {
+                    "code": "HEALTH_POST",
+                    "name": "GV_ENUM_HEALTH_POST"
+                  },
+                  {
+                    "code": "COMMUNITY_CENTRE",
+                    "name": "GV_ENUM_COMMUNITY_CENTRE"
+                  },
+                  {
+                    "code": "OTHER",
+                    "name": "GV_ENUM_OTHER"
+                  }
+                ],
+                "label": "GV_CLF_LOCATION_TYPE_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "dropdown",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "clfLocationType",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_CLF_SESSION_AREA_LABEL",
+                "order": 3,
+                "value": "",
+                "format": "locality",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "sessionArea",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "GV_SESSION_DATE_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "date",
+                "hidden": true,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "sessionDate",
+                "mandatory": false,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": true,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
                 "label": "GV_RESPONSIBLE_PERSON_LABEL",
-                "order": 6,
+                "order": 5,
                 "value": "",
                 "format": "text",
-                "hidden": false,
+                "hidden": true,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -2177,10 +1987,10 @@
               {
                 "type": "string",
                 "label": "GV_CONTACT_NUMBER_LABEL",
-                "order": 7,
+                "order": 6,
                 "value": "",
                 "format": "mobileNumber",
-                "hidden": false,
+                "hidden": true,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -2216,10 +2026,10 @@
               {
                 "type": "string",
                 "label": "GV_WORKER_NAME_LABEL",
-                "order": 8,
+                "order": 7,
                 "value": "",
                 "format": "text",
-                "hidden": false,
+                "hidden": true,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -2241,10 +2051,10 @@
               {
                 "type": "string",
                 "label": "GV_WORKER_PHONE_LABEL",
-                "order": 9,
+                "order": 8,
                 "value": "",
                 "format": "mobileNumber",
-                "hidden": false,
+                "hidden": true,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
@@ -2262,6 +2072,32 @@
                     "expression": "true==true"
                   }
                 ]
+              },
+              {
+                "type": "string",
+                "label": "GV_LOCATION_CAPTURED_LABEL",
+                "order": 9,
+                "value": "",
+                "format": "latLng",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "gpsStart",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_GPS_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "includeInSummary": false
               }
             ],
             "systemDate": null,
@@ -2343,7 +2179,6 @@
             }
           }
         ],
-        "order":2,
         "isSelected": true,
         "screenType": "FORM",
         "initActions": [],
@@ -2680,6 +2515,7 @@
       },
       {
         "name": "ADD_CLF_CHILD",
+        "order": 4,
         "pages": [
           {
             "page": "childDetails",
@@ -2700,34 +2536,8 @@
             "properties": [
               {
                 "type": "string",
-                "label": "GV_LOCATION_CAPTURED_LABEL",
-                "order": 1,
-                "value": "",
-                "format": "latLng",
-                "hidden": false,
-                "tooltip": "",
-                "helpText": "GV_GPS_START_HELPTEXT",
-                "infoText": "",
-                "readOnly": true,
-                "fieldName": "gpsChild",
-                "deleteFlag": false,
-                "innerLabel": "",
-                "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "GV_VALIDATION_GPS_REQUIRED"
-                  }
-                ],
-                "errorMessage": "",
-                "isMultiSelect": false,
-                "includeInSummary": false
-              },
-              {
-                "type": "string",
                 "label": "GV_CHILD_NAME_LABEL",
-                "order": 2,
+                "order": 1,
                 "value": "",
                 "format": "text",
                 "hidden": false,
@@ -2735,9 +2545,9 @@
                 "helpText": "GV_CHILD_NAME_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
-                "required": true,
+                "required": false,
                 "fieldName": "childName",
-                "mandatory": true,
+                "mandatory": false,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -2747,11 +2557,6 @@
                   "errorMessage": "GV_VALIDATION_MAX_200"
                 },
                 "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "HCM_GV_CHILD_NAME_LABEL_REQUIRED_MESSAGE"
-                  },
                   {
                     "type": "maxLength",
                     "value": "200",
@@ -2765,7 +2570,7 @@
               {
                 "type": "string",
                 "label": "GV_CHILD_DOB_LABEL",
-                "order": 3,
+                "order": 2,
                 "value": "",
                 "format": "dob",
                 "hidden": false,
@@ -2819,7 +2624,7 @@
                   }
                 ],
                 "label": "GV_CHILD_SEX_LABEL",
-                "order": 4,
+                "order": 3,
                 "value": "",
                 "format": "select",
                 "hidden": false,
@@ -2847,7 +2652,7 @@
               {
                 "type": "string",
                 "label": "GV_VACCINE_LABEL",
-                "order": 10,
+                "order": 4,
                 "value": "",
                 "format": "text",
                 "hidden": true,
@@ -2856,7 +2661,7 @@
                 "infoText": "",
                 "readOnly": true,
                 "fieldName": "ageBandVaccine",
-                "mandatory": true,
+                "mandatory": false,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "systemDate": false,
@@ -2865,6 +2670,32 @@
                 "includeInForm": true,
                 "isMultiSelect": false,
                 "includeInSummary": true
+              },
+              {
+                "type": "string",
+                "label": "GV_LOCATION_CAPTURED_LABEL",
+                "order": 5,
+                "value": "",
+                "format": "latLng",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "gpsChild",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "GV_VALIDATION_GPS_REQUIRED"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "includeInSummary": false
               }
             ],
             "systemDate": null,
@@ -2946,7 +2777,6 @@
           }
         ],
         "project": "POLIO",
-        "order":4,
         "summary": false,
         "version": 1,
         "category": "COMMUNAL_LIVING_FACILITY",
@@ -3113,8 +2943,8 @@
   "isActive": true,
   "auditDetails": {
     "createdBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
-    "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
+    "lastModifiedBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
     "createdTime": 1791788949610,
-    "lastModifiedTime": 1791960883026
+    "lastModifiedTime": 1792060010901
   }
 }

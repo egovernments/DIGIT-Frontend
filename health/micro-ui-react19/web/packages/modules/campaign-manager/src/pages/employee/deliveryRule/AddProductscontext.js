@@ -183,7 +183,7 @@ const AddProducts = React.memo(({
             
             <div className="add-resource-label-field-container">
               <LabelFieldPair style={{ display: "grid", gap: "4px" }}>
-                <label>{t(I18N_KEYS.PAGES.CAMPAIGN_ADD_PRODUCTS_LABEL)}</label>
+                {/* <label>{t(I18N_KEYS.PAGES.CAMPAIGN_ADD_PRODUCTS_LABEL)}</label> */}
                 <Dropdown
                   t={t}
                   ariaLabel={t(I18N_KEYS.PAGES.CAMPAIGN_ADD_PRODUCTS_LABEL)}
@@ -197,6 +197,11 @@ const AddProducts = React.memo(({
                   optionKey="displayName"
                   isSearchable={true}
                   optionCardStyles={{maxHeight:"20vh"}}
+                  label={t(I18N_KEYS.PAGES.CAMPAIGN_ADD_PRODUCTS_LABEL)}
+                  showLabel
+                  populators={{
+                      "alignFieldPairVertically":true
+                  }}
                 />
               </LabelFieldPair>
               
@@ -215,7 +220,7 @@ const AddProducts = React.memo(({
                     label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_COUNT_LABEL)}
                     showLabel
                     populators={{
-                      "alignFieldPairVerically":true
+                      "alignFieldPairVertically":true
                     }}
                   />
                 </LabelFieldPair>

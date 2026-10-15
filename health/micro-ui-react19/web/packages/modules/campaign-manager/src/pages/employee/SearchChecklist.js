@@ -193,7 +193,6 @@ const SearchChecklist = () => {
             >
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>{t(I18N_KEYS.PAGES.HCM_CHECKLIST_ROLE)}</span>
                   <Dropdown
                     t={t}
                     style={{ width: "50%" }}
@@ -203,11 +202,15 @@ const SearchChecklist = () => {
                       handleUpdateCode(value);
                     }}
                     placeholder="Type"
+                    label={t(I18N_KEYS.PAGES.HCM_CHECKLIST_ROLE)}
+                    showLabel
+                    populators={{
+                      "alignFieldPairVertically":true
+                    }}
                   />
                 </div>
                 <div style={{ height: "1rem" }}></div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>{t(I18N_KEYS.PAGES.SELECT_CHECKLIST_TYPE)}</span>
                   <Dropdown
                     t={t}
                     style={{ width: "50%" }}
@@ -217,6 +220,11 @@ const SearchChecklist = () => {
                       handleUpdateList(value);
                     }}
                     placeholder="Type"
+                    label={t(I18N_KEYS.PAGES.SELECT_CHECKLIST_TYPE)}
+                    showLabel
+                    populators={{
+                      "alignFieldPairVertically":true
+                    }}
                   />
                 </div>
               </div>

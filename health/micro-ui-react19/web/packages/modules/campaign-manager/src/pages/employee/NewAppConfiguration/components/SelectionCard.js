@@ -1,13 +1,17 @@
 import React, { useMemo } from "react";
 import { Loader, SelectionTag } from "@egovernments/digit-ui-components";
 import { useCustomT, useCustomTranslate } from "../hooks/useCustomT";
-import useCampaignStore from "../../../../hooks/useCampaignStore";
 
-const SelectionCard = ({ field, t, props }) => {
+const SelectionCard = ({ field, t, props, data }) => {
   const selectionField = field || props?.field;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const customT = useCustomTranslate();
-  const [adminUploadData] = useCampaignStore("HCM_ADMIN_CONSOLE_UPLOAD_DATA", null);
+  const searchParams = new URLSearchParams(location.search);
+  const campaignNumber = searchParams.get("campaignNumber");
+  // The module this screen belongs to (e.g. "HOUSEHOLDSTRATEGY") - saved campaigns stamp the
+  // same code onto each delivery as `deliveryMethod`, so this is what ties a resource card back
+  // to the delivery condition it should show products for.
+  const flow = data?.flow || searchParams.get("flow");
 
   // Check if this is a resourceCard field
   const isResourceCard = (field?.format === "custom" || props?.field?.format === "custom")
@@ -16,46 +20,51 @@ const SelectionCard = ({ field, t, props }) => {
       || field?.fieldName?.toLowerCase()?.includes("product")
       || props?.field?.fieldName?.toLowerCase()?.includes("product"));
 
-  // Read product variants from campaign store (adminUploadData) for resourceCard
+  // Fetch the saved campaign directly - the preview isn't guaranteed to be opened right after the
+  // delivery-rule step, so it can't rely on whatever happens to still be in the client-side wizard
+  // cache. Same campaign-search endpoint and call convention LocalisationAdd.js already uses.
+  const { data: campaignData } = Digit.Hooks.campaign.useSearchCampaign({
+    tenantId,
+    filter: { campaignNumber },
+    config: {
+      enabled: isResourceCard && !!campaignNumber,
+      select: (campaigns) => campaigns?.[0],
+    },
+  });
+
+  // Read product variants from the saved campaign's delivery rules, scoped to this screen's module
   const productVariants = useMemo(() => {
     if (!isResourceCard) return [];
 
     try {
-      const sessionData = adminUploadData;
-      if (!sessionData) return [];
+      const deliveryRules = campaignData?.deliveryRules;
+      if (!Array.isArray(deliveryRules)) return [];
 
-      const deliveryData = sessionData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
-
-      if (!deliveryData || !Array.isArray(deliveryData)) return [];
-
-      // Extract all product variants from all cycles and deliveries
+      // Extract product variants from deliveries belonging to this screen's module only
       const variantsMap = new Map();
 
-      deliveryData?.forEach((campaign) => {
-        if (campaign?.cycles && Array.isArray(campaign.cycles)) {
-          campaign.cycles.forEach((cycle) => {
-            if (cycle?.deliveries && Array.isArray(cycle.deliveries)) {
-              cycle.deliveries.forEach((delivery) => {
-                if (delivery?.doseCriteria && Array.isArray(delivery.doseCriteria)) {
-                  delivery.doseCriteria.forEach((criteria) => {
-                    if (criteria?.ProductVariants && Array.isArray(criteria.ProductVariants)) {
-                      criteria.ProductVariants.forEach((variant) => {
-                        if (variant?.productVariantId && variant?.name) {
-                          // Use productVariantId as key to avoid duplicates
-                          variantsMap.set(variant.productVariantId, {
-                            code: variant.productVariantId,
-                            name: variant.name,
-                            productVariantId: variant.productVariantId,
-                          });
-                        }
-                      });
-                    }
+      deliveryRules.forEach((ruleSet) => {
+        if (!Array.isArray(ruleSet?.cycles)) return;
+        ruleSet.cycles.forEach((cycle) => {
+          if (!Array.isArray(cycle?.deliveries)) return;
+          cycle.deliveries.forEach((delivery) => {
+            if (flow && delivery?.deliveryMethod !== flow) return;
+            if (!Array.isArray(delivery?.doseCriteria)) return;
+            delivery.doseCriteria.forEach((criteria) => {
+              if (!Array.isArray(criteria?.ProductVariants)) return;
+              criteria.ProductVariants.forEach((variant) => {
+                if (variant?.productVariantId && variant?.name) {
+                  // Use productVariantId as key to avoid duplicates
+                  variantsMap.set(variant.productVariantId, {
+                    code: variant.productVariantId,
+                    name: variant.name,
+                    productVariantId: variant.productVariantId,
                   });
                 }
               });
-            }
+            });
           });
-        }
+        });
       });
 
       return Array.from(variantsMap.values());
@@ -63,7 +72,7 @@ const SelectionCard = ({ field, t, props }) => {
       console.error("Error extracting product variants:", error);
       return [];
     }
-  }, [isResourceCard, adminUploadData]);
+  }, [isResourceCard, campaignData, flow]);
 
   // Parse schemaCode to get moduleName and masterName
   const { moduleName, masterName, isValidSchema } = useMemo(() => {
