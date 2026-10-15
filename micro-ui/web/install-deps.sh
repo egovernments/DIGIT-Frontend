@@ -9,11 +9,11 @@ rm -rf "$STUDIO_REPO"
 echo "Cloning DIGIT-Studio repository..."
 
 if [ -n "$GIT_TOKEN" ]; then
-    git clone -b develop-dev-a11y \
+    git clone -b develop \
     "https://${GIT_TOKEN}:x-oauth-basic@github.com/egovernments/DIGIT-Studio.git" \
     "$STUDIO_REPO"
 else
-    git clone -b develop-dev-a11y \
+    git clone -b develop \
     "https://github.com/egovernments/DIGIT-Studio.git" \
     "$STUDIO_REPO"
 fi
