@@ -6,7 +6,7 @@ import DataTable from "react-data-table-component";
 import { ensureUserSessionI18n } from "../../../packages/modules/campaign-manager/src/utils/i18nKeyConstants";
 import { tableCustomStyle } from "../../../packages/modules/campaign-manager/src/components/tableCustomStyle";
 import { getResolvedTenantId, isRevokeSuccessful, lookupEmployeeUuidByCode, revokeUserSession, searchActiveUsersByCampaignNumber, searchUserSessions } from "./service";
-import { getEmployeeHomeRouteLink, getUserSessionRouteLink, USER_SESSION_PAGE_SIZE } from "./config";
+import { getEmployeeHomeRouteLink, getUserSessionRouteLink, hasUserSessionAccess, USER_SESSION_PAGE_SIZE } from "./config";
 
 const applyLocalFilters = ({ rows, selectedRoles, statusFilter, userNameFilter = "" }) => {
   return rows.filter((row) => {
@@ -44,6 +44,7 @@ const UserSessionPage = () => {
   };
 
   const [userName, setUserName] = useState("");
+  const [userNameInput, setUserNameInput] = useState("");
   const [campaignName, setCampaignName] = useState("");
   const [selectedRoles, setSelectedRoles] = useState([]);
   const [statusFilter, setStatusFilter] = useState("");
@@ -191,8 +192,13 @@ const UserSessionPage = () => {
   const onSearch = async (event) => {
     event?.preventDefault();
 
+    const nextUserName = userNameInput;
+    setUserName(nextUserName);
+
     if (pageOffset === 0) {
-      await fetchUserSessions(0);
+      await fetchUserSessions(0, {
+        userName: nextUserName,
+      });
       return;
     }
 
@@ -218,6 +224,7 @@ const UserSessionPage = () => {
   };
 
   const onClear = async () => {
+    setUserNameInput("");
     setUserName("");
     setCampaignName("");
     setSelectedRoles([]);
@@ -337,8 +344,19 @@ const UserSessionPage = () => {
 
   const userSessionLink = getUserSessionRouteLink();
   const employeeHomeLink = getEmployeeHomeRouteLink();
+  const isAuthorizedForUserSession = hasUserSessionAccess();
   const pageTitle = t("USER_SESSION");
   const homeLabel = resolveLabel("HR_COMMON_BUTTON_HOME", "CS_COMMON_HOME");
+
+  useEffect(() => {
+    if (!isAuthorizedForUserSession) {
+      window.location.replace(employeeHomeLink);
+    }
+  }, [isAuthorizedForUserSession, employeeHomeLink]);
+
+  if (!isAuthorizedForUserSession) {
+    return null;
+  }
 
   return (
     <div className="ground-container" style={{ marginBottom: "80px" }}>
@@ -429,8 +447,8 @@ const UserSessionPage = () => {
                     <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 700, color: "#0B4B66" }}>{t("HR_USERNAME_LABEL")}</label>
                     <TextInput
                       type="text"
-                      value={userName}
-                      onChange={(event) => setUserName(event.target.value)}
+                      value={userNameInput}
+                      onChange={(event) => setUserNameInput(event.target.value)}
                       placeholder={t("HR_USERNAME_LABEL")}
                       style={{ width: "100%" }}
                     />

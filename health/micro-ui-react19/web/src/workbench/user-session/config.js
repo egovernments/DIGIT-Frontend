@@ -16,13 +16,31 @@ export const USER_SESSION_ALLOWED_ACTION_KEYS = [
   "USER_SESSION",
 ];
 
+export const USER_SESSION_REQUIRED_ROLE = "SYSTEM_ADMINISTRATOR";
+
 export const USER_SESSION_FALLBACK_ROLES = [
-  "SYSTEM_ADMINISTRATOR",
-  "SUPERUSER",
-  "HRMS_ADMIN",
-  "CAMPAIGN_ADMINISTRATOR",
-  "CAMPAIGN_MANAGER",
+  USER_SESSION_REQUIRED_ROLE,
 ];
+
+export const hasUserSessionAccess = () => {
+  try {
+    if (window?.Digit?.Utils?.didEmployeeHasAtleastOneRole) {
+      return window.Digit.Utils.didEmployeeHasAtleastOneRole([USER_SESSION_REQUIRED_ROLE]);
+    }
+  } catch (error) {
+    // Fallback to local role parsing when utility is unavailable.
+  }
+
+  try {
+    const raw = window.localStorage.getItem("Employee.user-info") || "";
+    if (!raw) return false;
+    const parsed = JSON.parse(raw);
+    const roles = parsed?.info?.roles || parsed?.roles || [];
+    return roles.some((role) => String(role?.code || "").toUpperCase() === USER_SESSION_REQUIRED_ROLE);
+  } catch (error) {
+    return false;
+  }
+};
 
 const NON_CONTEXT_SEGMENTS = new Set(["employee", "citizen"]);
 

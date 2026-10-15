@@ -1,6 +1,7 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { Hooks } from "@egovernments/digit-ui-libraries";
+import "@egovernments/digit-ui-health-css";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { Loader } from "@egovernments/digit-ui-components";
 import UserSessionPage from "./workbench/user-session/UserSessionPage";
@@ -45,6 +46,8 @@ const hasAnyRole = (roleCodes = []) => {
   const roles = getCurrentUserRoles();
   return roleCodes.some((roleCode) => roles.includes(roleCode));
 };
+
+const hasUserSessionAccess = () => hasAnyRole(["SYSTEM_ADMINISTRATOR"]);
 
 const isRestrictedBoundaryAccess = () => {
   const hasCampaignMicroplanningRole = hasAnyRole([CAMPAIGN_MAPPING_AND_MICROPLANNING_ADMINISTRATOR]);
@@ -108,10 +111,6 @@ const USER_SESSION_PARENT_MODULE = "USER_SESSION";
 const USER_SESSION_MODULE_CODE = "user-session";
 const USER_SESSION_FALLBACK_ROLES = [
   "SYSTEM_ADMINISTRATOR",
-  "SUPERUSER",
-  "HRMS_ADMIN",
-  "CAMPAIGN_ADMINISTRATOR",
-  "CAMPAIGN_MANAGER",
 ];
 
 const NON_CONTEXT_SEGMENTS = new Set(["employee", "citizen"]);
@@ -211,6 +210,7 @@ const patchAccessControlForUserSessionCard = () => {
 
     const routeLink = getUserSessionNavigationLink();
     const userSessionKeys = [USER_SESSION_ACTION_KEY, USER_SESSION_LINK_KEY];
+    const isAuthorizedForUserSession = hasUserSessionAccess();
     const normalizedActions = actions.map((action) => {
       const key = String(action?.name || action?.displayName || action?.path || "").toUpperCase();
       const navigationURL = String(action?.navigationURL || action?.url || action?.path || "");
@@ -227,6 +227,7 @@ const patchAccessControlForUserSessionCard = () => {
         path: isCardAction ? "card" : routeLink,
         url: isCardAction ? "card" : (action?.url || routeLink),
         parentModule: action?.parentModule || USER_SESSION_PARENT_MODULE,
+        roles: USER_SESSION_FALLBACK_ROLES,
       };
     });
 
@@ -234,6 +235,22 @@ const patchAccessControlForUserSessionCard = () => {
       const key = String(action?.name || action?.displayName || action?.path || "").toUpperCase();
       return userSessionKeys.includes(key) && String(action?.url || "").toLowerCase() === "card";
     });
+
+    if (!isAuthorizedForUserSession) {
+      const filteredActions = normalizedActions.filter((action) => {
+        const key = String(action?.name || action?.displayName || action?.path || "").toUpperCase();
+        const navigationURL = String(action?.navigationURL || action?.url || action?.path || "");
+        return !userSessionKeys.includes(key) && !navigationURL.includes(USER_SESSION_ROUTE);
+      });
+
+      return {
+        ...result,
+        data: {
+          ...result.data,
+          actions: filteredActions,
+        },
+      };
+    }
 
     const userSessionCardAction = {
       name: USER_SESSION_ACTION_KEY,

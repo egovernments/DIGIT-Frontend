@@ -9,6 +9,7 @@ import {
   USER_SESSION_ROUTE,
   USER_SESSION_ALLOWED_ACTION_KEYS,
   USER_SESSION_FALLBACK_ROLES,
+  hasUserSessionAccess,
   resolveWorkbenchContextPath,
   getUserSessionRouteLink,
 } from "./workbench/user-session/config";
@@ -182,6 +183,7 @@ const patchAccessControlForUserSessionCard = () => {
 
     const routeLink = getUserSessionNavigationLink();
     const userSessionKeys = [USER_SESSION_ACTION_KEY, USER_SESSION_LINK_KEY];
+    const isAuthorizedForUserSession = hasUserSessionAccess();
     const normalizedActions = actions.map((action) => {
       const key = String(action?.name || action?.displayName || action?.path || "").toUpperCase();
       const navigationURL = String(action?.navigationURL || action?.url || action?.path || "");
@@ -198,6 +200,7 @@ const patchAccessControlForUserSessionCard = () => {
         path: isCardAction ? "card" : routeLink,
         url: isCardAction ? "card" : (action?.url || routeLink),
         parentModule: action?.parentModule || USER_SESSION_PARENT_MODULE,
+        roles: USER_SESSION_FALLBACK_ROLES,
       };
     });
 
@@ -205,6 +208,22 @@ const patchAccessControlForUserSessionCard = () => {
       const key = String(action?.name || action?.displayName || action?.path || "").toUpperCase();
       return userSessionKeys.includes(key) && String(action?.url || "").toLowerCase() === "card";
     });
+
+    if (!isAuthorizedForUserSession) {
+      const filteredActions = normalizedActions.filter((action) => {
+        const key = String(action?.name || action?.displayName || action?.path || "").toUpperCase();
+        const navigationURL = String(action?.navigationURL || action?.url || action?.path || "");
+        return !userSessionKeys.includes(key) && !navigationURL.includes(USER_SESSION_ROUTE);
+      });
+
+      return {
+        ...result,
+        data: {
+          ...result.data,
+          actions: filteredActions,
+        },
+      };
+    }
 
     const userSessionCardAction = {
       name: USER_SESSION_ACTION_KEY,

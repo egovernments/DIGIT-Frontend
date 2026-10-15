@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 import {
+  hasUserSessionAccess,
   getUserSessionRouteLink,
   USER_SESSION_ALLOWED_ACTION_KEYS,
   USER_SESSION_FALLBACK_ROLES,
@@ -36,15 +37,15 @@ const UserSessionCard = () => {
     return actions.find(isUserSessionAction) || null;
   }, [accessControl]);
 
-  const roleGuard = userSessionAction?.roles?.length ? userSessionAction.roles : USER_SESSION_FALLBACK_ROLES;
-  if (!Digit.Utils.didEmployeeHasAtleastOneRole(roleGuard)) {
+  const roleGuard = USER_SESSION_FALLBACK_ROLES;
+  if (!hasUserSessionAccess()) {
     return null;
   }
 
   return (
     <EmployeeModuleCard
       Icon={"UpdateExpense"}
-      moduleName={t("USER_SESSION")}
+      moduleName={t("USER_SESSION_CARD_HEADER")}
       className="microplan-employee-module-card"
       kpis={[]}
       links={[

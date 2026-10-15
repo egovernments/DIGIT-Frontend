@@ -120,13 +120,79 @@ const getStatusValue = (session) => {
   return "-";
 };
 
+const toRoleLabel = (role) => {
+  if (!role) return null;
+
+  if (typeof role === "string") {
+    const value = role.trim();
+    return value || null;
+  }
+
+  if (typeof role === "object") {
+    const value = role?.name || role?.code || role?.role || role?.roleName || role?.id || "";
+    const normalizedValue = String(value || "").trim();
+    return normalizedValue || null;
+  }
+
+  return null;
+};
+
+const splitRoleString = (value) => {
+  if (typeof value !== "string") return [];
+  return value
+    .split(",")
+    .map((part) => String(part || "").trim())
+    .filter(Boolean);
+};
+
 const normalizeRoles = (session, user) => {
-  const roleSource = session?.roles || user?.roles || [];
-  if (!Array.isArray(roleSource)) return [];
-  return roleSource
-    .map((role) => role?.name || role?.code)
-    .filter(Boolean)
-    .map((roleName) => String(roleName).trim());
+  const roleCandidates = [
+    session?.roles,
+    user?.roles,
+    session?.role,
+    user?.role,
+    session?.roleCodes,
+    user?.roleCodes,
+    session?.roleNames,
+    user?.roleNames,
+    session?.additionalDetails?.roles,
+    user?.additionalDetails?.roles,
+    session?.additionalDetails?.roleCodes,
+    user?.additionalDetails?.roleCodes,
+  ];
+
+  const roleValues = [];
+
+  roleCandidates.forEach((candidate) => {
+    if (!candidate) return;
+
+    if (Array.isArray(candidate)) {
+      candidate.forEach((item) => {
+        const roleLabel = toRoleLabel(item);
+        if (roleLabel) roleValues.push(roleLabel);
+      });
+      return;
+    }
+
+    if (typeof candidate === "string") {
+      splitRoleString(candidate).forEach((roleLabel) => roleValues.push(roleLabel));
+      return;
+    }
+
+    const roleLabel = toRoleLabel(candidate);
+    if (roleLabel) roleValues.push(roleLabel);
+  });
+
+  const deduped = [];
+  const seen = new Set();
+  roleValues.forEach((value) => {
+    const key = String(value).toUpperCase();
+    if (seen.has(key)) return;
+    seen.add(key);
+    deduped.push(value);
+  });
+
+  return deduped;
 };
 
 const mapEmployeeRow = (item = {}, index = 0) => {
