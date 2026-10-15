@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-workbench",
-  "version": "2.0.0-dev-28",
+  "version": "2.0.0-dev-29",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@cyntler/react-doc-viewer": "1.17.1",
-    "@egovernments/digit-ui-components": "2.0.0-dev-62",
+    "@egovernments/digit-ui-components": "2.0.0-dev-74",
     "@egovernments/digit-ui-react-components": "2.0.0-dev-18",
     "@egovernments/digit-ui-libraries": "2.0.0-dev-14",
     "@rjsf/core": "5.10.0",

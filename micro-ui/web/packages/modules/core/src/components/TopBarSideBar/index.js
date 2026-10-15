@@ -113,6 +113,9 @@ const TopBarSideBar = ({
 
   return (
     <React.Fragment>
+      {/* <header> = banner landmark. The Header component renders plain divs, so without this the
+          whole top bar sits outside every landmark (axe region). display: contents keeps its layout. */}
+      <header style={{ display: "contents" }}>
       <TopBar
         t={t}
         stateInfo={stateInfo}
@@ -129,6 +132,7 @@ const TopBarSideBar = ({
         logoUrlWhite={logoUrlWhite}
         showLanguageChange={showLanguageChange}
       />
+      </header>
       {showDialog && <LogoutDialog onSelect={handleOnSubmit} onCancel={handleOnCancel} onDismiss={handleOnCancel}></LogoutDialog>}
       {!CITIZEN
         ? showSidebar && (

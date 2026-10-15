@@ -143,6 +143,9 @@ const TopBar = ({
             showArrow={true}
             menuStyles={{ marginTop: "1rem" }}
             theme="light"
+            // profilePic renders a single initial, so without this the control announces as one
+            // letter. Names both the trigger and the menu it opens.
+            ariaLabel={t("CORE_COMMON_USER_MENU")}
           />
         ),
       ]}
