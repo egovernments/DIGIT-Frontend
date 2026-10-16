@@ -11,7 +11,7 @@ import IntermediateWrapper from "./IntermediateWrapper";
 import { useCustomT, useCustomTranslate, useFieldDataLabel } from "./hooks/useCustomT";
 import fullParentConfig from "./configs/fullParentConfig.json";
 import { getPageFromConfig } from "./utils/configUtils";
-import { getFieldTypeFromMasterData, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData, isPanelItemEnabledForField, withoutFooterButtonTypes, toSentenceCase} from "./helpers";
+import { getFieldTypeFromMasterData, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData, getFieldValueByPath, isOutsideLimits, isPanelItemEnabledForField, withoutFooterButtonTypes, toSentenceCase} from "./helpers";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 // Helper function to check if a value is empty (null, undefined, empty string, or empty array)
@@ -414,6 +414,26 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 });
               }
             }
+
+            // A number property can set its own limits in the master through min/max, together
+            // with the message to show when they are broken (e.g. a popup timer's minutes, 0 - 4).
+            // The panel keeps whatever is typed and flags it under the box, so this is what stops
+            // an out-of-range value from being saved. Limits and message are configured as a pair,
+            // the same way validationExpression and validationMessage are below, so a property
+            // that sets no limits of its own is left alone. A toggle's conditional field counts
+            // only while that toggle is showing it.
+            const isShownConditional = (cField) => cField?.condition === Boolean(getFieldValueByPath(field, panelItem.bindTo));
+            [panelItem, ...(panelItem.children || []), ...(panelItem.conditionalField || []).filter(isShownConditional)]
+              .filter((property) => property?.validationMessage && (property?.min !== undefined || property?.max !== undefined))
+              .forEach((property) => {
+                if (!isOutsideLimits(getFieldValueByPath(field, property.bindTo), property.min, property.max)) return;
+                errors.push({
+                  fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                  panelLabel: property.label,
+                  message: property.validationMessage,
+                  tab: tabKey,
+                });
+              });
 
             // Validation for group fields with validationExpression (min/max, minLength/maxLength range checks)
             if (panelItem.fieldType === "group" && panelItem.validationExpression && panelItem.validationMessage) {

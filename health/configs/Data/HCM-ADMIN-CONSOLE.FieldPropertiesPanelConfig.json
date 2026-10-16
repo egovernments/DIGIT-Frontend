@@ -1,24 +1,12 @@
 [
   {
-    "id": "e1a32b92-59d7-4bb5-a6c7-b55a75692bbf",
-    "tenantId": "mz",
+    "id": "15a0b13c-0fe9-44cc-9658-9c8348775eb0",
+    "tenantId": "qa",
     "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
     "uniqueIdentifier": "NewPanelConfig",
     "data": {
       "label": "NewPanelConfig",
       "content": [
-        {
-          "id": "popupTitle",
-          "label": "popupTitle",
-          "order": 32,
-          "bindTo": "properties.popupConfig.title",
-          "fieldType": "text",
-          "defaultValue": "",
-          "isPopupProperty": true,
-          "conditionalField": [],
-          "showFieldOnToggle": false,
-          "visibilityEnabledFor": ["actionPopup"]
-        },
         {
           "label": "fieldType",
           "order": 1,
@@ -525,6 +513,50 @@
           "showFieldOnToggle": true,
           "disableForRequired": true,
           "visibilityEnabledFor": [""]
+        },
+        {
+          "id": "popupTitle",
+          "label": "popupTitle",
+          "order": 32,
+          "bindTo": "properties.popupConfig.title",
+          "fieldType": "text",
+          "defaultValue": "",
+          "isPopupProperty": true,
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": ["actionPopup"]
+        },
+        {
+          "id": "popupTimer",
+          "label": "popupTimer",
+          "order": 33,
+          "children": [
+            {
+              "id": "minutes",
+              "max": 4,
+              "min": 0,
+              "label": "minutes",
+              "bindTo": "popupTimer.minutes",
+              "fieldType": "number",
+              "description": "FIELD_DRAWER_HINT_POPUPTIMER_MINUTES",
+              "isLocalisable": false,
+              "validationMessage": "FIELD_DRAWER_ERROR_POPUPTIMER_MINUTES"
+            },
+            {
+              "id": "seconds",
+              "max": 59,
+              "min": 0,
+              "label": "seconds",
+              "bindTo": "popupTimer.seconds",
+              "fieldType": "number",
+              "description": "FIELD_DRAWER_HINT_POPUPTIMER_SECONDS",
+              "isLocalisable": false,
+              "validationMessage": "FIELD_DRAWER_ERROR_POPUPTIMER_SECONDS"
+            }
+          ],
+          "fieldType": "group",
+          "visibilityEnabledFor": ["latLng"],
+          "visibilityEnabledForFields": ["gpsStart", "gpsChild"]
         }
       ],
       "validation": [
@@ -821,10 +853,10 @@
     },
     "isActive": true,
     "auditDetails": {
-      "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
-      "lastModifiedBy": "961ad45f-5a9c-44df-affa-ced9831ffdeb",
-      "createdTime": 1766989523531,
-      "lastModifiedTime": 1791264500923
+      "createdBy": "3496b299-06f3-4dd2-8340-573cf8c4f1fc",
+      "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
+      "createdTime": 1777538631135,
+      "lastModifiedTime": 1792143524263
     }
   }
 ]

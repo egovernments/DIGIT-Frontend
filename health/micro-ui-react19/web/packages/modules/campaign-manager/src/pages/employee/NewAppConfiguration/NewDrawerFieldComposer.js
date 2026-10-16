@@ -13,6 +13,7 @@ import {
   isPanelItemEnabledForField,
   toSentenceCase,
   withoutEmojis,
+  isOutsideLimits,
 } from "./helpers";
 import { TextInput, Button } from "@egovernments/digit-ui-components";
 import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
@@ -450,13 +451,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         }
       }
     } else if (panelItem.fieldType === "number") {
-      // Number: clamp min on blur (allows incremental typing in onChange)
-      let numValue = currentLocalValue === "" || currentLocalValue === null || currentLocalValue === undefined ? null : currentLocalValue;
-      if (numValue !== null && panelItem.min !== undefined && numValue < panelItem.min) {
-        numValue = panelItem.min;
-        setLocalValue(numValue);
-        localValueRef.current = numValue;
-      }
+      // Number: whatever was typed is kept, including a value outside the limits. The error
+      // under the box says so and the save reports it, rather than the entry being rewritten.
+      const numValue = currentLocalValue === "" || currentLocalValue === null || currentLocalValue === undefined ? null : currentLocalValue;
       if (bindTo.includes(".")) {
         const keys = bindTo.split(".");
         const newField = structuredClone(currentSelectedField);
@@ -477,7 +474,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     panelItem?.isLocalisable,
     panelItem.bindTo,
     panelItem.defaultValue,
-    panelItem.min,
     dispatch,
     currentLocale,
     onFieldChange,
@@ -691,9 +687,17 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const configMax = panelItem.max !== undefined ? panelItem.max : undefined;
         const preventNegative = configMin !== undefined && configMin >= 0;
 
+        // The property's own hint, replaced by its own message while the entry is outside
+        // the limits it sets in the master. Both texts come from the master, so a property
+        // that configures neither shows neither.
+        const limitsHint = panelItem.description || "";
+        const rangeError = isOutsideLimits(localValue, panelItem.min, panelItem.max) ? panelItem.validationMessage || "" : "";
+
         return (
           <FieldV1
             type="number"
+            description={limitsHint}
+            error={rangeError}
             label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             value={localValue}
             onChange={(event) => {
@@ -718,14 +722,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 return;
               }
 
-              let value = parseInt(inputValue, 10);
+              const value = parseInt(inputValue, 10);
               // Only set if it's a valid number
               if (!isNaN(value)) {
-                // Only clamp max on change (prevents exceeding maximum)
-                // Min is enforced on blur to allow incremental typing (e.g., typing "2" then "0" for 20)
-                if (configMax !== undefined && value > configMax) {
-                  value = configMax;
-                }
+                // Kept as typed, even outside the limits - the error below the box says so
                 setLocalValue(value);
                 localValueRef.current = value;
                 handleNumberChange(value);
@@ -1622,16 +1622,6 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
     const currentSelectedField = selectedFieldRef.current;
     const currentFieldValue = fieldValueRef.current;
 
-    // Clamp min on blur for number conditional fields (allows incremental typing in onChange)
-    if (cField.type === "number" && currentLocalValue !== "" && currentLocalValue !== null && currentLocalValue !== undefined) {
-      const numVal = parseInt(currentLocalValue, 10);
-      if (!isNaN(numVal) && cField.min !== undefined && numVal < cField.min) {
-        const clampedValue = String(cField.min);
-        setConditionalLocalValue(clampedValue);
-        localValueRef.current = clampedValue;
-      }
-    }
-
     // Immediately dispatch the current value with localization handling
     let finalValueToSave;
 
@@ -1668,7 +1658,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
     newField[cField.bindTo] = finalValueToSave;
     onFieldChange(newField);
     isEditingRef.current = false;
-  }, [cField.bindTo, cField.type, cField.min, onFieldChange, dispatch, currentLocale, shouldSkipLocalization]);
+  }, [cField.bindTo, cField.type, onFieldChange, dispatch, currentLocale, shouldSkipLocalization]);
 
   // Check if this is a prefix field for mobileNumber : should only accept numbers
   const isMobileNumberPrefix = selectedField?.format === "mobileNumber" && cField.bindTo === "prefixText";
@@ -1681,6 +1671,12 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
   // Read min/max from config for number conditional fields
   const cFieldMin = cField.min;
   const cFieldMax = cField.max;
+  // The field's own hint, replaced by its own message while the entry is outside the limits
+  // it sets in the master. Both texts come from the master, so a field that configures
+  // neither shows neither.
+  const cFieldLimitsHint = cField.type === "number" ? cField.description || "" : "";
+  const cFieldRangeError =
+    cField.type === "number" && isOutsideLimits(conditionalLocalValue, cFieldMin, cFieldMax) ? cField.validationMessage || "" : "";
 
   switch (cField.type) {
     case "text":
@@ -1691,6 +1687,8 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
           <FieldV1
             type={isMobileNumberPrefix ? "text" : cField.type}
             label={cField.label ? t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${cField.label}`)) : null}
+            description={cFieldLimitsHint}
+            error={cFieldRangeError}
             value={conditionalLocalValue}
             disabled={viewMode}
             onChange={(event) => {
@@ -1716,17 +1714,6 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
               // Enforce maxLength for text/textarea/number/numeric conditional fields
               if ((cField.type === "text" || cField.type === "textarea" || cField.type === "number" || cField.type === "numeric") && cFieldMaxLength && newValue.length > cFieldMaxLength) {
                 return;
-              }
-
-              // Enforce max on change for number conditional fields
-              // Min is enforced on blur to allow incremental typing (e.g., typing "2" then "0" for 20)
-              if (cField.type === "number" && newValue !== "" && newValue !== null && newValue !== undefined) {
-                const numVal = parseInt(newValue, 10);
-                if (!isNaN(numVal)) {
-                  if (cFieldMax !== undefined && numVal > cFieldMax) {
-                    newValue = String(cFieldMax);
-                  }
-                }
               }
 
               isEditingRef.current = true;
