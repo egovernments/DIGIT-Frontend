@@ -286,12 +286,34 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
               <Card
                 key={definition.id || definition.hierarchyType}
                 onClick={isDisabled ? undefined : () => onHierarchySelect(hierarchy)}
+                // Selecting a hierarchy and opening "view all levels" are two separate actions, so
+                // they have to be two separate controls. Card otherwise makes any card with an
+                // onClick a role="button", which would put the levels button inside a control and
+                // merge its label into the card's name (axe nested-interactive). The card stays a
+                // plain clickable container - these three win because Card spreads ...props last -
+                // and the heading below becomes the control that selects.
+                role={undefined}
+                tabIndex={undefined}
+                onKeyDown={undefined}
                 className={`select-hierarchy-campaign-selection-card ${isSelected ? "selected" : ""} ${isDisabled ? "disabled" : ""}`}
               >
                 <div className="select-hierarchy-campaign-selection-card-name-row">
-                  <span className="select-hierarchy-campaign-selection-card-name">
+                  {/* Carries the same class as the span it replaced; the Tailwind reset strips a
+                      button's background, border, padding, margin and font, so only the two
+                      properties that reset does not cover are set here. */}
+                  <button
+                    type="button"
+                    className="select-hierarchy-campaign-selection-card-name"
+                    style={{ textAlign: "left", cursor: "pointer" }}
+                    aria-pressed={isSelected}
+                    disabled={isDisabled}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onHierarchySelect(hierarchy);
+                    }}
+                  >
                     {t(definition.hierarchyType)}
-                  </span>
+                  </button>
                   {!isDisabled && boundaryStatusMap[definition.hierarchyType] === "active" && (
                     <Tag
                       label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_HIERARCHY_BOUNDARY_DATA_ACTIVE)}

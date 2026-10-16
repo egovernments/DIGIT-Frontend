@@ -444,6 +444,10 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                   <span className="mandatory-span">*</span>
                 </CardLabel>
                 <TextInput
+                  // The CardLabel above is not linked to this input, so without a label of its own
+                  // the field has no accessible name (axe label). Passed without showLabel, exactly
+                  // as the cycle count field above does, so nothing is drawn.
+                  label={t(I18N_KEYS.PAGES.CAMPAIGN_NO_OF_DELIVERY)}
                   type="numeric"
                   value={cycleConfgureDate?.deliveries}
                   onChange={(d) => updateDelivery(d)}
