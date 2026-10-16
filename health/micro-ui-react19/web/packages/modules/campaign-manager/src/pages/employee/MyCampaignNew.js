@@ -90,7 +90,15 @@ const MyCampaignNew = ({ showDashboardLink }) => {
   // }, [Digit.SessionStorage.get("HCM_TIMELINE_POPUP")]);
 
   if (!isConfigReady || !config) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The loading state carries the same landmark and heading as the loaded one, so a slow load
+    // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+    // page-has-heading-one).
+    return (
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.COMPONENTS.ACTION_TEST_MY_CAMPAIGN)}</h1>
+        <Loader page={true} variant={"PageLoader"} />
+      </main>
+    );
   }
   return (
     // <main> with display: contents: the employee layout has no main landmark (axe landmark-one-main /

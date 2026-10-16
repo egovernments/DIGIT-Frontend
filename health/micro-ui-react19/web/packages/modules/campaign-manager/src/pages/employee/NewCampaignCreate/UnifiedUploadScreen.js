@@ -1,6 +1,7 @@
 import { FormComposerV2, Loader, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { srOnlyStyle } from "../../../utils";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { unifiedUploadConfig } from "../../../configs/unifiedUploadConfig";
@@ -135,11 +136,31 @@ const UnifiedUploadScreen = () => {
     );
   };
 
-  if (loader) return <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />;
+  if (loader) {
+  // The loading state carries the same landmark and heading as the loaded one, so a slow load
+  // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+  // page-has-heading-one).
+  return (
+    <main style={{ display: "contents" }}>
+      <h1 style={srOnlyStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_DATA_HEADING)}</h1>
+      <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />
+    </main>
+  );
+  }
 
   // Wait for the campaign fetch before rendering the upload area - otherwise a
   // pre-filled sheet (e.g. on a cloned campaign) appears only after a blank flash
-  if (campaignNumber && isCampaignLoading) return <Loader page={true} variant={"PageLoader"} />;
+  if (campaignNumber && isCampaignLoading) {
+  // The loading state carries the same landmark and heading as the loaded one, so a slow load
+  // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+  // page-has-heading-one).
+  return (
+    <main style={{ display: "contents" }}>
+      <h1 style={srOnlyStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_DATA_HEADING)}</h1>
+      <Loader page={true} variant={"PageLoader"} />
+    </main>
+  );
+  }
 
   const closeToast = () => setShowToast(null);
 

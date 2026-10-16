@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import EqualHeightWrapper from "../../../components/CreateCampaignComponents/WrapperModuleCard";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { srOnlyStyle } from "../../../utils";
 import { getCampaignDeliveryMethods, getDeliveryMethods } from "../../../utils/deliveryMethods";
 
 const NewAppModule = () => {
@@ -122,7 +123,15 @@ const NewAppModule = () => {
   // missing campaign or campaign type cannot leave the page loading forever.
   if (isLoading || (campaignNumber && campaignLoading) || (campaignProjectType && projectTypeLoading)) {
     // Page loader (nothing renders behind it) - OverlayLoader also brings the library's 6-dot animation
-    return <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.CAMPAIGN_CREATE.LOADING_MODULE)} />;
+    // The loading state carries the same landmark and heading as the loaded one, so a slow load
+    // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+    // page-has-heading-one).
+    return (
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.PAGES.HCM_CHOOSE_MODULE)}</h1>
+        <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.CAMPAIGN_CREATE.LOADING_MODULE)} />
+      </main>
+    );
   }
 
   return (

@@ -1232,6 +1232,14 @@ tbody {
       label {
         white-space: pre-wrap;
       }
+      // The tooltip icon comes wrapped in its own div, which carries display:inline-block as
+      // an inline style - so the rule above cannot reach it. An inline-block holding no text
+      // takes its baseline from its bottom edge, leaving the icon riding above the label.
+      // Centre the wrapper on the text and restore the gap the flex layout used to give it.
+      > div:has(svg) {
+        vertical-align: middle;
+        margin-left: 0.25rem;
+      }
     }
   }
   .digit-field {

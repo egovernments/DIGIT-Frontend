@@ -1192,15 +1192,39 @@ const SetupCampaign = () => {
   // The existing isDraft/isPreview checks below miss cases like draft=null&isDraft=true
   // where draftLoading is true but neither condition matches.
   if (id && draftLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The loading state carries the same landmark and heading as the loaded one, so a slow load
+    // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+    // page-has-heading-one).
+    return (
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_SETUP_DETAILS)}</h1>
+        <Loader page={true} variant={"PageLoader"} />
+      </main>
+    );
   }
 
   if (isPreview === "true" && !draftData) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The loading state carries the same landmark and heading as the loaded one, so a slow load
+    // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+    // page-has-heading-one).
+    return (
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_SETUP_DETAILS)}</h1>
+        <Loader page={true} variant={"PageLoader"} />
+      </main>
+    );
   }
 
   if (isDraft === "true" && !draftData) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The loading state carries the same landmark and heading as the loaded one, so a slow load
+    // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+    // page-has-heading-one).
+    return (
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_SETUP_DETAILS)}</h1>
+        <Loader page={true} variant={"PageLoader"} />
+      </main>
+    );
   }
 
   function onActionSelect(action) {

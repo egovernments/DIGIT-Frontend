@@ -13,6 +13,7 @@ import { downloadExcelWithCustomName } from "../../../utils";
 import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDateFormat";
 import QRButton from "../../../components/CreateCampaignComponents/QRButton";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { srOnlyStyle } from "../../../utils";
 import useCampaignStore from "../../../hooks/useCampaignStore";
 import { getCampaignDeliveryMethods, getDeliveryMethods } from "../../../utils/deliveryMethods";
 import { resetCreateCampaignData, campaignStore } from "../../../store/campaignStore";
@@ -799,7 +800,15 @@ const CampaignDetails = () => {
   };
 
   if (isLoading || isFormConfigLoading || isPolling) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The loading state carries the same landmark and heading as the loaded one, so a slow load
+    // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+    // page-has-heading-one).
+    return (
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.PAGES.VIEW_DETAILS)}</h1>
+        <Loader page={true} variant={"PageLoader"} />
+      </main>
+    );
   }
 
   const isMutationLoading = isSubmitting;

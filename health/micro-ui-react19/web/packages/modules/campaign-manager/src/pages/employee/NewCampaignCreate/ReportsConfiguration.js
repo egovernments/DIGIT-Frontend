@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { srOnlyStyle } from "../../../utils";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   Card,
@@ -457,7 +458,17 @@ const ReportsConfiguration = () => {
     return applicableReports.filter((r) => selectedReports[r.code]);
   }, [applicableReports, selectedReports]);
 
-  if (isReportsLoading || (isEditMode && isExistingConfigLoading)) return <Loader />;
+  if (isReportsLoading || (isEditMode && isExistingConfigLoading)) {
+  // The loading state carries the same landmark and heading as the loaded one, so a slow load
+  // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+  // page-has-heading-one).
+  return (
+    <main style={{ display: "contents" }}>
+      <h1 style={srOnlyStyle}>{t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION)}</h1>
+      <Loader />
+    </main>
+  );
+  }
 
   return (
     // <main>: the employee layout has no main landmark (axe landmark-one-main / region); the class

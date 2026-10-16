@@ -14,6 +14,7 @@ import { FlowFilled } from "../../../components/icons/FlowFilled";
 import { FlowUnfilled } from "../../../components/icons/FlowUnfilled";
 import AppHelpTutorial from "../../../components/AppHelpTutorial";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { srOnlyStyle } from "../../../utils";
 
 const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 // Lets the clickable <div role="button"> controls in this screen (menu items, flow/page tabs,
@@ -336,21 +337,30 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   }, [flowConfig, flowSearchQuery, campaignT]);
 
   // Show loader while fetching data
+  // The loading and error states carry the same landmark and heading as the loaded one. Without
+  // them a slow or failed load leaves a screen reader with no main region and no heading to
+  // navigate to, and the page fails axe landmark-one-main / page-has-heading-one while it waits.
   if (isLoading) {
     return (
-      <div className="full-config-wrapper__loader-container">
-        <Loader />
-      </div>
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIGURATION)}</h1>
+        <div className="full-config-wrapper__loader-container">
+          <Loader />
+        </div>
+      </main>
     );
   }
 
   // Show error message if fetch failed
   if (error || !flowConfig) {
     return (
-      <div className="full-config-wrapper__error-container">
-        <h2>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ERROR)}</h2>
-        <p>{error || t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FAILED_TO_LOAD_FLOW_CONFIG)}</p>
-      </div>
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIGURATION)}</h1>
+        <div className="full-config-wrapper__error-container">
+          <h2>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ERROR)}</h2>
+          <p>{error || t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FAILED_TO_LOAD_FLOW_CONFIG)}</p>
+        </div>
+      </main>
     );
   }
 

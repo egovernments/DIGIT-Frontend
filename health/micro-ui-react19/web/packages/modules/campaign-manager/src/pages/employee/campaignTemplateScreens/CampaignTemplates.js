@@ -27,7 +27,15 @@ const CampaignTemplates = () => {
   }, []);
 
   if (!isConfigReady || !config) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The loading state carries the same landmark and heading as the loaded one. Without them a
+    // slow load leaves a screen reader with no main region and no heading to navigate to, and the
+    // page momentarily fails axe landmark-one-main / page-has-heading-one.
+    return (
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.COMMON.CAMPAIGN_TEMPLATES)}</h1>
+        <Loader page={true} variant={"PageLoader"} />
+      </main>
+    );
   }
 
   return (

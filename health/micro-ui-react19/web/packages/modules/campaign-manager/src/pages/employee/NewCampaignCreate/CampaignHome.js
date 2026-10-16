@@ -14,6 +14,7 @@ import { AppHelpContent } from "../../../components/HelpInfoCard";
 import { CopyAll } from "../../../components/icons/CopyAll";
 import { MobileLayout } from "../../../components/icons/MobileLayout";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { srOnlyStyle } from "../../../utils";
 import useCampaignStore from "../../../hooks/useCampaignStore";
 import { useDispatch } from "react-redux";
 import { resetCreateCampaignData } from "../../../store/campaignStore";
@@ -157,7 +158,15 @@ const CampaignHome = () => {
   const templatesDataLength = templatesData?.mdms?.length;
 
   if (CampaignRequirementsLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The loading state carries the same landmark and heading as the loaded one, so a slow load
+    // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+    // page-has-heading-one).
+    return (
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.PAGES.HCM_HOW_DO_YOU_WANT_TO_CREATE)}</h1>
+        <Loader page={true} variant={"PageLoader"} />
+      </main>
+    );
   }
 
   return (
