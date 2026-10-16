@@ -20,6 +20,7 @@ export const CreateComplaintConfig = {
                 name: "SelectComplaintType",
                 optionsKey: "i18nKey",
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
+                isSearchable: true,
               },
             },
             {
