@@ -850,15 +850,54 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         };
 
         const isValid = evaluateValidation();
+
+        // A group can be switched on and off like any single property, by giving it a bindTo
+        // and showFieldOnToggle in the master. Its children then appear only while it is on,
+        // the same as a toggle's conditional fields. A group that declares neither keeps its
+        // plain heading and always shows its children, exactly as before.
+        // Until the switch is touched the group falls back to its defaultValue, so the master
+        // decides whether it starts on or off - the same fallback every other property uses.
+        const hasGroupToggle = Boolean(panelItem.showFieldOnToggle && panelItem.bindTo);
+        const isGroupOn = hasGroupToggle
+          ? Boolean(getFieldValueByPath(selectedField, panelItem.bindTo, panelItem.defaultValue || ""))
+          : true;
+
+        const handleGroupToggle = (value) => {
+          const newToggleValue = Boolean(value);
+          const keys = panelItem.bindTo.split(".");
+          const updatedField = structuredClone(selectedField);
+          let current = updatedField;
+          for (let i = 0; i < keys.length - 1; i++) {
+            if (!current[keys[i]] || typeof current[keys[i]] !== "object") current[keys[i]] = {};
+            current = current[keys[i]];
+          }
+          current[keys[keys.length - 1]] = newToggleValue;
+          onFieldChange(updatedField);
+        };
+
         // Render group with children
         return (
           <>
-            <div
-              className={"app-config-group-heading"}
-            >
-              {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            {hasGroupToggle ? (
+              <div id={`digit-sidepanel-switch-wrap-${panelItem.label}`}>
+                <Switch
+                  label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
+                  onToggle={handleGroupToggle}
+                  isCheckedInitially={isGroupOn}
+                  shapeOnOff
+                  disable={viewMode}
+                  isLabelFirst={true}
+                  className={"digit-sidepanel-switch-wrap sidepanel"}
+                />
+              </div>
+            ) : (
+              <div
+                className={"app-config-group-heading"}
+              >
+                {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
+              </div>
+            )}
+            <div style={{ display: isGroupOn ? "flex" : "none", flexDirection: "column", gap: "8px" }}>
               {panelItem.children?.map((childItem, index) => (
                 <RenderField
                   key={`${childItem.id}-${index}`}
@@ -871,8 +910,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 />
               ))}
             </div>
-            {/* Show validation message if validation fails */}
-            {panelItem.validationMessage && !isValid && (
+            {/* Show validation message if validation fails, but not while the group is off */}
+            {isGroupOn && panelItem.validationMessage && !isValid && (
               <div
                 style={{
                   marginTop: "8px",

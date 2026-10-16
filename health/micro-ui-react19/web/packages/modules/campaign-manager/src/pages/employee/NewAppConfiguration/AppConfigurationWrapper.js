@@ -420,10 +420,13 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
             // The panel keeps whatever is typed and flags it under the box, so this is what stops
             // an out-of-range value from being saved. Limits and message are configured as a pair,
             // the same way validationExpression and validationMessage are below, so a property
-            // that sets no limits of its own is left alone. A toggle's conditional field counts
-            // only while that toggle is showing it.
+            // that sets no limits of its own is left alone. A property the panel is not showing
+            // is not checked, so a switched-off group or conditional field cannot block the save.
             const isShownConditional = (cField) => cField?.condition === Boolean(getFieldValueByPath(field, panelItem.bindTo));
-            [panelItem, ...(panelItem.children || []), ...(panelItem.conditionalField || []).filter(isShownConditional)]
+            const isGroupShown =
+              !(panelItem.showFieldOnToggle && panelItem.bindTo) ||
+              Boolean(getFieldValueByPath(field, panelItem.bindTo, panelItem.defaultValue || ""));
+            [panelItem, ...(isGroupShown ? panelItem.children || [] : []), ...(panelItem.conditionalField || []).filter(isShownConditional)]
               .filter((property) => property?.validationMessage && (property?.min !== undefined || property?.max !== undefined))
               .forEach((property) => {
                 if (!isOutsideLimits(getFieldValueByPath(field, property.bindTo), property.min, property.max)) return;
