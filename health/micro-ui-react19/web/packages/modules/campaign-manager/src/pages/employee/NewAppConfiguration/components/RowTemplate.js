@@ -1,7 +1,6 @@
 import React from "react";
 import { renderTemplateComponent } from "../helpers/templateRendererHelpers";
 import { getAllowedChildren, isChildAllowed } from "../helpers/propertyHelpers";
-import { isValuePreview } from "./TextTemplate";
 
 const RowTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFieldClick, data }) => {
   const children = field.children || [];
@@ -61,9 +60,7 @@ const RowTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFieldClic
 
         // Action-like children hug their content; other fields (search bars, inputs, text)
         // share the remaining row width — mirrors the mobile app's Row sizing
-        const hugsContent =
-          ["button", "actionPopup", "icon", "tag"].includes(child?.format) ||
-          (child?.format === "textTemplate" && isValuePreview(child));
+        const hugsContent = ["button", "actionPopup", "icon", "tag"].includes(child?.format);
         return (
           <div key={childWithId.id} style={{ flex: hugsContent ? "0 0 auto" : "1 1 auto", minWidth: 0, display: "flex" }}>
             {renderTemplateComponent(childWithId, fieldTypeMasterData, selectedField, t, onFieldClick, data, `row-${field.id}`, index)}
