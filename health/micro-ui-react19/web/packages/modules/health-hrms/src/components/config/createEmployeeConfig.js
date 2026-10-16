@@ -193,6 +193,7 @@ export const CreateEmployeeConfig = {
                 optionsKey: "name",
                 required: true,
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
+                isSearchable: true,
               //  mdmsv2: true,
                 mdmsConfig: {
                   masterName: "EmployeeType",
@@ -233,6 +234,7 @@ export const CreateEmployeeConfig = {
                 optionsKey: "name",
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
                 required: true,
+                isSearchable: true,
                // mdmsv2: true,
                 mdmsConfig: {
                   masterName: "Department",
@@ -253,6 +255,7 @@ export const CreateEmployeeConfig = {
                 optionsKey: "name",
                 required: true,
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
+                isSearchable: true,
                // mdmsv2: true,
                 mdmsConfig: {
                   masterName: "Designation",
