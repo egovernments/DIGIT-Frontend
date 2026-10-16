@@ -124,6 +124,11 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
   }, [fieldPanelConfig, fieldType, field?.value]);
 
 
+  // FieldV1 ticks a checkbox from formData[populators.name], so a pre-ticked checkbox (value: true)
+  // previews ticked as the app shows it
+  const isCheckbox = fieldType === "checkbox";
+  const checkboxName = field?.fieldName || "previewCheckbox";
+
   // A dynamic country code is free-typed text with no country behind it, so it
   // renders through the plain prefix instead of the country picker.
   const showCountryPicker = Boolean(field?.showCountryCodeDropdown) && field?.countryCodeMode !== "DYNAMIC";
@@ -171,7 +176,9 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
         label={resolvedLabel}
         onChange={function noRefCheck() {}}
         placeholder={shouldCustomTranslate ? field?.innerLabel : customT(field?.innerLabel) || ""}
+        formData={isCheckbox ? { [checkboxName]: field?.value === true } : undefined}
         populators={{
+          ...(isCheckbox ? { name: checkboxName } : {}),
           title: field?.label,
           prefix: field?.prefixText || null,
           suffix: field?.suffixText || null,
