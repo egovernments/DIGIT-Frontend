@@ -423,21 +423,16 @@ const NewShipmentPopup = ({
     return userLevel ? [userLevel] : [];
   }, [userBoundary, effectiveHierarchy]);
 
-  // To: show hierarchy levels below From based on context
-  // - Top level (Country): only the immediate next level
-  // - Non-top level: all levels below From except the last level of the full hierarchy
+  // To: show all hierarchy levels below From (same rule for every user level, including top level)
+  // - Excludes the last level of the full hierarchy
   // - Edge case: always show at least 1 To level
+  // Levels are revealed progressively; facilities are fetched for the deepest selected level.
   const toVisibleLevels = useMemo(() => {
     if (!toHierarchyLevels.length) return [];
-    const fromBType = effectiveHierarchy[fromSelectedLevel]?.boundaryType;
-    const fromIsTopLevel = isTopLevel || fromBType === sortedHierarchy[0]?.boundaryType;
-    if (fromIsTopLevel) {
-      return toHierarchyLevels.slice(0, 1);
-    }
     const lastBoundaryType = sortedHierarchy[sortedHierarchy.length - 1]?.boundaryType;
     const withoutLast = toHierarchyLevels.filter((h) => h.boundaryType !== lastBoundaryType);
     return withoutLast.length > 0 ? withoutLast : toHierarchyLevels.slice(0, 1);
-  }, [toHierarchyLevels, isTopLevel, effectiveHierarchy, fromSelectedLevel, sortedHierarchy]);
+  }, [toHierarchyLevels, sortedHierarchy]);
 
   // "From" uses the exact projectId passed from the dashboard (user's assigned project)
   const fromFilteredProjectIds = useMemo(() => {
