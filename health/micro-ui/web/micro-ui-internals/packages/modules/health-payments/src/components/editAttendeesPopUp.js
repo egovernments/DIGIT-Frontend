@@ -133,10 +133,12 @@ const EditAttendeePopUp = ({
      */
     useEffect(() => {
         if (AttendanceData?.attendanceRegister?.length > 0) {
-            const ids = AttendanceData.attendanceRegister[0].attendees.map(
+            const ids = (AttendanceData.attendanceRegister[0].attendees || []).map(
                 (a) => a.individualId
             );
             setIndividualIds(ids);
+            // No attendees: the individual search never fires, so clear the table here
+            if (ids.length === 0) setAttendanceSummary([]);
         }
     }, [AttendanceData]);
 
@@ -174,7 +176,7 @@ const EditAttendeePopUp = ({
      */
     function getUserAttendanceSummary(attendanceData, individualsData, t) {
         const attendanceLogData =
-            attendanceData.attendanceRegister[0].attendees.map((individualEntry) => {
+            (attendanceData.attendanceRegister[0].attendees || []).map((individualEntry) => {
                 const individualId = individualEntry.individualId;
                 const matchingIndividual = individualsData?.Individual?.find(
                     (individual) => individual.id === individualId
