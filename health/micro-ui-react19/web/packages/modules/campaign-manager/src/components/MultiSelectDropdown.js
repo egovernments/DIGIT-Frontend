@@ -370,6 +370,10 @@ const MultiSelectDropdown = ({
   frozenType,
   isSearchable = false,
   disableClearAll = false,
+  // Names the control for screen readers without drawing anything. This is a local fork of the
+  // library dropdown, so the library's own naming props do not reach it - screens that show their
+  // own visible label (a CardLabel in a LabelFieldPair) pass the text here instead.
+  ariaLabel,
 }) => {
   const [active, setActive] = useState(false);
   const [searchInputValue, setSearchInputValue] = useState("");
@@ -1019,6 +1023,9 @@ const MultiSelectDropdown = ({
             isSearchable ? "serachable" : ""
           }`}
         >
+          {/* This input is the control the user actually focuses, so it carries the field's name.
+              Without it the field has none at all (axe label) - the CardLabel beside it is not
+              linked. Falls back to the placeholder text when no ariaLabel is given. */}
           <input
             className="digit-cursorPointer"
             style={{}}
@@ -1027,6 +1034,7 @@ const MultiSelectDropdown = ({
             onFocus={() => setActive(true)}
             value={searchInputValue}
             onChange={onSearch}
+            aria-label={ariaLabel || defaultLabel || t("MULTISELECT_SELECTED")}
           />
           <div className="digit-multiselectdropdown-label">
             {variant === "treemultiselect" ? (

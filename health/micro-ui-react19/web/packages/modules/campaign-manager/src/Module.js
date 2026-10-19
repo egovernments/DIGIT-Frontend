@@ -84,6 +84,7 @@ import DynamicSVG from "./components/DynamicSVGComponent";
 import IconTemplate from "./pages/employee/NewAppConfiguration/components/IconTemplate";
 import CampaignTemplateRowCard from "./pages/employee/campaignTemplateScreens/CampaignTemplateRowCard";
 import DropdownTemplate from "./pages/employee/NewAppConfiguration/components/DropdownTemplate";
+import DobTemplate from "./pages/employee/NewAppConfiguration/components/DobTemplate";
 import SelectionCard from "./pages/employee/NewAppConfiguration/components/SelectionCard";
 import TextInputTemplate from "./pages/employee/NewAppConfiguration/components/TextInputTemplate";
 import RadioListTemplate from "./pages/employee/NewAppConfiguration/components/RadioListTemplate";
@@ -279,6 +280,7 @@ const componentsToRegister = {
   IconTemplate,
   CampaignTemplateRowCard,
   DropdownTemplate,
+  DobTemplate,
   SelectionCard,
   TextInputTemplate,
   RadioListTemplate,

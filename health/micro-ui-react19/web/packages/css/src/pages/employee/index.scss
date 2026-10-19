@@ -1215,6 +1215,49 @@ tbody {
 .app-config-drawer-action-divider {
   margin-top: auto;
 }
+
+.app-preview-dob {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1px solid #D6D5D4;
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+
+  .app-preview-dob-part {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .app-preview-dob-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #363636;
+  }
+
+  .app-preview-dob-age {
+    display: flex;
+    gap: 0.5rem;
+
+    > * {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  .app-preview-dob-or {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #505a5f;
+  }
+
+  .digit-field,
+  .digit-label-field-pair {
+    width: 100%;
+  }
+}
+
 .app-preview-field-pair {
   display: flex;
   gap: 0.5rem;
