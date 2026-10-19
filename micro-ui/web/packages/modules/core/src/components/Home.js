@@ -240,7 +240,11 @@ const EmployeeHome = ({ modules, additionalComponent }) => {
   const { t } = useTranslation();
   return (
     <>
-      <div className="employee-app-container digit-home-employee-app">
+      {/* <main>, not <div>: the landing page's cards were the whole page content and sat outside
+          every landmark, so a screen reader had no main region to jump to and axe flagged the page
+          (region / landmark-one-main). Module routes are matched before this fallback, so this is
+          the only main on /employee. Class is unchanged, so the styling is untouched. */}
+      <main className="employee-app-container digit-home-employee-app">
         {/* Every page needs one h1 (axe page-has-heading-one); the landing page has no visible title,
             so expose one to screen readers only */}
         <h1 style={srOnlyStyle}>{t("CORE_COMMON_HOME")}</h1>
@@ -254,7 +258,7 @@ const EmployeeHome = ({ modules, additionalComponent }) => {
           })}
           </LandingPageWrapper>
         {/* </div> */}
-      </div>
+      </main>
 
       {additionalComponent &&
         additionalComponent?.length > 0 &&
