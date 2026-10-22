@@ -81,6 +81,16 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
           className={`app-preview-card ${
             data?.flow === "CHECKLIST" || /checklist/i.test(t(data?.heading || "")) ? "checklist-preview" : ""
           }`}
+          // This card scrolls (overflow: auto below) but everything inside it is a preview, so it
+          // held no focusable element and a keyboard user had no way to scroll it at all
+          // (axe scrollable-region-focusable). The tab stop is the fix; the name stops it being an
+          // unlabelled stop. role="group" is required for the name: aria-label is prohibited on a
+          // role-less <div>, which axe reports as needs-review. Not role="region" - that is a
+          // landmark, and two preview cards would then collide on landmark-unique.
+          // None of this affects layout; Card spreads these after its own props.
+          tabIndex={0}
+          role="group"
+          aria-label={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_PREVIEW_REGION)}
           style={{
             padding: "1rem",
             backgroundColor: "#eee",

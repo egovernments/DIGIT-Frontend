@@ -13,6 +13,7 @@ import {
   getDeliveryMethods,
   getRoundType,
   getSelectedMethodCodes,
+  getDefaultMethodCodes,
   normaliseSelection,
   usesDeliveryMethods,
 } from "../../../utils/deliveryMethods";
@@ -137,6 +138,12 @@ const DeliveryStrategySetup = ({ onSelect, formData, control, ...props }) => {
         ? getSelectedMethodCodes(savedCycleConfigure)
         : getCampaignDeliveryMethods(campaignData);
     if (codes.length > 0) setSelected(codes);
+    else {
+      // Nothing saved anywhere, so this is a fresh campaign: start from whatever the campaign
+      // type marks as a default. A type marking none leaves the list untouched and empty.
+      const defaults = getDefaultMethodCodes(methods);
+      if (defaults.length > 0) setSelected(defaults);
+    }
 
     const cycle =
       savedCycleConfigure?.cycleData?.find((c) => c?.key === 1) || campaignCycleConfigure?.cycleData?.find((c) => c?.key === 1);
@@ -144,7 +151,7 @@ const DeliveryStrategySetup = ({ onSelect, formData, control, ...props }) => {
     if (cycle?.toDate) setToDate(cycle.toDate);
 
     hydrated.current = true;
-  }, [applies, campaignLoading, savedCycleConfigure, campaignCycleConfigure, campaignData]);
+  }, [applies, campaignLoading, savedCycleConfigure, campaignCycleConfigure, campaignData, methods]);
 
   // Drop anything the campaign type no longer offers, and keep declared order.
   useEffect(() => {

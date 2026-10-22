@@ -3,6 +3,7 @@ import { AlertCard, Card, CardText, CardHeader, Button } from "@egovernments/dig
 import MobileBezelFrame from "./MobileBezelFrame";
 import ComponentToRender from "./ComponentToRender";
 import useCampaignStore from "../hooks/useCampaignStore";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 
 // Simple tabs component
@@ -118,6 +119,13 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
           className={`app-preview-card ${
             data?.flow === "CHECKLIST" || /checklist/i.test(t(data?.heading || "")) ? "checklist-preview" : ""
           }`}
+          // Same scrollable-but-unreachable preview card as NewLayoutRenderer: it scrolls
+          // (overflow: auto below) with nothing focusable inside, so a keyboard user could not
+          // scroll it (axe scrollable-region-focusable). role="group" is what makes the name
+          // legal - aria-label is prohibited on a role-less <div>. Layout is untouched.
+          tabIndex={0}
+          role="group"
+          aria-label={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_PREVIEW_REGION)}
           style={{
             backgroundColor: "#eee",
             boxShadow: "none",

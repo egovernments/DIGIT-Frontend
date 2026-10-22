@@ -23,7 +23,9 @@ const TextTemplate = ({ field, t, props }) => {
     const hasFixedValue = typeof value === "string" && value !== "" && !value.includes("{{");
     return (
       <div className={className} style={inlineStyle}>
-        {hasFixedValue ? translate(value) : translatedLabel}
+        {/* Fixed text reads as itself; the field name is only standing in for what the app
+            fills in, so it is underlined to say a real value belongs there */}
+        {hasFixedValue ? translate(value) : <span className="app-preview-dynamic-value">{translatedLabel}</span>}
       </div>
     );
   }

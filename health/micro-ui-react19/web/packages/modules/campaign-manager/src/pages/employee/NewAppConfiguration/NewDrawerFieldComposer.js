@@ -14,6 +14,7 @@ import {
   toSentenceCase,
   withoutEmojis,
   isOutsideLimits,
+  evaluateGroupExpression,
 } from "./helpers";
 import { TextInput, Button } from "@egovernments/digit-ui-components";
 import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
@@ -811,45 +812,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
       case "group": {
         // Evaluate validation expression
-        const evaluateValidation = () => {
-          if (!panelItem.validationExpression) {
-            return true;
-          }
-
-          try {
-            const expression = panelItem.validationExpression;
-            // Create a plain object copy to avoid "object is not extensible" errors
-            // This allows expressions to reference properties directly (e.g., "range.max > range.min")
-            const plainFieldCopy = structuredClone(selectedField);
-
-            // Extract field paths from expression (e.g., "lengthRange.minLength", "lengthRange.maxLength")
-            const fieldPaths = expression.match(/[\w.]+/g)?.filter((p) => p.includes(".")) || [];
-
-            // Helper to get nested value from path like "lengthRange.minLength"
-            const getNestedValue = (obj, path) => path.split(".").reduce((acc, key) => acc?.[key], obj);
-
-            // Check if ALL fields in expression have non-empty values - if any is empty, skip validation
-            const allFieldsFilled = fieldPaths.every((path) => {
-              const value = getNestedValue(plainFieldCopy, path);
-              return value !== null && value !== undefined && value !== "";
-            });
-            if (!allFieldsFilled) return true;
-
-            // Get all property names and values from the plain copy
-            // Replace dots in property names with underscores to make them valid JS parameter names
-            const paramNames = Object.keys(plainFieldCopy).map((key) => key.replace(/\./g, "_"));
-            const paramValues = Object.values(plainFieldCopy);
-            // Create function with all property names as parameters
-            const func = new Function(...paramNames, `return ${expression}`);
-            const result = func(...paramValues);
-            return result;
-          } catch (error) {
-            console.error("Validation expression error:", error);
-            return true; // Return true on error to avoid blocking
-          }
-        };
-
-        const isValid = evaluateValidation();
+        // Shared with the save check, so what shows in red here is what stops the save
+        const isValid = evaluateGroupExpression(selectedField, panelItem.validationExpression);
 
         // A group can be switched on and off like any single property, by giving it a bindTo
         // and showFieldOnToggle in the master. Its children then appear only while it is on,

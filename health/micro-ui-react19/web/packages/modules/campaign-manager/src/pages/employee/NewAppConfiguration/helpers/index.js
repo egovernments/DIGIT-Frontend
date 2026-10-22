@@ -7,3 +7,4 @@ export { isPanelItemEnabledForField } from "./panelItemVisibility";
 export { withFooterButtonTypes, withoutFooterButtonTypes } from "./footerButtonType";
 export { toSentenceCase, withoutEmojis } from "./labelText";
 export { isOutsideLimits } from "./numberLimits";
+export { evaluateGroupExpression } from "./groupValidation";

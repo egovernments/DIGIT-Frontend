@@ -124,8 +124,16 @@
                   "format": "textTemplate",
                   "fieldName": "sessionLocationName",
                   "properties": {
-                    "style": "headingL",
-                    "bottomGap": 8
+                    "style": "headingXl",
+                    "bottomGap": 4,
+                    "textStyle": {
+                      "color": "#0B4B66",
+                      "fontSize": "18px",
+                      "fontFamily": "Roboto",
+                      "fontWeight": 700,
+                      "lineHeight": 1.14
+                    },
+                    "isFieldValue": false
                   }
                 },
                 {
@@ -216,6 +224,7 @@
             "fieldName": "startSession",
             "mandatory": true,
             "properties": {
+              "icon": "AddCircle",
               "size": "large",
               "type": "primary",
               "prefixIcon": "AddCircle",
@@ -410,28 +419,6 @@
               },
               {
                 "type": "string",
-                "enums": [
-                  {
-                    "code": "BUS_STATION",
-                    "name": "GV_ENUM_BUS_STATION"
-                  },
-                  {
-                    "code": "BORDER_CROSSING",
-                    "name": "GV_ENUM_BORDER_CROSSING"
-                  },
-                  {
-                    "code": "CHECKPOINT",
-                    "name": "GV_ENUM_CHECKPOINT"
-                  },
-                  {
-                    "code": "FERRY_TERMINAL",
-                    "name": "GV_ENUM_FERRY_TERMINAL"
-                  },
-                  {
-                    "code": "OTHER",
-                    "name": "GV_ENUM_OTHER"
-                  }
-                ],
                 "label": "GV_TRANSIT_LOCATION_TYPE_LABEL",
                 "order": 2,
                 "value": "",
@@ -445,6 +432,7 @@
                 "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
+                "schemaCode": "common-masters.GroupVaccinationLocations",
                 "systemDate": false,
                 "validations": [
                   {
@@ -690,8 +678,16 @@
             "format": "textTemplate",
             "fieldName": "todaysProgressTitle",
             "properties": {
-              "style": "headingS",
-              "bottomGap": 4
+              "style": "headingM",
+              "bottomGap": 4,
+              "textStyle": {
+                "color": "#0B4B66",
+                "fontSize": "16px",
+                "fontFamily": "Roboto, sans-serif",
+                "fontWeight": 700,
+                "lineHeight": 1.14
+              },
+              "isFieldValue": false
             }
           },
           {
@@ -705,7 +701,15 @@
                 "fieldName": "vaccinatedCount",
                 "properties": {
                   "style": "headingXl",
-                  "bottomGap": 4
+                  "bottomGap": 4,
+                  "textStyle": {
+                    "color": "#0B4B66",
+                    "fontSize": "24px",
+                    "fontFamily": "Roboto, sans-serif",
+                    "fontWeight": 700,
+                    "lineHeight": 1.14
+                  },
+                  "isFieldValue": false
                 }
               },
               {
@@ -715,7 +719,15 @@
                 "fieldName": "vaccinatedLabel",
                 "properties": {
                   "style": "bodyS",
-                  "bottomGap": 4
+                  "bottomGap": 4,
+                  "textStyle": {
+                    "color": "#1D1B20",
+                    "fontSize": "14px",
+                    "fontFamily": "Roboto, sans-serif",
+                    "fontWeight": 400,
+                    "lineHeight": 1.37
+                  },
+                  "isFieldValue": false
                 }
               },
               {
@@ -738,7 +750,15 @@
                             "fieldName": "femaleCount",
                             "properties": {
                               "color": "primary",
-                              "style": "headingM"
+                              "style": "headingM",
+                              "textStyle": {
+                                "color": "#0B4B66",
+                                "fontSize": "14px",
+                                "fontFamily": "Roboto, sans-serif",
+                                "fontWeight": 700,
+                                "lineHeight": 1.14
+                              },
+                              "isFieldValue": false
                             }
                           },
                           {
@@ -748,7 +768,15 @@
                             "fieldName": "femaleLabel",
                             "properties": {
                               "color": "primary",
-                              "style": "bodyS"
+                              "style": "bodyS",
+                              "textStyle": {
+                                "color": "#0B4B66",
+                                "fontSize": "14px",
+                                "fontFamily": "Roboto, sans-serif",
+                                "fontWeight": 400,
+                                "lineHeight": 1.37
+                              },
+                              "isFieldValue": false
                             }
                           }
                         ],
@@ -764,7 +792,8 @@
                     "fieldName": "femalePill",
                     "properties": {
                       "type": "secondary",
-                      "radius": "radius4"
+                      "radius": "radius4",
+                      "cardType": "secondary"
                     }
                   },
                   {
@@ -783,7 +812,15 @@
                             "fieldName": "maleCount",
                             "properties": {
                               "color": "primary",
-                              "style": "headingM"
+                              "style": "headingM",
+                              "textStyle": {
+                                "color": "#0B4B66",
+                                "fontSize": "14px",
+                                "fontFamily": "Roboto, sans-serif",
+                                "fontWeight": 700,
+                                "lineHeight": 1.14
+                              },
+                              "isFieldValue": false
                             }
                           },
                           {
@@ -793,7 +830,15 @@
                             "fieldName": "maleLabel",
                             "properties": {
                               "color": "primary",
-                              "style": "bodyS"
+                              "style": "bodyS",
+                              "textStyle": {
+                                "color": "#0B4B66",
+                                "fontSize": "14px",
+                                "fontFamily": "Roboto, sans-serif",
+                                "fontWeight": 400,
+                                "lineHeight": 1.37
+                              },
+                              "isFieldValue": false
                             }
                           }
                         ],
@@ -809,7 +854,8 @@
                     "fieldName": "malePill",
                     "properties": {
                       "type": "secondary",
-                      "radius": "radius4"
+                      "radius": "radius4",
+                      "cardType": "secondary"
                     }
                   }
                 ],
@@ -1582,8 +1628,16 @@
                   "format": "textTemplate",
                   "fieldName": "sessionLocationName",
                   "properties": {
-                    "style": "headingL",
-                    "bottomGap": 8
+                    "style": "headingXl",
+                    "bottomGap": 4,
+                    "textStyle": {
+                      "color": "#0B4B66",
+                      "fontSize": "18px",
+                      "fontFamily": "Roboto",
+                      "fontWeight": 700,
+                      "lineHeight": 1.14
+                    },
+                    "isFieldValue": false
                   }
                 },
                 {
@@ -1674,6 +1728,7 @@
             "fieldName": "startSession",
             "mandatory": true,
             "properties": {
+              "icon": "AddCircle",
               "size": "large",
               "type": "primary",
               "prefixIcon": "AddCircle",
@@ -1868,28 +1923,6 @@
               },
               {
                 "type": "string",
-                "enums": [
-                  {
-                    "code": "SCHOOL",
-                    "name": "GV_ENUM_SCHOOL"
-                  },
-                  {
-                    "code": "MARKET",
-                    "name": "GV_ENUM_MARKET"
-                  },
-                  {
-                    "code": "HEALTH_POST",
-                    "name": "GV_ENUM_HEALTH_POST"
-                  },
-                  {
-                    "code": "COMMUNITY_CENTRE",
-                    "name": "GV_ENUM_COMMUNITY_CENTRE"
-                  },
-                  {
-                    "code": "OTHER",
-                    "name": "GV_ENUM_OTHER"
-                  }
-                ],
                 "label": "GV_CLF_LOCATION_TYPE_LABEL",
                 "order": 2,
                 "value": "",
@@ -1903,6 +1936,7 @@
                 "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
+                "schemaCode": "common-masters.GroupVaccinationLocationsCLF",
                 "systemDate": false,
                 "validations": [
                   {
@@ -2217,8 +2251,16 @@
             "format": "textTemplate",
             "fieldName": "todaysProgressTitle",
             "properties": {
-              "style": "headingS",
-              "bottomGap": 4
+              "style": "headingM",
+              "bottomGap": 4,
+              "textStyle": {
+                "color": "#0B4B66",
+                "fontSize": "16px",
+                "fontFamily": "Roboto, sans-serif",
+                "fontWeight": 700,
+                "lineHeight": 1.14
+              },
+              "isFieldValue": false
             }
           },
           {
@@ -2232,7 +2274,15 @@
                 "fieldName": "vaccinatedCount",
                 "properties": {
                   "style": "headingXl",
-                  "bottomGap": 4
+                  "bottomGap": 4,
+                  "textStyle": {
+                    "color": "#0B4B66",
+                    "fontSize": "24px",
+                    "fontFamily": "Roboto Condensed, sans-serif",
+                    "fontWeight": 700,
+                    "lineHeight": 1.14
+                  },
+                  "isFieldValue": false
                 }
               },
               {
@@ -2243,7 +2293,15 @@
                 "mandatory": true,
                 "properties": {
                   "style": "bodyS",
-                  "bottomGap": 4
+                  "bottomGap": 4,
+                  "textStyle": {
+                    "color": "#1D1B20",
+                    "fontSize": "14px",
+                    "fontFamily": "Roboto, sans-serif",
+                    "fontWeight": 400,
+                    "lineHeight": 1.37
+                  },
+                  "isFieldValue": false
                 }
               },
               {
@@ -2266,7 +2324,15 @@
                             "fieldName": "femaleCount",
                             "properties": {
                               "color": "primary",
-                              "style": "headingS"
+                              "style": "headingM",
+                              "textStyle": {
+                                "color": "#0B4B66",
+                                "fontSize": "14px",
+                                "fontFamily": "Roboto, sans-serif",
+                                "fontWeight": 700,
+                                "lineHeight": 1.14
+                              },
+                              "isFieldValue": false
                             }
                           },
                           {
@@ -2276,7 +2342,15 @@
                             "fieldName": "femaleLabel",
                             "properties": {
                               "color": "primary",
-                              "style": "bodyS"
+                              "style": "bodyS",
+                              "textStyle": {
+                                "color": "#0B4B66",
+                                "fontSize": "14px",
+                                "fontFamily": "Roboto, sans-serif",
+                                "fontWeight": 400,
+                                "lineHeight": 1.37
+                              },
+                              "isFieldValue": false
                             }
                           }
                         ],
@@ -2292,7 +2366,8 @@
                     "fieldName": "femalePill",
                     "properties": {
                       "type": "secondary",
-                      "radius": "radius4"
+                      "radius": "radius4",
+                      "cardType": "secondary"
                     }
                   },
                   {
@@ -2311,7 +2386,15 @@
                             "fieldName": "maleCount",
                             "properties": {
                               "color": "primary",
-                              "style": "headingS"
+                              "style": "headingM",
+                              "textStyle": {
+                                "color": "#0B4B66",
+                                "fontSize": "14px",
+                                "fontFamily": "Roboto, sans-serif",
+                                "fontWeight": 700,
+                                "lineHeight": 1.14
+                              },
+                              "isFieldValue": false
                             }
                           },
                           {
@@ -2321,7 +2404,15 @@
                             "fieldName": "maleLabel",
                             "properties": {
                               "color": "primary",
-                              "style": "bodyS"
+                              "style": "bodyS",
+                              "textStyle": {
+                                "color": "#0B4B66",
+                                "fontSize": "14px",
+                                "fontFamily": "Roboto, sans-serif",
+                                "fontWeight": 400,
+                                "lineHeight": 1.37
+                              },
+                              "isFieldValue": false
                             }
                           }
                         ],
@@ -2337,7 +2428,8 @@
                     "fieldName": "malePill",
                     "properties": {
                       "type": "secondary",
-                      "radius": "radius4"
+                      "radius": "radius4",
+                      "cardType": "secondary"
                     }
                   }
                 ],
@@ -2943,8 +3035,8 @@
   "isActive": true,
   "auditDetails": {
     "createdBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
-    "lastModifiedBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
+    "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
     "createdTime": 1791788949610,
-    "lastModifiedTime": 1792060010901
+    "lastModifiedTime": 1792660299572
   }
 }

@@ -11,7 +11,7 @@ import IntermediateWrapper from "./IntermediateWrapper";
 import { useCustomT, useCustomTranslate, useFieldDataLabel } from "./hooks/useCustomT";
 import fullParentConfig from "./configs/fullParentConfig.json";
 import { getPageFromConfig } from "./utils/configUtils";
-import { getFieldTypeFromMasterData, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData, getFieldValueByPath, isOutsideLimits, isPanelItemEnabledForField, withoutFooterButtonTypes, toSentenceCase} from "./helpers";
+import { getFieldTypeFromMasterData, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData, getFieldValueByPath, isOutsideLimits, evaluateGroupExpression, isPanelItemEnabledForField, withoutFooterButtonTypes, toSentenceCase} from "./helpers";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 // Helper function to check if a value is empty (null, undefined, empty string, or empty array)
@@ -438,8 +438,10 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 });
               });
 
-            // Validation for group fields with validationExpression (min/max, minLength/maxLength range checks)
-            if (panelItem.fieldType === "group" && panelItem.validationExpression && panelItem.validationMessage) {
+            // Validation for group fields with validationExpression (min/max, minLength/maxLength range checks).
+            // A group switched off keeps whatever was last typed, so it is skipped here the same way
+            // the panel stops showing its message - otherwise a timer turned off would still block the save.
+            if (isGroupShown && panelItem.fieldType === "group" && panelItem.validationExpression && panelItem.validationMessage) {
               // Parse the validation expression to get the field paths
               // Examples: "lengthRange.minLength <= lengthRange.maxLength", "range.min <= range.max"
               // Supports various spacing: "a<=b", "a <= b", "a  <=  b"
@@ -498,6 +500,22 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                       });
                     }
                   }
+                }
+              } else {
+                // Anything the simple pattern above cannot read - an expression with arithmetic,
+                // say "popupTimer.minutes * 60 + popupTimer.seconds >= 30" - is handed to the same
+                // evaluator the side panel uses, so a rule shown in red there also stops the save.
+                if (!evaluateGroupExpression(field, expression)) {
+                  errors.push({
+                    fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                    panelLabel: panelItem.label,
+                    message: panelItem.validationMessage,
+                    messageParams: {
+                      fieldName: translateFieldLabel(field),
+                      propertyName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
+                    },
+                    tab: tabKey,
+                  });
                 }
               }
             }

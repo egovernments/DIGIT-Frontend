@@ -48,6 +48,14 @@ export const getSelectedMethodCodes = (cycleConfigure) =>
   Array.isArray(cycleConfigure?.deliveryMethods) ? cycleConfigure.deliveryMethods : [];
 
 /**
+ * Methods a campaign type wants ticked before the user has chosen anything, declared as
+ * `isDefault: true` on the method in MDMS. Used only on a campaign with nothing saved yet, so it
+ * never overrides a choice. A campaign type that marks none leaves the list empty, as before.
+ */
+export const getDefaultMethodCodes = (methods) =>
+  (Array.isArray(methods) ? methods : []).filter((method) => method?.isDefault === true).map((method) => method?.code).filter(Boolean);
+
+/**
  * Round type for the campaign being edited. Persisted on the campaign by the create flow; falls
  * back to the wizard's own round-type step for a campaign that has not been saved yet.
  */

@@ -1213,7 +1213,7 @@ tbody {
   }
 }
 .app-config-drawer-action-divider {
-  margin-top: auto;
+  margin-top: 0rem;
 }
 
 .app-preview-dob {
@@ -1223,6 +1223,7 @@ tbody {
   border: 1px solid #D6D5D4;
   border-radius: 0.25rem;
   padding: 0.75rem;
+  background-color: #FAFAFA;
 
   .app-preview-dob-part {
     display: flex;
@@ -1231,8 +1232,7 @@ tbody {
   }
 
   .app-preview-dob-label {
-    font-size: 0.875rem;
-    font-weight: 500;
+    font-size: 16px;
     color: #363636;
   }
 

@@ -475,6 +475,22 @@ function NewAppFieldScreenWrapper({viewMode}) {
                 edit is written back by, so the rows are picked out here rather than beforehand. */}
             {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) ? null : renderFieldRow(fieldEntry, i, c)))}
 
+            {/* Adding a field adds one to the list above, so it stays with that list rather than
+                sitting under the popup and button sections that follow */}
+            {currentCard?.type !== "template" && !viewMode && (
+              <Button
+                className={"app-config-drawer-button add-field"}
+                type={"button"}
+                size={"medium"}
+                icon={"AddIcon"}
+                variation="secondary"
+                label={t(I18N_KEYS.APP_CONFIGURATION.ADD_FIELD)}
+                title={t(I18N_KEYS.APP_CONFIGURATION.ADD_FIELD)}
+                onClick={() => handleAddField(currentCard, card[index])}
+                id={"app-config-screen-add-field-button"}
+              />
+            )}
+
             {/* A popup is set up on the screen but opened by a button, so it is listed on its own */}
             {popupFields.length > 0 && (
               <>
@@ -498,17 +514,6 @@ function NewAppFieldScreenWrapper({viewMode}) {
               </>
             )}
             {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) && !isPopupRow(fieldEntry) ? renderFieldRow(fieldEntry, i, c) : null))}
-            {currentCard?.type !== "template" && !viewMode && (<Button
-              className={"app-config-drawer-button add-field"}
-              type={"button"}
-              size={"medium"}
-              icon={"AddIcon"}
-              variation="secondary"
-              label={t(I18N_KEYS.APP_CONFIGURATION.ADD_FIELD)}
-              title={t(I18N_KEYS.APP_CONFIGURATION.ADD_FIELD)}
-              onClick={() => handleAddField(currentCard, card[index])}
-              id={"app-config-screen-add-field-button"}
-            />)}
           </Fragment>
         );
       })}
