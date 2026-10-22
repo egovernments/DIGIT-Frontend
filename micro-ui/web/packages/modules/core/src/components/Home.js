@@ -240,16 +240,16 @@ const EmployeeHome = ({ modules, additionalComponent }) => {
   const { t } = useTranslation();
   return (
     <>
-      {/* <main>, not <div>: the landing page's cards were the whole page content and sat outside
-          every landmark, so a screen reader had no main region to jump to and axe flagged the page
-          (region / landmark-one-main). Module routes are matched before this fallback, so this is
-          the only main on /employee. Class is unchanged, so the styling is untouched. */}
-      <main className="employee-app-container digit-home-employee-app">
-        {/* Every page needs one h1 (axe page-has-heading-one); the landing page has no visible title,
-            so expose one to screen readers only */}
-        <h1 style={srOnlyStyle}>{t("CORE_COMMON_HOME")}</h1>
+      {/* This stays a plain <div>: LandingPageWrapper below already declares role="main", so adding
+          a second landmark here produced two main landmarks, one nested in the other. */}
+      <div className="employee-app-container digit-home-employee-app">
         {/* <div className="ground-container moduleCardWrapper gridModuleWrapper digit-home-moduleCardWrapper"> */}
         <LandingPageWrapper>
+          {/* Inside the landmark, not above it - as a sibling of LandingPageWrapper this heading sat
+              outside every landmark and was the only node axe flagged for the region rule. Every page
+              needs one h1 (page-has-heading-one); the landing page has no visible title, so this one
+              is exposed to screen readers only. */}
+          <h1 style={srOnlyStyle}>{t("CORE_COMMON_HOME")}</h1>
           {modules?.map(({ code }, index) => {
             const Card =
               Digit.ComponentRegistryService.getComponent(`${code}Card`) ||
@@ -258,7 +258,7 @@ const EmployeeHome = ({ modules, additionalComponent }) => {
           })}
           </LandingPageWrapper>
         {/* </div> */}
-      </main>
+      </div>
 
       {additionalComponent &&
         additionalComponent?.length > 0 &&
