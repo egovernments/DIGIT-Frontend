@@ -44,7 +44,7 @@
     "@egovernments/digit-ui-module-core": "2.0.0-dev-43",
     "@egovernments/digit-ui-react-components": "2.0.0-dev-18",
     "@egovernments/digit-ui-svg-components": "2.0.0-dev-01",
-    "@egovernments/digit-ui-components": "2.0.0-dev-76",
+    "@egovernments/digit-ui-components": "2.0.0-dev-77",
     "@egovernments/digit-ui-module-workbench": "2.0.0-dev-29",
     "@tanstack/react-query": "^5.62.16",
     "babel-loader": "^9",
