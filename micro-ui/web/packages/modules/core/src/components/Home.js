@@ -258,7 +258,7 @@ const EmployeeHome = ({ modules, additionalComponent }) => {
           })}
           </LandingPageWrapper>
         {/* </div> */}
-      </div>
+      </main>
 
       {additionalComponent &&
         additionalComponent?.length > 0 &&
