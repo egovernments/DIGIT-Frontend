@@ -13,6 +13,10 @@
             "type": "template",
             "format": "menu_card",
             "heading": "GV_LOCATION_TRANSIT_POST_HEADING",
+            "styling": {
+              "alignment": "center",
+              "iconPosition": "top"
+            },
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -35,6 +39,10 @@
             "type": "template",
             "format": "menu_card",
             "heading": "GV_LOCATION_CLF_HEADING",
+            "styling": {
+              "alignment": "center",
+              "iconPosition": "top"
+            },
             "onAction": [
               {
                 "actionType": "NAVIGATION",
@@ -105,6 +113,11 @@
               }
             ],
             "fieldName": "sessionSearch",
+            "proximity": {
+              "root": "userAction",
+              "radius": 100,
+              "searchName": "sessionProximity"
+            },
             "validations": [
               {
                 "type": "minSearchChars",
@@ -193,9 +206,17 @@
             },
             "format": "listView",
             "fieldName": "listViewSessions",
+            "emptyChild": {
+              "type": "template",
+              "label": "GV_SESSIONS_EMPTY_MESSAGE",
+              "format": "infoCard",
+              "fieldName": "emptyState",
+              "description": "GV_SESSIONS_EMPTY_DESCRIPTION"
+            },
             "properties": {
               "spacing": "spacer4"
-            }
+            },
+            "showLoader": true
           }
         ],
         "name": "transitSessionsList",
@@ -283,6 +304,10 @@
             }
           }
         ],
+        "waitForWidget": {
+          "name": "sessionProximity",
+          "timeoutMs": 3000
+        },
         "wrapperConfig": {
           "filters": [
             {
@@ -352,8 +377,8 @@
           "searchConfig": {
             "select": ["userAction"],
             "orderBy": {
-              "field": "clientCreatedTime",
-              "order": "DESC"
+              "field": "__distance",
+              "order": "ASC"
             },
             "primary": "userAction"
           }
@@ -947,22 +972,43 @@
             "properties": {
               "data": [
                 {
-                  "key": "resourceTag",
+                  "key": "tenantId",
                   "root": "userAction",
-                  "value": "{{navigation.SessionClientReferenceId}}",
+                  "value": "{{singleton.selectedProject.tenantId}}",
+                  "operation": "equals"
+                },
+                {
+                  "key": "projectId",
+                  "root": "userAction",
+                  "value": "{{singleton.selectedProject.id}}",
+                  "operation": "equals"
+                },
+                {
+                  "key": "boundaryCode",
+                  "root": "userAction",
+                  "value": "{{singleton.boundary.code}}",
                   "operation": "equals"
                 }
               ],
-              "name": "session",
+              "name": "sessions",
               "type": "SEARCH_EVENT"
             }
           }
         ],
+        "waitForWidget": {
+          "name": "sessionProximity",
+          "timeoutMs": 3000
+        },
         "wrapperConfig": {
           "filters": [
             {
               "field": "additionalFields.fields.sessionType",
               "equals": "TRANSIT"
+            },
+            {
+              "field": "additionalFields.fields.locationName",
+              "contains": "{{searchBar}}",
+              "minChars": 2
             }
           ],
           "relations": [
@@ -977,16 +1023,6 @@
                 {
                   "field": "additionalFields.fields.formType",
                   "equals": "GROUP_VAC_CHILD"
-                }
-              ],
-              "relations": [
-                {
-                  "name": "child",
-                  "match": {
-                    "field": "clientReferenceId",
-                    "equalsFrom": "clientReferenceId"
-                  },
-                  "entity": "UserActionModel"
                 }
               ]
             },
@@ -1028,9 +1064,13 @@
             }
           ],
           "rootEntity": "UserActionModel",
-          "wrapperName": "TransitSessionWrapper",
+          "wrapperName": "TransitSessionsListWrapper",
           "searchConfig": {
             "select": ["userAction"],
+            "orderBy": {
+              "field": "__distance",
+              "order": "ASC"
+            },
             "primary": "userAction"
           }
         }
@@ -1618,6 +1658,11 @@
               }
             ],
             "fieldName": "sessionSearch",
+            "proximity": {
+              "root": "userAction",
+              "radius": 100,
+              "searchName": "sessionProximity"
+            },
             "validations": [
               {
                 "type": "minSearchChars",
@@ -1706,9 +1751,17 @@
             },
             "format": "listView",
             "fieldName": "listViewSessions",
+            "emptyChild": {
+              "type": "template",
+              "label": "GV_SESSIONS_EMPTY_MESSAGE",
+              "format": "infoCard",
+              "fieldName": "emptyState",
+              "description": "GV_SESSIONS_EMPTY_DESCRIPTION"
+            },
             "properties": {
               "spacing": "spacer4"
-            }
+            },
+            "showLoader": true
           }
         ],
         "name": "clfSessionsList",
@@ -1796,6 +1849,10 @@
             }
           }
         ],
+        "waitForWidget": {
+          "name": "sessionProximity",
+          "timeoutMs": 3000
+        },
         "wrapperConfig": {
           "filters": [
             {
@@ -1865,8 +1922,8 @@
           "searchConfig": {
             "select": ["userAction"],
             "orderBy": {
-              "field": "clientCreatedTime",
-              "order": "DESC"
+              "field": "__distance",
+              "order": "ASC"
             },
             "primary": "userAction"
           }
@@ -3053,8 +3110,8 @@
   "isActive": true,
   "auditDetails": {
     "createdBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
-    "lastModifiedBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
+    "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
     "createdTime": 1791788949610,
-    "lastModifiedTime": 1792754103423
+    "lastModifiedTime": 1792994671515
   }
 }

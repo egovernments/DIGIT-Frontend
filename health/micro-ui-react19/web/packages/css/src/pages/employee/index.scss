@@ -1216,6 +1216,23 @@ tbody {
   margin-top: 0rem;
 }
 
+.digit-menu-card.menu-card-template {
+  &.menu-card-icon-top .icon-menu-header {
+    flex-direction: column;
+  }
+
+  &.menu-card-align-center {
+    .icon-menu-header {
+      align-items: center;
+      justify-content: center;
+    }
+    .digit-menuacard-menuName,
+    .digit-menucard-description {
+      text-align: center;
+    }
+  }
+}
+
 .app-preview-dob {
   display: flex;
   flex-direction: column;
