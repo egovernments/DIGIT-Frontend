@@ -1557,11 +1557,20 @@
                 {
                   "actionType": "NAVIGATION",
                   "properties": {
-                    "data": [],
-                    "name": "transitSessionsList",
+                    "data": [
+                      {
+                        "key": "SessionClientReferenceId",
+                        "value": "{{navigation.SessionClientReferenceId}}"
+                      },
+                      {
+                        "key": "SessionType",
+                        "value": "TRANSIT"
+                      }
+                    ],
+                    "name": "transitSessionOverview",
                     "type": "TEMPLATE",
                     "navigationMode": "popUntilAndReplace",
-                    "popUntilPageName": "transitSessionsList"
+                    "popUntilPageName": "transitSessionOverview"
                   }
                 }
               ],
@@ -2995,11 +3004,20 @@
                 {
                   "actionType": "NAVIGATION",
                   "properties": {
-                    "data": [],
-                    "name": "clfSessionsList",
+                    "data": [
+                      {
+                        "key": "SessionClientReferenceId",
+                        "value": "{{navigation.SessionClientReferenceId}}"
+                      },
+                      {
+                        "key": "SessionType",
+                        "value": "CLF"
+                      }
+                    ],
+                    "name": "clfSessionOverview",
                     "type": "TEMPLATE",
                     "navigationMode": "popUntilAndReplace",
-                    "popUntilPageName": "clfSessionsList"
+                    "popUntilPageName": "clfSessionOverview"
                   }
                 }
               ],
@@ -3035,8 +3053,8 @@
   "isActive": true,
   "auditDetails": {
     "createdBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
-    "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
+    "lastModifiedBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
     "createdTime": 1791788949610,
-    "lastModifiedTime": 1792660299572
+    "lastModifiedTime": 1792754103423
   }
 }
