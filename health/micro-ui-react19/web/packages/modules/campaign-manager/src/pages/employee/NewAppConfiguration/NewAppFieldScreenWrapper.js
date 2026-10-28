@@ -220,6 +220,10 @@ function NewAppFieldScreenWrapper({viewMode}) {
   };
 
   const isFieldEditable = (field) => {
+    // A field can opt in or out of the panel itself, overriding its field type's setting
+    // (e.g. a template card that should get its own show/hide toggle)
+    if (field?.editable === true) return true;
+    if (field?.editable === false) return false;
 
     const fieldConfig = fieldTypeMaster?.fieldTypeMappingConfig?.find((item) => item.metadata.format === field.format && item.metadata.type === field.type);
     // If no config found, default to editable

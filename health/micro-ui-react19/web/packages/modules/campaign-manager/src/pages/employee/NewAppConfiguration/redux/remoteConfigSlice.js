@@ -71,6 +71,18 @@ const updateParentVisibility = (node) => {
   }
 };
 
+// Helper function to apply a container's visibility to everything inside it, so that
+// updateParentVisibility does not switch a toggled-off card back on from its visible children
+const setDescendantsHidden = (node, hidden) => {
+  if (!node || typeof node !== "object") return;
+  const descendants = [...(Array.isArray(node.children) ? node.children : []), ...(node.child ? [node.child] : [])];
+  descendants.forEach((descendant) => {
+    if (!descendant || typeof descendant !== "object") return;
+    descendant.hidden = hidden;
+    setDescendantsHidden(descendant, hidden);
+  });
+};
+
 // Slice for storing app config data
 const remoteConfigSlice = createSlice({
   name: "remoteConfig",
@@ -739,6 +751,9 @@ const remoteConfigSlice = createSlice({
                 node.includeInForm = true;
                 node.includeInSummary = true;
               }
+              // A container that opted into the panel (editable: true, e.g. a template card)
+              // shows or hides as a whole
+              if (node.editable === true) setDescendantsHidden(node, node.hidden);
               return true;
             }
 
