@@ -556,7 +556,7 @@
           ],
           "fieldType": "group",
           "validationMessage": "FIELD_DRAWER_ERROR_POPUPTIMER_MINIMUM",
-          "validationExpression": "popupTimer[\"enabled\"] === false || (Number(popupTimer[\"minutes\"]) || 0) * 60 + (Number(popupTimer[\"seconds\"]) || 0) >= 30",
+          "validationExpression": "popupTimer.minutes * 60 + popupTimer.seconds >= 30",
           "visibilityEnabledFor": ["latLng"],
           "visibilityEnabledForFields": ["gpsStart", "gpsChild"]
         }
