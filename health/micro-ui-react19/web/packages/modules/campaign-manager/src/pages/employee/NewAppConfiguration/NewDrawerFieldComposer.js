@@ -2038,18 +2038,23 @@ const findTemplateNode = (node, field) => {
   return findTemplateNode(node.child, field) || findTemplateNode(node.children, field);
 };
 
-// Show/hide switches for the direct children of a template container that opted in with
-// childToggles: true (e.g. the Female and Male pills under "Count by gender")
+// Helper to get the direct children of a template node that are containers themselves
+// (e.g. the Female and Male pill cards under "Count by gender")
+const getContainerChildren = (node) =>
+  [...(Array.isArray(node?.children) ? node.children : []), ...(node?.child ? [node.child] : [])].filter(
+    (child) => child?.fieldName && (child.child || (Array.isArray(child.children) && child.children.length > 0))
+  );
+
+// Show/hide switches for the container children of a template node that opted into the panel
+// (editable: true), so each of them can be hidden on its own
 const ChildVisibilityToggles = ({ selectedField, viewMode }) => {
   const dispatch = useDispatch();
   const customTranslate = useCustomTranslate();
   const { currentData, selectedFieldPath } = useSelector((state) => state.remoteConfig);
 
   // selectedField is a snapshot taken on selection, so read the children's state from the page data
-  const container = findTemplateNode([...(currentData?.body || []).map((card) => card?.fields), currentData?.footer], selectedField);
-  const children = [...(Array.isArray(container?.children) ? container.children : []), ...(container?.child ? [container.child] : [])].filter(
-    (child) => child?.fieldName
-  );
+  const container = findTemplateNode((currentData?.body || []).map((card) => card?.fields), selectedField);
+  const children = getContainerChildren(container);
   if (children.length === 0) return null;
 
   return children.map((child) => (
@@ -2063,7 +2068,7 @@ const ChildVisibilityToggles = ({ selectedField, viewMode }) => {
         }
         isCheckedInitially={child.hidden !== true}
         shapeOnOff
-        disable={viewMode || selectedField?.hidden === true}
+        disable={viewMode}
         isLabelFirst={true}
         className={"digit-sidepanel-switch-wrap sidepanel"}
       />
@@ -2114,7 +2119,7 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
     });
   }, [currentTabProperties, fieldType, selectedField?.fieldName]);
 
-  const hasChildToggles = selectedField?.childToggles === true && activeTab === "content";
+  const hasChildToggles = selectedField?.editable === true && activeTab === "content" && getContainerChildren(selectedField).length > 0;
 
   // Function to collect validation errors for the selected field (group validations only)
   // Note: Mandatory conditional field validation is now handled in AppConfigurationWrapper for ALL fields
@@ -2312,7 +2317,7 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
           );
         })}
 
-        {/* Child show/hide switches - only for a template container that opted in */}
+        {/* Child show/hide switches - only for a template container that opted into the panel */}
         {hasChildToggles && <ChildVisibilityToggles selectedField={selectedField} viewMode={viewMode} />}
 
         {/* No properties message */}
