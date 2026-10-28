@@ -703,7 +703,7 @@ const remoteConfigSlice = createSlice({
       }
     },
     hideField(state, action) {
-      const { fieldName, cardIndex, role, key } = action.payload;
+      const { fieldName, cardIndex, role, key, cascade } = action.payload;
 
       // Check if this is a template type page
       const isTemplate = state.currentData?.type === "template";
@@ -751,9 +751,9 @@ const remoteConfigSlice = createSlice({
                 node.includeInForm = true;
                 node.includeInSummary = true;
               }
-              // A container that opted into the panel (editable: true, e.g. a template card)
-              // shows or hides as a whole
-              if (node.editable === true) setDescendantsHidden(node, node.hidden);
+              // A container that opted into the panel (editable: true, e.g. a template card), or one
+              // toggled from its parent's drawer (cascade, e.g. the Female pill), shows or hides as a whole
+              if (node.editable === true || cascade) setDescendantsHidden(node, node.hidden);
               return true;
             }
 
