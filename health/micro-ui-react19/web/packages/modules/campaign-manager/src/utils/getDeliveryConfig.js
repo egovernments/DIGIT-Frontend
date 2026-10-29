@@ -135,6 +135,11 @@ const generateConfig = (data) => {
 
     return {
       delivery: delivery.id,
+      // The delivery strategy this template is for, when the campaign type declares one per
+      // strategy (HOUSEHOLDSTRATEGY, OUTSIDEHOUSEHOLD, ...). The delivery rules screen matches a
+      // strategy tab to its template by this code and falls back to the first entry without it,
+      // and the saved campaign keeps it under additionalDetails.cycleData.deliveryConfig.
+      ...(delivery.deliveryMethod ? { deliveryMethod: delivery.deliveryMethod } : {}),
       conditionConfig
     };
   });
