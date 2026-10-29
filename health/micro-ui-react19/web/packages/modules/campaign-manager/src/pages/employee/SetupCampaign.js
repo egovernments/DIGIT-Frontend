@@ -15,6 +15,7 @@ import {
   findHighestStepCount,
 } from "../../utils/setupCampaignHelpers";
 import { handleValidate } from "../../utils/setupCampaignValidators";
+import { carryDeliveryMethods, getDeliveryMethods } from "../../utils/deliveryMethods";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import { srOnlyStyle } from "../../utils";
@@ -339,11 +340,18 @@ const SetupCampaign = () => {
             }
             payloadData.tenantId = tenantId;
             payloadData.action = "changeDates";
-            if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
-              payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
-            } else {
-              payloadData.additionalDetails.cycleData = {};
-            }
+            // Delivery strategies ride along on every draft save: from the session when the
+            // strategy step has been visited, else from the draft, else the campaign type's
+            // defaults. Leaving the field out would make project-factory drop it.
+            payloadData.additionalDetails.cycleData = carryDeliveryMethods(
+              totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
+              draftData?.additionalDetails?.cycleData,
+              getDeliveryMethods(
+                DeliveryConfig?.find?.(
+                  (e) => e?.code === (totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType)
+                )
+              )
+            );
             if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
@@ -519,11 +527,18 @@ const SetupCampaign = () => {
               // Only override isUnifiedCampaign if session has it explicitly set; otherwise draftData value is already preserved from spread above
               ...(sessionIsUnifiedCampaign !== undefined && { isUnifiedCampaign: sessionIsUnifiedCampaign }),
             };
-            if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
-              payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
-            } else {
-              payloadData.additionalDetails.cycleData = {};
-            }
+            // Delivery strategies ride along on every draft save: from the session when the
+            // strategy step has been visited, else from the draft, else the campaign type's
+            // defaults. Leaving the field out would make project-factory drop it.
+            payloadData.additionalDetails.cycleData = carryDeliveryMethods(
+              totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
+              draftData?.additionalDetails?.cycleData,
+              getDeliveryMethods(
+                DeliveryConfig?.find?.(
+                  (e) => e?.code === (totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType)
+                )
+              )
+            );
             if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
@@ -601,11 +616,18 @@ const SetupCampaign = () => {
               // Only override isUnifiedCampaign if session has it explicitly set; otherwise draftData value is already preserved from spread above
               ...(sessionIsUnifiedCampaign2 !== undefined && { isUnifiedCampaign: sessionIsUnifiedCampaign2 }),
             };
-            if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
-              payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
-            } else {
-              payloadData.additionalDetails.cycleData = {};
-            }
+            // Delivery strategies ride along on every draft save: from the session when the
+            // strategy step has been visited, else from the draft, else the campaign type's
+            // defaults. Leaving the field out would make project-factory drop it.
+            payloadData.additionalDetails.cycleData = carryDeliveryMethods(
+              totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
+              draftData?.additionalDetails?.cycleData,
+              getDeliveryMethods(
+                DeliveryConfig?.find?.(
+                  (e) => e?.code === (totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType)
+                )
+              )
+            );
             if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
