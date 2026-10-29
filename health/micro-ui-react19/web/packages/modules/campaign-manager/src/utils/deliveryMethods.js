@@ -75,6 +75,48 @@ export const getRoundType = (campaignData, sessionFormData) => {
 export const normaliseSelection = (selectedCodes, methods) =>
   methods.map((m) => m?.code).filter((code) => selectedCodes?.includes(code));
 
+/** A strategy code as a plain string. The backend also accepts `{ code }` objects, but strings are preferred. */
+const toMethodCode = (method) => {
+  if (typeof method === "string") return method;
+  if (method && typeof method === "object" && typeof method.code === "string") return method.code;
+  return undefined;
+};
+
+/**
+ * The strategy codes to persist on a save, in this order of preference:
+ *   1. what the user has ticked in this wizard session (`cycleConfigure.deliveryMethods`)
+ *   2. what the saved campaign already carries (`additionalDetails.cycleData.deliveryMethods`)
+ *   3. the campaign type's defaults from MDMS, when [methods] is given
+ * Returns undefined when nothing is known, so the caller can leave the field out.
+ *
+ * The backend (excel-ingestion, project-factory) reads this field on every create and update to
+ * decide whether the template gets the Outside Household sheet. project-factory stores whatever
+ * additionalDetails it receives, so a save that leaves the field out would erase it; an empty
+ * list counts as "no information". That is why every save path resolves the codes through here
+ * instead of forwarding only what the current step holds.
+ */
+export const resolveDeliveryMethodCodes = ({ cycleConfigure, savedCycleData, methods } = {}) => {
+  const chosen = getSelectedMethodCodes(cycleConfigure).map(toMethodCode).filter(Boolean);
+  if (chosen.length > 0) return chosen;
+  const saved = Array.isArray(savedCycleData?.deliveryMethods)
+    ? savedCycleData.deliveryMethods.map(toMethodCode).filter(Boolean)
+    : [];
+  if (saved.length > 0) return saved;
+  const defaults = getDefaultMethodCodes(methods);
+  return defaults.length > 0 ? defaults : undefined;
+};
+
+/**
+ * The cycle data to send on a save: [cycleData] as it is, with `deliveryMethods` filled from
+ * [resolveDeliveryMethodCodes]. Use this wherever `additionalDetails.cycleData` is written so a
+ * step that does not know about strategies cannot drop them.
+ */
+export const carryDeliveryMethods = (cycleData, savedCycleData, methods) => {
+  const codes = resolveDeliveryMethodCodes({ cycleConfigure: cycleData, savedCycleData, methods });
+  const base = cycleData && typeof cycleData === "object" ? cycleData : {};
+  return codes ? { ...base, deliveryMethods: codes } : base;
+};
+
 /**
  * Delivery strategies chosen on a saved campaign. Read from the cycle configuration the wizard
  * persists, falling back to the codes stamped on the saved deliveries.
