@@ -2,9 +2,9 @@ import React, { Fragment, useMemo, useState, useCallback, useRef, useEffect } fr
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { AlertCard, FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons, Loader,HeaderComponent,Card,SVG } from "@egovernments/digit-ui-components";
-import { updateSelectedField } from "./redux/remoteConfigSlice";
+import { updateSelectedField, hideField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
-import { useCustomT } from "./hooks/useCustomT";
+import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import {
   getFieldTypeFromMasterData,
   getFieldValueByPath,
@@ -2018,6 +2018,64 @@ export const Tabs = React.memo(({ tabs, activeTab, onTabChange }) => {
   );
 });
 
+// Helper to find a template node by fieldName (+ key and role when given) in the live page data
+const findTemplateNode = (node, field) => {
+  if (!node || typeof node !== "object") return null;
+  if (Array.isArray(node)) {
+    for (const item of node) {
+      const found = findTemplateNode(item, field);
+      if (found) return found;
+    }
+    return null;
+  }
+  if (
+    node.fieldName === field?.fieldName &&
+    (field?.key === undefined || node.key === field.key) &&
+    (!field?.role || node.role === field.role)
+  ) {
+    return node;
+  }
+  return findTemplateNode(node.child, field) || findTemplateNode(node.children, field);
+};
+
+// Helper to get the direct children of a template node that are containers themselves
+// (e.g. the Female and Male pill cards under "Count by gender")
+const getContainerChildren = (node) =>
+  [...(Array.isArray(node?.children) ? node.children : []), ...(node?.child ? [node.child] : [])].filter(
+    (child) => child?.fieldName && (child.child || (Array.isArray(child.children) && child.children.length > 0))
+  );
+
+// Show/hide switches for the container children of a template node that opted into the panel
+// (editable: true), so each of them can be hidden on its own
+const ChildVisibilityToggles = ({ selectedField, viewMode }) => {
+  const dispatch = useDispatch();
+  const customTranslate = useCustomTranslate();
+  const { currentData, selectedFieldPath } = useSelector((state) => state.remoteConfig);
+
+  // selectedField is a snapshot taken on selection, so read the children's state from the page data
+  const container = findTemplateNode((currentData?.body || []).map((card) => card?.fields), selectedField);
+  const children = getContainerChildren(container);
+  if (children.length === 0) return null;
+
+  return children.map((child) => (
+    <div key={`${selectedField?.fieldName}-${child.fieldName}`} className="drawer-toggle-field-container">
+      {/* Switch keeps its own state, so key it on the real value */}
+      <Switch
+        key={child.hidden === true ? "off" : "on"}
+        label={customTranslate(child.label)?.trim() || customTranslate(child.fieldName)?.trim() || child.fieldName}
+        onToggle={() =>
+          dispatch(hideField({ fieldName: child.fieldName, cardIndex: selectedFieldPath?.cardIndex, role: child.role, key: child.key, cascade: true }))
+        }
+        isCheckedInitially={child.hidden !== true}
+        shapeOnOff
+        disable={viewMode}
+        isLabelFirst={true}
+        className={"digit-sidepanel-switch-wrap sidepanel"}
+      />
+    </div>
+  ));
+};
+
 function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -2060,6 +2118,8 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
       return panelItem.visibilityEnabledFor.includes(fieldType) && panelItem?.isPopupProperty !== true;
     });
   }, [currentTabProperties, fieldType, selectedField?.fieldName]);
+
+  const hasChildToggles = selectedField?.editable === true && activeTab === "content" && getContainerChildren(selectedField).length > 0;
 
   // Function to collect validation errors for the selected field (group validations only)
   // Note: Mandatory conditional field validation is now handled in AppConfigurationWrapper for ALL fields
@@ -2257,8 +2317,11 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
           );
         })}
 
+        {/* Child show/hide switches - only for a template container that opted into the panel */}
+        {hasChildToggles && <ChildVisibilityToggles selectedField={selectedField} viewMode={viewMode} />}
+
         {/* No properties message */}
-        {visibleTabProperties.length === 0 && (
+        {visibleTabProperties.length === 0 && !hasChildToggles && (
           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
             <Tag showIcon={true} label={t(`CMP_DRAWER_NO_CONFIG_ERROR_${activeTab.toUpperCase()}`)} type="error" />
           </div>
