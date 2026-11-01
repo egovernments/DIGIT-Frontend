@@ -99,11 +99,18 @@ const LocalisationBulkUpload = () => {
           },
           {
             name: t(
-              I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_OUTSIDEHOUSEHOLD_POLIO_MODULE,
+              I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_TRANSIT_POST_POLIO_MODULE,
             ),
-            value: `hcm-outsidehousehold-${campaignNumber}`,
+            value: `hcm-transitpost-${campaignNumber}`,
             baseModule: projectTypeSuffix
-              ? `hcm-base-outsidehousehold-${projectTypeSuffix}`
+              ? `hcm-base-transitpost-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_CLF_POLIO_MODULE),
+            value: `hcm-clf-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-clf-${projectTypeSuffix}`
               : null,
           },
         ]
