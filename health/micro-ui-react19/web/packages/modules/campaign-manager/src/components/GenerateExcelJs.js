@@ -221,8 +221,13 @@ const GenerateExcelJs = ({
         return newRow;
       });
 
-      // Use display name for sheet tab, sanitized for Excel
-      const safeSheetName = sanitizeSheetName(moduleDisplayName);
+      // Use display name for sheet tab, sanitized for Excel; keep it unique
+      // since addWorksheet throws on a duplicate name
+      let safeSheetName = sanitizeSheetName(moduleDisplayName || moduleValue);
+      for (let n = 2; workbook.getWorksheet(safeSheetName); n++) {
+        const suffix = ` (${n})`;
+        safeSheetName = sanitizeSheetName(moduleDisplayName || moduleValue).substring(0, 31 - suffix.length) + suffix;
+      }
 
       // Create worksheet
       const worksheet = workbook.addWorksheet(safeSheetName, {
