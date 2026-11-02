@@ -194,6 +194,10 @@ function NewAppFieldScreenWrapper({viewMode}) {
 
     // If it's a template (like your fields), include it and also look inside for nested templates
     if (typeof node === "object" && node.type?.trim() === "template") {
+      // A container that opted into the panel (editable: true) is shown and toggled as one row,
+      // so what is inside it is not listed separately
+      if (node.editable === true) return [node];
+
       const fields = [node];
 
       // Extract primaryAction and secondaryAction if they exist
@@ -220,6 +224,9 @@ function NewAppFieldScreenWrapper({viewMode}) {
   };
 
   const isFieldEditable = (field) => {
+    // A field can opt into the panel itself, overriding its field type's setting
+    // (e.g. a template row that should get its own show/hide toggle)
+    if (field?.editable === true) return true;
 
     const fieldConfig = fieldTypeMaster?.fieldTypeMappingConfig?.find((item) => item.metadata.format === field.format && item.metadata.type === field.type);
     // If no config found, default to editable
