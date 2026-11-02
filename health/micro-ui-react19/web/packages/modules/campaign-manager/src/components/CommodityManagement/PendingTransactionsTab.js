@@ -1,12 +1,19 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader, Button, Toast, PopUp, TextArea } from "@egovernments/digit-ui-components";
+import { Loader, Button, Toast, PopUp, TextArea, TextInput, Dropdown } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import UserDetails from "./UserDetails";
 import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+
+// Codes match what the mobile app stores in discrepancyReason
+const DISCREPANCY_REASONS = ["IN_TRANSIT", "STOCK_LOSS", "STOCK_DAMAGE", "OTHERS"];
+
+// Default record filter: returns still in transit
+const isPendingReturn = (stock) => stock.stockEntryType === "RETURNED" && stock.status === "IN_TRANSIT";
+const getStockQuantity = (stock) => stock?.quantity || 0;
 
 const PendingTransactionsTab = ({
   rawStockData,
@@ -17,6 +24,12 @@ const PendingTransactionsTab = ({
   userBoundary,
   isTopLevel,
   refetchStockData,
+  header = "HCM_PENDING_RETURNS",
+  noDataMessage = "HCM_NO_PENDING_RETURNS",
+  excelFileName = "pending_transactions",
+  secondaryAction = "reject", // "reject" | "partialAccept"
+  filterStock = isPendingReturn,
+  getQuantity = getStockQuantity,
 }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,6 +38,9 @@ const PendingTransactionsTab = ({
   const [acceptPopup, setAcceptPopup] = useState(null); // { stockId }
   const [rejectPopup, setRejectPopup] = useState(null); // { stockId }
   const [rejectComment, setRejectComment] = useState("");
+  const [partialPopup, setPartialPopup] = useState(null); // { stockId, sentQuantity }
+  const [partialQuantity, setPartialQuantity] = useState("");
+  const [partialReason, setPartialReason] = useState(null);
 
   // Get user's staff project from context
   const { projects: contextProjects } = useCommodityProject();
@@ -153,13 +169,12 @@ const PendingTransactionsTab = ({
     return map;
   }, [productVariants, products]);
 
-  // Filter: RETURNED + IN_TRANSIT where user's facility is the receiver
+  // Filter: records matching filterStock where user's facility is the receiver
   const tableData = useMemo(() => {
     if (!rawStockData?.length) return [];
     return rawStockData
       .filter((stock) => {
-        if (stock.stockEntryType !== "RETURNED") return false;
-        if (stock.status !== "IN_TRANSIT") return false;
+        if (!filterStock(stock)) return false;
         // Only show where user's facility is the receiver (original sender getting stock back)
         if (projectFacilityIds.size > 0 && !projectFacilityIds.has(stock.receiverId))
           return false;
@@ -200,20 +215,20 @@ const PendingTransactionsTab = ({
           userName: stock?.userName || "",
           createdBy: stock?.auditDetails?.createdBy || "N/A",
           commodity: productName,
-          quantity: stock?.quantity || 0,
+          quantity: getQuantity(stock),
         };
       })
       .sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
-  }, [rawStockData, facilityNameMap, productNameMap, projectFacilityIds]);
+  }, [rawStockData, facilityNameMap, productNameMap, projectFacilityIds, filterStock, getQuantity]);
 
   const filteredData = useMemo(() => {
     if (!tableData?.length) return [];
     return applyGenericFilters(tableData, { searchText: searchQuery });
   }, [tableData, searchQuery]);
 
-  // Accept or Reject a pending return transaction
+  // Accept, Partially Accept or Reject a pending return transaction
   const handleAction = useCallback(
-    async (stockId, action, comments) => {
+    async (stockId, action, comments, extraFields = []) => {
       if (updatingIds.has(stockId)) return;
       setUpdatingIds((prev) => new Set(prev).add(stockId));
 
@@ -237,27 +252,20 @@ const PendingTransactionsTab = ({
         }
 
         // Step 2: Update the status in additionalFields from IN_TRANSIT to ACCEPTED/REJECTED
-        const newStatus = action === "accept" ? "ACCEPTED" : "REJECTED";
-        let updatedFields = (stockObject.additionalFields?.fields || []).map(
-          (field) => {
-            if (field.key === "status") {
-              return { ...field, value: newStatus };
-            }
-            return field;
-          }
-        );
+        // (a partial accept is stored as ACCEPTED plus the received quantity and discrepancy reason)
+        const newStatus = action === "reject" ? "REJECTED" : "ACCEPTED";
+        let updatedFields = [...(stockObject.additionalFields?.fields || [])];
 
-        // Step 2b: Add comments to additionalFields if provided
-        if (comments?.trim()) {
-          const hasComments = updatedFields.some((f) => f.key === "comments");
-          if (hasComments) {
-            updatedFields = updatedFields.map((f) =>
-              f.key === "comments" ? { ...f, value: comments.trim() } : f
-            );
+        // Step 2b: Set status, comments and any extra fields in additionalFields, overwriting existing keys
+        const fieldsToSet = [{ key: "status", value: newStatus }, ...extraFields];
+        if (comments?.trim()) fieldsToSet.push({ key: "comments", value: comments.trim() });
+        fieldsToSet.forEach(({ key, value }) => {
+          if (updatedFields.some((f) => f.key === key)) {
+            updatedFields = updatedFields.map((f) => (f.key === key ? { ...f, value } : f));
           } else {
-            updatedFields.push({ key: "comments", value: comments.trim() });
+            updatedFields.push({ key, value });
           }
-        }
+        });
 
         const updatedStock = {
           ...stockObject,
@@ -281,6 +289,8 @@ const PendingTransactionsTab = ({
           label:
             action === "accept"
               ? t("HCM_RETURN_ACCEPTED_SUCCESS")
+              : action === "partialAccept"
+              ? t("HCM_PARTIAL_ACCEPT_SUCCESS")
               : t("HCM_RETURN_REJECTED_SUCCESS"),
         });
 
@@ -330,6 +340,39 @@ const PendingTransactionsTab = ({
     setRejectPopup(null);
     setRejectComment("");
   }, [rejectPopup, rejectComment, handleAction]);
+
+  // Open partial accept popup
+  const handlePartialAcceptClick = useCallback((row) => {
+    setPartialQuantity("");
+    setPartialReason(null);
+    setPartialPopup({ stockId: row.stockId, sentQuantity: Number(row.quantity) || 0 });
+  }, []);
+
+  const closePartialPopup = useCallback(() => {
+    setPartialPopup(null);
+    setPartialQuantity("");
+    setPartialReason(null);
+  }, []);
+
+  // Received quantity must be a whole number below the quantity sent (equal means a full accept)
+  const isPartialQuantityValid =
+    /^\d+$/.test(partialQuantity) && Number(partialQuantity) < (partialPopup?.sentQuantity || 0);
+
+  const changePartialQuantity = (delta) => {
+    const current = /^\d+$/.test(partialQuantity) ? Number(partialQuantity) : 0;
+    const max = Math.max((partialPopup?.sentQuantity || 0) - 1, 0);
+    setPartialQuantity(String(Math.min(Math.max(current + delta, 0), max)));
+  };
+
+  // Confirm partial acceptance with received quantity and discrepancy reason
+  const handlePartialAcceptConfirm = useCallback(() => {
+    if (!partialPopup?.stockId || !isPartialQuantityValid || !partialReason?.code) return;
+    handleAction(partialPopup.stockId, "partialAccept", "", [
+      { key: "receivedQuantity", value: partialQuantity },
+      { key: "discrepancyReason", value: partialReason.code },
+    ]);
+    closePartialPopup();
+  }, [partialPopup, isPartialQuantityValid, partialQuantity, partialReason, handleAction, closePartialPopup]);
 
   const columns = [
     { label: t("HCM_TRN"), key: "trn", grow: 1, minWidth: "120px", sortable: true },
@@ -403,14 +446,25 @@ const PendingTransactionsTab = ({
             isDisabled={isUpdating}
             size="small"
           />
-          <Button
-            type="button"
-            variation="secondary"
-            label={isUpdating ? t("HCM_UPDATING") : t("HCM_REJECT")}
-            onClick={() => handleRejectClick(row.stockId)}
-            isDisabled={isUpdating}
-            size="small"
-          />
+          {secondaryAction === "partialAccept" ? (
+            <Button
+              type="button"
+              variation="secondary"
+              label={isUpdating ? t("HCM_UPDATING") : t("HCM_PARTIALLY_ACCEPT")}
+              onClick={() => handlePartialAcceptClick(row)}
+              isDisabled={isUpdating}
+              size="small"
+            />
+          ) : (
+            <Button
+              type="button"
+              variation="secondary"
+              label={isUpdating ? t("HCM_UPDATING") : t("HCM_REJECT")}
+              onClick={() => handleRejectClick(row.stockId)}
+              isDisabled={isUpdating}
+              size="small"
+            />
+          )}
         </div>
       );
     },
@@ -434,7 +488,7 @@ const PendingTransactionsTab = ({
   return (
     <div>
       <GenericChart
-        header={t("HCM_PENDING_RETURNS")}
+        header={t(header)}
         showSearch={true}
         className={"digit-stock-transactions-summary-tab"}
         subHeader={""}
@@ -444,14 +498,14 @@ const PendingTransactionsTab = ({
           data={filteredData}
           columns={columns}
           isLoading={false}
-          noDataMessage="HCM_NO_PENDING_RETURNS"
+          noDataMessage={noDataMessage}
           pagination={true}
           manualPagination={true}
           paginationPerPage={10}
           paginationRowsPerPageOptions={[10, 20, 50, 100]}
           customCellRenderer={customCellRenderer}
           enableExcelDownload={false}
-          excelFileName="pending_transactions"
+          excelFileName={excelFileName}
           className=""
           headerClassName=""
         />
@@ -536,6 +590,84 @@ const PendingTransactionsTab = ({
               placeholder={t("HCM_ENTER_COMMENTS")}
               style={{ maxWidth: "100%", minHeight: "100px" }}
             />
+          </div>
+        </PopUp>
+      )}
+
+      {partialPopup && (
+        <PopUp
+          type="default"
+          heading={t("HCM_PARTIALLY_ACCEPT_STOCK")}
+          description={t("HCM_PARTIALLY_ACCEPT_STOCK_DESC")}
+          children={[]}
+          onClose={closePartialPopup}
+          onOverlayClick={closePartialPopup}
+          equalWidthButtons={true}
+          footerChildren={[
+            <Button
+              key="cancel"
+              type="button"
+              size="large"
+              variation="secondary"
+              label={t("HCM_CANCEL")}
+              onClick={closePartialPopup}
+            />,
+            <Button
+              key="confirm"
+              type="button"
+              size="large"
+              variation="primary"
+              label={t("HCM_CONFIRM")}
+              onClick={handlePartialAcceptConfirm}
+              isDisabled={!isPartialQuantityValid || !partialReason?.code}
+            />,
+          ]}
+          style={{ maxWidth: "500px" }}
+        >
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <label style={{ fontWeight: 700, fontSize: "1rem" }}>
+                {t("HCM_ACTUAL_QUANTITY_RECEIVED")} <span style={{ color: "#B91900" }}>*</span>
+              </label>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <Button
+                  type="button"
+                  variation="secondary"
+                  label="-"
+                  onClick={() => changePartialQuantity(-1)}
+                  size="medium"
+                />
+                <TextInput
+                  type="number"
+                  value={partialQuantity}
+                  onChange={(e) => setPartialQuantity(e.target.value.replace(/\D/g, ""))}
+                  style={{ textAlign: "center" }}
+                />
+                <Button
+                  type="button"
+                  variation="secondary"
+                  label="+"
+                  onClick={() => changePartialQuantity(1)}
+                  size="medium"
+                />
+              </div>
+              <span style={{ fontSize: "0.875rem", color: "#505A5F" }}>
+                {t("HCM_QUANTITY_SENT")}: {partialPopup.sentQuantity.toLocaleString()}
+              </span>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <label style={{ fontWeight: 700, fontSize: "1rem" }}>
+                {t("HCM_DISCREPANCY_REASON")} <span style={{ color: "#B91900" }}>*</span>
+              </label>
+              <Dropdown
+                t={t}
+                option={DISCREPANCY_REASONS.map((code) => ({ code, name: t(`HCM_DISCREPANCY_REASON_${code}`) }))}
+                optionKey="name"
+                selected={partialReason}
+                select={(selected) => setPartialReason(selected)}
+                placeholder={t("ES_COMMON_SELECT")}
+              />
+            </div>
           </div>
         </PopUp>
       )}

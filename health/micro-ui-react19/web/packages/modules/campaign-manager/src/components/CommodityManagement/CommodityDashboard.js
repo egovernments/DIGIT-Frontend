@@ -4,6 +4,7 @@ import { Toggle, HeaderComponent, LabelFieldPair, Loader, Button, Card, Toast } 
 import TransactionSummaryTab from "./TransactionSummaryTab";
 import StockSummaryTab from "./StockSummaryTab";
 import PendingTransactionsTab from "./PendingTransactionsTab";
+import PartialAcceptedTab from "./PartialAcceptedTab";
 import DateRangePicker from "./DateRangePicker";
 import { useLocation } from "react-router-dom";
 import useStockData from "../../hooks/useStockData";
@@ -388,6 +389,7 @@ const CommodityDashboard = () => {
     { key: "transaction", label: t("HCM_TRANSACTION_SUMMARY") },
     { key: "stock", label: t("HCM_STOCK_SUMMARY") },
     { key: "pending", label: t("HCM_PENDING_TRANSACTIONS") },
+    { key: "partialAccepted", label: t("HCM_PARTIALLY_ACCEPTED") },
   ];
 
   if (campaignIdLoading) {
@@ -630,6 +632,18 @@ const CommodityDashboard = () => {
       )}
       {activeTab === "pending" && (
         <PendingTransactionsTab
+          rawStockData={rawStockData}
+          stockLoading={stockLoading}
+          tenantId={tenantId}
+          campaignId={campaignId}
+          projectId={projectId}
+          userBoundary={userBoundary}
+          isTopLevel={isTopLevel}
+          refetchStockData={refetchStockData}
+        />
+      )}
+      {activeTab === "partialAccepted" && (
+        <PartialAcceptedTab
           rawStockData={rawStockData}
           stockLoading={stockLoading}
           tenantId={tenantId}

@@ -109,7 +109,10 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
           createdBy: record.createdBy,
         },
         createdBy: record.createdBy,
-        boundaryHierarchyCode : record.boundaryHierarchyCode
+        boundaryHierarchyCode : record.boundaryHierarchyCode,
+        partialFlow: record.partialFlow,
+        discrepancyReason: record.discrepancyReason,
+        originalIssueClientReferenceId: record.originalIssueClientReferenceId,
       };
     });
   }, [rawRecords]);
