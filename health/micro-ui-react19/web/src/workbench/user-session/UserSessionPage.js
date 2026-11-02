@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, Card, HeaderComponent, Loader, MultiSelectDropdown, PopUp, TextInput, Toast } from "@egovernments/digit-ui-components";
+import { Button, Card, HeaderComponent, Loader, PopUp, TextInput, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { ensureUserSessionI18n } from "../../../packages/modules/campaign-manager/src/utils/i18nKeyConstants";
 import { tableCustomStyle } from "../../../packages/modules/campaign-manager/src/components/tableCustomStyle";
-import { getResolvedTenantId, isRevokeSuccessful, lookupEmployeeUuidByCode, revokeUserSession, searchActiveUsersByCampaignNumber, searchUserSessions } from "./service";
+import { getResolvedTenantId, isRevokeSuccessful, lookupEmployeeUuidByCode, revokeUserSession, searchActiveUsersByCampaignNumber } from "./service";
 import { getEmployeeHomeRouteLink, getUserSessionRouteLink, hasUserSessionAccess, USER_SESSION_PAGE_SIZE } from "./config";
 
-const applyLocalFilters = ({ rows, selectedRoles, statusFilter, userNameFilter = "" }) => {
+const applyLocalFilters = ({ rows, userNameFilter = "" }) => {
   return rows.filter((row) => {
     const normalizedUserNameFilter = String(userNameFilter || "").trim().toLowerCase();
     if (normalizedUserNameFilter) {
@@ -18,15 +18,6 @@ const applyLocalFilters = ({ rows, selectedRoles, statusFilter, userNameFilter =
       const matchesUserName = candidateValues.some((value) => value.includes(normalizedUserNameFilter));
       if (!matchesUserName) return false;
     }
-
-    if (selectedRoles.length > 0) {
-      const rowRoleSet = new Set((row?.roles || []).map((role) => String(role).toUpperCase()));
-      const hasAnyRole = selectedRoles.some((role) => rowRoleSet.has(String(role).toUpperCase()));
-      if (!hasAnyRole) return false;
-    }
-
-    if (statusFilter === "ACTIVE" && row?.status !== "ACTIVE") return false;
-    if (statusFilter === "INACTIVE" && row?.status !== "INACTIVE") return false;
 
     return true;
   });
@@ -45,9 +36,8 @@ const UserSessionPage = () => {
 
   const [userName, setUserName] = useState("");
   const [userNameInput, setUserNameInput] = useState("");
+  const [campaignNameInput, setCampaignNameInput] = useState("");
   const [campaignName, setCampaignName] = useState("");
-  const [selectedRoles, setSelectedRoles] = useState([]);
-  const [statusFilter, setStatusFilter] = useState("");
 
   const [rows, setRows] = useState([]);
   const [allRows, setAllRows] = useState([]);
@@ -76,48 +66,28 @@ const UserSessionPage = () => {
     try {
       const effectiveCampaignName = criteria?.campaignName ?? campaignName;
       const effectiveUserName = criteria?.userName ?? userName;
-      const effectiveSelectedRoles = criteria?.selectedRoles ?? selectedRoles;
-      const effectiveStatusFilter = criteria?.statusFilter ?? statusFilter;
       const effectiveCampaignSearchMode = Boolean(String(effectiveCampaignName || "").trim());
 
-      if (effectiveCampaignSearchMode) {
-        const transformedRows = await searchActiveUsersByCampaignNumber({
-          tenantId,
-          campaignNumber: effectiveCampaignName,
-        });
-
-        const filteredRows = applyLocalFilters({
-          rows: transformedRows,
-          selectedRoles: effectiveSelectedRoles,
-          statusFilter: effectiveStatusFilter,
-          userNameFilter: effectiveUserName,
-        });
-
-        setAllRows(transformedRows);
-        setRows(filteredRows.slice(offset, offset + rowsPerPage));
-        setTotalRows(filteredRows.length);
+      if (!effectiveCampaignSearchMode) {
+        setAllRows([]);
+        setRows([]);
+        setTotalRows(0);
         return;
       }
 
-      const searchResult = await searchUserSessions({
+      const transformedRows = await searchActiveUsersByCampaignNumber({
         tenantId,
-        userName: effectiveUserName,
-        limit: rowsPerPage,
-        offset,
+        campaignNumber: effectiveCampaignName,
       });
-
-      const transformedRows = searchResult?.rows || [];
 
       const filteredRows = applyLocalFilters({
         rows: transformedRows,
-        selectedRoles: effectiveSelectedRoles,
-        statusFilter: effectiveStatusFilter,
         userNameFilter: effectiveUserName,
       });
 
       setAllRows(transformedRows);
-      setRows(filteredRows);
-      setTotalRows(searchResult?.totalCount ?? transformedRows.length);
+      setRows(filteredRows.slice(offset, offset + rowsPerPage));
+      setTotalRows(filteredRows.length);
     } catch (searchError) {
       setError(searchError?.message || t("USER_SESSION_FETCH_FAILED"));
       setAllRows([]);
@@ -131,24 +101,17 @@ const UserSessionPage = () => {
   useEffect(() => {
     fetchUserSessions(pageOffset);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageOffset, rowsPerPage]);
+  }, [pageOffset, rowsPerPage, campaignName]);
 
   useEffect(() => {
     const filteredRows = applyLocalFilters({
       rows: allRows,
-      selectedRoles,
-      statusFilter,
       userNameFilter: userName,
     });
 
-    if (isCampaignSearchMode) {
-      setRows(filteredRows.slice(pageOffset, pageOffset + rowsPerPage));
-      setTotalRows(filteredRows.length);
-      return;
-    }
-
-    setRows(filteredRows);
-  }, [allRows, selectedRoles, statusFilter, isCampaignSearchMode, pageOffset, rowsPerPage, userName]);
+    setRows(filteredRows.slice(pageOffset, pageOffset + rowsPerPage));
+    setTotalRows(filteredRows.length);
+  }, [allRows, pageOffset, rowsPerPage, userName]);
 
   useEffect(() => {
     if (!toast) return;
@@ -156,91 +119,61 @@ const UserSessionPage = () => {
     return () => window.clearTimeout(timer);
   }, [toast]);
 
-  const roleOptions = useMemo(() => {
-    const roleSet = new Set();
-    allRows.forEach((row) => {
-      (row?.roles || []).forEach((role) => roleSet.add(role));
-    });
-    return Array.from(roleSet).sort((a, b) => a.localeCompare(b));
-  }, [allRows]);
-
-  const roleDropdownOptions = useMemo(() => roleOptions.map((role) => ({ code: role, name: role })), [roleOptions]);
-
-  const selectedRoleOptions = useMemo(() => {
-    const selectedSet = new Set(selectedRoles.map((role) => String(role).toUpperCase()));
-    return roleDropdownOptions.filter((option) => selectedSet.has(String(option?.code || "").toUpperCase()));
-  }, [roleDropdownOptions, selectedRoles]);
-
-  const updateSelectedRolesFromDropdown = (value) => {
-    if (!Array.isArray(value)) {
-      setSelectedRoles([]);
-      return;
-    }
-
-    const nextRoles = value
-      .map((item) => {
-        if (Array.isArray(item)) {
-          return item?.[1]?.code || item?.[1]?.name || null;
-        }
-        return item?.code || item?.name || null;
-      })
-      .filter(Boolean);
-
-    setSelectedRoles(nextRoles);
-  };
-
-  const onSearch = async (event) => {
+  const onCampaignSearch = async (event) => {
     event?.preventDefault();
+    const nextCampaignName = String(campaignNameInput || "").trim();
+    const hasCampaignChanged = nextCampaignName !== campaignName;
+    setCampaignName(nextCampaignName);
+    setUserName("");
+    setUserNameInput("");
 
-    const nextUserName = userNameInput;
-    setUserName(nextUserName);
-
-    if (pageOffset === 0) {
-      await fetchUserSessions(0, {
-        userName: nextUserName,
-      });
+    if (pageOffset !== 0) {
+      setPageOffset(0);
       return;
     }
 
-    setPageOffset(0);
+    if (hasCampaignChanged) {
+      return;
+    }
+
+    await fetchUserSessions(0, {
+      campaignName: nextCampaignName,
+      userName: "",
+    });
   };
 
-  const onClearFilters = () => {
-    setSelectedRoles([]);
-    setStatusFilter("");
-
+  const onUserNameSearch = (event) => {
+    event?.preventDefault();
+    const nextUserName = String(userNameInput || "").trim();
+    setUserName(nextUserName);
     if (pageOffset !== 0) {
       setPageOffset(0);
     }
   };
 
-  const onApplyFilters = async () => {
-    if (pageOffset === 0) {
-      await fetchUserSessions(0);
+  const onClear = async () => {
+    const hasCampaignSearchApplied = Boolean(campaignName);
+    setCampaignNameInput("");
+    setCampaignName("");
+    setUserNameInput("");
+    setUserName("");
+
+    if (pageOffset !== 0) {
+      setPageOffset(0);
       return;
     }
 
-    setPageOffset(0);
-  };
-
-  const onClear = async () => {
-    setUserNameInput("");
-    setUserName("");
-    setCampaignName("");
-    setSelectedRoles([]);
-    setStatusFilter("");
+    if (hasCampaignSearchApplied) {
+      return;
+    }
 
     if (pageOffset === 0) {
       await fetchUserSessions(0, {
-        userName: "",
         campaignName: "",
-        selectedRoles: [],
-        statusFilter: "",
+        userName: "",
       });
       return;
     }
-
-    setPageOffset(0);
   };
 
   const onOpenRevoke = (row) => {
@@ -397,68 +330,16 @@ const UserSessionPage = () => {
 
       <div className="digit-inbox-search-wrapper user-session-page">
         <div className="user-session-layout">
-          <Card className="user-session-filter-card user-session-filter-column">
-            <div style={{ fontWeight: 700, marginBottom: "1rem", color: "#0B4B66" }}>{t("ES_COMMON_FILTERS")}</div>
-
-            <div style={{ marginBottom: "1rem" }}>
-              <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 700, color: "#0B4B66" }}>{t("HR_COMMON_TABLE_COL_ROLE")}</label>
-              <div className="user-session-role-dropdown-wrap">
-                <MultiSelectDropdown
-                  t={t}
-                  options={roleDropdownOptions}
-                  optionsKey="name"
-                  selected={selectedRoleOptions}
-                  onSelect={updateSelectedRolesFromDropdown}
-                  onClose={updateSelectedRolesFromDropdown}
-                  isSearchable={true}
-                  addSelectAllCheck={true}
-                  config={{ isDropdownWithChip: false, chipKey: "code" }}
-                />
-              </div>
-            </div>
-
-            <div style={{ marginBottom: "1rem" }}>
-              <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 700, color: "#0B4B66" }}>{t("HR_EMP_STATUS_LABEL")}</label>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                  <input type="radio" name="status-filter" value="ACTIVE" checked={statusFilter === "ACTIVE"} onChange={(event) => setStatusFilter(event.target.value)} />
-                  {t("HR_ACTIVATE_HEAD")}
-                </label>
-                <label style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                  <input type="radio" name="status-filter" value="INACTIVE" checked={statusFilter === "INACTIVE"} onChange={(event) => setStatusFilter(event.target.value)} />
-                  {t("HR_DEACTIVATE_HEAD")}
-                </label>
-              </div>
-            </div>
-
-            <div className="user-session-filter-actions">
-              <Button type="button" variation="primary" label={t("HRMS_APPLY_FILTERS")} onClick={onApplyFilters} isDisabled={isLoading} />
-              <button type="button" className="user-session-clear-filter-link" onClick={onClearFilters} disabled={isLoading}>
-                {t("HRMS_CLEAR_FILTER")}
-              </button>
-            </div>
-          </Card>
-
           <div className="user-session-content-column">
             <Card className="user-session-search-card">
-              <form onSubmit={onSearch}>
+              <form onSubmit={onCampaignSearch}>
                 <div className="user-session-search-grid">
-                  <div>
-                    <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 700, color: "#0B4B66" }}>{t("HR_USERNAME_LABEL")}</label>
-                    <TextInput
-                      type="text"
-                      value={userNameInput}
-                      onChange={(event) => setUserNameInput(event.target.value)}
-                      placeholder={t("HR_USERNAME_LABEL")}
-                      style={{ width: "100%" }}
-                    />
-                  </div>
                   <div>
                     <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 700, color: "#0B4B66" }}>{t("HCM_CAMPAIGN_NAME")}</label>
                     <TextInput
                       type="text"
-                      value={campaignName}
-                      onChange={(event) => setCampaignName(event.target.value)}
+                      value={campaignNameInput}
+                      onChange={(event) => setCampaignNameInput(event.target.value)}
                       placeholder={t("HCM_CAMPAIGN_NAME")}
                       style={{ width: "100%" }}
                     />
@@ -478,6 +359,29 @@ const UserSessionPage = () => {
 
               {error ? <div style={{ color: "#B91900", marginTop: "0.75rem" }}>{error}</div> : null}
             </Card>
+
+            {isCampaignSearchMode ? (
+              <Card className="user-session-search-card" style={{ marginTop: "1rem" }}>
+                <form onSubmit={onUserNameSearch}>
+                  <div className="user-session-search-grid">
+                    <div>
+                      <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 700, color: "#0B4B66" }}>{t("HR_USERNAME_LABEL")}</label>
+                      <TextInput
+                        type="text"
+                        value={userNameInput}
+                        onChange={(event) => setUserNameInput(event.target.value)}
+                        placeholder={t("HR_USERNAME_LABEL")}
+                        style={{ width: "100%" }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="user-session-search-actions">
+                    <Button type="submit" variation="primary" label={t("ES_COMMON_SEARCH")} isDisabled={isLoading} />
+                  </div>
+                </form>
+              </Card>
+            ) : null}
 
             <Card className="user-session-table-card">
               <DataTable
@@ -501,7 +405,11 @@ const UserSessionPage = () => {
                 progressPending={isLoading}
                 progressComponent={<Loader />}
                 persistTableHead
-                noDataComponent={<div style={{ padding: "0.75rem 0", color: "#505A5F" }}>{t("ES_COMMON_NO_DATA")}</div>}
+                noDataComponent={
+                  <div style={{ padding: "0.75rem 0", color: "#505A5F" }}>
+                    {isCampaignSearchMode ? t("ES_COMMON_NO_DATA") : t("USER_SESSION_SEARCH_BY_CAMPAIGN_PROMPT")}
+                  </div>
+                }
               />
             </Card>
           </div>

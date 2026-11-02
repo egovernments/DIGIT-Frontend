@@ -197,13 +197,22 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     return match?.id || contextProjects[0]?.id || null;
   }, [contextProjects, userBoundary]);
 
-  // Fetch project facilities using user's staff project
+  // Prefer user-staff project facilities; also include campaign project as fallback.
+  // This prevents an empty transaction table on hard refresh when context project matching fails.
+  const effectiveProjectIds = useMemo(() => {
+    const ids = new Set();
+    if (userStaffProjectId) ids.add(userStaffProjectId);
+    if (projectId) ids.add(projectId);
+    return [...ids];
+  }, [userStaffProjectId, projectId]);
+
+  // Fetch project facilities using effective project IDs
   const projectFacilityCriteria = useMemo(() => ({
     url: `${getProjectServiceUrl()}/facility/v1/_search`,
     params: { tenantId, limit: 100, offset: 0 },
-    body: { ProjectFacility: { projectId: [userStaffProjectId] } },
+    body: { ProjectFacility: { projectId: effectiveProjectIds } },
     config: {
-      enabled: !!userStaffProjectId && !!tenantId,
+      enabled: !!effectiveProjectIds.length && !!tenantId,
       select: (data) => {
         const ids = new Set();
         (data?.ProjectFacilities || []).forEach(pf => {
@@ -212,7 +221,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
         return ids;
       },
     },
-  }), [tenantId, userStaffProjectId]);
+  }), [tenantId, effectiveProjectIds]);
   const { data: projectFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
 
   // Enrich chart rows with stock API details by transaction IDs (comments are often absent in chart response)
@@ -340,7 +349,9 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     if (!rawStockData?.length) return [];
     return rawStockData
       .filter(stock => {
-        if (projectFacilityIds.size === 0) return false;
+        // Fallback: when facility mapping is unavailable, show campaign-level transactions
+        // instead of rendering an empty table.
+        if (projectFacilityIds.size === 0) return true;
         const { senderId, receiverId } = getStockPartyIds(stock);
         return projectFacilityIds.has(senderId) || projectFacilityIds.has(receiverId);
       })
