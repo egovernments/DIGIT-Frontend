@@ -335,6 +335,16 @@
                   "masterName": "SEARCH_HOUSEHOLD_FILTERS",
                   "moduleName": "HCM",
                   "schemaCode": "HCM.SEARCH_HOUSEHOLD_FILTERS"
+                },
+                {
+                  "masterName": "GroupVaccinationLocations",
+                  "moduleName": "common-masters",
+                  "schemaCode": "common-masters.GroupVaccinationLocations"
+                },
+                {
+                  "masterName": "GroupVaccinationLocationsCLF",
+                  "moduleName": "common-masters",
+                  "schemaCode": "common-masters.GroupVaccinationLocationsCLF"
                 }
               ],
               "jsonPath": "schemaCode",
@@ -530,6 +540,7 @@
           "id": "popupTimer",
           "label": "popupTimer",
           "order": 33,
+          "bindTo": "popupTimer.enabled",
           "children": [
             {
               "id": "minutes",
@@ -555,10 +566,20 @@
             }
           ],
           "fieldType": "group",
+          "defaultValue": true,
+          "showFieldOnToggle": true,
           "validationMessage": "FIELD_DRAWER_ERROR_POPUPTIMER_MINIMUM",
-          "validationExpression": "popupTimer.minutes * 60 + popupTimer.seconds >= 30",
+          "validationExpression": "popupTimer[\"enabled\"] === false || (Number(popupTimer[\"minutes\"]) || 0) * 60 + (Number(popupTimer[\"seconds\"]) || 0) >= 30",
           "visibilityEnabledFor": ["latLng"],
-          "visibilityEnabledForFields": ["gpsStart", "gpsChild"]
+          "visibilityEnabledForFields": [
+            "gpsStart",
+            "gpsChild",
+            "gpsReferral",
+            "gpsFinal",
+            "gpsFirstHousehold",
+            "gpsLastHousehold",
+            "latLng"
+          ]
         }
       ],
       "validation": [
@@ -569,7 +590,7 @@
           "fieldType": "infoCard",
           "description": "APPCONFIG_AGE_DYNAMIC_INFO_TEXT",
           "visibilityEnabledFor": [],
-          "visibilityEnabledForFields": ["ageBand"]
+          "visibilityEnabledForFields": ["ageBand", "childDob"]
         },
         {
           "id": "scannerRegex",
@@ -849,16 +870,17 @@
           "fieldType": "group",
           "validationMessage": "APPCONFIG_MIN_AGE_LESS_EQUAL_MAX_AGE",
           "validationExpression": "ageRange.minAge <= ageRange.maxAge",
-          "visibilityEnabledFor": ["dob"]
+          "visibilityEnabledFor": ["dob"],
+          "visibilityDisabledForFields": ["childDob"]
         }
       ]
     },
     "isActive": true,
     "auditDetails": {
       "createdBy": "3496b299-06f3-4dd2-8340-573cf8c4f1fc",
-      "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
+      "lastModifiedBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
       "createdTime": 1777538631135,
-      "lastModifiedTime": 1792143524263
+      "lastModifiedTime": 1793186102383
     }
   }
 ]
