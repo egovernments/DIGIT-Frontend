@@ -54,9 +54,9 @@ const LocalisationBulkUpload = () => {
       ? [
           {
             name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_REGISTRATION_MODULE),
-            value: `hcm-registration-${campaignNumber}`,
+            value: `hcm-householdstrategy-${campaignNumber}`,
             baseModule: projectTypeSuffix
-              ? `hcm-base-registrationflow-${projectTypeSuffix}`
+              ? `hcm-base-householdstrategy-${projectTypeSuffix}`
               : null,
           },
           {
@@ -68,9 +68,9 @@ const LocalisationBulkUpload = () => {
           },
           {
             name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_CLOSEHOUSEHOLD_MODULE),
-            value: `hcm-closehousehold-${campaignNumber}`,
+            value: `hcm-missedchildren-${campaignNumber}`,
             baseModule: projectTypeSuffix
-              ? `hcm-base-closehousehold-${projectTypeSuffix}`
+              ? `hcm-base-missedchildren-${projectTypeSuffix}`
               : null,
           },
 
@@ -99,18 +99,11 @@ const LocalisationBulkUpload = () => {
           },
           {
             name: t(
-              I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_TRANSIT_POST_POLIO_MODULE,
+              I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_OUTSIDEHOUSEHOLD_POLIO_MODULE,
             ),
-            value: `hcm-transitpost-${campaignNumber}`,
+            value: `hcm-outsidehousehold-${campaignNumber}`,
             baseModule: projectTypeSuffix
-              ? `hcm-base-transitpost-${projectTypeSuffix}`
-              : null,
-          },
-          {
-            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_CLF_POLIO_MODULE),
-            value: `hcm-clf-${campaignNumber}`,
-            baseModule: projectTypeSuffix
-              ? `hcm-base-clf-${projectTypeSuffix}`
+              ? `hcm-base-outsidehousehold-${projectTypeSuffix}`
               : null,
           },
         ]
