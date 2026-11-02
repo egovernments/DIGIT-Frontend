@@ -284,9 +284,10 @@ const CampaignDetails = () => {
   }, [usesDeliveryStrategies, campaignData]);
 
   // True only when the delivery card offers to change an existing strategy, which is the same
-  // condition that makes its button read "Edit delivery strategy". A new or cloned campaign has
-  // nothing configured yet, and a created campaign edits its dates on a different screen - in
-  // both cases there is no earlier configuration to invalidate, so no confirmation is needed.
+  // condition that makes its button read "Edit delivery strategy". A new campaign has nothing
+  // configured yet, and a created campaign edits its dates on a different screen - in both cases
+  // there is no earlier configuration to invalidate, so no confirmation is needed. A copied
+  // campaign arrives with its delivery rules already filled in, so it does ask.
   const isEditingDeliveryStrategy = useMemo(
     () => usesDeliveryStrategies && !deliveryStrategyPending && campaignData?.status !== "created" && !campaignData?.parentId,
     [usesDeliveryStrategies, deliveryStrategyPending, campaignData?.status, campaignData?.parentId]

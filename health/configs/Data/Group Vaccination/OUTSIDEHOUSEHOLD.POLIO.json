@@ -1764,15 +1764,6 @@
           },
           {
             "type": "template",
-            "label": "GV_TRANSIT_SESSIONS_EMPTY_MESSAGE",
-            "format": "noResultCard",
-            "fieldName": "emptyState",
-            "schemaCode": null,
-            "description": "GV_TRANSIT_SESSIONS_EMPTY_DESCRIPTION",
-            "showOnEmptySearch": true
-          },
-          {
-            "type": "template",
             "child": {
               "type": "template",
               "format": "card",
@@ -1857,6 +1848,16 @@
             },
             "schemaCode": null,
             "showLoader": true
+          },
+          {
+            "type": "template",
+            "label": "GV_TRANSIT_SESSIONS_EMPTY_MESSAGE",
+            "format": "noResultCard",
+            "fieldName": "emptyState",
+            "schemaCode": null,
+            "description": "GV_TRANSIT_SESSIONS_EMPTY_DESCRIPTION",
+            "showOnEmptySearch": true,
+            "icon": "LocationNotFound"
           }
         ],
         "name": "transitSessionsList",
@@ -2063,15 +2064,6 @@
           },
           {
             "type": "template",
-            "label": "GV_CLF_SESSIONS_EMPTY_MESSAGE",
-            "format": "noResultCard",
-            "fieldName": "emptyState",
-            "schemaCode": null,
-            "description": "GV_CLF_SESSIONS_EMPTY_DESCRIPTION",
-            "showOnEmptySearch": true
-          },
-          {
-            "type": "template",
             "child": {
               "type": "template",
               "format": "card",
@@ -2156,6 +2148,16 @@
             },
             "schemaCode": null,
             "showLoader": true
+          },
+          {
+            "type": "template",
+            "label": "GV_CLF_SESSIONS_EMPTY_MESSAGE",
+            "format": "noResultCard",
+            "fieldName": "emptyState",
+            "schemaCode": null,
+            "description": "GV_CLF_SESSIONS_EMPTY_DESCRIPTION",
+            "showOnEmptySearch": true,
+            "icon": "LocationNotFound"
           }
         ],
         "name": "clfSessionsList",
@@ -3831,8 +3833,8 @@
   "isActive": true,
   "auditDetails": {
     "createdBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
-    "lastModifiedBy": "github:Shreya-egov",
+    "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
     "createdTime": 1791788949610,
-    "lastModifiedTime": 1793363924726
+    "lastModifiedTime": 1793612675976
   }
 }

@@ -132,7 +132,14 @@ const CloneCampaignWrapper = (props) => {
     const modifiedCampaign = {
       ...sourceCampaign,
       campaignName: name,
-      deliveryRules: [],
+      // Only a POLIO campaign carries its delivery rules into the copy. Its conditions, products
+      // and strategies are the bulk of the setup and are worth keeping, and the ids inside
+      // (cycle.id, delivery.id) are positions in the list rather than saved records, so they
+      // travel as they are. Every other campaign type is left as it was, with the wizard asking
+      // for its delivery rules again. The cycle dates come across belonging to the campaign that
+      // was copied and are re-entered on the delivery step, the same as the cycle dates already
+      // carried in additionalDetails.
+      deliveryRules: sourceCampaign?.projectType === "POLIO" ? sourceCampaign?.deliveryRules || [] : [],
       parentId: null,
       isActive: true,
       campaignNumber: null,
