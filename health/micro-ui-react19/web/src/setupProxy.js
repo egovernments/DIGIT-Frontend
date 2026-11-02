@@ -17,6 +17,7 @@ module.exports = function (app) {
     "/fsm",
     "/billing-service",
     "/collection-services",
+    "/hcm-bff",
     "/pdf-service",
     "/pg-service",
     "/vehicle",
