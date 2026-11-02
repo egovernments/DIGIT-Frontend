@@ -1444,63 +1444,6 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         return null;
       };
 
-      // Post-init variant: tolerate null resources immediately after triggering _init.
-      const pollUntilDoneAfterInit = async () => {
-        const startTime = Date.now();
-        while (Date.now() - startTime < maxPollTime) {
-          await new Promise((resolve) => setTimeout(resolve, pollRetryInterval));
-          const resource = await requestBulkTemplate();
-          if (resource?.status === "completed" || resource?.status === "failed") {
-            return resource;
-          }
-        }
-        return null;
-      };
-
-      const triggerBulkTemplateInit = async () => {
-        const requestInfo = buildRequestInfo("bulk-template-init");
-        try {
-          await Digit.CustomService.getResponse({
-            url: "/project-factory/v1/data/_init",
-            body: {
-              RequestInfo: requestInfo,
-              GenerateResource: {
-                tenantId: generationTenantId,
-                type: generationType,
-                hierarchyType,
-                campaignId: generationReferenceId,
-                localityCode: bulkLocalityCode,
-                additionalDetails: {
-                  campaignName,
-                  campaignId: generationReferenceId,
-                },
-              },
-            },
-          });
-        } catch (initError) {
-          // Backward-compatible fallback for environments that still expose only _generate.
-          const initErrorCode = initError?.response?.data?.Errors?.[0]?.code;
-          const initHttpStatus = initError?.response?.status;
-          const canFallbackToGenerate = initHttpStatus === 404 || initHttpStatus === 405 || initErrorCode === "EG_PROJECT_FACTORY_API_NOT_FOUND";
-          if (!canFallbackToGenerate) {
-            throw initError;
-          }
-
-          await Digit.CustomService.getResponse({
-            url: "/project-factory/v1/data/_generate",
-            body: {
-              RequestInfo: requestInfo,
-            },
-            params: {
-              tenantId: generationTenantId,
-              type: generationType,
-              hierarchyType,
-              campaignId: generationReferenceId,
-              localityCode: bulkLocalityCode,
-            },
-          });
-        }
-      };
 
       const downloadFromResource = async (resource) => {
         const fileStoreId = resource?.fileStoreid || resource?.fileStoreId;
@@ -1548,13 +1491,15 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           await downloadFromResource(initResource);
           return;
         }
-        // Explicitly initialize template generation for bulk attendance when it's not already completed.
-        await triggerBulkTemplateInit();
-        let resource = await pollUntilDoneAfterInit();
 
-        if (!resource && (initResource?.status === "pending" || initResource?.status === "inprogress")) {
-          resource = await pollUntilDone();
+        if (initResource?.status === "failed") {
+          setLoader(false);
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          return;
         }
+
+        const resource = await pollUntilDone();
 
         setLoader(false);
 
