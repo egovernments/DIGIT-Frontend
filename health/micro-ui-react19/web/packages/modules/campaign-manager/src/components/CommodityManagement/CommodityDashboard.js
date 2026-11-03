@@ -648,6 +648,7 @@ const CommodityDashboard = () => {
           stockLoading={stockLoading}
           tenantId={tenantId}
           campaignId={campaignId}
+          campaignNumber={campaignNumber}
           projectId={projectId}
           userBoundary={userBoundary}
           isTopLevel={isTopLevel}
