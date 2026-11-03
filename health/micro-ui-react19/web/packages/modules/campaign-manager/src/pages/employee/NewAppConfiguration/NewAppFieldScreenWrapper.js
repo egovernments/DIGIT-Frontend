@@ -194,6 +194,14 @@ function NewAppFieldScreenWrapper({viewMode}) {
 
     // If it's a template (like your fields), include it and also look inside for nested templates
     if (typeof node === "object" && node.type?.trim() === "template") {
+      // A group is one element to the author: list the node, but not the parts inside it.
+      // Without this a count and its label become two rows with two switches, so the number
+      // can be hidden while its label stays on screen.
+      // Opt-in: a config without the flag is flattened exactly as before.
+      if (node.groupAsSingleElement === true) {
+        return [node];
+      }
+
       const fields = [node];
 
       // Extract primaryAction and secondaryAction if they exist
@@ -220,6 +228,11 @@ function NewAppFieldScreenWrapper({viewMode}) {
   };
 
   const isFieldEditable = (field) => {
+    // A group stands in for the fields it wraps, so it belongs in the panel whatever its own
+    // format is. card, row and column are all editable:false in the field-type master - without
+    // this the group row is dropped here, and its parts are already gone, so the element
+    // disappears from the panel entirely.
+    if (field?.groupAsSingleElement === true) return true;
 
     const fieldConfig = fieldTypeMaster?.fieldTypeMappingConfig?.find((item) => item.metadata.format === field.format && item.metadata.type === field.type);
     // If no config found, default to editable

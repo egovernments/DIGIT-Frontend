@@ -1370,39 +1370,51 @@
             "children": [
               {
                 "type": "template",
-                "value": "{{contextData.0.children.length}}",
-                "format": "textTemplate",
-                "fieldName": "vaccinatedCount",
+                "format": "column",
+                "fieldName": "vaccinatedTotal",
+                "groupAsSingleElement": true,
+                "label": "GV_METRIC_VACCINATED_TODAY",
                 "properties": {
-                  "style": "headingXl",
-                  "bottomGap": 4,
-                  "textStyle": {
-                    "color": "#0B4B66",
-                    "fontSize": "24px",
-                    "fontFamily": "Roboto, sans-serif",
-                    "fontWeight": 700,
-                    "lineHeight": 1.14
+                  "mainAxisSize": "min"
+                },
+                "children": [
+                  {
+                    "type": "template",
+                    "value": "{{contextData.0.children.length}}",
+                    "format": "textTemplate",
+                    "fieldName": "vaccinatedCount",
+                    "properties": {
+                      "style": "headingXl",
+                      "bottomGap": 4,
+                      "textStyle": {
+                        "color": "#0B4B66",
+                        "fontSize": "24px",
+                        "fontFamily": "Roboto, sans-serif",
+                        "fontWeight": 700,
+                        "lineHeight": 1.14
+                      },
+                      "isFieldValue": false
+                    }
                   },
-                  "isFieldValue": false
-                }
-              },
-              {
-                "type": "template",
-                "value": "GV_METRIC_VACCINATED_TODAY",
-                "format": "textTemplate",
-                "fieldName": "vaccinatedLabel",
-                "properties": {
-                  "style": "bodyM",
-                  "bottomGap": 4,
-                  "textStyle": {
-                    "color": "#1D1B20",
-                    "fontSize": "14px",
-                    "fontFamily": "Roboto, sans-serif",
-                    "fontWeight": 400,
-                    "lineHeight": 1.37
-                  },
-                  "isFieldValue": false
-                }
+                  {
+                    "type": "template",
+                    "value": "GV_METRIC_VACCINATED_TODAY",
+                    "format": "textTemplate",
+                    "fieldName": "vaccinatedLabel",
+                    "properties": {
+                      "style": "bodyM",
+                      "bottomGap": 4,
+                      "textStyle": {
+                        "color": "#1D1B20",
+                        "fontSize": "14px",
+                        "fontFamily": "Roboto, sans-serif",
+                        "fontWeight": 400,
+                        "lineHeight": 1.37
+                      },
+                      "isFieldValue": false
+                    }
+                  }
+                ]
               },
               {
                 "type": "template",
@@ -1464,6 +1476,7 @@
                       }
                     ],
                     "fieldName": "femalePill",
+                    "label": "GV_ENUM_FEMALE",
                     "properties": {
                       "type": "secondary",
                       "radius": "radius4",
@@ -1526,6 +1539,7 @@
                       }
                     ],
                     "fieldName": "malePill",
+                    "label": "GV_ENUM_MALE",
                     "properties": {
                       "type": "secondary",
                       "radius": "radius4",
@@ -1536,7 +1550,9 @@
                 "fieldName": "vaccinatedSplit",
                 "properties": {
                   "gap": 8
-                }
+                },
+                "groupAsSingleElement": true,
+                "label": "GV_METRIC_VACCINATED_BY_GENDER"
               }
             ],
             "fieldName": "vaccinatedTile",
@@ -1717,7 +1733,9 @@
           "rootEntity": "UserActionModel",
           "wrapperName": "TransitSessionWrapper",
           "searchConfig": {
-            "select": ["userAction"],
+            "select": [
+              "userAction"
+            ],
             "primary": "userAction"
           }
         },
@@ -2013,7 +2031,9 @@
           "rootEntity": "UserActionModel",
           "wrapperName": "TransitSessionsListWrapper",
           "searchConfig": {
-            "select": ["userAction"],
+            "select": [
+              "userAction"
+            ],
             "orderBy": {
               "field": "__distance",
               "order": "ASC"
@@ -2313,7 +2333,9 @@
           "rootEntity": "UserActionModel",
           "wrapperName": "ClfSessionsListWrapper",
           "searchConfig": {
-            "select": ["userAction"],
+            "select": [
+              "userAction"
+            ],
             "orderBy": {
               "field": "__distance",
               "order": "ASC"
@@ -2378,40 +2400,52 @@
             "children": [
               {
                 "type": "template",
-                "value": "{{contextData.0.children.length}}",
-                "format": "textTemplate",
-                "fieldName": "vaccinatedCount",
+                "format": "column",
+                "fieldName": "vaccinatedTotal",
+                "groupAsSingleElement": true,
+                "label": "GV_METRIC_VACCINATED_TODAY",
                 "properties": {
-                  "style": "headingXl",
-                  "bottomGap": 4,
-                  "textStyle": {
-                    "color": "#0B4B66",
-                    "fontSize": "24px",
-                    "fontFamily": "Roboto Condensed, sans-serif",
-                    "fontWeight": 700,
-                    "lineHeight": 1.14
+                  "mainAxisSize": "min"
+                },
+                "children": [
+                  {
+                    "type": "template",
+                    "value": "{{contextData.0.children.length}}",
+                    "format": "textTemplate",
+                    "fieldName": "vaccinatedCount",
+                    "properties": {
+                      "style": "headingXl",
+                      "bottomGap": 4,
+                      "textStyle": {
+                        "color": "#0B4B66",
+                        "fontSize": "24px",
+                        "fontFamily": "Roboto Condensed, sans-serif",
+                        "fontWeight": 700,
+                        "lineHeight": 1.14
+                      },
+                      "isFieldValue": false
+                    }
                   },
-                  "isFieldValue": false
-                }
-              },
-              {
-                "type": "template",
-                "value": "GV_METRIC_VACCINATED_TODAY",
-                "format": "textTemplate",
-                "fieldName": "vaccinatedLabel",
-                "mandatory": true,
-                "properties": {
-                  "style": "bodyS",
-                  "bottomGap": 4,
-                  "textStyle": {
-                    "color": "#1D1B20",
-                    "fontSize": "14px",
-                    "fontFamily": "Roboto, sans-serif",
-                    "fontWeight": 400,
-                    "lineHeight": 1.37
-                  },
-                  "isFieldValue": false
-                }
+                  {
+                    "type": "template",
+                    "value": "GV_METRIC_VACCINATED_TODAY",
+                    "format": "textTemplate",
+                    "fieldName": "vaccinatedLabel",
+                    "mandatory": true,
+                    "properties": {
+                      "style": "bodyS",
+                      "bottomGap": 4,
+                      "textStyle": {
+                        "color": "#1D1B20",
+                        "fontSize": "14px",
+                        "fontFamily": "Roboto, sans-serif",
+                        "fontWeight": 400,
+                        "lineHeight": 1.37
+                      },
+                      "isFieldValue": false
+                    }
+                  }
+                ]
               },
               {
                 "type": "template",
@@ -2473,6 +2507,7 @@
                       }
                     ],
                     "fieldName": "femalePill",
+                    "label": "GV_ENUM_FEMALE",
                     "properties": {
                       "type": "secondary",
                       "radius": "radius4",
@@ -2535,6 +2570,7 @@
                       }
                     ],
                     "fieldName": "malePill",
+                    "label": "GV_ENUM_MALE",
                     "properties": {
                       "type": "secondary",
                       "radius": "radius4",
@@ -2545,7 +2581,9 @@
                 "fieldName": "vaccinatedSplit",
                 "properties": {
                   "gap": 8
-                }
+                },
+                "groupAsSingleElement": true,
+                "label": "GV_METRIC_VACCINATED_BY_GENDER"
               }
             ],
             "fieldName": "vaccinatedTile",
@@ -2722,7 +2760,9 @@
           "rootEntity": "UserActionModel",
           "wrapperName": "ClfSessionWrapper",
           "searchConfig": {
-            "select": ["userAction"],
+            "select": [
+              "userAction"
+            ],
             "primary": "userAction"
           }
         },

@@ -2,9 +2,9 @@ import React, { Fragment, useMemo, useState, useCallback, useRef, useEffect } fr
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { AlertCard, FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons, Loader,HeaderComponent,Card,SVG } from "@egovernments/digit-ui-components";
-import { updateSelectedField } from "./redux/remoteConfigSlice";
+import { updateSelectedField, hideField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
-import { useCustomT } from "./hooks/useCustomT";
+import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import {
   getFieldTypeFromMasterData,
   getFieldValueByPath,
@@ -2018,11 +2018,60 @@ export const Tabs = React.memo(({ tabs, activeTab, onTabChange }) => {
   );
 });
 
+// The parts of a group that get their own switch, e.g. the Female and Male cards.
+//
+// Only children that are containers themselves count. A count and the label explaining it are
+// one thing, so listing them here would hand back the separate switches grouping removed.
+const getGroupChildren = (field) => {
+  const branch = field?.children || field?.child;
+  if (!branch) return [];
+  return (Array.isArray(branch) ? branch : [branch]).filter(
+    (child) => child && typeof child === "object" && child.fieldName && (child.children || child.child)
+  );
+};
+
+// Look a node up in the live page. `selectedField` is a copy taken when the row was clicked,
+// so a switch reading from it would still show the old state after the first toggle.
+const findTemplateNode = (node, fieldName, role, key) => {
+  if (!node || !fieldName) return null;
+
+  if (Array.isArray(node)) {
+    for (const item of node) {
+      const found = findTemplateNode(item, fieldName, role, key);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  if (typeof node !== "object") return null;
+
+  if (
+    node.fieldName === fieldName &&
+    (key === undefined || node.key === undefined || node.key === key) &&
+    (!role || node.role === role)
+  ) {
+    return node;
+  }
+
+  for (const branch of [node.children, node.child, node.primaryAction, node.secondaryAction]) {
+    if (!branch) continue;
+    const found = findTemplateNode(branch, fieldName, role, key);
+    if (found) return found;
+  }
+  return null;
+};
+
 function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   // Get data from Redux
-  const { selectedField } = useSelector((state) => state.remoteConfig);
+  const { selectedField, selectedFieldPath, currentData } = useSelector((state) => state.remoteConfig);
+  const customTranslate = useCustomTranslate();
+  // The switchable parts of a grouped element (see getGroupChildren above)
+  const groupChildren = useMemo(
+    () => (selectedField?.groupAsSingleElement === true ? getGroupChildren(selectedField) : []),
+    [selectedField]
+  );
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
   const { byName: panelProperties } = useSelector((state) => state.fieldPanelMaster);
   // State to track validation errors
@@ -2257,13 +2306,55 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
           );
         })}
 
-        {/* No properties message */}
-        {visibleTabProperties.length === 0 && (
+        {/* No properties message. A group carries its switches below rather than panel
+            properties, so it is configured even when this list is empty. */}
+        {visibleTabProperties.length === 0 && groupChildren.length === 0 && (
           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
             <Tag showIcon={true} label={t(`CMP_DRAWER_NO_CONFIG_ERROR_${activeTab.toUpperCase()}`)} type="error" />
           </div>
         )}
       </div>
+      {/* Switches for the parts of a group. The group is one row in Page properties, so its parts
+          are not listed there - this is where they are turned on and off. `cascade` carries the
+          switch down the subtree, so turning Female off takes its count and its label with it. */}
+      {selectedField?.groupAsSingleElement === true &&
+        activeTab === "content" &&
+        groupChildren.map((child) => {
+            // Read the switch position from the live page, not from the selected-field copy
+            const liveChild =
+              findTemplateNode(currentData?.body, child.fieldName, child.role, child.key) ||
+              findTemplateNode(currentData?.footer, child.fieldName, child.role, child.key) ||
+              child;
+            const isOn = liveChild.hidden !== true;
+            return (
+            // One container per switch - the wrapper the panel's own properties use - so each
+            // part reads as its own row rather than a single boxed list.
+            <div key={child.fieldName} className="drawer-toggle-field-container">
+            <Switch
+              // Switch keeps its position internally, so re-key on the state to make it follow
+              // the config when that is changed from anywhere else.
+              key={`${child.fieldName}-${isOn ? "on" : "off"}`}
+              label={customTranslate(child.label)?.trim() || customTranslate(child.fieldName)?.trim() || child.fieldName}
+              isCheckedInitially={isOn}
+              onToggle={() =>
+                dispatch(
+                  hideField({
+                    fieldName: child.fieldName,
+                    cardIndex: selectedFieldPath?.cardIndex,
+                    role: child.role,
+                    key: child.key,
+                    cascade: true,
+                  })
+                )
+              }
+              disable={viewMode}
+              isLabelFirst={true}
+              // group-child-switch is only for styling these switches; nothing else carries it
+              className={"digit-sidepanel-switch-wrap sidepanel group-child-switch"}
+            />
+            </div>
+            );
+          })}
       {/* Popup Properties Section - Only for actionPopup field type */}
       {fieldType === "actionPopup" && activeTab === "content" && (
         <PopupConfigEditor selectedField={selectedField} viewMode={viewMode} />

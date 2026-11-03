@@ -32,6 +32,35 @@ const areAllChildrenHidden = (node) => {
   return false;
 };
 
+// Push a node's visibility down to everything inside it. Needed when a container is switched
+// off as one element, for two reasons:
+//  - updateParentVisibility below works out a parent's visibility from its children, so a
+//    container whose children are still visible gets switched straight back on;
+//  - the app reads this config too, and one that only looks at leaves would keep drawing the
+//    parts of a group the author has hidden.
+const setDescendantsHidden = (node, hidden) => {
+  if (!node || typeof node !== "object") return;
+
+  if (Array.isArray(node)) {
+    node.forEach((item) => setDescendantsHidden(item, hidden));
+    return;
+  }
+
+  ["children", "child", "primaryAction", "secondaryAction"].forEach((key) => {
+    const branch = node[key];
+    if (!branch || typeof branch !== "object") return;
+    (Array.isArray(branch) ? branch : [branch]).forEach((item) => {
+      if (!item || typeof item !== "object") return;
+      item.hidden = hidden;
+      if (hidden === false) {
+        item.includeInForm = true;
+        item.includeInSummary = true;
+      }
+      setDescendantsHidden(item, hidden);
+    });
+  });
+};
+
 // Helper function to update parent visibility based on children
 const updateParentVisibility = (node) => {
   if (!node) return;
@@ -691,7 +720,7 @@ const remoteConfigSlice = createSlice({
       }
     },
     hideField(state, action) {
-      const { fieldName, cardIndex, role, key } = action.payload;
+      const { fieldName, cardIndex, role, key, cascade } = action.payload;
 
       // Check if this is a template type page
       const isTemplate = state.currentData?.type === "template";
@@ -738,6 +767,11 @@ const remoteConfigSlice = createSlice({
               if (node.hidden === false) {
                 node.includeInForm = true;
                 node.includeInSummary = true;
+              }
+              // A group is one element, and a child switch asks for the same through `cascade`,
+              // so the whole subtree follows the switch.
+              if (node.groupAsSingleElement === true || cascade) {
+                setDescendantsHidden(node, node.hidden);
               }
               return true;
             }
