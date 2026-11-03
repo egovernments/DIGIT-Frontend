@@ -80,6 +80,12 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
   const today = Digit.Utils.date.getDate(Date.now());
+  // newDateFormat FieldV1 fires onChange(isoString) not onChange(event); extract local YYYY-MM-DD
+  const isoToLocalDate = (iso) => {
+    if (!iso) return undefined;
+    const dt = new Date(iso);
+    return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
+  };
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const { state } = useLocation();
@@ -216,7 +222,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
             }
             onChange={(d) => {
               handleDateChange({
-                date: d?.target?.value,
+                date: isoToLocalDate(d),
               });
             }}
           />
@@ -236,7 +242,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
             }}
             onChange={(d) => {
               handleDateChange({
-                date: d?.target?.value,
+                date: isoToLocalDate(d),
                 endDate: true,
               });
             }}
@@ -274,7 +280,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
                   onChange={(d) => {
                     // setStartValidation(true);
                     handleCycleDateChange({
-                      date: d?.target?.value,
+                      date: isoToLocalDate(d),
                       cycleIndex: item?.cycleIndex,
                     });
                   }}
@@ -306,7 +312,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
                   }}
                   onChange={(d) => {
                     handleCycleDateChange({
-                      date: d?.target?.value,
+                      date: isoToLocalDate(d),
                       endDate: true,
                       cycleIndex: item?.cycleIndex,
                     });
