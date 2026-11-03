@@ -161,16 +161,13 @@ const CloneCampaignWrapper = (props) => {
         if (res?.CampaignDetails?.campaignNumber) {
           // Clear stale store data before navigating to the cloned campaign
           campaignStore.dispatch(resetCreateCampaignData());
-          setToast({
-            key: "success",
-            label: `${res.CampaignDetails.campaignNumber} ${t(I18N_KEYS.COMPONENTS.CAMPAIGN_CREATED_SUCCESSFULLY)}`,
-            type: "success",
-          });
-          setTimeout(() => {
-            navigate(
-              `/workbench-ui/employee/campaign/view-details?tenantId=${tenantId}&campaignNumber=${res.CampaignDetails.campaignNumber}`
-            );
-          }, 1000);
+          // The copy is confirmed on the campaign it created rather than by a toast here, so the
+          // message arrives with the screen the user has to act on. `campaignCloned` is read once
+          // on arrival, the same way that screen already reads isDraft and afterUpload.
+          navigate(
+            `/workbench-ui/employee/campaign/view-details?tenantId=${tenantId}&campaignNumber=${res.CampaignDetails.campaignNumber}`,
+            { state: { campaignCloned: true } }
+          );
         }
       },
       onError: (err) => {

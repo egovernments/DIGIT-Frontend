@@ -665,6 +665,81 @@
   margin-bottom: 1.5rem;
   color: var(--digitv2-lightTheme-text-color-secondary);
 }
+
+.digit-infobanner-wrap.cloned-campaign-steps {
+  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 100% !important;
+
+  .additional-elements-inline{
+    max-width: 100%;
+    width: 100%;
+    align-items: center;
+  }
+
+  .cloned-campaign-step {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 0.5rem;
+    background: #ffffff;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    border: 1px solid #d6d5d4;
+  }
+
+  .cloned-campaign-step-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .cloned-campaign-step-number {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: #fce8e1;
+    color: var(--digitv2-lightTheme-primary-1);
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .cloned-campaign-step-title {
+    font-weight: 700;
+    color: var(--digitv2-lightTheme-primary-2);
+  }
+
+  .cloned-campaign-step-description {
+    font-size: 0.875rem;
+    color: var(--digitv2-lightTheme-text-color-secondary);
+  }
+
+  .cloned-campaign-steps-arrow {
+    align-self: center;
+    flex-shrink: 0;
+  }
+}
+
+.digit-popup-overlay .digit-popup-wrapper.clone-success-popup {
+  @media (min-width: 48rem) {
+    max-width: 40%;
+  }
+  .digit-popup-children-wrap {
+    display: none;
+  }
+
+  .digit-popup-alert-heading {
+    color: #0B4B66;
+  }
+
+  .digit-popup-alert-description {
+    font-weight: 400;
+  }
+}
 .dates {
   margin-top: 0.5rem;
   color: var(--digitv2-lightTheme-text-color-secondary);

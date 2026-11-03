@@ -1,11 +1,11 @@
-import { Button, HeaderComponent, Footer, Loader, Tag, Toast, PopUp } from "@egovernments/digit-ui-components";
+import { AlertCard, Button, HeaderComponent, Footer, Loader, Tag, Toast, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { Fragment, useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
-import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit, Translate, DocumentIconSolid } from "@egovernments/digit-ui-svg-components";
+import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit, Translate, DocumentIconSolid, ArrowForward } from "@egovernments/digit-ui-svg-components";
 import { transformUpdateCreateData } from "../../../utils/transformUpdateCreateData";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
@@ -152,6 +152,9 @@ const CampaignDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isDraftCampaign = location.state?.isDraft;
+  // Set by the copy dialog on the campaign it just created. Held in state so the popup is
+  // dismissed for good rather than returning on the next render.
+  const [showClonedPopup, setShowClonedPopup] = useState(Boolean(location.state?.campaignCloned));
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const [showToast, setShowToast] = useState(null);
@@ -264,6 +267,32 @@ const CampaignDetails = () => {
     { enabled: !!campaignData?.projectType },
     { schemaCode: "HCM-PROJECT-TYPES.projectTypes" }
   );
+
+  // A POLIO copy arrives with the delivery rules of the campaign it was copied from, so its
+  // cycle dates and quantities still belong to that campaign. These two steps say what has to be
+  // put right before the copy can be created. Shown only while it is still a draft - once the
+  // campaign is created there is nothing left to complete.
+  const isPolioCopyDraft = useMemo(
+    () =>
+      campaignData?.projectType === "POLIO" &&
+      Boolean(campaignData?.additionalDetails?.cloneFrom) &&
+      campaignData?.status !== "created",
+    [campaignData?.projectType, campaignData?.additionalDetails?.cloneFrom, campaignData?.status]
+  );
+
+  const clonedCampaignSteps = useMemo(() => {
+    if (!isPolioCopyDraft) return null;
+    return [
+      {
+        title: I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_STEP_EDIT_DELIVERY_TITLE,
+        description: I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_STEP_EDIT_DELIVERY_DESCRIPTION,
+      },
+      {
+        title: I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_STEP_UPLOAD_MICROPLAN_TITLE,
+        description: I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_STEP_UPLOAD_MICROPLAN_DESCRIPTION,
+      },
+    ];
+  }, [isPolioCopyDraft]);
 
   const usesDeliveryStrategies = useMemo(() => {
     const record = projectTypeMdms?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes?.find((e) => e?.code === campaignData?.projectType);
@@ -723,6 +752,19 @@ const CampaignDetails = () => {
     return campaignS <= first && campaignE >= last;
   };
 
+  // A copy keeps the cycle dates of the campaign it came from, so until the delivery strategy is
+  // edited they fall outside this campaign's own dates. Submitting then only raises the
+  // invalid-dates toast, so the button is held closed until they are put right. This holds back a
+  // copy only; every other campaign still submits and is told what is wrong, as before.
+  const copiedDatesPending = useMemo(() => {
+    if (!isPolioCopyDraft) return false;
+    const cycles = campaignData?.deliveryRules?.[0]?.cycles;
+    // Nothing configured yet is already covered by the checks beside this one, and
+    // validateCampaignDates expects a list
+    if (!Array.isArray(cycles) || cycles.length === 0) return false;
+    return !validateCampaignDates(cycles, campaignData);
+  }, [isPolioCopyDraft, campaignData]);
+
   const onsubmit = async () => {
     if (isSubmitting) return;
     const valideDates = validateCampaignDates(campaignData?.deliveryRules?.[0]?.cycles, campaignData);
@@ -896,6 +938,34 @@ const CampaignDetails = () => {
         )}
       </div>
       <div className="detail-desc">{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_VIEW_DETAILS_DESCRIPTION)}</div>
+      {clonedCampaignSteps && (
+        <AlertCard
+          variant="info"
+          inline={true}
+          className="cloned-campaign-steps"
+          label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_STEPS_HEADING)}
+          additionalElements={clonedCampaignSteps.flatMap((step, index) => [
+            ...(index > 0
+              ? [
+                  <ArrowForward
+                    key={`cloned-step-arrow-${index}`}
+                    className="cloned-campaign-steps-arrow"
+                    width="16"
+                    height="16"
+                    fill="#505A5F"
+                  />,
+                ]
+              : []),
+            <div key={step.title} className="cloned-campaign-step">
+              <span className="cloned-campaign-step-number">{index + 1}</span>
+              <div className="cloned-campaign-step-text">
+                <div className="cloned-campaign-step-title">{t(step.title)}</div>
+                <div className="cloned-campaign-step-description">{t(step.description)}</div>
+              </div>
+            </div>
+          ])}
+        />
+      )}
       <div className="campaign-summary-container">
         <ViewComposer data={data} />
       </div>
@@ -914,7 +984,8 @@ const CampaignDetails = () => {
                     campaignData?.boundaries?.length === 0 ||
                     campaignData?.deliveryRules?.length === 0 ||
                     campaignData?.deliveryRules?.some((rule) => rule?.cycles?.length === 0) ||
-                    campaignData?.resources?.length === 0
+                    campaignData?.resources?.length === 0 ||
+                    copiedDatesPending
                   }
                   type="button"
                   variation="primary"
@@ -937,6 +1008,38 @@ const CampaignDetails = () => {
         setactionFieldsToRight={true}
       />
       {showQRPopUp && <QRButton setShowQRPopUp={setShowQRPopUp} />}
+      {/* Confirms the copy on the campaign it created, rather than on the listing the user came
+          from, so the message arrives with the screen they have to act on. An alert popup draws a
+          centred icon, a heading and a message, and no close icon of its own - the Continue button
+          and a click outside are the ways out, both of which simply dismiss it. */}
+      {showClonedPopup && (
+        <PopUp
+          type="alert"
+          className="clone-success-popup"
+          customIcon="CheckCircle"
+          iconFill="#00703C"
+          alertHeading={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_SUCCESS_HEADING)}
+          alertMessage={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_SUCCESS_DESCRIPTION, {
+            campaignName: campaignData?.campaignName || "",
+          })}
+          onOverlayClick={() => setShowClonedPopup(false)}
+          onClose={() => setShowClonedPopup(false)}
+          footerclassName={"clone-success-popup-footer"}
+          equalWidthButtons={true}
+          footerChildren={[
+            <Button
+              key="clone-success-continue"
+              type="button"
+              size="large"
+              variation="primary"
+              label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_SUCCESS_ACTION)}
+              title={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_SUCCESS_ACTION)}
+              onClick={() => setShowClonedPopup(false)}
+              id="campaign-details-clone-success-continue"
+            />,
+          ]}
+        />
+      )}
       {pendingStrategyEdit && (
         <PopUp
           className="hierarchy-change-popup"
