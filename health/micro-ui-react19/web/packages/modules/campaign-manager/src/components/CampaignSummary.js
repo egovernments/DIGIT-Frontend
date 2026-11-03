@@ -9,6 +9,7 @@ import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import TimelineComponent from "./TimelineComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
 import { activateOnKey } from "../utils";
+import { getCampaignDeliveryMethods, getDeliveryMethods } from "../utils/deliveryMethods";
 
 function mergeObjects(item) {
   const arr = item;
@@ -458,7 +459,7 @@ const CampaignSummary = (props) => {
               sections: [
                 {
                   type: "DATA",
-                  cardHeader: { value: t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELIVERY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardHeader: { value: t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELIVERY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem", marginBottom: "1rem" } },
                   cardSecondaryAction: noAction !== "false" && (
                     <div className="campaign-preview-edit-container" role="button" tabIndex={0} onKeyDown={activateOnKey} onClick={() => handleRedirect(7)}>
                       <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
@@ -672,6 +673,15 @@ const CampaignSummary = (props) => {
     }
   }, [data?.data]);
 
+  // Supplies the display name of each delivery strategy, used by the summary built below.
+  const { data: projectTypeMdms } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
+    { enabled: !!data?.data?.projectType },
+    { schemaCode: "HCM-PROJECT-TYPES.projectTypes" }
+  );
+
   if (isLoading) {
     // The flow already shows its overlay loader while saving - do not stack a second loader
     if (isParentSubmitting) return null;
@@ -751,6 +761,64 @@ const CampaignSummary = (props) => {
           });
         }
       }
+    });
+  }
+
+  // A campaign that uses delivery strategies is summarised by strategy rather than by cycles and
+  // deliveries: the cycle and delivery counts are replaced by the list of chosen strategies, and
+  // each strategy gets a card of its own instead of sharing one behind a delivery toggle. Every
+  // other campaign type keeps the summary unchanged. Same treatment as the Delivery Details
+  // preview, which this screen had never been given.
+  const chosenStrategies = getCampaignDeliveryMethods(data?.data);
+  if (chosenStrategies.length > 0 && Array.isArray(updatedObject?.cards)) {
+    const projectTypeRecord = projectTypeMdms?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes?.find((e) => e?.code === data?.data?.projectType);
+    const methodMeta = getDeliveryMethods(projectTypeRecord);
+    const labelFor = (code) =>
+      code ? t(methodMeta.find((m) => m?.code === code)?.i18nKey || code) : t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA);
+
+    // Build a new array rather than editing in place - `updatedObject` is a shallow copy, so its
+    // cards are still the query cache's own objects.
+    updatedObject.cards = updatedObject.cards.flatMap((card) => {
+      const section = card?.sections?.[0];
+
+      if (Array.isArray(section?.values) && section.values.some((value) => value?.key === "CAMPAIGN_NO_OF_CYCLES")) {
+        return [
+          {
+            ...card,
+            sections: [
+              {
+                ...section,
+                values: [{ key: "CAMPAIGN_CHOSEN_DELIVERY_STRATEGIES", value: chosenStrategies.map(labelFor).join(", ") }],
+              },
+            ],
+          },
+        ];
+      }
+
+      if (typeof card?.name === "string" && card.name.startsWith("CYCLE_")) {
+        const cycle = section?.props?.data;
+        const deliveries = cycle?.deliveries || [];
+        // reverseDeliveryRemap above does not carry `deliveryMethod` onto the delivery it builds,
+        // so the strategy is matched by position - deliveries are built in the order the
+        // strategies were chosen. Leave the card alone if the two ever disagree.
+        if (deliveries.length !== chosenStrategies.length) return [card];
+        return deliveries.map((delivery, index) => ({
+          ...card,
+          name: `DELIVERY_${index + 1}`,
+          sections: [
+            {
+              ...section,
+              name: `DELIVERY_${index + 1}`,
+              cardHeader: { ...section?.cardHeader, value: labelFor(chosenStrategies[index]) },
+              // One delivery per card, so CycleDataPreview renders no delivery toggle. It displays
+              // whichever delivery is marked active, so the single delivery here must be marked so.
+              props: { ...section?.props, data: { ...cycle, deliveries: [{ ...delivery, active: true }] } },
+            },
+          ],
+        }));
+      }
+
+      return [card];
     });
   }
 
