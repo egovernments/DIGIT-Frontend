@@ -184,6 +184,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
           })}
           showIcon={!!popupConfig?.titleIcon}
           customIcon={popupConfig?.titleIcon}
+          iconFill={popupConfig?.titleIconFill}
         >
           {/* Popup Body */}
           {popupConfig?.body?.map((section, index) => (
