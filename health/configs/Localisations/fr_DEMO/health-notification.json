@@ -1,0 +1,62 @@
+[
+  {
+    "code": "HCM_Bednet_POST_DISTRIBUTION_3DAY_SMS",
+    "message": "Bonjour {HouseholdHeadName} , Votre moustiquaire a été livrée avec succès le {DistributedDate} pour la campagne moustiquaire {CampaignName} Merci",
+    "module": "health-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_MR-DN_POST_DISTRIBUTION_14DAY_SMS",
+    "message": "Bonjour {HouseholdHeadName} , Votre enfant smc, deuxième dose aujourd'hui pour la campagne moustiquaire {CampaignName} Merci",
+    "module": "health-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HCM_MR-DN_POST_DISTRIBUTION_3DAY_SMS",
+    "message": "Bonjour {HouseholdHeadName} , Votre enfant smc, deuxième dose aujourd'hui pour la campagne moustiquaire {CampaignName} Merci",
+    "module": "health-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HF_REFERRAL_PUSH_NOTIFICATION",
+    "message": "Vous avez reçu une nouvelle référence. Veuillez examiner et prendre les mesures nécessaires.",
+    "module": "health-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_ISSUE_PUSH_NOTIFICATION",
+    "message": "Le stock a été émis à partir de {Sending_Facility_Name} vers votre établissement.\n{quantity_of_sku}\nRéf de la transaction : {Transaction_ID}. Veuillez synchroniser et enregistrer le reçu.",
+    "module": "health-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_ISSUE_REJECT_PUSH_NOTIFICATION",
+    "message": "Votre stock émis a été rejeté par {Receiving_Facility_Name}.\nQuantité : {quantity_of_sku}\nRéf de la transaction : {Transaction_ID}.",
+    "module": "health-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_RECEIVE_PUSH_NOTIFICATION",
+    "message": "Votre stock émis a été reçu avec succès par {Receiving_Facility_Name}.\nReçu : {quantity_of_sku}\nRéf de la transaction : {Transaction_ID}. Aucune autre action n’est requise.",
+    "module": "health-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REVERSE_ACCEPT_PUSH_NOTIFICATION",
+    "message": "Votre retour a été accepté par {Receiving_Facility_Name}.\n{quantity_of_sku}\nRéf de la transaction : {Transaction_ID}. Solde des stocks mis à jour avec succès.",
+    "module": "health-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REVERSE_ISSUE_PUSH_NOTIFICATION",
+    "message": "Un retour en bourse a été initié par {Sending_Facility_Name}.\n{quantity_of_sku}\nRéf de la transaction : {Transaction_ID}. Veuillez enregistrer le reçu pour finaliser le retour.",
+    "module": "health-notification",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_REVERSE_REJECT_PUSH_NOTIFICATION",
+    "message": "Votre demande de retour a été rejetée par {Receiving_Facility_Name}.\n{quantity_of_sku}\nRéf de la transaction : {Transaction_ID}. Le stock a été rétabli dans votre solde.",
+    "module": "health-notification",
+    "locale": "fr_DEMO"
+  }
+]

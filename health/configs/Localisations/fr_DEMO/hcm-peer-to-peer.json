@@ -1,0 +1,194 @@
+[
+  {
+    "code": "CONNECTED_TO",
+    "message": "Connecté à",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_GO_HOME",
+    "message": "Rentrer à la maison",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DATA_RECEIVED_FOR_BOUNDARIES",
+    "message": "Données reçues pour les limites suivantes",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DATA_SHARING_LABEL",
+    "message": "Envoyer ou recevoir des données ?",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DATA_TRANSFER_COMPLETED",
+    "message": "Données envoyées avec succès !",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DATA_UN_SYNCED_DESCRIPTION",
+    "message": "Vos données ne sont pas complètement téléchargées, êtes-vous sûr de vouloir télécharger les données restantes ?",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FAILED_TO_RECEIVE",
+    "message": "Le transfert de données a échoué !",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FAILED_TO_RECEIVE_DESCRIPTION",
+    "message": "Une erreur s'est produite, veuillez réessayer plus tard.",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FAILED_TO_TRANSFER",
+    "message": "Le transfert de données a échoué !",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FAILED_TO_TRANSFER_DESCRIPTION",
+    "message": "Une erreur s'est produite, veuillez réessayer plus tard.",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FILE_NOT_FOUND_ERROR",
+    "message": "Fichier introuvable",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "INVALID_FILE_FORMAT_ERROR",
+    "message": "Format de fichier invalide, impossible de lire le fichier.",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO_BOUNDARIES_MATCHED_ERROR_DESCRIPTION",
+    "message": "Aucune limite correspondante reçue de l'expéditeur",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO_BOUNDARIES_MATCHED_ERROR_TITLE",
+    "message": "Aucune limite correspondante trouvée",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO_DEVICES_CONNECTED",
+    "message": "Aucun appareil connecté",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PROJECT_MISMATCH_ERROR",
+    "message": "Erreur d'incompatibilité du projet",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RECEIVED_SUCCESS_MESSAGE",
+    "message": "Données reçues avec succès !",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RECEIVER",
+    "message": "Récepteur",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RECEIVER_DIALOG_DESCRIPTION",
+    "message": "Êtes-vous sûr de vouloir recevoir des données de {} ? Une fois que vous aurez reçu les données, votre candidature sera remplie avec les enregistrements partagés par l'expéditeur.",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RECEIVER_DIALOG_TITLE",
+    "message": "{} souhaite partager des données",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RECEIVE_ACTION",
+    "message": "Recevoir des données",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RECEIVE_ACTION_DESCRIPTION",
+    "message": "Recevez les dossiers des bénéficiaires pour les limites qui vous sont assignées",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RECEIVE_ACTION_MESSAGE",
+    "message": "En attendant que quelqu'un partage des données",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "RECEIVING_ACTION_MESSAGE",
+    "message": "Réception de données",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SELECT_RECIPIENTS",
+    "message": "Sélectionnez vos destinataires",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SENDER",
+    "message": "Expéditeur",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SENDER_DIALOG_DESCRIPTION",
+    "message": "Les données une fois partagées seront remplacées et rempliront la base de données locale des récepteurs. Veuillez vous assurer que vous avez sélectionné le bon groupe d'utilisateurs avec lesquels partager des données.",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SENDER_DIALOG_TITLE",
+    "message": "Etes-vous sûr de vouloir partager des données ?",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SENDING_ACTION_MESSAGE",
+    "message": "Envoi de données au destinataire",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SEND_ACTION",
+    "message": "Envoyer des données",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SEND_ACTION_DESCRIPTION",
+    "message": "Envoyer les dossiers des bénéficiaires pour les limites qui vous sont assignées",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "SEND_ACTION_MESSAGE",
+    "message": "Recherche de récepteurs autour de vous",
+    "module": "hcm-peer-to-peer",
+    "locale": "fr_DEMO"
+  }
+]

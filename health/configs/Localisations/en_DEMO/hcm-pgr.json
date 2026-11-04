@@ -1,0 +1,1010 @@
+[
+  {
+    "code": "ACTION_TEST_CREATE_COMPLAINT",
+    "message": "Create Complaint",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_HOME",
+    "message": "Home",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_SEARCH",
+    "message": "Search",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ACTION_TEST_SEARCH_COMPLAINT",
+    "message": "Search Complaint",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ANOTHER_USER",
+    "message": "Another User",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ASSIGN",
+    "message": "Assign",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ASSIGN_SUCCESSFULLY",
+    "message": "Assigned successfully",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CMN_NOOPTION",
+    "message": "No Option",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMMON_NO_RESULTS_FOUND",
+    "message": "No Results Found",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINANT_CONTACT_NUMBER",
+    "message": "Complainant Contact Number",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_COMPLAINANT_NAME",
+    "message": "Complainant Name",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_SUPERVISOR_CONTACT_NUMBER",
+    "message": "Supervisor's contact number",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "COMPLAINTS_SUPERVISOR_NAME",
+    "message": "Supervisor's name",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID",
+    "message": "Applicant Mobile Number is Invalid",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_APPLICANT_NAME_INVALID",
+    "message": "Complainant's name is Invalid",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_ACTION_DOWNLOAD",
+    "message": "Download",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_ACTION_FILEUPLOADED",
+    "message": "File Uploaded",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_ACTION_NO_FILEUPLOADED",
+    "message": "No File Uploaded",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_CHOOSE_FILE",
+    "message": "Choose file",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_CLEAR_SEARCH",
+    "message": "Clear Search",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_COMPLAINT_FILE",
+    "message": "Complaint File",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_COMPLAINT_NO",
+    "message": "Complaint Number",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_EMPLOYEE_COMMENTS",
+    "message": "Employee Comments",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_EMPLOYEE_FETCH_ERROR",
+    "message": "Error Fetching Employee Data",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_HOME_COMPLAINTSS",
+    "message": "Complaints",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_MOBILE_NO",
+    "message": "Mobile Number",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_PGR_STATE_ASSIGNED",
+    "message": "Assigned",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_PGR_STATE_PENDING_ASSIGNMENT",
+    "message": "Pending Assignment",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_PGR_STATE_REJECTED",
+    "message": "Rejected",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_PGR_STATE_RESOLVED",
+    "message": "Resolved",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_REQUIRED_FIELDS_MISSING",
+    "message": "Required Fields Missing",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_SELECT_EMPLOYEE",
+    "message": "Select Employee",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMMON_SUBMIT",
+    "message": "Submit",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_BOUNDARY_DETAILS",
+    "message": "Boundary Details",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_BOUNDARY_HIERARCHY",
+    "message": "Boundary Details",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_DETAILS_ADDITIONAL_DETAILS",
+    "message": "Additional Details",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_DETAILS_ADDITIONAL_DETAILS_DESCRIPTIO...",
+    "message": "Additional Details Description",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_DETAILS_ADDITIONAL_DETAILS_DESCRIPTION",
+    "message": "Complaint description",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_DETAILS_ADDRESS_1_DETAILS",
+    "message": "Address line 1",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_DETAILS_ADDRESS_2_DETAILS",
+    "message": "Address line 2",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_DETAILS_AREA",
+    "message": "Area",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_DETAILS_COMPLAINT_DATE",
+    "message": "Date of complaint",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_DETAILS_COMPLAINT_DETAILS",
+    "message": "Complaint Details",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_DETAILS_COMPLAINT_NO",
+    "message": "Complaint Number",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_DETAILS_COMPLAINT_TIMELINE",
+    "message": "Complaint Timeline",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_DETAILS_COMPLAINT_TYPE",
+    "message": "Complaint Type",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_DETAILS_CURRENT_STATUS",
+    "message": "Current Status",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_FILED_DATE",
+    "message": "Complaint Filed Date",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_LANDMARK__DETAILS",
+    "message": "Landmark Details",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_LOCATION_DETAILS",
+    "message": "Complaint Location",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_COMPLAINT_POSTALCODE__DETAILS",
+    "message": "Postal code",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_FILE_DOWNLOAD_ERROR",
+    "message": "File Download Error",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_FILE_UPLOAD_ERROR",
+    "message": "File Upload Error",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_INVALID_FILE_TYPE",
+    "message": "Invalid file type",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED",
+    "message": "Maximum Upload Size Exceeded",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__DUPLICATE_COMPLAINT",
+    "message": "Duplicate Complaint",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__INVALID_COMPLAINT",
+    "message": "Invalid Complaint",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__OTHER",
+    "message": "Other",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON1",
+    "message": "Invalid Complaint",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON2",
+    "message": "Duplicate Complaint",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON3",
+    "message": "Insufficient or Missing Information",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON4",
+    "message": "Non-actionable Issue",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "CS_REJECTION__REASON5",
+    "message": "Resolved or Closed Issue",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DEPARTMENT_eGov",
+    "message": "eGov Department",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "DataIssues",
+    "message": "Data Issues",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ESTIMATE_PATTERN_ERR_MSG",
+    "message": "Invalid estimate format",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ES_CLEAR_ALL",
+    "message": "Clear All",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ES_COMMON_APPLY",
+    "message": "Apply",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ES_COMMON_CONTACT_DETAILS",
+    "message": "Contact Details",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ES_COMMON_FILE_UPLOADED",
+    "message": "File Uploaded",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ES_COMMON_NA",
+    "message": "NA",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ES_COMMON_TAKE_ACTION",
+    "message": "Take Action",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ES_CREATECOMPLAINT_FOR",
+    "message": "Are you raising a complaint for yourself or another user?",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ES_CREATECOMPLAINT_PROVIDE_COMPLAINANT_DETAILS",
+    "message": "Complainant Details",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ES_PGR_FILTER_STATUS",
+    "message": "Status",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ES_PGR_NEW_COMPLAINT",
+    "message": "New Complaint",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "EVENTS_DATERANGE_LABEL",
+    "message": "Date Range",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FAILED_TO_CREATE_COMPLAINT",
+    "message": "Failed to Create Complaint",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "FAILED_TO_UPDATE_COMPLAINT",
+    "message": "Failed to Update Complaint",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_AM_OF",
+    "message": "Of",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_AM_ROWS_PER_PAGE",
+    "message": "Rows Per Page",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_LESS",
+    "message": "View Less",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_AM_VIEW_MORE",
+    "message": "View More",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE",
+    "message": "Hierarchy type",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_BREADCRUMB",
+    "message": "Select hierarchy",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_DESCRIPTION",
+    "message": "Please select your hierarchy",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_HIERARCHY_TYPE_HEADER",
+    "message": "Select hierarchy type",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HIERARCHY_FIELD_MANDATORY",
+    "message": "Hierarchy Field is Mandatory",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HIERARCHY_TYPE_SELECTED",
+    "message": "Hierarchy Type Selected",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MAX_FILE_SIZE",
+    "message": "Max file size",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "MYSELF",
+    "message": "Myself",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NA",
+    "message": "NA",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NEXT",
+    "message": "Next",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY",
+    "message": "No Boundary Found for the Selected Hierarchy",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "NotEnoughStock",
+    "message": "Not Enough Stock",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "OTHER",
+    "message": "Dept-Other",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "Other",
+    "message": "Other",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR",
+    "message": "PGR",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_ACTION_ASSIGN",
+    "message": "Assign Complaint",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_ACTION_REJECT",
+    "message": "Reject Complaint",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_ACTION_RESOLVE",
+    "message": "Resolve Complaint",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_BACK_TO_HOME",
+    "message": "Back To Home",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_CREATE_ANOTHER_COMPLAIN",
+    "message": "Create Another Complaint",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_INBOX",
+    "message": "PGR Inbox",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_INBOX_APRIL",
+    "message": "April",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_INBOX_AUGUST",
+    "message": "August",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_INBOX_DECEMBER",
+    "message": "December",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_INBOX_FEBRUARY",
+    "message": "February",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_INBOX_JANUARY",
+    "message": "January",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_INBOX_JULY",
+    "message": "July",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_INBOX_JUNE",
+    "message": "June",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_INBOX_MARCH",
+    "message": "March",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_INBOX_MAY",
+    "message": "May",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_INBOX_NOVEMBER",
+    "message": "November",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_INBOX_OCTOBER",
+    "message": "October",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_INBOX_SEPTEMBER",
+    "message": "September",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_SEARCH_RESULTS_HEADING",
+    "message": "Search Complaints",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_SEARCH_RESULTS_HEADINGD",
+    "message": "Search Results",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PGR_TENANTS",
+    "message": "PGR Tenants",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PRIVACY_OBJECT",
+    "message": "Privacy Object",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PROJECT_PATTERN_ERR_MSG",
+    "message": "Invalid project format",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "PerformanceIssue",
+    "message": "Performance Issue",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REJECT",
+    "message": "Reject",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "REJECT_SUCCESSFULLY",
+    "message": "Rejected successfully",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RESOLVE",
+    "message": "Resolve",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "RESOLVE_SUCCESSFULLY",
+    "message": "Resolved successfully",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "ROWS_PER_PAGE",
+    "message": "Rows per page",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.DATAISSUES",
+    "message": "Data Issue",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.DATAISSUES.eGov",
+    "message": "Data Issue: Dept-eGov",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.NOTENOUGHSTOCK",
+    "message": "Not Enough Stock",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.NOTENOUGHSTOCK.WAREHOUSE",
+    "message": "Not Enough Stock: Dept-Warehouse",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.NOTENOUGHSTOCK.eGov",
+    "message": "Not Enough Stock: Dept-eGov",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.OTHER",
+    "message": "Other",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.OTHER.ADM",
+    "message": "Other: Dept-ADM",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.OTHER.OTHER",
+    "message": "Other: Dept-Other",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.PERFORMANCEISSUE",
+    "message": "Performance Issue",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.PERFORMANCEISSUE.eGov",
+    "message": "Performance Issue: Dept-eGov",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.SECURITYISSUES",
+    "message": "Security Issue",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.SECURITYISSUES.eGov",
+    "message": "Security Issue: Dept-eGov",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.SYNCNOTWORKING",
+    "message": "Sync Not Working",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.SYNCNOTWORKING.TECH",
+    "message": "Sync Not Working: Dept-Tech",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.SYNCNOTWORKING.eGov",
+    "message": "Sync Not Working: Dept-eGov",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.TECHNICALISSUES",
+    "message": "Technical Issue",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.TECHNICALISSUES.eGov",
+    "message": "Technical Issue: Dept-eGov",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.USERACCOUNTISSUES",
+    "message": "User Account Issue",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SERVICEDEFS.USERACCOUNTISSUES.eGov",
+    "message": "User Account Issue: Dept-eGov",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SecurityIssues",
+    "message": "Security Issues",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "SyncNotWorking",
+    "message": "Sync not working",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TECH",
+    "message": "Dept-Tech",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "TechnicalIssues",
+    "message": "Technical Issues",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UPLOAD_PIT_PHOTO",
+    "message": "Upload Photo",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "UserAccountIssues",
+    "message": "User Account Issues",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WAREHOUSE",
+    "message": "Dept-Warehouse",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WBH_DOWNLOAD",
+    "message": "Download",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WF_INBOX_ASSIGNED",
+    "message": "Assigned",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WF_INBOX_HEADER_CREATED_DATE",
+    "message": "Created Date",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WF_INBOX_HEADER_CURRENT_OWNER",
+    "message": "Current owner",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WF_INBOX_HEADER_LOCALITY",
+    "message": "Boundary",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WF_INBOX_HEADER_SLA_DAYS_REMAINING",
+    "message": "Remaining SLA",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WF_INBOX_PENDING_ASSIGNMENT",
+    "message": "Pending Assignment",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WF_INBOX_REJECTED",
+    "message": "Rejected",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WF_INBOX_RESOLVED",
+    "message": "Resolved",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WF_PGR_ASSIGN",
+    "message": "Assign",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WF_PGR_CREATE",
+    "message": "Created",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WF_PGR_REJECT",
+    "message": "Rejected",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WF_PGR_RESOLVE",
+    "message": "Resolved",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "WORKS_NO_FILE_SELECTED",
+    "message": "No File Selected",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "eGov",
+    "message": "Dept-eGov",
+    "module": "hcm-pgr",
+    "locale": "en_DEMO"
+  }
+]

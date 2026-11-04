@@ -1,0 +1,26 @@
+[
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Rótulo",
+    "module": "hcm-base-hfreferral-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ1_LABEL",
+    "message": "Criança avaliada quanto a reação adversa às doses?",
+    "module": "hcm-base-hfreferral-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ5_LABEL",
+    "message": "Criança com teste de malária negativo recebeu dose neste ciclo?",
+    "module": "hcm-base-hfreferral-polio",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "dateOfEvaluation",
+    "message": "Data da avaliação",
+    "module": "hcm-base-hfreferral-polio",
+    "locale": "pt_DEMO"
+  }
+]
