@@ -356,6 +356,13 @@ const BoundaryRelationCreate = () => {
       } else {
         label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
         // if (error?.message) label += `${t(error?.message)}`;
+        // The server lists what is wrong in the sheet (rows, columns and names); show it when it sent one
+        const backendError = error?.response?.data?.Errors?.[0];
+        if (backendError?.description) {
+          label += backendError.description;
+        } else if (backendError?.code) {
+          label += t(backendError.code);
+        }
       }
 
       setShowToast({ label, isError: "error" });

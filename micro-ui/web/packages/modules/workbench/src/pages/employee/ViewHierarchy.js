@@ -321,6 +321,12 @@ const ViewHierarchy = () => {
         }
       }
 
+      // The server lists what is wrong in the sheet (rows, columns and names): show it in the error box under the upload
+      const problems = error?.response?.data?.Errors?.[0]?.description;
+      if (problems) {
+        setUiErrorMsg(problems);
+        setUiValError(true);
+      }
       setShowToast({ label, isError: "error" });
       setDataCreationGoing(false);
       return {};
