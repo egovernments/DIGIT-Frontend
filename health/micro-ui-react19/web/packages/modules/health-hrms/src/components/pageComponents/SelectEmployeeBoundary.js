@@ -131,6 +131,7 @@ const BoundaryDropdown = ({ label, data, onChange, selected }) => {
         selected={selected}
         t={t}
         select={onChange}
+        isSearchable={true}
       />
     </div>
   );
