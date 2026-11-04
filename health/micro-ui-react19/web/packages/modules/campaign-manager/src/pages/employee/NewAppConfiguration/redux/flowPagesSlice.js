@@ -21,6 +21,10 @@ export const fetchFlowPages = createAsyncThunk(
             isActive: true,
           },
         },
+        // Same reason as the AppFlowConfig search in FullConfigWrapper: Digit.CustomService
+        // caches by default and stores an empty result too, so one early miss would be replayed
+        // for the rest of the session and the page list would stay empty.
+        useCache: false,
       });
 
       if (response?.mdms && response.mdms.length > 0) {

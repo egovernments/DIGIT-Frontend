@@ -158,6 +158,12 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               isActive: true,
             },
           },
+          // Digit.CustomService caches by default, keyed on the url and body, and it stores an
+          // empty result as readily as a full one. Left on, the first empty answer is replayed
+          // from memory for the rest of the session, so the screen keeps reporting a missing
+          // configuration after the record exists and nothing short of a browser reload reaches
+          // the server again. AppConfigInitializer turns the cache off for the same reason.
+          useCache: false,
         });
 
         if (response?.mdms && response.mdms.length > 0) {
@@ -182,7 +188,9 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
     };
 
     fetchFlowConfig();
-  }, [campaignNumber]);
+    // flowModule and tenantId are part of the search above; without them here, switching module
+    // without remounting kept showing whichever one was loaded first.
+  }, [campaignNumber, flowModule, tenantId]);
 
   // Update currentPageRoles when page changes
   useEffect(() => {
