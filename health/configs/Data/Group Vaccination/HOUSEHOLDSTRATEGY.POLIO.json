@@ -307,6 +307,10 @@
                     {
                       "key": "eligibleProductVariants",
                       "value": "{{contextData.0.eligibleProductVariants}}"
+                    },
+                    {
+                      "key": "householdLatLng",
+                      "value": "{{navigation.householdLatLng}}"
                     }
                   ],
                   "name": "DELIVERY",
@@ -649,6 +653,7 @@
           {
             "type": "template",
             "format": "row",
+            "hidden": true,
             "children": [
               {
                 "type": "template",
@@ -684,11 +689,11 @@
                   }
                 ],
                 "fieldName": "householdEditButton",
-                "prefixIcon": "Edit",
                 "properties": {
                   "icon": "Edit",
                   "size": "large",
                   "type": "secondary",
+                  "prefixIcon": "Edit",
                   "mainAxisSize": "min",
                   "mainAxisAlignment": "center"
                 }
@@ -718,7 +723,7 @@
                   },
                   {
                     "key": "HCM_HOUSEHOLD_OVERVIEW_TOTAL_MEMBERS_LABEL",
-                    "value": "{{contextData.0.household.HouseholdModel.additionalFields.fields.memberCount}}",
+                    "value": "{{contextData.0.members.length}}",
                     "isActive": true
                   }
                 ],
@@ -793,11 +798,11 @@
                             }
                           ],
                           "fieldName": "editIndividualButton",
-                          "prefixIcon": "Edit",
                           "properties": {
                             "icon": "Edit",
                             "size": "large",
                             "type": "tertiary",
+                            "prefixIcon": "Edit",
                             "mainAxisSize": "min",
                             "mainAxisAlignment": "center"
                           }
@@ -866,7 +871,7 @@
                       "type": "template",
                       "label": "HCM_HOUSEHOLD_OVERVIEW_ADMINISTERED_SUCCESS_TAG",
                       "format": "tag",
-                      "visible": "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
+                      "visible": "({{fn:isDelivered(item.task.last.status)}}==true || {{fn:hasVaccinatedElsewhereForCurrentCycle(item.task)}}==true) && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
                       "fieldName": "administrationSuccess",
                       "properties": {
                         "tagType": "success",
@@ -899,10 +904,10 @@
                       "type": "template",
                       "label": "HCM_HOUSEHOLD_OVERVIEW_NOT_VISITED_TAG",
                       "format": "tag",
-                      "visible": "{{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:isHead(item.member)}}==false",
+                      "visible": "{{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:isHead(item.member)}}==false && {{fn:hasVaccinatedElsewhereForCurrentCycle(item.task)}}==false",
                       "fieldName": "notVisited",
                       "properties": {
-                        "tagType": "info",
+                        "tagType": "warning",
                         "bottomGap": 16
                       }
                     },
@@ -962,6 +967,10 @@
                                       {
                                         "key": "cycleIndex",
                                         "value": "{{contextData.0.currentRunningCycle}}"
+                                      },
+                                      {
+                                        "key": "householdLatLng",
+                                        "value": "{{fn:joinLatLng(contextData.0.household.HouseholdModel.address.latitude, contextData.0.household.HouseholdModel.address.longitude, contextData.0.household.HouseholdModel.address.locationAccuracy)}}"
                                       }
                                     ],
                                     "name": "beneficiaryDetails",
@@ -972,7 +981,7 @@
                               "fieldName": "goForVaccinateButton",
                               "properties": {
                                 "size": "medium",
-                                "type": "secondary",
+                                "type": "primary",
                                 "bottomGap": 8,
                                 "mainAxisSize": "max"
                               }
@@ -1012,6 +1021,14 @@
                                       {
                                         "key": "doseIndex",
                                         "value": "1"
+                                      },
+                                      {
+                                        "key": "isRevisit",
+                                        "value": "false"
+                                      },
+                                      {
+                                        "key": "householdLatLng",
+                                        "value": "{{fn:joinLatLng(contextData.0.household.HouseholdModel.address.latitude, contextData.0.household.HouseholdModel.address.longitude, contextData.0.household.HouseholdModel.address.locationAccuracy)}}"
                                       }
                                     ],
                                     "name": "VACCINATED_ELSEWHERE",
@@ -1041,6 +1058,9 @@
                               "format": "button",
                               "onAction": [
                                 {
+                                  "actionType": "CLOSE_POPUP"
+                                },
+                                {
                                   "actionType": "NAVIGATION",
                                   "properties": {
                                     "data": [
@@ -1063,6 +1083,10 @@
                                       {
                                         "key": "doseIndex",
                                         "value": "1"
+                                      },
+                                      {
+                                        "key": "householdLatLng",
+                                        "value": "{{fn:joinLatLng(contextData.0.household.HouseholdModel.address.latitude, contextData.0.household.HouseholdModel.address.longitude, contextData.0.household.HouseholdModel.address.locationAccuracy)}}"
                                       }
                                     ],
                                     "name": "UNABLETODELIVER",
@@ -1089,54 +1113,148 @@
                     },
                     {
                       "type": "template",
-                      "label": "HCM_REDOSE_BUTTON",
-                      "format": "button",
+                      "label": "HCM_HOUSEHOLD_OVERVIEW_ACTION_BUTTON",
+                      "format": "actionPopup",
                       "visible": "{{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
-                      "onAction": [
-                        {
-                          "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
-                          "properties": {
-                            "data": [
-                              {
-                                "key": "ProjectBeneficiaryClientReferenceId",
-                                "value": "{{item.projectBeneficiary.0.clientReferenceId}}"
-                              },
-                              {
-                                "key": "HouseholdClientReferenceId",
-                                "value": "{{item.member.0.householdClientReferenceId}}"
-                              },
-                              {
-                                "key": "cycleIndex",
-                                "value": "{{contextData.0.currentRunningCycle}}"
-                              },
-                              {
-                                "key": "doseIndex",
-                                "value": "1"
-                              },
-                              {
-                                "key": "selectedIndividualAgeInMonths",
-                                "value": "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
-                              }
-                            ],
-                            "name": "REDOSE",
-                            "type": "FORM",
-                            "failedMessage": "BENEFICIARY_NOT_ELIGIBLE",
-                            "eligibilityParams": [
-                              {
-                                "type": "int",
-                                "navKey": "selectedIndividualAgeInMonths",
-                                "conditionVar": "age"
-                              }
-                            ]
-                          }
-                        }
-                      ],
-                      "fieldName": "redoseButton",
+                      "fieldName": "revisitActionButton",
                       "mandatory": true,
                       "properties": {
                         "size": "medium",
-                        "type": "secondary",
+                        "type": "primary",
                         "bottomGap": 16,
+                        "popupConfig": {
+                          "body": [
+                            {
+                              "type": "template",
+                              "label": "HCM_REDOSE_BUTTON",
+                              "format": "button",
+                              "visible": "{{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
+                              "onAction": [
+                                {
+                                  "actionType": "CLOSE_POPUP"
+                                },
+                                {
+                                  "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
+                                  "properties": {
+                                    "data": [
+                                      {
+                                        "key": "ProjectBeneficiaryClientReferenceId",
+                                        "value": "{{item.projectBeneficiary.0.clientReferenceId}}"
+                                      },
+                                      {
+                                        "key": "HouseholdClientReferenceId",
+                                        "value": "{{item.member.0.householdClientReferenceId}}"
+                                      },
+                                      {
+                                        "key": "cycleIndex",
+                                        "value": "{{contextData.0.currentRunningCycle}}"
+                                      },
+                                      {
+                                        "key": "doseIndex",
+                                        "value": "1"
+                                      },
+                                      {
+                                        "key": "selectedIndividualAgeInMonths",
+                                        "value": "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
+                                      },
+                                      {
+                                        "key": "householdLatLng",
+                                        "value": "{{fn:joinLatLng(contextData.0.household.HouseholdModel.address.latitude, contextData.0.household.HouseholdModel.address.longitude, contextData.0.household.HouseholdModel.address.locationAccuracy)}}"
+                                      }
+                                    ],
+                                    "name": "REDOSE",
+                                    "type": "FORM",
+                                    "failedMessage": "BENEFICIARY_NOT_ELIGIBLE",
+                                    "eligibilityParams": [
+                                      {
+                                        "type": "int",
+                                        "navKey": "selectedIndividualAgeInMonths",
+                                        "conditionVar": "age"
+                                      }
+                                    ]
+                                  }
+                                }
+                              ],
+                              "fieldName": "redoseButton",
+                              "mandatory": true,
+                              "properties": {
+                                "size": "medium",
+                                "type": "primary",
+                                "bottomGap": 8,
+                                "mainAxisSize": "max",
+                                "mainAxisAlignment": "center"
+                              }
+                            },
+                            {
+                              "type": "template",
+                              "label": "HCM_HOUSEHOLD_OVERVIEW_VACCINATED_ELSEWHERE_LABEL",
+                              "format": "button",
+                              "visible": "{{fn:wasAbsentOrRefusedForCurrentCycle(item.task)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkPolioEligibility(item.individual.0.dateOfBirth, item.task)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:isHead(item.member)}}==false",
+                              "onAction": [
+                                {
+                                  "actionType": "CLOSE_POPUP"
+                                },
+                                {
+                                  "actionType": "CHECK_ELIGIBILITY_AND_NAVIGATE",
+                                  "properties": {
+                                    "data": [
+                                      {
+                                        "key": "ProjectBeneficiaryClientReferenceId",
+                                        "value": "{{item.projectBeneficiary.0.clientReferenceId}}"
+                                      },
+                                      {
+                                        "key": "HouseholdClientReferenceId",
+                                        "value": "{{item.member.0.householdClientReferenceId}}"
+                                      },
+                                      {
+                                        "key": "cycleIndex",
+                                        "value": "{{contextData.0.currentRunningCycle}}"
+                                      },
+                                      {
+                                        "key": "doseIndex",
+                                        "value": "1"
+                                      },
+                                      {
+                                        "key": "selectedIndividualAgeInMonths",
+                                        "value": "{{fn:formatDate(item.individual.0.dateOfBirth, 'ageInMonths')}}"
+                                      },
+                                      {
+                                        "key": "isRevisit",
+                                        "value": "true"
+                                      },
+                                      {
+                                        "key": "householdLatLng",
+                                        "value": "{{fn:joinLatLng(contextData.0.household.HouseholdModel.address.latitude, contextData.0.household.HouseholdModel.address.longitude, contextData.0.household.HouseholdModel.address.locationAccuracy)}}"
+                                      }
+                                    ],
+                                    "name": "VACCINATED_ELSEWHERE",
+                                    "type": "FORM",
+                                    "failedMessage": "BENEFICIARY_NOT_ELIGIBLE",
+                                    "eligibilityParams": [
+                                      {
+                                        "type": "int",
+                                        "navKey": "selectedIndividualAgeInMonths",
+                                        "conditionVar": "age"
+                                      }
+                                    ]
+                                  }
+                                }
+                              ],
+                              "fieldName": "revisitVaccinatedElsewhereButton",
+                              "mandatory": true,
+                              "properties": {
+                                "size": "medium",
+                                "type": "secondary",
+                                "mainAxisSize": "max",
+                                "mainAxisAlignment": "center"
+                              }
+                            }
+                          ],
+                          "title": "REGISTRATION_HOUSEHOLDOVERVIEW_POPUP_TITLE",
+                          "description": "",
+                          "showCloseButton": true,
+                          "barrierDismissible": true
+                        },
                         "mainAxisSize": "max",
                         "mainAxisAlignment": "center"
                       }
@@ -1221,13 +1339,12 @@
                 "label": "DOWNLOAD_BENEFICIARY_IDS",
                 "format": "actionPopup",
                 "visible": "{{fn:hasMinimumBeneficiaryId(singleton.beneficiaryIdMinCount, uniqueIdPoolCount)}}==false",
-                "disabled": "{{fn:hasReachedMemberLimit(contextData.0.household.HouseholdModel, members)}}==true",
                 "fieldName": "beneficiaryIdMinCheck",
                 "properties": {
                   "icon": "FileDownload",
                   "size": "medium",
                   "type": "tertiary",
-                  "prefixIcon": "Download",
+                  "prefixIcon": "FileDownload",
                   "popupConfig": {
                     "body": [],
                     "type": "alert",
@@ -1311,7 +1428,6 @@
                 "label": "HCM_HOUSEHOLD_OVERVIEW_ADD_MEMBERS_BUTTON",
                 "format": "button",
                 "visible": "{{latestBeneficiaryId}} != ''",
-                "disabled": "{{fn:hasReachedMemberLimit(contextData.0.household.HouseholdModel, members)}}==true",
                 "onAction": [
                   {
                     "actionType": "NAVIGATION",
@@ -1369,15 +1485,7 @@
                   "type": "TEMPLATE"
                 }
               }
-            ],
-            "popupConfig": {
-              "title": "HCM_MEMBER_COUNT_MISMATCH_WARNING_TITLE",
-              "condition": "{{fn:hasReachedMemberLimit(contextData.0.household.HouseholdModel, members)}}==false",
-              "titleIcon": "Warning",
-              "cancelLabel": "HCM_COMMON_CANCEL_LABEL",
-              "description": "HCM_MEMBER_COUNT_MISMATCH_WARNING_DESCRIPTION",
-              "confirmLabel": "HCM_COMMON_CONTINUE_LABEL"
-            }
+            ]
           }
         ],
         "heading": "HCM_HOUSEHOLD_OVERVIEW_HEADING",
@@ -1644,6 +1752,7 @@
                   "popupConfig": {
                     "body": [
                       {
+                        "key": 1,
                         "type": "template",
                         "format": "card",
                         "children": [
@@ -1673,7 +1782,7 @@
                                 }
                               }
                             ],
-                            "fieldName": "proximitySearch",
+                            "fieldName": "proximitySearchRegistration",
                             "mandatory": true,
                             "schemaCode": null,
                             "validations": [
@@ -1685,11 +1794,13 @@
                             ]
                           }
                         ],
+                        "fieldName": "card",
                         "properties": {
                           "type": "secondary"
                         }
                       },
                       {
+                        "key": 2,
                         "type": "template",
                         "format": "card",
                         "children": [
@@ -1713,6 +1824,7 @@
                             "validations": []
                           }
                         ],
+                        "fieldName": "card",
                         "properties": {
                           "type": "secondary"
                         }
@@ -2241,7 +2353,7 @@
             "isGS1": false,
             "label": "HCM_SEARCH_SCAN_BENEFICIARY_BUTTON",
             "format": "qrScanner",
-            "hidden": false,
+            "hidden": true,
             "onAction": [
               {
                 "actionType": "OPEN_SCANNER",
@@ -2514,6 +2626,10 @@
                     {
                       "key": "deliveryStrategy",
                       "value": "{{navigation.deliveryStrategy}}"
+                    },
+                    {
+                      "key": "householdLatLng",
+                      "value": "{{navigation.householdLatLng}}"
                     }
                   ],
                   "onError": [
@@ -2562,6 +2678,10 @@
                         {
                           "key": "futureDoses",
                           "value": "{{navigation.futureDoses}}"
+                        },
+                        {
+                          "key": "householdLatLng",
+                          "value": "{{navigation.householdLatLng}}"
                         }
                       ],
                       "onError": [
@@ -2775,37 +2895,6 @@
               },
               {
                 "type": "string",
-                "label": "HCM_DELIVERY_LAT_LONG_LABEL",
-                "order": 5,
-                "value": "",
-                "format": "latLng",
-                "hidden": false,
-                "isMdms": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": false,
-                "required": true,
-                "fieldName": "latLng",
-                "mandatory": true,
-                "deleteFlag": false,
-                "innerLabel": "",
-                "schemaCode": null,
-                "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                  }
-                ],
-                "errorMessage": "REGISTRATION_DELIVERY_latLng_ERROR",
-                "includeInForm": true,
-                "isMultiSelect": false,
-                "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
-              },
-              {
-                "type": "string",
                 "enums": [
                   {
                     "code": "YES",
@@ -2821,29 +2910,22 @@
                   }
                 ],
                 "label": "HCM_REGISTRATION_ZERO_DOSE_DTP_LABEL_VACCINATION",
-                "order": 6,
+                "order": 5,
                 "value": "",
                 "format": "radio",
-                "hidden": false,
+                "hidden": true,
                 "isMdms": false,
                 "tooltip": "",
                 "helpText": "HCM_REGISTRATION_ZERO_DOSE_DTP_HELPTEXT_DOSE_VACCINATION",
                 "infoText": "",
                 "readOnly": false,
-                "required": true,
                 "fieldName": "zeroDoseDTP",
-                "mandatory": true,
+                "mandatory": false,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "schemaCode": null,
                 "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                  }
-                ],
+                "validations": [],
                 "errorMessage": "REGISTRATION_ADD_MEMBER_zeroDoseDTP_ERROR",
                 "includeInForm": true,
                 "isMultiSelect": false,
@@ -2867,29 +2949,22 @@
                   }
                 ],
                 "label": "HCM_REGISTRATION_PREV_ROUND_DOSE_LABEL_VACCINATION",
-                "order": 7,
+                "order": 6,
                 "value": "",
                 "format": "radio",
-                "hidden": false,
+                "hidden": true,
                 "isMdms": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
                 "readOnly": false,
-                "required": true,
                 "fieldName": "prevRoundDose",
-                "mandatory": true,
+                "mandatory": false,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "schemaCode": null,
                 "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                  }
-                ],
+                "validations": [],
                 "errorMessage": "REGISTRATION_ADD_MEMBER_prevRoundDose_ERROR",
                 "includeInForm": true,
                 "isMultiSelect": false,
@@ -2928,6 +3003,10 @@
                 {
                   "key": "deliveryStrategy",
                   "value": "{{navigation.deliveryStrategy}}"
+                },
+                {
+                  "key": "householdLatLng",
+                  "value": "{{navigation.householdLatLng}}"
                 }
               ],
               "onError": [
@@ -2976,6 +3055,10 @@
                     {
                       "key": "futureDoses",
                       "value": "{{navigation.futureDoses}}"
+                    },
+                    {
+                      "key": "householdLatLng",
+                      "value": "{{navigation.householdLatLng}}"
                     }
                   ],
                   "onError": [
@@ -3218,11 +3301,6 @@
                     "message": "HCM_VALIDATION_REQUIRED_FIELD"
                   },
                   {
-                    "type": "pattern",
-                    "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
-                    "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
-                  },
-                  {
                     "type": "minLength",
                     "value": "2",
                     "message": "HCM_VALIDATION_SIZE_2_TO_200"
@@ -3265,11 +3343,6 @@
                     "type": "required",
                     "value": true,
                     "message": "HCM_VALIDATION_REQUIRED"
-                  },
-                  {
-                    "type": "pattern",
-                    "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
-                    "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                   },
                   {
                     "type": "minLength",
@@ -3381,7 +3454,7 @@
                 "fieldName": "dobPicker",
                 "mandatory": true,
                 "deleteFlag": false,
-                "innerLabel": "",
+                "innerLabel": "HCM_REGISTRATION_DOB_LABEL_INNER",
                 "schemaCode": null,
                 "systemDate": false,
                 "validations": [
@@ -3475,32 +3548,24 @@
                 "order": 7,
                 "value": "",
                 "format": "radio",
-                "hidden": false,
+                "hidden": true,
                 "isMdms": false,
                 "tooltip": "",
                 "helpText": "HCM_REGISTRATION_ZERO_DOSE_DTP_HELPTEXT",
                 "infoText": "",
                 "readOnly": false,
-                "required": true,
                 "fieldName": "zeroDoseDTP",
-                "mandatory": true,
+                "mandatory": false,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "schemaCode": null,
                 "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                  }
-                ],
+                "validations": [],
                 "errorMessage": "REGISTRATION_ADD_MEMBER_zeroDoseDTP_ERROR",
                 "includeInForm": true,
                 "isMultiSelect": false,
                 "additionalFields": true,
                 "includeInSummary": true,
-                "required.message": "HCM_VALIDATION_REQUIRED_FIELD",
                 "visibilityCondition": {
                   "expression": [
                     {
@@ -3529,32 +3594,24 @@
                 "order": 8,
                 "value": "",
                 "format": "radio",
-                "hidden": false,
+                "hidden": true,
                 "isMdms": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
                 "readOnly": false,
-                "required": true,
                 "fieldName": "prevRoundDose",
-                "mandatory": true,
+                "mandatory": false,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "schemaCode": null,
                 "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                  }
-                ],
+                "validations": [],
                 "errorMessage": "REGISTRATION_ADD_MEMBER_prevRoundDose_ERROR",
                 "includeInForm": true,
                 "isMultiSelect": false,
                 "additionalFields": true,
                 "includeInSummary": true,
-                "required.message": "HCM_VALIDATION_REQUIRED_FIELD",
                 "visibilityCondition": {
                   "expression": [
                     {
@@ -3566,10 +3623,10 @@
               {
                 "type": "string",
                 "label": "HCM_REGISTRATION_QR_SCAN_LABEL",
-                "order": 10,
+                "order": 9,
                 "value": "",
                 "format": "scanner",
-                "hidden": false,
+                "hidden": true,
                 "isMdms": false,
                 "tooltip": "",
                 "helpText": "",
@@ -4066,11 +4123,6 @@
                     "message": "HCM_VALIDATION_REQUIRED_FIELD"
                   },
                   {
-                    "type": "pattern",
-                    "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
-                    "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
-                  },
-                  {
                     "type": "minLength",
                     "value": "2",
                     "message": "HCM_VALIDATION_SIZE_2_TO_200"
@@ -4113,11 +4165,6 @@
                     "type": "minLength",
                     "value": "2",
                     "message": "HCM_VALIDATION_MIN_2_CHARS_NEEDED"
-                  },
-                  {
-                    "type": "pattern",
-                    "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
-                    "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
                   },
                   {
                     "type": "required",
@@ -4220,7 +4267,7 @@
                 "fieldName": "dobPicker",
                 "mandatory": true,
                 "deleteFlag": false,
-                "innerLabel": "",
+                "innerLabel": "HCM_REGISTRATION_DOB_LABEL_INNER",
                 "schemaCode": null,
                 "systemDate": false,
                 "validations": [
@@ -4335,7 +4382,7 @@
                 "order": 8,
                 "value": "",
                 "format": "scanner",
-                "hidden": false,
+                "hidden": true,
                 "isMdms": false,
                 "tooltip": "",
                 "helpText": "",
@@ -4628,65 +4675,6 @@
                 "errorMessage": "REGISTRATION_HOUSEHOLD_dateOfRegistration_ERROR",
                 "isMultiSelect": false,
                 "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
-              },
-              {
-                "type": "integer",
-                "label": "HCM_REGISTRATION_MEMBER_COUNT_LABEL",
-                "order": 2,
-                "range": {
-                  "min": "1",
-                  "errorMessage": "HCM_VALIDATION_MIN_MEMBERS_1"
-                },
-                "value": "2",
-                "format": "numeric",
-                "hidden": false,
-                "fieldName": "memberCount",
-                "mandatory": true,
-                "validations": [
-                  {
-                    "type": "min",
-                    "value": "1",
-                    "message": "HCM_VALIDATION_MIN_MEMBERS_1"
-                  },
-                  {
-                    "type": "max",
-                    "value": "500",
-                    "message": "HCM_VALIDATION_MAX_MEMBERS_500"
-                  }
-                ],
-                "includeInForm": true
-              },
-              {
-                "type": "integer",
-                "label": "HCM_REGISTRATION_CHILDREN_COUNT_LABEL",
-                "order": 4,
-                "range": {
-                  "min": "1",
-                  "errorMessage": "HCM_VALIDATION_MIN_CHILDREN_1"
-                },
-                "value": "1",
-                "format": "numeric",
-                "hidden": true,
-                "isMdms": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": false,
-                "fieldName": "childrenCount",
-                "mandatory": false,
-                "deleteFlag": false,
-                "innerLabel": "",
-                "schemaCode": null,
-                "systemDate": false,
-                "validations": [
-                  {
-                    "type": "min",
-                    "value": "1",
-                    "message": "HCM_VALIDATION_MIN_CHILDREN_1"
-                  }
-                ],
-                "errorMessage": "REGISTRATION_HOUSEHOLD_childrenCount_ERROR",
-                "isMultiSelect": false
               }
             ],
             "actionLabel": "HCM_REGISTRATION_SAVE_HOUSEHOLD_BUTTON",
@@ -4970,38 +4958,8 @@
               },
               {
                 "type": "string",
-                "label": "HCM_REGISTRATION_LAT_LONG_LABEL",
-                "order": 3,
-                "value": "",
-                "format": "latLng",
-                "hidden": false,
-                "isMdms": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": false,
-                "required": true,
-                "fieldName": "latLng",
-                "mandatory": true,
-                "deleteFlag": false,
-                "innerLabel": "",
-                "schemaCode": null,
-                "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                  }
-                ],
-                "errorMessage": "REGISTRATION_HOUSEHOLD_latLng_ERROR",
-                "isMultiSelect": false,
-                "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
-              },
-              {
-                "type": "string",
                 "label": "HCM_REGISTRATION_ADDRESS_LINE1_LABEL",
-                "order": 4,
+                "order": 3,
                 "value": "",
                 "format": "text",
                 "hidden": true,
@@ -5025,11 +4983,6 @@
                     "type": "minLength",
                     "value": "2",
                     "message": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message"
-                  },
-                  {
-                    "type": "pattern",
-                    "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
-                    "message": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS"
                   }
                 ],
                 "errorMessage": "REGISTRATION_HOUSEHOLD_addressLine1_ERROR",
@@ -5038,7 +4991,7 @@
               {
                 "type": "string",
                 "label": "HCM_REGISTRATION_ADDRESS_LINE2_LABEL",
-                "order": 5,
+                "order": 4,
                 "value": "",
                 "format": "text",
                 "hidden": true,
@@ -5062,11 +5015,6 @@
                     "type": "minLength",
                     "value": "2",
                     "message": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message"
-                  },
-                  {
-                    "type": "pattern",
-                    "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
-                    "message": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS"
                   }
                 ],
                 "errorMessage": "REGISTRATION_HOUSEHOLD_addressLine2_ERROR",
@@ -5075,7 +5023,7 @@
               {
                 "type": "string",
                 "label": "HCM_REGISTRATION_LANDMARK_LABEL",
-                "order": 6,
+                "order": 5,
                 "value": "",
                 "format": "text",
                 "hidden": true,
@@ -5099,11 +5047,6 @@
                     "type": "minLength",
                     "value": "2",
                     "message": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message"
-                  },
-                  {
-                    "type": "pattern",
-                    "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
-                    "message": "HCM_VALIDATION_NO_SPECIAL_CHARACTERS"
                   }
                 ],
                 "errorMessage": "REGISTRATION_HOUSEHOLD_landmark_ERROR",
@@ -5112,7 +5055,7 @@
               {
                 "type": "integer",
                 "label": "HCM_REGISTRATION_PINCODE_LABEL",
-                "order": 7,
+                "order": 6,
                 "value": "",
                 "format": "text",
                 "hidden": true,
@@ -5189,6 +5132,36 @@
                   }
                 ],
                 "includeInSummary": false
+              },
+              {
+                "type": "string",
+                "label": "HCM_REGISTRATION_LAT_LONG_LABEL",
+                "order": 8,
+                "value": "",
+                "format": "latLng",
+                "hidden": false,
+                "isMdms": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "required": true,
+                "fieldName": "latLng",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "schemaCode": null,
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "HCM_VALIDATION_REQUIRED_FIELD"
+                  }
+                ],
+                "errorMessage": "REGISTRATION_HOUSEHOLD_latLng_ERROR",
+                "isMultiSelect": false,
+                "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
               }
             ],
             "actionLabel": "HCM_REGISTRATION_SAVE_LOCATION_BUTTON",
@@ -5535,32 +5508,6 @@
             "properties": [
               {
                 "type": "string",
-                "label": "APPONE_UNABLETODELIVER_LATLNG_LABEL",
-                "order": 1,
-                "value": "",
-                "format": "latLng",
-                "hidden": false,
-                "isMdms": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": false,
-                "fieldName": "latLng",
-                "mandatory": false,
-                "showLabel": true,
-                "deleteFlag": false,
-                "innerLabel": "",
-                "schemaCode": null,
-                "systemDate": false,
-                "validations": [],
-                "errorMessage": "",
-                "includeInForm": true,
-                "isMultiSelect": false,
-                "additionalFields": true,
-                "includeInSummary": true
-              },
-              {
-                "type": "string",
                 "enums": [
                   {
                     "code": "REFUSED",
@@ -5572,7 +5519,7 @@
                   }
                 ],
                 "label": "UNABLETODELIVERY_FLOW_reason_LABEL",
-                "order": 2,
+                "order": 1,
                 "value": "",
                 "format": "radio",
                 "hidden": false,
@@ -5642,7 +5589,7 @@
                   }
                 ],
                 "label": "UNABLETODELIVER_REFUSAL_REASON_LABEL",
-                "order": 3,
+                "order": 2,
                 "value": "",
                 "format": "dropdown",
                 "hidden": false,
@@ -5670,7 +5617,6 @@
                 "visibilityCondition": {
                   "expression": [
                     {
-                      "type": "custom",
                       "condition": "unableToDeliver.reason=='REFUSED'"
                     }
                   ]
@@ -5679,7 +5625,7 @@
               {
                 "type": "string",
                 "label": "UNABLETODELIVER_OTHER_REFUSAL_REASON_LABEL",
-                "order": 4,
+                "order": 3,
                 "value": "",
                 "format": "text",
                 "hidden": false,
@@ -5707,7 +5653,6 @@
                 "visibilityCondition": {
                   "expression": [
                     {
-                      "type": "custom",
                       "condition": "unableToDeliver.refusalReason=='OTHERS'"
                     }
                   ]
@@ -5742,7 +5687,7 @@
                   }
                 ],
                 "label": "UNABLETODELIVER_ABSENCE_REASON_LABEL",
-                "order": 5,
+                "order": 4,
                 "value": "",
                 "format": "dropdown",
                 "hidden": false,
@@ -5770,7 +5715,6 @@
                 "visibilityCondition": {
                   "expression": [
                     {
-                      "type": "custom",
                       "condition": "unableToDeliver.reason=='ABSENCE'"
                     }
                   ]
@@ -5779,7 +5723,7 @@
               {
                 "type": "string",
                 "label": "UNABLETODELIVER_OTHER_ABSENCE_REASON_LABEL",
-                "order": 6,
+                "order": 5,
                 "value": "",
                 "format": "text",
                 "hidden": false,
@@ -5807,7 +5751,6 @@
                 "visibilityCondition": {
                   "expression": [
                     {
-                      "type": "custom",
                       "condition": "unableToDeliver.absenceReason=='OTHER'"
                     }
                   ]
@@ -5858,6 +5801,10 @@
                 {
                   "key": "doseIndex",
                   "value": "{{navigation.doseIndex}}"
+                },
+                {
+                  "key": "householdLatLng",
+                  "value": "{{navigation.householdLatLng}}"
                 }
               ],
               "onError": [
@@ -5985,7 +5932,7 @@
                 "order": 0,
                 "value": "",
                 "format": "custom",
-                "hidden": false,
+                "hidden": true,
                 "isMdms": false,
                 "tooltip": "",
                 "helpText": "",
@@ -6031,34 +5978,8 @@
               },
               {
                 "type": "string",
-                "label": "VACCINATED_ELSEWHERE_LATLNG_LABEL",
-                "order": 1,
-                "value": "",
-                "format": "latLng",
-                "hidden": false,
-                "isMdms": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": false,
-                "fieldName": "latLng",
-                "mandatory": false,
-                "showLabel": true,
-                "deleteFlag": false,
-                "innerLabel": "",
-                "schemaCode": null,
-                "systemDate": false,
-                "validations": [],
-                "errorMessage": "",
-                "includeInForm": true,
-                "isMultiSelect": false,
-                "additionalFields": true,
-                "includeInSummary": true
-              },
-              {
-                "type": "string",
                 "label": "UNABLETODELIVER_SITE_NAME_LABEL",
-                "order": 2,
+                "order": 1,
                 "value": "",
                 "format": "text",
                 "hidden": true,
@@ -6073,13 +5994,7 @@
                 "innerLabel": "",
                 "schemaCode": null,
                 "systemDate": false,
-                "validations": [
-                  {
-                    "type": "pattern",
-                    "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
-                    "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
-                  }
-                ],
+                "validations": [],
                 "errorMessage": "REGISTRATION_VACCINATED_ELSEWHERE_siteName_ERROR",
                 "isMultiSelect": false,
                 "additionalFields": true
@@ -6087,7 +6002,7 @@
               {
                 "type": "string",
                 "label": "UNABLETODELIVER_REGION_LABEL",
-                "order": 3,
+                "order": 2,
                 "value": "",
                 "format": "text",
                 "hidden": true,
@@ -6102,16 +6017,147 @@
                 "innerLabel": "",
                 "schemaCode": null,
                 "systemDate": false,
-                "validations": [
-                  {
-                    "type": "pattern",
-                    "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
-                    "message": "VACCINATED_ELSEWHERE_VALIDATION_ALPHANUMERIC_ONLY"
-                  }
-                ],
+                "validations": [],
                 "errorMessage": "REGISTRATION_VACCINATED_ELSEWHERE_region_ERROR",
                 "isMultiSelect": false,
                 "additionalFields": true
+              },
+              {
+                "type": "string",
+                "enums": [
+                  {
+                    "code": "TRANSIT_POST",
+                    "name": "GV_ENUM_TRANSIT_POST"
+                  },
+                  {
+                    "code": "OUTSIDE_HH_PLACE",
+                    "name": "GV_ENUM_OUTSIDE_HH_PLACE"
+                  }
+                ],
+                "label": "VACCINATED_ELSEWHERE_LOCATION_LABEL",
+                "order": 3,
+                "value": "",
+                "format": "dropdown",
+                "hidden": false,
+                "isMdms": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "vaccinationLocation",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "schemaCode": null,
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "VACCINATED_ELSEWHERE_LOCATION_REQUIRED"
+                  }
+                ],
+                "errorMessage": "REGISTRATION_VACCINATED_ELSEWHERE_vaccinationLocation_ERROR",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "additionalFields": true,
+                "includeInSummary": true
+              },
+              {
+                "type": "string",
+                "label": "VACCINATED_ELSEWHERE_TRANSIT_POST_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "dropdown",
+                "hidden": false,
+                "isMdms": true,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "transitPostLocation",
+                "mandatory": false,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "schemaCode": "HCM.GroupVaccinationLocations",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "additionalFields": true,
+                "includeInSummary": true,
+                "visibilityCondition": {
+                  "expression": [
+                    {
+                      "condition": "vaccinatedElsewhere.vaccinationLocation==TRANSIT_POST"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "string",
+                "label": "VACCINATED_ELSEWHERE_OUTSIDE_HH_PLACE_LABEL",
+                "order": 5,
+                "value": "",
+                "format": "dropdown",
+                "hidden": false,
+                "isMdms": true,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "outsideHHPlaceLocation",
+                "mandatory": false,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "schemaCode": "HCM.GroupVaccinationLocationsCLF",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "additionalFields": true,
+                "includeInSummary": true,
+                "visibilityCondition": {
+                  "expression": [
+                    {
+                      "condition": "vaccinatedElsewhere.vaccinationLocation==OUTSIDE_HH_PLACE"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "string",
+                "label": "VACCINATED_ELSEWHERE_LOCATION_OTHER_LABEL",
+                "order": 6,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "isMdms": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "vaccinationLocationOther",
+                "mandatory": false,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "schemaCode": null,
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "additionalFields": true,
+                "includeInSummary": true,
+                "visibilityCondition": {
+                  "expression": [
+                    {
+                      "condition": "vaccinatedElsewhere.transitPostLocation==OTHER || vaccinatedElsewhere.outsideHHPlaceLocation==OTHER"
+                    }
+                  ]
+                }
               }
             ],
             "actionLabel": "VACCINATED_ELSEWHERE_FLOW_ACTION_LABEL",
@@ -6142,6 +6188,14 @@
                 {
                   "key": "doseIndex",
                   "value": "{{navigation.doseIndex}}"
+                },
+                {
+                  "key": "isRevisit",
+                  "value": "{{navigation.isRevisit}}"
+                },
+                {
+                  "key": "householdLatLng",
+                  "value": "{{navigation.householdLatLng}}"
                 }
               ],
               "onError": [
@@ -6394,37 +6448,6 @@
               },
               {
                 "type": "string",
-                "label": "HCM_REDOSE_LAT_LONG_LABEL",
-                "order": 5,
-                "value": "",
-                "format": "latLng",
-                "hidden": false,
-                "isMdms": false,
-                "tooltip": "",
-                "helpText": "",
-                "infoText": "",
-                "readOnly": false,
-                "required": true,
-                "fieldName": "latLng",
-                "mandatory": true,
-                "deleteFlag": false,
-                "innerLabel": "",
-                "schemaCode": null,
-                "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                  }
-                ],
-                "errorMessage": "REGISTRATION_REDOSE_latLng_ERROR",
-                "includeInForm": true,
-                "isMultiSelect": false,
-                "required.message": "HCM_VALIDATION_REQUIRED_FIELD"
-              },
-              {
-                "type": "string",
                 "enums": [
                   {
                     "code": "YES",
@@ -6440,29 +6463,22 @@
                   }
                 ],
                 "label": "HCM_REGISTRATION_ZERO_DOSE_DTP_LABEL_DOSE",
-                "order": 6,
+                "order": 5,
                 "value": "",
                 "format": "radio",
-                "hidden": false,
+                "hidden": true,
                 "isMdms": false,
                 "tooltip": "",
                 "helpText": "HCM_REGISTRATION_ZERO_DOSE_DTP_HELPTEXT_DOSE",
                 "infoText": "",
                 "readOnly": false,
-                "required": true,
                 "fieldName": "zeroDoseDTP",
-                "mandatory": true,
+                "mandatory": false,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "schemaCode": null,
                 "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                  }
-                ],
+                "validations": [],
                 "errorMessage": "REGISTRATION_ADD_MEMBER_zeroDoseDTP_ERROR",
                 "includeInForm": true,
                 "isMultiSelect": false,
@@ -6486,29 +6502,22 @@
                   }
                 ],
                 "label": "HCM_REGISTRATION_PREV_ROUND_DOSE_LABEL_DOSE",
-                "order": 7,
+                "order": 6,
                 "value": "",
                 "format": "radio",
-                "hidden": false,
+                "hidden": true,
                 "isMdms": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
                 "readOnly": false,
-                "required": true,
                 "fieldName": "prevRoundDose",
-                "mandatory": true,
+                "mandatory": false,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "schemaCode": null,
                 "systemDate": false,
-                "validations": [
-                  {
-                    "type": "required",
-                    "value": true,
-                    "message": "HCM_VALIDATION_REQUIRED_FIELD"
-                  }
-                ],
+                "validations": [],
                 "errorMessage": "REGISTRATION_ADD_MEMBER_prevRoundDose_ERROR",
                 "includeInForm": true,
                 "isMultiSelect": false,
@@ -6547,6 +6556,10 @@
                 {
                   "key": "deliveryStrategy",
                   "value": "{{navigation.deliveryStrategy}}"
+                },
+                {
+                  "key": "householdLatLng",
+                  "value": "{{navigation.householdLatLng}}"
                 }
               ],
               "onError": [
@@ -6620,8 +6633,8 @@
   "isActive": true,
   "auditDetails": {
     "createdBy": "8ca0fd96-d0d8-4c1d-b209-4aa5518f78e7",
-    "lastModifiedBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
+    "lastModifiedBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
     "createdTime": 1790055959929,
-    "lastModifiedTime": 1791967214484
+    "lastModifiedTime": 1793275504599
   }
 }
