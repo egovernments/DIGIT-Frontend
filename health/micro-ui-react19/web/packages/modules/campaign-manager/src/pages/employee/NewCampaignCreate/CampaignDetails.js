@@ -15,7 +15,7 @@ import QRButton from "../../../components/CreateCampaignComponents/QRButton";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import { srOnlyStyle } from "../../../utils";
 import useCampaignStore from "../../../hooks/useCampaignStore";
-import { getCampaignDeliveryMethods, getDeliveryMethods } from "../../../utils/deliveryMethods";
+import { getCampaignDeliveryMethods, getRoundType, usesDeliveryMethods } from "../../../utils/deliveryMethods";
 import { resetCreateCampaignData, campaignStore } from "../../../store/campaignStore";
 
 function transformCampaignData(inputObj = {}) {
@@ -294,14 +294,22 @@ const CampaignDetails = () => {
     ];
   }, [isPolioCopyDraft]);
 
+  // Strategies only apply to a single-round campaign, so this asks the same question the Delivery
+  // Setup step asks rather than looking at the campaign type alone. A multi-round campaign of a
+  // type that happens to declare strategies never sees that step, so it must not be gated on one.
   const usesDeliveryStrategies = useMemo(() => {
     const record = projectTypeMdms?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes?.find((e) => e?.code === campaignData?.projectType);
-    return getDeliveryMethods(record).length > 0;
-  }, [projectTypeMdms, campaignData?.projectType]);
+    return usesDeliveryMethods(record, getRoundType(campaignData));
+  }, [projectTypeMdms, campaignData]);
 
   const deliveryStrategyPending = useMemo(() => {
     // Campaign types that declare no delivery strategies keep the gating they have today.
     if (!usesDeliveryStrategies) return false;
+
+    // Nothing is left to configure once the campaign is created, so the gate is spent. Without
+    // this, a campaign created before its type offered strategies carries none and would have its
+    // cards locked for good - there is no step left on this screen that could add them.
+    if (campaignData?.status === "created") return false;
 
     // The strategy selection is saved when the user leaves the first delivery step, while the
     // conditions and resources are saved on finishing the second. Both steps sit behind the one

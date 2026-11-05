@@ -17,6 +17,7 @@ import {
   evaluateGroupExpression,
 } from "./helpers";
 import { TextInput, Button } from "@egovernments/digit-ui-components";
+import { activateOnKey } from "../../../utils";
 import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
 import { getLabelFieldPairConfig } from "./redux/labelFieldPairSlice";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
@@ -1470,7 +1471,7 @@ const OptionItem = React.memo(({ item, index, canDelete, cField, selectedField, 
   return (
     <div className="app-config-option-item">
       <div className="app-config-option-item-label">{`${t(
-        "APPCONFIG_OPTION_LABEL",
+        I18N_KEYS.APP_CONFIGURATION.APPCONFIG_OPTION_LABEL,
       )} ${index + 1}`}</div>
       <div style={{ display: "flex", gap: "0.5rem",alignItems:"center",justifyContent:"center" }}>
         <TextInput
@@ -1480,8 +1481,17 @@ const OptionItem = React.memo(({ item, index, canDelete, cField, selectedField, 
           onChange={handleChange}
           disabled={viewMode}
         />
+        {/* Named after the row it removes, so a screen reader announces which option goes.
+            role + tabIndex + Enter/Space is the same treatment the field rows in the panel get. */}
         {!viewMode && canDelete && (
-          <div onClick={onDelete}>
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label={`${t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_DELETE_OPTION)} ${index + 1}`}
+            style={{ cursor: "pointer" }}
+            onKeyDown={activateOnKey}
+            onClick={onDelete}
+          >
             <SVG.DeleteOutline />
           </div>
         )}

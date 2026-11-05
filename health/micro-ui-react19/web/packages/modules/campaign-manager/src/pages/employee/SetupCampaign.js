@@ -15,7 +15,7 @@ import {
   findHighestStepCount,
 } from "../../utils/setupCampaignHelpers";
 import { handleValidate } from "../../utils/setupCampaignValidators";
-import { carryDeliveryMethods, getDeliveryMethods } from "../../utils/deliveryMethods";
+import { carryDeliveryMethods, getDeliveryMethods, getRoundType, isSingleRound } from "../../utils/deliveryMethods";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import { srOnlyStyle } from "../../utils";
@@ -194,6 +194,24 @@ const SetupCampaign = () => {
     }
   }, [draftData?.hierarchyType]);
 
+  /**
+   * The campaign type's default delivery strategies, for the last fallback in carryDeliveryMethods.
+   *
+   * Only a single-round campaign gets them. A multi-round campaign is sent through the cycle
+   * screens and never sees the strategy step, so handing it the type's defaults would persist a
+   * selection the user was never shown - enough to make the summary and data layouts switch to the
+   * strategy form. Returning an empty list leaves the field off the save, while anything the user
+   * actually chose, or the draft already carries, still takes priority inside carryDeliveryMethods.
+   *
+   * All three draft-save paths call this so the guard cannot be applied to one and missed on another.
+   */
+  const defaultDeliveryMethodsForSave = (totalFormData) => {
+    if (!isSingleRound(getRoundType(draftData, totalFormData))) return [];
+    return getDeliveryMethods(
+      DeliveryConfig?.find?.((e) => e?.code === (totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType))
+    );
+  };
+
   useEffect(() => {
     if (isPreview === "true") {
       setIsDraftCreated(true);
@@ -346,11 +364,7 @@ const SetupCampaign = () => {
             payloadData.additionalDetails.cycleData = carryDeliveryMethods(
               totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
               draftData?.additionalDetails?.cycleData,
-              getDeliveryMethods(
-                DeliveryConfig?.find?.(
-                  (e) => e?.code === (totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType)
-                )
-              )
+              defaultDeliveryMethodsForSave(totalFormData)
             );
             if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
@@ -533,11 +547,7 @@ const SetupCampaign = () => {
             payloadData.additionalDetails.cycleData = carryDeliveryMethods(
               totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
               draftData?.additionalDetails?.cycleData,
-              getDeliveryMethods(
-                DeliveryConfig?.find?.(
-                  (e) => e?.code === (totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType)
-                )
-              )
+              defaultDeliveryMethodsForSave(totalFormData)
             );
             if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
@@ -622,11 +632,7 @@ const SetupCampaign = () => {
             payloadData.additionalDetails.cycleData = carryDeliveryMethods(
               totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
               draftData?.additionalDetails?.cycleData,
-              getDeliveryMethods(
-                DeliveryConfig?.find?.(
-                  (e) => e?.code === (totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType)
-                )
-              )
+              defaultDeliveryMethodsForSave(totalFormData)
             );
             if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
