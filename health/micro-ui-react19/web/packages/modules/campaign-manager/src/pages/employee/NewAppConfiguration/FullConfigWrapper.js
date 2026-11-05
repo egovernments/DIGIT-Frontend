@@ -14,18 +14,12 @@ import { FlowFilled } from "../../../components/icons/FlowFilled";
 import { FlowUnfilled } from "../../../components/icons/FlowUnfilled";
 import AppHelpTutorial from "../../../components/AppHelpTutorial";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
-import { srOnlyStyle } from "../../../utils";
+// activateOnKey lets the clickable <div role="button"> controls in this screen (menu items,
+// flow/page tabs, preview arrows, field-type cards) be operated from the keyboard. It is the same
+// helper the summary screens use, so the behaviour stays defined in one place.
+import { srOnlyStyle, activateOnKey } from "../../../utils";
 
 const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
-// Lets the clickable <div role="button"> controls in this screen (menu items, flow/page tabs,
-// preview arrows, field-type cards) be operated from the keyboard: Enter or Space re-dispatches
-// the element's own click handler, so the behaviour stays defined in one place.
-const activateOnKey = (e) => {
-  if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault();
-    e.currentTarget.click();
-  }
-};
 
 const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const { t } = useTranslation();
