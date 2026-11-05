@@ -36,7 +36,7 @@
             "description": "GV_LOCATION_TRANSIT_POST_DESCRIPTION"
           },
           {
-            "icon": "Groups",
+            "icon": "NaturePeople",
             "type": "template",
             "format": "menu_card",
             "heading": "GV_LOCATION_CLF_HEADING",
@@ -57,7 +57,7 @@
             ],
             "fieldName": "clfOption",
             "properties": {
-              "icon": "Groups"
+              "icon": "NaturePeople"
             },
             "schemaCode": null,
             "description": "GV_LOCATION_CLF_DESCRIPTION"
@@ -211,7 +211,8 @@
                 "systemDate": false,
                 "lengthRange": {
                   "maxLength": "200",
-                  "errorMessage": "GV_VALIDATION_MAX_200"
+                  "minLength": "2",
+                  "errorMessage": "GV_VALIDATION_SIZE_2_TO_200"
                 },
                 "validations": [
                   {
@@ -222,11 +223,16 @@
                   {
                     "type": "maxLength",
                     "value": "200",
-                    "message": "GV_VALIDATION_MAX_200"
+                    "message": "GV_VALIDATION_SIZE_2_TO_200"
+                  },
+                  {
+                    "type": "minLength",
+                    "value": "2",
+                    "message": "GV_VALIDATION_SIZE_2_TO_200"
                   },
                   {
                     "type": "pattern",
-                    "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
+                    "value": "^(?!\\+)[^!@#$%^*;<>?|\\\\~{}\\[\\]\"=\\r\\n\\t]+$",
                     "message": "GV_LOCATION_NAME_SPECIAL_CHAR_ERROR"
                   },
                   {
@@ -1386,7 +1392,7 @@
             "children": [
               {
                 "type": "template",
-                "label": "GV_METRIC_VACCINATED_TODAY",
+                "label": "GV_METRIC_VACCINATED_TODAY_PANEL",
                 "format": "column",
                 "children": [
                   {
@@ -1430,6 +1436,7 @@
                 "properties": {
                   "mainAxisSize": "min"
                 },
+                "mandatory": true,
                 "groupAsSingleElement": true
               },
               {
@@ -2028,7 +2035,7 @@
                   "type": "template",
                   "value": "{{item.FacilityModel.name}}",
                   "format": "textTemplate",
-                  "fieldName": "sessionLocationName",
+                  "fieldName": "transipostSessionLocationName",
                   "properties": {
                     "style": "headingXl",
                     "bottomGap": 4,
@@ -2550,7 +2557,7 @@
                   "type": "template",
                   "value": "{{item.FacilityModel.name}}",
                   "format": "textTemplate",
-                  "fieldName": "sessionLocationName",
+                  "fieldName": "clfSessionLocationName",
                   "properties": {
                     "style": "headingXl",
                     "bottomGap": 4,
@@ -2863,7 +2870,7 @@
             "children": [
               {
                 "type": "template",
-                "label": "GV_METRIC_VACCINATED_TODAY",
+                "label": "GV_METRIC_VACCINATED_TODAY_PANEL",
                 "format": "column",
                 "children": [
                   {
@@ -2908,6 +2915,7 @@
                 "properties": {
                   "mainAxisSize": "min"
                 },
+                "mandatory": true,
                 "groupAsSingleElement": true
               },
               {
@@ -3462,7 +3470,8 @@
                 "systemDate": false,
                 "lengthRange": {
                   "maxLength": "200",
-                  "errorMessage": "GV_VALIDATION_MAX_200"
+                  "minLength": "2",
+                  "errorMessage": "GV_VALIDATION_SIZE_2_TO_200"
                 },
                 "validations": [
                   {
@@ -3473,11 +3482,16 @@
                   {
                     "type": "maxLength",
                     "value": "200",
-                    "message": "GV_VALIDATION_MAX_200"
+                    "message": "GV_VALIDATION_SIZE_2_TO_200"
+                  },
+                  {
+                    "type": "minLength",
+                    "value": "2",
+                    "message": "GV_VALIDATION_SIZE_2_TO_200"
                   },
                   {
                     "type": "pattern",
-                    "value": "^[a-zA-ZÀ-ÖØ-öø-ÿ؀-ۿ0-9 ]+$",
+                    "value": "^(?!\\+)[^!@#$%^*;<>?|\\\\~{}\\[\\]\"=\\r\\n\\t]+$",
                     "message": "GV_LOCATION_NAME_SPECIAL_CHAR_ERROR"
                   },
                   {
@@ -4357,6 +4371,6 @@
     "createdBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
     "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
     "createdTime": 1791788949610,
-    "lastModifiedTime": 1793775932959
+    "lastModifiedTime": 1793799180231
   }
 }
