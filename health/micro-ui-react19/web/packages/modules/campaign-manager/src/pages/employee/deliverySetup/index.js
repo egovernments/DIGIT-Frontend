@@ -137,7 +137,12 @@ const DeliveryStrategySetup = ({ onSelect, formData, control, ...props }) => {
       getSelectedMethodCodes(savedCycleConfigure).length > 0
         ? getSelectedMethodCodes(savedCycleConfigure)
         : getCampaignDeliveryMethods(campaignData);
-    if (codes.length > 0) setSelected(codes);
+    // Normalised on the way in rather than left to the effect below: that effect reads `selected`
+    // from the render it was queued in, so it cannot see what is being set here, and its own
+    // dependencies do not change when this runs. A code the campaign type no longer offers would
+    // otherwise reach cycleConfigure and give Delivery Rules a tab for a strategy that is gone.
+    // `applies` already requires the type to declare methods, so `methods` is populated here.
+    if (codes.length > 0) setSelected(normaliseSelection(codes, methods));
     else {
       // Nothing saved anywhere, so this is a fresh campaign: start from whatever the campaign
       // type marks as a default. A type marking none leaves the list untouched and empty.
