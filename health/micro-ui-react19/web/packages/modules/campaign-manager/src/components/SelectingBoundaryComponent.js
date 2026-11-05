@@ -257,7 +257,13 @@ const SelectingBoundaryComponent = ({
         const newBoundaryType = transformedRes?.[0]?.type;
         const existingBoundaryType = selectedData?.length > 0 ? selectedData?.[0]?.type : null;
 
-        if (existingBoundaryType === newBoundaryType) {
+        // The shortcut below only maps over what is already selected, so it can update entries but
+        // never add or drop one. That is correct when the selection has not actually changed, and
+        // wrong when it has: a boundary swapped at this level would keep the old entry (no new one
+        // to map onto it) and an added boundary would never appear. So it is taken only for an
+        // unchanged selection; any real change goes through the merge below, which rebuilds the
+        // level and re-walks the tree, dropping children left behind by a boundary that is gone.
+        if (existingBoundaryType === newBoundaryType && isSameSelection) {
           const transformedMap = new Map(transformedRes.map((r) => [r.code, r]));
           const updatedSelectedData = selectedData
             .map((item) => {
