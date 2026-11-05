@@ -86,7 +86,9 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
 
   const { data: campaignDetails, isLoading } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId,
-    filter: { ids: [id] },
+    // Dates changed on the update-dates screen are written to the project service alone, so the
+    // campaign's own dates go stale. Every screen that shows them asks for the project's instead.
+    filter: { ids: [id], isOverrideDatesFromProject: true },
     config: {
       select: (response) => {
         return response?.[0] || null;
