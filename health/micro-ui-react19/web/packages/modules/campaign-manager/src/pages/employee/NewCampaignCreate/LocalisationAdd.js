@@ -107,6 +107,47 @@ const LocalisationBulkUpload = () => {
               : null,
           },
         ]
+      : campaignData?.projectType === "Immunisation"
+      ? [
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_REGISTRATION_MODULE),
+            value: `hcm-householdstrategy-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-householdstrategy-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_COMPLAINTS_MODULE),
+            value: `hcm-complaints-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-complaints-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_CLOSEHOUSEHOLD_MODULE),
+            value: `hcm-missedchildren-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-missedchildren-${projectTypeSuffix}`
+              : null,
+          },
+
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_STOCK_POLIO_MODULE),
+            value: `hcm-stock-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-stock-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(
+              I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_OUTSIDEHOUSEHOLD_POLIO_MODULE,
+            ),
+            value: `hcm-outsidehousehold-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-outsidehousehold-${projectTypeSuffix}`
+              : null,
+          },
+        ]
       : [
           {
             name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_REGISTRATION_MODULE),
