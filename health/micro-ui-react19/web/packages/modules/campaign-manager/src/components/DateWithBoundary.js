@@ -243,12 +243,12 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
       };
 
       const temp = sortHierarchy(hierarchyDefinition.boundaryHierarchy);
-      const sortedHierarchy = temp.filter((boundary, index, array) => {
-        // Find the index of the lowest hierarchy
-        const lowestIndex = array.findIndex((b) => b.boundaryType === lowestHierarchy);
-        // Include only those boundaries that are above or equal to the lowest hierarchy
-        return index <= lowestIndex;
-      });
+      // Keep the levels down to the lowest one. When that level is not one of them - MDMS can name
+      // a level this hierarchy does not have - keep them all: the list is only meant to stop at the
+      // lowest level, and filtering on a level that is missing left none at all and a dropdown with
+      // nothing to pick.
+      const lowestIndex = temp.findIndex((b) => b.boundaryType === lowestHierarchy);
+      const sortedHierarchy = lowestIndex === -1 ? temp : temp.filter((boundary, index) => index <= lowestIndex);
       const sortedHierarchyWithLocale = sortedHierarchy.map((i) => {
         return {
           ...i,
@@ -257,7 +257,9 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
       });
       setHierarchyTypeDataresult(sortedHierarchyWithLocale);
     }
-  }, [hierarchyDefinition]);
+    // lowestHierarchy decides where the list stops, and it comes from MDMS, which can answer after
+    // the hierarchy definition. Without it here the levels were built once and never rebuilt.
+  }, [hierarchyDefinition, lowestHierarchy]);
 
   useEffect(() => {
     if (state?.data) {
