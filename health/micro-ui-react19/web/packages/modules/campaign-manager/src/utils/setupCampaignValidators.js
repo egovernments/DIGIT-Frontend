@@ -379,6 +379,13 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
           setShowToast({ key: "error", label: "ES__REQUIRED_DELIVERY_DATE" });
           return false;
         }
+        // The end-date picker's `min` is the start date, but typing straight into its text input
+        // goes around that, so the order is checked here too. Equal dates are a valid one-day
+        // delivery window, so only an end date strictly before the start is rejected.
+        if (new Date(deliveryRange.toDate) < new Date(deliveryRange.fromDate)) {
+          setShowToast({ key: "error", label: "ES__REQUIRED_DELIVERY_DATE" });
+          return false;
+        }
         return true;
       }
 
