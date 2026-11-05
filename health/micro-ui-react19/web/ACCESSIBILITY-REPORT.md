@@ -265,6 +265,13 @@ element cannot become a flex/grid item or a containing block:
 </main>
 ```
 
+> **Check the landmark before you rely on this.** Browsers spent years dropping `display: contents`
+> elements from the accessibility tree — the landmark rendered, but no screen reader announced it.
+> Current Chrome, Firefox and Safari expose it, and MDN still carries the warning. Verify `<main>`
+> actually appears in the landmark list of the browser and screen reader you support. If it does
+> not, use a plain wrapper with `role="main"`, or a `<main>` that is not `display: contents`,
+> wherever the layout can take the extra box.
+
 ### The 20 Oct regression — and what it taught us
 
 On 20 Oct the report showed *"Medium issues increased by 2."* The cause was ours: a change in core's
@@ -362,10 +369,15 @@ mean work stopped delivering value.**
 ### Steps
 
 1. **Inventory** — `npm ls @egovernments/digit-ui-components` and your React version.
-2. **Find forks early:**
+2. **Find forks early** — look for a local component *definition* whose name shadows a library one.
+   Do not look for files that skip the library import: a fork usually still imports other things
+   from it (ours imports `Dropdown`, `Chip` and `SVG`), so excluding importers hides exactly the
+   file you are hunting for.
    ```bash
-   find src -name "*.js" | xargs grep -l "MultiSelectDropdown\|Dropdown\|CheckBox" \
-     | xargs grep -L "@egovernments/digit-ui-components"
+   # 1. local definitions that shadow a library component
+   grep -rnE "(const|function) (MultiSelectDropdown|Dropdown|CheckBox)\b" src
+   # 2. where those local copies are used, rather than the library's
+   grep -rnE "import .*(MultiSelectDropdown|Dropdown|CheckBox).* from \"\.\.?/" src
    ```
 3. **Baseline audit** — record the exact configuration (routes, viewport, auth). Without it, later
    comparisons are meaningless.
