@@ -48,7 +48,10 @@ const SelectionCard = ({ field, t, props, data }) => {
         ruleSet.cycles.forEach((cycle) => {
           if (!Array.isArray(cycle?.deliveries)) return;
           cycle.deliveries.forEach((delivery) => {
-            if (flow && delivery?.deliveryMethod !== flow) return;
+            // Skip a delivery only when it names a different strategy. A campaign that uses no
+            // delivery strategies stamps no `deliveryMethod` at all, and those deliveries hold the
+            // only products it has - dropping them would leave the card with placeholder options.
+            if (flow && delivery?.deliveryMethod && delivery.deliveryMethod !== flow) return;
             if (!Array.isArray(delivery?.doseCriteria)) return;
             delivery.doseCriteria.forEach((criteria) => {
               if (!Array.isArray(criteria?.ProductVariants)) return;
