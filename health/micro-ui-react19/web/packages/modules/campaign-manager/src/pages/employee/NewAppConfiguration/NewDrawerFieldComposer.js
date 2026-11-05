@@ -2144,37 +2144,15 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
 
         // Check group fields with validation expressions
         if (panelItem.fieldType === "group" && panelItem.validationExpression) {
-          try {
-            const expression = panelItem.validationExpression;
-            const plainFieldCopy = structuredClone(selectedField);
-
-            // Extract field paths from expression (e.g., "lengthRange.minLength", "lengthRange.maxLength")
-            const fieldPaths = expression.match(/[\w.]+/g)?.filter((p) => p.includes(".")) || [];
-
-            // Helper to get nested value from path like "lengthRange.minLength"
-            const getNestedValue = (obj, path) => path.split(".").reduce((acc, key) => acc?.[key], obj);
-
-            // Check if ALL fields in expression have non-empty values - if any is empty, skip validation
-            const allFieldsFilled = fieldPaths.every((path) => {
-              const value = getNestedValue(plainFieldCopy, path);
-              return value !== null && value !== undefined && value !== "";
+          // The same helper the panel uses, so a rule shown in red there is the one that stops the
+          // save. It returns true for a half-filled group and for an expression that throws, which
+          // is what the copy that used to live here did by skipping the error push in those cases.
+          if (!evaluateGroupExpression(selectedField, panelItem.validationExpression)) {
+            errors.push({
+              fieldLabel: panelItem.label,
+              message: panelItem.validationMessage,
+              tab: tabKey,
             });
-            if (!allFieldsFilled) return;
-
-            const paramNames = Object.keys(plainFieldCopy).map((key) => key.replace(/\./g, "_"));
-            const paramValues = Object.values(plainFieldCopy);
-            const func = new Function(...paramNames, `return ${expression}`);
-            const result = func(...paramValues);
-
-            if (!result) {
-              errors.push({
-                fieldLabel: panelItem.label,
-                message: panelItem.validationMessage,
-                tab: tabKey,
-              });
-            }
-          } catch (error) {
-            console.error("Validation expression error:", error);
           }
         }
       });
