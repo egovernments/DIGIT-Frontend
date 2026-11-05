@@ -1132,12 +1132,14 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           if (temp?.additionalDetails?.error?.code) {
             setLoader(false);
             setIsValidation(false);
-            // const errorMessage = temp?.error.replaceAll(":", "-");
             const backendErrorLabel = temp?.additionalDetails?.error?.message || t(temp.additionalDetails.error.code);
             setShowToast({ key: "error", label: backendErrorLabel, transitionTime: 5000000 });
             setValidationStatus({ type: "error", label: backendErrorLabel, toastLabel: backendErrorLabel });
             setIsError(true);
-            setApiError(errorMessage);
+            // useProcessData returns either its own error object or the backend record, never both,
+            // so this branch has no `temp.error` to format - the sibling branch's `errorMessage` is
+            // scoped to that branch. The resolved label is what the screen already shows.
+            setApiError(backendErrorLabel);
             setNotValid(2);
             return;
           }
