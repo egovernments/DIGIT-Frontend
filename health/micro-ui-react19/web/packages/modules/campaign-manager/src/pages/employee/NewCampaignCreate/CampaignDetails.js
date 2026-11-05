@@ -268,20 +268,23 @@ const CampaignDetails = () => {
     { schemaCode: "HCM-PROJECT-TYPES.projectTypes" }
   );
 
-  // A POLIO copy arrives with the delivery rules of the campaign it was copied from, so its
-  // cycle dates and quantities still belong to that campaign. These two steps say what has to be
-  // put right before the copy can be created. Shown only while it is still a draft - once the
-  // campaign is created there is nothing left to complete.
-  const isPolioCopyDraft = useMemo(
+  // A copy that uses delivery strategies arrives with the delivery rules of the campaign it was
+  // copied from, so its cycle dates and quantities still belong to that campaign. These two steps
+  // say what has to be put right before the copy can be created. Shown only while it is still a
+  // draft - once the campaign is created there is nothing left to complete.
+  //
+  // Keyed on the strategies the campaign carries, the same question CloneCampaignWrapper asks
+  // before copying the rules, so the checklist cannot appear for a copy that was never given any.
+  const isStrategyCopyDraft = useMemo(
     () =>
-      campaignData?.projectType === "POLIO" &&
+      getCampaignDeliveryMethods(campaignData).length > 0 &&
       Boolean(campaignData?.additionalDetails?.cloneFrom) &&
       campaignData?.status !== "created",
-    [campaignData?.projectType, campaignData?.additionalDetails?.cloneFrom, campaignData?.status]
+    [campaignData]
   );
 
   const clonedCampaignSteps = useMemo(() => {
-    if (!isPolioCopyDraft) return null;
+    if (!isStrategyCopyDraft) return null;
     return [
       {
         title: I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_STEP_EDIT_DELIVERY_TITLE,
@@ -292,7 +295,7 @@ const CampaignDetails = () => {
         description: I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_STEP_UPLOAD_MICROPLAN_DESCRIPTION,
       },
     ];
-  }, [isPolioCopyDraft]);
+  }, [isStrategyCopyDraft]);
 
   // Strategies only apply to a single-round campaign, so this asks the same question the Delivery
   // Setup step asks rather than looking at the campaign type alone. A multi-round campaign of a
@@ -765,13 +768,13 @@ const CampaignDetails = () => {
   // invalid-dates toast, so the button is held closed until they are put right. This holds back a
   // copy only; every other campaign still submits and is told what is wrong, as before.
   const copiedDatesPending = useMemo(() => {
-    if (!isPolioCopyDraft) return false;
+    if (!isStrategyCopyDraft) return false;
     const cycles = campaignData?.deliveryRules?.[0]?.cycles;
     // Nothing configured yet is already covered by the checks beside this one, and
     // validateCampaignDates expects a list
     if (!Array.isArray(cycles) || cycles.length === 0) return false;
     return !validateCampaignDates(cycles, campaignData);
-  }, [isPolioCopyDraft, campaignData]);
+  }, [isStrategyCopyDraft, campaignData]);
 
   const onsubmit = async () => {
     if (isSubmitting) return;
