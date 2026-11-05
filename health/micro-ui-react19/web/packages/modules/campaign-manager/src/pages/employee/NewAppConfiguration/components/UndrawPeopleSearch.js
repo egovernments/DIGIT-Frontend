@@ -27,8 +27,8 @@ export const UndrawPeopleSearch = ({
           viewBox="0 0 160 124"
           fill="none"
           aria-hidden="true"
-          width={160 ||width}
-          height={124 || height}
+          width={width || 160}
+          height={height || 124}
           style={style}
           onClick={onClick}
         >
