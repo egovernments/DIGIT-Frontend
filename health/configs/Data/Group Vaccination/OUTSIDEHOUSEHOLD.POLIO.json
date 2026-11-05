@@ -267,7 +267,7 @@
                 "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
-                "schemaCode": "HCM.OUTSIDE_HOUSEHOLD_TYPES:TRANSIT_POST",
+                "schemaCode": "HCM.GroupVaccinationLocations",
                 "systemDate": false,
                 "validations": [
                   {
@@ -1433,10 +1433,10 @@
                   }
                 ],
                 "fieldName": "vaccinatedTotal",
+                "mandatory": true,
                 "properties": {
                   "mainAxisSize": "min"
                 },
-                "mandatory": true,
                 "groupAsSingleElement": true
               },
               {
@@ -1860,7 +1860,7 @@
                         "isMdms": true,
                         "valueKey": "code",
                         "fieldName": "siteType",
-                        "schemaCode": "HCM.OUTSIDE_HOUSEHOLD_TYPES:TRANSIT_POST",
+                        "schemaCode": "HCM.GroupVaccinationLocations",
                         "showWhenSingleOption": true
                       },
                       {
@@ -1960,53 +1960,6 @@
             "properties": {
               "gap": 16
             }
-          },
-          {
-            "type": "template",
-            "chips": [
-              {
-                "key": "siteProximity",
-                "label": "GV_FILTER_CHIP_NEARBY",
-                "onRemove": [
-                  {
-                    "actionType": "CLEAR_STATE",
-                    "properties": {
-                      "name": "siteProximity",
-                      "filterKeys": ["siteProximity"],
-                      "triggerSearch": true
-                    }
-                  }
-                ]
-              },
-              {
-                "key": "siteType",
-                "onRemove": [
-                  {
-                    "actionType": "CLEAR_STATE",
-                    "properties": {
-                      "name": "sessions",
-                      "widgetKeys": ["siteType", "siteType-object"],
-                      "triggerSearch": true
-                    }
-                  }
-                ]
-              },
-              {
-                "key": "siteArea",
-                "onRemove": [
-                  {
-                    "actionType": "CLEAR_STATE",
-                    "properties": {
-                      "name": "sessions",
-                      "widgetKeys": ["siteArea", "siteArea-object"],
-                      "triggerSearch": true
-                    }
-                  }
-                ]
-              }
-            ],
-            "format": "appliedFilterChips",
-            "fieldName": "appliedFilters"
           },
           {
             "type": "template",
@@ -2382,7 +2335,7 @@
                         "isMdms": true,
                         "valueKey": "code",
                         "fieldName": "siteType",
-                        "schemaCode": "HCM.OUTSIDE_HOUSEHOLD_TYPES:OUTSIDE_HOUSEHOLD_PLACES",
+                        "schemaCode": "HCM.GroupVaccinationLocationsCLF",
                         "showWhenSingleOption": true
                       },
                       {
@@ -2482,53 +2435,6 @@
             "properties": {
               "gap": 16
             }
-          },
-          {
-            "type": "template",
-            "chips": [
-              {
-                "key": "siteProximity",
-                "label": "GV_FILTER_CHIP_NEARBY",
-                "onRemove": [
-                  {
-                    "actionType": "CLEAR_STATE",
-                    "properties": {
-                      "name": "siteProximity",
-                      "filterKeys": ["siteProximity"],
-                      "triggerSearch": true
-                    }
-                  }
-                ]
-              },
-              {
-                "key": "siteType",
-                "onRemove": [
-                  {
-                    "actionType": "CLEAR_STATE",
-                    "properties": {
-                      "name": "sessions",
-                      "widgetKeys": ["siteType", "siteType-object"],
-                      "triggerSearch": true
-                    }
-                  }
-                ]
-              },
-              {
-                "key": "siteArea",
-                "onRemove": [
-                  {
-                    "actionType": "CLEAR_STATE",
-                    "properties": {
-                      "name": "sessions",
-                      "widgetKeys": ["siteArea", "siteArea-object"],
-                      "triggerSearch": true
-                    }
-                  }
-                ]
-              }
-            ],
-            "format": "appliedFilterChips",
-            "fieldName": "appliedFilters"
           },
           {
             "type": "template",
@@ -2912,10 +2818,10 @@
                   }
                 ],
                 "fieldName": "vaccinatedTotal",
+                "mandatory": true,
                 "properties": {
                   "mainAxisSize": "min"
                 },
-                "mandatory": true,
                 "groupAsSingleElement": true
               },
               {
@@ -3526,7 +3432,7 @@
                 "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
-                "schemaCode": "HCM.OUTSIDE_HOUSEHOLD_TYPES:OUTSIDE_HOUSEHOLD_PLACES",
+                "schemaCode": "HCM.GroupVaccinationLocationsCLF",
                 "systemDate": false,
                 "validations": [
                   {
@@ -4369,8 +4275,8 @@
   "isActive": true,
   "auditDetails": {
     "createdBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
-    "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
+    "lastModifiedBy": "github:Shreya-egov",
     "createdTime": 1791788949610,
-    "lastModifiedTime": 1793799180231
+    "lastModifiedTime": 1793885681496
   }
 }
