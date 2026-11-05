@@ -15,7 +15,7 @@ import {
   findHighestStepCount,
 } from "../../utils/setupCampaignHelpers";
 import { handleValidate } from "../../utils/setupCampaignValidators";
-import { carryDeliveryMethods, getDeliveryMethods, getRoundType, isSingleRound } from "../../utils/deliveryMethods";
+import { carryDeliveryMethods, getDeliveryMethods, getRoundType, usesDeliveryMethods } from "../../utils/deliveryMethods";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import { srOnlyStyle } from "../../utils";
@@ -195,21 +195,33 @@ const SetupCampaign = () => {
   }, [draftData?.hierarchyType]);
 
   /**
-   * The campaign type's default delivery strategies, for the last fallback in carryDeliveryMethods.
+   * The cycle data to save, with the delivery strategies resolved against the campaign type that
+   * is selected now.
    *
-   * Only a single-round campaign gets them. A multi-round campaign is sent through the cycle
-   * screens and never sees the strategy step, so handing it the type's defaults would persist a
-   * selection the user was never shown - enough to make the summary and data layouts switch to the
-   * strategy form. Returning an empty list leaves the field off the save, while anything the user
-   * actually chose, or the draft already carries, still takes priority inside carryDeliveryMethods.
+   * While the type still offers strategies this behaves exactly as before: what the user chose
+   * wins, then what the draft already holds, then the type's defaults.
+   *
+   * When it does not, both fallbacks are withheld - the draft's own saved codes as well as the
+   * type's defaults. The campaign type can be changed from step 1 after a draft has been saved,
+   * and nothing clears cycleData on that change, so a draft that picked strategies as POLIO would
+   * otherwise keep handing them back on every later save under its new type. The summary, the date
+   * screens and the app modules all read those codes, so the campaign would go on being treated as
+   * a strategy campaign. Leaving the field off the save is what clears it: project-factory stores
+   * the additionalDetails it receives.
    *
    * All three draft-save paths call this so the guard cannot be applied to one and missed on another.
    */
-  const defaultDeliveryMethodsForSave = (totalFormData) => {
-    if (!isSingleRound(getRoundType(draftData, totalFormData))) return [];
-    return getDeliveryMethods(
-      DeliveryConfig?.find?.((e) => e?.code === (totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType))
+  const carryDeliveryMethodsForSave = (totalFormData) => {
+    const cycleConfigure = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+    const projectTypeRecord = DeliveryConfig?.find?.(
+      (e) => e?.code === (totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType)
     );
+
+    if (!usesDeliveryMethods(projectTypeRecord, getRoundType(draftData, totalFormData))) {
+      return carryDeliveryMethods(cycleConfigure, undefined, []);
+    }
+
+    return carryDeliveryMethods(cycleConfigure, draftData?.additionalDetails?.cycleData, getDeliveryMethods(projectTypeRecord));
   };
 
   useEffect(() => {
@@ -361,11 +373,7 @@ const SetupCampaign = () => {
             // Delivery strategies ride along on every draft save: from the session when the
             // strategy step has been visited, else from the draft, else the campaign type's
             // defaults. Leaving the field out would make project-factory drop it.
-            payloadData.additionalDetails.cycleData = carryDeliveryMethods(
-              totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
-              draftData?.additionalDetails?.cycleData,
-              defaultDeliveryMethodsForSave(totalFormData)
-            );
+            payloadData.additionalDetails.cycleData = carryDeliveryMethodsForSave(totalFormData);
             if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
@@ -544,11 +552,7 @@ const SetupCampaign = () => {
             // Delivery strategies ride along on every draft save: from the session when the
             // strategy step has been visited, else from the draft, else the campaign type's
             // defaults. Leaving the field out would make project-factory drop it.
-            payloadData.additionalDetails.cycleData = carryDeliveryMethods(
-              totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
-              draftData?.additionalDetails?.cycleData,
-              defaultDeliveryMethodsForSave(totalFormData)
-            );
+            payloadData.additionalDetails.cycleData = carryDeliveryMethodsForSave(totalFormData);
             if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
@@ -629,11 +633,7 @@ const SetupCampaign = () => {
             // Delivery strategies ride along on every draft save: from the session when the
             // strategy step has been visited, else from the draft, else the campaign type's
             // defaults. Leaving the field out would make project-factory drop it.
-            payloadData.additionalDetails.cycleData = carryDeliveryMethods(
-              totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
-              draftData?.additionalDetails?.cycleData,
-              defaultDeliveryMethodsForSave(totalFormData)
-            );
+            payloadData.additionalDetails.cycleData = carryDeliveryMethodsForSave(totalFormData);
             if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
