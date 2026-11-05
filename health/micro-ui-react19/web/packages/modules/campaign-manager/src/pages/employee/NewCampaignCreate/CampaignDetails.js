@@ -1081,7 +1081,11 @@ const CampaignDetails = () => {
               onClick={() => {
                 const link = pendingStrategyEdit;
                 setPendingStrategyEdit(null);
-                navigate(`/${window.contextPath}/employee/campaign/${link}`, { state: { isDraftCampaign: isDraftCampaign } });
+                // Same expression the card's own navigation uses. A drafted campaign opened straight
+                // from its details page carries no router state, so the status has to be read too.
+                navigate(`/${window.contextPath}/employee/campaign/${link}`, {
+                  state: { isDraftCampaign: isDraftCampaign || campaignData?.status === "drafted" },
+                });
               }}
             />,
           ]}
