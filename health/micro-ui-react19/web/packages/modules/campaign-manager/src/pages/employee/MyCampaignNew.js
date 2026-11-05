@@ -3,19 +3,9 @@ import { useTranslation } from "react-i18next";
 import { InboxSearchComposer, Loader } from "@egovernments/digit-ui-components";
 import { myCampaignConfigNew } from "../../configs/myCampaignConfigNew";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
-
-// Visually hidden but exposed to assistive technology (same recipe as the common .sr-only utility)
-const srOnlyStyle = {
-  position: "absolute",
-  width: "1px",
-  height: "1px",
-  padding: 0,
-  margin: "-1px",
-  overflow: "hidden",
-  clip: "rect(0, 0, 0, 0)",
-  whiteSpace: "nowrap",
-  border: 0,
-};
+// Visually hidden but exposed to assistive technology. Shared, so a change to the recipe reaches
+// every page that hides text this way rather than only the ones that were remembered.
+import { srOnlyStyle } from "../../utils";
 
 /**
  * The `MyCampaignNew` function is a React component that displays a header with a campaign search title
