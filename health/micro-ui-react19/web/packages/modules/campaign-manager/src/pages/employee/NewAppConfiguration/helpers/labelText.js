@@ -2,9 +2,14 @@
  * Helpers for the wording a user types into the panel - field labels and option text
  */
 
-// Pictographs, flag pairs, keycap marks and the joiners that build the longer emoji out of them.
-// Letters are matched by none of these, so wording in any language is left alone.
-const EMOJI = /[\p{Extended_Pictographic}\p{Regional_Indicator}\u{FE0F}\u{20E3}]|‍/gu;
+// Pictographs, flag pairs, skin tones, keycap marks, and the zero-width joiners that build the
+// longer emoji out of them.
+//
+// The joiner is matched only between two pictographs, never on its own. It is an ordinary letter
+// in several scripts - Malayalam chillu, Sinhala and Bengali conjuncts all spell words with it -
+// so removing every one of them would quietly break wording a user is entitled to type. The
+// zero-width non-joiner, which those scripts also use, is not matched at all.
+const EMOJI = /[\p{Extended_Pictographic}\p{Regional_Indicator}\p{Emoji_Modifier}][\u{FE0F}\u{20E3}]*(?:‍[\p{Extended_Pictographic}\p{Regional_Indicator}\p{Emoji_Modifier}][\u{FE0F}\u{20E3}]*)*|[\u{FE0F}\u{20E3}]/gu;
 
 /**
  * Remove emojis from text.
