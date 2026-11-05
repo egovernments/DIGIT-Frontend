@@ -221,9 +221,9 @@ New helpers: `numberLimits.js`, `groupValidation.js`, `panelItemVisibility.js`, 
 
 #### Campaign cloning — POLIO
 
-- A POLIO copy now carries the **delivery rules** of its source campaign. Other campaign types are unchanged and re-enter them in the wizard.
+- A copy of a campaign that uses delivery strategies now carries its **delivery rules** forward. Campaigns without strategies are unchanged and re-enter them in the wizard. In practice this means POLIO, which is the only campaign type declaring `deliveryMethods` today — but the behaviour follows the strategies the campaign carries, not its type.
 - The copy is confirmed by a **popup on the campaign it created**, not a toast on the listing the user leaves a second later. The 1-second redirect delay is gone, so the copy opens straight away.
-- An **info card above the summary** lists the two steps left — edit the delivery strategy, then update the microplan. It is keyed on `additionalDetails.cloneFrom` and on the campaign still being a draft, so it appears only for a POLIO copy and disappears once the campaign is created.
+- An **info card above the summary** lists the two steps left — edit the delivery strategy, then update the microplan. It is keyed on `additionalDetails.cloneFrom`, on the strategies the campaign carries and on it still being a draft, so it appears only for a copy that was actually given delivery rules, and disappears once the campaign is created.
 - **Create Campaign is held disabled** while copied cycle dates fall outside the new campaign's dates. Previously it submitted and only raised a toast, creating nothing.
 
 ---
@@ -272,6 +272,9 @@ WCAG fixes across the console (#4514, #4530 and follow-ups):
 | — | Resource card products restored for campaigns that use no delivery strategies — such deliveries carry no `deliveryMethod`, so the strategy filter dropped them all and the card fell back to placeholders |
 | — | Emoji stripping no longer removes the zero-width joiner, which is an ordinary letter in Malayalam, Sinhala and Bengali — so labels typed in those scripts survive save |
 | — | Option delete icon made keyboard operable, with a screen-reader label naming the option it removes |
+| — | Upload validation no longer crashes when the backend reports the failure on `additionalDetails` alone — the handler referenced a variable scoped to the other error branch, so the validation state was never set and the screen was left mid-check |
+| — | Delivery strategies are cleared when the campaign type is changed after a draft is saved — they were being restored on every later save, so the campaign went on being treated as a strategy campaign under its new type |
+| — | A saved strategy the campaign type no longer offers is dropped when the delivery step loads, instead of reaching the payload and giving Delivery Rules a tab for a strategy that no longer exists |
 | — | POLIO download template (#4685) |
 | — | Payments headers / toast / CSS; dashboard CSS |
 | — | `rainmaker-hcm-dss` removed from the localisation call |
@@ -389,6 +392,9 @@ Module package versions are unchanged (`campaign-manager` 1.0.0, `health-payment
 - [ ] Boundaries: swap one, add one, deselect one of two — at root and child level, and on a campaign with frozen boundaries
 - [ ] Clone POLIO: rules copied, popup, info card, Create disabled until dates fixed
 - [ ] Clone non-POLIO: rules not copied, no info card
+- [ ] Change the campaign type on a saved POLIO draft — the strategies are not carried onto the new type
+- [ ] Remove a strategy from MDMS, then open a draft that had saved it — no Delivery Rules tab for it
+- [ ] Upload a sheet that fails validation on the backend record — the error is shown and the screen recovers
 - [ ] App Config: multi-select, popup config, group toggle, timer limits, number errors, DOB
 - [ ] Field label in Malayalam or Bengali survives saving — joiner not stripped
 - [ ] Accessibility pass on campaign and App Configuration screens

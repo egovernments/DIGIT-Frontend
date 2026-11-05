@@ -52,6 +52,8 @@ onSelect("cycleConfigure", {
 
 Keeping the published shape identical means downstream steps — delivery rules, summary, save — need no branch for strategy campaigns.
 
+The saved selection is put through `normaliseSelection` as it is hydrated, so a code the campaign type no longer offers is dropped before it can reach `cycleConfigure`. This has to happen inside the hydration effect rather than in the effect that follows it: that effect reads `selected` from the render it was queued in, so it cannot see what hydration is setting, and its own dependencies do not change when hydration runs. `applies` already requires the type to declare methods, so the list is never normalised against an empty one.
+
 #### Where strategies are stored
 
 | Location | Shape | Written by |
@@ -61,6 +63,8 @@ Keeping the published shape identical means downstream steps — delivery rules,
 | `additionalDetails.roundType` | `"SINGLE_ROUND"` / `"MULTI_ROUND"` | `transformCreateData` / `transformUpdateCreateData` |
 
 > **Strategies are written on every save, not only on the delivery step.** project-factory stores whatever `additionalDetails` it receives, so a partial save from an unrelated step previously erased them. Every save path now routes through `carryDeliveryMethods` before writing.
+
+> **They are also cleared when the campaign stops using them.** The campaign type can be changed from step 1 after a draft is saved, and nothing clears `cycleData` on that change. `SetupCampaign`'s `carryDeliveryMethodsForSave` therefore withholds *both* fallbacks — the draft's own saved codes as well as the type's defaults — when `usesDeliveryMethods` is false for the type now selected. Leaving the field off the save is what clears it.
 
 #### `utils/deliveryMethods.js` — the single resolver
 
@@ -181,15 +185,19 @@ The app reads this config too, so marking descendants keeps a consumer that only
 
 ---
 
-### 5. POLIO Campaign Cloning
+### 5. Campaign Cloning with Delivery Strategies
 
-A POLIO copy carries the **delivery rules** of its source campaign. Other campaign types are unchanged and re-enter them in the wizard.
+A copy of a campaign that uses delivery strategies carries the **delivery rules** of its source. Campaigns without strategies are unchanged and re-enter them in the wizard.
+
+The condition is `getCampaignDeliveryMethods(sourceCampaign).length > 0` — the campaign is asked, not its type. What makes the rules worth copying is that they are strategy-shaped (conditions, products, one tab per strategy), which is a property of the campaign. In practice this is POLIO today, since it is the only type declaring `deliveryMethods`.
 
 | Behaviour | Keyed on |
 |---|---|
 | Success popup on the created campaign | `campaignCloned` in router state, read once into state by the campaign page |
-| Info card listing the two remaining steps | `additionalDetails.cloneFrom` **and** the campaign still being a draft |
+| Info card listing the two remaining steps | `getCampaignDeliveryMethods(campaignData).length > 0`, `additionalDetails.cloneFrom`, **and** the campaign still being a draft |
 | Create Campaign held disabled | Copied cycle dates falling outside the new campaign's dates |
+
+> The info card and the copy itself ask the same question (`isStrategyCopyDraft` in `CampaignDetails.js`), so the checklist cannot appear for a copy that was never given any rules to correct.
 
 The previous behaviour confirmed the copy with a toast on the listing the user left a second later, then let them press Create Campaign and fail with an invalid-dates toast having created nothing. The 1-second `setTimeout` around the redirect is gone, so the copy opens straight away.
 
