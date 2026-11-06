@@ -489,6 +489,10 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
               size={"medium"}
               id={`my-campaigns-row-card-clone-campaign-button-${rowData?.id}`}
               title={t(I18N_KEYS.COMPONENTS.DUPLICATE_CAMPAIGN)}
+              // A campaign still being created has no settled delivery rules or resources to copy,
+              // so copying it mid-creation would carry a half-written campaign forward. The progress
+              // tag in this same row already says why the button is unavailable.
+              isDisabled={isCreating}
             />
           )}
           {showCancelCampaign && (
