@@ -333,6 +333,21 @@ const CampaignDetails = () => {
     [usesDeliveryStrategies, deliveryStrategyPending, campaignData?.status, campaignData?.parentId]
   );
 
+  // The uploaded sheet is prepared against the delivery strategy, so changing the strategy leaves
+  // it describing a configuration the campaign no longer has - the same reason the app config is
+  // worth warning about. Uses the test the upload card itself uses to decide whether its button
+  // reads "Upload" or "Edit", so the warning and the card cannot disagree about what counts as
+  // uploaded: a unified campaign carries one combined sheet under its own resource types, while
+  // every other campaign carries one resource per sheet.
+  const hasUploadedData = useMemo(() => {
+    const resources = campaignData?.resources;
+    if (!Array.isArray(resources) || resources.length === 0) return false;
+    if (campaignData?.additionalDetails?.isUnifiedCampaign) {
+      return resources.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
+    }
+    return true;
+  }, [campaignData]);
+
   // MDMS call for Form Config to check if all forms are configured
   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.FormConfig`;
   const { isLoading: isFormConfigLoading, data: formConfigData } = Digit.Hooks.useCustomAPIHook(
@@ -524,9 +539,11 @@ const CampaignDetails = () => {
                   : `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true&projectType=${campaignData?.projectType}`,
               type: campaignData?.deliveryRules?.[0]?.cycles?.length > 0 ? "secondary" : "primary",
               icon: <OutpatientMed />,
-              // Changing the strategy invalidates the app and microplan configuration built on
-              // top of it, so ask for confirmation once that configuration exists.
-              onButtonClick: isEditingDeliveryStrategy && isFormConfigured ? (link) => setPendingStrategyEdit(link) : undefined,
+              // Changing the strategy invalidates whatever was built on top of it, so ask for
+              // confirmation once any of that exists - the app configuration, the uploaded sheet,
+              // or both. Either one on its own is enough to warrant the warning.
+              onButtonClick:
+                isEditingDeliveryStrategy && (isFormConfigured || hasUploadedData) ? (link) => setPendingStrategyEdit(link) : undefined,
             },
           },
         ],
