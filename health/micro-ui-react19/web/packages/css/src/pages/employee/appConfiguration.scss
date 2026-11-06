@@ -1398,6 +1398,13 @@
   }
 }
 
+// Switches for the parts of a group (Female / Male inside the gender row). They sit straight in
+// the container, so they miss the label weight the rule below gives switches wrapped in a
+// tooltip. Scoped to a class only these switches carry, so no other switch changes.
+.digit-switch-container.group-child-switch > .digit-switch-label {
+  font-weight: 700;
+}
+
 .drawer-toggle-field-container {
   .drawer-container-tooltip {
     .digit-switch-container {
@@ -1423,6 +1430,17 @@
             font-size: var(--digitv2-fontSize-heading-s-desktop);
           }
         }
+      }
+    }
+
+    .drawer-container-tooltip-label{
+      font-size: 14px;
+      font-weight: 700;
+      font-family: Roboto;
+      color: #363636;
+
+      &.false{
+        color: #787878;
       }
     }
   }

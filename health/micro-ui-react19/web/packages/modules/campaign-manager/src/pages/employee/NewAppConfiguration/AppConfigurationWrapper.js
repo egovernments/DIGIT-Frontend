@@ -11,7 +11,7 @@ import IntermediateWrapper from "./IntermediateWrapper";
 import { useCustomT, useCustomTranslate, useFieldDataLabel } from "./hooks/useCustomT";
 import fullParentConfig from "./configs/fullParentConfig.json";
 import { getPageFromConfig } from "./utils/configUtils";
-import { getFieldTypeFromMasterData, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData } from "./helpers";
+import { getFieldTypeFromMasterData, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData, getFieldValueByPath, isOutsideLimits, evaluateGroupExpression, isPanelItemEnabledForField, withoutFooterButtonTypes, toSentenceCase} from "./helpers";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 // Helper function to check if a value is empty (null, undefined, empty string, or empty array)
@@ -204,8 +204,9 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
             panelItem.visibilityEnabledFor.length === 0 ||
             panelItem.visibilityEnabledFor.includes(fieldType);
 
-          // Field must be visible for this field type AND field must not be hidden
-          const isVisible = isFieldTypeVisible && field.hidden !== true;
+          // Field must be visible for this field type, field must not be hidden, and the property
+          // must not be one the config has scoped to other fields by name
+          const isVisible = isFieldTypeVisible && field.hidden !== true && isPanelItemEnabledForField(panelItem, field?.fieldName);
           if (!isVisible) {
             return;
           }          // Validation for mandatory localisable fields
@@ -414,8 +415,33 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
               }
             }
 
-            // Validation for group fields with validationExpression (min/max, minLength/maxLength range checks)
-            if (panelItem.fieldType === "group" && panelItem.validationExpression && panelItem.validationMessage) {
+            // A number property can set its own limits in the master through min/max, together
+            // with the message to show when they are broken (e.g. a popup timer's minutes, 0 - 4).
+            // The panel keeps whatever is typed and flags it under the box, so this is what stops
+            // an out-of-range value from being saved. Limits and message are configured as a pair,
+            // the same way validationExpression and validationMessage are below, so a property
+            // that sets no limits of its own is left alone. A property the panel is not showing
+            // is not checked, so a switched-off group or conditional field cannot block the save.
+            const isShownConditional = (cField) => cField?.condition === Boolean(getFieldValueByPath(field, panelItem.bindTo));
+            const isGroupShown =
+              !(panelItem.showFieldOnToggle && panelItem.bindTo) ||
+              Boolean(getFieldValueByPath(field, panelItem.bindTo, panelItem.defaultValue || ""));
+            [panelItem, ...(isGroupShown ? panelItem.children || [] : []), ...(panelItem.conditionalField || []).filter(isShownConditional)]
+              .filter((property) => property?.validationMessage && (property?.min !== undefined || property?.max !== undefined))
+              .forEach((property) => {
+                if (!isOutsideLimits(getFieldValueByPath(field, property.bindTo), property.min, property.max)) return;
+                errors.push({
+                  fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                  panelLabel: property.label,
+                  message: property.validationMessage,
+                  tab: tabKey,
+                });
+              });
+
+            // Validation for group fields with validationExpression (min/max, minLength/maxLength range checks).
+            // A group switched off keeps whatever was last typed, so it is skipped here the same way
+            // the panel stops showing its message - otherwise a timer turned off would still block the save.
+            if (isGroupShown && panelItem.fieldType === "group" && panelItem.validationExpression && panelItem.validationMessage) {
               // Parse the validation expression to get the field paths
               // Examples: "lengthRange.minLength <= lengthRange.maxLength", "range.min <= range.max"
               // Supports various spacing: "a<=b", "a <= b", "a  <=  b"
@@ -474,6 +500,22 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                       });
                     }
                   }
+                }
+              } else {
+                // Anything the simple pattern above cannot read - an expression with arithmetic,
+                // say "popupTimer.minutes * 60 + popupTimer.seconds >= 30" - is handed to the same
+                // evaluator the side panel uses, so a rule shown in red there also stops the save.
+                if (!evaluateGroupExpression(field, expression)) {
+                  errors.push({
+                    fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                    panelLabel: panelItem.label,
+                    message: panelItem.validationMessage,
+                    messageParams: {
+                      fieldName: translateFieldLabel(field),
+                      propertyName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
+                    },
+                    tab: tabKey,
+                  });
                 }
               }
             }
@@ -923,7 +965,8 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           tenantId: responseData.tenantId,
           schemaCode: responseData.schemaCode,
           uniqueIdentifier: responseData.uniqueIdentifier,
-          data: currentData, // Replace with updated config
+          // Saved without the button type the store added on load, so the page keeps its own shape
+          data: withoutFooterButtonTypes(currentData),
           isActive: responseData.isActive,
           auditDetails: responseData.auditDetails,
         },
@@ -949,7 +992,10 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
 
   // Handle adding new field
   const handleAddNewField = () => {
-    if (!newFieldType?.label || !newFieldType?.field) {
+    // Guard on the entered text, matching the Add button. newFieldType.label is a
+    // localisation code that survives clearing the box, so it cannot stand in for
+    // "a label was given".
+    if (!fieldDataLabel?.trim() || !newFieldType?.label || !newFieldType?.field) {
       return; // Validation: ensure required fields are present
     }
 
@@ -1173,7 +1219,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       updateLocalizationEntry({
         code: locVal,
         locale: currentLocale || "en_IN",
-        message: value,
+        message: toSentenceCase(value),
       })
     );
     // Replace spaces with underscores and convert to lowercase
@@ -1274,7 +1320,10 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 variation="primary"
                 label={t(I18N_KEYS.APP_CONFIGURATION.ADD)}
                 title={t(I18N_KEYS.APP_CONFIGURATION.ADD)}
-                isDisabled={!newFieldType?.label || !newFieldType?.field}
+                // Validate the text in the box, not newFieldType.label - that holds a
+                // localisation code which is generated on the first keystroke and
+                // stays truthy after the label is cleared, leaving Add enabled.
+                isDisabled={!fieldDataLabel?.trim() || !newFieldType?.field}
                 onClick={handleAddNewField}
                 id={"save-add-field-popup"}
               />

@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink, type, icon, disabled, isDraftCampaign,buttonId }) => {
+const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink, type, icon, disabled, isDraftCampaign, buttonId, onButtonClick }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -24,6 +24,11 @@ const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink, type, ic
         <Button
           label={buttonLabel}
           onClick={() => {
+            // A caller can take over the click to confirm first, then navigate itself.
+            if (onButtonClick) {
+              onButtonClick(navLink);
+              return;
+            }
             navigate(`/${window.contextPath}/employee/campaign/${navLink}`, { state: { isDraftCampaign: isDraftCampaign } });
           }}
           variation={type}

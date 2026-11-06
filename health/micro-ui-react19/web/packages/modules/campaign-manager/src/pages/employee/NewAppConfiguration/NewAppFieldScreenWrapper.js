@@ -111,6 +111,7 @@ const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale,
                 <span>{typeLabel}</span>
               </div>
               <TextInput
+                label={typeLabel}
                 name={`footerLabel-${index}`}
                 value={localValue}
                 onChange={(event) => handleChange(event.target.value)}
@@ -193,6 +194,14 @@ function NewAppFieldScreenWrapper({viewMode}) {
 
     // If it's a template (like your fields), include it and also look inside for nested templates
     if (typeof node === "object" && node.type?.trim() === "template") {
+      // A group is one element to the author: list the node, but not the parts inside it.
+      // Without this a count and its label become two rows with two switches, so the number
+      // can be hidden while its label stays on screen.
+      // Opt-in: a config without the flag is flattened exactly as before.
+      if (node.groupAsSingleElement === true) {
+        return [node];
+      }
+
       const fields = [node];
 
       // Extract primaryAction and secondaryAction if they exist
@@ -219,6 +228,11 @@ function NewAppFieldScreenWrapper({viewMode}) {
   };
 
   const isFieldEditable = (field) => {
+    // A group stands in for the fields it wraps, so it belongs in the panel whatever its own
+    // format is. card, row and column are all editable:false in the field-type master - without
+    // this the group row is dropped here, and its parts are already gone, so the element
+    // disappears from the panel entirely.
+    if (field?.groupAsSingleElement === true) return true;
 
     const fieldConfig = fieldTypeMaster?.fieldTypeMappingConfig?.find((item) => item.metadata.format === field.format && item.metadata.type === field.type);
     // If no config found, default to editable
@@ -237,11 +251,12 @@ function NewAppFieldScreenWrapper({viewMode}) {
     );
   }
 
-  // True when a body section renders its own Buttons subheader (button-format rows) — the footer
-  // label inputs then join that section instead of opening a second "Buttons" heading
+  // True when the page already lists its buttons as rows, in the Buttons section. The plain label
+  // inputs below are the fallback for a page whose buttons cannot be listed that way, and the two
+  // must never show at once.
   const hasBodyButtonRows = (currentCard?.body || []).some((section) => {
     const sectionBodyFields = currentCard?.type === "template" ? extractTemplateFields(section?.fields) : (section?.fields || []);
-    const sectionFooterFields = currentCard?.type === "template" && currentCard?.footer ? extractTemplateFields(currentCard.footer) : [];
+    const sectionFooterFields = currentCard?.footer ? extractTemplateFields(currentCard.footer) : [];
     // Footer rows always join the Buttons section, whatever their format (qrScanner, actionPopup, …)
     return (
       sectionBodyFields.filter(isFieldEditable).some((f) => ["button", "actionPopup", "qrScanner"].includes(f?.format)) ||
@@ -269,6 +284,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
             cardIndex={0}
             fieldKey="heading"
             viewMode={viewMode}
+            maxLength={64}
           />
           {/* Description Field */}
           <HeaderFieldWrapper
@@ -333,6 +349,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
               <Switch
                 key={currentCard?.conditions?.infoCardText ? "infocard-on" : "infocard-off"}
                 label=""
+                ariaLabel={t("INFO_CARD_TEXT")}
                 isCheckedInitially={!!currentCard?.conditions?.infoCardText}
                 disable={viewMode}
                 shapeOnOff
@@ -359,10 +376,8 @@ function NewAppFieldScreenWrapper({viewMode}) {
             ? extractTemplateFields(section?.fields)
             : section?.fields || [];
 
-        const footerFields =
-          currentCard?.type === "template" && currentCard?.footer
-            ? extractTemplateFields(currentCard.footer)
-            : [];
+        // Action buttons are listed as field rows on both kinds of screen
+        const footerFields = currentCard?.footer ? extractTemplateFields(currentCard.footer) : [];
 
         // Filter editable fields only
         const editableBodyFields = bodyFields.filter(isFieldEditable);
@@ -376,7 +391,8 @@ function NewAppFieldScreenWrapper({viewMode}) {
         // (primary/secondary buttons, listed here as separate rows) keep theirs.
 
         // Every screen needs a CTA. A lone button therefore has no toggle at all, and where there are
-        // several, the last visible one cannot be switched off either.
+        // several, the last visible one cannot be switched off either. On a form screen the action
+        // buttons are not part of the field list, so none of them can be hidden.
         // Footer entries all render in the app's bottom action bar, so every footer row is an
         // action button regardless of format (qrScanner "Scan QR", actionPopup "Download IDs", …)
         // Popup-opening actions (actionPopup, qrScanner) render as buttons in the app,
@@ -385,6 +401,16 @@ function NewAppFieldScreenWrapper({viewMode}) {
         const buttonFields = fields.filter((f, i) => isButtonRow(f, i));
         const visibleButtonCount = buttonFields.filter((f) => f?.hidden !== true).length;
         const isOnlyButton = buttonFields.length === 1;
+
+        // Popups are listed apart from the buttons. A scanner stays with the buttons: it is one of
+        // them on screen, even though it opens something. The counts above still take in both, so
+        // the rule that a screen keeps one visible action is unchanged.
+        const isPopupRow = (f) => f?.format === "actionPopup";
+        const popupFields = buttonFields.filter(isPopupRow);
+        const actionButtonFields = buttonFields.filter((f) => !isPopupRow(f));
+
+        // Footer rows on a form screen, which are its action buttons
+        const isFormActionButton = (i) => currentCard?.type !== "template" && i >= bodyFieldsCount;
 
         // A menu screen (e.g. Manage Stock) with every menu card hidden would be a dead end
         // in the app, so the last visible menu card cannot be switched off either
@@ -443,8 +469,10 @@ function NewAppFieldScreenWrapper({viewMode}) {
                   fieldIndex={actualFieldIndex}
                   cardIndex={actualCardIndex}
                   indexOfCard={index}
-                  moveField={viewMode ? null : type !== "template" ? moveField : null}
-                  hideToggle={rest?.format === "panelCard" || rest?.format === "labelPairList" || (rest?.format === "button" && isOnlyButton)}
+                  // Buttons sit in their own section and have no meaningful order,
+                  // so they are not reorderable - which also drops their drag handle.
+                  moveField={viewMode || isButtonRow(fieldEntry, i) ? null : type !== "template" ? moveField : null}
+                  hideToggle={rest?.format === "panelCard" || rest?.format === "labelPairList" || (rest?.format === "button" && (isOnlyButton || isFormActionButton(i)))}
                   toggleResetKey={toggleResetKey}
                   fields={c}
                   isTemplate={currentCard?.type === "template"}
@@ -455,9 +483,41 @@ function NewAppFieldScreenWrapper({viewMode}) {
 
         return (
           <Fragment key={`card-${index}`}>
+            {/* Each pass walks the whole list and renders only the rows belonging to its section.
+                The index has to stay the one the field holds in the list, since that is what an
+                edit is written back by, so the rows are picked out here rather than beforehand. */}
             {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) ? null : renderFieldRow(fieldEntry, i, c)))}
+
+            {/* Adding a field adds one to the list above, so it stays with that list rather than
+                sitting under the popup and button sections that follow */}
+            {currentCard?.type !== "template" && !viewMode && (
+              <Button
+                className={"app-config-drawer-button add-field"}
+                type={"button"}
+                size={"medium"}
+                icon={"AddIcon"}
+                variation="secondary"
+                label={t(I18N_KEYS.APP_CONFIGURATION.ADD_FIELD)}
+                title={t(I18N_KEYS.APP_CONFIGURATION.ADD_FIELD)}
+                onClick={() => handleAddField(currentCard, card[index])}
+                id={"app-config-screen-add-field-button"}
+              />
+            )}
+
+            {/* A popup is set up on the screen but opened by a button, so it is listed on its own */}
+            {popupFields.length > 0 && (
+              <>
+                <Divider className="app-config-drawer-action-divider" />
+                <div className="app-config-drawer-subheader">
+                  <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_POPUPS)}</div>
+                  <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_POPUPS)} />
+                </div>
+              </>
+            )}
+            {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) && isPopupRow(fieldEntry) ? renderFieldRow(fieldEntry, i, c) : null))}
+
             {/* Body/template buttons get their own section, consistent with pages whose buttons live in the footer */}
-            {buttonFields.length > 0 && (
+            {actionButtonFields.length > 0 && (
               <>
                 <Divider className="app-config-drawer-action-divider" />
                 <div className="app-config-drawer-subheader">
@@ -466,18 +526,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
                 </div>
               </>
             )}
-            {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) ? renderFieldRow(fieldEntry, i, c) : null))}
-            {currentCard?.type !== "template" && !viewMode && (<Button
-              className={"app-config-drawer-button add-field"}
-              type={"button"}
-              size={"medium"}
-              icon={"AddIcon"}
-              variation="secondary"
-              label={t(I18N_KEYS.APP_CONFIGURATION.ADD_FIELD)}
-              title={t(I18N_KEYS.APP_CONFIGURATION.ADD_FIELD)}
-              onClick={() => handleAddField(currentCard, card[index])}
-              id={"app-config-screen-add-field-button"}
-            />)}
+            {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) && !isPopupRow(fieldEntry) ? renderFieldRow(fieldEntry, i, c) : null))}
           </Fragment>
         );
       })}
@@ -526,6 +575,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
         <Switch
           className={"app-config-drawer-subheader"}
           isLabelFirst={true}
+          ariaLabel={t(I18N_KEYS.APP_CONFIGURATION.PREVENT_SCREEN_CAPTURE)}
           isCheckedInitially={currentCard?.preventScreenCapture || false}
           onToggle={handleTogglePreventScreenCapture}
           disable={viewMode}

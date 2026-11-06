@@ -1,13 +1,23 @@
 import React, { Fragment, useMemo, useState, useCallback, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
-import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons, Loader,HeaderComponent } from "@egovernments/digit-ui-components";
-import { updateSelectedField } from "./redux/remoteConfigSlice";
+import { AlertCard, FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons, Loader,HeaderComponent,Card,SVG } from "@egovernments/digit-ui-components";
+import { updateSelectedField, hideField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
-import { useCustomT } from "./hooks/useCustomT";
-import { getFieldTypeFromMasterData, getFieldValueByPath, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData } from "./helpers";
+import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
+import {
+  getFieldTypeFromMasterData,
+  getFieldValueByPath,
+  getFieldTypeFromMasterData2,
+  getFieldTypeOptionFromMasterData,
+  isPanelItemEnabledForField,
+  toSentenceCase,
+  withoutEmojis,
+  isOutsideLimits,
+  evaluateGroupExpression,
+} from "./helpers";
 import { TextInput, Button } from "@egovernments/digit-ui-components";
-import { DustbinIcon } from "../../../components/icons/DustbinIcon";
+import { activateOnKey } from "../../../utils";
 import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
 import { getLabelFieldPairConfig } from "./redux/labelFieldPairSlice";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
@@ -443,13 +453,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         }
       }
     } else if (panelItem.fieldType === "number") {
-      // Number: clamp min on blur (allows incremental typing in onChange)
-      let numValue = currentLocalValue === "" || currentLocalValue === null || currentLocalValue === undefined ? null : currentLocalValue;
-      if (numValue !== null && panelItem.min !== undefined && numValue < panelItem.min) {
-        numValue = panelItem.min;
-        setLocalValue(numValue);
-        localValueRef.current = numValue;
-      }
+      // Number: whatever was typed is kept, including a value outside the limits. The error
+      // under the box says so and the save reports it, rather than the entry being rewritten.
+      const numValue = currentLocalValue === "" || currentLocalValue === null || currentLocalValue === undefined ? null : currentLocalValue;
       if (bindTo.includes(".")) {
         const keys = bindTo.split(".");
         const newField = structuredClone(currentSelectedField);
@@ -470,7 +476,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     panelItem?.isLocalisable,
     panelItem.bindTo,
     panelItem.defaultValue,
-    panelItem.min,
     dispatch,
     currentLocale,
     onFieldChange,
@@ -569,6 +574,21 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
           onFieldChange(updatedField);
         };
+        // Where options come from is an either/or choice, not an on/off state,
+        // so this property replaces the switch entirely rather than sitting
+        // under one.
+        if (bindTo === "isMdms") {
+          return (
+            <OptionsSourceField
+              key={`${selectedField?.id || selectedField?.key || selectedField?.label || selectedField?.fieldName || ""}-optionsSource`}
+              panelItem={panelItem}
+              selectedField={selectedField}
+              onFieldChange={onFieldChange}
+              viewMode={viewMode}
+            />
+          );
+        }
+
         return (
           <>
             <div id={`digit-sidepanel-switch-wrap-${panelItem.label}`}>
@@ -582,20 +602,34 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 className={"digit-sidepanel-switch-wrap sidepanel"}
               />
             </div>
-            {/* Render Conditional Fields based on condition property */}
-            {getConditionalFields().map((cField, index) => (
-              <ConditionalField
-                // Key by the selected field too: without it the input survives
-                // switching fields, so its stale local value and pending
-                // debounced write land on the newly selected field. Fall back to
-                // key/label before fieldName — checklist siblings share a fieldName.
-                key={`${selectedField?.id ?? selectedField?.key ?? selectedField?.label ?? selectedField?.fieldName ?? ""}-${cField.bindTo}-${index}`}
-                cField={cField}
-                selectedField={selectedField}
-                onFieldChange={onFieldChange}
-                viewMode={viewMode}
-              />
-            ))}
+            {/* The country code prefix offers a choice of editors rather than a
+                single input, so it renders its own control in place of the
+                generic conditional field list. Visibility follows the toggle
+                directly: the master's per-field condition flag is not consulted,
+                because that control replaces the fields it would apply to. */}
+            {panelItem.bindTo === "showCountryCodeDropdown"
+              ? localToggle && (
+                  <CountryCodePrefixField
+                    key={`${selectedField?.id || selectedField?.key || selectedField?.label || selectedField?.fieldName || ""}-countryCodePrefix`}
+                    panelItem={panelItem}
+                    selectedField={selectedField}
+                    onFieldChange={onFieldChange}
+                    viewMode={viewMode}
+                  />
+                )
+              : getConditionalFields().map((cField, index) => (
+                  <ConditionalField
+                    // Key by the selected field too: without it the input survives
+                    // switching fields, so its stale local value and pending
+                    // debounced write land on the newly selected field. Fall back to
+                    // key/label before fieldName — checklist siblings share a fieldName.
+                    key={`${selectedField?.id ?? selectedField?.key ?? selectedField?.label ?? selectedField?.fieldName ?? ""}-${cField.bindTo}-${index}`}
+                    cField={cField}
+                    selectedField={selectedField}
+                    onFieldChange={onFieldChange}
+                    viewMode={viewMode}
+                  />
+                ))}
           </>
         );
       }
@@ -618,6 +652,12 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               isEditingRef.current = true;
               let newValue = event.target.value;
               if (maxLength && newValue.length > maxLength) return;
+              // Capitalise a label as it is typed, so it reads the same as one written when the
+              // field was first added. Done here rather than when the user leaves the box because
+              // this input is not given a blur handler.
+              if (panelItem.bindTo === "label") {
+                newValue = toSentenceCase(newValue);
+              }
               setLocalValue(newValue);
               localValueRef.current = newValue;
               // If isLocalisable is false, save directly without localization
@@ -649,9 +689,17 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const configMax = panelItem.max !== undefined ? panelItem.max : undefined;
         const preventNegative = configMin !== undefined && configMin >= 0;
 
+        // The property's own hint, replaced by its own message while the entry is outside
+        // the limits it sets in the master. Both texts come from the master, so a property
+        // that configures neither shows neither.
+        const limitsHint = panelItem.description || "";
+        const rangeError = isOutsideLimits(localValue, panelItem.min, panelItem.max) ? panelItem.validationMessage || "" : "";
+
         return (
           <FieldV1
             type="number"
+            description={limitsHint}
+            error={rangeError}
             label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             value={localValue}
             onChange={(event) => {
@@ -676,14 +724,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 return;
               }
 
-              let value = parseInt(inputValue, 10);
+              const value = parseInt(inputValue, 10);
               // Only set if it's a valid number
               if (!isNaN(value)) {
-                // Only clamp max on change (prevents exceeding maximum)
-                // Min is enforced on blur to allow incremental typing (e.g., typing "2" then "0" for 20)
-                if (configMax !== undefined && value > configMax) {
-                  value = configMax;
-                }
+                // Kept as typed, even outside the limits - the error below the box says so
                 setLocalValue(value);
                 localValueRef.current = value;
                 handleNumberChange(value);
@@ -769,54 +813,56 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
       case "group": {
         // Evaluate validation expression
-        const evaluateValidation = () => {
-          if (!panelItem.validationExpression) {
-            return true;
+        // Shared with the save check, so what shows in red here is what stops the save
+        const isValid = evaluateGroupExpression(selectedField, panelItem.validationExpression);
+
+        // A group can be switched on and off like any single property, by giving it a bindTo
+        // and showFieldOnToggle in the master. Its children then appear only while it is on,
+        // the same as a toggle's conditional fields. A group that declares neither keeps its
+        // plain heading and always shows its children, exactly as before.
+        // Until the switch is touched the group falls back to its defaultValue, so the master
+        // decides whether it starts on or off - the same fallback every other property uses.
+        const hasGroupToggle = Boolean(panelItem.showFieldOnToggle && panelItem.bindTo);
+        const isGroupOn = hasGroupToggle
+          ? Boolean(getFieldValueByPath(selectedField, panelItem.bindTo, panelItem.defaultValue || ""))
+          : true;
+
+        const handleGroupToggle = (value) => {
+          const newToggleValue = Boolean(value);
+          const keys = panelItem.bindTo.split(".");
+          const updatedField = structuredClone(selectedField);
+          let current = updatedField;
+          for (let i = 0; i < keys.length - 1; i++) {
+            if (!current[keys[i]] || typeof current[keys[i]] !== "object") current[keys[i]] = {};
+            current = current[keys[i]];
           }
-
-          try {
-            const expression = panelItem.validationExpression;
-            // Create a plain object copy to avoid "object is not extensible" errors
-            // This allows expressions to reference properties directly (e.g., "range.max > range.min")
-            const plainFieldCopy = structuredClone(selectedField);
-
-            // Extract field paths from expression (e.g., "lengthRange.minLength", "lengthRange.maxLength")
-            const fieldPaths = expression.match(/[\w.]+/g)?.filter((p) => p.includes(".")) || [];
-
-            // Helper to get nested value from path like "lengthRange.minLength"
-            const getNestedValue = (obj, path) => path.split(".").reduce((acc, key) => acc?.[key], obj);
-
-            // Check if ALL fields in expression have non-empty values - if any is empty, skip validation
-            const allFieldsFilled = fieldPaths.every((path) => {
-              const value = getNestedValue(plainFieldCopy, path);
-              return value !== null && value !== undefined && value !== "";
-            });
-            if (!allFieldsFilled) return true;
-
-            // Get all property names and values from the plain copy
-            // Replace dots in property names with underscores to make them valid JS parameter names
-            const paramNames = Object.keys(plainFieldCopy).map((key) => key.replace(/\./g, "_"));
-            const paramValues = Object.values(plainFieldCopy);
-            // Create function with all property names as parameters
-            const func = new Function(...paramNames, `return ${expression}`);
-            const result = func(...paramValues);
-            return result;
-          } catch (error) {
-            console.error("Validation expression error:", error);
-            return true; // Return true on error to avoid blocking
-          }
+          current[keys[keys.length - 1]] = newToggleValue;
+          onFieldChange(updatedField);
         };
 
-        const isValid = evaluateValidation();
         // Render group with children
         return (
           <>
-            <div
-              className={"app-config-group-heading"}
-            >
-              {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            {hasGroupToggle ? (
+              <div id={`digit-sidepanel-switch-wrap-${panelItem.label}`}>
+                <Switch
+                  label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
+                  onToggle={handleGroupToggle}
+                  isCheckedInitially={isGroupOn}
+                  shapeOnOff
+                  disable={viewMode}
+                  isLabelFirst={true}
+                  className={"digit-sidepanel-switch-wrap sidepanel"}
+                />
+              </div>
+            ) : (
+              <div
+                className={"app-config-group-heading"}
+              >
+                {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
+              </div>
+            )}
+            <div style={{ display: isGroupOn ? "flex" : "none", flexDirection: "column", gap: "8px" }}>
               {panelItem.children?.map((childItem, index) => (
                 <RenderField
                   key={`${childItem.id}-${index}`}
@@ -829,8 +875,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 />
               ))}
             </div>
-            {/* Show validation message if validation fails */}
-            {panelItem.validationMessage && !isValid && (
+            {/* Show validation message if validation fails, but not while the group is off */}
+            {isGroupOn && panelItem.validationMessage && !isValid && (
               <div
                 style={{
                   marginTop: "8px",
@@ -978,15 +1024,33 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const isEnabledForModuleAndPage = (modules = [], module, page) =>
           modules.some((m) => m?.[module]?.enabledPages?.includes(page));
 
+        /**
+         * Whether a label field belongs on the page currently being configured.
+         *
+         * A field normally names the flows it serves itself. An entity can also be shared by
+         * several flows that reuse the same page, and declares those flows on the entity rather
+         * than repeating them on every one of its fields. Reading only the field level hid every
+         * field of a shared entity from the flows that were declared that way, leaving the
+         * selector with nothing to offer.
+         *
+         * The entity-level route is a fallback, and still requires the page to match, so a field
+         * can only appear on a page some flow of that entity already enables it for.
+         */
+        const isFieldEnabled = (entity, field) => {
+          const module = currentData?.module;
+          const page = currentData?.page;
+
+          if (isEnabledForModuleAndPage(field?.modules, module, page)) return true;
+
+          const entityModules = Array.isArray(entity?.modules) ? entity.modules : [];
+          if (!entityModules.includes(module)) return false;
+
+          return entityModules.some((entityModule) => isEnabledForModuleAndPage(field?.modules, entityModule, page));
+        };
+
         const labelPairConfig = allLabelPairConfig
           .map((entity) => {
-            const labelFields = (entity.labelFields || []).filter((field) =>
-              isEnabledForModuleAndPage(
-                field.modules,
-                currentData?.module,
-                currentData?.page
-              )
-            );
+            const labelFields = (entity.labelFields || []).filter((field) => isFieldEnabled(entity, field));
 
             return labelFields.length
               ? { ...entity, labelFields }
@@ -1086,6 +1150,13 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                   });
                 }}
                 onClose={(selectedArray) => {
+                  // Nothing to choose from means the options could not be resolved - a flow the
+                  // config does not cover, or a failed fetch. That is not the user clearing the
+                  // selection, and writing the empty result back would erase the saved label
+                  // pairs simply because the field was opened. Individual removal still goes
+                  // through onChipClose, which is unaffected.
+                  if (nestedOptions.length === 0) return;
+
                   const extractedOptions =
                     selectedArray?.map((arr) => arr?.[1]) || [];
                   const mappedData = extractedOptions
@@ -1212,6 +1283,20 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           </>
         );
       }
+      // A note about the selected field, for behaviour the panel cannot show as a control.
+      // Read only: it has no bindTo and never writes anything to the field.
+      case "infoCard":
+        return (
+          <AlertCard
+            populators={{ name: "infocard" }}
+            variant="default"
+            className="cmn-help-info-card"
+            label={panelItem?.label ? t(panelItem.label) : ""}
+            text={panelItem?.description ? t(panelItem.description) : ""}
+            style={{ margin: "0rem", width: "100%", maxWidth: "100%" }}
+          />
+        );
+
       default:
         return null;
     }
@@ -1287,6 +1372,7 @@ const LocalizationInput = React.memo(
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <Switch
                 label=""
+                ariaLabel={typeof label === "string" ? label : undefined}
                 onToggle={handleToggle}
                 disable={viewMode || isLastVisible}
                 isCheckedInitially={toggleState}
@@ -1331,7 +1417,7 @@ const LocalizationInput = React.memo(
 );
 
 // Separate component for option items to avoid hooks violations
-const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onDelete, viewMode }) => {
+const OptionItem = React.memo(({ item, index, canDelete, cField, selectedField, onFieldChange, onDelete, viewMode }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
@@ -1340,7 +1426,7 @@ const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onD
   const translatedOptionValue = useCustomT(item.name);
 
   const handleChange = (e) => {
-    const newValue = e.target.value;
+    const newValue = withoutEmojis(e.target.value);
 
     // Handle localization for the option name
     let localizationCode = item.name;
@@ -1373,30 +1459,43 @@ const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onD
       return;
     }
 
-    // Update the option with the localization code
-    const updated = (selectedField[cField.bindTo] || []).map((i) => (i.code === item.code ? { ...i, name: localizationCode } : i));
+    // The first row is rendered before it exists in the data, so typing into it
+    // has to append rather than map - otherwise the value would be dropped.
+    const current = selectedField[cField.bindTo] || [];
+    const updated = current.some((i) => i.code === item.code)
+      ? current.map((i) => (i.code === item.code ? { ...i, name: localizationCode } : i))
+      : [...current, { ...item, name: localizationCode }];
     onFieldChange({ ...selectedField, [cField.bindTo]: updated });
   };
 
   return (
-    <div style={{ display: "flex", gap: "1rem" }}>
-      <TextInput type="text" value={translatedOptionValue || ""} placeholder={t(I18N_KEYS.APP_CONFIGURATION.OPTION_PLACEHOLDER)} onChange={handleChange} disabled={viewMode} />
-      {!viewMode && (<div
-        onClick={onDelete}
-        style={{
-          cursor: "pointer",
-          fontWeight: "600",
-          marginLeft: "1rem",
-          fontSize: "1rem",
-          color: "#c84c0e",
-          display: "flex",
-          gap: "0.5rem",
-          alignItems: "center",
-          marginTop: "1rem",
-        }}
-      >
-        <DustbinIcon />
-      </div>)}
+    <div className="app-config-option-item">
+      <div className="app-config-option-item-label">{`${t(
+        I18N_KEYS.APP_CONFIGURATION.APPCONFIG_OPTION_LABEL,
+      )} ${index + 1}`}</div>
+      <div style={{ display: "flex", gap: "0.5rem",alignItems:"center",justifyContent:"center" }}>
+        <TextInput
+          type="text"
+          value={translatedOptionValue || ""}
+          placeholder={t(I18N_KEYS.APP_CONFIGURATION.OPTION_PLACEHOLDER)}
+          onChange={handleChange}
+          disabled={viewMode}
+        />
+        {/* Named after the row it removes, so a screen reader announces which option goes.
+            role + tabIndex + Enter/Space is the same treatment the field rows in the panel get. */}
+        {!viewMode && canDelete && (
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label={`${t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_DELETE_OPTION)} ${index + 1}`}
+            style={{ cursor: "pointer" }}
+            onKeyDown={activateOnKey}
+            onClick={onDelete}
+          >
+            <SVG.DeleteOutline />
+          </div>
+        )}
+      </div>
     </div>
   );
 });
@@ -1404,6 +1503,9 @@ const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onD
 // Separate component for conditional fields to avoid hooks violations
 const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, viewMode }) => {
   const { t } = useTranslation();
+  // The manual editor always offers a first row, even before any option exists.
+  // Its identity must survive re-renders or typing would restart each keystroke.
+  const placeholderOption = useMemo(() => ({ code: crypto.randomUUID(), name: "" }), []);
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
 
@@ -1533,16 +1635,6 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
     const currentSelectedField = selectedFieldRef.current;
     const currentFieldValue = fieldValueRef.current;
 
-    // Clamp min on blur for number conditional fields (allows incremental typing in onChange)
-    if (cField.type === "number" && currentLocalValue !== "" && currentLocalValue !== null && currentLocalValue !== undefined) {
-      const numVal = parseInt(currentLocalValue, 10);
-      if (!isNaN(numVal) && cField.min !== undefined && numVal < cField.min) {
-        const clampedValue = String(cField.min);
-        setConditionalLocalValue(clampedValue);
-        localValueRef.current = clampedValue;
-      }
-    }
-
     // Immediately dispatch the current value with localization handling
     let finalValueToSave;
 
@@ -1579,7 +1671,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
     newField[cField.bindTo] = finalValueToSave;
     onFieldChange(newField);
     isEditingRef.current = false;
-  }, [cField.bindTo, cField.type, cField.min, onFieldChange, dispatch, currentLocale, shouldSkipLocalization]);
+  }, [cField.bindTo, cField.type, onFieldChange, dispatch, currentLocale, shouldSkipLocalization]);
 
   // Check if this is a prefix field for mobileNumber : should only accept numbers
   const isMobileNumberPrefix = selectedField?.format === "mobileNumber" && cField.bindTo === "prefixText";
@@ -1592,6 +1684,12 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
   // Read min/max from config for number conditional fields
   const cFieldMin = cField.min;
   const cFieldMax = cField.max;
+  // The field's own hint, replaced by its own message while the entry is outside the limits
+  // it sets in the master. Both texts come from the master, so a field that configures
+  // neither shows neither.
+  const cFieldLimitsHint = cField.type === "number" ? cField.description || "" : "";
+  const cFieldRangeError =
+    cField.type === "number" && isOutsideLimits(conditionalLocalValue, cFieldMin, cFieldMax) ? cField.validationMessage || "" : "";
 
   switch (cField.type) {
     case "text":
@@ -1602,6 +1700,8 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
           <FieldV1
             type={isMobileNumberPrefix ? "text" : cField.type}
             label={cField.label ? t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${cField.label}`)) : null}
+            description={cFieldLimitsHint}
+            error={cFieldRangeError}
             value={conditionalLocalValue}
             disabled={viewMode}
             onChange={(event) => {
@@ -1629,17 +1729,6 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
                 return;
               }
 
-              // Enforce max on change for number conditional fields
-              // Min is enforced on blur to allow incremental typing (e.g., typing "2" then "0" for 20)
-              if (cField.type === "number" && newValue !== "" && newValue !== null && newValue !== undefined) {
-                const numVal = parseInt(newValue, 10);
-                if (!isNaN(numVal)) {
-                  if (cFieldMax !== undefined && numVal > cFieldMax) {
-                    newValue = String(cFieldMax);
-                  }
-                }
-              }
-
               isEditingRef.current = true;
               setConditionalLocalValue(newValue);
               localValueRef.current = newValue;
@@ -1662,20 +1751,17 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
       );
     case "options":
       return (
-        <div
-          style={{
-            padding: "1.5rem",
-            border: "1px solid #c84c0e",
-            borderRadius: "1rem",
-            display: "flex",
-            flexDirection: "column",
-            gap: "1.5rem",
-          }}
-        >
-          {(selectedField[cField.bindTo] || [])?.map((item, index) => (
+        // Framing lives in CSS so that nesting this editor inside an options
+        // source card can drop the duplicate border.
+        <div className="app-config-options-editor">
+          {(((selectedField[cField.bindTo] || []).length ? selectedField[cField.bindTo] : [placeholderOption]) || [])?.map((item, index) => (
             <OptionItem
               key={item?.code || index}
               item={item}
+              index={index}
+              // The last option cannot be removed - a field with no options at
+              // all is not a valid state to leave the configurer in.
+              canDelete={(selectedField[cField.bindTo] || []).length > 1}
               cField={cField}
               selectedField={selectedField}
               onFieldChange={onFieldChange}
@@ -1690,17 +1776,19 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
           {!viewMode && (<Button
             type="button"
             icon="AddIcon"
-            size="small"
-            variation="tertiary"
+            size="medium"
+            variation="secondary"
             label={t(I18N_KEYS.APP_CONFIGURATION.ADD_OPTIONS_SIDEPANEL)}
             title={t(I18N_KEYS.APP_CONFIGURATION.ADD_OPTIONS_SIDEPANEL)}
             className={`app-config-add-option-button`}
-            style={{ color: "#c84c0e", height: "1.5rem", width: "fit-content" }}
-            textStyles={{ color: "#c84c0e", fontSize: "0.875rem" }}
+            style={{width:"100%"}}
             onClick={() => {
-              const newOption = { code: crypto.randomUUID(), name: "" };
-              const updated = selectedField[cField.bindTo] ? [...selectedField[cField.bindTo], newOption] : [newOption];
-              onFieldChange({ ...selectedField, [cField.bindTo]: updated });
+              const current = selectedField[cField.bindTo] || [];
+              // The first row is on screen before it exists in the data, so adding
+              // has to materialise it as well - appending to the data alone would
+              // make the new row take the place of the one already shown.
+              const base = current.length ? current : [placeholderOption];
+              onFieldChange({ ...selectedField, [cField.bindTo]: [...base, { code: crypto.randomUUID(), name: "" }] });
             }}
           />)}
         </div>
@@ -1751,6 +1839,180 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
   }
 });
 
+// `mode` is the stored value and the one the preview reads; `code` is only the
+// localisation key for the label. Keeping them separate means renaming a label
+// cannot quietly change stored behaviour.
+const COUNTRY_CODE_MODES = [
+  { mode: "FIXED", code: "APPCONFIG_FIXED_COUNTRY_CODE" },
+  { mode: "DYNAMIC", code: "APPCONFIG_DYNAMIC_COUNTRY_CODE" },
+];
+
+// Editor for a mobile number field's country code prefix.
+//
+// Both modes write the same prefixText and differ only in how it is entered:
+// Fixed picks from the country list, Dynamic accepts any typed string. Neither
+// the mode nor showCountryCodeDropdown survives the config transforms, so a
+// reopened configuration re-derives the mode from prefixText alone.
+const CountryCodePrefixField = React.memo(({ panelItem, selectedField, onFieldChange, viewMode }) => {
+  const { t } = useTranslation();
+  const [modeOverride, setModeOverride] = useState(null);
+  const prefixText = selectedField?.prefixText || "";
+  const stateId = Digit.ULBService.getStateId();
+
+  // Read from the same master the preview's own picker uses, so the panel can
+  // never offer a code the preview is unable to render.
+  const { data: countries, isLoading } = Digit.Hooks.useCustomMDMS(
+    stateId,
+    "common-masters",
+    [{ name: "CountryCodes" }],
+    {
+      select: (data) =>
+        (data?.["common-masters"]?.["CountryCodes"] || [])
+          .filter((country) => !country.hasOwnProperty("active") || country.active)
+          .map((country) => ({ ...country, displayLabel: `${country.dialCode} ${country.name}` })),
+      enabled: Boolean(stateId),
+      staleTime: 300000,
+    }
+  );
+
+  const matchedCountry = (countries || []).find((country) => country.dialCode === prefixText) || null;
+  // Assume Fixed unless there is positive evidence otherwise: only a code that
+  // is present yet missing from the list can have been typed by hand. An empty
+  // code, or a list that has not loaded yet, proves nothing either way.
+  const looksFixed = !prefixText || isLoading || !countries?.length || Boolean(matchedCountry);
+  const mode = modeOverride || selectedField?.countryCodeMode || (looksFixed ? "FIXED" : "DYNAMIC");
+
+  // What each mode last held. Both modes write the same prefixText, so without this a country
+  // picked under Fixed would show up already typed into Dynamic. Kept only while the panel is
+  // open: a saved field stores prefixText alone, and its mode is worked out from that on reopen.
+  const lastValueByMode = useRef({ FIXED: "", DYNAMIC: "" });
+
+  // The mode is stored separately from showCountryCodeDropdown because that
+  // flag also signals that the toggle itself is on. Reusing it would switch the
+  // whole toggle off as soon as the prefix box was cleared in Dynamic mode.
+  const selectMode = (option) => {
+    const nextMode = option?.mode;
+    // Picking the mode already in use changes nothing, and swapping values would discard what
+    // the user has just entered.
+    if (!nextMode || nextMode === mode) return;
+
+    // Put the current value aside and bring back whatever the mode being opened last held,
+    // which is nothing until that mode has been used.
+    lastValueByMode.current[mode] = prefixText;
+    setModeOverride(nextMode);
+    onFieldChange({
+      ...selectedField,
+      countryCodeMode: nextMode,
+      showCountryCodeDropdown: true,
+      prefixText: lastValueByMode.current[nextMode] || "",
+    });
+  };
+
+  // Reuse the master's own text config so the prefix input keeps the
+  // constraints already defined for it rather than duplicating them here.
+  const dynamicField = panelItem?.conditionalField?.[0];
+
+  return (
+    <>
+      <RadioButtons
+        options={COUNTRY_CODE_MODES}
+        additionalWrapperClass="app-config-radio"
+        selectedOption={COUNTRY_CODE_MODES.find((option) => option.mode === mode)}
+        onSelect={selectMode}
+        optionsKey="code"
+        disabled={viewMode}
+      />
+      {mode === "FIXED" ? (
+        <div className="drawer-container-tooltip" style={{ marginTop: "8px" }}>
+          <FieldV1
+            type="dropdown"
+            label={t("APPCONFIG_CHOOSE_FIXED_COUNTRY_CODE")}
+            value={matchedCountry}
+            onChange={(country) =>
+              onFieldChange({
+                ...selectedField,
+                prefixText: country?.dialCode || "",
+                countryCodeMode: "FIXED",
+                showCountryCodeDropdown: true,
+              })
+            }
+            disabled={viewMode || isLoading}
+            populators={{
+              options: countries || [],
+              optionsKey: "displayLabel",
+              fieldPairClassName: "drawer-toggle-conditional-field",
+              disablePortal: true,
+              optionsCustomStyle: { maxHeight: "10vh" },
+            }}
+          />
+        </div>
+      ) : (
+        dynamicField && (
+          <ConditionalField cField={dynamicField} selectedField={selectedField} onFieldChange={onFieldChange} viewMode={viewMode} />
+        )
+      )}
+    </>
+  );
+});
+
+// Where a field's options come from. isMdms already models exactly this choice,
+// so the radio only moves the decision into the open - nothing new is stored.
+const OPTION_SOURCE_MODES = [
+  { mode: "EXISTING", code: "APPCONFIG_PULL_FROM_EXISTING_DATA" },
+  { mode: "MANUAL", code: "APPCONFIG_ENTER_OPTIONS_MANUALLY" },
+];
+
+// Picks the source of a dropdown/select/radio field's options. The two editors
+// come from the panel master's own conditionalField entries, keyed on the
+// condition flag, so the schema list and the manual rows stay master-driven.
+const OptionsSourceField = React.memo(({ panelItem, selectedField, onFieldChange, viewMode }) => {
+  const { t } = useTranslation();
+  const isExisting = Boolean(selectedField?.isMdms);
+  const editors = Array.isArray(panelItem?.conditionalField) ? panelItem.conditionalField : [];
+  const activeEditor = editors.find((editor) => Boolean(editor?.condition) === isExisting);
+
+  // Both cards belong to one radio group, so the group name has to be unique per
+  // field - otherwise two fields' panels would share a selection.
+  const groupName = `optionsSource-${selectedField?.id || selectedField?.key || selectedField?.fieldName || panelItem?.label}`;
+
+  // Only the mode is written. Whatever the other mode held is left untouched, so
+  // switching back and forth does not discard a schema choice or typed options.
+  const selectMode = (option) => {
+    onFieldChange({ ...selectedField, isMdms: option?.mode === "EXISTING" });
+  };
+
+  return (
+    <div className="app-config-options-source">
+      {/* The section keeps its heading; only the on/off control is replaced,
+          so the master's existing label still names this group. */}
+      <div className="app-config-options-source-label digit-switch-label">
+        {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
+      </div>
+      {OPTION_SOURCE_MODES.map((option) => {
+        const isSelected = option.mode === (isExisting ? "EXISTING" : "MANUAL");
+        return (
+          <Card key={option.mode} className={`app-config-options-source-card${isSelected ? " selected" : ""}`}>
+            <RadioButtons
+              options={[option]}
+              name={groupName}
+              additionalWrapperClass="app-config-radio"
+              selectedOption={isSelected ? option : null}
+              onSelect={() => selectMode(option)}
+              optionsKey="code"
+              disabled={viewMode}
+            />
+            {/* The editor belongs to the choice, so it renders inside that card
+                rather than below both. */}
+            {isSelected && activeEditor && (
+              <ConditionalField cField={activeEditor} selectedField={selectedField} onFieldChange={onFieldChange} viewMode={viewMode} />
+            )}
+          </Card>
+        );
+      })}
+    </div>
+  );
+});
+
 // Simple tabs component - exported for use in SidePanelApp header
 export const Tabs = React.memo(({ tabs, activeTab, onTabChange }) => {
   const { t } = useTranslation();
@@ -1766,11 +2028,60 @@ export const Tabs = React.memo(({ tabs, activeTab, onTabChange }) => {
   );
 });
 
+// The parts of a group that get their own switch, e.g. the Female and Male cards.
+//
+// Only children that are containers themselves count. A count and the label explaining it are
+// one thing, so listing them here would hand back the separate switches grouping removed.
+const getGroupChildren = (field) => {
+  const branch = field?.children || field?.child;
+  if (!branch) return [];
+  return (Array.isArray(branch) ? branch : [branch]).filter(
+    (child) => child && typeof child === "object" && child.fieldName && (child.children || child.child)
+  );
+};
+
+// Look a node up in the live page. `selectedField` is a copy taken when the row was clicked,
+// so a switch reading from it would still show the old state after the first toggle.
+const findTemplateNode = (node, fieldName, role, key) => {
+  if (!node || !fieldName) return null;
+
+  if (Array.isArray(node)) {
+    for (const item of node) {
+      const found = findTemplateNode(item, fieldName, role, key);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  if (typeof node !== "object") return null;
+
+  if (
+    node.fieldName === fieldName &&
+    (key === undefined || node.key === undefined || node.key === key) &&
+    (!role || node.role === role)
+  ) {
+    return node;
+  }
+
+  for (const branch of [node.children, node.child, node.primaryAction, node.secondaryAction]) {
+    if (!branch) continue;
+    const found = findTemplateNode(branch, fieldName, role, key);
+    if (found) return found;
+  }
+  return null;
+};
+
 function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   // Get data from Redux
-  const { selectedField } = useSelector((state) => state.remoteConfig);
+  const { selectedField, selectedFieldPath, currentData } = useSelector((state) => state.remoteConfig);
+  const customTranslate = useCustomTranslate();
+  // The switchable parts of a grouped element (see getGroupChildren above)
+  const groupChildren = useMemo(
+    () => (selectedField?.groupAsSingleElement === true ? getGroupChildren(selectedField) : []),
+    [selectedField]
+  );
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
   const { byName: panelProperties } = useSelector((state) => state.fieldPanelMaster);
   // State to track validation errors
@@ -1795,6 +2106,11 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
   // Filter properties based on field type visibility
   const visibleTabProperties = useMemo(() => {
     return currentTabProperties.filter((panelItem) => {
+      // Skip properties the config has scoped to other fields by name
+      if (!isPanelItemEnabledForField(panelItem, selectedField?.fieldName)) {
+        return false;
+      }
+
       // If visibilityEnabledFor is empty, the field is always visible
       if (!panelItem?.visibilityEnabledFor || panelItem.visibilityEnabledFor.length === 0) {
         return true;
@@ -1802,7 +2118,7 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
       // Check if current field type matches any of the enabled types
       return panelItem.visibilityEnabledFor.includes(fieldType) && panelItem?.isPopupProperty !== true;
     });
-  }, [currentTabProperties, fieldType]);
+  }, [currentTabProperties, fieldType, selectedField?.fieldName]);
 
   // Function to collect validation errors for the selected field (group validations only)
   // Note: Mandatory conditional field validation is now handled in AppConfigurationWrapper for ALL fields
@@ -1822,39 +2138,21 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
 
         if (!isVisible) return;
 
+        // A property that is not shown for this field is not validated for it either, so hiding
+        // one can never raise an error with no control on screen to clear it
+        if (!isPanelItemEnabledForField(panelItem, selectedField?.fieldName)) return;
+
         // Check group fields with validation expressions
         if (panelItem.fieldType === "group" && panelItem.validationExpression) {
-          try {
-            const expression = panelItem.validationExpression;
-            const plainFieldCopy = structuredClone(selectedField);
-
-            // Extract field paths from expression (e.g., "lengthRange.minLength", "lengthRange.maxLength")
-            const fieldPaths = expression.match(/[\w.]+/g)?.filter((p) => p.includes(".")) || [];
-
-            // Helper to get nested value from path like "lengthRange.minLength"
-            const getNestedValue = (obj, path) => path.split(".").reduce((acc, key) => acc?.[key], obj);
-
-            // Check if ALL fields in expression have non-empty values - if any is empty, skip validation
-            const allFieldsFilled = fieldPaths.every((path) => {
-              const value = getNestedValue(plainFieldCopy, path);
-              return value !== null && value !== undefined && value !== "";
+          // The same helper the panel uses, so a rule shown in red there is the one that stops the
+          // save. It returns true for a half-filled group and for an expression that throws, which
+          // is what the copy that used to live here did by skipping the error push in those cases.
+          if (!evaluateGroupExpression(selectedField, panelItem.validationExpression)) {
+            errors.push({
+              fieldLabel: panelItem.label,
+              message: panelItem.validationMessage,
+              tab: tabKey,
             });
-            if (!allFieldsFilled) return;
-
-            const paramNames = Object.keys(plainFieldCopy).map((key) => key.replace(/\./g, "_"));
-            const paramValues = Object.values(plainFieldCopy);
-            const func = new Function(...paramNames, `return ${expression}`);
-            const result = func(...paramValues);
-
-            if (!result) {
-              errors.push({
-                fieldLabel: panelItem.label,
-                message: panelItem.validationMessage,
-                tab: tabKey,
-              });
-            }
-          } catch (error) {
-            console.error("Validation expression error:", error);
           }
         }
       });
@@ -1948,7 +2246,7 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
 
       {/* Field Properties */}
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        {visibleTabProperties.map((panelItem) => {
+        {visibleTabProperties.map((panelItem, panelItemIndex) => {
           const bindTo = panelItem?.bindTo || "";
 
           // If bindTo has ".", take the first part (parent key), otherwise use the whole bindTo
@@ -1969,21 +2267,82 @@ function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
               selectedField?.[parentKey] === undefined
             ) // hide if missing
           );
-          return shouldShowToggle ? (
-            // Keyed by the selected field too — see ConditionalField key note.
-            <div key={`${selectedField?.id ?? selectedField?.fieldName ?? ""}-${panelItem.id}`} className="drawer-toggle-field-container">
-              <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} viewMode={viewMode} />
+          if (!shouldShowToggle) return null;
+
+          // Keyed by the selected field too - see ConditionalField key note.
+          //
+          // The panel item part has to stay unique within a render: not every entry in the
+          // master carries an id, and two entries without one produced the same key. React
+          // matches children by key, so the duplicates could not be paired up and the stale
+          // one was left behind on the next selection, stacking up another copy of that
+          // property each time a different field was picked.
+          const panelItemKey = `${selectedField?.id ?? selectedField?.fieldName ?? ""}-${panelItem.id ?? panelItem.label ?? panelItemIndex}`;
+          const renderedField = (
+            <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} viewMode={viewMode} />
+          );
+
+          // An info card is a note about the field rather than a property to edit, so it stands on
+          // its own instead of sitting inside the container the editable properties share.
+          if (panelItem?.fieldType === "infoCard") {
+            return <Fragment key={panelItemKey}>{renderedField}</Fragment>;
+          }
+
+          return (
+            <div key={panelItemKey} className="drawer-toggle-field-container">
+              {renderedField}
             </div>
-          ) : null;
+          );
         })}
 
-        {/* No properties message */}
-        {visibleTabProperties.length === 0 && (
+        {/* No properties message. A group carries its switches below rather than panel
+            properties, so it is configured even when this list is empty. */}
+        {visibleTabProperties.length === 0 && groupChildren.length === 0 && (
           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
             <Tag showIcon={true} label={t(`CMP_DRAWER_NO_CONFIG_ERROR_${activeTab.toUpperCase()}`)} type="error" />
           </div>
         )}
       </div>
+      {/* Switches for the parts of a group. The group is one row in Page properties, so its parts
+          are not listed there - this is where they are turned on and off. `cascade` carries the
+          switch down the subtree, so turning Female off takes its count and its label with it. */}
+      {selectedField?.groupAsSingleElement === true &&
+        activeTab === "content" &&
+        groupChildren.map((child) => {
+            // Read the switch position from the live page, not from the selected-field copy
+            const liveChild =
+              findTemplateNode(currentData?.body, child.fieldName, child.role, child.key) ||
+              findTemplateNode(currentData?.footer, child.fieldName, child.role, child.key) ||
+              child;
+            const isOn = liveChild.hidden !== true;
+            return (
+            // One container per switch - the wrapper the panel's own properties use - so each
+            // part reads as its own row rather than a single boxed list.
+            <div key={child.fieldName} className="drawer-toggle-field-container">
+            <Switch
+              // Switch keeps its position internally, so re-key on the state to make it follow
+              // the config when that is changed from anywhere else.
+              key={`${child.fieldName}-${isOn ? "on" : "off"}`}
+              label={customTranslate(child.label)?.trim() || customTranslate(child.fieldName)?.trim() || child.fieldName}
+              isCheckedInitially={isOn}
+              onToggle={() =>
+                dispatch(
+                  hideField({
+                    fieldName: child.fieldName,
+                    cardIndex: selectedFieldPath?.cardIndex,
+                    role: child.role,
+                    key: child.key,
+                    cascade: true,
+                  })
+                )
+              }
+              disable={viewMode}
+              isLabelFirst={true}
+              // group-child-switch is only for styling these switches; nothing else carries it
+              className={"digit-sidepanel-switch-wrap sidepanel group-child-switch"}
+            />
+            </div>
+            );
+          })}
       {/* Popup Properties Section - Only for actionPopup field type */}
       {fieldType === "actionPopup" && activeTab === "content" && (
         <PopupConfigEditor selectedField={selectedField} viewMode={viewMode} />

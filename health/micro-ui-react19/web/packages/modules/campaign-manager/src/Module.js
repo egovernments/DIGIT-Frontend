@@ -8,6 +8,7 @@ import { UICustomizations } from "./configs/UICustomizations";
 import CampaignCard from "./components/CampaignCard";
 import CycleConfiguration from "./pages/employee/CycleConfiguration";
 import DeliverySetup from "./pages/employee/deliveryRule";
+import DeliveryStrategySetup from "./pages/employee/deliverySetup";
 import CampaignDates from "./components/CampaignDates";
 import CampaignType from "./components/CampaignType";
 import CampaignName from "./components/CampaignName";
@@ -83,6 +84,7 @@ import DynamicSVG from "./components/DynamicSVGComponent";
 import IconTemplate from "./pages/employee/NewAppConfiguration/components/IconTemplate";
 import CampaignTemplateRowCard from "./pages/employee/campaignTemplateScreens/CampaignTemplateRowCard";
 import DropdownTemplate from "./pages/employee/NewAppConfiguration/components/DropdownTemplate";
+import DobTemplate from "./pages/employee/NewAppConfiguration/components/DobTemplate";
 import SelectionCard from "./pages/employee/NewAppConfiguration/components/SelectionCard";
 import TextInputTemplate from "./pages/employee/NewAppConfiguration/components/TextInputTemplate";
 import RadioListTemplate from "./pages/employee/NewAppConfiguration/components/RadioListTemplate";
@@ -200,6 +202,7 @@ const componentsToRegister = {
   CampaignCard: CampaignCard,
   UploadData,
   DeliveryRule: DeliverySetup,
+  DeliveryStrategySetup: DeliveryStrategySetup,
   CycleConfiguration: CycleConfiguration,
   CampaignDates,
   CampaignType,
@@ -277,6 +280,7 @@ const componentsToRegister = {
   IconTemplate,
   CampaignTemplateRowCard,
   DropdownTemplate,
+  DobTemplate,
   SelectionCard,
   TextInputTemplate,
   RadioListTemplate,

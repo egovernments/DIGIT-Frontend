@@ -40,7 +40,11 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
     }
   }, [isFieldSelected]);
 
-  const shouldCustomTranslate = !field?.isMdms && (fieldType === "dropdown" || fieldType === "radio" || fieldType === "checkbox");
+  // Controls whose manually entered labels and options are localisation codes:
+  // this module's translator resolves them, so the raw codes are handed over and
+  // FieldV1 translates both the label and the option names with it.
+  const CODE_LABELLED_TYPES = ["dropdown", "multiselectdropdown", "radio", "checkbox"];
+  const shouldCustomTranslate = !field?.isMdms && CODE_LABELLED_TYPES.includes(String(fieldType || "").toLowerCase());
 
   // Fields that carry their own label (scanner button, checkbox) render a blank label,
   // so hide the label row altogether - otherwise a required field shows an orphan asterisk
@@ -120,9 +124,41 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
   }, [fieldPanelConfig, fieldType, field?.value]);
 
 
+  // FieldV1 ticks a checkbox from formData[populators.name], so a pre-ticked checkbox (value: true)
+  // previews ticked as the app shows it
+  const isCheckbox = fieldType === "checkbox";
+  const checkboxName = field?.fieldName || "previewCheckbox";
+
+  // A dynamic country code is free-typed text with no country behind it, so it
+  // renders through the plain prefix instead of the country picker.
+  const showCountryPicker = Boolean(field?.showCountryCodeDropdown) && field?.countryCodeMode !== "DYNAMIC";
+
+  // The option codes, which change only when an option is added or removed. Renaming one keeps
+  // its code, so editing a name does not disturb the preview.
+  const optionCodes = useMemo(() => (options || []).map((option) => option?.code).join("|"), [options]);
+
+  // TEMPORARY diagnostic - remove once the stale selection count is confirmed fixed
+  if (typeof window !== "undefined" && window.__appConfig_debugOptions) {
+    // eslint-disable-next-line no-console
+    console.log("[preview]", field?.fieldName, "optionCount=", (options || []).length, "key=", optionCodes);
+  }
+
   return (
     <div ref={fieldRef}>
       <FieldV1
+        // Two controls hold on to state of their own that no change of props can reach, so they
+        // are remounted instead by keying on what they hold:
+        //  - the country picker reads its code only while mounting
+        //  - a dropdown remembers what was picked in the preview without checking it against the
+        //    options it is given, leaving an option deleted in the panel still counted
+        // A field with neither has no key, as before.
+        key={
+          showCountryPicker
+            ? `countryCode-${field?.prefixText || ""}`
+            : optionCodes
+            ? `options-${optionCodes}`
+            : undefined
+        }
         charCount={field?.charCount}
         component={component}
         config={{
@@ -140,7 +176,9 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
         label={resolvedLabel}
         onChange={function noRefCheck() {}}
         placeholder={shouldCustomTranslate ? field?.innerLabel : customT(field?.innerLabel) || ""}
+        formData={isCheckbox ? { [checkboxName]: field?.value === true } : undefined}
         populators={{
+          ...(isCheckbox ? { name: checkboxName } : {}),
           title: field?.label,
           prefix: field?.prefixText || null,
           suffix: field?.suffixText || null,
@@ -151,9 +189,11 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
           optionsKey: optionsKey,
           showToolTip: true,
           optionsCustomStyle:{maxHeight:"8vh"},
-          showCountryCodeDropdown: field?.showCountryCodeDropdown || false,
-          countryCodeConfig: field?.showCountryCodeDropdown
-            ? { moduleName: "common-masters", masterName: "CountryCodes", defaultCountryCode: "+91" }
+          disablePortal:true,
+          allowMultiselect: field?.isMultiSelect === true,
+          showCountryCodeDropdown: showCountryPicker,
+          countryCodeConfig: showCountryPicker
+            ? { moduleName: "common-masters", masterName: "CountryCodes", defaultCountryCode: field?.prefixText || "+91" }
             : null
         }}
         withoutLabel={field?.format === "checkbox" || !resolvedLabel}
@@ -162,6 +202,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
         value={previewValue}
         disabled={field?.readOnly || false}
         showToolTip={true}
+        disablePortal={true}
       />
     </div>
   );

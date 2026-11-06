@@ -453,6 +453,7 @@ const CommodityShipmentPopup = ({
             {t(COMMODITY_KEYS.HCM_WAYBILL_NUMBER)}
           </label>
           <TextInput
+            label={t(COMMODITY_KEYS.HCM_WAYBILL_NUMBER)}
             value={waybillNumber}
             onChange={(e) => {
               const val = e.target.value;
@@ -476,6 +477,7 @@ const CommodityShipmentPopup = ({
               {t(COMMODITY_KEYS.HCM_FROM)}
             </label>
             <TextInput
+              label={t(COMMODITY_KEYS.HCM_FROM)}
               value={fromFacility?.name || fromFacility?.id || ""}
               disabled={true}
             />
@@ -529,6 +531,7 @@ const CommodityShipmentPopup = ({
                 {t(COMMODITY_KEYS.HCM_QUANTITY)}
               </label>
               <TextInput
+                label={t(COMMODITY_KEYS.HCM_QUANTITY)}
                 type="number"
                 value={quantity}
                 onChange={(e) => {

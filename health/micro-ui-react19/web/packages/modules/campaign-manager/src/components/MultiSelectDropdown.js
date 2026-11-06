@@ -152,6 +152,9 @@ const Wrapper = ({
           <MultiSelectDropdown
             t={t}
             isSearchable={true}
+            // The CardLabel above is not linked to this control, so it needs its own name
+            // (axe label) - same text, rendered to screen readers only.
+            ariaLabel={t((hierarchyType + "_" + boundaryType).toUpperCase())}
             props={{ className: "selecting-boundaries-dropdown" }}
             options={Object.entries(popUpOption)
               .filter(([key]) => key.startsWith(boundaryType))
@@ -309,7 +312,13 @@ const Menu = ({
           {addCategorySelectAllCheck && (
             <div className="digit-category-selectAll" onClick={() => handleCategorySelection(option)}>
               <div className="category-selectAll-label">{categorySelectAllLabel ? categorySelectAllLabel : t(I18N_KEYS.COMMON.SELECT_ALL)}</div>
-              <input type="checkbox" checked={selectAllChecked || categorySelected[option.code]} />
+              {/* Named for screen readers: the visible text sits in a sibling div, so the checkbox
+                  itself had no accessible name (axe label). */}
+              <input
+                type="checkbox"
+                checked={selectAllChecked || categorySelected[option.code]}
+                aria-label={`${categorySelectAllLabel ? categorySelectAllLabel : t(I18N_KEYS.COMMON.SELECT_ALL)} ${t(option[optionsKey])}`}
+              />
               <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
                 <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
               </div>
@@ -370,6 +379,10 @@ const MultiSelectDropdown = ({
   frozenType,
   isSearchable = false,
   disableClearAll = false,
+  // Names the control for screen readers without drawing anything. This is a local fork of the
+  // library dropdown, so the library's own naming props do not reach it - screens that show their
+  // own visible label (a CardLabel in a LabelFieldPair) pass the text here instead.
+  ariaLabel,
 }) => {
   const [active, setActive] = useState(false);
   const [searchInputValue, setSearchInputValue] = useState("");
@@ -958,6 +971,9 @@ const MultiSelectDropdown = ({
             }
           }}
           className={`digit-multi-select-dropdown-menuitem ${variant ? variant : ""} ${isFrozen ? "disabled" : ""}`}
+          // The option text is rendered in a sibling <p>, so without this the checkbox has no
+          // accessible name at all (axe label) - one per option, on every open dropdown.
+          aria-label={t(option[optionsKey] && typeof option[optionsKey] === "string" ? option[optionsKey] : option.code)}
           disabled={isFrozen}
           style={{
             cursor: isFrozen ? "not-allowed" : "pointer",
@@ -981,7 +997,13 @@ const MultiSelectDropdown = ({
 
   const selectAllOption = addSelectAllCheck && (
     <div className={`digit-multiselectdropodwn-menuitem ${variant ? variant : ""} ${addSelectAllCheck ? "selectAll" : ""}`}>
-      <input type="checkbox" checked={selectAllChecked} onChange={handleSelectAll} />
+      {/* Named for screen readers: the visible text sits in a sibling <p> (axe label). */}
+      <input
+        type="checkbox"
+        checked={selectAllChecked}
+        onChange={handleSelectAll}
+        aria-label={selectAllLabel ? selectAllLabel : t(I18N_KEYS.COMMON.SELECT_ALL)}
+      />
       <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
         <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
       </div>
@@ -1019,6 +1041,9 @@ const MultiSelectDropdown = ({
             isSearchable ? "serachable" : ""
           }`}
         >
+          {/* This input is the control the user actually focuses, so it carries the field's name.
+              Without it the field has none at all (axe label) - the CardLabel beside it is not
+              linked. Falls back to the placeholder text when no ariaLabel is given. */}
           <input
             className="digit-cursorPointer"
             style={{}}
@@ -1027,6 +1052,7 @@ const MultiSelectDropdown = ({
             onFocus={() => setActive(true)}
             value={searchInputValue}
             onChange={onSearch}
+            aria-label={ariaLabel || defaultLabel || t("MULTISELECT_SELECTED")}
           />
           <div className="digit-multiselectdropdown-label">
             {variant === "treemultiselect" ? (

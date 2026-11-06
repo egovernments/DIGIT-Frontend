@@ -1,3 +1,5 @@
+import { resolveDeliveryMethodCodes } from "./deliveryMethods";
+
 export const transformCreateData = ({totalFormData, hierarchyType , params , formData ,id , hasDateChanged, hierarchyChanged: hierarchyChangedOverride}) => {
   function getStartDateEpoch(rawDate) {
   if (!rawDate) return null;
@@ -32,6 +34,14 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
     : (totalFormData?.HCM_CAMPAIGN_DATE?.additionalDetails?.cycleData?.cycleConfgureDate ||
        params?.additionalDetails?.cycleData?.cycleConfgureDate ||
        {});
+
+  // Delivery strategies are sent on every save. Unlike the two values above they survive a date or
+  // hierarchy change: the strategies do not depend on either, and a save without the field would
+  // make project-factory drop them.
+  const deliveryMethods = resolveDeliveryMethodCodes({
+    cycleConfigure: totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
+    savedCycleData: params?.additionalDetails?.cycleData,
+  });
 
   // Transform resource types for API - unified-console should be sent as unified-console-resources
   const transformedResources = hierarchyChanged
@@ -72,6 +82,7 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
         cycleData:{
           cycleData: cycleDataFromForm,
           cycleConfgureDate: cycleConfgureDateFromForm,
+          ...(deliveryMethods ? { deliveryMethods } : {}),
         },
         isUnifiedCampaign: hasUnifiedResource,
         ...(roundType ? { roundType } : {}),

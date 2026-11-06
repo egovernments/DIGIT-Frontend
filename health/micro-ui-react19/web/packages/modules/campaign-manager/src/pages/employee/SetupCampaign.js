@@ -15,8 +15,10 @@ import {
   findHighestStepCount,
 } from "../../utils/setupCampaignHelpers";
 import { handleValidate } from "../../utils/setupCampaignValidators";
+import { carryDeliveryMethods, getDeliveryMethods, getRoundType, usesDeliveryMethods } from "../../utils/deliveryMethods";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import { srOnlyStyle } from "../../utils";
 import useCampaignStore from "../../hooks/useCampaignStore";
 import CampaignSubmitContext from "../../components/CampaignSubmitContext";
 import { useDispatch } from "react-redux";
@@ -192,6 +194,36 @@ const SetupCampaign = () => {
     }
   }, [draftData?.hierarchyType]);
 
+  /**
+   * The cycle data to save, with the delivery strategies resolved against the campaign type that
+   * is selected now.
+   *
+   * While the type still offers strategies this behaves exactly as before: what the user chose
+   * wins, then what the draft already holds, then the type's defaults.
+   *
+   * When it does not, both fallbacks are withheld - the draft's own saved codes as well as the
+   * type's defaults. The campaign type can be changed from step 1 after a draft has been saved,
+   * and nothing clears cycleData on that change, so a draft that picked strategies as POLIO would
+   * otherwise keep handing them back on every later save under its new type. The summary, the date
+   * screens and the app modules all read those codes, so the campaign would go on being treated as
+   * a strategy campaign. Leaving the field off the save is what clears it: project-factory stores
+   * the additionalDetails it receives.
+   *
+   * All three draft-save paths call this so the guard cannot be applied to one and missed on another.
+   */
+  const carryDeliveryMethodsForSave = (totalFormData) => {
+    const cycleConfigure = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+    const projectTypeRecord = DeliveryConfig?.find?.(
+      (e) => e?.code === (totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType)
+    );
+
+    if (!usesDeliveryMethods(projectTypeRecord, getRoundType(draftData, totalFormData))) {
+      return carryDeliveryMethods(cycleConfigure, undefined, []);
+    }
+
+    return carryDeliveryMethods(cycleConfigure, draftData?.additionalDetails?.cycleData, getDeliveryMethods(projectTypeRecord));
+  };
+
   useEffect(() => {
     if (isPreview === "true") {
       setIsDraftCreated(true);
@@ -338,11 +370,10 @@ const SetupCampaign = () => {
             }
             payloadData.tenantId = tenantId;
             payloadData.action = "changeDates";
-            if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
-              payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
-            } else {
-              payloadData.additionalDetails.cycleData = {};
-            }
+            // Delivery strategies ride along on every draft save: from the session when the
+            // strategy step has been visited, else from the draft, else the campaign type's
+            // defaults. Leaving the field out would make project-factory drop it.
+            payloadData.additionalDetails.cycleData = carryDeliveryMethodsForSave(totalFormData);
             if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
@@ -518,11 +549,10 @@ const SetupCampaign = () => {
               // Only override isUnifiedCampaign if session has it explicitly set; otherwise draftData value is already preserved from spread above
               ...(sessionIsUnifiedCampaign !== undefined && { isUnifiedCampaign: sessionIsUnifiedCampaign }),
             };
-            if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
-              payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
-            } else {
-              payloadData.additionalDetails.cycleData = {};
-            }
+            // Delivery strategies ride along on every draft save: from the session when the
+            // strategy step has been visited, else from the draft, else the campaign type's
+            // defaults. Leaving the field out would make project-factory drop it.
+            payloadData.additionalDetails.cycleData = carryDeliveryMethodsForSave(totalFormData);
             if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
@@ -600,11 +630,10 @@ const SetupCampaign = () => {
               // Only override isUnifiedCampaign if session has it explicitly set; otherwise draftData value is already preserved from spread above
               ...(sessionIsUnifiedCampaign2 !== undefined && { isUnifiedCampaign: sessionIsUnifiedCampaign2 }),
             };
-            if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
-              payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
-            } else {
-              payloadData.additionalDetails.cycleData = {};
-            }
+            // Delivery strategies ride along on every draft save: from the session when the
+            // strategy step has been visited, else from the draft, else the campaign type's
+            // defaults. Leaving the field out would make project-factory drop it.
+            payloadData.additionalDetails.cycleData = carryDeliveryMethodsForSave(totalFormData);
             if (Array.isArray(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule)) {
               const temp = restructureData(
                 totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
@@ -1191,15 +1220,39 @@ const SetupCampaign = () => {
   // The existing isDraft/isPreview checks below miss cases like draft=null&isDraft=true
   // where draftLoading is true but neither condition matches.
   if (id && draftLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The loading state carries the same landmark and heading as the loaded one, so a slow load
+    // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+    // page-has-heading-one).
+    return (
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_SETUP_DETAILS)}</h1>
+        <Loader page={true} variant={"PageLoader"} />
+      </main>
+    );
   }
 
   if (isPreview === "true" && !draftData) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The loading state carries the same landmark and heading as the loaded one, so a slow load
+    // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+    // page-has-heading-one).
+    return (
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_SETUP_DETAILS)}</h1>
+        <Loader page={true} variant={"PageLoader"} />
+      </main>
+    );
   }
 
   if (isDraft === "true" && !draftData) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The loading state carries the same landmark and heading as the loaded one, so a slow load
+    // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+    // page-has-heading-one).
+    return (
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_SETUP_DETAILS)}</h1>
+        <Loader page={true} variant={"PageLoader"} />
+      </main>
+    );
   }
 
   function onActionSelect(action) {
@@ -1248,7 +1301,12 @@ const SetupCampaign = () => {
 
   return (
     <CampaignSubmitContext.Provider value={submitStatus}>
-    <React.Fragment>
+    {/* <main> with display: contents: the employee layout has no main landmark (axe landmark-one-main,
+        region); display: contents keeps the stepper and cards laid out exactly as before */}
+    <main style={{ display: "contents" }}>
+      {/* The stepper carries the step name, not the page name, so the page has no visible
+          heading of its own. Expose one to screen readers only (axe page-has-heading-one). */}
+      <h1 style={srOnlyStyle}>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_SETUP_DETAILS)}</h1>
       {(loader || isUpdating) && <Loader page={true} variant={"OverlayLoader"} loaderText={currentKey == 6 ? t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_ADDING_BOUNDARIES) : t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />}
       {/* {noAction !== "false" && (
         <Stepper
@@ -1333,7 +1391,7 @@ const SetupCampaign = () => {
           onClose={closeToast}
         />
       )}
-    </React.Fragment>
+    </main>
     </CampaignSubmitContext.Provider>
   );
 };

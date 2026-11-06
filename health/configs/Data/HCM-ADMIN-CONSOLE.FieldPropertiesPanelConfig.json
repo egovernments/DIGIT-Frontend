@@ -1,24 +1,12 @@
 [
   {
-    "id": "2384c96f-8c59-46e3-a930-a5addec99a5b",
-    "tenantId": "mz",
+    "id": "15a0b13c-0fe9-44cc-9658-9c8348775eb0",
+    "tenantId": "qa",
     "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
     "uniqueIdentifier": "NewPanelConfig",
     "data": {
       "label": "NewPanelConfig",
       "content": [
-        {
-          "id": "popupTitle",
-          "label": "popupTitle",
-          "order": 32,
-          "bindTo": "properties.popupConfig.title",
-          "fieldType": "text",
-          "defaultValue": "",
-          "isPopupProperty": true,
-          "conditionalField": [],
-          "showFieldOnToggle": false,
-          "visibilityEnabledFor": ["actionPopup"]
-        },
         {
           "label": "fieldType",
           "order": 1,
@@ -44,16 +32,20 @@
           "order": 2,
           "bindTo": "label",
           "fieldType": "text",
+          "isMandatory": true,
           "defaultValue": "",
           "conditionalField": [],
           "showFieldOnToggle": false,
           "visibilityEnabledFor": [
-            "Image",
             "latLng",
+            "textarea",
+            "idPopulator",
             "text",
             "date",
             "dropdown",
+            "select",
             "checkbox",
+            "dob",
             "radio",
             "number",
             "numeric",
@@ -61,18 +53,18 @@
             "button",
             "filter",
             "buttonTemplate",
-            "searchByProximity",
+            "proximitySearch",
             "searchByID",
             "PrimaryButton",
             "qrScanner",
             "scanner",
             "switch",
             "searchBar",
-            "actionPopup",
             "locality",
             "infoCard",
             "dropdownTemplate",
-            "evaluationFacility"
+            "evaluationFacility",
+            "multiSelectDropdown"
           ]
         },
         {
@@ -84,24 +76,24 @@
           "defaultValue": "",
           "conditionalField": [
             {
-              "type": "text",
+              "type": "textarea",
               "bindTo": "helpText"
             }
           ],
           "showFieldOnToggle": true,
           "visibilityEnabledFor": [
             "text",
-            "checkbox",
-            "radio",
+            "textarea",
             "numeric",
-            "Image",
             "date",
             "dropdown",
+            "idPopulator",
             "number",
             "latLng",
             "mobileNumber",
             "locality",
-            "evaluationFacility"
+            "evaluationFacility",
+            "multiSelectDropdown"
           ]
         },
         {
@@ -127,15 +119,15 @@
             "date",
             "select",
             "dropdown",
+            "idPopulator",
             "mobileNumber",
             "number",
-            "textArea",
+            "textarea",
             "text",
-            "latLng",
             "administrativeArea",
             "radio",
             "searchableDropdown",
-            "locality"
+            "multiSelectDropdown"
           ]
         },
         {
@@ -149,6 +141,25 @@
             {
               "type": "text",
               "bindTo": "prefixText",
+              "isLocalisable": false
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["number"]
+        },
+        {
+          "id": "showCountryCode",
+          "label": "showCountryCode",
+          "order": 5,
+          "bindTo": "showCountryCodeDropdown",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [
+            {
+              "type": "text",
+              "label": "APPCONFIG_CUSTOM_PREFIX",
+              "bindTo": "prefixText",
+              "condition": true,
               "isLocalisable": false
             }
           ],
@@ -183,6 +194,18 @@
           "conditionalField": [],
           "showFieldOnToggle": true,
           "visibilityEnabledFor": ["searchBar"]
+        },
+        {
+          "id": "proximityRadius",
+          "label": "proximityRadius",
+          "order": 7,
+          "bindTo": "proximityRadius",
+          "fieldType": "number",
+          "defaultValue": 5,
+          "isLocalisable": false,
+          "conditionalField": [],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["proximitySearch"]
         },
         {
           "id": "filter",
@@ -228,7 +251,20 @@
             }
           ],
           "showFieldOnToggle": true,
-          "visibilityEnabledFor": ["text", "date", "numeric", "dropdown", "number", "mobileNumber", "Image", "latLng", "locality"]
+          "visibilityEnabledFor": [
+            "text",
+            "textarea",
+            "date",
+            "numeric",
+            "dropdown",
+            "idPopulator",
+            "select",
+            "number",
+            "mobileNumber",
+            "latLng",
+            "locality",
+            "multiSelectDropdown"
+          ]
         },
         {
           "id": "readOnly",
@@ -239,7 +275,7 @@
           "defaultValue": false,
           "conditionalField": [],
           "showFieldOnToggle": false,
-          "visibilityEnabledFor": ["text", "date", "dropdown", "number", "mobileNumber", "numeric"]
+          "visibilityEnabledFor": ["text", "date", "textarea", "numeric"]
         },
         {
           "id": "hidden",
@@ -257,6 +293,7 @@
           "order": 12,
           "bindTo": "isMdms",
           "fieldType": "toggle",
+          "isMandatory": true,
           "defaultValue": false,
           "conditionalField": [
             {
@@ -298,6 +335,16 @@
                   "masterName": "SEARCH_HOUSEHOLD_FILTERS",
                   "moduleName": "HCM",
                   "schemaCode": "HCM.SEARCH_HOUSEHOLD_FILTERS"
+                },
+                {
+                  "masterName": "GroupVaccinationLocations",
+                  "moduleName": "common-masters",
+                  "schemaCode": "common-masters.GroupVaccinationLocations"
+                },
+                {
+                  "masterName": "GroupVaccinationLocationsCLF",
+                  "moduleName": "common-masters",
+                  "schemaCode": "common-masters.GroupVaccinationLocationsCLF"
                 }
               ],
               "jsonPath": "schemaCode",
@@ -310,7 +357,14 @@
             }
           ],
           "showFieldOnToggle": true,
-          "visibilityEnabledFor": ["dropdown", "radio", "searchableDropdown"]
+          "visibilityEnabledFor": [
+            "dropdown",
+            "idPopulator",
+            "select",
+            "radio",
+            "searchableDropdown",
+            "multiSelectDropdown"
+          ]
         },
         {
           "id": "min",
@@ -375,6 +429,7 @@
           "bindTo": "label",
           "fieldType": "text",
           "defaultValue": "",
+          "isLocalisable": true,
           "conditionalField": [],
           "showFieldOnToggle": false,
           "visibilityEnabledFor": ["panelCard"]
@@ -433,27 +488,7 @@
           "isLocalisable": false,
           "conditionalField": [
             {
-              "type": "text",
-              "label": "APPCONFIG_DEFAULT_VALUE",
-              "bindTo": "value",
-              "isLocalisable": false
-            }
-          ],
-          "showFieldOnToggle": true,
-          "visibilityEnabledFor": ["text"]
-        },
-        {
-          "id": "defaultValue",
-          "label": "defaultValue",
-          "order": 2,
-          "bindTo": "value",
-          "fieldType": "toggle",
-          "defaultValue": false,
-          "isLocalisable": false,
-          "conditionalField": [
-            {
               "type": "number",
-              "label": "APPCONFIG_DEFAULT_VALUE",
               "bindTo": "value",
               "isLocalisable": false
             }
@@ -475,7 +510,7 @@
             }
           ],
           "showFieldOnToggle": true,
-          "visibilityEnabledFor": ["text"]
+          "visibilityEnabledFor": ["text", "textarea"]
         },
         {
           "id": "isMultiSelect",
@@ -487,16 +522,83 @@
           "conditionalField": [],
           "showFieldOnToggle": true,
           "disableForRequired": true,
-          "visibilityEnabledFor": ["dropdown"]
+          "visibilityEnabledFor": [""]
+        },
+        {
+          "id": "popupTitle",
+          "label": "popupTitle",
+          "order": 32,
+          "bindTo": "properties.popupConfig.title",
+          "fieldType": "text",
+          "defaultValue": "",
+          "isPopupProperty": true,
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": ["actionPopup"]
+        },
+        {
+          "id": "popupTimer",
+          "label": "popupTimer",
+          "order": 33,
+          "bindTo": "popupTimer.enabled",
+          "children": [
+            {
+              "id": "minutes",
+              "max": 4,
+              "min": 0,
+              "label": "minutes",
+              "bindTo": "popupTimer.minutes",
+              "fieldType": "number",
+              "description": "FIELD_DRAWER_HINT_POPUPTIMER_MINUTES",
+              "isLocalisable": false,
+              "validationMessage": "FIELD_DRAWER_ERROR_POPUPTIMER_MINUTES"
+            },
+            {
+              "id": "seconds",
+              "max": 59,
+              "min": 0,
+              "label": "seconds",
+              "bindTo": "popupTimer.seconds",
+              "fieldType": "number",
+              "description": "FIELD_DRAWER_HINT_POPUPTIMER_SECONDS",
+              "isLocalisable": false,
+              "validationMessage": "FIELD_DRAWER_ERROR_POPUPTIMER_SECONDS"
+            }
+          ],
+          "fieldType": "group",
+          "defaultValue": true,
+          "showFieldOnToggle": true,
+          "validationMessage": "FIELD_DRAWER_ERROR_POPUPTIMER_MINIMUM",
+          "validationExpression": "popupTimer[\"enabled\"] === false || (Number(popupTimer[\"minutes\"]) || 0) * 60 + (Number(popupTimer[\"seconds\"]) || 0) >= 30",
+          "visibilityEnabledFor": ["latLng"],
+          "visibilityEnabledForFields": [
+            "gpsStart",
+            "gpsChild",
+            "gpsReferral",
+            "gpsFinal",
+            "gpsFirstHousehold",
+            "gpsLastHousehold",
+            "latLng"
+          ]
         }
       ],
       "validation": [
+        {
+          "id": "deliveryStrategyAgeInfo",
+          "label": "APPCONFIG_AGE_DYNAMIC_INFO_TITLE",
+          "order": 1,
+          "fieldType": "infoCard",
+          "description": "APPCONFIG_AGE_DYNAMIC_INFO_TEXT",
+          "visibilityEnabledFor": [],
+          "visibilityEnabledForFields": ["ageBand", "childDob"]
+        },
         {
           "id": "scannerRegex",
           "label": "ScannerRegexPattern",
           "order": 1,
           "bindTo": "pattern",
           "fieldType": "toggle",
+          "isMandatory": true,
           "conditionalField": [
             {
               "type": "text",
@@ -537,7 +639,8 @@
               "validation": {
                 "pattern": "^(0|[1-9]\\d*)$"
               },
-              "defaultValue": 1
+              "defaultValue": 1,
+              "isLocalisable": false
             },
             {
               "type": "text",
@@ -566,19 +669,22 @@
           "visibilityEnabledFor": [
             "checkbox",
             "numeric",
-            "dob",
             "date",
+            "dob",
             "select",
             "dropdown",
+            "idPopulator",
             "mobileNumber",
             "number",
-            "textArea",
+            "textarea",
             "text",
             "latLng",
             "radio",
             "administrativeArea",
-            "searchableDropdown"
-          ]
+            "searchableDropdown",
+            "multiSelectDropdown"
+          ],
+          "visibilityDisabledForFields": ["ageBand"]
         },
         {
           "id": "regex",
@@ -586,6 +692,7 @@
           "order": 3,
           "bindTo": "pattern",
           "fieldType": "toggle",
+          "isMandatory": true,
           "conditionalField": [
             {
               "type": "radioOptions",
@@ -732,15 +839,48 @@
           "validationMessage": "APPCONFIG_MIN_DATE_LESS_EQUAL_MAX",
           "validationExpression": "dateRange.startDate <= dateRange.endDate",
           "visibilityEnabledFor": ["date"]
+        },
+        {
+          "id": "ageRange",
+          "label": "ageRange",
+          "order": 4,
+          "children": [
+            {
+              "id": "minAge",
+              "label": "minimumAge",
+              "bindTo": "ageRange.minAge",
+              "fieldType": "number",
+              "isLocalisable": false
+            },
+            {
+              "id": "maxAge",
+              "label": "maximumAge",
+              "bindTo": "ageRange.maxAge",
+              "fieldType": "number",
+              "isLocalisable": false
+            },
+            {
+              "id": "errorMessage",
+              "label": "errorMessage",
+              "bindTo": "ageRange.errorMessage",
+              "fieldType": "text",
+              "isLocalisable": true
+            }
+          ],
+          "fieldType": "group",
+          "validationMessage": "APPCONFIG_MIN_AGE_LESS_EQUAL_MAX_AGE",
+          "validationExpression": "ageRange.minAge <= ageRange.maxAge",
+          "visibilityEnabledFor": ["dob"],
+          "visibilityDisabledForFields": ["childDob"]
         }
       ]
     },
     "isActive": true,
     "auditDetails": {
-      "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
-      "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
-      "createdTime": 1761299753683,
-      "lastModifiedTime": 1764933573787
+      "createdBy": "3496b299-06f3-4dd2-8340-573cf8c4f1fc",
+      "lastModifiedBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
+      "createdTime": 1777538631135,
+      "lastModifiedTime": 1793186102383
     }
   }
 ]

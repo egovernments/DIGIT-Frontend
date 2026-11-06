@@ -1,11 +1,11 @@
-import { Button, HeaderComponent, Footer, Loader, Tag, Toast, PopUp } from "@egovernments/digit-ui-components";
+import { AlertCard, Button, HeaderComponent, Footer, Loader, Tag, Toast, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { Fragment, useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
-import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit, Translate, DocumentIconSolid } from "@egovernments/digit-ui-svg-components";
+import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit, Translate, DocumentIconSolid, ArrowForward } from "@egovernments/digit-ui-svg-components";
 import { transformUpdateCreateData } from "../../../utils/transformUpdateCreateData";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
@@ -13,7 +13,9 @@ import { downloadExcelWithCustomName } from "../../../utils";
 import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDateFormat";
 import QRButton from "../../../components/CreateCampaignComponents/QRButton";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { srOnlyStyle } from "../../../utils";
 import useCampaignStore from "../../../hooks/useCampaignStore";
+import { getCampaignDeliveryMethods, getRoundType, usesDeliveryMethods } from "../../../utils/deliveryMethods";
 import { resetCreateCampaignData, campaignStore } from "../../../store/campaignStore";
 
 function transformCampaignData(inputObj = {}) {
@@ -99,6 +101,10 @@ function transformCampaignData(inputObj = {}) {
       cycleConfigure: {
         cycleConfgureDate: configure,
         cycleData: cycleDataArray,
+        // Chosen delivery strategies, for campaign types that use them. This rebuilds the wizard
+        // session from a saved campaign, so omitting it would lose the selection whenever the
+        // delivery step is reopened from here.
+        deliveryMethods: inputObj.additionalDetails?.cycleData?.deliveryMethods,
       },
     },
     HCM_CAMPAIGN_DELIVERY_DATA: {
@@ -146,11 +152,16 @@ const CampaignDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isDraftCampaign = location.state?.isDraft;
+  // Set by the copy dialog on the campaign it just created. Held in state so the popup is
+  // dismissed for good rather than returning on the next render.
+  const [showClonedPopup, setShowClonedPopup] = useState(Boolean(location.state?.campaignCloned));
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const [showToast, setShowToast] = useState(null);
   const isDraft = searchParams.get("draft");
   const [showQRPopUp, setShowQRPopUp] = useState(false);
+  // Holds the pending navigation target while the edit confirmation is on screen.
+  const [pendingStrategyEdit, setPendingStrategyEdit] = useState(null);
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
   const url = getMDMSUrl(true);
 
@@ -246,6 +257,81 @@ const CampaignDetails = () => {
   }, [tenantId, BOUNDARY_HIERARCHY_TYPE]);
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(hierarchyDefinitionReqCriteria);
+
+  // The campaign type declares the delivery strategies it offers, if any. Used below to decide
+  // whether this campaign is gated on the delivery step being completed.
+  const { data: projectTypeMdms } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
+    { enabled: !!campaignData?.projectType },
+    { schemaCode: "HCM-PROJECT-TYPES.projectTypes" }
+  );
+
+  // A copy that uses delivery strategies arrives with the delivery rules of the campaign it was
+  // copied from, so its cycle dates and quantities still belong to that campaign. These two steps
+  // say what has to be put right before the copy can be created. Shown only while it is still a
+  // draft - once the campaign is created there is nothing left to complete.
+  //
+  // Keyed on the strategies the campaign carries, the same question CloneCampaignWrapper asks
+  // before copying the rules, so the checklist cannot appear for a copy that was never given any.
+  const isStrategyCopyDraft = useMemo(
+    () =>
+      getCampaignDeliveryMethods(campaignData).length > 0 &&
+      Boolean(campaignData?.additionalDetails?.cloneFrom) &&
+      campaignData?.status !== "created",
+    [campaignData]
+  );
+
+  const clonedCampaignSteps = useMemo(() => {
+    if (!isStrategyCopyDraft) return null;
+    return [
+      {
+        title: I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_STEP_EDIT_DELIVERY_TITLE,
+        description: I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_STEP_EDIT_DELIVERY_DESCRIPTION,
+      },
+      {
+        title: I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_STEP_UPLOAD_MICROPLAN_TITLE,
+        description: I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_STEP_UPLOAD_MICROPLAN_DESCRIPTION,
+      },
+    ];
+  }, [isStrategyCopyDraft]);
+
+  // Strategies only apply to a single-round campaign, so this asks the same question the Delivery
+  // Setup step asks rather than looking at the campaign type alone. A multi-round campaign of a
+  // type that happens to declare strategies never sees that step, so it must not be gated on one.
+  const usesDeliveryStrategies = useMemo(() => {
+    const record = projectTypeMdms?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes?.find((e) => e?.code === campaignData?.projectType);
+    return usesDeliveryMethods(record, getRoundType(campaignData));
+  }, [projectTypeMdms, campaignData]);
+
+  const deliveryStrategyPending = useMemo(() => {
+    // Campaign types that declare no delivery strategies keep the gating they have today.
+    if (!usesDeliveryStrategies) return false;
+
+    // Nothing is left to configure once the campaign is created, so the gate is spent. Without
+    // this, a campaign created before its type offered strategies carries none and would have its
+    // cards locked for good - there is no step left on this screen that could add them.
+    if (campaignData?.status === "created") return false;
+
+    // The strategy selection is saved when the user leaves the first delivery step, while the
+    // conditions and resources are saved on finishing the second. Both steps sit behind the one
+    // "Configure delivery strategy" card, so a draft abandoned between them still counts as
+    // incomplete. Checking only the selection would unlock the later steps too early.
+    const strategiesChosen = getCampaignDeliveryMethods(campaignData).length > 0;
+    const deliveryRulesSaved = campaignData?.deliveryRules?.[0]?.cycles?.length > 0;
+    return !(strategiesChosen && deliveryRulesSaved);
+  }, [usesDeliveryStrategies, campaignData]);
+
+  // True only when the delivery card offers to change an existing strategy, which is the same
+  // condition that makes its button read "Edit delivery strategy". A new campaign has nothing
+  // configured yet, and a created campaign edits its dates on a different screen - in both cases
+  // there is no earlier configuration to invalidate, so no confirmation is needed. A copied
+  // campaign arrives with its delivery rules already filled in, so it does ask.
+  const isEditingDeliveryStrategy = useMemo(
+    () => usesDeliveryStrategies && !deliveryStrategyPending && campaignData?.status !== "created" && !campaignData?.parentId,
+    [usesDeliveryStrategies, deliveryStrategyPending, campaignData?.status, campaignData?.parentId]
+  );
 
   // MDMS call for Form Config to check if all forms are configured
   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.FormConfig`;
@@ -438,6 +524,9 @@ const CampaignDetails = () => {
                   : `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true&projectType=${campaignData?.projectType}`,
               type: campaignData?.deliveryRules?.[0]?.cycles?.length > 0 ? "secondary" : "primary",
               icon: <OutpatientMed />,
+              // Changing the strategy invalidates the app and microplan configuration built on
+              // top of it, so ask for confirmation once that configuration exists.
+              onButtonClick: isEditingDeliveryStrategy && isFormConfigured ? (link) => setPendingStrategyEdit(link) : undefined,
             },
           },
         ],
@@ -468,7 +557,10 @@ const CampaignDetails = () => {
                   : `campaign-details-page-button-setup-mobile-app`,
                 type: isFormConfigured ? "secondary" : "primary",
                 navLink: `new-app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}${isOngoingCampaign ? "&viewMode=true" : ""}`,
-                icon: <AdUnits fill="#C84C0E" />,
+                icon: (
+                  <AdUnits fill={usesDeliveryStrategies && (campaignData?.boundaries?.length <= 0 || deliveryStrategyPending) ? "#c5c5c5" : "#C84C0E"} />
+                ),
+                disabled: usesDeliveryStrategies && (campaignData?.boundaries?.length <= 0 || deliveryStrategyPending),
               };
             })(),
           },
@@ -503,13 +595,13 @@ const CampaignDetails = () => {
                     icon: (
                       <UploadCloud
                         fill={
-                          campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId
+                          campaignData?.boundaries?.length <= 0 || deliveryStrategyPending || campaignData?.status === "created" || campaignData?.parentId
                             ? "#c5c5c5"
                             : "#C84C0E"
                         }
                       />
                     ),
-                    disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
+                    disabled: campaignData?.boundaries?.length <= 0 || deliveryStrategyPending || campaignData?.status === "created" || campaignData?.parentId,
                   },
                 },
               ],
@@ -533,13 +625,13 @@ const CampaignDetails = () => {
                     icon: (
                       <UploadCloud
                         fill={
-                          campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId
+                          campaignData?.boundaries?.length <= 0 || deliveryStrategyPending || campaignData?.status === "created" || campaignData?.parentId
                             ? "#c5c5c5"
                             : "#C84C0E"
                         }
                       />
                     ),
-                    disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
+                    disabled: campaignData?.boundaries?.length <= 0 || deliveryStrategyPending || campaignData?.status === "created" || campaignData?.parentId,
                   },
                 },
               ],
@@ -671,6 +763,19 @@ const CampaignDetails = () => {
     return campaignS <= first && campaignE >= last;
   };
 
+  // A copy keeps the cycle dates of the campaign it came from, so until the delivery strategy is
+  // edited they fall outside this campaign's own dates. Submitting then only raises the
+  // invalid-dates toast, so the button is held closed until they are put right. This holds back a
+  // copy only; every other campaign still submits and is told what is wrong, as before.
+  const copiedDatesPending = useMemo(() => {
+    if (!isStrategyCopyDraft) return false;
+    const cycles = campaignData?.deliveryRules?.[0]?.cycles;
+    // Nothing configured yet is already covered by the checks beside this one, and
+    // validateCampaignDates expects a list
+    if (!Array.isArray(cycles) || cycles.length === 0) return false;
+    return !validateCampaignDates(cycles, campaignData);
+  }, [isStrategyCopyDraft, campaignData]);
+
   const onsubmit = async () => {
     if (isSubmitting) return;
     const valideDates = validateCampaignDates(campaignData?.deliveryRules?.[0]?.cycles, campaignData);
@@ -749,7 +854,15 @@ const CampaignDetails = () => {
   };
 
   if (isLoading || isFormConfigLoading || isPolling) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The loading state carries the same landmark and heading as the loaded one, so a slow load
+    // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+    // page-has-heading-one).
+    return (
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.PAGES.VIEW_DETAILS)}</h1>
+        <Loader page={true} variant={"PageLoader"} />
+      </main>
+    );
   }
 
   const isMutationLoading = isSubmitting;
@@ -760,7 +873,7 @@ const CampaignDetails = () => {
     setShowToast(null);
   };
 
-  return ( 
+  return (
     // <main> with display: contents: the employee layout has no main landmark (axe landmark-one-main /
     // region); display: contents keeps the layout exactly as before
     <main style={{ display: "contents" }}>
@@ -836,6 +949,34 @@ const CampaignDetails = () => {
         )}
       </div>
       <div className="detail-desc">{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_VIEW_DETAILS_DESCRIPTION)}</div>
+      {clonedCampaignSteps && (
+        <AlertCard
+          variant="info"
+          inline={true}
+          className="cloned-campaign-steps"
+          label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_STEPS_HEADING)}
+          additionalElements={clonedCampaignSteps.flatMap((step, index) => [
+            ...(index > 0
+              ? [
+                  <ArrowForward
+                    key={`cloned-step-arrow-${index}`}
+                    className="cloned-campaign-steps-arrow"
+                    width="16"
+                    height="16"
+                    fill="#505A5F"
+                  />,
+                ]
+              : []),
+            <div key={step.title} className="cloned-campaign-step">
+              <span className="cloned-campaign-step-number">{index + 1}</span>
+              <div className="cloned-campaign-step-text">
+                <div className="cloned-campaign-step-title">{t(step.title)}</div>
+                <div className="cloned-campaign-step-description">{t(step.description)}</div>
+              </div>
+            </div>
+          ])}
+        />
+      )}
       <div className="campaign-summary-container">
         <ViewComposer data={data} />
       </div>
@@ -854,7 +995,8 @@ const CampaignDetails = () => {
                     campaignData?.boundaries?.length === 0 ||
                     campaignData?.deliveryRules?.length === 0 ||
                     campaignData?.deliveryRules?.some((rule) => rule?.cycles?.length === 0) ||
-                    campaignData?.resources?.length === 0
+                    campaignData?.resources?.length === 0 ||
+                    copiedDatesPending
                   }
                   type="button"
                   variation="primary"
@@ -877,6 +1019,79 @@ const CampaignDetails = () => {
         setactionFieldsToRight={true}
       />
       {showQRPopUp && <QRButton setShowQRPopUp={setShowQRPopUp} />}
+      {/* Confirms the copy on the campaign it created, rather than on the listing the user came
+          from, so the message arrives with the screen they have to act on. An alert popup draws a
+          centred icon, a heading and a message, and no close icon of its own - the Continue button
+          and a click outside are the ways out, both of which simply dismiss it. */}
+      {showClonedPopup && (
+        <PopUp
+          type="alert"
+          className="clone-success-popup"
+          customIcon="CheckCircle"
+          iconFill="#00703C"
+          alertHeading={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_SUCCESS_HEADING)}
+          alertMessage={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_SUCCESS_DESCRIPTION, {
+            campaignName: campaignData?.campaignName || "",
+          })}
+          onOverlayClick={() => setShowClonedPopup(false)}
+          onClose={() => setShowClonedPopup(false)}
+          footerclassName={"clone-success-popup-footer"}
+          equalWidthButtons={true}
+          footerChildren={[
+            <Button
+              key="clone-success-continue"
+              type="button"
+              size="large"
+              variation="primary"
+              label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_SUCCESS_ACTION)}
+              title={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CLONE_SUCCESS_ACTION)}
+              onClick={() => setShowClonedPopup(false)}
+              id="campaign-details-clone-success-continue"
+            />,
+          ]}
+        />
+      )}
+      {pendingStrategyEdit && (
+        <PopUp
+          className="hierarchy-change-popup"
+          type="alert"
+          alertHeading={t("HCM_EDIT_DELIVERY_STRATEGY_WARNING_HEADING")}
+          alertMessage={t("HCM_EDIT_DELIVERY_STRATEGY_WARNING_TEXT")}
+          onOverlayClick={() => setPendingStrategyEdit(null)}
+          onClose={() => setPendingStrategyEdit(null)}
+          footerclassName={"hierarchy-change-popup-footer"}
+          equalWidthButtons={true}
+          footerChildren={[
+            <Button
+              key="cancel"
+              type="button"
+              size="large"
+              variation="secondary"
+              label={t(I18N_KEYS.COMMON.CANCEL)}
+              title={t(I18N_KEYS.COMMON.CANCEL)}
+              onClick={() => setPendingStrategyEdit(null)}
+            />,
+            <Button
+              key="confirm"
+              type="button"
+              size="large"
+              variation="primary"
+              label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CAMPAIGN_PROCEED)}
+              title={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CAMPAIGN_PROCEED)}
+              onClick={() => {
+                const link = pendingStrategyEdit;
+                setPendingStrategyEdit(null);
+                // Same expression the card's own navigation uses. A drafted campaign opened straight
+                // from its details page carries no router state, so the status has to be read too.
+                navigate(`/${window.contextPath}/employee/campaign/${link}`, {
+                  state: { isDraftCampaign: isDraftCampaign || campaignData?.status === "drafted" },
+                });
+              }}
+            />,
+          ]}
+          showAlertAsSvg={true}
+        />
+      )}
       {showToast && (
         <Toast
           type={

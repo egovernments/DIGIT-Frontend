@@ -481,7 +481,8 @@ const App = ({ path }) => {
     <Provider store={campaignStore}>
     <HydrationGate>
     <React.Fragment>
-      <div className="wbh-header-container">
+      {/* nav landmark: the breadcrumb bar otherwise sits outside every landmark (axe region) */}
+      <nav className="wbh-header-container" aria-label="Breadcrumb">
         {window?.location?.pathname === "/workbench-ui/employee/campaign/add-product" ||
         window?.location?.pathname === "/workbench-ui/employee/campaign/response" ||
         window?.location?.pathname === "/workbench-ui/employee/campaign/new-app-configuration-redesign" ? null : (
@@ -490,7 +491,7 @@ const App = ({ path }) => {
         {window?.location?.pathname === "/workbench-ui/employee/campaign/new-app-configuration-redesign" ? null : (
           <AppHelpTutorial appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT" />
         )}
-      </div>
+      </nav>
       <AppContainer className="campaign">
         <Routes>
           <Route path={`create-campaign/upload-boundary-data`} element={<UploadBoundaryData />} />

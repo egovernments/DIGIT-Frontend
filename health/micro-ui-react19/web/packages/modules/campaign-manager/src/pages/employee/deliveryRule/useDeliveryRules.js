@@ -27,6 +27,7 @@ import {
   setError,
   syncCycles,
   syncDeliveries,
+  syncDeliveryMethods,
   updateObservationStrategy,
 } from './deliveryRulesSlice';
 import { CONSOLE_MDMS_MODULENAME } from '../../../Module';
@@ -47,8 +48,8 @@ export const useDeliveryRules = () => {
   const initialized = useSelector(selectInitialized);
 
 
-  const initializeData = useCallback((cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig, campaignId) => {
-    dispatch(initializeCampaignData({ cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig, campaignId }));
+  const initializeData = useCallback((cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig, campaignId, deliveryMethods) => {
+    dispatch(initializeCampaignData({ cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig, campaignId, deliveryMethods }));
   }, [dispatch]);
 
   const changeTab = useCallback((tabIndex) => {
@@ -149,6 +150,10 @@ export const useDeliveryRules = () => {
     dispatch(syncDeliveries({ newDeliveryCount, effectiveDeliveryConfig, attributeConfig, operatorConfig }));
   }, [dispatch]);
 
+  const syncDeliveryMethodsAction = useCallback((deliveryMethods, effectiveDeliveryConfig, attributeConfig, operatorConfig) => {
+    dispatch(syncDeliveryMethods({ deliveryMethods, effectiveDeliveryConfig, attributeConfig, operatorConfig }));
+  }, [dispatch]);
+
   const updateObservationStrategyAction = useCallback((observationStrategy) => {
     dispatch(updateObservationStrategy({ observationStrategy }));
   }, [dispatch]);
@@ -183,6 +188,7 @@ export const useDeliveryRules = () => {
     updateDeliveryTypeForEachDelivery,
     syncCycleCount,
     syncDeliveryCount,
+    syncDeliveryMethodsAction,
     updateObservationStrategyAction,
   };
 };

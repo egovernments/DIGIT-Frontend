@@ -78,18 +78,41 @@ const UpdateCampaign = () => {
     { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
   );
 
-  const reqCriteriaCampaign = {
-    url: `/project-factory/v1/project-type/search`,
-    body: {
-      CampaignDetails: {
-        tenantId: tenantId,
-        ids: [parentId],
+  /**
+   * The campaign being updated.
+   *
+   * `isOverrideDatesFromProject` is what every other screen that shows campaign dates already
+   * passes - the campaign list, the campaign details screen and the commodity screens. Dates
+   * changed on the update-dates screen are written to the project service alone, so without the
+   * flag the search returns the campaign's own dates and the change appears not to have happened.
+   *
+   * This is not display-only data: the summary shows these dates and the save writes them back
+   * (`payloadData.startDate`/`endDate` below), so leaving the flag off also persists the old
+   * dates over the new ones.
+   *
+   * useCustomAPIHook defaults to staleTime 5000 / gcTime 1000 and spreads `config` last, so the
+   * overrides below take effect. It has to be `gcTime` rather than `cacheTime` - the hook only
+   * reads `cacheTime` from its own `options` argument, and TanStack v5 ignores the old name.
+   */
+  const reqCriteriaCampaign = useMemo(
+    () => ({
+      url: `/project-factory/v1/project-type/search`,
+      body: {
+        CampaignDetails: {
+          tenantId: tenantId,
+          ids: [parentId],
+          isOverrideDatesFromProject: true,
+        },
       },
-    },
-    config: {
-      enabled: parentId ? true : false,
-    },
-  };
+      config: {
+        enabled: parentId ? true : false,
+        staleTime: 0,
+        gcTime: 0,
+        refetchOnMount: "always",
+      },
+    }),
+    [tenantId, parentId]
+  );
 
   const { data: CampaignData } = Digit.Hooks.useCustomAPIHook(reqCriteriaCampaign);
 

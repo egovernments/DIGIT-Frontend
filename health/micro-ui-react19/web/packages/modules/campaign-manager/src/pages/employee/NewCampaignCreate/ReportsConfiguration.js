@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { srOnlyStyle } from "../../../utils";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   Card,
@@ -457,23 +458,30 @@ const ReportsConfiguration = () => {
     return applicableReports.filter((r) => selectedReports[r.code]);
   }, [applicableReports, selectedReports]);
 
-  if (isReportsLoading || (isEditMode && isExistingConfigLoading)) return <Loader />;
+  if (isReportsLoading || (isEditMode && isExistingConfigLoading)) {
+  // The loading state carries the same landmark and heading as the loaded one, so a slow load
+  // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+  // page-has-heading-one).
+  return (
+    <main style={{ display: "contents" }}>
+      <h1 style={srOnlyStyle}>{t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION)}</h1>
+      <Loader />
+    </main>
+  );
+  }
 
   return (
     // <main>: the employee layout has no main landmark (axe landmark-one-main / region); the class
     // keeps all existing styling
     <main className="reports-configuration">
-      <div className="reports-configuration">
-        {currentStep === STEP_SELECTION && (
-          <Card>
-            <HeaderComponent className="reports-configuration__heading">
-              <h1 style={{ margin: 0 }}>
-                {t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION)}
-              </h1>
-            </HeaderComponent>
-            <p className="reports-configuration__description">
-              {t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION_DESC)}
-            </p>
+      {currentStep === STEP_SELECTION && (
+        <Card>
+          <HeaderComponent className="reports-configuration__heading">
+            <h1 style={{ margin: 0 }}>{t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION)}</h1>
+          </HeaderComponent>
+          <p className="reports-configuration__description">
+            {t(I18N_KEYS.PAGES.HCM_REPORTS_SELECTION_DESC)}
+          </p>
 
             <div className="reports-configuration__count">
               {t(I18N_KEYS.PAGES.HCM_REPORTS_AVAILABLE_REPORTS)} (
@@ -509,16 +517,14 @@ const ReportsConfiguration = () => {
           </Card>
         )}
 
-        {currentStep === STEP_FREQUENCY && (
-          <Card>
-            <HeaderComponent className="reports-configuration__heading">
-              <h1 style={{ margin: 0 }}>
-                {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY)}
-              </h1>
-            </HeaderComponent>
-            <p className="reports-configuration__description">
-              {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY_DESC)}
-            </p>
+      {currentStep === STEP_FREQUENCY && (
+        <Card>
+          <HeaderComponent className="reports-configuration__heading">
+            <h1 style={{ margin: 0 }}>{t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY)}</h1>
+          </HeaderComponent>
+          <p className="reports-configuration__description">
+            {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY_DESC)}
+          </p>
 
             <div className="reports-configuration__count">
               {t(I18N_KEYS.PAGES.HCM_REPORTS_CONFIGURE_FREQUENCY_COUNT)} (
@@ -649,48 +655,47 @@ const ReportsConfiguration = () => {
           </Card>
         )}
 
-        <Footer
-          actionFields={[
-            <Button
-              key="back"
-              label={t(I18N_KEYS.COMMON.HCM_BACK)}
-              onClick={handleBack}
-              variation="secondary"
-              icon="ArrowBack"
-              style={{
-                marginLeft: "3rem",
-                minWidth: "12.5rem",
-              }}
-            />,
-            <Button
-              key="next"
-              label={
-                currentStep === STEP_FREQUENCY
-                  ? t(I18N_KEYS.PAGES.HCM_SAVE_CONFIGURATION)
-                  : t(I18N_KEYS.COMMON.HCM_NEXT)
-              }
-              onClick={handleNext}
-              variation="primary"
-              icon={
-                currentStep === STEP_FREQUENCY ? "CheckCircle" : "ArrowForward"
-              }
-              isDisabled={selectedCount === 0 || isSaving}
-              style={{
-                minWidth: "12.5rem",
-              }}
-              isSuffix={true}
-            />,
-          ]}
-          maxActionFieldsAllowed={5}
+      <Footer
+        actionFields={[
+          <Button
+            key="back"
+            label={t(I18N_KEYS.COMMON.HCM_BACK)}
+            onClick={handleBack}
+            variation="secondary"
+            icon="ArrowBack"
+            style={{
+              marginLeft: "3rem",
+              minWidth: "12.5rem",
+            }}
+          />,
+          <Button
+            key="next"
+            label={
+              currentStep === STEP_FREQUENCY
+                ? t(I18N_KEYS.PAGES.HCM_SAVE_CONFIGURATION)
+                : t(I18N_KEYS.COMMON.HCM_NEXT)
+            }
+            onClick={handleNext}
+            variation="primary"
+            icon={
+              currentStep === STEP_FREQUENCY ? "CheckCircle" : "ArrowForward"
+            }
+            isDisabled={selectedCount === 0 || isSaving}
+            style={{
+              minWidth: "12.5rem",
+            }}
+            isSuffix={true}
+          />,
+        ]}
+        maxActionFieldsAllowed={5}
+      />
+      {showToast && (
+        <Toast
+          type={showToast.key === "error" ? "error" : "success"}
+          label={showToast.label}
+          onClose={() => setShowToast(null)}
         />
-        {showToast && (
-          <Toast
-            type={showToast.key === "error" ? "error" : "success"}
-            label={showToast.label}
-            onClose={() => setShowToast(null)}
-          />
-        )}
-      </div>
+      )}
     </main>
   );
 };

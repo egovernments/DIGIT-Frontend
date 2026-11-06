@@ -204,6 +204,7 @@ const AddAttributeField = React.memo(({
         <Dropdown
           className="form-field"
           showToolTip
+          ariaLabel={t(I18N_KEYS.COMPONENTS.CAMPAIGN_ATTRIBUTE_LABEL)}
           selected={selectedAttribute}
           disable={false}
           isMandatory
@@ -220,6 +221,7 @@ const AddAttributeField = React.memo(({
         </CardLabel>
         <Dropdown
           className="form-field"
+          ariaLabel={t(I18N_KEYS.COMPONENTS.CAMPAIGN_OPERATOR_LABEL)}
           selected={selectedOperator}
           isMandatory
           option={allowedOperators}
@@ -235,6 +237,7 @@ const AddAttributeField = React.memo(({
           <LabelFieldPair style={{ marginBottom: "0rem" }} className="add-attribute-field">
             <CardLabel className="card-label-smaller add-attribute-field-label">{t(I18N_KEYS.PAGES.CAMPAIGN_FROM_LABEL)}</CardLabel>
             <TextInput
+              label={t(I18N_KEYS.PAGES.CAMPAIGN_FROM_LABEL)}
               value={attribute?.fromValue || ""}
               onChange={(e) => handleRangeValueChange(e, "from")}
               disable={false}
@@ -243,6 +246,7 @@ const AddAttributeField = React.memo(({
           <LabelFieldPair style={{ marginBottom: "0rem" }} className="add-attribute-field">
             <CardLabel className="card-label-smaller add-attribute-field-label">{t(I18N_KEYS.PAGES.CAMPAIGN_TO_LABEL)}</CardLabel>
             <TextInput
+              label={t(I18N_KEYS.PAGES.CAMPAIGN_TO_LABEL)}
               value={attribute?.toValue || ""}
               onChange={(e) => handleRangeValueChange(e, "to")}
               disable={false}
@@ -259,6 +263,7 @@ const AddAttributeField = React.memo(({
               ) : (
                 <Dropdown
                   className="form-field"
+                  ariaLabel={t(I18N_KEYS.COMPONENTS.CAMPAIGN_VALUE_LABEL)}
                   selected={selectedDropdownValue}
                   disable={false}
                   isMandatory
@@ -271,6 +276,7 @@ const AddAttributeField = React.memo(({
             ) : (
               <TextInput
                 textInputStyle={{ width: "100%" }}
+                label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_VALUE_LABEL)}
                 value={attribute?.value || ""}
                 onChange={handleValueChange}
                 disable={false}
@@ -354,7 +360,10 @@ const AddDeliveryRule = React.memo(({
   onDelete 
 }) => {
 
-  const { updateRuleProducts, updateRuleDeliveryType } = useDeliveryRules();
+  const { updateRuleProducts, updateRuleDeliveryType, activeDelivery } = useDeliveryRules();
+  // Delivery strategy tabs are rendered without a card of their own, so this card sits directly
+  // beneath them and drops its top margin. Cycle tabs keep their card and the default spacing.
+  const isMethodMode = !!activeDelivery?.deliveryMethod;
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const prodRef = useRef();
@@ -383,7 +392,7 @@ const AddDeliveryRule = React.memo(({
 
   return (
     <>
-      <Card className="delivery-rule-container">
+      <Card className={`delivery-rule-container${isMethodMode ? " delivery-strategy-rule-container" : ""}`}>
         <CardHeader styles={{ display: "flex", justifyContent: "space-between" }} className="card-header-delivery">
           <p className="title">
             {t(I18N_KEYS.PAGES.CAMPAIGN_DELIVERY_RULE_LABEL)} {rule.ruleKey}
@@ -539,6 +548,14 @@ const AddDeliveryRuleWrapper = React.memo(({
     const directOption = filteredDeliveryTypeConfig?.find(opt => opt.code === "DIRECT");
     const indirectOption = filteredDeliveryTypeConfig?.find(opt => opt.code === "INDIRECT");
 
+    // A delivery that represents a delivery strategy is always DIRECT, whatever its position -
+    // the observation strategy describes a sequence of doses, which does not apply here. Offering
+    // INDIRECT would also let the selection fall back to it, since this list is what the selected
+    // value is resolved against.
+    if (activeDelivery?.deliveryMethod) {
+      return directOption ? [directOption] : [];
+    }
+
     if (isDOT1) {
       // For DOT1: First delivery = DIRECT only, 2nd+ delivery = INDIRECT only
       if (isFirstDelivery) {
@@ -550,7 +567,14 @@ const AddDeliveryRuleWrapper = React.memo(({
       // For non-DOT1: All deliveries = DIRECT only
       return directOption ? [directOption] : [];
     }
-  }, [activeDelivery?.deliveryIndex, activeDelivery?.deliveryNumber, activeDelivery?.key, filteredDeliveryTypeConfig, projectConfig?.observationStrategy]);
+  }, [
+    activeDelivery?.deliveryIndex,
+    activeDelivery?.deliveryNumber,
+    activeDelivery?.key,
+    activeDelivery?.deliveryMethod,
+    filteredDeliveryTypeConfig,
+    projectConfig?.observationStrategy,
+  ]);
 
   const handleAddRule = useCallback(() => {
     addRule();
@@ -590,7 +614,7 @@ const AddDeliveryRuleWrapper = React.memo(({
 return (
     <>
      {radioDeliveryTypeOptions && radioDeliveryTypeOptions?.length > 0 && (
-        <Card className="delivery-type-container">
+        <Card className="delivery-type-container" style={{marginBottom:"1.5rem"}}>
           <LabelFieldPair style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} className="delivery-type-radio">
             <div className="deliveryType-labelfield">
               <span className="bold">{t(I18N_KEYS.PAGES.HCM_DELIVERY_TYPE)}</span>
@@ -607,29 +631,31 @@ return (
           </LabelFieldPair>
         </Card>
       )}
-      {activeDeliveryRules.map((rule) => (
-        <AddDeliveryRule
-          key={rule.ruleKey}
-          rule={rule}
-          attributeConfig={attributeConfig}
-          operatorConfig={operatorConfig}
-          deliveryTypeConfig={deliveryTypeConfig}
-          projectConfig={projectConfig}
-          canDelete={activeDeliveryRules.length > 1}
-          onDelete={() => handleRemoveRule(rule.ruleKey)}
-        />
-      ))}
-      
-      {canAddMore && (
-        <Button
-          variation="secondary"
-          label={t(I18N_KEYS.PAGES.CAMPAIGN_ADD_MORE_DELIVERY_BUTTON)}
-          title={t(I18N_KEYS.PAGES.CAMPAIGN_ADD_MORE_DELIVERY_BUTTON)}
-          className="add-rule-btn hover"
-          icon="AddIcon"
-          onClick={handleAddRule}
-        />
-      )}
+      <Card className="delivery-conditions-wrapper" type="secondary">
+        {activeDeliveryRules.map((rule) => (
+          <AddDeliveryRule
+            key={rule.ruleKey}
+            rule={rule}
+            attributeConfig={attributeConfig}
+            operatorConfig={operatorConfig}
+            deliveryTypeConfig={deliveryTypeConfig}
+            projectConfig={projectConfig}
+            canDelete={activeDeliveryRules.length > 1}
+            onDelete={() => handleRemoveRule(rule.ruleKey)}
+          />
+        ))}
+
+        {canAddMore && (
+          <Button
+            variation="secondary"
+            label={t(I18N_KEYS.PAGES.CAMPAIGN_ADD_MORE_DELIVERY_BUTTON)}
+            title={t(I18N_KEYS.PAGES.CAMPAIGN_ADD_MORE_DELIVERY_BUTTON)}
+            className="add-rule-btn hover"
+            icon="AddIcon"
+            onClick={handleAddRule}
+          />
+        )}
+      </Card>
     </>
   );
 });

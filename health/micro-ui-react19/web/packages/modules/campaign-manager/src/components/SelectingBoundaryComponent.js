@@ -235,9 +235,16 @@ const SelectingBoundaryComponent = ({
       let transformedRes = [];
 
       if (isMultiSelect) {
-        transformedRes = selectedData.filter((item) => item?.type === boundary?.boundaryType);
         const filteredData = selectedData.filter((item) => item?.type === boundary?.boundaryType);
-        if (filteredData.length === 0 || filteredData.length !== res.length) {
+        // When the selection has not changed, keep the existing entries so their parent/isRoot/
+        // includeAllChildren are preserved. Compare codes, not count: swapping one boundary for
+        // another leaves the count the same, and counting alone kept the old selection, so the
+        // new one was lost and the children of the old one stayed behind.
+        const selectedCodes = new Set(res.map((item) => item?.code));
+        const isSameSelection = filteredData.length === res.length && filteredData.every((item) => selectedCodes.has(item?.code));
+        if (isSameSelection) {
+          transformedRes = filteredData;
+        } else {
           transformedRes = res?.map((item) => ({
             code: item.code,
             name: item.name,
@@ -246,13 +253,17 @@ const SelectingBoundaryComponent = ({
             isRoot: item.type === parentRoot,
             includeAllChildren: item.type === lowest || item.boundaryType === lowest,
           }));
-        } else {
-          transformedRes = filteredData;
         }
         const newBoundaryType = transformedRes?.[0]?.type;
         const existingBoundaryType = selectedData?.length > 0 ? selectedData?.[0]?.type : null;
 
-        if (existingBoundaryType === newBoundaryType) {
+        // The shortcut below only maps over what is already selected, so it can update entries but
+        // never add or drop one. That is correct when the selection has not actually changed, and
+        // wrong when it has: a boundary swapped at this level would keep the old entry (no new one
+        // to map onto it) and an added boundary would never appear. So it is taken only for an
+        // unchanged selection; any real change goes through the merge below, which rebuilds the
+        // level and re-walks the tree, dropping children left behind by a boundary that is gone.
+        if (existingBoundaryType === newBoundaryType && isSameSelection) {
           const transformedMap = new Map(transformedRes.map((r) => [r.code, r]));
           const updatedSelectedData = selectedData
             .map((item) => {
@@ -275,7 +286,11 @@ const SelectingBoundaryComponent = ({
             // Items the user explicitly cleared (by clearing a parent) should stay cleared.
             const currentSelectedCodes = new Set((selectedData || []).map((item) => item.code));
             mergedData = [...mergedFrozenData, ...frozenData.filter((frozenItem) =>
-              !mergedCodes.has(frozenItem.code) && currentSelectedCodes.has(frozenItem.code)
+              !mergedCodes.has(frozenItem.code) &&
+              currentSelectedCodes.has(frozenItem.code) &&
+              // Unticking is the user clearing it too, so a frozen boundary swapped out at this
+              // level must not be added back. Other levels are untouched.
+              frozenItem?.type !== newBoundaryType
             )];
           } else {
             mergedData = [...(selectedData || []).filter((item) => item?.type !== newBoundaryType), ...transformedRes];
@@ -726,6 +741,7 @@ const SelectingBoundaryComponent = ({
                       <MultiSelectDropdown
                         disablePortal={true}
                         t={t}
+                        ariaLabel={t((hierarchyType + "_" + bType).toUpperCase())}
                         props={{ className: "selecting-boundaries-dropdown" }}
                         options={options}
                         onSelect={() => {}}
@@ -757,6 +773,7 @@ const SelectingBoundaryComponent = ({
                       <MultiSelectDropdown
                         disablePortal={true}
                         t={t}
+                        ariaLabel={t((hierarchyType + "_" + bType).toUpperCase())}
                         props={{ className: "selecting-boundaries-dropdown" }}
                         options={options}
                         onSelect={() => {}}
@@ -804,6 +821,7 @@ const SelectingBoundaryComponent = ({
                     </CardLabel>
                     <Dropdown
                       t={t}
+                      ariaLabel={t((hierarchyType + "_" + bType).toUpperCase())}
                       props={{ className: "selecting-boundaries-dropdown" }}
                       option={options}
                       select={(value) => {

@@ -121,7 +121,11 @@ export const transformUpdateCreateData = ({ campaignData }) => {
       additionalDetails: {
         beneficiaryType: campaignData?.additionalDetails?.beneficiaryType,
         key: 2,
-        cycleData: {},
+        // Carried over rather than reset: project-factory stores the additionalDetails it is
+        // given, and the backend reads cycleData.deliveryMethods on every save to decide whether
+        // the template gets the Outside Household sheet.
+        cycleData: { ...(campaignData?.additionalDetails?.cycleData || {}) },
+        ...(campaignData?.additionalDetails?.roundType ? { roundType: campaignData.additionalDetails.roundType } : {}),
         isUnifiedCampaign: hasUnifiedResource,
       },
     },

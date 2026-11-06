@@ -1,4 +1,4 @@
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useRef, useSyncExternalStore } from "react";
 import {
   campaignStore,
   STORAGE_KEYS,
@@ -145,7 +145,12 @@ const useCampaignStore = (key, defaultValue = null) => {
 
   const reduxValue = useSyncExternalStore(subscribe, getSnapshot);
 
-  const value = reduxValue !== null && reduxValue !== undefined ? reduxValue : defaultValue;
+  // Keep the fallback stable across renders. Callers pass a literal such as `{}`, which is a
+  // new object on every render; handing it straight back made every effect that depends on the
+  // value (SetupCampaign's `[params]` effect, for one) re-run on each render while the store
+  // was empty, which React stops with "Maximum update depth exceeded". The first default wins.
+  const defaultRef = useRef(defaultValue);
+  const value = reduxValue !== null && reduxValue !== undefined ? reduxValue : defaultRef.current;
 
   const setValue = useCallback(
     (newValue) => {

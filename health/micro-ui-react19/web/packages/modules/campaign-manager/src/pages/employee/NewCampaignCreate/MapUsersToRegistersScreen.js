@@ -424,15 +424,17 @@ const MapUsersToRegistersScreen = () => {
           {campaignName && <TagComponent campaignName={campaignName} />}
         </div>
 
-      <div className="map-users-heading">
-        {/* Page heading */}
-        <HeaderComponent className="attendance-screen-headers">
-          {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_TO_REGISTERS_PAGE_HEADING)}
-        </HeaderComponent>
-        <p className="info-text">
-          {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_TO_REGISTERS_PAGE_DESC)}
-        </p>
-      </div>
+        <div className="map-users-heading">
+          {/* Page heading */}
+          <HeaderComponent className="attendance-screen-headers">
+            {t(
+              I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_TO_REGISTERS_PAGE_HEADING,
+            )}
+          </HeaderComponent>
+          <p className="info-text">
+            {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_TO_REGISTERS_PAGE_DESC)}
+          </p>
+        </div>
         {/* Search filters */}
         <div
           style={{
@@ -456,6 +458,7 @@ const MapUsersToRegistersScreen = () => {
             </CardLabel>
             <div className="digit-field" style={{ width: "100%" }}>
               <TextInput
+                label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_ID_LABEL)}
                 type="text"
                 value={registerIdFilter}
                 onChange={(e) => setRegisterIdFilter(e.target.value)}
@@ -514,7 +517,9 @@ const MapUsersToRegistersScreen = () => {
       {/* ── Registers Table Card ── */}
       <Card style={{ padding: "1.5rem", overflow: "hidden" }}>
         {!isFetching && filteredRegisters.length === 0 ? (
-          <NoResultsFound text={I18N_KEYS.CAMPAIGN_CREATE.HCM_NO_REGISTERS_FOUND} />
+          <NoResultsFound
+            text={I18N_KEYS.CAMPAIGN_CREATE.HCM_NO_REGISTERS_FOUND}
+          />
         ) : (
           <DataTable
             className="digit-map-users-to-registers-table"
@@ -533,7 +538,9 @@ const MapUsersToRegistersScreen = () => {
               setCurrentPage(1);
             }}
             paginationComponentOptions={{
-              rowsPerPageText: t(I18N_KEYS.APP_CONFIGURATION.CS_COMMON_ROWS_PER_PAGE),
+              rowsPerPageText: t(
+                I18N_KEYS.APP_CONFIGURATION.CS_COMMON_ROWS_PER_PAGE,
+              ),
             }}
             progressPending={isFetching}
             progressComponent={<Loader />}

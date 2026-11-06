@@ -170,7 +170,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               isMandatory: false,
               key: "cycleConfigure",
               type: "component",
-              component: "CycleConfiguration",
+              component: "DeliveryStrategySetup",
               withoutLabelFieldPair: true,
               withoutLabel: true,
               disable: false,

@@ -64,7 +64,8 @@ function NewDraggableField({
 
   return (
     <div className="draggableField-cont" ref={ref} style={{ opacity: isDragging ? 0.5 : 1, display: "flex", alignItems: "center" }}>
-      {!isTemplate && (<div className="drag-handle">
+      {/* Only offer the handle where the row can actually be reordered. */}
+      {isDragEnabled && (<div className="drag-handle">
         <span></span>
         <span></span>
         <span></span>

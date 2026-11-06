@@ -54,9 +54,9 @@ const LocalisationBulkUpload = () => {
       ? [
           {
             name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_REGISTRATION_MODULE),
-            value: `hcm-registration-${campaignNumber}`,
+            value: `hcm-householdstrategy-${campaignNumber}`,
             baseModule: projectTypeSuffix
-              ? `hcm-base-registrationflow-${projectTypeSuffix}`
+              ? `hcm-base-householdstrategy-${projectTypeSuffix}`
               : null,
           },
           {
@@ -68,9 +68,9 @@ const LocalisationBulkUpload = () => {
           },
           {
             name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_CLOSEHOUSEHOLD_MODULE),
-            value: `hcm-closehousehold-${campaignNumber}`,
+            value: `hcm-missedchildren-${campaignNumber}`,
             baseModule: projectTypeSuffix
-              ? `hcm-base-closehousehold-${projectTypeSuffix}`
+              ? `hcm-base-missedchildren-${projectTypeSuffix}`
               : null,
           },
 
@@ -95,6 +95,56 @@ const LocalisationBulkUpload = () => {
             value: `hcm-insidemonitoring-${campaignNumber}`,
             baseModule: projectTypeSuffix
               ? `hcm-base-insidemonitoring-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(
+              I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_OUTSIDEHOUSEHOLD_POLIO_MODULE,
+            ),
+            value: `hcm-outsidehousehold-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-outsidehousehold-${projectTypeSuffix}`
+              : null,
+          },
+        ]
+      : campaignData?.projectType === "Immunisation"
+      ? [
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_REGISTRATION_MODULE),
+            value: `hcm-householdstrategy-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-householdstrategy-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_COMPLAINTS_MODULE),
+            value: `hcm-complaints-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-complaints-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_CLOSEHOUSEHOLD_MODULE),
+            value: `hcm-missedchildren-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-missedchildren-${projectTypeSuffix}`
+              : null,
+          },
+
+          {
+            name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_STOCK_POLIO_MODULE),
+            value: `hcm-stock-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-stock-${projectTypeSuffix}`
+              : null,
+          },
+          {
+            name: t(
+              I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_OUTSIDEHOUSEHOLD_POLIO_MODULE,
+            ),
+            value: `hcm-outsidehousehold-${campaignNumber}`,
+            baseModule: projectTypeSuffix
+              ? `hcm-base-outsidehousehold-${projectTypeSuffix}`
               : null,
           },
         ]
@@ -468,7 +518,7 @@ const LocalisationBulkUpload = () => {
     }
   }, [showToast]);
 
-   return (
+  return (
     // <main> with display: contents: the employee layout has no main landmark (axe landmark-one-main /
     // region); display: contents keeps the card layout exactly as before
     <main style={{ display: "contents" }}>

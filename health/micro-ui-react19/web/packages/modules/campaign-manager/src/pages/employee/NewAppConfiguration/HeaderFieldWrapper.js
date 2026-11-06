@@ -58,7 +58,8 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
   }, [value, generateLocCode, currentLocale, cardIndex, index, fieldKey, skipPropertyUpdate, dispatch]);
 
   const handleChange = useCallback((e) => {
-    let newValue = e.target.value;
+    let newValue = e && e.target ? e.target.value : e;
+    if (typeof newValue !== "string") newValue = "";
     if (newValue.length > maxLength) {
       newValue = newValue.slice(0, maxLength);
     }
@@ -98,6 +99,7 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
             type="textarea"
             className="appConfigLabelField-Input"
             name=""
+            label={t(label)}
             value={localValue}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -108,6 +110,7 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
           <TextInput
             className="appConfigLabelField-Input"
             name=""
+            label={t(label)}
             value={localValue}
             onChange={handleChange}
             onBlur={handleBlur}

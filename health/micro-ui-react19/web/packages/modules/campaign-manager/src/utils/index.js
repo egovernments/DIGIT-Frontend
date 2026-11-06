@@ -116,3 +116,27 @@ export const PRIMARY_COLOR = "#C84C0E";
 export const STOCK_BATCH_SIZE = 30;
 export const STOCK_SEARCH_MAX_RETRIES = 5;
 export const STOCK_SEARCH_RETRY_INTERVAL = 5000; // milliseconds
+
+
+/* Lets a div that carries an onClick behave like a button for keyboard users.
+   Pair it with role="button" and tabIndex={0}; the element's own click runs. */
+export const activateOnKey = (e) => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    e.currentTarget.click();
+  }
+};
+
+/* Hides an element from sight while leaving it on the accessibility tree.
+   Use it to give a screen reader a heading or a name that the design has no room to show. */
+export const srOnlyStyle = {
+  position: "absolute",
+  width: "1px",
+  height: "1px",
+  padding: 0,
+  margin: "-1px",
+  overflow: "hidden",
+  clip: "rect(0, 0, 0, 0)",
+  whiteSpace: "nowrap",
+  border: 0,
+};

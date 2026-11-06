@@ -14,6 +14,7 @@ import { AppHelpContent } from "../../../components/HelpInfoCard";
 import { CopyAll } from "../../../components/icons/CopyAll";
 import { MobileLayout } from "../../../components/icons/MobileLayout";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { srOnlyStyle } from "../../../utils";
 import useCampaignStore from "../../../hooks/useCampaignStore";
 import { useDispatch } from "react-redux";
 import { resetCreateCampaignData } from "../../../store/campaignStore";
@@ -157,10 +158,22 @@ const CampaignHome = () => {
   const templatesDataLength = templatesData?.mdms?.length;
 
   if (CampaignRequirementsLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    // The loading state carries the same landmark and heading as the loaded one, so a slow load
+    // does not leave a screen reader with no main region and no heading (axe landmark-one-main /
+    // page-has-heading-one).
+    return (
+      <main style={{ display: "contents" }}>
+        <h1 style={srOnlyStyle}>{t(I18N_KEYS.PAGES.HCM_HOW_DO_YOU_WANT_TO_CREATE)}</h1>
+        <Loader page={true} variant={"PageLoader"} />
+      </main>
+    );
   }
 
   return (
+    // <main> with display: contents: the employee layout has no main landmark, so declare one here
+    // without affecting layout (axe landmark-one-main / region). The h1 gives the page its heading
+    // (page-has-heading-one); health CSS resets heading font-size/weight so visuals are unchanged.
+    <main style={{ display: "contents" }}>
     <Card className="digit-campaign-home-card-wrapper">
       <HeaderComponent className="campaign-header-style">
         <h1 style={{ margin: 0 }}>{t(I18N_KEYS.PAGES.HCM_HOW_DO_YOU_WANT_TO_CREATE)}</h1>
@@ -174,6 +187,12 @@ const CampaignHome = () => {
             navigate(
               `/${window.contextPath}/employee/campaign/campaign-templates?from=home`
             );
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              navigate(`/${window.contextPath}/employee/campaign/campaign-templates?from=home`);
+            }
           }}
           id={"campaign-home-card-campaign-create-methods-campaign-templates"}
         >
@@ -195,11 +214,18 @@ const CampaignHome = () => {
         </Card>
         <Card
           className="digit-campaign-home-card"
-          tabIndex={1}
+          // tabIndex 0 for all three cards: positive values force an artificial tab order (axe tabindex)
+          tabIndex={0}
           onClick={() => {
             navigate(
               `/${window.contextPath}/employee/campaign/my-campaign-new?from=home`
             );
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              navigate(`/${window.contextPath}/employee/campaign/my-campaign-new?from=home`);
+            }
           }}
           id={"campaign-home-card-campaign-create-methods-my-campaigns-screen"}
         >
@@ -218,12 +244,13 @@ const CampaignHome = () => {
         </Card>
         <Card
           className="digit-campaign-home-card"
-          tabIndex={2}
+          tabIndex={0}
           onClick={() => {
             setShowPopUp(true);
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
               setShowPopUp(true);
             }
           }}
@@ -280,6 +307,7 @@ const CampaignHome = () => {
         </PopUp>
       )}
     </Card>
+    </main>
   );
 };
 

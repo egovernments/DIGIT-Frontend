@@ -128,7 +128,7 @@ const DeactivatePopUp = ({
           }}
           type="text"
           value={comment || ""}
-          populators={{ alignFieldPairVerically: true }}
+          populators={{ alignFieldPairVertically: true }}
         />
         <FieldV1
           label={t(I18N_KEYS.DEACTIVATE_POPUP.HR_EFFECTIVE_DATE)}
@@ -136,7 +136,7 @@ const DeactivatePopUp = ({
           populators={{
             name: "date",
             disableTextField: true,
-            alignFieldPairVerically: true,
+            alignFieldPairVertically: true,
           }}
           key="effective"
           onChange={(e) => {
@@ -150,7 +150,7 @@ const DeactivatePopUp = ({
           showLabel
           uploadedFiles={[]}
           variant="uploadField"
-          populators={{ alignFieldPairVerically: true }}
+          populators={{ alignFieldPairVertically: true }}
         />
         <FieldV1
           label={t(I18N_KEYS.DEACTIVATE_POPUP.HR_ENTER_REMARKS)}
@@ -159,7 +159,7 @@ const DeactivatePopUp = ({
           }}
           type="text"
           value={order || ""}
-          populators={{ alignFieldPairVerically: true }}
+          populators={{ alignFieldPairVertically: true }}
         />
       </PopUp>
       {showToast && (

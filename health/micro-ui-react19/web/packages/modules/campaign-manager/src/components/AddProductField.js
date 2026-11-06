@@ -104,6 +104,7 @@ const AddProductField = ({ onSelect }) => {
               </div>
               <div style={{ flex: 1 }}>
                 <TextInput
+                  label={t(I18N_KEYS.COMPONENTS.HCM_PRODUCT_NAME)}
                   name="name"
                   value={field?.name || ""}
                   onChange={(event) => handleUpdateField(event.target.value, "name", field.key)}
