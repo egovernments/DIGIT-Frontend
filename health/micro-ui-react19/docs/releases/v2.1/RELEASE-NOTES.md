@@ -907,9 +907,9 @@ Translation keys are centralised in `src/utils/i18nKeyConstants.js`.
 
 ## Related Documents
 
-- [Campaign Manager RELEASE-NOTES.md](https://github.com/egovernments/DIGIT-Frontend/blob/master/health/micro-ui-react19/web/packages/modules/campaign-manager/RELEASE-NOTES.md)
-- [Health Payments RELEASE-NOTES.md](https://github.com/egovernments/DIGIT-Frontend/blob/master/health/micro-ui-react19/web/packages/modules/health-payments/RELEASE-NOTES.md)
-- [Health HRMS RELEASE-NOTES.md](https://github.com/egovernments/DIGIT-Frontend/blob/master/health/micro-ui-react19/web/packages/modules/health-hrms/RELEASE-NOTES.md)
-- [PGR RELEASE-NOTES.md](https://github.com/egovernments/DIGIT-Frontend/blob/master/health/micro-ui-react19/web/packages/modules/pgr/RELEASE-NOTES.md)
-- [Health DSS RELEASE-NOTES.md](https://github.com/egovernments/DIGIT-Frontend/blob/master/health/micro-ui-react19/web/packages/modules/health-dss/RELEASE-NOTES.md)
+- [Campaign Manager — v2.1 release notes](../../../web/packages/modules/campaign-manager/docs/releases/v2.1/RELEASE-NOTES.md)
+- [Health Payments — v2.1 release notes](../../../web/packages/modules/health-payments/docs/releases/v2.1/RELEASE-NOTES.md)
+- [Health HRMS — v2.1 release notes](../../../web/packages/modules/health-hrms/docs/releases/v2.1/RELEASE-NOTES.md)
+- [PGR — v2.1 release notes](../../../web/packages/modules/pgr/docs/releases/v2.1/RELEASE-NOTES.md)
+- [Health DSS — v2.1 release notes](../../../web/packages/modules/health-dss/docs/releases/v2.1/RELEASE-NOTES.md)
 - [HCM-v2.0 Release](https://github.com/egovernments/DIGIT-Frontend/releases/tag/HCM-v2.0) — previous release reference

@@ -21,7 +21,7 @@ Unlike v2.1, this release involves **no platform migration and no new deployable
 | Health Payments | One bug fix (boundary session storage) |
 | Health HRMS | One bug fix (deactivate popup field alignment); searchable dropdowns |
 | Complaints Management (PGR) | Searchable dropdowns |
-| Health DSS | Dependency version bump only |
+| Health DSS | Two bug fixes (percentage bar chart corner; localisation module list) |
 
 ---
 
@@ -333,6 +333,8 @@ New keys in HCM v2.2 cover Group Vaccination (`GV_*`), POLIO cloning (`HCM_CLONE
 
 **After:** The write moved into a `useEffect` keyed on the selection, and the `children` array is stripped before storing. This removes a side effect during render and keeps the stored payload small.
 
+Full detail: [Health Payments v2.2 release notes](../../../web/packages/modules/health-payments/docs/releases/v2.2/RELEASE-NOTES.md)
+
 ---
 
 ## Health HRMS
@@ -349,19 +351,47 @@ New keys in HCM v2.2 cover Group Vaccination (`GV_*`), POLIO cloning (`HCM_CLONE
 
 #### Searchable dropdowns
 
-Dropdowns in HRMS and PGR are now searchable, via the `digit-ui-components` upgrade.
+`isSearchable` was added explicitly in module source — it is not inherited automatically from the `digit-ui-components` upgrade. In HRMS it covers the Employee Type, Department and Designation dropdowns on the create employee screen (`src/components/config/createEmployeeConfig.js`) and the boundary dropdown (`src/components/pageComponents/SelectEmployeeBoundary.js`).
+
+Full detail: [Health HRMS v2.2 release notes](../../../web/packages/modules/health-hrms/docs/releases/v2.2/RELEASE-NOTES.md)
 
 ---
 
 ## Complaints Management (PGR)
 
-No module code changes in this release beyond the dependency upgrade that makes dropdowns searchable.
+### What Changed
+
+#### Searchable complaint type and boundary dropdowns
+
+`isSearchable` was added explicitly in PGR source — in `src/configs/CreateComplaintConfig.js` for the complaint type dropdown, and in `src/components/BoundaryComponentWithCard.js` for the boundary dropdown. Both now accept typed text and filter their options as you type.
+
+No other source changes in this module.
+
+Full detail: [PGR v2.2 release notes](../../../web/packages/modules/pgr/docs/releases/v2.2/RELEASE-NOTES.md)
 
 ---
 
 ## Health DSS
 
-No module code changes in this release — dependency version bump only.
+### Bug Fixes
+
+#### Percentage bar charts — rounded corner drawn on the wrong segment
+
+**Before:** The horizontal bar chart located the last non-zero segment with `Number.isInteger`. In percentage mode the plotted values are one-decimal floats, which that test rejects, so no segment was recorded and the rounded corner was drawn on the **bottom** segment instead of the top.
+
+**After:** The test now accepts any numeric value. The corner is drawn on the correct segment in both count and percentage modes. Count mode was never affected.
+
+---
+
+#### Localisation request included a module that is no longer used
+
+**Before:** The dashboard requested four localisation modules at load, one of which was `rainmaker-hcm-dss`.
+
+**After:** `rainmaker-hcm-dss` has been removed, leaving `hcm-campaignmanager`, `hcm-dss` and `hcm-boundary-{hierarchyType}`.
+
+> **Check before upgrading:** any dashboard label served only from `rainmaker-hcm-dss` will no longer resolve. Confirm dashboard labels exist under `hcm-dss`.
+
+Full detail: [Health DSS v2.2 release notes](../../../web/packages/modules/health-dss/docs/releases/v2.2/RELEASE-NOTES.md)
 
 ---
 
