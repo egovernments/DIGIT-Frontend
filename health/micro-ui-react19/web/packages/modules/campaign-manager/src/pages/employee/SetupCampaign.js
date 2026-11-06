@@ -15,6 +15,7 @@ import {
   findHighestStepCount,
 } from "../../utils/setupCampaignHelpers";
 import { handleValidate } from "../../utils/setupCampaignValidators";
+import { getDeliveryRulesCampaignData } from "./deliveryRule";
 import { carryDeliveryMethods, getDeliveryMethods, getRoundType, usesDeliveryMethods } from "../../utils/deliveryMethods";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
@@ -749,6 +750,30 @@ const SetupCampaign = () => {
     }
 
     setIsSubmitting(true);
+
+    // The wizard renders one form field per step and FormComposer re-registers that field as the
+    // step changes. A re-registration that lands after the step has published its value seeds the
+    // field from the step before it, so the delivery-rules step can arrive here holding the
+    // delivery-setup object instead of its rules array. Validation then sees no rules and stops
+    // without a message, and the save would write that object over the rules.
+    //
+    // The step's own Redux store is what the screen is rendering, so it is the value to recover.
+    // Reading it only when the field is not an array keeps this off the normal path entirely: a
+    // step that published successfully always holds an array, and is left untouched. Repairing it
+    // here rather than inside the validator means the save below writes the same rules that were
+    // validated - `formData` is the object this step is persisted from.
+    //
+    // An empty store is left alone rather than written through. Replacing the field with [] would
+    // let the session fallback carry validation while the save wrote [] over rules the campaign
+    // still holds, so when there is nothing to recover the old path runs unchanged.
+    if (filteredConfig?.[0]?.form?.[0]?.name === "HCM_CAMPAIGN_DELIVERY_DATA" && !Array.isArray(formData?.deliveryRule)) {
+      const storedDeliveryRules = getDeliveryRulesCampaignData();
+      if (storedDeliveryRules?.length > 0) {
+        // Safe to assign: react-hook-form hands handleSubmit a fresh clone of the form values.
+        formData.deliveryRule = storedDeliveryRules;
+      }
+    }
+
     // Same resolution CycleConfiguration.js uses for its own isBednet render-guard (store first,
     // URL projectType param as fallback) - the validator's Bednet check must match this exactly,
     // otherwise the two can disagree about whether this is a Bednet campaign.
