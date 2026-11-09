@@ -1,11 +1,6 @@
 import React from "react";
 import PendingTransactionsTab from "./PendingTransactionsTab";
-
-// Partial-flow fields come flattened from the chart, or from additionalDetails / additionalFields on stock API records
-const getStockField = (stock, key, sourceKey = key) =>
-  stock?.[key] ??
-  stock?.additionalDetails?.[sourceKey] ??
-  stock?.additionalFields?.fields?.find((f) => f?.key === sourceKey)?.value;
+import { getStockField, isPartialFlow } from "./partialFlowUtils";
 
 const isPresent = (value) => value !== undefined && value !== null && String(value).trim() !== "";
 
@@ -13,7 +8,7 @@ const isPresent = (value) => value !== undefined && value !== null && String(val
 const isPartialReturn = (stock) =>
   stock.stockEntryType === "RETURNED" &&
   stock.status === "IN_TRANSIT" &&
-  String(getStockField(stock, "partialFlow", "partial_flow")) === "true" &&
+  isPartialFlow(stock) &&
   isPresent(getStockField(stock, "discrepancyReason")) &&
   isPresent(getStockField(stock, "originalIssueClientReferenceId"));
 

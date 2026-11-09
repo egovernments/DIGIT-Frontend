@@ -1,15 +1,16 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader, Button, Toast, PopUp, TextArea, TextInput } from "@egovernments/digit-ui-components";
+import { Loader, Button, Toast, PopUp, TextInput } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import UserDetails from "./UserDetails";
 import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { isPartialFlow } from "./partialFlowUtils";
 
-// Default record filter: returns still in transit
-const isPendingReturn = (stock) => stock.stockEntryType === "RETURNED" && stock.status === "IN_TRANSIT";
+// Default record filter: returns still in transit, excluding partial-flow returns (shown in the Partially Accepted tab)
+const isPendingReturn = (stock) => stock.stockEntryType === "RETURNED" && stock.status === "IN_TRANSIT" && !isPartialFlow(stock);
 const getStockQuantity = (stock) => stock?.quantity || 0;
 
 const PendingTransactionsTab = ({
@@ -25,7 +26,7 @@ const PendingTransactionsTab = ({
   header = "HCM_PENDING_RETURNS",
   noDataMessage = "HCM_NO_PENDING_RETURNS",
   excelFileName = "pending_transactions",
-  secondaryAction = "reject", // "reject" | "partialAccept"
+  secondaryAction = null, // null (accept only) | "partialAccept"
   filterStock = isPendingReturn,
   getQuantity = getStockQuantity,
 }) => {
@@ -34,8 +35,6 @@ const PendingTransactionsTab = ({
   const [showToast, setShowToast] = useState(null);
   const [updatingIds, setUpdatingIds] = useState(new Set());
   const [acceptPopup, setAcceptPopup] = useState(null); // { stockId }
-  const [rejectPopup, setRejectPopup] = useState(null); // { stockId }
-  const [rejectComment, setRejectComment] = useState("");
   const [partialPopup, setPartialPopup] = useState(null); // { stockId, sentQuantity, discrepancyReason }
   const [partialQuantity, setPartialQuantity] = useState("");
 
@@ -229,7 +228,7 @@ const PendingTransactionsTab = ({
     return applyGenericFilters(tableData, { searchText: searchQuery });
   }, [tableData, searchQuery]);
 
-  // Accept, Partially Accept or Reject a pending return transaction
+  // Accept or Partially Accept a pending return transaction
   const handleAction = useCallback(
     async (stockId, action, comments, extraFields = [], actualQuantityReceived = null) => {
       if (updatingIds.has(stockId)) return;
@@ -417,20 +416,6 @@ const PendingTransactionsTab = ({
     setAcceptPopup(null);
   }, [acceptPopup, handleAction]);
 
-  // Open reject popup
-  const handleRejectClick = useCallback((stockId) => {
-    setRejectComment("");
-    setRejectPopup({ stockId });
-  }, []);
-
-  // Confirm rejection with mandatory comments
-  const handleRejectConfirm = useCallback(() => {
-    if (!rejectPopup?.stockId || !rejectComment.trim()) return;
-    handleAction(rejectPopup.stockId, "reject", rejectComment);
-    setRejectPopup(null);
-    setRejectComment("");
-  }, [rejectPopup, rejectComment, handleAction]);
-
   // Open partial accept popup
   const handlePartialAcceptClick = useCallback((row) => {
     setPartialQuantity("");
@@ -535,21 +520,12 @@ const PendingTransactionsTab = ({
             isDisabled={isUpdating}
             size="small"
           />
-          {secondaryAction === "partialAccept" ? (
+          {secondaryAction === "partialAccept" && (
             <Button
               type="button"
               variation="secondary"
               label={isUpdating ? t("HCM_UPDATING") : t("HCM_PARTIALLY_ACCEPT")}
               onClick={() => handlePartialAcceptClick(row)}
-              isDisabled={isUpdating}
-              size="small"
-            />
-          ) : (
-            <Button
-              type="button"
-              variation="secondary"
-              label={isUpdating ? t("HCM_UPDATING") : t("HCM_REJECT")}
-              onClick={() => handleRejectClick(row.stockId)}
               isDisabled={isUpdating}
               size="small"
             />
@@ -629,58 +605,6 @@ const PendingTransactionsTab = ({
           ]}
           style={{ maxWidth: "500px" }}
         />
-      )}
-
-      {rejectPopup && (
-        <PopUp
-          type="default"
-          heading={t("HCM_REJECT_RETURN")}
-          children={[]}
-          onClose={() => {
-            setRejectPopup(null);
-            setRejectComment("");
-          }}
-          onOverlayClick={() => {
-            setRejectPopup(null);
-            setRejectComment("");
-          }}
-          equalWidthButtons={true}
-          footerChildren={[
-            <Button
-              key="cancel"
-              type="button"
-              size="large"
-              variation="secondary"
-              label={t("HCM_CANCEL")}
-              onClick={() => {
-                setRejectPopup(null);
-                setRejectComment("");
-              }}
-            />,
-            <Button
-              key="reject"
-              type="button"
-              size="large"
-              variation="primary"
-              label={t("HCM_CONFIRM_REJECT")}
-              onClick={handleRejectConfirm}
-              isDisabled={!rejectComment.trim()}
-            />,
-          ]}
-          style={{ maxWidth: "500px" }}
-        >
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <label style={{ fontWeight: 700, fontSize: "1rem" }}>
-              {t("HCM_COMMENTS")} <span style={{ color: "#B91900" }}>*</span>
-            </label>
-            <TextArea
-              value={rejectComment}
-              onChange={(e) => setRejectComment(e.target.value)}
-              placeholder={t("HCM_ENTER_COMMENTS")}
-              style={{ maxWidth: "100%", minHeight: "100px" }}
-            />
-          </div>
-        </PopUp>
       )}
 
       {partialPopup && (
