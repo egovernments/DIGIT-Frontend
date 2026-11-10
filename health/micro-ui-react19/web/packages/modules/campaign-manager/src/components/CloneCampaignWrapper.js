@@ -232,7 +232,20 @@ const CloneCampaignWrapper = (props) => {
                     }}
                     placeholder={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_NAME_EXAMPLE)}
                     value={name}
-                    onChange={(event) => setName(event.target.value)}
+                    onChange={(event) => {
+                      const value = event.target.value;
+                      setName(value);
+                      const nameRegexPattern = /^(?!.*[ _-]{2})(?=^[^\s_-])(?!.*[\s_-]$)(?=^[\p{L}][\p{L}0-9 _\-\(\)]{4,29}$)^.*$/u;
+                      if (!value?.trim()) {
+                        setNameError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
+                      } else if (value.length > 30) {
+                        setNameError({ message: "CAMPAIGN_NAME_GREATER" });
+                      } else if (!nameRegexPattern.test(value)) {
+                        setNameError({ message: "ES__REQUIRED_NAME_AND_LENGTH" });
+                      } else {
+                        setNameError(null);
+                      }
+                    }}
                   />
                   <FieldV1
                     error={startError?.message ? t(startError.message) : ""}
