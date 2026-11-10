@@ -48,6 +48,12 @@
     .options-card {
       max-height: 10rem !important;
     }
+
+    .digit-label-field-pair .digit-card-header, .digit-label-field-pair .digit-header-content, .digit-label-field-pair .label, .digit-label-field-pair header{
+      width: 100%;
+      max-width: 100%;
+    }
+
   }
 
   .popup-wrap {
