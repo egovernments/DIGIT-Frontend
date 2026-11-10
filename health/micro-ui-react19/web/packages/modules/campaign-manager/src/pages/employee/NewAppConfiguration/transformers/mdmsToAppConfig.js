@@ -132,6 +132,16 @@ export const transformMdmsToAppConfig = (fullData, version, existingFlows) => {
   // Combine templates and forms
   const result = [...templates, ...Object.values(forms)];
 
+  // Pages carry no category or roles, so the flows rebuilt above lose both. One save was enough to
+  // drop them from FormConfig for good, and they are what groups the flow list and fills the roles
+  // panel. Carried over from the previous flows, the same way order and initActions already are.
+  result.forEach((flow) => {
+    const previous = existingFlows?.find((f) => f?.name === flow?.name);
+    if (!previous) return;
+    if (previous.category !== undefined) flow.category = previous.category;
+    if (previous.roles !== undefined) flow.roles = previous.roles;
+  });
+
   return result;
 };
 

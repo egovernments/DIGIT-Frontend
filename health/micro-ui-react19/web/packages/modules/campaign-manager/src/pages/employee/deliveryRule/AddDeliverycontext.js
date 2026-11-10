@@ -1,4 +1,5 @@
-import React, { useRef, useState, useCallback, useMemo } from "react";
+import React, { useRef, useState, useCallback, useMemo, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import {
@@ -13,6 +14,7 @@ import {
   CardHeader,
   PopUp,
   Loader,
+  Toast,
 } from "@egovernments/digit-ui-components";
 import { useDeliveryRules } from './useDeliveryRules';
 import AddProducts from "./AddProductscontext";
@@ -366,13 +368,23 @@ const AddDeliveryRule = React.memo(({
   const isMethodMode = !!activeDelivery?.deliveryMethod;
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
+  const [showToast, setShowToast] = useState(null);
   const prodRef = useRef();
+
+  const closeToast = useCallback(() => setShowToast(null), []);
+
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(closeToast, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast, closeToast]);
 
   const handleRemoveProduct = useCallback((productItem) => {
     const updatedProducts = rule.products
       .filter(product => product.value !== productItem.value)
       .map((product, index) => ({ ...product, key: index + 1 }));
-    
+
     updateRuleProducts(rule.ruleKey, updatedProducts);
   }, [rule.products, rule.ruleKey, updateRuleProducts]);
 
@@ -380,12 +392,12 @@ const AddDeliveryRule = React.memo(({
   const confirmResources = useCallback(() => {
     const products = prodRef.current || [];
     const isValid = products.every(item => item?.quantity && item?.value);
-    
+
     if (!isValid) {
-      // Handle validation error
+      setShowToast({ key: "error", label: I18N_KEYS.PAGES.CAMPAIGN_PRODUCTS_SELECT_ALL_VALIDATION });
       return;
     }
-    
+
     updateRuleProducts(rule.ruleKey, products);
     setShowModal(false);
   }, [rule.ruleKey, updateRuleProducts]);
@@ -485,6 +497,14 @@ const AddDeliveryRule = React.memo(({
           />
         </PopUp>
       )}
+
+      {showToast &&
+        createPortal(
+          <div className="add-delivery-resource-toast">
+            <Toast type="error" label={t(showToast.label)} onClose={closeToast} />
+          </div>,
+          document.body
+        )}
     </>
   );
 });

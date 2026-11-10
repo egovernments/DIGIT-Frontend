@@ -48,6 +48,12 @@
     .options-card {
       max-height: 10rem !important;
     }
+
+    .digit-label-field-pair .digit-card-header, .digit-label-field-pair .digit-header-content, .digit-label-field-pair .label, .digit-label-field-pair header{
+      width: 100%;
+      max-width: 100%;
+    }
+
   }
 
   .popup-wrap {
@@ -409,6 +415,10 @@
     font-size: 1rem;
     font-weight: 600;
   }
+}
+
+.add-delivery-resource-toast .digit-toast-success {
+  z-index: 10001;
 }
 
 .popup-wrap.campaign-product-wrapper {

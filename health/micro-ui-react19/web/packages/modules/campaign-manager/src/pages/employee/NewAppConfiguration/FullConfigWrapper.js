@@ -361,6 +361,39 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         <div className="full-config-wrapper__error-container">
           <h2>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ERROR)}</h2>
           <p>{error || t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FAILED_TO_LOAD_FLOW_CONFIG)}</p>
+          {/* This screen used to end here, with the browser back button as the only way out.
+              Retry goes through the initializer rather than refetching here: the usual reason for
+              landing on this screen is a missing AppFlowConfig record, and the initializer is what
+              creates it. Refetching alone would just report the same thing again. */}
+          <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
+            <Button
+              variation="primary"
+              label={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_RETRY)}
+              title={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_RETRY)}
+              size="medium"
+              onClick={() =>
+                navigate(
+                  `/${window?.contextPath}/employee/campaign/app-config-init?campaignNumber=${campaignNumber}&flow=${flowModule}&version=${version}&tenantId=${tenantId}${
+                    viewMode ? "&viewMode=true" : ""
+                  }`
+                )
+              }
+            />
+            <Button
+              variation="secondary"
+              icon="ArrowBack"
+              label={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_MODULES)}
+              title={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_MODULES)}
+              size="medium"
+              onClick={() =>
+                navigate(
+                  `/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}${
+                    viewMode ? "&viewMode=true" : ""
+                  }`
+                )
+              }
+            />
+          </div>
         </div>
       </main>
     );
