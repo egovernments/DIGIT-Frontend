@@ -1,0 +1,81 @@
+name: DIGIT i18n - Apply Localization Upserts
+
+# Copy this file into your CONSUMING repo at .github/workflows/digit-i18n-apply.yml
+# and edit the two spots marked below (branches, MODULE_PATH). This is the only
+# place in the whole digit-i18n toolchain that writes to the real backend
+# automatically — deliberately. Everything before this point (the pre-commit
+# hook's lint/scan/export) only ever reads code and writes local files. The
+# reason it's safe to let THIS step write automatically is that reaching one
+# of the branches below already required a human to review and merge a pull
+# request — the committed localizations/export.*.json files in that PR are
+# what a reviewer should actually look at. That review is the human
+# confirmation "digit-i18n apply" would otherwise ask for interactively
+# (--yes below is what skips that interactive prompt, safe to do here only
+# because the PR review already served that purpose).
+#
+# Note on what actually gets sent: this step re-derives the payload fresh at
+# merge time (same "pending" registry entries + a fresh code scan that
+# `apply` always does), rather than literally re-uploading the committed
+# export.*.json file byte-for-byte. Any entry a human wrote via `stage` is
+# committed text, so what gets sent for those is identical to what was
+# reviewed. Machine-translated entries (anything under `--to` locales) are
+# re-translated fresh here rather than replayed — the free/unofficial
+# translation service has no determinism guarantee across calls, so the
+# exact wording sent could differ slightly from what was in the PR diff.
+# That's the same caveat those entries already carry (`_machineTranslated`,
+# `_needsReview`) — nothing new, just worth knowing before you rely on this.
+
+on:
+  push:
+    branches:
+      # Add every branch that should trigger an automatic apply on merge.
+      # Uncomment / add more lines for additional branches (e.g. release
+      # branches) — this is a plain list, so any number of branches works.
+      - digit-i18n-cli-demo
+      # - release/*
+      # - staging
+    paths:
+      # Only run when this module's localization data actually changed —
+      # edit this to match MODULE_PATH below.
+      - "health/micro-ui-react19/web/packages/modules/campaign-manager/localizations/**"
+
+  # Lets a human manually re-run this from the Actions tab (e.g. after a
+  # transient failure) without needing an empty commit to re-trigger `push`.
+  workflow_dispatch: {}
+
+env:
+  # Which module folder to run "digit-i18n apply" from. Edit this if you
+  # copy this workflow for a different module — keep it in sync with the
+  # `paths:` filter above.
+  MODULE_PATH: health/micro-ui-react19/web/packages/modules/campaign-manager
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install digit-i18n-cli
+        working-directory: ${{ env.MODULE_PATH }}
+        run: npm install --no-save digit-i18n-cli
+
+      - name: Apply pending localization entries
+        working-directory: ${{ env.MODULE_PATH }}
+        env:
+          # All of these are GitHub Actions repo/environment secrets you
+          # must configure yourself (Settings -> Secrets and variables ->
+          # Actions) — none of them should ever be committed to this repo.
+          DIGIT_API_BASE_URL: ${{ secrets.DIGIT_API_BASE_URL }}
+          DIGIT_TENANT_ID: ${{ secrets.DIGIT_TENANT_ID }}
+          DIGIT_USERNAME: ${{ secrets.DIGIT_USERNAME }}
+          DIGIT_PASSWORD: ${{ secrets.DIGIT_PASSWORD }}
+          DIGIT_USER_TYPE: EMPLOYEE
+          DIGIT_UPSERT_LOCALES: ${{ secrets.DIGIT_UPSERT_LOCALES }}
+        # --yes: skip the interactive confirmation prompt (there's no
+        # terminal to answer it in CI) — safe here specifically because the
+        # PR merge that triggered this already required human review.
+        run: npx digit-i18n apply --yes
