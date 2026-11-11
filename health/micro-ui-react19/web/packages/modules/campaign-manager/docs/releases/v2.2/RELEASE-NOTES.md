@@ -304,7 +304,7 @@ New keys in HCM v2.2 cover Group Vaccination (`GV_*`), POLIO cloning (`HCM_CLONE
 | `digit-ui-react-components` | — | dev-21 |
 | `digit-ui-svg-components` | — | dev-11 |
 | `digit-ui-libraries` | — | dev-16 |
-| `digit-ui-health-css` | 1.0.55 | **1.0.64** |
+| `digit-ui-health-css` | 1.0.55 | **1.0.65** |
 | `digit-ui-components-css` | dev-13 | dev-15 |
 
 The module's own package version is unchanged at `1.0.0`.
