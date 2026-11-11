@@ -61,7 +61,14 @@ jobs:
 
       - name: Install digit-i18n-cli
         working-directory: ${{ env.MODULE_PATH }}
-        run: npm install --no-save digit-i18n-cli
+        # --legacy-peer-deps: this workspace already has pre-existing peer
+        # dependency conflicts (e.g. react 19 vs. react-drag-drop-files'
+        # react@^18 peer, postcss version mismatches) that yarn silently
+        # tolerates locally via its own resolutions field — npm doesn't
+        # understand yarn's resolutions and enforces peers strictly by
+        # default, so a plain "npm install" fails here even though nothing
+        # about digit-i18n-cli itself is the problem.
+        run: npm install --no-save --legacy-peer-deps digit-i18n-cli
 
       - name: Apply pending localization entries
         working-directory: ${{ env.MODULE_PATH }}
