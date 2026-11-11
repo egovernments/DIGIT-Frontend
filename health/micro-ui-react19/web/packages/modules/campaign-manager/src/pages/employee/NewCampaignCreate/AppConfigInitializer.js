@@ -182,6 +182,7 @@ const AppConfigInitializer = () => {
                   setSetupFailed(false);
                   setAttempt((a) => a + 1);
                 }}
+                textStyles={{color:"#FFFFFF"}}
               />
             )}
             <Button

@@ -378,6 +378,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                   }`
                 )
               }
+              textStyles={{color:"#FFFFFF"}}
             />
             <Button
               variation="secondary"
