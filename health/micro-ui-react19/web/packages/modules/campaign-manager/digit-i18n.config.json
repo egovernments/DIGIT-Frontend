@@ -1,0 +1,16 @@
+{
+  "_comment": "Copy this to digit-i18n.config.json in the root of the module/repo you're running digit-i18n from, and edit it to match reality. The 'backendModule' values below are best-effort guesses from the DIGIT-Frontend source and documentation (CLAUDE.md / RELEASE-NOTES.md per module) — NOT independently confirmed for every module. If `sync` returns 0 keys for a module, double-check its backendModule tag against that module's actual moduleCode/modulePrefix.",
+  "commonModule": "COMMON",
+  "modules": {
+    "COMMON": {
+      "backendModule": "hcm-common",
+      "isCommon": true
+    },
+    "CAMPAIGN": {
+      "backendModule": "hcm-campaignmanager"
+    },
+    "APPCONFIGURATION": {
+      "backendModule": "hcm-appconfiguration"
+    }
+  }
+}

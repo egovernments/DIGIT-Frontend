@@ -1,0 +1,64 @@
+[
+  {
+    "tenantId": "demo",
+    "module": "hcm-campaignmanager",
+    "locale": "en_DEMO,fr_DEMO,pt_DEMO",
+    "messages": [
+      {
+        "module": "hcm-campaignmanager",
+        "locale": "en_DEMO,fr_DEMO,pt_DEMO",
+        "code": "DIGIT_CAMPAIGN_CONFIRM_BULK_DELETE_WARNING",
+        "message": "Confirm Bulk Delete Warning",
+        "source": "drafted",
+        "_needsReview": true,
+        "_foundAt": [
+          "/home/swathi/Downloads/MICROPLAN-UI/CURRENT/DIGIT-Frontend/DIGIT-Frontend/health/micro-ui-react19/web/packages/modules/campaign-manager/src/components/DemoUnlocalizedCheck.js:16"
+        ]
+      },
+      {
+        "module": "hcm-campaignmanager",
+        "locale": "en_DEMO,fr_DEMO,pt_DEMO",
+        "code": "DIGIT_CAMPAIGN_BULK_DELETE_SUCCESS",
+        "message": "Bulk Delete Success",
+        "source": "drafted",
+        "_needsReview": true,
+        "_foundAt": [
+          "/home/swathi/Downloads/MICROPLAN-UI/CURRENT/DIGIT-Frontend/DIGIT-Frontend/health/micro-ui-react19/web/packages/modules/campaign-manager/src/components/DemoUnlocalizedCheck.js:17"
+        ]
+      },
+      {
+        "module": "hcm-campaignmanager",
+        "locale": "en_DEMO,fr_DEMO,pt_DEMO",
+        "code": "DIGIT_CAMPAIGN_BULK_DELETE_FAILED",
+        "message": "Bulk Delete Failed",
+        "source": "drafted",
+        "_needsReview": true,
+        "_foundAt": [
+          "/home/swathi/Downloads/MICROPLAN-UI/CURRENT/DIGIT-Frontend/DIGIT-Frontend/health/micro-ui-react19/web/packages/modules/campaign-manager/src/components/DemoUnlocalizedCheck.js:18"
+        ]
+      },
+      {
+        "module": "hcm-campaignmanager",
+        "locale": "en_DEMO,fr_DEMO,pt_DEMO",
+        "code": "DIGIT_CAMPAIGN_SELECT_CAMPAIGNS_TO_DELETE",
+        "message": "Select Campaigns To Delete",
+        "source": "drafted",
+        "_needsReview": true,
+        "_foundAt": [
+          "/home/swathi/Downloads/MICROPLAN-UI/CURRENT/DIGIT-Frontend/DIGIT-Frontend/health/micro-ui-react19/web/packages/modules/campaign-manager/src/components/DemoUnlocalizedCheck.js:19"
+        ]
+      },
+      {
+        "module": "hcm-campaignmanager",
+        "locale": "en_DEMO,fr_DEMO,pt_DEMO",
+        "code": "DIGIT_CAMPAIGN_CANCEL",
+        "message": "Cancel",
+        "source": "drafted",
+        "_needsReview": true,
+        "_foundAt": [
+          "/home/swathi/Downloads/MICROPLAN-UI/CURRENT/DIGIT-Frontend/DIGIT-Frontend/health/micro-ui-react19/web/packages/modules/campaign-manager/src/components/DemoUnlocalizedCheck.js:25"
+        ]
+      }
+    ]
+  }
+]

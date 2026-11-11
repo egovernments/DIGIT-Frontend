@@ -1,0 +1,35 @@
+{
+  "hcm-campaignmanager": {
+    "en_DEMO": {
+      "lastSyncedAt": "2026-11-11T06:23:46.442Z"
+    },
+    "fr_DEMO": {
+      "lastSyncedAt": "2026-11-11T06:23:46.714Z"
+    },
+    "pt_DEMO": {
+      "lastSyncedAt": "2026-11-11T06:23:46.961Z"
+    }
+  },
+  "hcm-appconfiguration": {
+    "en_DEMO": {
+      "lastSyncedAt": "2026-11-11T06:23:46.556Z"
+    },
+    "fr_DEMO": {
+      "lastSyncedAt": "2026-11-11T06:23:46.805Z"
+    },
+    "pt_DEMO": {
+      "lastSyncedAt": "2026-11-11T06:23:47.068Z"
+    }
+  },
+  "hcm-common": {
+    "en_DEMO": {
+      "lastSyncedAt": "2026-11-11T06:23:46.612Z"
+    },
+    "fr_DEMO": {
+      "lastSyncedAt": "2026-11-11T06:23:46.861Z"
+    },
+    "pt_DEMO": {
+      "lastSyncedAt": "2026-11-11T06:23:47.133Z"
+    }
+  }
+}
