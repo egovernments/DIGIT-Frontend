@@ -93,6 +93,7 @@
     "webpack": "^5.97.1",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1",
-    "@types/react-redux": "^7.1.33"
+    "@types/react-redux": "^7.1.33",
+    "digit-i18n-cli": "1.0.1"
   }
 }
