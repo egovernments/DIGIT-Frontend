@@ -100,7 +100,7 @@ const RoleWageTable = ({
           data: {
             name: campaignName,
             eventType: "CAMPAIGN",
-            currency: "USD",
+            currency: "XOF",//ONLY for Gabon tenant
             rates,
             campaignId,
           },
