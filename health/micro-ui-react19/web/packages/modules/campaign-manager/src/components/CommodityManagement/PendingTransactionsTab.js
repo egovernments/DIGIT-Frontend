@@ -1,40 +1,53 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader, Button, Toast, PopUp, TextArea } from "@egovernments/digit-ui-components";
+import { Loader, Button, Toast, PopUp, TextInput } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import UserDetails from "./UserDetails";
 import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { isPartialFlow } from "./partialFlowUtils";
+
+// Default record filter: returns still in transit, excluding partial-flow returns (shown in the Partially Accepted tab)
+const isPendingReturn = (stock) => stock.stockEntryType === "RETURNED" && stock.status === "IN_TRANSIT" && !isPartialFlow(stock);
+const getStockQuantity = (stock) => stock?.quantity || 0;
 
 const PendingTransactionsTab = ({
   rawStockData,
   stockLoading,
   tenantId,
   campaignId,
+  campaignNumber,
   projectId,
   userBoundary,
   isTopLevel,
   refetchStockData,
+  header = "HCM_PENDING_RETURNS",
+  noDataMessage = "HCM_NO_PENDING_RETURNS",
+  excelFileName = "pending_transactions",
+  secondaryAction = null, // null (accept only) | "partialAccept"
+  filterStock = isPendingReturn,
+  getQuantity = getStockQuantity,
 }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [showToast, setShowToast] = useState(null);
   const [updatingIds, setUpdatingIds] = useState(new Set());
   const [acceptPopup, setAcceptPopup] = useState(null); // { stockId }
-  const [rejectPopup, setRejectPopup] = useState(null); // { stockId }
-  const [rejectComment, setRejectComment] = useState("");
+  const [partialPopup, setPartialPopup] = useState(null); // { stockId, sentQuantity, discrepancyReason }
+  const [partialQuantity, setPartialQuantity] = useState("");
 
   // Get user's staff project from context
   const { projects: contextProjects } = useCommodityProject();
-  const userStaffProjectId = useMemo(() => {
+  const userStaffProject = useMemo(() => {
     if (!contextProjects?.length) return null;
     const match = contextProjects.find(
       (p) => p.address?.boundary === userBoundary?.boundary
     );
-    return match?.id || contextProjects[0]?.id || null;
+    return match || contextProjects[0] || null;
   }, [contextProjects, userBoundary]);
+  const userStaffProjectId = userStaffProject?.id || null;
 
   // Fetch project facilities using user's staff project
   const projectFacilityCriteria = useMemo(
@@ -153,13 +166,12 @@ const PendingTransactionsTab = ({
     return map;
   }, [productVariants, products]);
 
-  // Filter: RETURNED + IN_TRANSIT where user's facility is the receiver
+  // Filter: records matching filterStock where user's facility is the receiver
   const tableData = useMemo(() => {
     if (!rawStockData?.length) return [];
     return rawStockData
       .filter((stock) => {
-        if (stock.stockEntryType !== "RETURNED") return false;
-        if (stock.status !== "IN_TRANSIT") return false;
+        if (!filterStock(stock)) return false;
         // Only show where user's facility is the receiver (original sender getting stock back)
         if (projectFacilityIds.size > 0 && !projectFacilityIds.has(stock.receiverId))
           return false;
@@ -200,27 +212,35 @@ const PendingTransactionsTab = ({
           userName: stock?.userName || "",
           createdBy: stock?.auditDetails?.createdBy || "N/A",
           commodity: productName,
-          quantity: stock?.quantity || 0,
+          quantity: getQuantity(stock),
+          discrepancyReason:
+            stock?.discrepancyReason ||
+            stock?.additionalDetails?.discrepancyReason ||
+            stock?.additionalFields?.fields?.find((f) => f.key === "discrepancyReason")?.value ||
+            "",
         };
       })
       .sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
-  }, [rawStockData, facilityNameMap, productNameMap, projectFacilityIds]);
+  }, [rawStockData, facilityNameMap, productNameMap, projectFacilityIds, filterStock, getQuantity]);
 
   const filteredData = useMemo(() => {
     if (!tableData?.length) return [];
     return applyGenericFilters(tableData, { searchText: searchQuery });
   }, [tableData, searchQuery]);
 
-  // Accept or Reject a pending return transaction
+  // Accept or Partially Accept a pending return transaction
   const handleAction = useCallback(
-    async (stockId, action, comments) => {
+    async (stockId, action, comments, extraFields = [], actualQuantityReceived = null) => {
       if (updatingIds.has(stockId)) return;
       setUpdatingIds((prev) => new Set(prev).add(stockId));
+      // Tracks which call failed so a partial accept can report it precisely
+      let failedStep = "update";
 
       try {
-        // Step 1: Search for the full stock object by ID
+        // Step 1: Search for the full stock object by ID (uncached, so rowVersion and quantity are current)
         const searchResponse = await Digit.CustomService.getResponse({
           url: `/stock/v1/_search`,
+          useCache: false,
           params: { tenantId, limit: 1, offset: 0 },
           body: {
             Stock: { id: [stockId] },
@@ -236,28 +256,99 @@ const PendingTransactionsTab = ({
           return;
         }
 
-        // Step 2: Update the status in additionalFields from IN_TRANSIT to ACCEPTED/REJECTED
-        const newStatus = action === "accept" ? "ACCEPTED" : "REJECTED";
-        let updatedFields = (stockObject.additionalFields?.fields || []).map(
-          (field) => {
-            if (field.key === "status") {
-              return { ...field, value: newStatus };
-            }
-            return field;
-          }
-        );
-
-        // Step 2b: Add comments to additionalFields if provided
-        if (comments?.trim()) {
-          const hasComments = updatedFields.some((f) => f.key === "comments");
-          if (hasComments) {
-            updatedFields = updatedFields.map((f) =>
-              f.key === "comments" ? { ...f, value: comments.trim() } : f
-            );
-          } else {
-            updatedFields.push({ key: "comments", value: comments.trim() });
-          }
+        // Remaining quantity is computed from the record itself, not the possibly stale table row
+        const originalQuantity = Number(stockObject.quantity) || 0;
+        const remainingQuantity =
+          action === "partialAccept" ? originalQuantity - Number(actualQuantityReceived) : 0;
+        if (action === "partialAccept" && !(remainingQuantity > 0 && remainingQuantity <= originalQuantity)) {
+          setShowToast({ key: "error", label: t("HCM_PARTIAL_QUANTITY_INVALID") });
+          return;
         }
+
+        // Step 1b: For a partial accept, issue the remaining quantity back from the receiver to the returner.
+        // referenceId must be a project the new sender (the receiver here) is mapped to, or the stock service rejects the DISPATCHED record.
+        if (remainingQuantity > 0) {
+          failedStep = "create";
+          const userInfo = Digit.UserService.getUser()?.info;
+          const timestamp = Date.now();
+          const sku = stockObject.additionalFields?.fields?.find((f) => f.key === "sku")?.value;
+          const createResponse = await Digit.CustomService.getResponse({
+            url: `/stock/v1/_create`,
+            useCache: false,
+            params: {},
+            body: {
+              Stock: {
+                tenantId,
+                clientReferenceId: crypto.randomUUID(),
+                productVariantId: stockObject.productVariantId,
+                quantity: remainingQuantity,
+                referenceId: userStaffProjectId || projectId,
+                referenceIdType: "PROJECT",
+                campaignNumber: campaignNumber || "",
+                transactionType: "DISPATCHED",
+                senderType: stockObject.receiverType || "WAREHOUSE",
+                senderId: stockObject.receiverId,
+                receiverType: stockObject.senderType || "WAREHOUSE",
+                receiverId: stockObject.senderId,
+                dateOfEntry: timestamp,
+                isDeleted: false,
+                rowVersion: 1,
+                additionalFields: {
+                  schema: "Stock",
+                  version: 1,
+                  fields: [
+                    ...(sku ? [{ key: "sku", value: sku }] : []),
+                    { key: "stockEntryType", value: "ISSUED" },
+                    { key: "primaryRole", value: "SENDER" },
+                    { key: "secondaryRole", value: "RECEIVER" },
+                    { key: "status", value: "IN_TRANSIT" },
+                    { key: "administrativeArea", value: userStaffProject?.address?.boundary || "" },
+                    { key: "campaignNumber", value: campaignNumber || "" },
+                  ],
+                },
+                auditDetails: {
+                  createdBy: userInfo?.uuid,
+                  lastModifiedBy: userInfo?.uuid,
+                  createdTime: timestamp,
+                  lastModifiedTime: timestamp,
+                },
+                clientAuditDetails: {
+                  createdBy: userInfo?.uuid,
+                  lastModifiedBy: userInfo?.uuid,
+                  createdTime: timestamp,
+                  lastModifiedTime: timestamp,
+                },
+              },
+            },
+          });
+          if (!createResponse?.Stock) throw new Error("Stock create returned no record");
+          failedStep = "updateAfterCreate";
+        }
+
+        // Step 2: Update the status in additionalFields from IN_TRANSIT to ACCEPTED/REJECTED
+        // (a partial accept is stored as ACCEPTED plus the actual and original quantities)
+        let updatedFields = [...(stockObject.additionalFields?.fields || [])];
+
+        // Step 2b: Set status, comments and any extra fields in additionalFields, overwriting existing keys
+        const fieldsToSet = [
+          { key: "status", value: action === "reject" ? "REJECTED" : "ACCEPTED" },
+          ...extraFields,
+        ];
+        if (action === "partialAccept") {
+          fieldsToSet.push(
+            { key: "actualQuantityReceived", value: String(actualQuantityReceived) },
+            // Backup of the quantity on the record before the partial accept
+            { key: "originalQuantityReceived", value: String(originalQuantity) }
+          );
+        }
+        if (comments?.trim()) fieldsToSet.push({ key: "comments", value: comments.trim() });
+        fieldsToSet.forEach(({ key, value }) => {
+          if (updatedFields.some((f) => f.key === key)) {
+            updatedFields = updatedFields.map((f) => (f.key === key ? { ...f, value } : f));
+          } else {
+            updatedFields.push({ key, value });
+          }
+        });
 
         const updatedStock = {
           ...stockObject,
@@ -270,6 +361,7 @@ const PendingTransactionsTab = ({
         // Step 3: Call stock update API
         await Digit.CustomService.getResponse({
           url: `/stock/v1/_update`,
+          useCache: false,
           params: {},
           body: {
             Stock: updatedStock,
@@ -281,6 +373,8 @@ const PendingTransactionsTab = ({
           label:
             action === "accept"
               ? t("HCM_RETURN_ACCEPTED_SUCCESS")
+              : action === "partialAccept"
+              ? t("HCM_PARTIAL_ACCEPT_SUCCESS")
               : t("HCM_RETURN_REJECTED_SUCCESS"),
         });
 
@@ -289,10 +383,15 @@ const PendingTransactionsTab = ({
           setTimeout(() => refetchStockData(), 2000);
         }
       } catch (error) {
-        console.error("Stock update error:", error);
+        console.error(`Stock ${failedStep} error:`, error);
         setShowToast({
           key: "error",
-          label: t("HCM_STOCK_UPDATE_FAILED"),
+          label:
+            failedStep === "create"
+              ? t("HCM_REMAINING_STOCK_CREATE_FAILED")
+              : failedStep === "updateAfterCreate"
+              ? t("HCM_PARTIAL_ACCEPT_UPDATE_FAILED")
+              : t("HCM_STOCK_UPDATE_FAILED"),
         });
       } finally {
         setUpdatingIds((prev) => {
@@ -302,7 +401,7 @@ const PendingTransactionsTab = ({
         });
       }
     },
-    [tenantId, t, updatingIds, refetchStockData]
+    [tenantId, campaignNumber, projectId, userStaffProject, userStaffProjectId, t, updatingIds, refetchStockData]
   );
 
   // Open accept confirmation popup
@@ -317,19 +416,37 @@ const PendingTransactionsTab = ({
     setAcceptPopup(null);
   }, [acceptPopup, handleAction]);
 
-  // Open reject popup
-  const handleRejectClick = useCallback((stockId) => {
-    setRejectComment("");
-    setRejectPopup({ stockId });
+  // Open partial accept popup
+  const handlePartialAcceptClick = useCallback((row) => {
+    setPartialQuantity("");
+    setPartialPopup({
+      stockId: row.stockId,
+      sentQuantity: Number(row.quantity) || 0,
+      discrepancyReason: row.discrepancyReason,
+    });
   }, []);
 
-  // Confirm rejection with mandatory comments
-  const handleRejectConfirm = useCallback(() => {
-    if (!rejectPopup?.stockId || !rejectComment.trim()) return;
-    handleAction(rejectPopup.stockId, "reject", rejectComment);
-    setRejectPopup(null);
-    setRejectComment("");
-  }, [rejectPopup, rejectComment, handleAction]);
+  const closePartialPopup = useCallback(() => {
+    setPartialPopup(null);
+    setPartialQuantity("");
+  }, []);
+
+  // Received quantity must be a whole number below the quantity sent (equal means a full accept)
+  const isPartialQuantityValid =
+    /^\d+$/.test(partialQuantity) && Number(partialQuantity) < (partialPopup?.sentQuantity || 0);
+
+  const changePartialQuantity = (delta) => {
+    const current = /^\d+$/.test(partialQuantity) ? Number(partialQuantity) : 0;
+    const max = Math.max((partialPopup?.sentQuantity || 0) - 1, 0);
+    setPartialQuantity(String(Math.min(Math.max(current + delta, 0), max)));
+  };
+
+  // Confirm partial acceptance with received quantity and discrepancy reason
+  const handlePartialAcceptConfirm = useCallback(() => {
+    if (!partialPopup?.stockId || !isPartialQuantityValid) return;
+    handleAction(partialPopup.stockId, "partialAccept", "", [], Number(partialQuantity));
+    closePartialPopup();
+  }, [partialPopup, isPartialQuantityValid, partialQuantity, handleAction, closePartialPopup]);
 
   const columns = [
     { label: t("HCM_TRN"), key: "trn", grow: 1, minWidth: "120px", sortable: true },
@@ -403,14 +520,16 @@ const PendingTransactionsTab = ({
             isDisabled={isUpdating}
             size="small"
           />
-          <Button
-            type="button"
-            variation="secondary"
-            label={isUpdating ? t("HCM_UPDATING") : t("HCM_REJECT")}
-            onClick={() => handleRejectClick(row.stockId)}
-            isDisabled={isUpdating}
-            size="small"
-          />
+          {secondaryAction === "partialAccept" && (
+            <Button
+              type="button"
+              variation="secondary"
+              label={isUpdating ? t("HCM_UPDATING") : t("HCM_PARTIALLY_ACCEPT")}
+              onClick={() => handlePartialAcceptClick(row)}
+              isDisabled={isUpdating}
+              size="small"
+            />
+          )}
         </div>
       );
     },
@@ -434,7 +553,7 @@ const PendingTransactionsTab = ({
   return (
     <div>
       <GenericChart
-        header={t("HCM_PENDING_RETURNS")}
+        header={t(header)}
         showSearch={true}
         className={"digit-stock-transactions-summary-tab"}
         subHeader={""}
@@ -444,14 +563,14 @@ const PendingTransactionsTab = ({
           data={filteredData}
           columns={columns}
           isLoading={false}
-          noDataMessage="HCM_NO_PENDING_RETURNS"
+          noDataMessage={noDataMessage}
           pagination={true}
           manualPagination={true}
           paginationPerPage={10}
           paginationRowsPerPageOptions={[10, 20, 50, 100]}
           customCellRenderer={customCellRenderer}
           enableExcelDownload={false}
-          excelFileName="pending_transactions"
+          excelFileName={excelFileName}
           className=""
           headerClassName=""
         />
@@ -488,19 +607,14 @@ const PendingTransactionsTab = ({
         />
       )}
 
-      {rejectPopup && (
+      {partialPopup && (
         <PopUp
           type="default"
-          heading={t("HCM_REJECT_RETURN")}
+          heading={t("HCM_PARTIALLY_ACCEPT_STOCK")}
+          description={t("HCM_PARTIALLY_ACCEPT_STOCK_DESC")}
           children={[]}
-          onClose={() => {
-            setRejectPopup(null);
-            setRejectComment("");
-          }}
-          onOverlayClick={() => {
-            setRejectPopup(null);
-            setRejectComment("");
-          }}
+          onClose={closePartialPopup}
+          onOverlayClick={closePartialPopup}
           equalWidthButtons={true}
           footerChildren={[
             <Button
@@ -509,33 +623,58 @@ const PendingTransactionsTab = ({
               size="large"
               variation="secondary"
               label={t("HCM_CANCEL")}
-              onClick={() => {
-                setRejectPopup(null);
-                setRejectComment("");
-              }}
+              onClick={closePartialPopup}
             />,
             <Button
-              key="reject"
+              key="confirm"
               type="button"
               size="large"
               variation="primary"
-              label={t("HCM_CONFIRM_REJECT")}
-              onClick={handleRejectConfirm}
-              isDisabled={!rejectComment.trim()}
+              label={t("HCM_CONFIRM")}
+              onClick={handlePartialAcceptConfirm}
+              isDisabled={!isPartialQuantityValid}
             />,
           ]}
           style={{ maxWidth: "500px" }}
         >
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <label style={{ fontWeight: 700, fontSize: "1rem" }}>
-              {t("HCM_COMMENTS")} <span style={{ color: "#B91900" }}>*</span>
-            </label>
-            <TextArea
-              value={rejectComment}
-              onChange={(e) => setRejectComment(e.target.value)}
-              placeholder={t("HCM_ENTER_COMMENTS")}
-              style={{ maxWidth: "100%", minHeight: "100px" }}
-            />
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <label style={{ fontWeight: 700, fontSize: "1rem" }}>
+                {t("HCM_ACTUAL_QUANTITY_RECEIVED")} <span style={{ color: "#B91900" }}>*</span>
+              </label>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <Button
+                  type="button"
+                  variation="secondary"
+                  label="-"
+                  onClick={() => changePartialQuantity(-1)}
+                  size="medium"
+                />
+                <TextInput
+                  type="number"
+                  value={partialQuantity}
+                  onChange={(e) => setPartialQuantity(e.target.value.replace(/\D/g, ""))}
+                  style={{ textAlign: "center" }}
+                />
+                <Button
+                  type="button"
+                  variation="secondary"
+                  label="+"
+                  onClick={() => changePartialQuantity(1)}
+                  size="medium"
+                />
+              </div>
+              <span style={{ fontSize: "0.875rem", color: "#505A5F" }}>
+                {t("HCM_QUANTITY_SENT")}: {partialPopup.sentQuantity.toLocaleString()}
+              </span>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <label style={{ fontWeight: 700, fontSize: "1rem" }}>{t("HCM_DISCREPANCY_REASON")}</label>
+              {/* Reason recorded by the mobile app on the return; shown read-only */}
+              <span>
+                {partialPopup.discrepancyReason ? t(partialPopup.discrepancyReason) : "N/A"}
+              </span>
+            </div>
           </div>
         </PopUp>
       )}
