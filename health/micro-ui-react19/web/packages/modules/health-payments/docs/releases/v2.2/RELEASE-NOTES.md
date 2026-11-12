@@ -44,7 +44,7 @@ File changed: `src/components/BoundaryComponent.js`
 
 | Package | v2.1 | v2.2 |
 |---|---|---|
-| `@egovernments/digit-ui-components` | 2.0.0-dev-64 | 2.0.0-dev-78 |
+| `@egovernments/digit-ui-components` | 2.0.0-dev-64 | 2.0.0-dev-79 |
 
 `@egovernments/digit-ui-react-components` remains pinned to `*`. The module's own package version is unchanged at `1.0.0`.
 
