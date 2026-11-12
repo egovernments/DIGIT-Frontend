@@ -741,6 +741,13 @@
       margin-right: auto !important;
     }
   }
+
+  .digit-switch {
+    &.switch-disabled {
+      cursor: not-allowed !important;
+      pointer-events: auto !important;
+    }
+  }
 }
 
 .react-datepicker-popper {

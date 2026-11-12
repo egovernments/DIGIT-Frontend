@@ -1118,9 +1118,14 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       })
     );
 
-    // Fetch localization data when localeModule changes
-    if (localeModule && previousLocaleModuleRef.current !== localeModule) {
-      previousLocaleModuleRef.current = localeModule;
+    // Refetch the campaign localization when the module changes and when the language does. The
+    // effect already re-runs on a language switch - sessionLocale is one of its dependencies - but
+    // this guard only compared the module, so both dispatches below were skipped and the preview
+    // stayed in the previous language while the rest of the screen switched. Each entry holds only
+    // the locale it was fetched for, so a new language needs a new fetch, not a lookup.
+    const localeCacheKey = `${localeModule}-${sessionLocale}`;
+    if (localeModule && previousLocaleModuleRef.current !== localeCacheKey) {
+      previousLocaleModuleRef.current = localeCacheKey;
 
       dispatch(
         fetchLocalization({

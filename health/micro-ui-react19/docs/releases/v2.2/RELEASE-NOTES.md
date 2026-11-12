@@ -405,7 +405,7 @@ Full detail: [Health DSS v2.2 release notes](../../../web/packages/modules/healt
 | `digit-ui-react-components` | — | dev-21 |
 | `digit-ui-svg-components` | — | dev-11 |
 | `digit-ui-libraries` | — | dev-16 |
-| `digit-ui-health-css` | 1.0.55 | **1.0.64** |
+| `digit-ui-health-css` | 1.0.55 | **1.0.65** |
 | `digit-ui-components-css` | dev-13 | dev-15 |
 
 Module package versions are unchanged (`campaign-manager` 1.0.0, `health-payments` 1.0.0, `health-hrms` 1.0.0, `health-dss` 1.0.0, `pgr` 0.0.2).
