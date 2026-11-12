@@ -53,7 +53,7 @@ const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
   // Calculate duration from deliveryCycles
   const deliveryCycles = rowData?.data?.deliveryCycles || [];
   const duration = deliveryCycles.length > 0
-    ? `${deliveryCycles.length} Round${deliveryCycles.length > 1 ? 's' : ''} | ${deliveryCycles[0]?.durationInDays || 0} ${t(I18N_KEYS.COMPONENTS.DAYS)}`
+    ? `${deliveryCycles.length} ${deliveryCycles.length > 1 ? t(I18N_KEYS.COMPONENTS.ROUND_PLURAL) : t(I18N_KEYS.COMPONENTS.ROUND_SINGLE)} | ${deliveryCycles[0]?.durationInDays || 0} ${t(I18N_KEYS.COMPONENTS.DAYS)}`
     : "NA";
 
   const createdBy = rowData?.data?.partnerName || "NA";
