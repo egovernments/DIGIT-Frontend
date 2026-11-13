@@ -72,7 +72,7 @@ const moduleCode = ["hcm-campaignmanager", "hcm-dss", `hcm-boundary-${hierarchyT
 |---|---|---|
 | `@egovernments/digit-ui-react-components` | 2.0.0-dev-18 | 2.0.0-dev-21 |
 | `@egovernments/digit-ui-svg-components` | 2.0.0-dev-08 | 2.0.0-dev-11 |
-| `@egovernments/digit-ui-components` | 2.0.0-dev-64 | 2.0.0-dev-78 |
+| `@egovernments/digit-ui-components` | 2.0.0-dev-64 | 2.0.0-dev-79 |
 
 ---
 

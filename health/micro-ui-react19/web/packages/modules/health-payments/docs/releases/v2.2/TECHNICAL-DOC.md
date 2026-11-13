@@ -62,7 +62,7 @@ useEffect(() => {
 
 | Package | v2.1 | v2.2 |
 |---|---|---|
-| `@egovernments/digit-ui-components` | 2.0.0-dev-64 | 2.0.0-dev-78 |
+| `@egovernments/digit-ui-components` | 2.0.0-dev-64 | 2.0.0-dev-79 |
 
 `@egovernments/digit-ui-react-components` is pinned to `*` and did not change. This module declares no `digit-ui-svg-components` dependency.
 

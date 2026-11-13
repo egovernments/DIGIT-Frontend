@@ -58,7 +58,7 @@ File changed: `src/Module.js`
 |---|---|---|
 | `@egovernments/digit-ui-react-components` | 2.0.0-dev-18 | 2.0.0-dev-21 |
 | `@egovernments/digit-ui-svg-components` | 2.0.0-dev-08 | 2.0.0-dev-11 |
-| `@egovernments/digit-ui-components` | 2.0.0-dev-64 | 2.0.0-dev-78 |
+| `@egovernments/digit-ui-components` | 2.0.0-dev-64 | 2.0.0-dev-79 |
 
 The module's own package version is unchanged at `1.0.0`.
 
