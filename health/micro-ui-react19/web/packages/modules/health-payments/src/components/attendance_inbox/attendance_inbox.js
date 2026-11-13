@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef} from "react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
 import CustomFilter from "./filter_section";
@@ -16,6 +16,14 @@ import { useMyContext } from "../../utils/context";
  */
 const AttendanceInboxComponent = ({ fromBill = false }) => {
   const { t } = useTranslation();
+  const latestRequestRef = useRef(0);
+
+  // Invalidate pending requests when the component unmounts
+  useEffect(() => {
+    return () => {
+      latestRequestRef.current += 1;
+    };
+  }, []);
   const { hierarchyType } = useMyContext();
   const stateCode = Digit.ULBService.getStateId();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -63,87 +71,104 @@ const AttendanceInboxComponent = ({ fromBill = false }) => {
    * @param {number} totalNext - Offset for pagination
    * @param {object} selectedProject - Selected project object
    */
-  const triggerAttendanceSearch = (filterData, status, totalRows, totalNext, userAssignedProject) => {
+  const triggerAttendanceSearch = async (
+    filterData,
+    status,
+    pageSize = rowsPerPage,
+    page = currentPage,
+    userAssignedProject,
+  ) => {
+    const requestId = ++latestRequestRef.current;
+
     try {
       setChildrenDataLoading(true);
 
-      // FIX: Always get the latest period from session storage when function is called
       const latestPeriod = Digit.SessionStorage.get("selectedPeriod");
       const periodId = latestPeriod?.id;
 
-      // Update display state with latest period
       setMarkPeriod(latestPeriod);
+
+      // Normalize pagination values
+      const effectivePageSize = Math.max(
+        1,
+        Number(pageSize) || defaultRowsPerPage,
+      );
+      const effectivePage = Math.max(1, Number(page) || 1);
+
+      // Calculate zero-based offset
+      const offset = (effectivePage - 1) * effectivePageSize;
 
       const params = {
         tenantId: Digit.ULBService.getStateId(),
-        limit: totalRows || rowsPerPage,
-        offset: totalNext == undefined ? (currentPage - 1) * rowsPerPage : (totalNext - 1) * totalRows,
+        limit: effectivePageSize,
+        offset,
         referenceId:
-          (userAssignedProject?.id == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id) ||
-          selectedProject?.id,
+          (userAssignedProject?.id === undefined
+            ? Digit.SessionStorage.get("paymentInbox")?.selectedProject?.id
+            : selectedProject?.id) || selectedProject?.id,
         localityCode:
-          filterData?.code == undefined || filterData?.code == null
-            ? filterCriteria?.code == undefined || filterCriteria?.code == null
-              ? Digit.SessionStorage.get("paymentInbox").code
+          filterData?.code == null
+            ? filterCriteria?.code == null
+              ? Digit.SessionStorage.get("paymentInbox")?.code
               : filterCriteria?.code
             : filterData?.code,
-        registerPeriodStatus: status == undefined ? selectedStatus : status,
+        registerPeriodStatus: status ?? selectedStatus,
         isChildrenRequired: true,
-        billingPeriodId: periodId, // Use the latest period ID
+        billingPeriodId: periodId,
       };
 
       if (!fromBill) {
         params.staffId = Digit.SessionStorage.get("UserIndividual")?.[0]?.id;
       }
+      const response = await fetchRegisters.mutateAsync({
+        params,
+      });
 
-      fetchRegisters.mutateAsync(
-        {
-          params: {
-            ...params,
-          },
-        },
-        {
-          /**
-           * Success callback function
-           * @param {object} data - Response data from API
-           */
-          onSuccess: (data) => {
-            const rowData =
-              data?.attendanceRegister.length > 0
-                ? data?.attendanceRegister?.map((item, index) => {
-                  return {
-                    id: item?.registerNumber,
-                    registerId: item?.id,
-                    name: selectedProject?.name,
-                    boundary: item?.localityCode,
-                    boundaryType: item?.additionalDetails?.boundaryType,
-                    status: item?.attendees == null ? 0 : item?.attendees.length || 0,
-                    markby: item?.staff?.[0].additionalDetails?.ownerName || "NA",
-                    approvedBy: item?.staff?.[0].additionalDetails?.staffName || "NA",
-                  };
-                })
-                : [];
-            setChildrenDataLoading(false);
-            setCard(true);
-            setchildrenData({
-              data: rowData,
-              totalCount: data?.totalCount,
-              statusCount: data?.statusCount,
-            });
-          },
-          /**
-           * Error callback function
-           * @param {object} error - Error object
-           */
-          onError: (error) => {
-            setCard(true);
-            setChildrenDataLoading(false);
-            setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED), transitionTime: 3000 });
-          },
-        }
-      );
+      // Ignore responses from older requests
+      if (requestId !== latestRequestRef.current) {
+        return;
+      }
+
+      const attendanceRegisters = Array.isArray(response?.attendanceRegister)
+        ? response.attendanceRegister
+        : [];
+
+      const rowData = attendanceRegisters.map((item) => ({
+        id: item?.registerNumber,
+        registerId: item?.id,
+        name: selectedProject?.name,
+        boundary: item?.localityCode,
+        boundaryType: item?.additionalDetails?.boundaryType,
+        status: item?.attendees?.length || 0,
+        markby: item?.staff?.[0]?.additionalDetails?.ownerName || "NA",
+        approvedBy: item?.staff?.[0]?.additionalDetails?.staffName || "NA",
+      }));
+
+      setCard(true);
+
+      setchildrenData({
+        data: rowData,
+        totalCount: response?.totalCount ?? 0,
+        statusCount: response?.statusCount,
+      });
     } catch (error) {
-      setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED), transitionTime: 3000 });
+      // Ignore errors from older requests
+      if (requestId !== latestRequestRef.current) {
+        return;
+      }
+
+      setCard(true);
+
+      setShowToast({
+        key: "error",
+        label: t(I18N_KEYS.COMMON.HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED),
+        transitionTime: 3000,
+      });
+    } finally {
+      // Only the latest request can update loading state
+      if (requestId === latestRequestRef.current) {
+        setChildrenDataLoading(false);
+      }
     }
   };
 
@@ -245,20 +270,34 @@ const AttendanceInboxComponent = ({ fromBill = false }) => {
     Digit.SessionStorage.set("paymentInbox", existingData);
 
     // Trigger search - it will automatically get the latest period from session storage
-    triggerAttendanceSearch(newFilter, selectedStatus);
+    setCurrentPage(1);
+    triggerAttendanceSearch(newFilter, selectedStatus, rowsPerPage, 1);
   };
 
   const handlePaginationChange = (page) => {
     setCurrentPage(page);
-    // Will get latest period from session storage when called
-    triggerAttendanceSearch(filterCriteria, selectedStatus, rowsPerPage, page);
+
+    triggerAttendanceSearch(
+      filterCriteria,
+      selectedStatus,
+      rowsPerPage,
+      page
+    );
   };
 
   const handleRowsPerPageChange = (newPerPage, page) => {
-    setRowsPerPage(newPerPage);
-    setCurrentPage(page);
-    // Will get latest period from session storage when called
-    triggerAttendanceSearch(filterCriteria, selectedStatus, newPerPage, page);
+    const nextPageSize = Number(newPerPage) || defaultRowsPerPage;
+    const nextPage = Math.max(1, Number(page) || 1);
+
+    setRowsPerPage(nextPageSize);
+    setCurrentPage(nextPage);
+
+    triggerAttendanceSearch(
+      filterCriteria,
+      selectedStatus,
+      nextPageSize,
+      nextPage
+    );
   };
 
   const callServiceOnTap = (status) => {
@@ -320,6 +359,7 @@ const AttendanceInboxComponent = ({ fromBill = false }) => {
                 <CustomInboxTable
                   statusCount={childrenData?.statusCount}
                   handleTabChange={callServiceOnTap}
+                  currentPage={currentPage}
                   rowsPerPage={rowsPerPage}
                   customHandleRowsPerPageChange={handleRowsPerPageChange}
                   customHandlePaginationChange={handlePaginationChange}

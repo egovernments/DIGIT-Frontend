@@ -14,7 +14,7 @@ export const lowerBoundaryDefaultSet = "DISTRICT";
 export const defaultRowsPerPage = 10;
 export const defaultRowsPerPageForEditAttendee = 5;
 
-export const defaultPaginationValues = [10, 20, 30, 40, 50];
+export const defaultPaginationValues = [10, 20, 30, 50, 100];
 export const defaultPaginationValuesForEditAttendee = [5, 10, 15, 20, 25];
 
 // For type of Bill

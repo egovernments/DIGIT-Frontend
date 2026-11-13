@@ -18,4 +18,4 @@ export const StatusEnum = Object.freeze({
     export const defaultRowsPerPage= 10;
 
     
-    export const defaultPaginationValues = [10, 20, 30, 40, 50];
+    export const defaultPaginationValues = [10, 20, 30, 50, 100];

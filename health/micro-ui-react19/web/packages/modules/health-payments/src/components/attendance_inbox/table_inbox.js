@@ -16,6 +16,7 @@ const APPROVED_TAB = { code: "APPROVED", name: "HCM_AM_APPROVED" };
 
 const CustomInboxTable = ({
   handleTabChange,
+  currentPage,
   rowsPerPage,
   isLoading,
   tableData,
@@ -302,6 +303,7 @@ const CustomInboxTable = ({
                   paginationTotalRows={totalCount}
                   onChangePage={handlePaginationChange}
                   onChangeRowsPerPage={handleRowsPerPageChange}
+                  paginationDefaultPage={currentPage}
                   paginationPerPage={rowsPerPage}
                   sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
                   paginationRowsPerPageOptions={defaultPaginationValues}
