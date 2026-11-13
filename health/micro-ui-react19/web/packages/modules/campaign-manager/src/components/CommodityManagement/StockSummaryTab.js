@@ -9,6 +9,7 @@ import GenericChart from "./GenericChart";
 import CommodityShipmentPopup from "./CommodityShipmentPopup";
 import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { getQuantityInBalesColumn, formatBales, QUANTITY_IN_BALES_KEY, withoutBalesColumn } from "./stockUnits";
 
 const toCamelCase = (str) =>
   str.split(" ")
@@ -141,7 +142,12 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   }, [productVariants, products]);
 
   // Get user's staff project from context (the project the user is directly assigned to)
-  const { projects: contextProjects, sortedHierarchy } = useCommodityProject();
+  const { projects: contextProjects, sortedHierarchy, userLevelIndex } = useCommodityProject();
+
+  // Stock enters the system at the first warehouse tier (the level directly below the top)
+  // without a recorded receipt, so per-commodity balance cards aren't meaningful there.
+  // Hide them for the top level and that first tier.
+  const hideCommodityCards = isTopLevel || (userLevelIndex >= 0 && userLevelIndex <= 1);
   const userStaffProjectId = useMemo(() => {
     if (!contextProjects?.length) return null;
     // First project is the user's directly assigned staff project
@@ -178,7 +184,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   // Uses status field on ISSUED records: ACCEPTED→issued, REJECTED→returned, IN_TRANSIT→skip
   // LESS/EXCESS adjust received totals; RETURNED adds to returned
   const facilityCommoditySummaries = useMemo(() => {
-    if (isTopLevel || !finalStockData?.length || !userFacilityIds.size) return [];
+    if (hideCommodityCards || !finalStockData?.length || !userFacilityIds.size) return [];
     const commodityMap = {};
     finalStockData.forEach((stock) => {
       const stockEntryType = stock.stockEntryType || "";
@@ -245,7 +251,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       ...c,
       balance: c.totalReceived - c.totalIssued - c.totalReturned,
     }));
-  }, [finalStockData, userFacilityIds, isTopLevel, productNameMap]);
+  }, [finalStockData, userFacilityIds, hideCommodityCards, productNameMap]);
 
   // Use per-facility summaries when available, otherwise fall back to global
   const { commoditySummaries: globalCommoditySummaries = [], dataSyncStats: syncStats } = stockSummary || {};
@@ -568,6 +574,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       minWidth: "100px",
       sortable: true,
     },
+    getQuantityInBalesColumn(t),
     {
       label: t("HCM_STATUS"),
       key: "displayStatus",
@@ -653,7 +660,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     const label = t("HCM_TRANSACTION_LIST");
     exportTableToXlsx(
       filteredData,
-      columns.filter((col) => col.key !== "action"),
+      withoutBalesColumn(columns).filter((col) => col.key !== "action"),
       label,
       label
     );
@@ -801,6 +808,9 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         {row.quantity?.toLocaleString()}
       </span>
     ),
+    [QUANTITY_IN_BALES_KEY]: (row) => (
+      <span className="cm-cell-stock">{formatBales(row.quantity)}</span>
+    ),
     displayStatus: (row) => (
       <span className={`cm-status-badge ${getStatusClass(row.displayStatus)}`}>
         {row.displayStatus}
@@ -846,7 +856,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         ]}
       />
 
-      {!isTopLevel && commoditySummaries.map((commodity, index) => (
+      {!hideCommodityCards && commoditySummaries.map((commodity, index) => (
         <SummaryCard
           key={index}
           title="HCM_STOCK_SUMMARY"

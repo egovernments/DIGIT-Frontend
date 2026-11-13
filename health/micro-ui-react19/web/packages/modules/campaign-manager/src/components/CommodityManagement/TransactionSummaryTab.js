@@ -9,6 +9,7 @@ import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { getQuantityInBalesColumn, formatBales, QUANTITY_IN_BALES_KEY, withoutBalesColumn } from "./stockUnits";
 
 const normalizeStock = (stock) => stock?._source?.Data || stock?.Data || stock || {};
 
@@ -389,7 +390,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       const XLSX = require("xlsx");
       const exportData = filteredData.map((row) => {
         const exportRow = {};
-        columns.forEach((col) => {
+        withoutBalesColumn(columns).forEach((col) => {
           exportRow[col.label] =
             row[col.key] !== undefined && row[col.key] !== null
               ? String(row[col.key])
@@ -524,6 +525,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   { label: t("HCM_STATUS"), key: "status", grow: 0.8, minWidth: "120px", sortable: false },
   { label: t("HCM_COMMODITY"), key: "commodity", grow: 0.8, sortable: false },
   { label: t("HCM_QUANTITY"), key: "quantity", sortType: "numeric", grow: 0.6, minWidth: "100px", sortable: true },
+  getQuantityInBalesColumn(t),
   { label: t("HCM_TRANSACTION_TYPE"), key: "transactionType", grow: 1, sortable: false },
   { label: t("HCM_COMMENTS"), key: "comments", grow: 1.2, minWidth: "180px", sortable: false },
 ];
@@ -542,6 +544,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   };
 
   const customCellRenderer = {
+    [QUANTITY_IN_BALES_KEY]: (row) => formatBales(row.quantity),
     status: (row) => (
       <span className={`cm-status-badge ${getStatusClass(row.status)}`}>
         {row.status}

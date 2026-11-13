@@ -13,6 +13,8 @@ import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDat
 import QRButton from "../../../components/CreateCampaignComponents/QRButton";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
+export const HCMCONSOLE_APPCONFIG_MODULENAME = "FormConfig";
+
 function transformCampaignData(inputObj = {}) {
   const deliveryRule = inputObj.deliveryRules?.[0] || {};
   const deliveryResources = deliveryRule.resources || [];

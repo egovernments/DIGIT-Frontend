@@ -8,6 +8,7 @@ import UserDetails from "./UserDetails";
 import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { isPartialFlow } from "./partialFlowUtils";
+import { getQuantityInBalesColumn, formatBales, QUANTITY_IN_BALES_KEY } from "./stockUnits";
 
 // Default record filter: returns still in transit, excluding partial-flow returns (shown in the Partially Accepted tab)
 const isPendingReturn = (stock) => stock.stockEntryType === "RETURNED" && stock.status === "IN_TRANSIT" && !isPartialFlow(stock);
@@ -456,10 +457,12 @@ const PendingTransactionsTab = ({
     { label: t("HCM_CREATED_BY"), key: "createdBy", grow: 1, sortable: true },
     { label: t("HCM_COMMODITY"), key: "commodity", grow: 0.8, sortable: true },
     { label: t("HCM_QUANTITY"), key: "quantity", grow: 0.6, minWidth: "100px", sortable: true },
+    getQuantityInBalesColumn(t),
     { label: t("HCM_ACTION"), key: "action", grow: 1.5, minWidth: "240px", sortable: false },
   ];
 
   const customCellRenderer = {
+    [QUANTITY_IN_BALES_KEY]: (row) => formatBales(row.quantity),
     sentFrom: (row) => (
       <div>
         <div className="cm-cell-link">{row.sentFrom}</div>

@@ -13,8 +13,12 @@ import {
   MultiSelectDropdown,
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
+import { toBales } from "./stockUnits";
 
 const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
+// Number of lowest hierarchy levels that never hold warehouses (e.g. service points and
+// settlements below the last warehouse tier). Stock can't be shipped to these levels.
+const NON_WAREHOUSE_BOTTOM_LEVELS = 2;
 
 const NewShipmentPopup = ({
   campaignNumber,
@@ -248,11 +252,16 @@ const NewShipmentPopup = ({
     }
   }, [userBoundary, effectiveHierarchy]);
 
-  // Auto-select the first from facility when the facility list changes (new boundary → new list)
-  useEffect(() => {
-    if (!fromFacilityList?.length) return;
-    setFromFacilityId(fromFacilityList[0].id);
-  }, [fromFacilityList]);
+  // Top-level users don't dispatch from the top boundary itself: they pick a boundary
+  // one level below it and dispatch from that boundary's warehouse.
+  const isUserAtTopLevel =
+    !!userBoundary?.boundaryType &&
+    sortedHierarchy[0]?.boundaryType === userBoundary.boundaryType;
+
+  const fromSelectableLevel = useMemo(
+    () => (isUserAtTopLevel && effectiveHierarchy.length > 1 ? effectiveHierarchy[1] : null),
+    [isUserAtTopLevel, effectiveHierarchy]
+  );
 
   // Build hierarchy filter options from boundary tree
   const hierarchyFilterOptions = useMemo(() => {
@@ -300,11 +309,23 @@ const NewShipmentPopup = ({
     return level;
   }, [fromHierarchyFilters, effectiveHierarchy]);
 
+  // "From" boundary is complete once every selectable From level has a value
+  const isFromBoundaryComplete =
+    fromSelectedLevel >= 0 &&
+    (!fromSelectableLevel || !!fromHierarchyFilters[fromSelectableLevel.boundaryType]);
+
+  // Stock enters the system at the first warehouse tier — the level directly below the top
+  // boundary, which is also the level top-level users dispatch from — without a prior receipt.
+  // Shipments from the top boundary or that first tier therefore skip the available-stock check.
+  const fromBoundaryType = effectiveHierarchy[fromSelectedLevel]?.boundaryType;
+  const fromLevelIdxInHierarchy = sortedHierarchy.findIndex((h) => h.boundaryType === fromBoundaryType);
+  const isFromSourceLevel = isTopLevel || (fromLevelIdxInHierarchy >= 0 && fromLevelIdxInHierarchy <= 1);
+
   // "To" hierarchy levels: below the "From" selected level (within effectiveHierarchy)
   const toHierarchyLevels = useMemo(() => {
-    if (fromSelectedLevel < 0) return [];
+    if (!isFromBoundaryComplete) return [];
     return effectiveHierarchy.slice(fromSelectedLevel + 1);
-  }, [effectiveHierarchy, fromSelectedLevel]);
+  }, [effectiveHierarchy, fromSelectedLevel, isFromBoundaryComplete]);
 
   // Determine the deepest "To" hierarchy level with a selection (index relative to effectiveHierarchy)
   const toSelectedLevel = useMemo(() => {
@@ -333,6 +354,7 @@ const NewShipmentPopup = ({
   // Searches the MERGED allProjectIds (initial + accumulated child data) so that
   // multi-level cascading works (e.g., LGA parents found from a previous child search).
   const childSearchProjectIds = useMemo(() => {
+    if (!isFromBoundaryComplete) return [];
     const targetLevelIdx = toSelectedLevel >= 0 ? toSelectedLevel : (fromSelectedLevel >= 0 ? fromSelectedLevel + 1 : -1);
     if (targetLevelIdx < 0 || targetLevelIdx >= effectiveHierarchy.length) return [];
     const targetBoundaryType = effectiveHierarchy[targetLevelIdx]?.boundaryType;
@@ -367,7 +389,7 @@ const NewShipmentPopup = ({
         return ancestors[type] === value;
       });
     });
-  }, [allProjectIds, projectBoundaryMap, sortedHierarchy, effectiveHierarchy, toSelectedLevel, fromSelectedLevel, fromHierarchyFilters, boundaryAncestorMap, campaignNumber]);
+  }, [allProjectIds, projectBoundaryMap, sortedHierarchy, effectiveHierarchy, toSelectedLevel, fromSelectedLevel, fromHierarchyFilters, boundaryAncestorMap, campaignNumber, isFromBoundaryComplete]);
 
   // Dynamic child project search — uses includeDescendants to fetch all levels in one shot
   const childProjectSearchCriteria = useMemo(() => ({
@@ -416,29 +438,67 @@ const NewShipmentPopup = ({
   }, [childProjectData]);
 
 
-  // From: show only the user's assigned boundary level (disabled, for context)
+  // From: the user's assigned boundary level (disabled, for context).
+  // Top-level users additionally get the next level as a selectable dropdown.
   const fromVisibleLevels = useMemo(() => {
     if (!userBoundary?.boundaryType || !effectiveHierarchy.length) return [];
     const userLevel = effectiveHierarchy.find((h) => h.boundaryType === userBoundary.boundaryType);
-    return userLevel ? [userLevel] : [];
-  }, [userBoundary, effectiveHierarchy]);
+    if (!userLevel) return [];
+    return fromSelectableLevel ? [userLevel, fromSelectableLevel] : [userLevel];
+  }, [userBoundary, effectiveHierarchy, fromSelectableLevel]);
 
-  // To: show all hierarchy levels below From (same rule for every user level, including top level)
-  // - Excludes the last level of the full hierarchy
+  // To: show hierarchy levels below From, down to the deepest warehouse level.
+  // The bottom NON_WAREHOUSE_BOTTOM_LEVELS of the hierarchy (service points / settlements)
+  // don't hold warehouses, so they are never offered as To levels.
   // - Edge case: always show at least 1 To level
   // Levels are revealed progressively; facilities are fetched for the deepest selected level.
   const toVisibleLevels = useMemo(() => {
     if (!toHierarchyLevels.length) return [];
-    const lastBoundaryType = sortedHierarchy[sortedHierarchy.length - 1]?.boundaryType;
-    const withoutLast = toHierarchyLevels.filter((h) => h.boundaryType !== lastBoundaryType);
-    return withoutLast.length > 0 ? withoutLast : toHierarchyLevels.slice(0, 1);
+    const maxWarehouseIdx = sortedHierarchy.length - 1 - NON_WAREHOUSE_BOTTOM_LEVELS;
+    const warehouseTypes = new Set(
+      sortedHierarchy.slice(0, Math.max(0, maxWarehouseIdx + 1)).map((h) => h.boundaryType)
+    );
+    const withinWarehouseLevels = toHierarchyLevels.filter((h) => warehouseTypes.has(h.boundaryType));
+    return withinWarehouseLevels.length > 0 ? withinWarehouseLevels : toHierarchyLevels.slice(0, 1);
   }, [toHierarchyLevels, sortedHierarchy]);
 
-  // "From" uses the exact projectId passed from the dashboard (user's assigned project)
+  // Project belongs to this campaign (or carries no referenceId to check against)
+  const isCampaignProject = useCallback(
+    (bInfo) => !campaignNumber || !bInfo?.referenceId || bInfo.referenceId === campaignNumber,
+    [campaignNumber]
+  );
+
+  // "From": the user's assigned project, or — for top-level users — the campaign project
+  // at the boundary selected in the extra From level.
   const fromFilteredProjectIds = useMemo(() => {
+    if (fromSelectableLevel) {
+      const selectedCode = fromHierarchyFilters[fromSelectableLevel.boundaryType];
+      if (!selectedCode) return [];
+      return allProjectIds.filter((pid) => {
+        const bInfo = projectBoundaryMap[pid];
+        return (
+          bInfo?.boundary === selectedCode &&
+          bInfo.boundaryType === fromSelectableLevel.boundaryType &&
+          isCampaignProject(bInfo)
+        );
+      });
+    }
     if (!projectIdProp) return [];
     return [projectIdProp];
-  }, [projectIdProp]);
+  }, [fromSelectableLevel, fromHierarchyFilters, allProjectIds, projectBoundaryMap, isCampaignProject, projectIdProp]);
+
+  // Options for the selectable From level: only boundaries that have a project in this campaign
+  const fromSelectableOptions = useMemo(() => {
+    if (!fromSelectableLevel) return [];
+    const bType = fromSelectableLevel.boundaryType;
+    const campaignCodes = new Set(
+      Object.values(projectBoundaryMap)
+        .filter((b) => b?.boundaryType === bType && isCampaignProject(b))
+        .map((b) => b.boundary)
+    );
+    const available = getAvailableOptions(bType, fromHierarchyFilters);
+    return campaignCodes.size ? available.filter((code) => campaignCodes.has(code)) : available;
+  }, [fromSelectableLevel, projectBoundaryMap, isCampaignProject, getAvailableOptions, fromHierarchyFilters]);
 
   // Filter project IDs for "To" — only projects whose referenceId matches this campaign
   const toFilteredProjectIds = useMemo(() => {
@@ -499,6 +559,15 @@ const NewShipmentPopup = ({
     data: fromFacilityList,
     isLoading: fromFacilitiesLoading,
   } = Digit.Hooks.useCustomAPIHook(fromFacilityReqCriteria);
+
+  // Auto-select the first From facility when the list changes (new boundary → new list),
+  // keeping the current choice if it's still in the list
+  useEffect(() => {
+    if (!fromFacilityList?.length) return;
+    setFromFacilityId((prev) =>
+      fromFacilityList.some((f) => f.id === prev) ? prev : fromFacilityList[0].id
+    );
+  }, [fromFacilityList]);
 
   // Fetch "To" facilities using filtered project IDs
   const toFacilityReqCriteria = useMemo(
@@ -644,7 +713,7 @@ const NewShipmentPopup = ({
       headers: { tenantId: tenantId || "" },
     },
     config: {
-      enabled: !isTopLevel && !!tenantId && !!campaignNumber && !!fromFacilityId,
+      enabled: !isFromSourceLevel && !!tenantId && !!campaignNumber && !!fromFacilityId,
       select: (data) => {
         // Combine results from both queries and dedup by record id
         const r1 = data?.responseData?.customData?.rawResponse?.facilityStockTransformer || [];
@@ -661,7 +730,7 @@ const NewShipmentPopup = ({
       },
     },
     changeQueryName: `stockBalance_shipment_${campaignNumber}_${fromFacilityId}`,
-  }), [tenantId, campaignNumber, isTopLevel, fromFacilityId]);
+  }), [tenantId, campaignNumber, isFromSourceLevel, fromFacilityId]);
 
   const { data: stockRecords } = Digit.Hooks.useCustomAPIHook(stockBalanceCriteria);
 
@@ -734,11 +803,6 @@ const NewShipmentPopup = ({
     });
     return map;
   }, [stockRecords, fromFacilityId]);
-
-  // Determine if the "From" level is top level (skip stock validation)
-  const topLevelBoundaryType = sortedHierarchy[0]?.boundaryType;
-  const fromBoundaryType = effectiveHierarchy[fromSelectedLevel]?.boundaryType;
-  const isFromTopLevel = isTopLevel || fromBoundaryType === topLevelBoundaryType;
 
   // Handle "From" hierarchy filter change (cascading + clear To filters)
   const handleFromHierarchyChange = useCallback((boundaryType, value) => {
@@ -1182,7 +1246,7 @@ const NewShipmentPopup = ({
       });
 
       // Stock balance validation: check that dispatched quantities don't exceed available stock
-      if (!isFromTopLevel) {
+      if (!isFromSourceLevel) {
         // Aggregate total quantities per senderId per productVariantId across all data rows
         const aggregatedQty = {};
         dataRows.forEach((row) => {
@@ -1262,6 +1326,7 @@ const NewShipmentPopup = ({
               version: 1,
               fields: [
                 { key: "sku", value: productVariantSku },
+                { key: "balesQuantity", value: String(toBales(quantity)) },
                 { key: "stockEntryType", value: "ISSUED" },
                 { key: "primaryRole", value: "SENDER" },
                 { key: "secondaryRole", value: "RECEIVER" },
@@ -1313,7 +1378,7 @@ const NewShipmentPopup = ({
     productVariants,
     onBatchStart,
     t,
-    isFromTopLevel,
+    isFromSourceLevel,
     facilityStockMap,
     facilityNameMap,
   ]);
@@ -1419,6 +1484,8 @@ const NewShipmentPopup = ({
                       const isUserLevel = userBoundary?.boundaryType === h.boundaryType;
                       const availableOptions = isUserLevel
                         ? [userBoundary.boundary]
+                        : h.boundaryType === fromSelectableLevel?.boundaryType
+                        ? fromSelectableOptions
                         : getAvailableOptions(h.boundaryType, fromHierarchyFilters);
                       return (
                         <div
@@ -1515,7 +1582,7 @@ const NewShipmentPopup = ({
                       </p>
                     )}
                   </div>
-                ) : fromSelectedLevel >= 0 ? (
+                ) : isFromBoundaryComplete ? (
                   <p style={{ color: "#505A5F", marginBottom: "0rem" }}>
                     {t("HCM_FACILITY_API_FAILED_DESC")}
                   </p>
@@ -1525,7 +1592,7 @@ const NewShipmentPopup = ({
                   </p>
                 )}
 
-                {fromSelectedLevel >= 0 && (
+                {isFromBoundaryComplete && (
                   <div
                     style={{
                       display: "flex",
