@@ -1,6 +1,6 @@
 {
-  "id": "1503ceca-9745-44be-8e05-bc7ef8d894fb",
-  "tenantId": "qa",
+  "id": "ae20c240-b858-44f9-99ab-8a83114f317a",
+  "tenantId": "demo",
   "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
   "uniqueIdentifier": "OUTSIDEHOUSEHOLD.POLIO",
   "data": {
@@ -232,7 +232,7 @@
                   },
                   {
                     "type": "pattern",
-                    "value": "^(?!\\+)[^!@#$%^*;<>?|\\\\~{}\\[\\]\"=\\r\\n\\t]+$",
+                    "value": "^(?![+])[a-zA-Z0-9 ,.’()/&_:+-]+$",
                     "message": "GV_LOCATION_NAME_SPECIAL_CHAR_ERROR"
                   },
                   {
@@ -1800,6 +1800,7 @@
                   }
                 ],
                 "fieldName": "sessionSearch",
+                "mandatory": true,
                 "validations": [
                   {
                     "type": "minSearchChars",
@@ -1850,7 +1851,7 @@
                             "errorMessage": "PROXIMITY_RADIUS_ERROR_MESSAGE"
                           }
                         ],
-                        "defaultValue": true
+                        "defaultValue": false
                       },
                       {
                         "type": "template",
@@ -1957,6 +1958,7 @@
                 }
               }
             ],
+            "mandatory": true,
             "properties": {
               "gap": 16
             }
@@ -2275,6 +2277,7 @@
                   }
                 ],
                 "fieldName": "sessionSearch",
+                "mandatory": true,
                 "validations": [
                   {
                     "type": "minSearchChars",
@@ -2325,7 +2328,7 @@
                             "errorMessage": "PROXIMITY_RADIUS_ERROR_MESSAGE"
                           }
                         ],
-                        "defaultValue": true
+                        "defaultValue": false
                       },
                       {
                         "type": "template",
@@ -2432,6 +2435,7 @@
                 }
               }
             ],
+            "mandatory": true,
             "properties": {
               "gap": 16
             }
@@ -3397,7 +3401,7 @@
                   },
                   {
                     "type": "pattern",
-                    "value": "^(?!\\+)[^!@#$%^*;<>?|\\\\~{}\\[\\]\"=\\r\\n\\t]+$",
+                    "value": "^(?![+])[a-zA-Z0-9 ,.’()/&_:+-]+$",
                     "message": "GV_LOCATION_NAME_SPECIAL_CHAR_ERROR"
                   },
                   {
@@ -4274,9 +4278,9 @@
   },
   "isActive": true,
   "auditDetails": {
-    "createdBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
-    "lastModifiedBy": "github:Shreya-egov",
-    "createdTime": 1791788949610,
-    "lastModifiedTime": 1793885681496
+    "createdBy": "2ff09ac4-a8f2-4ebb-81f2-922d2fec5302",
+    "lastModifiedBy": "0efe1027-d8bd-4e1e-97d4-0039ee5d3b6b",
+    "createdTime": 1793904362604,
+    "lastModifiedTime": 1793959483506
   }
 }
