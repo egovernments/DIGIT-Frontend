@@ -1826,6 +1826,19 @@
                         "type": "template",
                         "label": "GV_TRANSIT_SESSIONS_NEARBY_SEARCH",
                         "format": "proximitySearch",
+                        "properties": {
+                          "isLabelFirst": true,
+                          "containerStyle": {
+                            "width": "100%",
+                            "boxSizing": "border-box",
+                            "justifyContent": "space-between",
+                            "gap": "12px",
+                            "padding": "12px",
+                            "border": "1px solid var(--digitv2-lightTheme-generic-divider)",
+                            "borderRadius": "4px",
+                            "background": "var(--digitv2-lightTheme-paper-secondary)"
+                          }
+                        },
                         "onAction": [
                           {
                             "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
@@ -2303,6 +2316,19 @@
                         "type": "template",
                         "label": "GV_CLF_SESSIONS_NEARBY_SEARCH",
                         "format": "proximitySearch",
+                        "properties": {
+                          "isLabelFirst": true,
+                          "containerStyle": {
+                            "width": "100%",
+                            "boxSizing": "border-box",
+                            "justifyContent": "space-between",
+                            "gap": "12px",
+                            "padding": "12px",
+                            "border": "1px solid var(--digitv2-lightTheme-generic-divider)",
+                            "borderRadius": "4px",
+                            "background": "var(--digitv2-lightTheme-paper-secondary)"
+                          }
+                        },
                         "onAction": [
                           {
                             "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
