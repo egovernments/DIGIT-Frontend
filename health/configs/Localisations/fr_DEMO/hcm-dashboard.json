@@ -1,0 +1,404 @@
+[
+  {
+    "code": "ADMINISTRATION_COVERAGE_TODAY",
+    "message": "Couverture administrative aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ADMINISTRATIVEPOST",
+    "message": "Poste administratif",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BEDNETS_DISTRIBUTED_TODAY",
+    "message": "Moustiquaires distribuées aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "BOTTLES_USED_TODAY",
+    "message": "Bouteilles",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DISTRIBUTION_COVERAGE_TODAY",
+    "message": "Couverture de distribution aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_HEALTH_NATIONAL_BED_NETS_DISTRIBUTED_TODAY",
+    "message": "Total des moustiquaires distribuées aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_HEALTH_NATIONAL_BED_NET_DISTRIBUTED_TODAY",
+    "message": "Total des moustiquaires distribuées aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_HEALTH_NATIONAL_POPULATION_COVERED_TODAY",
+    "message": "Population couverte aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_HEALTH_NATIONAL_TODAL_POPULATION_COVERED",
+    "message": "Population totale couverte",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_HEALTH_NATIONAL_TOTAL_POPULATION_COVERED",
+    "message": "Population totale couverte",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_LAST_SYNC_TIME",
+    "message": "Heure de la dernière synchronisation",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_NETWORK_FAILURE_ERROR",
+    "message": "Erreur réseau !!! Veuillez vous connecter à Internet pour actualiser le tableau de bord",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_DESCRIPTION",
+    "message": "Faites défiler la barre vers la droite pour afficher tous les détails d'un travailleur\n\nTaux de couverture des maisons = Total des maisons pulvérisées / Total des maisons visitées\n\nTaux de couverture des pièces = Total des pièces pulvérisées / Total des pièces disponibles",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_DESCRIPTION_IRS-mz",
+    "message": "Faites défiler la barre vers la droite pour afficher tous les détails d'un travailleur \nTaux de couverture des maisons = Total des maisons pulvérisées / Total des maisons visitées \nTaux de couverture des pièces = Total des pièces pulvérisées / Total des pièces disponibles",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_DESCRIPTION_LLIN-mz",
+    "message": "Faites défiler la barre vers la droite pour afficher tous les détails d'un travailleur",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_DESCRIPTION_MR-DN",
+    "message": "Faites défiler la barre vers la droite pour afficher tous les détails d'un travailleur",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_TITLE",
+    "message": "Note:",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_TITLE_IRS-mz",
+    "message": "Note:",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_TITLE_LLIN-mz",
+    "message": "Note:",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_NOTE_TITLE_MR-DN",
+    "message": "Note:",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_NO_OF_BOTTLES_USED_TODAY",
+    "message": "Nombre de bouteilles utilisées aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_NO_OF_HOUSES_NOT_SPRAYED_TODAY",
+    "message": "Nombre de maisons non traitées aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_NO_OF_HOUSES_SPRAYED_TODAY",
+    "message": "Nombre de maisons traitées aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_NO_OF_HOUSES_VISITED_TODAY",
+    "message": "Nombre de maisons visitées aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_PERCENT_TARGET_ACHIEVEMENT_TODAY",
+    "message": "% de l'objectif atteint aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_REMAINING_BOTTLES",
+    "message": "Bouteilles restantes",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_SOME_ERROR_OCCURED",
+    "message": "Une erreur s'est produite",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_TOTAL_BEDNETS_DISTRIBUTED",
+    "message": "Total des moustiquaires distribuées",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_TOTAL_BOTTLES_USED",
+    "message": "Nombre total de bouteilles utilisées aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_TOTAL_CHILDREN_ADMINISTERED",
+    "message": "Nombre total d'enfants administrés",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_TOTAL_HOUSEHOLD_DISTRIBUTED",
+    "message": "Total des ménages distribués",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_TOTAL_HOUSEHOLD_SPRAYED",
+    "message": "Nombre total de ménages traités aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_TOTAL_SPAQ_USED",
+    "message": "Nombre total de SPAQ utilisés",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "DSS_USER_ID_NAME",
+    "message": "ID/Nom d'utilisateur",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_COMMON_DSS_NATIONAL_HEALTH_DASHBOARD_SMC",
+    "message": "Tableau de bord national",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ES_COMMON_DSS_PROVINCIAL_HEALTH_DASHBOARD_SMC",
+    "message": "Tableau de bord provincial",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "FILTER_BY_CYCLE",
+    "message": "Filtrer par cycle",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HOME_DASHBOARD_LABEL",
+    "message": "Tableau de bord",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HOUSEHOLDS_SPRAYED",
+    "message": "Les ménages pulvérisés",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HOUSEHOLDS_VISITED",
+    "message": "Ménages visités",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HOUSEHOLD_COVERAGE",
+    "message": "Couverture des ménages",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HOUSE_COVERAGE_RATIO",
+    "message": "Taux de couverture de la maison",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "LAST_SYNCED_TIME",
+    "message": "Heure de la dernière synchronisation",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "MEDICINES_DISTRIBUTED_TODAY",
+    "message": "Médicaments distribués aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NEGATIVEHOUSEHOLDSDISTRIBUTED",
+    "message": "Ménages négatifs distribués",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO._OF_BENEFICIARIES_DISTRIBUTED_TODAY",
+    "message": "Nombre de bénéficiaires distribués aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO._OF_BENEFICIARIES_NOT_DISTRIBUTED_TODAY",
+    "message": "Nombre de bénéficiaires non distribués aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO._OF_HOUSES_DISTRIBUTED_TODAY",
+    "message": "Nombre de maisons distribuées aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO._OF_HOUSES_NOT_DISTRIBUTED_TODAY",
+    "message": "Nombre de maisons non distribuées aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO._OF_HOUSES_NOT_SPRAYE",
+    "message": "Nombre de maisons non traitées",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO._OF_HOUSES_NOT_SPRAYED_TODAY",
+    "message": "Nombre de maisons non traitées aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO._OF_HOUSES_SPRAYED_TODAY",
+    "message": "Nombre de maisons traitées aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO._OF_HOUSES_VISITED_TODAY",
+    "message": "Nombre de maisons visitées aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO._OF_REMAINING_BEDNETS",
+    "message": "Nombre de moustiquaires restantes",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO._OF_REMAINING_BOTTLES",
+    "message": "Nombre de bouteilles restantes",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NO._OF_REMAINING_MEDICINES",
+    "message": "Nombre de médicaments restants",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERCENTAGE_VALUE",
+    "message": "Pourcentage %",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "POPULATION_COVERAGE",
+    "message": "Couverture de la population",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PROVINCE",
+    "message": "Province",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PROVINCES",
+    "message": "Provinces",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "QUANTITY",
+    "message": "Quantité",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "STOCK_COUNT_PER_USER",
+    "message": "Inventaire des stocks par utilisateur",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TOTAL_COUNT",
+    "message": "Nombre total",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TOTAL_HOUSEHOLDS_VISITED_CUMULATIVE",
+    "message": "Nombre total de maisons",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "TOTAL_HOUSEHOLDS_VISITED_TODAY",
+    "message": "Nombre de maisons visitées aujourd'hui",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USERNAME",
+    "message": "Nom d'utilisateur",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "USER_NAME",
+    "message": "Nom d'utilisateur",
+    "module": "hcm-dashboard",
+    "locale": "fr_DEMO"
+  }
+]

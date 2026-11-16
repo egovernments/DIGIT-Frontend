@@ -1,0 +1,62 @@
+[
+  {
+    "code": "HCM_Bednet_POST_DISTRIBUTION_3DAY_SMS",
+    "message": "Hi {HouseholdHeadName} , You bednet is successfully delivered on {DistributedDate} for the bednet campaign {CampaignName} Thank You",
+    "module": "health-notification",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_MR-DN_POST_DISTRIBUTION_14DAY_SMS",
+    "message": "Hi {HouseholdHeadName} , You child smc second dose today for the bednet campaign {CampaignName} Thank You",
+    "module": "health-notification",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HCM_MR-DN_POST_DISTRIBUTION_3DAY_SMS",
+    "message": "Hi {HouseholdHeadName} , You child smc second dose today for the bednet campaign {CampaignName} Thank You",
+    "module": "health-notification",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "HF_REFERRAL_PUSH_NOTIFICATION",
+    "message": "You have received a new referral. Please review and take necessary action.",
+    "module": "health-notification",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_ISSUE_PUSH_NOTIFICATION",
+    "message": "Stock has been issued from {Sending_Facility_Name} to your facility.\n{quantity_of_sku}\nTransaction Ref:     {Transaction_ID}. Please sync and record receipt.",
+    "module": "health-notification",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_ISSUE_REJECT_PUSH_NOTIFICATION",
+    "message": "Your issued stock has been rejected by {Receiving_Facility_Name}.\nQuantity: {quantity_of_sku}\nTransaction Ref: {Transaction_ID}.",
+    "module": "health-notification",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_RECEIVE_PUSH_NOTIFICATION",
+    "message": "Your issued stock has been successfully received by {Receiving_Facility_Name}.\nReceived: {quantity_of_sku}\nTransaction Ref: {Transaction_ID}. No further action required.",
+    "module": "health-notification",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_REVERSE_ACCEPT_PUSH_NOTIFICATION",
+    "message": "Your return has been accepted by {Receiving_Facility_Name}.\n{quantity_of_sku}\nTransaction Ref: {Transaction_ID}. Stock balance updated successfully.",
+    "module": "health-notification",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_REVERSE_ISSUE_PUSH_NOTIFICATION",
+    "message": "A stock return has been initiated by {Sending_Facility_Name}.\n{quantity_of_sku}\nTransaction Ref: {Transaction_ID}. Please record the receipt to complete the return.",
+    "module": "health-notification",
+    "locale": "en_DEMO"
+  },
+  {
+    "code": "STOCK_REVERSE_REJECT_PUSH_NOTIFICATION",
+    "message": "Your return request has been rejected by {Receiving_Facility_Name}.\n{quantity_of_sku}\nTransaction Ref: {Transaction_ID}. Stock has been restored to your balance.",
+    "module": "health-notification",
+    "locale": "en_DEMO"
+  }
+]

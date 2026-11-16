@@ -1,0 +1,26 @@
+[
+  {
+    "code": "ADD_HEADER_LOCALIZATION",
+    "message": "Étiquette",
+    "module": "hcm-base-hfreferral-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ1_LABEL",
+    "message": "Enfant évalué pour effet indésirable aux doses ?",
+    "module": "hcm-base-hfreferral-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ5_LABEL",
+    "message": "Un enfant avec un test de paludisme négatif a-t-il reçu une dose au cours de ce cycle ?",
+    "module": "hcm-base-hfreferral-polio",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "dateOfEvaluation",
+    "message": "Date d'évaluation",
+    "module": "hcm-base-hfreferral-polio",
+    "locale": "fr_DEMO"
+  }
+]

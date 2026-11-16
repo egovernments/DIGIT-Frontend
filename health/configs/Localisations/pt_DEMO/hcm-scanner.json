@@ -1,0 +1,164 @@
+[
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_min_message",
+    "message": "O comprimento não deve ser inferior a 2 caracteres.",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_min_message",
+    "message": "O comprimento não deve ser inferior a 2 caracteres.",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_min_message",
+    "message": "O comprimento não deve ser inferior a 2 caracteres.",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BARCODE_BATCH_NO_REQUIRED",
+    "message": "Este é um campo obrigatório.",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BARCODE_BATCH_NUMBER",
+    "message": "Número do lote do código de barras",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BARCODE_EXPIRY_DATE",
+    "message": "Data de validade do código de barras",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BARCODE_SERIAL_NO_REQUIRED",
+    "message": "Este é um campo obrigatório.",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "BARCODE_SERIAL_NUMBER",
+    "message": "Número de série do código de barras",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "ENTER_MANUAL_CODE",
+    "message": "Insira o código manualmente",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FLASH_OFF",
+    "message": "Flash desligado",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "FLASH_ON",
+    "message": "Flash ativado",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "INVALID_RESOURCE_CODE",
+    "message": "Código de barras inválido",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "MANUAL_SCAN",
+    "message": "Não foi possível digitalizar o código QR?",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "RESOURCES_ALREADY_SCANNED",
+    "message": "Recurso já verificado",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "RESOURCE_ALREADY_SCANNED",
+    "message": "Recurso já verificado",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "RESOURCE_CODE",
+    "message": "Código de recurso",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "RESOURCE_SCANNED",
+    "message": "Recursos verificados",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "RESOURCE_SCAN_FAILED",
+    "message": "Falha na verificação de recursos",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_CONTENT",
+    "message": "O número de recursos verificados é menor que a quantidade mínima de {quantity}.",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_PRIMARY_ACTION",
+    "message": "Voltar",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_PRIMARY_BUTTON",
+    "message": "Continue digitalizando",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_SECONDARY_ACTION",
+    "message": "Confirmar",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_SECONDARY_BUTTON",
+    "message": "Salvar e fechar",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_TITLE",
+    "message": "Scanner",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCANNER_DIALOG_TITTLE",
+    "message": "Tem certeza que deseja voltar?",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCANNER_LABEL",
+    "message": "Digitalize o código QR",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  },
+  {
+    "code": "SCANNER_MANUAL_CODE_DESCRIPTION",
+    "message": "Por favor, insira o código de recurso presente no pacote.",
+    "module": "hcm-scanner",
+    "locale": "pt_DEMO"
+  }
+]

@@ -1,0 +1,194 @@
+[
+  {
+    "code": "CORE_COMMON_ALLOW_BACKGROUND_ACTIVITY",
+    "message": "Veuillez vérifier si l'activité en arrière-plan est activée dans les paramètres",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ALLOW_PERMISSIONS",
+    "message": "Autoriser les autorisations",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_ALLOW_PERMISSIONS_DESCRIPTION",
+    "message": "Autoriser les autorisations",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSIONS_ALERT",
+    "message": "Autoriser les autorisations requises",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_BLUETOOTHSCAN",
+    "message": "Autorisation Bluetooth",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_CAMERA",
+    "message": "Caméra",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_GRANTED",
+    "message": "Autorisation accordée",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_IGNOREBATTERYOPTIMIZATIONS",
+    "message": "Ignorer l'optimisation de la batterie",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_IGNOREBATTERYOPTIMIZATIONS_WARNING",
+    "message": "Autoriser l'activité en arrière-plan dans la batterie -> paramètres",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_LOCATION",
+    "message": "Emplacement",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES",
+    "message": "Partage à proximité",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_NOTIFICATION",
+    "message": "Notifications",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "CORE_COMMON_PERMISSION_NOT_GRANTED",
+    "message": "Autorisation non accordée",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "ENABLE_PERMISSION_CHECKBOX",
+    "message": "Veuillez activer la case à cocher",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION",
+    "message": "Accorder",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_BATTERY",
+    "message": "Accorder",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_BLUETOOTH",
+    "message": "Accorder",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_CAMERA",
+    "message": "Accorder",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_LOCATION",
+    "message": "Accorder",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_NEARBY",
+    "message": "Accorder",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "GRANT_PERMISSION_NOTIFICATION",
+    "message": "Accorder",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NEAR_BY_WIFI_DEVICES",
+    "message": "Appareils à proximité",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "NOTIFICATION_PERMISSION_TAG",
+    "message": "Statut d'autorisation des notifications",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "OPEN_SETTINGS",
+    "message": "Paramètres",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERMISSIONS_ALERT",
+    "message": "Autoriser les autorisations requises",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERMISSION_CONTINUE",
+    "message": "Continuer",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERMISSION_DENIED_OPEN_SETTINGS",
+    "message": "L'autorisation est refusée définitivement. Veuillez l'activer depuis les paramètres",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "PERMISSION_HANDLER_ALLOW_BACKGROUND_ACTIVITY",
+    "message": "Veuillez vérifier si l'activité en arrière-plan est activée dans les paramètres.",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "batteryOptimizationTag",
+    "message": "État d'autorisation de la batterie",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "blueToothScan",
+    "message": "État d'autorisation de numérisation Bluetooth",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "cameraPermissionStatus",
+    "message": "État d'autorisation de la caméra",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  },
+  {
+    "code": "locationPermission",
+    "message": "Statut d'autorisation de localisation",
+    "module": "hcm-base-permissionhandler-default",
+    "locale": "fr_DEMO"
+  }
+]
