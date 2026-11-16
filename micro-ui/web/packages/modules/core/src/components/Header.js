@@ -26,7 +26,6 @@ const Header = ({ showTenant = true }) => {
           className="svgHeaderLogo"
           src={headerSvgSecondaryUrl}
           alt="DIGIT Logo"
-          style={{ maxHeight: "40px", objectFit: "contain" }}
         />
       </div>
     );
