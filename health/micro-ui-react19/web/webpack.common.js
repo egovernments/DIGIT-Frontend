@@ -1,7 +1,28 @@
 const path = require("path");
+const fs = require("fs");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const dotenv = require("dotenv");
+
+// HtmlWebpackPlugin only templates public/index.html - everything else in public/ is
+// otherwise dropped from the build, which is why /robots.txt 503s on the deployed app
+// (flagged by every Lighthouse SEO audit) even though the file itself is valid and
+// present in the repo. Emits it as a build output asset with no extra dependency.
+class CopyRobotsTxtPlugin {
+  apply(compiler) {
+    compiler.hooks.thisCompilation.tap("CopyRobotsTxtPlugin", (compilation) => {
+      compilation.hooks.processAssets.tap(
+        { name: "CopyRobotsTxtPlugin", stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL },
+        () => {
+          const robotsPath = path.resolve(__dirname, "public/robots.txt");
+          if (fs.existsSync(robotsPath)) {
+            compilation.emitAsset("robots.txt", new webpack.sources.RawSource(fs.readFileSync(robotsPath)));
+          }
+        }
+      );
+    });
+  }
+}
 
 // Load package.json to get the homepage/publicPath
 const packageJson = require("./package.json");
@@ -62,6 +83,7 @@ module.exports = {
       React: "react",
       ReactDOM: "react-dom",
     }),
+    new CopyRobotsTxtPlugin(),
   ],
   resolve: {
     extensions: [".js", ".jsx"],
