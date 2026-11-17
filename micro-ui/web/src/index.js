@@ -493,6 +493,53 @@ const employeeTenantFromSession = () => {
     return false;
   }
 
+  // POST /egov-hrms/employees/_search?tenantId&roles=A,B&isActive (2.x HRMS) -> 3.0
+  //   GET /employee/v3/employees?role=<one role>&include=individual,roles, once per role.
+  // digit-ui-libraries' useHRMSSearch still calls the 2.x route, which has no route on
+  // 3.0 (404), so the workflow popup's assignee list (WorkflowPopup.js) came up empty.
+  // The 3.0 search takes a single role per call, so fan out and merge by employee id,
+  // then reshape to the 2.x {Employees:[{uuid, code, user:{uuid,name,...}}]} the popup
+  // reads (user.name for the label, uuid as the workflow assignee — the Keycloak user id).
+  function handleHrmsEmployeeSearch(xhr, urlObj) {
+    const params = urlObj.searchParams;
+    const tenantId = params.get("tenantId") || fallbackTenantId();
+    const roles = (params.get("roles") || "").split(",").map((r) => r.trim()).filter(Boolean);
+    const activeOnly = String(params.get("isActive")) === "true";
+    const fetchRole = (role) => {
+      const q = new URLSearchParams({ include: "individual,roles", limit: "100", offset: "0" });
+      if (role) q.set("role", role);
+      return fetch(`/employee/v3/employees?${q.toString()}`, { headers: authHeaders(tenantId) })
+        .then((r) => (r.ok ? r.json() : []))
+        .then((d) => (Array.isArray(d) ? d : d?.employees || []))
+        .catch(() => []);
+    };
+    Promise.all(roles.length ? roles.map(fetchRole) : [fetchRole(null)])
+      .then((lists) => {
+        const byId = new Map();
+        lists.flat().forEach((emp) => emp?.id && byId.set(emp.id, emp));
+        const Employees = Array.from(byId.values())
+          .filter((emp) => !activeOnly || emp.isActive !== false)
+          .map((emp) => {
+            const ind = emp.individual || {};
+            const name = [ind.givenName, ind.familyName].filter(Boolean).join(" ") || emp.code;
+            const userRoles = (emp.roles || []).map((code) => ({ code, name: code, tenantId }));
+            return {
+              id: emp.id,
+              uuid: emp.userId,
+              code: emp.code,
+              tenantId,
+              isActive: emp.isActive !== false,
+              employeeStatus: emp.status,
+              employeeType: emp.employeeType,
+              user: { uuid: emp.userId, name, userName: emp.code, emailId: ind.email || null, roles: userRoles, tenantId },
+              assignments: [{ department: emp.department, designation: emp.designation, isCurrentAssignment: true }],
+            };
+          });
+        completeXhr(xhr, 200, { Employees });
+      })
+      .catch(() => completeXhr(xhr, 200, { Employees: [] }));
+  }
+
   window.XMLHttpRequest.prototype.send = function (body) {
     if (isKeycloakEnabled() && typeof this.__mdmsUrl === "string") {
       let urlObj;
@@ -518,6 +565,10 @@ const employeeTenantFromSession = () => {
               // to do here, the request just goes out without the header this time.
             }
           }
+        }
+
+        if (this.__mdmsMethod === "POST" && pathname.endsWith("/egov-hrms/employees/_search")) {
+          return void handleHrmsEmployeeSearch(this, urlObj);
         }
 
         if (this.__mdmsMethod === "POST" && typeof body === "string") {
