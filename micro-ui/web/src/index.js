@@ -35,10 +35,24 @@ let citizenRedirectPending = false;
 
 // digit-ui-libraries' getCurrentTenantId()/getStateId() for non-employees, the app's stateCode and
 // this file's MDMS shim all fall back to STATE_LEVEL_TENANT_ID. On a citizen tenant page that has to
-// be the URL's tenant, so answer it from the URL there; everywhere else nothing changes.
-(function citizenTenantAsStateTenant() {
+// be the URL's tenant, so answer it from the URL there.
+// Employees: the tenant is the realm they signed in to (Employee.tenant-id, written by
+// KeycloakTenantLogin). Without this a STUDIOB employee's app initialised against the
+// globalConfigs tenant (STUDIO) — tenants/citymodule/StateInfo for STUDIO, which a STUDIOB token
+// can't read — so no modules loaded and every employee page rendered blank. For a STUDIO
+// employee the value is STUDIO either way.
+const employeeTenantFromSession = () => {
+  if (!new RegExp(`^/${getBasePath()}/employee(/|$)`).test(window.location.pathname)) return null;
+  try {
+    return window.localStorage.getItem("Employee.token") ? window.localStorage.getItem("Employee.tenant-id") || null : null;
+  } catch (e) {
+    return null;
+  }
+};
+(function tenantAwareStateTenant() {
   if (!isKeycloakEnabled() || typeof originalGetConfig !== "function") return;
-  window.globalConfigs.getConfig = (key) => (key === "STATE_LEVEL_TENANT_ID" && citizenTenantFromUrl()) || originalGetConfig(key);
+  window.globalConfigs.getConfig = (key) =>
+    (key === "STATE_LEVEL_TENANT_ID" && (citizenTenantFromUrl() || employeeTenantFromSession())) || originalGetConfig(key);
 })();
 
 // ---------------------------------------------------------------------------
@@ -232,10 +246,24 @@ let citizenRedirectPending = false;
   //      MDMS (checklist/role/fee/form/payment/notification/theme/app config,
   //      ServiceConfiguration itself, ...) since they all build this exact
   //      old-contract shape.
+  // "My drafts": 3.0 mdms-v2 fills auditDetails.createdBy from X-Client-ID ("digit-studio")
+  // and ignores X-User-ID, so the landing page can no longer tell whose draft a record is.
+  // Record the creator inside the draft itself instead (the drafts schema allows extra
+  // fields). Only stamped when missing, so the original owner is kept on every later save;
+  // a draft saved before this existed becomes owned by the next person who saves it.
+  // LandingPage.js (extractDraftsAndPublished) filters on it.
+  const DRAFTS_SCHEMA = "Studio.ServiceConfigurationDrafts";
+  function stampDraftOwner(record) {
+    if (record.schemaCode !== DRAFTS_SCHEMA || !record.data || record.data.createdByUserUuid) return record;
+    const uuid = window.Digit?.UserService?.getUser?.()?.info?.uuid;
+    return uuid ? { ...record, data: { ...record.data, createdByUserUuid: uuid } } : record;
+  }
+
   function handleV2CreateOrUpdate(xhr, body, schemaCodeFromUrl, isUpdate) {
-    const record = { ...(body?.Mdms || {}) };
+    let record = { ...(body?.Mdms || {}) };
     const tenantId = record.tenantId || fallbackTenantId();
     if (!record.schemaCode && schemaCodeFromUrl) record.schemaCode = schemaCodeFromUrl;
+    record = stampDraftOwner(record);
     fetch(`/${MDMS_CONTEXT}/v2`, {
       method: isUpdate ? "PUT" : "POST",
       headers: { ...authHeaders(tenantId), "Content-Type": "application/json" },
