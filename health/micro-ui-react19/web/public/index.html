@@ -3,18 +3,30 @@
 
 <head>
   <meta charset="utf-8" />
+  <!-- Warm up connections to external origins used below, so DNS/TCP/TLS setup happens
+       in parallel with HTML parsing instead of after the browser discovers each tag. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="preconnect" href="https://egov-dev-assets.s3.ap-south-1.amazonaws.com" />
   <link rel="icon" href="https://egov-dev-assets.s3.ap-south-1.amazonaws.com/browser-icon.png" />
   <link
     href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
     rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-css@2.0.0-dev-08/dist/index.css" />
-  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-components-css@2.0.0-dev-15/dist/index.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-components-css@2.0.0-dev-16/dist/index.css" />
   <!-- added below css for hcm-workbench module inclusion-->
   <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-health-css@1.0.65/dist/index.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#00bcd1" />
+  <meta name="description"
+    content="DIGIT HCM - workbench for planning, configuring, and tracking public health campaigns." />
   <title>DIGIT HCM</title>
-  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+  <!-- defer: only used inside upload/export handlers, never at module load time, so this
+       is safe to load off the critical rendering path. html-webpack-plugin's own injected
+       bundle script is also deferred and placed after this tag, so window.XLSX is still
+       guaranteed ready before the app mounts. -->
+  <script defer src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
   <script src="<%= REACT_APP_GLOBAL %>"></script>
   <script>
     if (navigator.platform.indexOf('Mac') !== -1) {

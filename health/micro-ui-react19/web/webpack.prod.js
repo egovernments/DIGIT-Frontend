@@ -79,12 +79,35 @@ module.exports = merge(common, {
           name: "react",
           priority: 40,
         },
-        digitUI: {
-          test: /[\\/]node_modules[\\/]@egovernments[\\/]/,
+        // The shared DIGIT libraries. src/index.js imports digit-ui-libraries at the
+        // top of the file, so this group has to load before anything can render.
+        digitUIShared: {
+          test: /[\\/]node_modules[\\/]@egovernments[\\/](digit-ui-libraries|digit-ui-components|digit-ui-react-components|digit-ui-svg-components)[\\/]/,
           name: "digit-ui",
           priority: 35,
           reuseExistingChunk: true,
         },
+        // The feature modules. src/index.js already loads these with import(), so they
+        // belong in a separate file that downloads after the first paint.
+        //
+        // These used to share one "digit-ui" name with the group above. Because webpack
+        // puts everything with the same name into one chunk, and the group above must
+        // load first, these got pulled in with it - which quietly cancelled the import()
+        // in src/index.js. workbench alone is ~3.8 MB and was loading on every page.
+        // Keeping them separate, with chunks "async", lets the import() work as intended.
+        digitUIModules: {
+          test: /[\\/]node_modules[\\/]@egovernments[\\/](digit-ui-module-core|digit-ui-module-workbench)[\\/]/,
+          name: "digit-ui-modules",
+          chunks: "async",
+          priority: 36,
+          reuseExistingChunk: true,
+        },
+        // NOTE: the three groups below currently match nothing, so they have no effect.
+        // xlsx is listed in webpack.common.js "externals", and leaflet / proj4 / @rjsf /
+        // ajv / exceljs are bundled inside packages/modules/campaign-manager/dist/main.js
+        // rather than installed here. None of them reach this build as node_modules.
+        // Leaving them in place: they are harmless, and they become useful again if any
+        // of these libraries is ever imported directly by this app.
         excel: {
           test: /[\\/]node_modules[\\/](xlsx|exceljs)[\\/]/,
           name: "excel-libs",
