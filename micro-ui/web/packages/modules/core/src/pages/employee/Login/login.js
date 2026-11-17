@@ -606,7 +606,10 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     return <Loader page={true} variant="PageLoader" />;
   }
   return propsConfig?.bannerImages ? (
-    <div className="login-container">
+    // <main> rather than <div>: Lighthouse reports "Document does not have a main
+    // landmark" on this page, and there is no <main> anywhere else in the module. The
+    // class is unchanged and every rule for it is class-only, so the styling is the same.
+    <main className="login-container">
       {/* <SkipToMainContent class_name={".login-form-container"}/> */}
       <Carousel bannerImages={propsConfig?.bannerImages} />
       <div className="login-form-container">
@@ -623,7 +626,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
         )}
         {renderFooter("EmployeeLoginFooter")}
       </div>
-    </div>
+    </main>
   ) : (
     <Background>
       {loginLoader && (
