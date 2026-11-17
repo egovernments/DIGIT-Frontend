@@ -573,9 +573,11 @@ function installAccessControlOverride() {
       if (!isKeycloakEnabled()) return;
       (fixtureCache
         ? Promise.resolve(fixtureCache)
-        : fetch("/fixtures/studioAccessControlActions.json")
-            .then((r) => r.json())
-            .then((data) => (fixtureCache = data))
+        : // Bundled as its own lazy chunk (served under the app's publicPath) rather than
+          // fetched from /fixtures/: deployed builds serve only /<context-path>/ and don't
+          // copy public/ at all, so a root-relative fetch 404'd with an HTML page there.
+          import(/* webpackChunkName: "studio-access-control-fixture" */ "./fixtures/studioAccessControlActions.json")
+            .then((m) => (fixtureCache = m.default || m))
       ).then((data) => setState({ isLoading: false, data }));
     }, []);
     return state;
