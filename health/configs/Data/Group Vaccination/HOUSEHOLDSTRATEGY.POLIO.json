@@ -1,6 +1,6 @@
 {
-  "id": "189c58f8-b477-4467-9e7a-61e7290ee7e1",
-  "tenantId": "qa",
+  "id": "7417e0f2-5c27-4020-a6fd-279c0f2f987f",
+  "tenantId": "demo",
   "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
   "uniqueIdentifier": "HOUSEHOLDSTRATEGY.POLIO",
   "data": {
@@ -659,6 +659,7 @@
                 "type": "template",
                 "label": "HCM_HOUSEHOLD_OVERVIEW_EDIT_HOUSEHOLD_BUTTON",
                 "format": "button",
+                "hidden": true,
                 "onAction": [
                   {
                     "actionType": "REVERSE_TRANSFORM",
@@ -5617,7 +5618,7 @@
                 "visibilityCondition": {
                   "expression": [
                     {
-                      "condition": "unableToDeliver.reason=='REFUSED'"
+                      "condition": "unableToDeliver.reason==REFUSED"
                     }
                   ]
                 }
@@ -5653,7 +5654,7 @@
                 "visibilityCondition": {
                   "expression": [
                     {
-                      "condition": "unableToDeliver.refusalReason=='OTHERS'"
+                      "condition": "unableToDeliver.refusalReason==OTHERS"
                     }
                   ]
                 }
@@ -5715,7 +5716,7 @@
                 "visibilityCondition": {
                   "expression": [
                     {
-                      "condition": "unableToDeliver.reason=='ABSENCE'"
+                      "condition": "unableToDeliver.reason==ABSENCE"
                     }
                   ]
                 }
@@ -5751,7 +5752,7 @@
                 "visibilityCondition": {
                   "expression": [
                     {
-                      "condition": "unableToDeliver.absenceReason=='OTHER'"
+                      "condition": "unableToDeliver.absenceReason==OTHER"
                     }
                   ]
                 }
@@ -6632,9 +6633,9 @@
   },
   "isActive": true,
   "auditDetails": {
-    "createdBy": "8ca0fd96-d0d8-4c1d-b209-4aa5518f78e7",
-    "lastModifiedBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
-    "createdTime": 1790055959929,
-    "lastModifiedTime": 1793275504599
+    "createdBy": "2ff09ac4-a8f2-4ebb-81f2-922d2fec5302",
+    "lastModifiedBy": "d5862a62-7b2c-46a4-a899-4857960a4ff3",
+    "createdTime": 1793904362981,
+    "lastModifiedTime": 1794378774858
   }
 }
