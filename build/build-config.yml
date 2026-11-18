@@ -47,6 +47,18 @@ config:
         build-args:
           BUILD_VARIANT: workbench-ui
 
+  # HCM flow preview: Flutter web build of health-campaign-field-worker-app
+  # (apps/flow_preview), embedded by workbench-ui's "Preview in app".
+  # Served at /flow-preview/ on the workbench-ui domain. HCM_REF is the
+  # branch of that repository to build.
+  - name: builds/Digit-Frontend/health/flow-preview
+    build:
+      - work-dir: health/flow-preview/
+        dockerfile: health/flow-preview/Dockerfile
+        image-name: hcm-flow-preview
+        build-args:
+          HCM_REF: feature/flow-preview-console-embed
+
   - name: builds/Digit-Frontend/health/microplan-ui
     build:
     - work-dir: health/micro-ui/

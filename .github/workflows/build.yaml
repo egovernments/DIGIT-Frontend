@@ -12,6 +12,7 @@ on:
           - digit-ui
           - core-ui
           - workbench-ui
+          - flow-preview
           - sandbox-ui
           - microplan-ui
           - console
