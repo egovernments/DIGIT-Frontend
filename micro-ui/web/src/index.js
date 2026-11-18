@@ -95,6 +95,36 @@ const employeeTenantFromSession = () => {
   };
 })();
 
+// Same gap for window.fetch: several PublicServices screens (records list,
+// record prefill, inbox, module page, ...) call fetch() directly with only
+// the 2.x `auth-token` header, which Kong rejects with 401 "No JWT token
+// provided". Adds `Authorization: Bearer` to same-origin calls only (never
+// to third-party analytics), skips Keycloak's own endpoints, and leaves any
+// request that already carries an Authorization header untouched.
+(function patchFetchForBearerAuth() {
+  const originalFetch = window.fetch;
+  if (typeof originalFetch !== "function") return;
+  window.fetch = function (input, init) {
+    try {
+      const token = isKeycloakEnabled() && window.Digit?.UserService?.getUser?.()?.access_token;
+      if (token) {
+        const isRequest = typeof Request !== "undefined" && input instanceof Request;
+        const url = new URL(isRequest ? input.url : String(input), window.location.href);
+        if (url.origin === window.location.origin && !url.pathname.startsWith("/keycloak/")) {
+          const headers = new Headers((init && init.headers) || (isRequest ? input.headers : undefined));
+          if (!headers.has("Authorization")) {
+            headers.set("Authorization", `Bearer ${token}`);
+            return originalFetch.call(this, input, { ...(init || {}), headers });
+          }
+        }
+      }
+    } catch (e) {
+      // Fall through to the unmodified call on anything unexpected.
+    }
+    return originalFetch.call(this, input, init);
+  };
+})();
+
 // ---------------------------------------------------------------------------
 // Patch: multiple backend services on digit-lts (3.0) — not just mdms-v2 —
 // have moved to a REST contract (GET + query params + X-Tenant-ID/X-Client-ID
