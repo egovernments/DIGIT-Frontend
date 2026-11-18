@@ -25,7 +25,8 @@ ARG HCM_REF
 ADD https://api.github.com/repos/egovernments/health-campaign-field-worker-app/commits/${HCM_REF} /tmp/hcm-commit.json
 
 RUN set -eu; \
-    sha=$(sed -n 's/^  "sha": "\([0-9a-f]\{40\}\)",$/\1/p' /tmp/hcm-commit.json | head -n 1); \
+    # The response's first "sha" is the commit's (compact or pretty JSON).
+    sha=$(grep -o '"sha": *"[0-9a-f]\{40\}"' /tmp/hcm-commit.json | head -n 1 | grep -o '[0-9a-f]\{40\}'); \
     test -n "$sha" || { echo "Could not read the commit of ${HCM_REF}"; cat /tmp/hcm-commit.json; exit 1; }; \
     git init -q /src; \
     git -C /src fetch -q --depth 1 "${HCM_REPO}.git" "$sha"; \
