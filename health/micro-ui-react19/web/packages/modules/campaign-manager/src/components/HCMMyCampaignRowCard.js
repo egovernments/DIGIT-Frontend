@@ -9,6 +9,7 @@ import CloneCampaignWrapper from "./CloneCampaignWrapper";
 import { convertEpochToNewDateFormat } from "../utils/convertEpochToNewDateFormat";
 import QRButton from "./CreateCampaignComponents/QRButton";
 import TagComponent from "./TagComponent";
+import MobileAppPreviewPopup from "./MobileAppPreviewPopup";
 
 /**
  * HCMMyCampaignRowCard Component
@@ -116,7 +117,7 @@ const handleDownloadUserCreds = async (campaignId, hierarchyType, campaignNumber
 };
 
 // function to generate action buttons
-const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp, handleRetryLogic) => {
+const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp, handleRetryLogic, setShowAppPreview) => {
   const actions = {};
   // const userResource =
   //   Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")
@@ -125,6 +126,20 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
   const campaignId = rowData?.id;
   const hierarchyType = rowData?.hierarchyType;
   const campaignNumber = rowData?.campaignNumber;
+
+  // The campaign's published mobile app, in the field worker app's screens.
+  const previewTab = tabData?.find((i) => i?.active === true)?.label;
+  if (rowData?.status == "created" && ["CAMPAIGN_ONGOING", "CAMPAIGN_UPCOMING", "CAMPAIGN_COMPLETED"].includes(previewTab)) {
+    actions.previewApp = {
+      label: "PREVIEW_MOBILE_APP",
+      title: "PREVIEW_MOBILE_APP",
+      onClick: () => setShowAppPreview(true),
+      size: "medium",
+      icon: "Preview",
+      id: `my-campaigns-row-card-preview-app-button-${campaignId}`,
+      variation: "secondary",
+    };
+  }
 
   // Always show download if userCreds exist
   if (rowData?.status == "created") {
@@ -303,6 +318,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const [showErrorPopUp, setShowErrorPopUp] = useState(false);
   const [showCreatingPopUp, setShowCreatingPopUp] = useState(false);
   const [showQRPopUp, setShowQRPopUp] = useState(false);
+  const [showAppPreview, setShowAppPreview] = useState(false);
   const [showDeleteConfirmPopUp, setShowDeleteConfirmPopUp] = useState(false);
   const actionButtons = getActionButtons(
     rowData,
@@ -311,7 +327,8 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
     setShowErrorPopUp,
     setShowCreatingPopUp,
     setShowQRPopUp,
-    handleRetryLogic
+    handleRetryLogic,
+    setShowAppPreview
   );
   const actionTags = useMemo(() => {
     if (!isCreating) return {};
@@ -617,6 +634,14 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
         ></PopUp>
       )}
       {showQRPopUp && <QRButton setShowQRPopUp={setShowQRPopUp} />}
+      {showAppPreview && (
+        <MobileAppPreviewPopup
+          tenantId={tenantId}
+          campaignNumber={rowData?.campaignNumber}
+          campaignName={rowData?.campaignName}
+          onClose={() => setShowAppPreview(false)}
+        />
+      )}
       {showDeleteConfirmPopUp && (
         <PopUp
           type={"alert"}

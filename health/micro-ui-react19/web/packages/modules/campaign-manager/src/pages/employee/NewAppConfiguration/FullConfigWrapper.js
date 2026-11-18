@@ -13,7 +13,6 @@ import { deselectField } from "./redux/remoteConfigSlice";
 import { FlowFilled } from "../../../components/icons/FlowFilled";
 import { FlowUnfilled } from "../../../components/icons/FlowUnfilled";
 import AppHelpTutorial from "../../../components/AppHelpTutorial";
-import AppPreviewDrawer from "./AppPreviewDrawer";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 // activateOnKey lets the clickable <div role="button"> controls in this screen (menu items,
 // flow/page tabs, preview arrows, field-type cards) be operated from the keyboard. It is the same
@@ -40,7 +39,6 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showToast, setShowToast] = useState(null);
-  const [showAppPreview, setShowAppPreview] = useState(false);
 
 
   // Child panels raise errors through this hook (same contract as AppConfigurationWrapper); without
@@ -274,17 +272,6 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
     navigate(
       `/${window?.contextPath}/employee/campaign/app-config-save?campaignNumber=${campaignNumber}&flow=${flowModule}&tenantId=${tenantId}`
     );
-  };
-
-  // Before "Preview in app" builds the draft: save the screen being edited,
-  // as page switches and "Proceed" do. Nothing to save in view mode.
-  const prepareAppPreview = async () => {
-    if (viewMode) return true;
-    if (checkValidationErrorsAndShowToast(setShowToast, t)) return false;
-    if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
-      await window.__appConfig_onNext();
-    }
-    return true;
   };
 
   const toggleCategory = (category) => {
@@ -968,16 +955,6 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             // :
             //  (
             <Button
-                key="preview-in-app"
-                variation="secondary"
-                label={t(I18N_KEYS.APP_CONFIGURATION.PREVIEW_IN_APP)}
-                title={t(I18N_KEYS.APP_CONFIGURATION.PREVIEW_IN_APP)}
-                icon="Preview"
-                isSuffix={false}
-                onClick={() => setShowAppPreview(true)}
-              />,
-            <Button
-                key="proceed-to-preview"
                 variation="primary"
                 label={t(I18N_KEYS.APP_CONFIGURATION.PROCEED_TO_PREVIEW)}
                 title={t(I18N_KEYS.APP_CONFIGURATION.PROCEED_TO_PREVIEW)}
@@ -996,15 +973,6 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
       {/* Toast Notification — outside the container: its overflow-hidden scroll areas
           (center-content/preview-area) clip fixed descendants, cutting the message off
           at the canvas edge when rendered inside */}
-      {showAppPreview && (
-        <AppPreviewDrawer
-          tenantId={tenantId}
-          campaignNumber={campaignNumber}
-          flowModule={flowModule}
-          prepare={prepareAppPreview}
-          onClose={() => setShowAppPreview(false)}
-        />
-      )}
       {showToast && (
         <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />
       )}
