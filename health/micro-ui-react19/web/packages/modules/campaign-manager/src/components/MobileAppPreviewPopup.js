@@ -1,23 +1,17 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /*
  * "Preview mobile app" on a campaign card (My campaigns: ongoing, upcoming,
- * completed): a popup running the field worker app's real flow screens (the
- * HCM flow preview, a Flutter web build) for the campaign's published app
- * configuration.
+ * completed): a popup running the field worker app's real screens (the HCM
+ * flow preview, a Flutter web build served on the console's domain at
+ * /flow-preview/, or globalConfigs HCM_FLOW_PREVIEW_PATH).
  *
- * The preview is served on the console's own domain (default /flow-preview/,
- * or globalConfigs HCM_FLOW_PREVIEW_PATH) and is driven over postMessage,
- * same origin only. Protocol (apps/flow_preview/README.md in
- * health-campaign-field-worker-app):
- *   preview -> console  {type: "hcm-preview:ready"}
- *   console -> preview  {type: "hcm-preview:init", session, campaignNumber}
- *   preview -> console  {type: "hcm-preview:status", state, message?}
- * With no `config` in init, the preview opens the campaign's project and
- * lists every published module (HCM-ADMIN-CONSOLE.FormConfig) on its home
- * screen, as the app does.
+ * It starts like the app on a phone: the login screen. The user signs in with
+ * a field worker account; with ?campaign=<campaign number>, a user assigned to
+ * this campaign goes straight to it, otherwise they choose a project as in the
+ * app. Then boundary selection and home with the campaign's published modules.
  */
 
 const previewPath = window.globalConfigs?.getConfig("HCM_FLOW_PREVIEW_PATH") || "/flow-preview/";
@@ -28,11 +22,11 @@ const PHONE = { width: 412, height: 915 };
 const HEADER_HEIGHT = 56;
 const MARGIN = 16;
 
-const previewUrl = () => {
+const previewUrl = (campaignNumber) => {
   const url = new URL(previewPath, window.location.origin);
-  url.searchParams.set("embed", "1");
   // The popup is the phone; the preview should not draw another frame.
   url.searchParams.set("frame", "off");
+  if (campaignNumber) url.searchParams.set("campaign", campaignNumber);
   return url;
 };
 
@@ -43,66 +37,21 @@ const fitScale = () =>
     (window.innerWidth - 2 * MARGIN) / PHONE.width
   );
 
-const MobileAppPreviewPopup = ({ tenantId, campaignNumber, campaignName, onClose }) => {
+const MobileAppPreviewPopup = ({ campaignNumber, campaignName, onClose }) => {
   const { t } = useTranslation();
-  const iframeRef = useRef(null);
   const closeRef = useRef(null);
-  // starting | ready | error
-  const [phase, setPhase] = useState("starting");
-  const [message, setMessage] = useState(null);
+  const [loaded, setLoaded] = useState(false);
   const [scale, setScale] = useState(fitScale);
+
+  const url = previewUrl(campaignNumber);
+  // Same domain only: the preview signs in against this domain's APIs.
+  const sameOrigin = url.origin === window.location.origin;
 
   useEffect(() => {
     const onResize = () => setScale(fitScale());
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
-
-  const url = previewUrl();
-  const sameOrigin = url.origin === window.location.origin;
-
-  const sendInit = useCallback(() => {
-    const user = Digit.UserService.getUser();
-    iframeRef.current?.contentWindow?.postMessage(
-      {
-        type: "hcm-preview:init",
-        session: {
-          token: user?.access_token,
-          userInfo: user?.info,
-          tenantId,
-          locale: Digit.StoreData.getCurrentLanguage(),
-        },
-        campaignNumber,
-      },
-      window.location.origin
-    );
-  }, [tenantId, campaignNumber]);
-
-  // Messages from the preview (same origin, this iframe only).
-  useEffect(() => {
-    const onMessage = (e) => {
-      if (e.origin !== window.location.origin || e.source !== iframeRef.current?.contentWindow) return;
-      const msg = e.data || {};
-      if (msg.type === "hcm-preview:ready") {
-        // Also after a reload of the preview: start a new session.
-        setPhase("starting");
-        setMessage(null);
-        sendInit();
-      } else if (msg.type === "hcm-preview:status") {
-        if (msg.state === "ready") {
-          setPhase("ready");
-          setMessage(null);
-        } else if (msg.state === "loading") {
-          setPhase("starting");
-        } else if (msg.state === "error") {
-          setPhase("error");
-          setMessage(msg.message || t(I18N_KEYS.COMPONENTS.PREVIEW_MOBILE_APP_FAILED));
-        }
-      }
-    };
-    window.addEventListener("message", onMessage);
-    return () => window.removeEventListener("message", onMessage);
-  }, [sendInit, t]);
 
   useEffect(() => {
     closeRef.current?.focus();
@@ -111,14 +60,14 @@ const MobileAppPreviewPopup = ({ tenantId, campaignNumber, campaignName, onClose
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const isError = phase === "error" || !sameOrigin;
   const status = !sameOrigin
     ? t(I18N_KEYS.COMPONENTS.PREVIEW_MOBILE_APP_NOT_AVAILABLE)
-    : phase === "starting"
+    : !loaded
     ? t(I18N_KEYS.COMPONENTS.PREVIEW_MOBILE_APP_STARTING)
-    : phase === "error"
-    ? message
     : null;
+
+  const width = Math.round(PHONE.width * scale);
+  const height = Math.round(PHONE.height * scale);
 
   return (
     <div style={styles.overlay} onClick={onClose}>
@@ -126,7 +75,7 @@ const MobileAppPreviewPopup = ({ tenantId, campaignNumber, campaignName, onClose
         role="dialog"
         aria-modal="true"
         aria-labelledby="mobile-app-preview-title"
-        style={{ ...styles.popup, width: Math.round(PHONE.width * scale) }}
+        style={{ ...styles.popup, width }}
         onClick={(e) => e.stopPropagation()}
       >
         <div style={styles.header}>
@@ -147,17 +96,17 @@ const MobileAppPreviewPopup = ({ tenantId, campaignNumber, campaignName, onClose
             ×
           </button>
         </div>
-        <div style={{ ...styles.screen, width: Math.round(PHONE.width * scale), height: Math.round(PHONE.height * scale) }}>
+        <div style={{ ...styles.screen, width, height }}>
           {sameOrigin && (
             <iframe
-              ref={iframeRef}
               title={t(I18N_KEYS.COMPONENTS.PREVIEW_MOBILE_APP)}
               src={url.toString()}
+              onLoad={() => setLoaded(true)}
               style={{ ...styles.frame, transform: `scale(${scale})` }}
             />
           )}
           {status && (
-            <div role={isError ? "alert" : "status"} style={isError ? styles.error : styles.status}>
+            <div role={sameOrigin ? "status" : "alert"} style={sameOrigin ? styles.status : styles.error}>
               {status}
             </div>
           )}
@@ -187,7 +136,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    padding: "1rem",
+    padding: MARGIN,
   },
   popup: {
     background: "#FFFFFF",
@@ -228,7 +177,7 @@ const styles = {
     display: "block",
     transformOrigin: "top left",
   },
-  // Loading and error messages float over the screen instead of taking space.
+  // Loading messages float over the screen instead of taking space.
   status: { ...overlay, color: "#0B4B66", background: "#E6F0F5" },
   error: { ...overlay, color: "#B91900", background: "#FCECE9" },
 };

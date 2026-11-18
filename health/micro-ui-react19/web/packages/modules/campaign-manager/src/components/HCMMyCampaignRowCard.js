@@ -636,7 +636,6 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       {showQRPopUp && <QRButton setShowQRPopUp={setShowQRPopUp} />}
       {showAppPreview && (
         <MobileAppPreviewPopup
-          tenantId={tenantId}
           campaignNumber={rowData?.campaignNumber}
           campaignName={rowData?.campaignName}
           onClose={() => setShowAppPreview(false)}

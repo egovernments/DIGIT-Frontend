@@ -58,7 +58,7 @@ config:
         dockerfile: health/flow-preview/Dockerfile
         image-name: hcm-flow-preview
         build-args:
-          HCM_REF: 4b8b1dc5afe7298f464332399dabf15b17f51cae  # feature/flow-preview-console-embed
+          HCM_REF: 2a60e06f74be9a7a1d20a90ae0f464e95a1f561d  # feature/flow-preview-console-embed
 
   - name: builds/Digit-Frontend/health/microplan-ui
     build:
