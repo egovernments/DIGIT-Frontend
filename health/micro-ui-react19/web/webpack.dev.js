@@ -121,6 +121,22 @@ module.exports = merge(common, {
         changeOrigin: true,
         secure: false,
       },
+      // Optional: "Preview in app" in the app-config editor against a local
+      // HCM flow preview (health-campaign-field-worker-app/apps/flow_preview).
+      // Build it with `flutter build web --pwa-strategy=none
+      // --no-web-resources-cdn --base-href /flow-preview/`, serve it with
+      // `python3 tool/serve.py`, then start this with
+      //   FLOW_PREVIEW_DEV_URL=http://127.0.0.1:8099 yarn start
+      // The preview's API calls use the routes above.
+      ...(process.env.FLOW_PREVIEW_DEV_URL
+        ? [
+            {
+              context: ["/flow-preview"],
+              target: process.env.FLOW_PREVIEW_DEV_URL,
+              pathRewrite: { "^/flow-preview": "" },
+            },
+          ]
+        : []),
     ],
   },
 
