@@ -1,8 +1,8 @@
 {
-  "id": "7417e0f2-5c27-4020-a6fd-279c0f2f987f",
-  "tenantId": "demo",
+  "id": "d96d9fd1-7c07-401a-8171-05d63901c973",
+  "tenantId": "qa",
   "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
-  "uniqueIdentifier": "HOUSEHOLDSTRATEGY.POLIO",
+  "uniqueIdentifier": "HOUSEHOLDSTRATEGY.Immunisation",
   "data": {
     "name": "HOUSEHOLDSTRATEGY",
     "flows": [
@@ -3531,6 +3531,32 @@
               },
               {
                 "type": "string",
+                "label": "HCM_REGISTRATION_SCHOOL_LABEL",
+                "order": 7,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "isMdms": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "required": false,
+                "fieldName": "school",
+                "mandatory": false,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "schemaCode": null,
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false,
+                "additionalFields": true,
+                "includeInSummary": true
+              },
+              {
+                "type": "string",
                 "enums": [
                   {
                     "code": "YES",
@@ -3546,7 +3572,7 @@
                   }
                 ],
                 "label": "HCM_REGISTRATION_ZERO_DOSE_DTP_LABEL",
-                "order": 7,
+                "order": 8,
                 "value": "",
                 "format": "radio",
                 "hidden": true,
@@ -3592,7 +3618,7 @@
                   }
                 ],
                 "label": "HCM_REGISTRATION_PREV_ROUND_DOSE_LABEL",
-                "order": 8,
+                "order": 9,
                 "value": "",
                 "format": "radio",
                 "hidden": true,
@@ -3624,7 +3650,7 @@
               {
                 "type": "string",
                 "label": "HCM_REGISTRATION_QR_SCAN_LABEL",
-                "order": 9,
+                "order": 10,
                 "value": "",
                 "format": "scanner",
                 "hidden": true,
@@ -6625,7 +6651,7 @@
     ],
     "order": 1,
     "active": true,
-    "project": "POLIO",
+    "project": "Immunisation",
     "version": 1,
     "disabled": false,
     "isSelected": true,
@@ -6633,9 +6659,9 @@
   },
   "isActive": true,
   "auditDetails": {
-    "createdBy": "2ff09ac4-a8f2-4ebb-81f2-922d2fec5302",
-    "lastModifiedBy": "d5862a62-7b2c-46a4-a899-4857960a4ff3",
-    "createdTime": 1793904362981,
-    "lastModifiedTime": 1794378774858
+    "createdBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
+    "lastModifiedBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
+    "createdTime": 1793774439903,
+    "lastModifiedTime": 1794895266625
   }
 }
