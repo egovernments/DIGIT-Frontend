@@ -85,4 +85,4 @@ jobs:
         # --yes: skip the interactive confirmation prompt (there's no
         # terminal to answer it in CI) — safe here specifically because the
         # PR merge that triggered this already required human review.
-        run: npx digit-i18n apply --yes
+        run: npx digit-i18n apply --yes --locale en_DEMO
