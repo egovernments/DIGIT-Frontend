@@ -3,6 +3,12 @@
 
 <head>
   <meta charset="utf-8" />
+  <!-- Warm up connections to external origins used below, so DNS/TCP/TLS setup happens
+       in parallel with HTML parsing instead of after the browser discovers each tag. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="preconnect" href="https://egov-dev-assets.s3.ap-south-1.amazonaws.com" />
   <link rel="icon" href="https://egov-dev-assets.s3.ap-south-1.amazonaws.com/browser-icon.png" />
   <link
     href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
@@ -13,8 +19,15 @@
   <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-health-css@1.0.65/dist/index.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#00bcd1" />
+  <meta name="description" content="DIGIT HCM - workbench for planning, configuring, and tracking public health campaigns." />
   <title>DIGIT HCM</title>
-  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+  <!-- defer: xlsx is only used inside upload/export handlers, never at module load time,
+       so it is safe to take off the critical rendering path. html-webpack-plugin injects
+       the app bundle as a deferred script after this tag, and deferred scripts run in
+       document order, so window.XLSX is still ready before the app mounts.
+       Pinned version: the unversioned URL answers with a 302 redirect to this exact file,
+       costing an extra round trip before the download can even start. -->
+  <script defer src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="<%= REACT_APP_GLOBAL %>"></script>
 
 </head>

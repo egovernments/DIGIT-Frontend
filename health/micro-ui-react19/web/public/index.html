@@ -25,8 +25,10 @@
   <!-- defer: only used inside upload/export handlers, never at module load time, so this
        is safe to load off the critical rendering path. html-webpack-plugin's own injected
        bundle script is also deferred and placed after this tag, so window.XLSX is still
-       guaranteed ready before the app mounts. -->
-  <script defer src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+       guaranteed ready before the app mounts.
+       Pinned version: the unversioned URL answers with a 302 redirect to this exact file,
+       costing an extra round trip before the download can even start. -->
+  <script defer src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="<%= REACT_APP_GLOBAL %>"></script>
   <script>
     if (navigator.platform.indexOf('Mac') !== -1) {
