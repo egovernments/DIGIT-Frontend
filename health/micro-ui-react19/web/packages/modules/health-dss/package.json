@@ -21,9 +21,9 @@
     "react-i18next": ">=11.0.0",
     "react-hook-form": ">=6.0.0",
     "@tanstack/react-query": ">=5.0.0",
-    "@egovernments/digit-ui-react-components": "2.0.0-dev-22",
-    "@egovernments/digit-ui-svg-components": "2.0.0-dev-12",
-    "@egovernments/digit-ui-components": "2.0.0-dev-80"
+    "@egovernments/digit-ui-react-components": "2.0.0-dev-23",
+    "@egovernments/digit-ui-svg-components": "2.0.0-dev-13",
+    "@egovernments/digit-ui-components": "2.0.0-dev-81"
   },
   "dependencies": {
     "highcharts": "^8.0.2",
