@@ -1,9 +1,11 @@
 import React, { Fragment, useCallback, useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Divider, LabelFieldPair, TextInput, Switch, Tag } from "@egovernments/digit-ui-components";
+import { AlertCard, Button, Divider, LabelFieldPair, TextInput, Switch, Tag } from "@egovernments/digit-ui-components";
+import { VisibilityNew, VisibilityOffNew } from "@egovernments/digit-ui-svg-components";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup, updateHeaderProperty } from "./redux/remoteConfigSlice";
-import { useCustomT } from "./hooks/useCustomT";
+import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup, updateHeaderProperty, setPreviewState } from "./redux/remoteConfigSlice";
+import { getStateGroups, buildFieldStateIndex } from "./helpers/previewStateHelpers";
+import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import NewDraggableField from "./NewDraggableField";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
@@ -132,7 +134,13 @@ const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale,
 function NewAppFieldScreenWrapper({viewMode}) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { currentData } = useSelector((state) => state.remoteConfig);
+  // State group and state names are written in the config, so they are translated the same way
+  // every other config-authored label is: out of the campaign's own localisation, not i18next.
+  // i18next only carries the console's own modules, so a code seeded against the campaign would
+  // never resolve there. Falls back to i18next so a console-owned code still works.
+  const campaignT = useCustomTranslate();
+  const stateLabel = (code) => (code ? campaignT(code) || t(code) : "");
+  const { currentData, selectedPreviewStates, selectedStateGroup } = useSelector((state) => state.remoteConfig);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
 
@@ -417,7 +425,40 @@ function NewAppFieldScreenWrapper({viewMode}) {
         const menuCardFields = fields.filter((f) => f?.format === "menu_card");
         const visibleMenuCardCount = menuCardFields.filter((f) => f?.hidden !== true).length;
 
+        // A state group replaces the rows it owns with a single element card listing its states.
+        // Which rows it owns has to come from the config tree, because `fields` above is flat and
+        // a row nested inside a container can no longer tell which state it inherited.
+        // A page declaring no states gets an empty index, so every row falls through unchanged.
+        const stateGroups = getStateGroups(currentCard);
+        const fieldStateIndex = new Map();
+        if (stateGroups.length > 0) {
+          buildFieldStateIndex(section?.fields, fieldStateIndex);
+          buildFieldStateIndex(currentCard?.footer, fieldStateIndex);
+        }
 
+        const statesOfRow = (f) => fieldStateIndex.get(f?.fieldName) || [];
+        const isStateRow = (f) => statesOfRow(f).length > 0;
+        const isInSelectedState = (f, group) => statesOfRow(f).includes(selectedPreviewStates?.[group?.name]);
+        const groupOfRow = (f) =>
+          stateGroups.find((group) => (group?.states || []).some((st) => statesOfRow(f).includes(st?.name)));
+
+        // Clicking a state opens the properties of the field it is made of. The states box is the
+        // only way in now, since those fields are no longer listed as rows of their own.
+        const fieldIndexForState = (stateName) =>
+          fields.findIndex((f, i) => !isButtonRow(f, i) && statesOfRow(f).includes(stateName));
+
+        // The group is drawn where its first row sat, so it keeps that place in the list.
+        // Worked out up front to keep the render pass below a plain map.
+        const firstRowOfGroup = new Map();
+        fields.forEach((f, i) => {
+          if (isButtonRow(f, i)) return;
+          const group = groupOfRow(f);
+          if (group && !firstRowOfGroup.has(group.name)) firstRowOfGroup.set(group.name, i);
+        });
+
+        // Buttons and popups stay in their own sections at the bottom rather than moving under a
+        // state, so one that belongs to a state is hidden there instead when it is not showing.
+        const isRowVisibleForStates = (f) => !isStateRow(f) || stateGroups.some((group) => isInSelectedState(f, group));
 
         // Render one field row; `i` stays the index in the combined body+footer list so the
         // existing card/field index math is unchanged by the section grouping below
@@ -481,12 +522,120 @@ function NewAppFieldScreenWrapper({viewMode}) {
               );
             };
 
+        // The state group is one element of this screen like any other: its name, its type, and
+        // the situations it can be in nested inside it - the same shape every other element row has.
+        const renderStateGroup = (group) => (
+          <div
+            className="draggableField-cont"
+            key={`state-group-${group?.name}`}
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            <div
+              className={`app-config-field-wrapper app-config-state-group-field${
+                selectedStateGroup === group?.name ? " selected-state-group" : ""
+              }`}
+            >
+              <LabelFieldPair className="appConfigLabelField">
+                <div className="appConfigLabelField-label-container" style={{ width: "100%" }}>
+                  <div className="appConfigLabelField-label">
+                    <span>{stateLabel(group?.label)}</span>
+                  </div>
+                  {group?.typeLabel && (
+                    <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap" }}>
+                      <Tag
+                        icon=""
+                        label={stateLabel(group.typeLabel)}
+                        className="app-config-field-tag normal"
+                        labelStyle={{}}
+                        showIcon={false}
+                        style={{}}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Nested inside the element card, the way the states belong to this element
+                    rather than sitting beside it */}
+                <div className="app-config-state-group" role="group" aria-label={stateLabel(group?.label)}>
+                  {group?.title && <div className="app-config-state-group-title">{stateLabel(group.title)}</div>}
+                  {group?.description && (
+                    // AlertCard always draws an icon and a heading, and with no label of its own
+                    // that heading reads "Info" - a word that adds nothing here. The sentence is
+                    // the whole point, so the header is hidden and only the text is left.
+                    <AlertCard
+                      className="app-config-state-group-alertcard"
+                      variant="info"
+                      label={stateLabel(group.description)}
+                    />
+                  )}
+                  {(group?.states || []).map((appState) => {
+                    const isPreviewing = selectedPreviewStates?.[group?.name] === appState?.name;
+                    // Picking a state does both things at once: shows it in the preview, and opens
+                    // the properties of the field it is made of. The preview is set first so the
+                    // eye still turns on for a state whose field has nothing to edit.
+                    const openState = () => {
+                      dispatch(setPreviewState({ groupName: group?.name, stateName: appState?.name }));
+                      const at = fieldIndexForState(appState?.name);
+                      if (at < 0) return;
+                      handleSelectField(fields[at], currentCard, card[index], index, at);
+                    };
+                    return (
+                      // The row opens the properties of the field this state is made of; only the
+                      // eye beside it changes what the preview is showing.
+                      <div
+                        key={`state-${group?.name}-${appState?.name}`}
+                        className={`app-config-state-option${isPreviewing ? " previewing" : ""}`}
+                        role="button"
+                        tabIndex={0}
+                        onClick={openState}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            openState();
+                          }
+                        }}
+                      >
+                        <span className="app-config-state-option-label">{stateLabel(appState?.label)}</span>
+                        <button
+                          type="button"
+                          className="app-config-state-option-eye"
+                          aria-pressed={isPreviewing}
+                          title={t(
+                            isPreviewing
+                              ? I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_STOP_PREVIEWING
+                              : I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_PREVIEW_STATE
+                          )}
+                          // The eye on its own only changes the preview, and clicking the state
+                          // already showing returns the group to its placeholder
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            dispatch(setPreviewState({ groupName: group?.name, stateName: isPreviewing ? null : appState?.name }));
+                          }}
+                        >
+                          {isPreviewing ? <VisibilityNew fill="#C84C0E" /> : <VisibilityOffNew fill="#505A5F" />}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </LabelFieldPair>
+            </div>
+          </div>
+        );
+
         return (
           <Fragment key={`card-${index}`}>
             {/* Each pass walks the whole list and renders only the rows belonging to its section.
                 The index has to stay the one the field holds in the list, since that is what an
                 edit is written back by, so the rows are picked out here rather than beforehand. */}
-            {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) ? null : renderFieldRow(fieldEntry, i, c)))}
+            {fields?.map((fieldEntry, i, c) => {
+              if (isButtonRow(fieldEntry, i)) return null;
+              // A state group is one element of this screen like any other, so it is drawn in the
+              // list, in the place its own fields held - not in a section of its own.
+              const group = groupOfRow(fieldEntry);
+              if (group) return firstRowOfGroup.get(group.name) === i ? renderStateGroup(group) : null;
+              return renderFieldRow(fieldEntry, i, c);
+            })}
 
             {/* Adding a field adds one to the list above, so it stays with that list rather than
                 sitting under the popup and button sections that follow */}
@@ -514,7 +663,11 @@ function NewAppFieldScreenWrapper({viewMode}) {
                 </div>
               </>
             )}
-            {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) && isPopupRow(fieldEntry) ? renderFieldRow(fieldEntry, i, c) : null))}
+            {fields?.map((fieldEntry, i, c) =>
+              isButtonRow(fieldEntry, i) && isPopupRow(fieldEntry) && isRowVisibleForStates(fieldEntry)
+                ? renderFieldRow(fieldEntry, i, c)
+                : null
+            )}
 
             {/* Body/template buttons get their own section, consistent with pages whose buttons live in the footer */}
             {actionButtonFields.length > 0 && (
@@ -526,7 +679,11 @@ function NewAppFieldScreenWrapper({viewMode}) {
                 </div>
               </>
             )}
-            {fields?.map((fieldEntry, i, c) => (isButtonRow(fieldEntry, i) && !isPopupRow(fieldEntry) ? renderFieldRow(fieldEntry, i, c) : null))}
+            {fields?.map((fieldEntry, i, c) =>
+              isButtonRow(fieldEntry, i) && !isPopupRow(fieldEntry) && isRowVisibleForStates(fieldEntry)
+                ? renderFieldRow(fieldEntry, i, c)
+                : null
+            )}
           </Fragment>
         );
       })}

@@ -1436,6 +1436,126 @@ tbody {
   }
 }
 
+.app-config-field-wrapper.app-config-state-group-field {
+  &.selected-state-group .appConfigLabelField {
+    border: 1px solid var(--digitv2-lightTheme-primary);
+  }
+  .appConfigLabelField {
+    display: block;
+  }
+
+  .app-config-state-group {
+    margin-top: 0.75rem;
+  }
+}
+.app-config-state-group {
+  border: 1px solid var(--digitv2-lightTheme-generic-divider);
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+  background: var(--digitv2-lightTheme-paper-primary);
+
+  .app-config-state-group-title {
+    font-family: var(--digitv2-fontFamily-sans);
+    font-weight: var(--digitv2-fontWeight-bold);
+    color: var(--digitv2-lightTheme-text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .app-config-state-group-alertcard {
+    margin-bottom: 0.5rem;
+    padding: 8px;
+  }
+
+
+  .app-config-state-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+    text-align: left;
+    font-family: var(--digitv2-fontFamily-sans);
+    font-size: var(--digitv2-fontSize-body-s-desktop);
+    color: var(--digitv2-lightTheme-text-primary);
+    background: var(--digitv2-lightTheme-paper-primary);
+    border: 1px solid var(--digitv2-lightTheme-generic-divider);
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &:hover {
+      border-color: var(--digitv2-lightTheme-primary-1);
+      background: var(--digitv2-lightTheme-primary-bg);
+    }
+
+    &.previewing {
+      color: var(--digitv2-lightTheme-primary-1);
+      border-color: var(--digitv2-lightTheme-primary-1);
+      background: var(--digitv2-lightTheme-primary-bg);
+      font-weight: var(--digitv2-fontWeight-bold);
+
+      .app-config-state-option-eye {
+        border-color: var(--digitv2-lightTheme-primary-1);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--digitv2-lightTheme-primary-1);
+      outline-offset: 2px;
+    }
+    .app-config-state-option-eye {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 2rem;
+      height: 2rem;
+      padding: 0;
+      background: var(--digitv2-lightTheme-paper-primary);
+      border: 1px solid var(--digitv2-lightTheme-generic-divider);
+      border-radius: 0.25rem;
+      cursor: pointer;
+
+      &:hover {
+        border-color: var(--digitv2-lightTheme-primary-1);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--digitv2-lightTheme-primary-1);
+        outline-offset: 2px;
+      }
+    }
+  }
+}
+.app-preview-state-placeholder {
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+
+  &.selected {
+    border-color: #c84c0e;
+    background-color: #c84c0e08;
+  }
+
+  &.plain {
+    padding: 1rem;
+    background: var(--digitv2-lightTheme-paper-primary);
+    color: var(--digitv2-lightTheme-text-secondary);
+    font-family: var(--digitv2-fontFamily-sans);
+  }
+
+  .app-preview-state-placeholder-text {
+    border-bottom: 1px dashed #505A5F;
+  }
+}
+
 .icon-wrapper.app-config-tooltip {
   margin-bottom: 0;
   /*height: 2rem;

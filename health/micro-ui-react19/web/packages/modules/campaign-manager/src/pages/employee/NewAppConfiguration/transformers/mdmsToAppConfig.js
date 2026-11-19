@@ -4,6 +4,26 @@
  * @returns {Array} Array of app config objects
  */
 
+/**
+ * Take the preview-only keys back off, at every depth.
+ *
+ * `stateGroups` (on a screen) and `previewStates` (on a field) exist so the console can draw
+ * one of the situations a screen can be in. The app works the situation out from its own data,
+ * so neither key means anything to it and neither is sent.
+ */
+const stripPreviewStateKeys = (node) => {
+  if (!node || typeof node !== "object") return;
+
+  if (Array.isArray(node)) {
+    node.forEach(stripPreviewStateKeys);
+    return;
+  }
+
+  delete node.stateGroups;
+  delete node.previewStates;
+  Object.values(node).forEach(stripPreviewStateKeys);
+};
+
 //Final TransformaTION
 export const transformMdmsToAppConfig = (fullData, version, existingFlows) => {
   if (!fullData || !Array.isArray(fullData) || fullData.length === 0) {
@@ -141,6 +161,12 @@ export const transformMdmsToAppConfig = (fullData, version, existingFlows) => {
     if (previous.category !== undefined) flow.category = previous.category;
     if (previous.roles !== undefined) flow.roles = previous.roles;
   });
+
+  // `stateGroups` and `previewStates` only tell the console which situation to draw a screen in.
+  // The app has no use for them and decides for itself what to show, so they are taken off here,
+  // where the config the app reads is built. Template screens already drop stateGroups by being
+  // rebuilt key by key; doing it in one place means both keys behave the same on every screen.
+  result.forEach(stripPreviewStateKeys);
 
   return result;
 };

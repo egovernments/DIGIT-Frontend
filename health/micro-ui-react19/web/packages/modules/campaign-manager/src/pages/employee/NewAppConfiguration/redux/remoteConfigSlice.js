@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import dummyConfig from "../configs/dummyConfig.json";
 import { withFooterButtonTypes } from "../helpers";
+import { getDefaultSelectedStates } from "../helpers/previewStateHelpers";
 
 // Helper function to check if all children of a node are hidden
 const areAllChildrenHidden = (node) => {
@@ -117,6 +118,12 @@ const remoteConfigSlice = createSlice({
     showAddFieldPopup: false,
     // Popup preview state for actionPopup fields
     showPopupPreview: false,
+    // Which state of each declared group the preview is showing, as { groupName: stateName }.
+    // A view-only choice: it is never written back to the config the app is sent.
+    selectedPreviewStates: {},
+    // The state group the author has clicked in the preview, so the panel can show which
+    // element the placeholder belongs to. A view-only choice, never saved.
+    selectedStateGroup: null,
   },
   reducers: {
     initializeConfig(state, action) {
@@ -141,6 +148,10 @@ const remoteConfigSlice = createSlice({
       state.currentScreen = null;
       state.currentCard = null;
       state.isFieldSelected = false;
+      // Each page opens on its own default state, and a page that declares none gets {},
+      // which every preview check reads as "show everything" - the behaviour before this existed.
+      state.selectedPreviewStates = getDefaultSelectedStates();
+      state.selectedStateGroup = null;
     },
     setRemoteData(state, action) {
       state.remoteData = action.payload;
@@ -316,6 +327,9 @@ const remoteConfigSlice = createSlice({
       if (actualField?.format === "actionPopup") {
         state.showPopupPreview = true;
       }
+      // Only one thing is selected at a time: picking a field drops the group the
+      // placeholder had marked.
+      state.selectedStateGroup = null;
     },
     deselectField(state) {
       state.selectedField = null;
@@ -936,6 +950,20 @@ const remoteConfigSlice = createSlice({
     setShowPopupPreview(state, action) {
       state.showPopupPreview = action.payload;
     },
+    // Switch which state of a group the preview is showing. Groups are independent,
+    // so choosing one leaves the others where they are.
+    // Clicking a group's placeholder points the panel at the group rather than at one of its
+    // states: with no state picked, opening one state's properties would be a guess.
+    setSelectedStateGroup(state, action) {
+      state.selectedStateGroup = action.payload || null;
+      state.selectedField = null;
+      state.isFieldSelected = false;
+    },
+    setPreviewState(state, action) {
+      const { groupName, stateName } = action.payload || {};
+      if (!groupName) return;
+      state.selectedPreviewStates = { ...state.selectedPreviewStates, [groupName]: stateName };
+    },
   },
 });
 
@@ -958,5 +986,7 @@ export const {
   handleShowAddFieldPopup,
   updatePageConditionalNav,
   setShowPopupPreview,
+  setPreviewState,
+  setSelectedStateGroup,
 } = remoteConfigSlice.actions;
 export default remoteConfigSlice.reducer;

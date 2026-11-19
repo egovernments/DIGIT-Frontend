@@ -48,6 +48,9 @@ export const transformMdmsToAppConfig = (mdmsData) => {
         wrapperConfig: flow.wrapperConfig,
         scrollListener: flow.scrollListener,
         isSuccessorErrorScreen: flow.isSuccessorErrorScreen || false,
+        // The situations this screen can be in, used only to preview one of them at a time.
+        // Listed here because the page below is built key by key, so anything left out is dropped.
+        stateGroups: flow.stateGroups,
       };
 
       appConfig.push(transformedFlow);
@@ -121,6 +124,8 @@ export const transformMdmsToAppConfig = (mdmsData) => {
           showTabView: page?.multiEntityConfig !== null && page?.multiEntityConfig !== undefined ? Object.keys(page?.multiEntityConfig)?.length > 0 ? true : false : false,
           multiEntityConfig: page.multiEntityConfig,
           conditions: page.conditions || null,
+          // Preview-only, as above: form screens can declare states too.
+          stateGroups: page.stateGroups,
 
         };
 
