@@ -8,7 +8,7 @@ import UserDetails from "./UserDetails";
 import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { isPartialFlow } from "./partialFlowUtils";
-import { getQuantityInBalesColumn, formatBales, QUANTITY_IN_BALES_KEY } from "./stockUnits";
+import { getQuantityInBalesColumn, formatBales, QUANTITY_IN_BALES_KEY, toBales } from "./stockUnits";
 
 // Default record filter: returns still in transit, excluding partial-flow returns (shown in the Partially Accepted tab)
 const isPendingReturn = (stock) => stock.stockEntryType === "RETURNED" && stock.status === "IN_TRANSIT" && !isPartialFlow(stock);
@@ -305,6 +305,7 @@ const PendingTransactionsTab = ({
                     { key: "status", value: "IN_TRANSIT" },
                     { key: "administrativeArea", value: userStaffProject?.address?.boundary || "" },
                     { key: "campaignNumber", value: campaignNumber || "" },
+                    { key: "balesQuantity", value: String(toBales(remainingQuantity)) },
                   ],
                 },
                 auditDetails: {
@@ -339,7 +340,8 @@ const PendingTransactionsTab = ({
           fieldsToSet.push(
             { key: "actualQuantityReceived", value: String(actualQuantityReceived) },
             // Backup of the quantity on the record before the partial accept
-            { key: "originalQuantityReceived", value: String(originalQuantity) }
+            { key: "originalQuantityReceived", value: String(originalQuantity) },
+            { key: "actualBalesReceived", value: String(toBales(actualQuantityReceived)) }
           );
         }
         if (comments?.trim()) fieldsToSet.push({ key: "comments", value: comments.trim() });
