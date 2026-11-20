@@ -30,7 +30,10 @@ export function buildDigitSessionFromKeycloak({ tenant, accessToken, refreshToke
   const info = {
     uuid: parsedToken.sub,
     userName: parsedToken.preferred_username,
-    name: parsedToken.name || parsedToken.preferred_username,
+    // A citizen who registered with only a mobile number has no name in Keycloak; their
+    // username IS the mobile number, so don't show it as their name (the profile page
+    // pre-fills this). They set a name on Edit Profile, which saves it to Keycloak.
+    name: parsedToken.name || (isCitizen ? "" : parsedToken.preferred_username),
     emailId: parsedToken.email || null,
     mobileNumber,
     type: isCitizen ? "CITIZEN" : "EMPLOYEE",

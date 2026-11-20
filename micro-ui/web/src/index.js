@@ -8,7 +8,7 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { fetchAndApplyThemeOverrides } from "./config/themeOverrides";
 import KeycloakTenantLogin from "./KeycloakTenantLogin";
 import { logoutFromKeycloak } from "./auth/keycloakClient";
-import { isKeycloakEnabled } from "./auth/keycloakConfig";
+import { isKeycloakEnabled, getKeycloakBaseUrl } from "./auth/keycloakConfig";
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
@@ -517,7 +517,101 @@ const employeeTenantFromSession = () => {
     const requestedUuids = body?.uuid || [];
     const currentUser = window.Digit?.UserService?.getUser?.()?.info;
     if (requestedUuids.length === 1 && currentUser?.uuid && requestedUuids[0] === currentUser.uuid) {
-      completeXhr(xhr, 200, { user: [currentUser] });
+      // A Keycloak user with no first/last name has no `name` claim, so the session
+      // fell back to the username — for a citizen that's the mobile number, which the
+      // profile page then showed as the name. Show it empty so they can fill it in.
+      const user = { ...currentUser };
+      if (user.name && (user.name === user.userName || user.name === user.mobileNumber)) user.name = "";
+      completeXhr(xhr, 200, { user: [user] });
+      return true;
+    }
+    return false;
+  }
+
+  // Edit Profile on 3.0. egov-user and studio-individual aren't deployed, so core's
+  // profile pages (UserProfile -> POST /user/profile/_update; IndividualUserProfile,
+  // used when USE_INDIVIDUAL_MODEL is on -> POST <INDIVIDUAL_SERVICE_CONTEXT_PATH>/v1/
+  // _search and _update) all answered 404. A person's name lives on their Keycloak
+  // user, and Keycloak's Account API lets every user (default role manage-account)
+  // edit their own first/last name. Only the SIGNED-IN user's own record is handled;
+  // anything else falls through untouched. Only the name is saved: the mobile number
+  // is the citizen's login, and an email change needs Keycloak's own checks.
+  // The account is read first and sent back whole, so its other fields are kept.
+  function saveOwnNameToKeycloak(name) {
+    const session = window.Digit?.UserService?.getUser?.();
+    const token = session?.access_token;
+    if (!token) return Promise.reject(new Error("Not signed in"));
+    const realm = session?.info?.tenantId || fallbackTenantId();
+    const url = `${getKeycloakBaseUrl()}/realms/${encodeURIComponent(realm)}/account/`;
+    const headers = { Authorization: `Bearer ${token}`, Accept: "application/json" };
+    return fetch(url, { headers })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`account read ${r.status}`))))
+      .then((account) => {
+        const { userProfileMetadata, ...rest } = account || {};
+        const updated = name ? { ...rest, firstName: name, lastName: "" } : rest;
+        return fetch(url, { method: "POST", headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify(updated) }).then((r) =>
+          r.ok ? [updated.firstName, updated.lastName].filter(Boolean).join(" ") : r.text().then((t) => Promise.reject(new Error(`account update ${r.status} ${t.slice(0, 200)}`)))
+        );
+      })
+      .then((savedName) => {
+        // A reload rebuilds the session from the info stored at login (see the
+        // Citizen.user-info / Employee.user-info restore below), and the current token
+        // still has the old name until the next login — keep the stored copy in step.
+        ["Citizen.user-info", "Employee.user-info"].forEach((key) => {
+          try {
+            const stored = JSON.parse(window.localStorage.getItem(key) || "null");
+            if (stored && stored.uuid === session.info?.uuid) window.localStorage.setItem(key, JSON.stringify({ ...stored, name: savedName }));
+          } catch (e) {
+            // storage unavailable — the name is still saved in Keycloak for the next login
+          }
+        });
+        return savedName;
+      });
+  }
+
+  const profileError = (xhr, e) =>
+    completeXhr(xhr, 400, { Errors: [{ code: "PROFILE_UPDATE_FAILED", message: e?.message || "Profile update failed", description: e?.message || "Profile update failed" }] });
+
+  // UserProfile: answers in the 2.x shape it reads ({responseInfo:{status:"200"}, user:[...]});
+  // core then puts the new name into the stored session itself.
+  function handleProfileUpdate(xhr, body) {
+    const info = window.Digit?.UserService?.getUser?.()?.info || {};
+    saveOwnNameToKeycloak(String(body?.user?.name || "").trim())
+      .then((savedName) => completeXhr(xhr, 200, { responseInfo: { status: "200" }, user: [{ ...info, ...(body?.user || {}), name: savedName }] }))
+      .catch((e) => profileError(xhr, e));
+  }
+
+  // IndividualUserProfile: the signed-in user's own record, in the individual shape it
+  // reads (Individual[0].name.givenName, mobileNumber, email), built from the session.
+  function individualFromSession(info) {
+    return {
+      userUuid: info.uuid,
+      tenantId: info.tenantId,
+      name: { givenName: info.name || "" },
+      mobileNumber: info.mobileNumber || null,
+      email: info.emailId || null,
+    };
+  }
+  function tryHandleOwnIndividual(xhr, pathname, body) {
+    const servicePath = window.globalConfigs?.getConfig?.("INDIVIDUAL_SERVICE_CONTEXT_PATH");
+    if (!servicePath) return false;
+    const base = `/${String(servicePath).replace(/^\/+|\/+$/g, "")}/v1/`;
+    const info = window.Digit?.UserService?.getUser?.()?.info;
+    if (!info?.uuid) return false;
+    if (pathname.endsWith(`${base}_search`)) {
+      const uuids = body?.Individual?.userUuid || [];
+      if (uuids.length !== 1 || uuids[0] !== info.uuid) return false;
+      completeXhr(xhr, 200, { ResponseInfo: { status: "successful" }, Individual: [individualFromSession(info)] });
+      return true;
+    }
+    if (pathname.endsWith(`${base}_update`)) {
+      const individual = body?.Individual;
+      if (!individual || (individual.userUuid && individual.userUuid !== info.uuid)) return false;
+      saveOwnNameToKeycloak(String(individual?.name?.givenName || "").trim())
+        .then((savedName) =>
+          completeXhr(xhr, 200, { ResponseInfo: { status: "successful" }, Individual: [{ ...individualFromSession(info), ...individual, name: { ...(individual.name || {}), givenName: savedName } }] })
+        )
+        .catch((e) => profileError(xhr, e));
       return true;
     }
     return false;
@@ -613,6 +707,8 @@ const employeeTenantFromSession = () => {
             if (pathname.endsWith(`/${MDMS_CONTEXT}/v1/schema/_search`)) return void handleSchemaSearch(this, parsedBody);
             if (pathname.endsWith(`/${MDMS_CONTEXT}/v1/_search`)) return void handleLegacyBatchSearch(this, parsedBody);
             if (pathname.endsWith("/user/_search") && tryHandleSelfUserSearch(this, parsedBody)) return;
+            if (pathname.endsWith("/user/profile/_update")) return void handleProfileUpdate(this, parsedBody);
+            if (tryHandleOwnIndividual(this, pathname, parsedBody)) return;
 
             const createMatch = pathname.match(new RegExp(`/${MDMS_CONTEXT}/v2/_create(?:/([^/]+))?$`));
             if (createMatch) return void handleV2CreateOrUpdate(this, parsedBody, createMatch[1] && decodeURIComponent(createMatch[1]), false);
