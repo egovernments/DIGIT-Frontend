@@ -617,6 +617,62 @@ const employeeTenantFromSession = () => {
     return false;
   }
 
+  // POST /egov-workflow-v2/egov-wf/process/_search?tenantId&businessIds=a,b&businessService=X&history=true
+  //   (2.x) -> 3.0 workflow v3, answered in the 2.x shape so callers keep their own logic.
+  // Used by the republish gate (ServiceBuilderCard.js, useServiceGroupRepublish.js): it
+  // picks each application's latest process instance and blocks while any one's
+  // state.isTerminateState is false. On 3.0 the egov-workflow-v2 route doesn't exist.
+  //   - instances: GET /workflow/v3/transition?entityId=<id>&processCode=<businessService>
+  //     (one entity per call), mapped to {businessId, businessService, state, auditDetails};
+  //   - isTerminateState: v3 states have no such flag; their `type` (INITIAL /
+  //     INTERMEDIATE / TERMINAL_SUCCESS / TERMINAL_FAILURE) from
+  //     GET /workflow/v3/process/definition/<businessService> says the same thing.
+  // Any failure answers an error, so the caller's own "fail closed" handling applies.
+  function handleWorkflowProcessSearch(xhr, urlObj) {
+    const params = urlObj.searchParams;
+    const tenantId = params.get("tenantId") || fallbackTenantId();
+    const processCode = params.get("businessService") || "";
+    const businessIds = (params.get("businessIds") || "").split(",").map((s) => s.trim()).filter(Boolean);
+    if (!processCode || businessIds.length === 0) return void completeXhr(xhr, 200, { ProcessInstances: [] });
+    const headers = authHeaders(tenantId);
+    const getJson = (url, what) =>
+      fetch(url, { headers }).then((r) => (r.ok ? r.json() : Promise.reject(new Error(`${what} ${r.status}`))));
+    const definition = getJson(`/workflow/v3/process/definition/${encodeURIComponent(processCode)}`, "workflow process definition");
+    const instances = Promise.all(
+      businessIds.map((entityId) =>
+        getJson(`/workflow/v3/transition?${new URLSearchParams({ entityId, processCode, history: "true" })}`, "workflow transition search").then(
+          (d) => (Array.isArray(d) ? d : d?.processInstances || [])
+        )
+      )
+    );
+    Promise.all([definition, instances])
+      .then(([def, lists]) => {
+        const processes = Array.isArray(def) ? def : def?.processes || def?.processDefinitions || [def];
+        const stateType = {};
+        processes.forEach((p) => (p?.states || []).forEach((s) => s?.code && (stateType[s.code] = s.type)));
+        const ProcessInstances = lists.flat().map((pi) => ({
+          id: pi.id,
+          tenantId,
+          businessId: pi.entityId,
+          businessService: pi.processCode,
+          action: pi.action,
+          state: {
+            state: pi.currentState,
+            applicationStatus: pi.stateAdditionalDetails?.applicationStatus ?? null,
+            isTerminateState: /^TERMINAL/i.test(stateType[pi.currentState] || ""),
+          },
+          auditDetails: {
+            createdBy: pi.auditDetail?.createdBy,
+            createdTime: pi.auditDetail?.createdTime,
+            lastModifiedBy: pi.auditDetail?.modifiedBy,
+            lastModifiedTime: pi.auditDetail?.modifiedTime,
+          },
+        }));
+        completeXhr(xhr, 200, { ProcessInstances });
+      })
+      .catch((e) => completeXhr(xhr, 502, { Errors: [{ code: "WORKFLOW_SEARCH_FAILED", message: e?.message || "Workflow search failed" }] }));
+  }
+
   // POST /egov-hrms/employees/_search?tenantId&roles=A,B&isActive (2.x HRMS) -> 3.0
   //   GET /employee/v3/employees?role=<one role>&include=individual,roles, once per role.
   // digit-ui-libraries' useHRMSSearch still calls the 2.x route, which has no route on
@@ -693,6 +749,9 @@ const employeeTenantFromSession = () => {
 
         if (this.__mdmsMethod === "POST" && pathname.endsWith("/egov-hrms/employees/_search")) {
           return void handleHrmsEmployeeSearch(this, urlObj);
+        }
+        if (this.__mdmsMethod === "POST" && pathname.endsWith("/egov-workflow-v2/egov-wf/process/_search")) {
+          return void handleWorkflowProcessSearch(this, urlObj);
         }
 
         if (this.__mdmsMethod === "POST" && typeof body === "string") {
