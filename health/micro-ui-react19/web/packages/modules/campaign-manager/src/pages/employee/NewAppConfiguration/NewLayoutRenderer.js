@@ -4,13 +4,13 @@ import { Card, CardHeader, CardText, Button, PopUp } from "@egovernments/digit-u
 import MobileBezelFrame from "../../../components/MobileBezelFrame";
 import { isFieldSelected, renderTemplateComponent } from "./helpers/templateRendererHelpers";
 import { getStateGroups, filterFieldsByState, withStatePlaceholders } from "./helpers/previewStateHelpers";
-import { setShowPopupPreview, setSelectedStateGroup } from "./redux/remoteConfigSlice";
+import { setShowPopupPreview } from "./redux/remoteConfigSlice";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 /**
  * Render a section (body or footer)
  */
-const renderSection = (section, sectionName, fieldTypeMasterData, selectedField, t, onFieldClick, data, onGroupClick, selectedStateGroup) => {
+const renderSection = (section, sectionName, fieldTypeMasterData, selectedField, t, onFieldClick, data) => {
   if (!section || section.length === 0) return null;
 
   return (
@@ -21,31 +21,6 @@ const renderSection = (section, sectionName, fieldTypeMasterData, selectedField,
         .filter((field) => field.hidden !== true)
         .sort((a, b) => (a.order || 0) - (b.order || 0))
         .map((field, index) => {
-          // A group with no state picked stands in for whatever the app will draw here. The
-          // stand-in is a field from the config, so it renders through the same path as the
-          // real elements; clicking anywhere on it points the panel at the group.
-          if (field?.statePlaceholderFor) {
-            const group = field.statePlaceholderFor;
-            const isGroupSelected = selectedStateGroup === group?.name;
-            const selectGroup = () => onGroupClick?.(group);
-            return (
-              <div
-                key={`state-placeholder-${group?.name}`}
-                // A stand-in written in the config paints its own card or tag, so the wrapper
-                // stays bare; only the fallback draws a box of its own.
-                className={`app-preview-state-placeholder${field?.format ? "" : " plain"}${
-                  isGroupSelected ? " selected" : ""
-                }`}
-                onClick={selectGroup}
-              >
-                {field?.format ? (
-                  renderTemplateComponent(field, fieldTypeMasterData, selectedField, t, selectGroup, data, sectionName, index)
-                ) : (
-                  <span className="app-preview-state-placeholder-text">{t(group?.label)}</span>
-                )}
-              </div>
-            );
-          }
           // Ensure field has an id for React keys
           const fieldWithId = {
             ...field,
@@ -87,8 +62,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
   // Get field type master data from Redux
   const dispatch = useDispatch();
   const { byName } = useSelector((state) => state.fieldTypeMaster);
-  const { showPopupPreview, selectedPreviewStates, selectedStateGroup } = useSelector((state) => state.remoteConfig);
-  const handleGroupClick = (group) => dispatch(setSelectedStateGroup(group?.name));
+  const { showPopupPreview, selectedPreviewStates } = useSelector((state) => state.remoteConfig);
   const fieldTypeMasterData = byName?.fieldTypeMappingConfig || [];
 
   // A screen that declares states shows one of them at a time, the way the app would. Until one
@@ -154,7 +128,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
             {/* BODY */}
             {data?.body &&
               bodyFields &&
-              renderSection(bodyFields, "body", fieldTypeMasterData, selectedField, t, onFieldClick, data, handleGroupClick, selectedStateGroup)}
+              renderSection(bodyFields, "body", fieldTypeMasterData, selectedField, t, onFieldClick, data)}
         </Card>
 
         {/* FOOTER - sticky at bottom */}

@@ -460,6 +460,29 @@
     transition: left 0.3s ease-out;
   }
 
+  /* 
+    //Default preview tag (parked - not wanted for now).
+    // Follows the flow tag: same left, same transition, one row below it.
+    &__default-preview-tag {
+    position: fixed;
+    top: 15.25rem;
+    left: 17.5rem;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    background-color: var(--digitv2-lightTheme-generic-background);
+    border: 1px solid var(--digitv2-lightTheme-generic-divider);
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--digitv2-lightTheme-text-secondary);
+    width: fit-content;
+    transition: left 0.3s ease-out;
+    }
+  */
+
   &__container--panel-open &__flow-tag {
     left: 35rem; /* 240px + 280px (side panel width) */
   }

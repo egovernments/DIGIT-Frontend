@@ -2,6 +2,7 @@ import React from "react";
 import { FieldV1 } from "@egovernments/digit-ui-components";
 import { getFieldTypeFromMasterData } from "./getFieldTypeFromMasterData";
 import { getComponentName as getComponentNameFromHelper, isEditableComponent } from "./propertyHelpers.js";
+import StatePlaceholder from "../components/StatePlaceholder";
 
 /**
  * Get component name from field master data
@@ -58,6 +59,13 @@ export const renderTemplateComponent = (
 
   const isSelected = isFieldSelected(field, selectedField);
   const uniqueKey = field.id || (field.role ? `${field.fieldName}-${field.role}` : field.fieldName) || `${sectionName}-${index}`;
+
+  // The stand-in has no format, so it is drawn here instead of falling through to the
+  // "component will be available soon" case. Containers render their children through this
+  // function too, so a stand-in works at any depth.
+  if (field?.statePlaceholderFor) {
+    return <StatePlaceholder key={`state-placeholder-${field.statePlaceholderFor?.name}`} field={field} t={t} />;
+  }
 
   // Get component name from field master
   const componentName = getComponentName(field, fieldTypeMasterData);

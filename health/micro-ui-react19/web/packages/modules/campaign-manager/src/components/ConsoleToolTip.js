@@ -3,13 +3,15 @@ import { InfoOutline } from "@egovernments/digit-ui-svg-components";
 import ReactDOM from "react-dom";
 // import { TooltipWrapper } from "@egovernments/digit-ui-components";
 
-const Tooltip = ({ content, position }) => {
+const Tooltip = ({ content, position, align }) => {
   if (!position) return null;
 
   const style = {
     position: "fixed",
     top: position.top + 8, // 8px below icon
-    right: "1rem",
+    // By default the tooltip sits at the right edge of the screen, which suits the side panel.
+    // Pass align="left" to put it under the icon instead.
+    ...(align === "left" ? { left: position.left } : { right: "1rem" }),
     width: "20rem",
     maxWidth: 300,
     backgroundColor: "#333",
@@ -31,7 +33,7 @@ const Tooltip = ({ content, position }) => {
   );
 };
 
-const ConsoleTooltip = ({ className = "", toolTipContent, placement = "right-end", iconFill = "#787878",style }) => {
+const ConsoleTooltip = ({ className = "", toolTipContent, placement = "right-end", iconFill = "#787878", style, align }) => {
   const [tooltipPos, setTooltipPos] = useState(null);
   const iconRef = useRef(null);
 
@@ -58,7 +60,7 @@ const ConsoleTooltip = ({ className = "", toolTipContent, placement = "right-end
       </span>
 
       {/* Tooltip Portal */}
-      <Tooltip content={toolTipContent} position={tooltipPos} />
+      <Tooltip content={toolTipContent} position={tooltipPos} align={align} />
     </div>
   );
   // return (

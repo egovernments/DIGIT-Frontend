@@ -29,7 +29,7 @@ export const getStateGroups = (page) => (Array.isArray(page?.stateGroups) ? page
 const getFieldStates = (field) => (Array.isArray(field?.previewStates) ? field.previewStates : []);
 
 /** True while a group has no state chosen, so it shows as a stand-in. */
-const isGroupNeutral = (group, selectedStates) => !selectedStates?.[group?.name];
+export const isGroupNeutral = (group, selectedStates) => !selectedStates?.[group?.name];
 
 /** The group a field belongs to, or undefined when it is not tied to any state. */
 const getFieldGroup = (field, stateGroups) => {
@@ -135,9 +135,10 @@ export const filterFieldsByState = (fields, selectedStates, stateGroups) => {
 /**
  * Put a stand-in where a group's fields would go while none of its states is chosen.
  *
- * Choosing a state for the author would be inventing a screen, and drawing nothing leaves a
- * hole, so the group appears once - as the field it names in `group.placeholder`, in the place
- * its first field held. Its other fields fall away until a state is chosen.
+ * Picking a state for the author would invent a screen, and drawing nothing leaves a hole,
+ * so the group shows once, where its first field was. Every group gets the same box, so it
+ * reads as "something goes here" rather than as one of the states.
+ * `group.placeholder.style` resizes or restyles it.
  */
 export const withStatePlaceholders = (fields, selectedStates, stateGroups) => {
   if (!Array.isArray(fields) || !(stateGroups || []).length) return fields;
@@ -153,7 +154,7 @@ export const withStatePlaceholders = (fields, selectedStates, stateGroups) => {
     if (!group) return undefined;
     if (placed.has(group.name)) return null;
     placed.add(group.name);
-    return { ...(group.placeholder || {}), statePlaceholderFor: group };
+    return { statePlaceholderFor: group };
   });
 };
 

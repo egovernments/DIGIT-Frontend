@@ -10,6 +10,10 @@ import { checkValidationErrorsAndShowToast } from "./utils/configUtils";
 import { SVG ,CustomSVG} from "@egovernments/digit-ui-components";
 import { ConversionPath, Earbuds } from "./svg/Flows";
 import { deselectField } from "./redux/remoteConfigSlice";
+// Parked: the "Default preview" tag is not wanted for now. Uncomment this and the three
+// blocks marked "Default preview tag" below to bring it back.
+// import { getStateGroups, isGroupNeutral } from "./helpers/previewStateHelpers";
+// import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import { FlowFilled } from "../../../components/icons/FlowFilled";
 import { FlowUnfilled } from "../../../components/icons/FlowUnfilled";
 import AppHelpTutorial from "../../../components/AppHelpTutorial";
@@ -58,6 +62,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const [formElementSearch, setFormElementSearch] = useState("");
   const [fieldTypeMaster, setFieldTypeMaster] = useState(appConfigStore.getState().fieldTypeMaster?.byName);
   const [campaignLocalization, setCampaignLocalization] = useState(appConfigStore.getState().localization);
+  // Default preview tag (parked)
+  // const [remoteConfig, setRemoteConfig] = useState(appConfigStore.getState().remoteConfig);
 
   useEffect(() => {
     const mdmsCtx = window?.globalConfigs?.getConfig("MDMS_V1_CONTEXT_PATH") || "egov-mdms-service";
@@ -67,6 +73,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
     const unsubscribe = appConfigStore.subscribe(() => {
       setFieldTypeMaster(appConfigStore.getState().fieldTypeMaster?.byName);
       setCampaignLocalization(appConfigStore.getState().localization);
+      // setRemoteConfig(appConfigStore.getState().remoteConfig);   // Default preview tag (parked)
     });
     return unsubscribe;
   }, [tenantId]);
@@ -401,6 +408,11 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   }
 
   const activeFlow = flowConfig.flows?.find((flow) => flow.id === selectedFlow);
+
+  // Default preview tag (parked): true while any group is still showing its stand-in
+  // const showsDefaultPreview = getStateGroups(remoteConfig?.currentData).some((group) =>
+  //   isGroupNeutral(group, remoteConfig?.selectedPreviewStates)
+  // );
 
   // Get current page's route information
   const currentPage = activeFlow?.pages?.find((p) => p.name === selectedPageName);
@@ -811,6 +823,25 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               <FlowUnfilled fill="#0057BD" />
               <span>{campaignT(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${activeFlow?.name}`))}</span>
             </div>
+
+            {/* Default preview tag (parked - not wanted for now).
+                A small chip under the flow tag, shown while a group is still standing in,
+                with the explanation on its tooltip. To bring it back, restore this markup
+                and the three blocks marked "Default preview tag" above.
+
+                {showsDefaultPreview && (
+                  <div className="full-config-wrapper__default-preview-tag">
+                    <span>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_DEFAULT_PREVIEW)}</span>
+                    <ConsoleTooltip
+                      iconFill={"#505A5F"}
+                      style={{ marginLeft: "0rem", top: "0rem" }}
+                      className="app-config-tooltip"
+                      toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_DEFAULT_PREVIEW_NOTE)}
+                      align="left"
+                    />
+                  </div>
+                )}
+            */}
 
             {/* Left Arrow */}
             <div

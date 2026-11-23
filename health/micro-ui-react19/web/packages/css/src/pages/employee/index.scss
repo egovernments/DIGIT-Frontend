@@ -1532,27 +1532,33 @@ tbody {
     }
   }
 }
+
 .app-preview-state-placeholder {
-  cursor: pointer;
-  border: 2px solid transparent;
-  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-sizing: border-box;
-  margin-bottom: 0.5rem;
+  height: 7rem;
+  flex-shrink: 0;
+  margin-bottom: 0.75rem;
+  border: 1px solid #f9e2d4;
+  border-radius: 0.375rem;
+  background: #fff8f3;
+  font-family: var(--digitv2-fontFamily-sans);
+  font-size: 0.875rem;
+  color: #334155;
+  cursor: pointer;
 
   &.selected {
-    border-color: #c84c0e;
-    background-color: #c84c0e08;
-  }
-
-  &.plain {
-    padding: 1rem;
-    background: var(--digitv2-lightTheme-paper-primary);
-    color: var(--digitv2-lightTheme-text-secondary);
-    font-family: var(--digitv2-fontFamily-sans);
+    outline: 2px solid #c84c0e;
+    outline-offset: 2px;
   }
 
   .app-preview-state-placeholder-text {
-    border-bottom: 1px dashed #505A5F;
+    display: inline-block;
+    min-width: 2.5rem;
+    border-bottom: 1.5px dotted #64748b;
+    line-height: 1.375;
   }
 }
 
@@ -1581,6 +1587,14 @@ tbody {
     display: flex;
     align-items: center;
   }
+}
+
+.app-config-drawer-subheader-tooltip {
+    display: flex;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    justify-content: center;
 }
 
 .icon-wrapper {
