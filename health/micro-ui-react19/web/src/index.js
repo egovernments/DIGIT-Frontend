@@ -3,17 +3,6 @@ import ReactDOM from "react-dom/client";
 import { Hooks } from "@egovernments/digit-ui-libraries";
 import "@egovernments/digit-ui-health-css";
 // import { BrowserRouter } from "react-router-dom";
-import UserSessionPage from "./workbench/user-session/UserSessionPage";
-import UserSessionCard from "./workbench/user-session/UserSessionCard";
-import {
-  USER_SESSION_ROUTE,
-  USER_SESSION_ALLOWED_ACTION_KEYS,
-  USER_SESSION_FALLBACK_ROLES,
-  hasUserSessionAccess,
-  resolveWorkbenchContextPath,
-  getUserSessionRouteLink,
-} from "./workbench/user-session/config";
-import { ensureUserSessionI18n } from "../packages/modules/campaign-manager/src/utils/i18nKeyConstants";
 import { initGlobalConfigs } from "./globalConfig";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
@@ -102,183 +91,27 @@ const setupBoundaryAccessGuard = () => {
 };
 
 
-const enabledModules = ["assignment", "Workbench", "Utilities", "Campaign", "UserSession"];
-const USER_SESSION_ACTION_KEY = USER_SESSION_ALLOWED_ACTION_KEYS[0] || "USERMANAGEMENT.USER_SESSION";
-const USER_SESSION_LINK_KEY = USER_SESSION_ALLOWED_ACTION_KEYS[1] || "USER_SESSION_LINK_USER_SESSION";
-const USER_SESSION_PARENT_MODULE = "USER_SESSION";
-const USER_SESSION_MODULE_CODE = "user-session";
-const USER_SESSION_CARD_ENABLED = false;
+const enabledModules = ["assignment", "Workbench", "Utilities", "Campaign"];
+const NON_CONTEXT_SEGMENTS = new Set(["employee", "citizen"]);
 
-const getUserSessionNavigationLink = () => {
-  return getUserSessionRouteLink();
-};
+const resolveWorkbenchContextPath = () => {
+  const configuredContextPath = String(window?.globalConfigs?.getConfig?.("CONTEXT_PATH") || "").trim();
+  const pathSegment = String(window?.location?.pathname?.split("/").filter(Boolean)[0] || "").trim();
+  const runtimeContextPath = String(window?.contextPath || "").trim();
 
-const UserSessionModule = () => <UserSessionPage />;
-
-const appendUserSessionModule = (source) => {
-  if (!source || !Array.isArray(source.modules)) {
-    return source;
+  if (configuredContextPath && !NON_CONTEXT_SEGMENTS.has(configuredContextPath.toLowerCase())) {
+    return configuredContextPath;
   }
 
-  const hasUserSessionModule = source.modules.some((moduleConfig) => String(moduleConfig?.code || "").toLowerCase() === USER_SESSION_MODULE_CODE);
-  if (hasUserSessionModule) {
-    return source;
+  if (pathSegment && !NON_CONTEXT_SEGMENTS.has(pathSegment.toLowerCase())) {
+    return pathSegment;
   }
 
-  const workbenchModule = source.modules.find((moduleConfig) => String(moduleConfig?.code || "").toLowerCase() === "workbench");
-  const userSessionModule = {
-    code: USER_SESSION_MODULE_CODE,
-    module: "UserSession",
-    tenants: workbenchModule?.tenants || source.modules?.[0]?.tenants || [],
-  };
-
-  return {
-    ...source,
-    modules: [...source.modules, userSessionModule],
-  };
-};
-
-const ensureUserSessionModuleOnSource = (source) => {
-  const patched = appendUserSessionModule(source);
-  if (!source || !patched || patched === source) {
-    return source;
+  if (runtimeContextPath && !NON_CONTEXT_SEGMENTS.has(runtimeContextPath.toLowerCase())) {
+    return runtimeContextPath;
   }
 
-  source.modules = patched.modules;
-  return source;
-};
-
-const patchUseInitStoreForUserSessionModule = () => {
-  const hooks = window?.Digit?.Hooks;
-  if (!hooks || typeof hooks.useInitStore !== "function" || hooks.__userSessionInitStorePatchApplied) {
-    return;
-  }
-
-  const originalUseInitStore = hooks.useInitStore.bind(hooks);
-  hooks.useInitStore = (...args) => {
-    const result = originalUseInitStore(...args);
-    if (!result || !result.data || typeof result !== "object") {
-      return result;
-    }
-    ensureUserSessionModuleOnSource(result.data);
-    return result;
-  };
-
-  hooks.__userSessionInitStorePatchApplied = true;
-};
-
-const patchAccessControlForUserSessionCard = () => {
-  const hooks = window?.Digit?.Hooks;
-  if (!hooks || typeof hooks.useAccessControl !== "function" || hooks.__userSessionCardPatchApplied) {
-    return;
-  }
-
-  const originalUseAccessControl = hooks.useAccessControl.bind(hooks);
-  hooks.useAccessControl = (...args) => {
-    const result = originalUseAccessControl(...args);
-    const actions = result?.data?.actions;
-
-    if (!Array.isArray(actions)) {
-      return result;
-    }
-
-    const routeLink = getUserSessionNavigationLink();
-    const userSessionKeys = [USER_SESSION_ACTION_KEY, USER_SESSION_LINK_KEY];
-    const isUserSessionCardAction = (action = {}) => {
-      const key = String(action?.name || action?.displayName || action?.path || "").toUpperCase();
-      return userSessionKeys.includes(key) && String(action?.url || "").toLowerCase() === "card";
-    };
-    const isAuthorizedForUserSession = hasUserSessionAccess();
-    const normalizedActions = actions.map((action) => {
-      const key = String(action?.name || action?.displayName || action?.path || "").toUpperCase();
-      const navigationURL = String(action?.navigationURL || action?.url || action?.path || "");
-      const isUserSessionAction = userSessionKeys.includes(key) || navigationURL.includes(USER_SESSION_ROUTE);
-
-      if (!isUserSessionAction) {
-        return action;
-      }
-
-      const isCardAction = String(action?.url || "").toLowerCase() === "card";
-      return {
-        ...action,
-        navigationURL: routeLink,
-        path: isCardAction ? "card" : routeLink,
-        url: isCardAction ? "card" : (action?.url || routeLink),
-        parentModule: action?.parentModule || USER_SESSION_PARENT_MODULE,
-        roles: USER_SESSION_FALLBACK_ROLES,
-      };
-    });
-
-    const actionsWithCardPreference = USER_SESSION_CARD_ENABLED
-      ? normalizedActions
-      : normalizedActions.filter((action) => !isUserSessionCardAction(action));
-
-    if (!isAuthorizedForUserSession) {
-      const filteredActions = actionsWithCardPreference.filter((action) => {
-        const key = String(action?.name || action?.displayName || action?.path || "").toUpperCase();
-        const navigationURL = String(action?.navigationURL || action?.url || action?.path || "");
-        return !userSessionKeys.includes(key) && !navigationURL.includes(USER_SESSION_ROUTE);
-      });
-
-      return {
-        ...result,
-        data: {
-          ...result.data,
-          actions: filteredActions,
-        },
-      };
-    }
-
-    if (!USER_SESSION_CARD_ENABLED) {
-      return {
-        ...result,
-        data: {
-          ...result.data,
-          actions: actionsWithCardPreference,
-        },
-      };
-    }
-
-    const hasUserSessionCard = actionsWithCardPreference.some((action) => isUserSessionCardAction(action));
-
-    const userSessionCardAction = {
-      name: USER_SESSION_ACTION_KEY,
-      displayName: "USER_SESSION",
-      url: "card",
-      path: "card",
-      navigationURL: routeLink,
-      parentModule: USER_SESSION_PARENT_MODULE,
-      roles: USER_SESSION_FALLBACK_ROLES,
-    };
-
-    return {
-      ...result,
-      data: {
-        ...result.data,
-        actions: hasUserSessionCard ? actionsWithCardPreference : [...actionsWithCardPreference, userSessionCardAction],
-      },
-    };
-  };
-
-  hooks.__userSessionCardPatchApplied = true;
-};
-
-const registerWorkbenchUserSessionComponents = () => {
-  const registry = window?.Digit?.ComponentRegistryService;
-  if (!registry || typeof registry.setComponent !== "function") {
-    return;
-  }
-
-  if (!registry.__userSessionWorkbenchRegistrationApplied) {
-    registry.setComponent("UserSessionPage", UserSessionPage);
-    registry.setComponent("UserSession", UserSessionPage);
-    registry.setComponent("UserSessionModule", UserSessionModule);
-    registry.setComponent("user-sessionModule", UserSessionModule);
-    registry.setComponent("USERMANAGEMENT.USER_SESSION", UserSessionPage);
-    registry.setComponent("USER_SESSION_LINK_USER_SESSION", UserSessionPage);
-    registry.setComponent("UserSessionCard", UserSessionCard);
-    registry.__userSessionWorkbenchRegistrationApplied = true;
-  }
+  return "workbench-ui";
 };
 
 const initTokens = (stateCode) => {
@@ -310,11 +143,7 @@ const initTokens = (stateCode) => {
 
 const initDigitUI = () => {
   initGlobalConfigs();
-  ensureUserSessionI18n();
   window.contextPath = resolveWorkbenchContextPath();
-  patchAccessControlForUserSessionCard();
-  patchUseInitStoreForUserSessionModule();
-  registerWorkbenchUserSessionComponents();
   setupBoundaryAccessGuard();
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
@@ -338,12 +167,6 @@ const MainApp = ({ stateCode, enabledModules }) => {
         const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
         initCampaignComponents();
         initWorkbenchComponents();
-        patchAccessControlForUserSessionCard();
-        patchUseInitStoreForUserSessionModule();
-        registerWorkbenchUserSessionComponents();
-        setTimeout(registerWorkbenchUserSessionComponents, 0);
-        setTimeout(registerWorkbenchUserSessionComponents, 500);
-        setTimeout(registerWorkbenchUserSessionComponents, 1500);
       } catch (error) {
         console.log("Error loading modules:", error);
         // Continue without modules if they fail to load
