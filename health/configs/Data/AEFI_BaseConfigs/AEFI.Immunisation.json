@@ -370,16 +370,7 @@
               },
               {
                 "type": "string",
-                "enums": [
-                  {
-                    "code": "TRANSIT_POST",
-                    "name": "AEFI_LOCATION_TYPE_TRANSIT_POST"
-                  },
-                  {
-                    "code": "OUTSIDE_HOUSEHOLD_PLACES",
-                    "name": "AEFI_LOCATION_TYPE_OUTSIDE_HOUSEHOLD_PLACES"
-                  }
-                ],
+                "enums": null,
                 "label": "AEFI_LOCATION_TYPE_LABEL",
                 "order": 2,
                 "value": "",
@@ -587,16 +578,7 @@
               },
               {
                 "type": "string",
-                "enums": [
-                  {
-                    "code": "MALE",
-                    "name": "AEFI_ENUM_MALE"
-                  },
-                  {
-                    "code": "FEMALE",
-                    "name": "AEFI_ENUM_FEMALE"
-                  }
-                ],
+                "enums": null,
                 "label": "AEFI_CHILD_GENDER_LABEL",
                 "order": 3,
                 "value": "",
