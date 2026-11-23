@@ -1723,8 +1723,8 @@
             "format": "noResultCard",
             "fieldName": "beneficiaryNotFound",
             "description": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-            "showOnEmptySearch": true,
-            "previewStates": ["NOT_FOUND"]
+            "previewStates": ["NOT_FOUND"],
+            "showOnEmptySearch": true
           },
           {
             "data": "members",
@@ -1860,40 +1860,14 @@
             "format": "listView",
             "hidden": false,
             "fieldName": "listView",
-            "previewStates": ["BENEFICIARY_DETAILS"],
             "properties": {
               "spacing": "spacer4"
             },
-            "schemaCode": null
+            "schemaCode": null,
+            "previewStates": ["BENEFICIARY_DETAILS"]
           }
         ],
         "name": "searchBeneficiary",
-        "stateGroups": [
-          {
-            "name": "searchResults",
-            "label": "APPCONFIG_STATEGROUP_SEARCH_RESULTS",
-            "typeLabel": "APPCONFIG_FIELDTYPE_TEMPLATE_CARD",
-            "title": "APPCONFIG_STATEGROUP_SEARCH_RESULTS_TITLE",
-            "description": "APPCONFIG_STATEGROUP_SEARCH_RESULTS_DESC",
-            "placeholder": {
-              "type": "template",
-              "format": "card",
-              "fieldName": "searchResultsPlaceholder",
-              "children": [
-                {
-                  "type": "template",
-                  "format": "textTemplate",
-                  "fieldName": "APPCONFIG_STATEGROUP_SEARCH_RESULTS",
-                  "properties": { "isFieldValue": false }
-                }
-              ]
-            },
-            "states": [
-              { "name": "BENEFICIARY_DETAILS", "label": "APPCONFIG_STATE_BENEFICIARY_DETAILS" },
-              { "name": "NOT_FOUND", "label": "APPCONFIG_STATE_BENEFICIARY_NOT_FOUND" }
-            ]
-          }
-        ],
         "order": 1,
         "footer": [
           {
@@ -2111,6 +2085,25 @@
         "initActions": [
           {
             "actionType": "LOAD_UNIQUE_ID_POOL"
+          }
+        ],
+        "stateGroups": [
+          {
+            "name": "searchResults",
+            "label": "APPCONFIG_STATEGROUP_SEARCH_RESULTS",
+            "title": "APPCONFIG_STATEGROUP_SEARCH_RESULTS_TITLE",
+            "states": [
+              {
+                "name": "BENEFICIARY_DETAILS",
+                "label": "APPCONFIG_STATE_BENEFICIARY_DETAILS"
+              },
+              {
+                "name": "NOT_FOUND",
+                "label": "APPCONFIG_STATE_BENEFICIARY_NOT_FOUND"
+              }
+            ],
+            "typeLabel": "APPCONFIG_FIELDTYPE_TEMPLATE_CARD",
+            "description": "APPCONFIG_STATEGROUP_SEARCH_RESULTS_DESC"
           }
         ],
         "wrapperConfig": {
@@ -4823,8 +4816,8 @@
   "isActive": true,
   "auditDetails": {
     "createdBy": "3496b299-06f3-4dd2-8340-573cf8c4f1fc",
-    "lastModifiedBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
+    "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
     "createdTime": 1777538670097,
-    "lastModifiedTime": 1793095143603
+    "lastModifiedTime": 1795411990102
   }
 }

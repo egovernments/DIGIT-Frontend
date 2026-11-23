@@ -252,14 +252,16 @@
                 "fieldName": "expandable",
                 "expandLabel": "REGISTRATION_VIEW_PAST_CYCLES",
                 "collapseLabel": "REGISTRATION_HIDE_PAST_CYCLES",
-                "controlsField": "pastCycles"
+                "controlsField": "pastCycles",
+                "previewStates": ["MULTI_CYCLE"]
               }
             ],
             "fieldName": "card",
             "properties": {
               "type": "primary"
             },
-            "schemaCode": null
+            "schemaCode": null,
+            "previewStates": ["SINGLE_CYCLE", "MULTI_CYCLE"]
           }
         ],
         "name": "beneficiaryDetails",
@@ -362,6 +364,25 @@
               "name": "household",
               "type": "SEARCH_EVENT"
             }
+          }
+        ],
+        "stateGroups": [
+          {
+            "name": "vaccinationHistory",
+            "label": "APPCONFIG_STATEGROUP_VACCINATION_HISTORY",
+            "title": "APPCONFIG_STATEGROUP_VACCINATION_HISTORY_TITLE",
+            "states": [
+              {
+                "name": "SINGLE_CYCLE",
+                "label": "APPCONFIG_STATE_SINGLE_CYCLE"
+              },
+              {
+                "name": "MULTI_CYCLE",
+                "label": "APPCONFIG_STATE_MULTI_CYCLE"
+              }
+            ],
+            "typeLabel": "APPCONFIG_FIELDTYPE_TEMPLATE_CARD",
+            "description": "APPCONFIG_STATEGROUP_VACCINATION_HISTORY_DESC"
           }
         ],
         "wrapperConfig": {
@@ -867,9 +888,7 @@
                       "properties": {
                         "tagType": "error"
                       },
-                      "previewStates": [
-                        "NOT_ELIGIBLE"
-                      ]
+                      "previewStates": ["NOT_ELIGIBLE"]
                     },
                     {
                       "type": "template",
@@ -881,9 +900,7 @@
                         "tagType": "success",
                         "bottomGap": 16
                       },
-                      "previewStates": [
-                        "ADMINISTERED_SUCCESSFULLY"
-                      ]
+                      "previewStates": ["ADMINISTERED_SUCCESSFULLY"]
                     },
                     {
                       "type": "template",
@@ -895,9 +912,7 @@
                         "tagType": "error",
                         "bottomGap": 16
                       },
-                      "previewStates": [
-                        "ADMINISTRATION_FAILED"
-                      ]
+                      "previewStates": ["ADMINISTRATION_FAILED"]
                     },
                     {
                       "type": "template",
@@ -909,9 +924,7 @@
                         "tagType": "success",
                         "bottomGap": 16
                       },
-                      "previewStates": [
-                        "RE_VACCINATED"
-                      ]
+                      "previewStates": ["RE_VACCINATED"]
                     },
                     {
                       "type": "template",
@@ -923,9 +936,7 @@
                         "tagType": "warning",
                         "bottomGap": 16
                       },
-                      "previewStates": [
-                        "NOT_VISITED"
-                      ]
+                      "previewStates": ["NOT_VISITED"]
                     },
                     {
                       "type": "template",
@@ -1205,9 +1216,7 @@
                                 "mainAxisSize": "max",
                                 "mainAxisAlignment": "center"
                               },
-                              "previewStates": [
-                                "ADMINISTRATION_FAILED"
-                              ]
+                              "previewStates": ["ADMINISTRATION_FAILED"]
                             },
                             {
                               "type": "template",
@@ -1272,9 +1281,7 @@
                                 "mainAxisSize": "max",
                                 "mainAxisAlignment": "center"
                               },
-                              "previewStates": [
-                                "ADMINISTRATION_FAILED"
-                              ]
+                              "previewStates": ["ADMINISTRATION_FAILED"]
                             }
                           ],
                           "title": "REGISTRATION_HOUSEHOLDOVERVIEW_POPUP_TITLE",
@@ -1285,9 +1292,7 @@
                         "mainAxisSize": "max",
                         "mainAxisAlignment": "center"
                       },
-                      "previewStates": [
-                        "ADMINISTRATION_FAILED"
-                      ]
+                      "previewStates": ["ADMINISTRATION_FAILED"]
                     },
                     {
                       "icon": "add",
@@ -1546,6 +1551,44 @@
             }
           }
         ],
+        "stateGroups": [
+          {
+            "name": "deliveryStatus",
+            "label": "APPCONFIG_STATEGROUP_DELIVERY_STATUS",
+            "title": "APPCONFIG_STATEGROUP_DELIVERY_STATUS_TITLE",
+            "states": [
+              {
+                "name": "NOT_ELIGIBLE",
+                "label": "APPCONFIG_STATE_NOT_ELIGIBLE"
+              },
+              {
+                "name": "NOT_VISITED",
+                "label": "APPCONFIG_STATE_NOT_VISITED"
+              },
+              {
+                "name": "ADMINISTERED_SUCCESSFULLY",
+                "label": "APPCONFIG_STATE_ADMINISTERED_SUCCESSFULLY"
+              },
+              {
+                "name": "ADMINISTRATION_FAILED",
+                "label": "APPCONFIG_STATE_ADMINISTRATION_FAILED"
+              },
+              {
+                "name": "RE_VACCINATED",
+                "label": "APPCONFIG_STATE_RE_VACCINATED"
+              }
+            ],
+            "typeLabel": "APPCONFIG_FIELDTYPE_TEMPLATE_TAG",
+            "description": "APPCONFIG_STATEGROUP_DELIVERY_STATUS_DESC",
+            "placeholder": {
+              "style": {
+                "width": "fit-content",
+                "height": "2rem",
+                "padding": "0 0.75rem"
+              }
+            }
+          }
+        ],
         "wrapperConfig": {
           "filters": [],
           "computed": {
@@ -1700,47 +1743,7 @@
           }
         },
         "submitCondition": null,
-        "preventScreenCapture": false,
-        "stateGroups": [
-          {
-            "name": "deliveryStatus",
-            "label": "APPCONFIG_STATEGROUP_DELIVERY_STATUS",
-            "typeLabel": "APPCONFIG_FIELDTYPE_TEMPLATE_TAG",
-            "title": "APPCONFIG_STATEGROUP_DELIVERY_STATUS_TITLE",
-            "description": "APPCONFIG_STATEGROUP_DELIVERY_STATUS_DESC",
-            "placeholder": {
-              "type": "template",
-              "format": "tag",
-              "fieldName": "deliveryStatusPlaceholder",
-              "label": "APPCONFIG_STATEGROUP_DELIVERY_STATUS",
-              "properties": {
-                "tagType": "monochrome"
-              }
-            },
-            "states": [
-              {
-                "name": "NOT_ELIGIBLE",
-                "label": "APPCONFIG_STATE_NOT_ELIGIBLE"
-              },
-              {
-                "name": "NOT_VISITED",
-                "label": "APPCONFIG_STATE_NOT_VISITED"
-              },
-              {
-                "name": "ADMINISTERED_SUCCESSFULLY",
-                "label": "APPCONFIG_STATE_ADMINISTERED_SUCCESSFULLY"
-              },
-              {
-                "name": "ADMINISTRATION_FAILED",
-                "label": "APPCONFIG_STATE_ADMINISTRATION_FAILED"
-              },
-              {
-                "name": "RE_VACCINATED",
-                "label": "APPCONFIG_STATE_RE_VACCINATED"
-              }
-            ]
-          }
-        ]
+        "preventScreenCapture": false
       },
       {
         "body": [
@@ -1886,13 +1889,8 @@
                               {
                                 "actionType": "CLEAR_STATE",
                                 "properties": {
-                                  "filterKeys": [
-                                    "givenName",
-                                    "identifierId"
-                                  ],
-                                  "widgetKeys": [
-                                    "searchBar"
-                                  ],
+                                  "filterKeys": ["givenName", "identifierId"],
+                                  "widgetKeys": ["searchBar"],
                                   "triggerSearch": true
                                 }
                               }
@@ -2147,9 +2145,7 @@
             "format": "noResultCard",
             "fieldName": "beneficiaryNotFound",
             "description": "CORE_COMMON_BENEFICIARY_NOT_FOUND_DESC",
-            "previewStates": [
-              "NOT_FOUND"
-            ],
+            "previewStates": ["NOT_FOUND"],
             "showOnEmptySearch": true
           },
           {
@@ -2208,10 +2204,7 @@
                                   }
                                 ],
                                 "configName": "beneficiaryRegistration",
-                                "entityTypes": [
-                                  "HouseholdModel",
-                                  "TaskModel"
-                                ]
+                                "entityTypes": ["HouseholdModel", "TaskModel"]
                               }
                             },
                             {
@@ -2300,9 +2293,7 @@
               "spacing": "spacer4"
             },
             "schemaCode": null,
-            "previewStates": [
-              "BENEFICIARY_DETAILS"
-            ]
+            "previewStates": ["BENEFICIARY_DETAILS"]
           }
         ],
         "name": "searchBeneficiary",
@@ -2524,21 +2515,6 @@
           {
             "name": "searchResults",
             "label": "APPCONFIG_STATEGROUP_SEARCH_RESULTS",
-            "placeholder": {
-              "type": "template",
-              "format": "card",
-              "fieldName": "searchResultsPlaceholder",
-              "children": [
-                {
-                  "type": "template",
-                  "format": "textTemplate",
-                  "fieldName": "APPCONFIG_STATEGROUP_SEARCH_RESULTS",
-                  "properties": {
-                    "isFieldValue": false
-                  }
-                }
-              ]
-            },
             "title": "APPCONFIG_STATEGROUP_SEARCH_RESULTS_TITLE",
             "states": [
               {
@@ -6757,6 +6733,6 @@
     "createdBy": "8ca0fd96-d0d8-4c1d-b209-4aa5518f78e7",
     "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
     "createdTime": 1790055959929,
-    "lastModifiedTime": 1794983320804
+    "lastModifiedTime": 1795170510850
   }
 }
