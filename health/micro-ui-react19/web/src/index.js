@@ -107,6 +107,7 @@ const USER_SESSION_ACTION_KEY = USER_SESSION_ALLOWED_ACTION_KEYS[0] || "USERMANA
 const USER_SESSION_LINK_KEY = USER_SESSION_ALLOWED_ACTION_KEYS[1] || "USER_SESSION_LINK_USER_SESSION";
 const USER_SESSION_PARENT_MODULE = "USER_SESSION";
 const USER_SESSION_MODULE_CODE = "user-session";
+const USER_SESSION_CARD_ENABLED = false;
 
 const getUserSessionNavigationLink = () => {
   return getUserSessionRouteLink();
@@ -183,6 +184,10 @@ const patchAccessControlForUserSessionCard = () => {
 
     const routeLink = getUserSessionNavigationLink();
     const userSessionKeys = [USER_SESSION_ACTION_KEY, USER_SESSION_LINK_KEY];
+    const isUserSessionCardAction = (action = {}) => {
+      const key = String(action?.name || action?.displayName || action?.path || "").toUpperCase();
+      return userSessionKeys.includes(key) && String(action?.url || "").toLowerCase() === "card";
+    };
     const isAuthorizedForUserSession = hasUserSessionAccess();
     const normalizedActions = actions.map((action) => {
       const key = String(action?.name || action?.displayName || action?.path || "").toUpperCase();
@@ -204,13 +209,12 @@ const patchAccessControlForUserSessionCard = () => {
       };
     });
 
-    const hasUserSessionCard = normalizedActions.some((action) => {
-      const key = String(action?.name || action?.displayName || action?.path || "").toUpperCase();
-      return userSessionKeys.includes(key) && String(action?.url || "").toLowerCase() === "card";
-    });
+    const actionsWithCardPreference = USER_SESSION_CARD_ENABLED
+      ? normalizedActions
+      : normalizedActions.filter((action) => !isUserSessionCardAction(action));
 
     if (!isAuthorizedForUserSession) {
-      const filteredActions = normalizedActions.filter((action) => {
+      const filteredActions = actionsWithCardPreference.filter((action) => {
         const key = String(action?.name || action?.displayName || action?.path || "").toUpperCase();
         const navigationURL = String(action?.navigationURL || action?.url || action?.path || "");
         return !userSessionKeys.includes(key) && !navigationURL.includes(USER_SESSION_ROUTE);
@@ -224,6 +228,18 @@ const patchAccessControlForUserSessionCard = () => {
         },
       };
     }
+
+    if (!USER_SESSION_CARD_ENABLED) {
+      return {
+        ...result,
+        data: {
+          ...result.data,
+          actions: actionsWithCardPreference,
+        },
+      };
+    }
+
+    const hasUserSessionCard = actionsWithCardPreference.some((action) => isUserSessionCardAction(action));
 
     const userSessionCardAction = {
       name: USER_SESSION_ACTION_KEY,
@@ -239,7 +255,7 @@ const patchAccessControlForUserSessionCard = () => {
       ...result,
       data: {
         ...result.data,
-        actions: hasUserSessionCard ? normalizedActions : [...normalizedActions, userSessionCardAction],
+        actions: hasUserSessionCard ? actionsWithCardPreference : [...actionsWithCardPreference, userSessionCardAction],
       },
     };
   };
