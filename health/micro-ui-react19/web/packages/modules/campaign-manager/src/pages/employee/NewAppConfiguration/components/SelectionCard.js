@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Loader, SelectionTag } from "@egovernments/digit-ui-components";
 import { useCustomT, useCustomTranslate } from "../hooks/useCustomT";
 
@@ -6,6 +7,9 @@ const SelectionCard = ({ field, t, props, data }) => {
   const selectionField = field || props?.field;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const customT = useCustomTranslate();
+  // Options taken from a master are named by that master's codes, which every campaign shares -
+  // see the translator choice further down.
+  const { t: i18nT } = useTranslation();
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   // The module this screen belongs to (e.g. "HOUSEHOLDSTRATEGY") - saved campaigns stamp the
@@ -142,6 +146,8 @@ const SelectionCard = ({ field, t, props, data }) => {
 
   // Determine options based on field type
   let options = [];
+  // True once the options are the master's own, which decides how they are translated below
+  let optionsFromMdms = false;
 
   if (isResourceCard) {
     if (hasValidResourceData) {
@@ -154,11 +160,14 @@ const SelectionCard = ({ field, t, props, data }) => {
     // The app renders the config's enums (its per-campaign selection of the master options,
     // filtered by isActive) — mirror that here so the preview matches the device. Fall back to
     // the full master list only when the config carries no selection yet.
-    options = hasValidEnums
-      ? selectionField.enums.filter((o) => o?.isActive !== false)
-      : hasValidMdmsData
-      ? mdmsData
-      : [];
+    if (hasValidEnums) {
+      options = selectionField.enums.filter((o) => o?.isActive !== false);
+    } else if (hasValidMdmsData) {
+      options = mdmsData;
+      optionsFromMdms = true;
+    } else {
+      options = [];
+    }
   } else if (hasValidEnums) {
     options = selectionField.enums.filter((o) => o.isActive !== false);
   } else if (hasValidDropdownOptions) {
@@ -178,7 +187,12 @@ const SelectionCard = ({ field, t, props, data }) => {
       selected={[]}
       withContainer={true}
       populators={{
-        t: isResourceCard ? t : field ? t : props?.t,
+        // A master's codes are the same for every campaign, so they are localised once in the
+        // console's own modules and read through i18next; only what the author wrote for this
+        // campaign lives in the campaign module that customT reads. Changing a field's data
+        // source therefore costs no new localisation work per campaign.
+        // Either way a code with no message shows as itself rather than as an empty option.
+        t: (code) => (optionsFromMdms ? i18nT : isResourceCard ? t : field ? t : props?.t)?.(code) || code,
       }
       }
     />
