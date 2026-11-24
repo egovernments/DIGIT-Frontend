@@ -558,10 +558,26 @@ export const lookupEmployeeUuidByCode = async ({ tenantId, employeeCode, limit =
   return { status: "not-found", userUuid: null, matchedEmployee: null };
 };
 
+const normalizeRevokeUserUuids = (userUuid) => {
+  const uuidValues = Array.isArray(userUuid) ? userUuid : [userUuid];
+  const cleaned = uuidValues.map((value) => String(value || "").trim()).filter(Boolean);
+  return [...new Set(cleaned)];
+};
+
 export const revokeUserSession = async ({ userUuid, tenantId }) => {
+  const normalizedUuids = normalizeRevokeUserUuids(userUuid);
+  if (!normalizedUuids.length) {
+    throw new Error("Invalid revoke request: userUuid is required.");
+  }
+
+  if (normalizedUuids.length > 100) {
+    throw new Error("Invalid revoke request: a maximum of 100 user UUIDs is allowed per request.");
+  }
+
   const authTokenFromRequestInfo = Digit?.Utils?.getRequestInfo?.()?.authToken;
   const authTokenFromStorage = window.localStorage.getItem("token");
   const authToken = authTokenFromRequestInfo || authTokenFromStorage || "";
+  const payloadUserUuid = normalizedUuids.length === 1 ? normalizedUuids[0] : normalizedUuids;
 
   return postJson(
     USER_SESSION_REVOKE_URL,
@@ -569,7 +585,7 @@ export const revokeUserSession = async ({ userUuid, tenantId }) => {
       RequestInfo: {
         authToken,
       },
-      userUuid,
+      userUuid: payloadUserUuid,
       tenantId,
     },
     {},
@@ -577,6 +593,42 @@ export const revokeUserSession = async ({ userUuid, tenantId }) => {
       setTimeParam: false,
     }
   );
+};
+
+export const getRevokeResultSummary = (response, requestedUserUuids = []) => {
+  const requested = [...new Set((requestedUserUuids || []).map((value) => String(value || "").trim()).filter(Boolean))];
+  const revokedFromResponse = Array.isArray(response?.revoked)
+    ? [...new Set(response.revoked.map((value) => String(value || "").trim()).filter(Boolean))]
+    : [];
+  const failedFromResponse = Array.isArray(response?.failed)
+    ? response.failed
+        .map((entry) => ({
+          userUuid: String(entry?.userUuid || "").trim(),
+          code: String(entry?.code || "").trim() || "UNKNOWN_ERROR",
+          message: String(entry?.message || "").trim() || "",
+        }))
+        .filter((entry) => entry.userUuid)
+    : [];
+
+  if (!requested.length) {
+    return {
+      revoked: revokedFromResponse,
+      failed: failedFromResponse,
+    };
+  }
+
+  // Backward compatibility: single-user success response contains only ResponseInfo.
+  if (!revokedFromResponse.length && !failedFromResponse.length && requested.length === 1 && isRevokeSuccessful(response)) {
+    return {
+      revoked: requested,
+      failed: [],
+    };
+  }
+
+  return {
+    revoked: revokedFromResponse,
+    failed: failedFromResponse,
+  };
 };
 
 export const isRevokeSuccessful = (response) => {
