@@ -7,15 +7,15 @@ import ReusableTableWrapper from "./ReusableTableWrapper";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import CommodityShipmentPopup from "./CommodityShipmentPopup";
-import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const toCamelCase = (str) =>
   str.split(" ")
     .map((word, i) => (i === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()))
     .join("");
 
-const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted, userBoundary, userBoundaries, isTopLevel }) => {
+const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted, userBoundary, userBoundaries, isTopLevel, sortedHierarchy }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [summarySearchQuery, setSummarySearchQuery] = useState("");
@@ -48,10 +48,14 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       enabled: !!facilityIds.length && !!tenantId,
       select: (data) => {
         const nameMap = {};
+
+
         const usageMap = {};
         (data?.Facilities || []).forEach(f => {
           if (f.id) {
             nameMap[f.id] = f.name || f.id;
+
+
             usageMap[f.id] = f.usage || f.facilityType || "";
           }
         });
@@ -72,10 +76,13 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   }), [tenantId, facilityIds]);
   const { data: facilityMaps, isLoading: facilitiesLoading } = Digit.Hooks.useCustomAPIHook(facilitySearchCriteria);
   const facilityNameMap = facilityMaps?.nameMap || {};
+
+
   const facilityUsageMap = facilityMaps?.usageMap || {};
 
   // Map facilityId/senderId/receiverId → boundaryHierarchyCode object from stock records.
   // First occurrence wins (avoids overwriting with a less relevant record).
+
   const facilityBoundaryHierarchyMap = useMemo(() => {
     const map = {};
     (finalStockData || []).forEach((stock) => {
@@ -140,23 +147,13 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     return map;
   }, [productVariants, products]);
 
-  // Get user's staff project from context (the project the user is directly assigned to)
-  const { projects: contextProjects, sortedHierarchy } = useCommodityProject();
-  const userStaffProjectId = useMemo(() => {
-    if (!contextProjects?.length) return null;
-    // First project is the user's directly assigned staff project
-    // (context searches staffProjectIds with includeDescendants, staff project comes first)
-    const match = contextProjects.find(p => p.address?.boundary === userBoundary?.boundary);
-    return match?.id || contextProjects[0]?.id || null;
-  }, [contextProjects, userBoundary]);
-
-  // Fetch project facilities using user's staff project (not campaign's top-level projectId)
+  // Fetch project facilities using the selected project (not derived from context)
   const projectFacilityCriteria = useMemo(() => ({
     url: `${getProjectServiceUrl()}/facility/v1/_search`,
-    params: { tenantId, limit: 1500, offset: 0 },
-    body: { ProjectFacility: { projectId: [userStaffProjectId] } },
+    params: { tenantId, limit: 100, offset: 0 },
+    body: { ProjectFacility: { projectId: [projectId] } },
     config: {
-      enabled: !!userStaffProjectId && !!tenantId,
+      enabled: !!projectId && !!tenantId,
       select: (data) => {
         const ids = new Set();
         (data?.ProjectFacilities || []).forEach(pf => {
@@ -165,7 +162,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         return ids;
       },
     },
-  }), [tenantId, userStaffProjectId]);
+  }), [tenantId, projectId]);
   const { data: userFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
 
   // User's own facility: first project facility (primary facility for shipment actions)
@@ -188,23 +185,12 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         stock?.additionalFields?.fields?.find((f) => f.key === "productName")?.value ||
         "Unknown";
       if (!commodityMap[productName]) {
-        commodityMap[productName] = { name: productName, totalReceived: 0, totalIssued: 0, totalReturned: 0, totalRejected: 0 };
+        commodityMap[productName] = { name: productName, totalReceived: 0, totalAccepted: 0, totalIssued: 0, totalReturned: 0, totalRejected: 0 };
       }
-      if (stockEntryType === "RECEIPT") {
-        // I confirmed receipt → totalReceived
-        if (userFacilityIds.has(stock.receiverId)) {
-          commodityMap[productName].totalReceived += qty;
-        }
-      } else if (stockEntryType === "EXCESS") {
-        // Received more than expected → additional stock for receiver
-        if (userFacilityIds.has(stock.receiverId)) {
-          commodityMap[productName].totalReceived += qty;
-        }
-      } else if (stockEntryType === "LESS") {
-        // Received less than expected → reduces receiver stock
-        if (userFacilityIds.has(stock.receiverId)) {
-          commodityMap[productName].totalReceived -= qty;
-        }
+      // RECEIPT/EXCESS/LESS are duplicate entries of ISSUED/ACCEPTED — skip to avoid double-counting
+      if (stockEntryType === "RECEIPT" || stockEntryType === "EXCESS" || stockEntryType === "LESS") {
+        // Ignored: receiver creates RECEIPT when accepting an ISSUED dispatch,
+        // which is already counted via ISSUED/ACCEPTED below
       } else if (stockEntryType === "ISSUED") {
         const status = stock.status || "";
         if (status === "ACCEPTED" || status === "IN_TRANSIT") {
@@ -215,6 +201,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           // Only ACCEPTED counts as received for receiver (confirmation required)
           if (status === "ACCEPTED" && userFacilityIds.has(stock.receiverId)) {
             commodityMap[productName].totalReceived += qty;
+            commodityMap[productName].totalAccepted += qty;
           }
         } else if (status === "REJECTED") {
           // Rejected dispatch → sender's stock came back
@@ -243,7 +230,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     });
     return Object.values(commodityMap).map((c) => ({
       ...c,
-      balance: c.totalReceived - c.totalIssued - c.totalReturned,
+      balance: c.totalAccepted - c.totalIssued - c.totalReturned,
     }));
   }, [finalStockData, userFacilityIds, isTopLevel, productNameMap]);
 
@@ -271,6 +258,8 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     }
     return "N/A";
   }, [facilityBoundaryHierarchyMap, sortedHierarchy, t]);
+
+
 
   // Per-transaction rows: all ISSUED transactions where user's facility is the sender
   const warehouseData = useMemo(() => {
@@ -304,7 +293,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       // Determine type: if sender/receiver is not in facility API response, it's a staff member
       let rowType;
       if (!facilityNameMap[senderId] && !facilityNameMap[receiverId]) {
-        rowType = t("HCM_STAFF");
+        rowType = t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STAFF);
       } else if (stock.senderType === "WAREHOUSE" || stock.receiverType === "WAREHOUSE") {
         rowType = "Warehouse";
       } else {
@@ -317,6 +306,9 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         toFacility: facilityNameMap[receiverId] || userNameMap[receiverId] || receiverId || "N/A",
         toFacilityId: receiverId || "N/A",
         type: rowType,
+
+
+
         boundary: getBoundaryDisplay(senderId),
         commodity: productName,
         quantity: qty,
@@ -388,7 +380,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     const statsMap = {};
     const getOrInit = (fId, pvId, productName) => {
       if (!statsMap[fId]) statsMap[fId] = {};
-      if (!statsMap[fId][pvId]) statsMap[fId][pvId] = { productName, totalReceived: 0, totalIssued: 0, totalRejected: 0, totalReturned: 0 };
+      if (!statsMap[fId][pvId]) statsMap[fId][pvId] = { productName, totalReceived: 0, totalAccepted: 0, totalIssued: 0, totalRejected: 0, totalReturned: 0 };
       return statsMap[fId][pvId];
     };
 
@@ -400,21 +392,17 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       if (!pvId) return;
       const productName = productNameMap[pvId] || stock.productName || "Unknown";
 
-      if (stockEntryType === "RECEIPT") {
-        if (stock.receiverId && descendantIds.has(stock.receiverId))
-          getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
-      } else if (stockEntryType === "EXCESS") {
-        if (stock.receiverId && descendantIds.has(stock.receiverId))
-          getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
-      } else if (stockEntryType === "LESS") {
-        if (stock.receiverId && descendantIds.has(stock.receiverId))
-          getOrInit(stock.receiverId, pvId, productName).totalReceived -= qty;
+      // RECEIPT/EXCESS/LESS are duplicate entries of ISSUED/ACCEPTED — skip to avoid double-counting
+      if (stockEntryType === "RECEIPT" || stockEntryType === "EXCESS" || stockEntryType === "LESS") {
+        // Ignored
       } else if (stockEntryType === "ISSUED") {
         if (status === "ACCEPTED" || status === "IN_TRANSIT") {
           if (stock.senderId && descendantIds.has(stock.senderId))
             getOrInit(stock.senderId, pvId, productName).totalIssued += qty;
-          if (status === "ACCEPTED" && stock.receiverId && descendantIds.has(stock.receiverId))
+          if (status === "ACCEPTED" && stock.receiverId && descendantIds.has(stock.receiverId)) {
             getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
+            getOrInit(stock.receiverId, pvId, productName).totalAccepted += qty;
+          }
         } else if (status === "REJECTED") {
           if (stock.senderId && descendantIds.has(stock.senderId))
             getOrInit(stock.senderId, pvId, productName).totalRejected += qty;
@@ -445,22 +433,22 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         rows.push({
           facilityId,
           facilityName: resolveName(facilityId),
-          facilityType: facilityUsageMap[facilityId] || (!facilityNameMap[facilityId] ? t("HCM_STAFF") : "—"),
+          facilityType: facilityUsageMap[facilityId] || (!facilityNameMap[facilityId] ? t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STAFF) : "—"),
           boundary: getBoundaryDisplay(facilityId),
           boundaryHierarchy: getBoundaryHierarchyDisplay(facilityId),
           productVariantId: pvId,
           commodity: stats.productName,
           totalReceived: stats.totalReceived,
+          totalAccepted: stats.totalAccepted,
           totalIssued: stats.totalIssued,
           totalRejected: stats.totalRejected,
           totalReturned: stats.totalReturned,
-          balance: stats.totalReceived - stats.totalIssued - stats.totalReturned,
+          balance: stats.totalAccepted - stats.totalIssued - stats.totalReturned,
         });
       });
     });
 
-    // Hide staff user rows — only show facilities known to the facility API
-    return rows.filter((row) => !!facilityNameMap[row.facilityId]).sort((a, b) => a.facilityName.localeCompare(b.facilityName));
+    return rows.sort((a, b) => a.facilityName.localeCompare(b.facilityName));
   }, [finalStockData, facilityNameMap, facilityUsageMap, userNameMap, productNameMap, userFacilityIds, getBoundaryDisplay, facilityBoundaryHierarchyMap, t]);
 
   // Compute per-facility stock map: { facilityId: { productVariantId: currentStock } }
@@ -488,15 +476,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           // ACCEPTED: receiver gained stock
           if (status === "ACCEPTED" && stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
         }
-      } else if (stockEntryType === "RECEIPT") {
-        // Receiver confirms receipt → gains stock
-        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
-      } else if (stockEntryType === "EXCESS") {
-        // Received more than expected → additional stock for receiver
-        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
-      } else if (stockEntryType === "LESS") {
-        // Received less than expected → reduces receiver stock
-        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] -= qty; }
+      // RECEIPT/EXCESS/LESS are duplicate entries of ISSUED/ACCEPTED — skip to avoid double-counting
       } else if (stockEntryType === "RETURNED") {
         const retStatus = stock.status || "";
         if (retStatus === "REJECTED") {
@@ -527,56 +507,56 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
 
   const columns = [
     {
-      label: t("HCM_FROM_FACILITY"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_FROM_FACILITY),
       key: "warehouseName",
       grow: 1.5,
       minWidth: "180px",
       sortable: true,
     },
     {
-      label: t("HCM_TO_FACILITY"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TO_FACILITY),
       key: "toFacility",
       grow: 1.2,
       minWidth: "160px",
       sortable: true,
     },
     {
-      label: t("HCM_TYPE"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TYPE),
       key: "type",
       grow: 0.6,
       minWidth: "100px",
       sortable: true,
     },
     {
-      label: t("HCM_BOUNDARY"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BOUNDARY),
       key: "boundary",
       grow: 1.2,
       minWidth: "160px",
       sortable: true,
     },
     {
-      label: t("HCM_COMMODITY"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_COMMODITY),
       key: "commodity",
       grow: 0.6,
       minWidth: "100px",
       sortable: true,
     },
     {
-      label: t("HCM_QUANTITY"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_QUANTITY),
       key: "quantity",
       grow: 0.6,
       minWidth: "100px",
       sortable: true,
     },
     {
-      label: t("HCM_STATUS"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STATUS),
       key: "displayStatus",
       grow: 0.8,
       minWidth: "120px",
       sortable: true,
     },
     ...(!isCompleted ? [{
-      label: t("HCM_ACTION"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_ACTION),
       key: "action",
       grow: 1.5,
       minWidth: "240px",
@@ -591,16 +571,17 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   }, [facilityStockSummaryRows, summarySearchQuery]);
 
   const summaryColumns = [
-    { label: t("HCM_CHILD_FACILITY"),      key: "facilityName",      grow: 1.5, minWidth: "180px", sortable: true },
-    { label: t("HCM_TYPE"),                key: "facilityType",      grow: 0.8, minWidth: "120px", sortable: true },
-    { label: t("HCM_BOUNDARY"),            key: "boundary",          grow: 1.2, minWidth: "160px", sortable: true },
-    { label: t("HCM_BOUNDARY_HIERARCHY"),  key: "boundaryHierarchy", grow: 2.5, minWidth: "280px", sortable: false },
-    { label: t("HCM_COMMODITY"),           key: "commodity",         grow: 0.8, minWidth: "120px", sortable: true },
-    { label: t("HCM_TOTAL_RECEIVED"), key: "totalReceived", grow: 0.7, minWidth: "110px", sortable: true },
-    { label: t("HCM_TOTAL_ISSUED"),   key: "totalIssued",   grow: 0.7, minWidth: "110px", sortable: true },
-    { label: t("HCM_TOTAL_REJECTED"), key: "totalRejected", grow: 0.7, minWidth: "110px", sortable: true },
-    { label: t("HCM_TOTAL_RETURNED"), key: "totalReturned", grow: 0.7, minWidth: "110px", sortable: true },
-    { label: t("HCM_BALANCE"),        key: "balance",       grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CHILD_FACILITY),      key: "facilityName",      grow: 1.5, minWidth: "180px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TYPE),                key: "facilityType",      grow: 0.8, minWidth: "120px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BOUNDARY),            key: "boundary",          grow: 1.2, minWidth: "160px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BOUNDARY_HIERARCHY),  key: "boundaryHierarchy", grow: 2.5, minWidth: "280px", sortable: false },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_COMMODITY),           key: "commodity",         grow: 0.8, minWidth: "120px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_RECEIVED), key: "totalReceived", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_ACCEPTED), key: "totalAccepted", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_ISSUED),   key: "totalIssued",   grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_REJECTED), key: "totalRejected", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TOTAL_RETURNED), key: "totalReturned", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BALANCE),        key: "balance",       grow: 0.7, minWidth: "110px", sortable: true },
   ];
 
   const summaryCellRenderer = {
@@ -616,6 +597,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       );
     },
     totalReceived: (row) => <span className="cm-cell-stock">{row.totalReceived?.toLocaleString()}</span>,
+    totalAccepted: (row) => <span className="cm-cell-stock">{row.totalAccepted?.toLocaleString()}</span>,
     totalIssued:   (row) => <span className="cm-cell-stock">{row.totalIssued?.toLocaleString()}</span>,
     totalRejected: (row) => <span className="cm-cell-stock">{row.totalRejected?.toLocaleString()}</span>,
     totalReturned: (row) => <span className="cm-cell-stock">{row.totalReturned?.toLocaleString()}</span>,
@@ -650,7 +632,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
 
   // Transaction List export — called by onActionSelect (ES_DSS_DOWNLOAD_EXCEL) and the inline button
   const handleExcelDownload = useCallback(() => {
-    const label = t("HCM_TRANSACTION_LIST");
+    const label = t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRANSACTION_LIST);
     exportTableToXlsx(
       filteredData,
       columns.filter((col) => col.key !== "action"),
@@ -661,36 +643,36 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
 
   // Stock Summary List export
   const handleSummaryExport = useCallback(() => {
-    const label = t("HCM_STOCK_SUMMARY_LIST");
+    const label = t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_SUMMARY_LIST);
     exportTableToXlsx(summaryFilteredData, summaryColumns, label, label);
   }, [summaryFilteredData, summaryColumns, exportTableToXlsx, t]);
 
   // Share options - DSS pattern
   const shareOptions = navigator.share
     ? [
-      { code: "ES_DSS_SHARE_PDF", label: t("ES_DSS_SHARE_PDF") },
-      { code: "ES_DSS_SHARE_IMAGE", label: t("ES_DSS_SHARE_IMAGE") },
+      { code: "ES_DSS_SHARE_PDF", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_PDF) },
+      { code: "ES_DSS_SHARE_IMAGE", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_IMAGE) },
     ]
     : [
       {
         icon: "EmailIcon",
         code: "ES_DSS_SHARE_PDF_EMAIL",
-        label: t("ES_DSS_SHARE_PDF"),
+        label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_PDF),
       },
       {
         icon: "WhatsappIcon",
         code: "ES_DSS_SHARE_PDF_WHATSAPP",
-        label: t("ES_DSS_SHARE_PDF"),
+        label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_PDF),
       },
       {
         icon: "EmailIcon",
         code: "ES_DSS_SHARE_IMAGE_EMAIL",
-        label: t("ES_DSS_SHARE_IMAGE"),
+        label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_IMAGE),
       },
       {
         icon: "WhatsappIcon",
         code: "ES_DSS_SHARE_IMAGE_WHATSAPP",
-        label: t("ES_DSS_SHARE_IMAGE"),
+        label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE_IMAGE),
       },
     ];
 
@@ -699,24 +681,24 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     {
       icon: "ImageIcon",
       code: "ES_DSS_DOWNLOAD_IMAGE",
-      label: t("ES_DSS_DOWNLOAD_IMAGE"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_DOWNLOAD_IMAGE),
     },
     {
       icon: "PDFSvg",
       code: "ES_DSS_DOWNLOAD_PDF",
-      label: t("ES_DSS_DOWNLOAD_PDF"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_DOWNLOAD_PDF),
     },
     {
       icon: "FileDownload",
       code: "ES_DSS_DOWNLOAD_EXCEL",
-      label: t("ES_DSS_DOWNLOAD_EXCEL"),
+      label: t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_DOWNLOAD_EXCEL),
     },
   ];
 
   // Handle share/download action selection - DSS pattern
   const onActionSelect = useCallback(
     (item) => {
-      const title = t("HCM_STOCK_SUMMARY");
+      const title = t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_SUMMARY);
       switch (item?.code) {
         case "ES_DSS_DOWNLOAD_IMAGE":
           setTimeout(() => Digit.Download.Image(fullPageRef, title), 500);
@@ -811,9 +793,9 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         onClick={() =>
           setShipmentFacility({ id: row.facilityId, name: row.warehouseName, productVariantId: row.productVariantId })
         }
-        title={t("HCM_SHIP_COMMODITY")}
+        title={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SHIP_COMMODITY)}
         icon={"Add"}
-        label={t("HCM_SHIP_COMMODITY")}
+        label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SHIP_COMMODITY)}
         variation={"secondary"}
       />
     ),
@@ -853,6 +835,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           subtitle={commodity.name}
           items={[
             { label: "HCM_TOTAL_RECEIVED", value: commodity.totalReceived },
+            { label: "HCM_TOTAL_ACCEPTED", value: commodity.totalAccepted },
             { label: "HCM_TOTAL_ISSUED", value: commodity.totalIssued },
             { label: "HCM_TOTAL_REJECTED", value: commodity.totalRejected },
             { label: "HCM_TOTAL_RETURNED", value: commodity.totalReturned },
@@ -863,11 +846,11 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
 
       {/* <div className="cm-table-card">
         <div className="cm-table-header">
-          <div className="cm-table-title">{t("HCM_TRANSACTION_LIST")}</div>
+          <div className="cm-table-title">{t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRANSACTION_LIST)}</div>
           <input
             type="text"
             className="cm-search-input"
-            placeholder={t("ES_COMMON_SEARCH")}
+            placeholder={t(I18N_KEYS.PAGES.ES_COMMON_SEARCH)}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -891,7 +874,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           <Button
             type="actionButton"
             variation="teritiary"
-            label={t("ES_DSS_SHARE")}
+            label={t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_SHARE)}
             options={shareOptions}
             optionsKey="label"
             showBottom={true}
@@ -906,7 +889,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           <Button
             type="actionButton"
             variation="teritiary"
-            label={t("ES_DSS_DOWNLOAD")}
+            label={t(I18N_KEYS.COMMODITY_MANAGEMENT.ES_DSS_DOWNLOAD)}
             options={downloadOptions}
             optionsKey="label"
             showBottom={true}
@@ -921,19 +904,19 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         </div>
       </div> */}
 
-      <div className="digit-dss-switch-tabs" style={{ marginBottom: "8px" }}>
+      <div className="digit-dss-switch-tabs" style={{ marginBottom: "8px",width:"100%" }}>
         <div className="digit-dss-switch-tab-wrapper">
           <div
             className={activeSubTab === "transactions" ? "digit-dss-switch-tab-selected" : "digit-dss-switch-tab-unselected"}
             onClick={() => setActiveSubTab("transactions")}
           >
-            {t("HCM_TRANSACTION_LIST")}
+            {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRANSACTION_LIST)}
           </div>
           <div
             className={activeSubTab === "stockSummary" ? "digit-dss-switch-tab-selected" : "digit-dss-switch-tab-unselected"}
             onClick={() => setActiveSubTab("stockSummary")}
           >
-            {t("HCM_STOCK_SUMMARY_LIST")}
+            {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_SUMMARY_LIST)}
           </div>
         </div>
       </div>
@@ -949,7 +932,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
             <Button
               type="button"
               variation="secondary"
-              label={t("HCM_EXPORT_XLSX")}
+              label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_EXPORT_XLSX)}
               icon="FileDownload"
               onClick={handleExcelDownload}
               size="medium"
@@ -985,7 +968,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
             <Button
               type="button"
               variation="secondary"
-              label={t("HCM_EXPORT_XLSX")}
+              label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_EXPORT_XLSX)}
               icon="FileDownload"
               onClick={handleSummaryExport}
               size="medium"
@@ -1015,6 +998,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           tenantId={tenantId}
           campaignId={campaignId}
           campaignNumber={campaignNumber}
+          projectId={projectId}
           fromFacility={shipmentFacility}
           selectedCommodity={shipmentFacility.productVariantId}
           productVariants={productVariantList}
@@ -1023,7 +1007,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           onClose={() => setShipmentFacility(null)}
           onSuccess={() => {
             setShipmentFacility(null);
-            setShowToast({ key: "success", label: t("HCM_SHIPMENT_CREATED_SUCCESS") });
+            setShowToast({ key: "success", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SHIPMENT_CREATED_SUCCESS) });
             if (refetchStockData) {
               setTimeout(() => refetchStockData(), 2000);
             }

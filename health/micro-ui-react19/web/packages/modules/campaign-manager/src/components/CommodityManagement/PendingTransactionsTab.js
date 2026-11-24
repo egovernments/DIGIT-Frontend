@@ -5,8 +5,8 @@ import ReusableTableWrapper from "./ReusableTableWrapper";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import UserDetails from "./UserDetails";
-import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const PendingTransactionsTab = ({
   rawStockData,
@@ -26,24 +26,14 @@ const PendingTransactionsTab = ({
   const [rejectPopup, setRejectPopup] = useState(null); // { stockId }
   const [rejectComment, setRejectComment] = useState("");
 
-  // Get user's staff project from context
-  const { projects: contextProjects } = useCommodityProject();
-  const userStaffProjectId = useMemo(() => {
-    if (!contextProjects?.length) return null;
-    const match = contextProjects.find(
-      (p) => p.address?.boundary === userBoundary?.boundary
-    );
-    return match?.id || contextProjects[0]?.id || null;
-  }, [contextProjects, userBoundary]);
-
-  // Fetch project facilities using user's staff project
+  // Fetch project facilities using the selected project (passed from CommodityDashboard)
   const projectFacilityCriteria = useMemo(
     () => ({
       url: `${getProjectServiceUrl()}/facility/v1/_search`,
-      params: { tenantId, limit: 1500, offset: 0 },
-      body: { ProjectFacility: { projectId: [userStaffProjectId] } },
+      params: { tenantId, limit: 100, offset: 0 },
+      body: { ProjectFacility: { projectId: [projectId] } },
       config: {
-        enabled: !!userStaffProjectId && !!tenantId,
+        enabled: !!projectId && !!tenantId,
         select: (data) => {
           const ids = new Set();
           (data?.ProjectFacilities || []).forEach((pf) => {
@@ -53,7 +43,7 @@ const PendingTransactionsTab = ({
         },
       },
     }),
-    [tenantId, userStaffProjectId]
+    [tenantId, projectId]
   );
   const { data: projectFacilityIds = new Set(), isLoading: projectFacilitiesLoading } =
     Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
@@ -231,7 +221,7 @@ const PendingTransactionsTab = ({
         if (!stockObject) {
           setShowToast({
             key: "error",
-            label: t("HCM_STOCK_RECORD_NOT_FOUND"),
+            label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_RECORD_NOT_FOUND),
           });
           return;
         }
@@ -280,8 +270,8 @@ const PendingTransactionsTab = ({
           key: "success",
           label:
             action === "accept"
-              ? t("HCM_RETURN_ACCEPTED_SUCCESS")
-              : t("HCM_RETURN_REJECTED_SUCCESS"),
+              ? t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_RETURN_ACCEPTED_SUCCESS)
+              : t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_RETURN_REJECTED_SUCCESS),
         });
 
         // Refetch stock data to update all tabs
@@ -292,7 +282,7 @@ const PendingTransactionsTab = ({
         console.error("Stock update error:", error);
         setShowToast({
           key: "error",
-          label: t("HCM_STOCK_UPDATE_FAILED"),
+          label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_UPDATE_FAILED),
         });
       } finally {
         setUpdatingIds((prev) => {
@@ -332,14 +322,14 @@ const PendingTransactionsTab = ({
   }, [rejectPopup, rejectComment, handleAction]);
 
   const columns = [
-    { label: t("HCM_TRN"), key: "trn", grow: 1, minWidth: "120px", sortable: true },
-    { label: t("HCM_CREATION_DATE"), key: "creationDate", grow: 1.5, minWidth: "200px", sortable: true },
-    { label: t("HCM_RETURNED_BY"), key: "sentFrom", grow: 1, minWidth: "160px", sortable: true },
-    { label: t("HCM_RETURN_TO"), key: "sentTo", grow: 1, minWidth: "160px", sortable: true },
-    { label: t("HCM_CREATED_BY"), key: "createdBy", grow: 1, sortable: true },
-    { label: t("HCM_COMMODITY"), key: "commodity", grow: 0.8, sortable: true },
-    { label: t("HCM_QUANTITY"), key: "quantity", grow: 0.6, minWidth: "100px", sortable: true },
-    { label: t("HCM_ACTION"), key: "action", grow: 1.5, minWidth: "240px", sortable: false },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRN), key: "trn", grow: 1, minWidth: "120px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CREATION_DATE), key: "creationDate", grow: 1.5, minWidth: "200px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_RETURNED_BY), key: "sentFrom", grow: 1, minWidth: "160px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_RETURN_TO), key: "sentTo", grow: 1, minWidth: "160px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CREATED_BY), key: "createdBy", grow: 1, sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_COMMODITY), key: "commodity", grow: 0.8, sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_QUANTITY), key: "quantity", grow: 0.6, minWidth: "100px", sortable: true },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_ACTION), key: "action", grow: 1.5, minWidth: "240px", sortable: false },
   ];
 
   const customCellRenderer = {
@@ -398,7 +388,7 @@ const PendingTransactionsTab = ({
           <Button
             type="button"
             variation="primary"
-            label={isUpdating ? t("HCM_UPDATING") : t("HCM_ACCEPT")}
+            label={isUpdating ? t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_UPDATING) : t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_ACCEPT)}
             onClick={() => handleAcceptClick(row.stockId)}
             isDisabled={isUpdating}
             size="small"
@@ -406,7 +396,7 @@ const PendingTransactionsTab = ({
           <Button
             type="button"
             variation="secondary"
-            label={isUpdating ? t("HCM_UPDATING") : t("HCM_REJECT")}
+            label={isUpdating ? t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_UPDATING) : t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_REJECT)}
             onClick={() => handleRejectClick(row.stockId)}
             isDisabled={isUpdating}
             size="small"
@@ -434,7 +424,7 @@ const PendingTransactionsTab = ({
   return (
     <div>
       <GenericChart
-        header={t("HCM_PENDING_RETURNS")}
+        header={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_PENDING_RETURNS)}
         showSearch={true}
         className={"digit-stock-transactions-summary-tab"}
         subHeader={""}
@@ -460,8 +450,8 @@ const PendingTransactionsTab = ({
       {acceptPopup && (
         <PopUp
           type="alert"
-          alertHeading={t("HCM_ACCEPT_RETURN")}
-          alertMessage={t("HCM_CONFIRM_ACCEPT_MESSAGE")}
+          alertHeading={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_ACCEPT_RETURN)}
+          alertMessage={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CONFIRM_ACCEPT_MESSAGE)}
           children={[]}
           onClose={() => setAcceptPopup(null)}
           onOverlayClick={() => setAcceptPopup(null)}
@@ -472,7 +462,7 @@ const PendingTransactionsTab = ({
               type="button"
               size="large"
               variation="secondary"
-              label={t("HCM_CANCEL")}
+              label={t(I18N_KEYS.COMPONENTS.HCM_CANCEL)}
               onClick={() => setAcceptPopup(null)}
             />,
             <Button
@@ -480,7 +470,7 @@ const PendingTransactionsTab = ({
               type="button"
               size="large"
               variation="primary"
-              label={t("HCM_CONFIRM_ACCEPT")}
+              label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CONFIRM_ACCEPT)}
               onClick={handleAcceptConfirm}
             />,
           ]}
@@ -491,7 +481,7 @@ const PendingTransactionsTab = ({
       {rejectPopup && (
         <PopUp
           type="default"
-          heading={t("HCM_REJECT_RETURN")}
+          heading={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_REJECT_RETURN)}
           children={[]}
           onClose={() => {
             setRejectPopup(null);
@@ -508,7 +498,7 @@ const PendingTransactionsTab = ({
               type="button"
               size="large"
               variation="secondary"
-              label={t("HCM_CANCEL")}
+              label={t(I18N_KEYS.COMPONENTS.HCM_CANCEL)}
               onClick={() => {
                 setRejectPopup(null);
                 setRejectComment("");
@@ -519,7 +509,7 @@ const PendingTransactionsTab = ({
               type="button"
               size="large"
               variation="primary"
-              label={t("HCM_CONFIRM_REJECT")}
+              label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CONFIRM_REJECT)}
               onClick={handleRejectConfirm}
               isDisabled={!rejectComment.trim()}
             />,
@@ -528,12 +518,12 @@ const PendingTransactionsTab = ({
         >
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             <label style={{ fontWeight: 700, fontSize: "1rem" }}>
-              {t("HCM_COMMENTS")} <span style={{ color: "#B91900" }}>*</span>
+              {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_COMMENTS)} <span style={{ color: "#B91900" }}>*</span>
             </label>
             <TextArea
               value={rejectComment}
               onChange={(e) => setRejectComment(e.target.value)}
-              placeholder={t("HCM_ENTER_COMMENTS")}
+              placeholder={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_ENTER_COMMENTS)}
               style={{ maxWidth: "100%", minHeight: "100px" }}
             />
           </div>

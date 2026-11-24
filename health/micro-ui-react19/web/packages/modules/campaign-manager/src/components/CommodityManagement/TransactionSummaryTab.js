@@ -366,9 +366,9 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     tableData.forEach((row) => {
       stats.total++;
       if (row.status === "Completed") stats.completed++;
-      else if (row.status === "In-Transit" || row.status === "Return Initiated") stats.pending++;
+      else if (row.status === "Returned" || row.status === "Return Initiated") stats.returned++;
+      else if (row.status === "In-Transit") stats.pending++;
       else if (row.status === "Rejected" || row.status === "Return Rejected") stats.rejected++;
-      else if (row.status === "Returned") stats.returned++;
     });
     return stats;
   }, [tableData]);

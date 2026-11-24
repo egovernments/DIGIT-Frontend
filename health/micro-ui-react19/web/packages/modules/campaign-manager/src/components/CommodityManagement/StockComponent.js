@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Loader, Button, HeaderComponent } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import UserDetails from "./UserDetails";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const transformStock = (stock) => {
   const getFieldValue = (fieldKey) => {
@@ -93,24 +94,24 @@ const StockComponent = ({ allProjectIds }) => {
   const { data: stockData, isLoading: stockLoading } = Digit.Hooks.useCustomAPIHook(stockSearchCriteria);
 
   const columns = [
-    { label: t("WBH_STOCK_ID"), key: "id", width: "150px" },
-    { label: t("WBH_PRODUCT_VARIANT"), key: "productVariantId" },
-    { label: t("WBH_PRODUCT_NAME"), key: "productName" },
-    { label: t("WBH_VARIATION"), key: "variation" },
-    { label: t("WBH_MATERIAL_NOTE_NUMBER"), key: "materialNoteNumber" },
-    { label: t("WBH_BATCH_NUMBER"), key: "batchNumber", width: "100px" },
-    { label: t("WBH_QUANTITY_SENT"), key: "quantitySent", width: "100px" },
-    { label: t("WBH_QUANTITY_RECEIVED"), key: "quantityReceived", width: "100px" },
-    { label: t("WBH_QUANTITY"), key: "quantity", width: "100px" },
-    { label: t("WBH_TRANSACTION_TYPE"), key: "transactionType" },
-    { label: t("WBH_TRANSACTION_REASON"), key: "transactionReason" },
-    { label: t("WBH_WAY_BILL_NUMBER"), key: "wayBillNumber" },
-    { label: t("WBH_SENDER_TYPE"), key: "senderType" },
-    { label: t("WBH_RECEIVER_TYPE"), key: "receiverType" },
-    { label: t("HCM_ADMIN_CONSOLE_USER_ID"), key: "createdBy" },
-    { label: t("WBH_EXPIRE_DATE"), key: "expireDate" },
-    { label: t("WBH_TRANSACTION_DATE"), key: "transactionDate" },
-    { label: t("WBH_DISTRIBUTOR_NAME"), key: "distributorName" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_STOCK_ID), key: "id", width: "150px" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_PRODUCT_VARIANT), key: "productVariantId" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_PRODUCT_NAME), key: "productName" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_VARIATION), key: "variation" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_MATERIAL_NOTE_NUMBER), key: "materialNoteNumber" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_BATCH_NUMBER), key: "batchNumber", width: "100px" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_QUANTITY_SENT), key: "quantitySent", width: "100px" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_QUANTITY_RECEIVED), key: "quantityReceived", width: "100px" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_QUANTITY), key: "quantity", width: "100px" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_TRANSACTION_TYPE), key: "transactionType" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_TRANSACTION_REASON), key: "transactionReason" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_WAY_BILL_NUMBER), key: "wayBillNumber" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_SENDER_TYPE), key: "senderType" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_RECEIVER_TYPE), key: "receiverType" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_ADMIN_CONSOLE_USER_ID), key: "createdBy" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_EXPIRE_DATE), key: "expireDate" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_TRANSACTION_DATE), key: "transactionDate" },
+    { label: t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_DISTRIBUTOR_NAME), key: "distributorName" },
   ];
 
   const customCellRenderer = {
@@ -194,7 +195,7 @@ const StockComponent = ({ allProjectIds }) => {
   return (
     <div className="override-card" style={{ overflow: "auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
-        <HeaderComponent className="works-header-view">{t("WBH_STOCK_DETAILS")}</HeaderComponent>
+        <HeaderComponent className="works-header-view">{t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_STOCK_DETAILS)}</HeaderComponent>
       </div>
 
       {showFilters && (
@@ -207,10 +208,10 @@ const StockComponent = ({ allProjectIds }) => {
             border: "1px solid #e0e0e0",
           }}
         >
-          <h4 style={{ marginBottom: "12px", color: "#333" }}>{t("FILTER_BY_DATE")}</h4>
+          <h4 style={{ marginBottom: "12px", color: "#333" }}>{t(I18N_KEYS.COMMODITY_MANAGEMENT.FILTER_BY_DATE)}</h4>
           <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
             <div style={{ minWidth: "250px" }}>
-              <label style={{ marginBottom: "8px", color: "#555", display: "block" }}>{t("SELECT_DATE")}</label>
+              <label style={{ marginBottom: "8px", color: "#555", display: "block" }}>{t(I18N_KEYS.COMMODITY_MANAGEMENT.SELECT_DATE)}</label>
               <input
                 type="date"
                 value={selectedDate}
@@ -228,14 +229,14 @@ const StockComponent = ({ allProjectIds }) => {
             <div style={{ display: "flex", gap: "12px", alignItems: "flex-end" }}>
               <Button
                 variation="secondary"
-                label={t("CLEAR_FILTER")}
+                label={t(I18N_KEYS.COMMODITY_MANAGEMENT.CLEAR_FILTER)}
                 onClick={clearDateFilter}
                 isDisabled={!selectedDate}
                 style={{ padding: "0.4rem 0.8rem", fontSize: "0.85rem" }}
               />
               {selectedDate && (
                 <span style={{ color: "#666", fontSize: "14px", alignSelf: "center" }}>
-                  {t("FILTERING_BY")}: {new Date(selectedDate).toLocaleDateString()}
+                  {t(I18N_KEYS.COMMODITY_MANAGEMENT.FILTERING_BY)}: {new Date(selectedDate).toLocaleDateString()}
                 </span>
               )}
             </div>
@@ -244,7 +245,7 @@ const StockComponent = ({ allProjectIds }) => {
       )}
 
       {!stockData || stockData.length === 0 ? (
-        <h1>{t("WBH_NO_STOCK_FOUND")}</h1>
+        <h1>{t(I18N_KEYS.COMMODITY_MANAGEMENT.WBH_NO_STOCK_FOUND)}</h1>
       ) : (
         <ReusableTableWrapper
           data={stockData}
