@@ -1205,6 +1205,9 @@
                       "format": "tag",
                       "visible": "({{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false || {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}}==false) && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
                       "fieldName": "notEligible",
+                      "previewStates": [
+                        "NOT_ELIGIBLE"
+                      ],
                       "properties": {
                         "tagType": "error"
                       }
@@ -1215,6 +1218,9 @@
                       "format": "tag",
                       "visible": "{{fn:hasReferralForCurrentCycle(item.hFReferral)}}==true",
                       "fieldName": "beneficiaryReferred",
+                      "previewStates": [
+                        "BENEFICIARY_REFERRED"
+                      ],
                       "properties": {
                         "tagType": "error"
                       }
@@ -1225,6 +1231,9 @@
                       "format": "tag",
                       "visible": "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
                       "fieldName": "administrationSuccess",
+                      "previewStates": [
+                        "ADMINISTERED_SUCCESSFULLY"
+                      ],
                       "properties": {
                         "tagType": "success",
                         "bottomGap": 16
@@ -1236,6 +1245,9 @@
                       "format": "tag",
                       "visible": "{{fn:hasRedoseForCurrentCycle(item.task)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
                       "fieldName": "redoseCompleted",
+                      "previewStates": [
+                        "REDOSE_COMPLETED"
+                      ],
                       "properties": {
                         "tagType": "success",
                         "bottomGap": 16
@@ -1247,6 +1259,9 @@
                       "format": "tag",
                       "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false",
                       "fieldName": "notVisited",
+                      "previewStates": [
+                        "NOT_VISITED"
+                      ],
                       "properties": {
                         "tagType": "info",
                         "bottomGap": 16
@@ -1301,6 +1316,9 @@
                         }
                       ],
                       "fieldName": "deliveryButton",
+                      "previewStates": [
+                        "NOT_VISITED"
+                      ],
                       "mandatory": true,
                       "properties": {
                         "size": "medium",
@@ -1342,6 +1360,9 @@
                         }
                       ],
                       "fieldName": "unableToDeliverButton",
+                      "previewStates": [
+                        "NOT_VISITED"
+                      ],
                       "mandatory": true,
                       "properties": {
                         "size": "medium",
@@ -1433,6 +1454,9 @@
                         }
                       ],
                       "fieldName": "redoseButton",
+                      "previewStates": [
+                        "ADMINISTERED_SUCCESSFULLY"
+                      ],
                       "mandatory": true,
                       "properties": {
                         "size": "medium",
@@ -1492,6 +1516,10 @@
                         }
                       ],
                       "fieldName": "viewDetails",
+                      "previewStates": [
+                        "ADMINISTERED_SUCCESSFULLY",
+                        "REDOSE_COMPLETED"
+                      ],
                       "properties": {
                         "icon": "add",
                         "size": "medium",
@@ -1693,6 +1721,44 @@
               ],
               "name": "household",
               "type": "SEARCH_EVENT"
+            }
+          }
+        ],
+        "stateGroups": [
+          {
+            "name": "deliveryStatus",
+            "label": "APPCONFIG_STATEGROUP_DELIVERY_STATUS",
+            "title": "APPCONFIG_STATEGROUP_DELIVERY_STATUS_TITLE",
+            "states": [
+              {
+                "name": "NOT_VISITED",
+                "label": "APPCONFIG_STATE_NOT_ADMINISTERED"
+              },
+              {
+                "name": "ADMINISTERED_SUCCESSFULLY",
+                "label": "APPCONFIG_STATE_ADMINISTERED_SUCCESS"
+              },
+              {
+                "name": "REDOSE_COMPLETED",
+                "label": "APPCONFIG_STATE_REDOSE_COMPLETED"
+              },
+              {
+                "name": "NOT_ELIGIBLE",
+                "label": "APPCONFIG_STATE_NOT_ELIGIBLE"
+              },
+              {
+                "name": "BENEFICIARY_REFERRED",
+                "label": "APPCONFIG_STATE_BENEFICIARY_REFERRED"
+              }
+            ],
+            "typeLabel": "APPCONFIG_FIELDTYPE_TEMPLATE_TAG",
+            "description": "APPCONFIG_STATEGROUP_DELIVERY_STATUS_DESC",
+            "placeholder": {
+              "style": {
+                "width": "fit-content",
+                "height": "2rem",
+                "padding": "0 0.75rem"
+              }
             }
           }
         ],
