@@ -185,6 +185,9 @@
                 "format": "tag",
                 "visible": "{{fn:isDelivered(task.last.status)}}==true",
                 "fieldName": "administrationSuccess",
+                "previewStates": [
+                  "DELIVERED_SUCCESSFULLY"
+                ],
                 "properties": {
                   "tagType": "success"
                 }
@@ -195,6 +198,9 @@
                 "format": "tag",
                 "visible": "{{fn:isDelivered(task.last.status)}}==false",
                 "fieldName": "notVisited",
+                "previewStates": [
+                  "NOT_DELIVERED"
+                ],
                 "properties": {
                   "tagType": "info"
                 }
@@ -469,6 +475,9 @@
             ],
             "fieldName": "deliveryButton",
             "mandatory": true,
+            "previewStates": [
+              "NOT_DELIVERED"
+            ],
             "properties": {
               "size": "medium",
               "type": "primary",
@@ -514,6 +523,32 @@
           },
           {
             "actionType": "LOAD_UNIQUE_ID_POOL"
+          }
+        ],
+        "stateGroups": [
+          {
+            "name": "deliveryStatus",
+            "label": "APPCONFIG_STATEGROUP_DELIVERY_STATUS",
+            "title": "APPCONFIG_STATEGROUP_DELIVERY_STATUS_TITLE",
+            "states": [
+              {
+                "name": "NOT_DELIVERED",
+                "label": "APPCONFIG_STATE_NOT_DELIVERED"
+              },
+              {
+                "name": "DELIVERED_SUCCESSFULLY",
+                "label": "APPCONFIG_STATE_DELIVERED_SUCCESSFULLY"
+              }
+            ],
+            "typeLabel": "APPCONFIG_FIELDTYPE_TEMPLATE_TAG",
+            "description": "APPCONFIG_STATEGROUP_DELIVERY_STATUS_DESC",
+            "placeholder": {
+              "style": {
+                "width": "fit-content",
+                "height": "2rem",
+                "padding": "0 0.75rem"
+              }
+            }
           }
         ],
         "wrapperConfig": {
