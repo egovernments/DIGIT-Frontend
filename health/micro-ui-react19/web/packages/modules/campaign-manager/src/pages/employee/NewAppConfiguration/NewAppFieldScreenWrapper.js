@@ -305,7 +305,9 @@ function NewAppFieldScreenWrapper({viewMode}) {
             cardIndex={0}
             fieldKey="description"
             viewMode={viewMode}
-            maxLength={64}
+            // A description is a sentence, so it gets more room than the heading above. The
+            // shipped ones already run past 64, and editing one used to cut it short.
+            maxLength={256}
           />
          <Divider />
         </>
