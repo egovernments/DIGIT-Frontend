@@ -63,16 +63,17 @@
               },
               {
                 "type": "template",
+                "label": "AEFI_OVERVIEW_TYPE_PANEL",
                 "format": "row",
                 "children": [
                   {
                     "flex": 1,
                     "type": "template",
+                    "label": "AEFI_OVERVIEW_SERIOUS_PANEL",
                     "format": "card",
                     "children": [
                       {
                         "type": "template",
-                        "label": "AEFI_OVERVIEW_SERIOUS_PANEL",
                         "format": "row",
                         "children": [
                           {
@@ -118,8 +119,7 @@
                           "mainAxisSize": "max",
                           "mainAxisAlignment": "start",
                           "crossAxisAlignment": "center"
-                        },
-                        "groupAsSingleElement": true
+                        }
                       }
                     ],
                     "fieldName": "seriousPill",
@@ -136,11 +136,11 @@
                   {
                     "flex": 1,
                     "type": "template",
+                    "label": "AEFI_OVERVIEW_MINOR_PANEL",
                     "format": "card",
                     "children": [
                       {
                         "type": "template",
-                        "label": "AEFI_OVERVIEW_MINOR_PANEL",
                         "format": "row",
                         "children": [
                           {
@@ -186,8 +186,7 @@
                           "mainAxisSize": "max",
                           "mainAxisAlignment": "start",
                           "crossAxisAlignment": "center"
-                        },
-                        "groupAsSingleElement": true
+                        }
                       }
                     ],
                     "fieldName": "minorPill",
@@ -205,7 +204,8 @@
                 "fieldName": "typeSplit",
                 "properties": {
                   "gap": 8
-                }
+                },
+                "groupAsSingleElement": true
               }
             ],
             "fieldName": "casesTile",
@@ -285,6 +285,7 @@
           }
         ],
         "heading": "AEFI_OVERVIEW_HEADING",
+        "category": "AEFI_REPORTING",
         "screenType": "TEMPLATE",
         "description": "AEFI_OVERVIEW_DESCRIPTION",
         "initActions": [
@@ -320,8 +321,7 @@
           }
         },
         "submitCondition": null,
-        "preventScreenCapture": false,
-        "category": "AEFI_REPORTING"
+        "preventScreenCapture": false
       },
       {
         "name": "AEFI_CREATE",
@@ -806,6 +806,7 @@
         "project": "CMP-2026-10-30-011277",
         "summary": true,
         "version": 1,
+        "category": "AEFI_REPORTING",
         "disabled": false,
         "onAction": [
           {
@@ -857,8 +858,7 @@
         "screenType": "FORM",
         "initActions": [],
         "wrapperConfig": {},
-        "scrollListener": {},
-        "category": "AEFI_REPORTING"
+        "scrollListener": {}
       },
       {
         "body": [
@@ -946,13 +946,13 @@
         "order": 3,
         "footer": [],
         "header": [],
+        "category": "AEFI_REPORTING",
         "navigateTo": null,
         "screenType": "TEMPLATE",
         "initActions": [],
         "submitCondition": null,
         "preventScreenCapture": false,
-        "isSuccessorErrorScreen": true,
-        "category": "AEFI_REPORTING"
+        "isSuccessorErrorScreen": true
       }
     ],
     "order": 9,
@@ -966,8 +966,8 @@
   "isActive": true,
   "auditDetails": {
     "createdBy": "github:JatinS-eGov",
-    "lastModifiedBy": "github:JatinS-eGov",
+    "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
     "createdTime": 1794899090249,
-    "lastModifiedTime": 1795165977470
+    "lastModifiedTime": 1795508653573
   }
 }
