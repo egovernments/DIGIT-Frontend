@@ -1138,9 +1138,7 @@
                         "mainAxisAlignment": "center"
                       },
                       "previewStates": [
-                        "NOT_VISITED",
-                        "ADMINISTERED_SUCCESSFULLY",
-                        "ADMINISTRATION_FAILED"
+                        "NOT_VISITED"
                       ]
                     },
                     {
