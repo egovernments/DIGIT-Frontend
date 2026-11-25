@@ -185,12 +185,10 @@
                 "format": "tag",
                 "visible": "{{fn:isDelivered(task.last.status)}}==true",
                 "fieldName": "administrationSuccess",
-                "previewStates": [
-                  "DELIVERED_SUCCESSFULLY"
-                ],
                 "properties": {
                   "tagType": "success"
-                }
+                },
+                "previewStates": ["DELIVERED_SUCCESSFULLY"]
               },
               {
                 "type": "template",
@@ -198,12 +196,10 @@
                 "format": "tag",
                 "visible": "{{fn:isDelivered(task.last.status)}}==false",
                 "fieldName": "notVisited",
-                "previewStates": [
-                  "NOT_DELIVERED"
-                ],
                 "properties": {
                   "tagType": "info"
-                }
+                },
+                "previewStates": ["NOT_DELIVERED"]
               },
               {
                 "type": "template",
@@ -475,15 +471,13 @@
             ],
             "fieldName": "deliveryButton",
             "mandatory": true,
-            "previewStates": [
-              "NOT_DELIVERED"
-            ],
             "properties": {
               "size": "medium",
               "type": "primary",
               "mainAxisSize": "max",
               "mainAxisAlignment": "center"
-            }
+            },
+            "previewStates": ["NOT_DELIVERED"]
           }
         ],
         "header": [
@@ -4853,6 +4847,6 @@
     "createdBy": "3496b299-06f3-4dd2-8340-573cf8c4f1fc",
     "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
     "createdTime": 1777538670097,
-    "lastModifiedTime": 1795411990102
+    "lastModifiedTime": 1795435025162
   }
 }
