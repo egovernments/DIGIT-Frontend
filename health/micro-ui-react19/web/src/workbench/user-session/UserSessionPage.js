@@ -5,7 +5,13 @@ import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { ensureUserSessionI18n } from "../../../packages/modules/campaign-manager/src/utils/i18nKeyConstants";
 import { tableCustomStyle } from "../../../packages/modules/campaign-manager/src/components/tableCustomStyle";
-import { getResolvedTenantId, isRevokeSuccessful, lookupEmployeeUuidByCode, revokeUserSession, searchActiveUsersByCampaignNumber } from "./service";
+import {
+  getResolvedTenantId,
+  getRevokeResultSummary,
+  lookupEmployeeUuidByCode,
+  revokeUserSession,
+  searchActiveUsersByCampaignNumber,
+} from "./service";
 import { getEmployeeHomeRouteLink, getUserSessionRouteLink, hasUserSessionAccess, USER_SESSION_PAGE_SIZE } from "./config";
 
 const applyLocalFilters = ({ rows, userNameFilter = "" }) => {
@@ -21,6 +27,15 @@ const applyLocalFilters = ({ rows, userNameFilter = "" }) => {
 
     return true;
   });
+};
+
+const chunkArray = (items = [], chunkSize = 100) => {
+  if (!Array.isArray(items) || !items.length) return [];
+  const chunks = [];
+  for (let index = 0; index < items.length; index += chunkSize) {
+    chunks.push(items.slice(index, index + chunkSize));
+  }
+  return chunks;
 };
 
 const UserSessionPage = () => {
@@ -47,7 +62,9 @@ const UserSessionPage = () => {
   const [isRevoking, setIsRevoking] = useState(false);
   const [error, setError] = useState("");
   const [toast, setToast] = useState(null);
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [revokeTargets, setRevokeTargets] = useState([]);
+  const [clearSelectedRows, setClearSelectedRows] = useState(false);
   const [showRevokeModal, setShowRevokeModal] = useState(false);
   const [pageOffset, setPageOffset] = useState(0);
 
@@ -126,6 +143,8 @@ const UserSessionPage = () => {
     setCampaignName(nextCampaignName);
     setUserName("");
     setUserNameInput("");
+    setSelectedRows([]);
+    setClearSelectedRows((prev) => !prev);
 
     if (pageOffset !== 0) {
       setPageOffset(0);
@@ -146,6 +165,8 @@ const UserSessionPage = () => {
     event?.preventDefault();
     const nextUserName = String(userNameInput || "").trim();
     setUserName(nextUserName);
+    setSelectedRows([]);
+    setClearSelectedRows((prev) => !prev);
     if (pageOffset !== 0) {
       setPageOffset(0);
     }
@@ -157,6 +178,8 @@ const UserSessionPage = () => {
     setCampaignName("");
     setUserNameInput("");
     setUserName("");
+    setSelectedRows([]);
+    setClearSelectedRows((prev) => !prev);
 
     if (pageOffset !== 0) {
       setPageOffset(0);
@@ -176,58 +199,161 @@ const UserSessionPage = () => {
     }
   };
 
-  const onOpenRevoke = (row) => {
-    if (!row?.userUuid && !row?.employeeCode && !row?.userName) {
+  const isRevokableRow = (row) => Boolean(row?.userUuid || row?.employeeCode || row?.userName);
+
+  const resolveUserUuidForRow = async (row) => {
+    if (row?.userUuid) return { status: "resolved", userUuid: row.userUuid };
+
+    const lookupResult = await lookupEmployeeUuidByCode({
+      tenantId,
+      employeeCode: row?.employeeCode || row?.sessionUserName || row?.userName,
+    });
+
+    if (lookupResult?.status === "ambiguous") {
+      return { status: "ambiguous", userUuid: null };
+    }
+
+    if (lookupResult?.status !== "resolved" || !lookupResult?.userUuid) {
+      return { status: "not-found", userUuid: null };
+    }
+
+    return { status: "resolved", userUuid: lookupResult.userUuid };
+  };
+
+  const onOpenRevoke = (targetRows = []) => {
+    const rowsToRevoke = Array.isArray(targetRows) ? targetRows.filter(Boolean) : [targetRows].filter(Boolean);
+    if (!rowsToRevoke.length) return;
+
+    const hasInvalidSelection = rowsToRevoke.some((row) => !isRevokableRow(row));
+    if (hasInvalidSelection) {
       setToast({ key: "error", label: t("USER_SESSION_EMPLOYEE_LOOKUP_NOT_FOUND"), type: "error" });
       return;
     }
-    setSelectedRow(row);
+
+    setRevokeTargets(rowsToRevoke);
     setShowRevokeModal(true);
+  };
+
+  const onOpenBulkRevoke = () => {
+    if (!selectedRows.length) {
+      setToast({ key: "error", label: "Please select at least one user session to revoke.", type: "error" });
+      return;
+    }
+
+    const rowsToRevoke = selectedRows.filter((row) => isRevokableRow(row));
+    if (!rowsToRevoke.length) {
+      setToast({ key: "error", label: t("USER_SESSION_EMPLOYEE_LOOKUP_NOT_FOUND"), type: "error" });
+      return;
+    }
+
+    onOpenRevoke(rowsToRevoke);
   };
 
   const onCloseRevoke = () => {
     setShowRevokeModal(false);
-    setSelectedRow(null);
+    setRevokeTargets([]);
   };
 
   const onConfirmRevoke = async () => {
-    if (!selectedRow) {
+    if (!revokeTargets.length) {
       return;
     }
 
     setIsRevoking(true);
     try {
-      let resolvedUserUuid = selectedRow?.userUuid || null;
+      const lookupErrors = [];
+      const resolvedTargets = [];
 
-      if (!resolvedUserUuid) {
-        const lookupResult = await lookupEmployeeUuidByCode({
-          tenantId,
-          employeeCode: selectedRow?.employeeCode || selectedRow?.sessionUserName || selectedRow?.userName,
+      for (const row of revokeTargets) {
+        try {
+          const uuidResult = await resolveUserUuidForRow(row);
+          if (uuidResult?.status === "ambiguous") {
+            lookupErrors.push("ambiguous");
+            continue;
+          }
+
+          if (uuidResult?.status !== "resolved" || !uuidResult?.userUuid) {
+            lookupErrors.push("not-found");
+            continue;
+          }
+          resolvedTargets.push({
+            userUuid: uuidResult.userUuid,
+            tenantId: row?.tenantId || tenantId,
+          });
+        } catch (revokeError) {
+          lookupErrors.push(revokeError?.message || "not-found");
+        }
+      }
+
+      if (!resolvedTargets.length) {
+        const allAmbiguous = lookupErrors.length > 0 && lookupErrors.every((entry) => entry === "ambiguous");
+        const errorLabel = allAmbiguous ? t("USER_SESSION_EMPLOYEE_LOOKUP_AMBIGUOUS") : t("USER_SESSION_REVOKE_FAILED");
+        setToast({ key: "error", label: errorLabel, type: "error" });
+        return;
+      }
+
+      const groupedByTenant = resolvedTargets.reduce((acc, entry) => {
+        const groupTenantId = entry.tenantId || tenantId;
+        if (!acc[groupTenantId]) acc[groupTenantId] = [];
+        if (!acc[groupTenantId].includes(entry.userUuid)) {
+          acc[groupTenantId].push(entry.userUuid);
+        }
+        return acc;
+      }, {});
+
+      const revokedSet = new Set();
+      const revokeFailures = [];
+
+      const tenantIds = Object.keys(groupedByTenant);
+      for (const groupTenantId of tenantIds) {
+        const userUuidChunks = chunkArray(groupedByTenant[groupTenantId], 100);
+        for (const userUuidChunk of userUuidChunks) {
+          try {
+            const revokeResponse = await revokeUserSession({
+              userUuid: userUuidChunk,
+              tenantId: groupTenantId,
+            });
+
+            const summary = getRevokeResultSummary(revokeResponse, userUuidChunk);
+            summary.revoked.forEach((uuid) => revokedSet.add(uuid));
+            summary.failed.forEach((entry) => revokeFailures.push(entry));
+          } catch (revokeError) {
+            const errorMessage = revokeError?.message || t("USER_SESSION_REVOKE_FAILED");
+            userUuidChunk.forEach((userUuid) => {
+              revokeFailures.push({
+                userUuid,
+                code: "REVOKE_API_ERROR",
+                message: errorMessage,
+              });
+            });
+          }
+        }
+      }
+
+      const revokeSuccessCount = revokedSet.size;
+      const revokeFailureCount = revokeFailures.length + lookupErrors.length;
+
+      if (revokeSuccessCount === 0) {
+        const allNoActiveSession =
+          revokeFailures.length > 0 &&
+          revokeFailures.every((entry) => String(entry?.code || "").toUpperCase() === "NO_ACTIVE_SESSION");
+        const errorLabel = allNoActiveSession ? "No active session found for selected users." : t("USER_SESSION_REVOKE_FAILED");
+        setToast({ key: "error", label: errorLabel, type: "error" });
+        return;
+      }
+
+      if (revokeFailureCount > 0) {
+        setToast({
+          key: "error",
+          label: `${revokeSuccessCount}/${revokeTargets.length} ${t("USER_SESSION_REVOKE_SUCCESS")}`,
+          type: "error",
         });
-
-        if (lookupResult?.status === "ambiguous") {
-          setToast({ key: "error", label: t("USER_SESSION_EMPLOYEE_LOOKUP_AMBIGUOUS"), type: "error" });
-          return;
-        }
-
-        if (lookupResult?.status !== "resolved" || !lookupResult?.userUuid) {
-          setToast({ key: "error", label: t("USER_SESSION_EMPLOYEE_LOOKUP_NOT_FOUND"), type: "error" });
-          return;
-        }
-
-        resolvedUserUuid = lookupResult.userUuid;
+      } else {
+        setToast({ key: "success", label: t("USER_SESSION_REVOKE_SUCCESS"), type: "success" });
       }
 
-      const revokeResponse = await revokeUserSession({
-        userUuid: resolvedUserUuid,
-        tenantId: selectedRow?.tenantId || tenantId,
-      });
-
-      if (!isRevokeSuccessful(revokeResponse)) {
-        throw new Error(t("USER_SESSION_REVOKE_FAILED"));
-      }
-
-      setToast({ key: "success", label: t("USER_SESSION_REVOKE_SUCCESS"), type: "success" });
+      setSelectedRows([]);
+      setClearSelectedRows((prev) => !prev);
       onCloseRevoke();
       await fetchUserSessions(pageOffset);
     } catch (revokeError) {
@@ -239,6 +365,14 @@ const UserSessionPage = () => {
     } finally {
       setIsRevoking(false);
     }
+  };
+
+  const onOpenSingleRevoke = (row) => {
+    if (!row?.userUuid && !row?.employeeCode && !row?.userName) {
+      setToast({ key: "error", label: t("USER_SESSION_EMPLOYEE_LOOKUP_NOT_FOUND"), type: "error" });
+      return;
+    }
+    onOpenRevoke([row]);
   };
 
   const tableColumns = useMemo(
@@ -267,7 +401,7 @@ const UserSessionPage = () => {
             variation="secondary"
             label={t("USER_SESSION_REVOKE")}
             isDisabled={isRevoking || (!row?.userUuid && !row?.employeeCode && !row?.userName)}
-            onClick={() => onOpenRevoke(row)}
+            onClick={() => onOpenSingleRevoke(row)}
           />
         ),
       },
@@ -384,12 +518,28 @@ const UserSessionPage = () => {
             ) : null}
 
             <Card className="user-session-table-card">
+              <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.75rem" }}>
+                <Button
+                  type="button"
+                  variation="secondary"
+                  label={`${t("USER_SESSION_REVOKE")} (${selectedRows.length})`}
+                  isDisabled={isRevoking || selectedRows.length === 0}
+                  onClick={onOpenBulkRevoke}
+                />
+              </div>
               <DataTable
                 columns={tableColumns}
                 data={rows}
+                selectableRows
+                clearSelectedRows={clearSelectedRows}
+                onSelectedRowsChange={({ selectedRows: nextSelectedRows }) => setSelectedRows(nextSelectedRows || [])}
                 customStyles={tableCustomStyle}
                 pagination
                 paginationServer
+                paginationServerOptions={{
+                  persistSelectedOnPageChange: false,
+                  persistSelectedOnSort: false,
+                }}
                 paginationTotalRows={totalRows}
                 paginationPerPage={rowsPerPage}
                 paginationDefaultPage={currentPage}
@@ -437,7 +587,9 @@ const UserSessionPage = () => {
           ]}
         >
           <div style={{ marginTop: "0.5rem" }}>
-            {t("USER_SESSION_REVOKE_CONFIRMATION", { userName: selectedRow?.userName || "-" })}
+            {revokeTargets.length === 1
+              ? t("USER_SESSION_REVOKE_CONFIRMATION", { userName: revokeTargets[0]?.userName || revokeTargets[0]?.sessionUserName || "-" })
+              : `Are you sure you want to revoke sessions for ${revokeTargets.length} selected users?`}
           </div>
         </PopUp>
       ) : null}
