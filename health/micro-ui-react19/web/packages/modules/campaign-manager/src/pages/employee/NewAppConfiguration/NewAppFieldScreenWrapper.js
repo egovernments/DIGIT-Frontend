@@ -140,9 +140,23 @@ function NewAppFieldScreenWrapper({viewMode}) {
   // never resolve there. Falls back to i18next so a console-owned code still works.
   const campaignT = useCustomTranslate();
   const stateLabel = (code) => (code ? campaignT(code) || t(code) : "");
-  const { currentData, selectedPreviewStates, selectedStateGroup } = useSelector((state) => state.remoteConfig);
+  const { currentData, selectedPreviewStates, selectedStateGroup, selectedField } = useSelector((state) => state.remoteConfig);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
+
+  // A click in the preview already selects the field, but its row can be far down a long list.
+  // A field inside a state group is marked on that group's card, so the card is what moves.
+  // Keyed on names, so editing a field in the drawer does not scroll the panel as you type.
+  const selectedFieldName = selectedField?.fieldName;
+  useEffect(() => {
+    // A button keeps its own row in the Buttons section even when it belongs to a state, so
+    // its row is preferred; a tag has none and falls through to its group's card.
+    const row =
+      (selectedFieldName && document.querySelector(`[data-field-name="${selectedFieldName}"]`)) ||
+      (selectedStateGroup && document.querySelector(`[data-state-group="${selectedStateGroup}"]`));
+    // "nearest" leaves a row that is already on screen alone, so clicking in the panel never jumps
+    row?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [selectedFieldName, selectedStateGroup]);
 
   const currentCard = currentData;
 
@@ -530,6 +544,9 @@ function NewAppFieldScreenWrapper({viewMode}) {
           <div
             className="draggableField-cont"
             key={`state-group-${group?.name}`}
+            // The rows this group holds are not listed on their own, so a click on one of its
+            // states in the preview brings this card into view instead
+            data-state-group={group?.name}
             style={{ display: "flex", alignItems: "center" }}
           >
             <div

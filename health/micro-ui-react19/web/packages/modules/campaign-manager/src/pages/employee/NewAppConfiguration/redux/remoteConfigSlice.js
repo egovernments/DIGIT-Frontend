@@ -328,8 +328,11 @@ const remoteConfigSlice = createSlice({
         state.showPopupPreview = true;
       }
       // Only one thing is selected at a time: picking a field drops the group the
-      // placeholder had marked.
-      state.selectedStateGroup = null;
+      // placeholder had marked. A field belonging to a state group is the exception - the
+      // panel lists it inside that group's card, so the card is what gets marked instead.
+      const groups = Array.isArray(state.currentData?.stateGroups) ? state.currentData.stateGroups : [];
+      const fieldStates = Array.isArray(actualField?.previewStates) ? actualField.previewStates : [];
+      state.selectedStateGroup = groups.find((g) => (g?.states || []).some((s) => fieldStates.includes(s?.name)))?.name || null;
     },
     deselectField(state) {
       state.selectedField = null;

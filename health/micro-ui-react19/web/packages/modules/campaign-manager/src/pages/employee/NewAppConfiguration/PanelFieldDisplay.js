@@ -96,6 +96,8 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
   return (
     <div
       ref={componentRef}
+      // Lets a click in the preview find this row and bring it into view
+      data-field-name={rest?.fieldName || config?.fieldName}
       onClick={(e) => {
         e.stopPropagation();
         if(onSelectField != null)
