@@ -1190,12 +1190,10 @@
                       "format": "tag",
                       "visible": "({{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==false || {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}}==false) && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
                       "fieldName": "notEligible",
-                      "previewStates": [
-                        "NOT_ELIGIBLE"
-                      ],
                       "properties": {
                         "tagType": "error"
-                      }
+                      },
+                      "previewStates": ["NOT_ELIGIBLE"]
                     },
                     {
                       "type": "template",
@@ -1203,12 +1201,10 @@
                       "format": "tag",
                       "visible": "{{fn:hasReferralForCurrentCycle(item.hFReferral)}}==true",
                       "fieldName": "beneficiaryReferred",
-                      "previewStates": [
-                        "BENEFICIARY_REFERRED"
-                      ],
                       "properties": {
                         "tagType": "error"
-                      }
+                      },
+                      "previewStates": ["BENEFICIARY_REFERRED"]
                     },
                     {
                       "type": "template",
@@ -1216,13 +1212,11 @@
                       "format": "tag",
                       "visible": "{{fn:isDelivered(item.task.last.status)}}==true && {{fn:hasRedoseForCurrentCycle(item.task)}}==false && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
                       "fieldName": "administrationSuccess",
-                      "previewStates": [
-                        "ADMINISTERED_SUCCESSFULLY"
-                      ],
                       "properties": {
                         "tagType": "success",
                         "bottomGap": 16
-                      }
+                      },
+                      "previewStates": ["ADMINISTERED_SUCCESSFULLY"]
                     },
                     {
                       "type": "template",
@@ -1230,13 +1224,11 @@
                       "format": "tag",
                       "visible": "{{fn:hasRedoseForCurrentCycle(item.task)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}}==true && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false",
                       "fieldName": "redoseCompleted",
-                      "previewStates": [
-                        "REDOSE_COMPLETED"
-                      ],
                       "properties": {
                         "tagType": "success",
                         "bottomGap": 16
-                      }
+                      },
+                      "previewStates": ["REDOSE_COMPLETED"]
                     },
                     {
                       "type": "template",
@@ -1244,13 +1236,11 @@
                       "format": "tag",
                       "visible": "{{fn:checkEligibilityForAgeAndSideEffect(item.individual.0.dateOfBirth, item.task, contextData.0.currentRunningCycle)}}==true && {{fn:hasEligibleProductVariants(item.individual.0, contextData.0.currentRunningCycle)}}==true && {{fn:isDelivered(item.task.last.status)}}==false && {{fn:hasReferralForCurrentCycle(item.hFReferral)}}==false && {{fn:hasUnableToDeliverForCurrentCycle(item.task)}}==false && {{fn:hasRedoseForCurrentCycle(item.task)}}==false",
                       "fieldName": "notVisited",
-                      "previewStates": [
-                        "NOT_VISITED"
-                      ],
                       "properties": {
                         "tagType": "info",
                         "bottomGap": 16
-                      }
+                      },
+                      "previewStates": ["NOT_VISITED"]
                     },
                     {
                       "type": "template",
@@ -1301,9 +1291,6 @@
                         }
                       ],
                       "fieldName": "deliveryButton",
-                      "previewStates": [
-                        "NOT_VISITED"
-                      ],
                       "mandatory": true,
                       "properties": {
                         "size": "medium",
@@ -1311,7 +1298,8 @@
                         "bottomGap": 16,
                         "mainAxisSize": "max",
                         "mainAxisAlignment": "center"
-                      }
+                      },
+                      "previewStates": ["NOT_VISITED"]
                     },
                     {
                       "type": "template",
@@ -1346,9 +1334,6 @@
                         }
                       ],
                       "fieldName": "unableToDeliverButton",
-                      "previewStates": [
-                        "NOT_VISITED"
-                      ],
                       "mandatory": true,
                       "properties": {
                         "size": "medium",
@@ -1356,7 +1341,8 @@
                         "bottomGap": 16,
                         "mainAxisSize": "max",
                         "mainAxisAlignment": "center"
-                      }
+                      },
+                      "previewStates": ["NOT_VISITED"]
                     },
                     {
                       "icon": "add",
@@ -1408,10 +1394,6 @@
                         }
                       ],
                       "fieldName": "viewDetails",
-                      "previewStates": [
-                        "ADMINISTERED_SUCCESSFULLY",
-                        "REDOSE_COMPLETED"
-                      ],
                       "properties": {
                         "icon": "add",
                         "size": "medium",
@@ -1419,7 +1401,11 @@
                         "bottomGap": 16,
                         "mainAxisSize": "max",
                         "mainAxisAlignment": "center"
-                      }
+                      },
+                      "previewStates": [
+                        "ADMINISTERED_SUCCESSFULLY",
+                        "REDOSE_COMPLETED"
+                      ]
                     },
                     {
                       "type": "template",
@@ -1503,17 +1489,15 @@
                         }
                       ],
                       "fieldName": "redoseButton",
-                      "previewStates": [
-                        "ADMINISTERED_SUCCESSFULLY"
-                      ],
                       "mandatory": true,
                       "properties": {
                         "size": "medium",
-                        "type": "secondary",
+                        "type": "primary",
                         "bottomGap": 16,
                         "mainAxisSize": "max",
                         "mainAxisAlignment": "center"
-                      }
+                      },
+                      "previewStates": ["ADMINISTERED_SUCCESSFULLY"]
                     }
                   ],
                   "fieldName": "memberCard",
@@ -7886,6 +7870,6 @@
     "createdBy": "3496b299-06f3-4dd2-8340-573cf8c4f1fc",
     "lastModifiedBy": "39888397-1179-4e3d-8ead-a9e5abf8611d",
     "createdTime": 1777538670236,
-    "lastModifiedTime": 1795411860518
+    "lastModifiedTime": 1795502266785
   }
 }
