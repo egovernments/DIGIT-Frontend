@@ -19,6 +19,7 @@ import LeafletMapChart from "../../components/LeafletMapChart";
 import CustomPieChart from "../../components/CustomPieChart";
 import CustomHorizontalBarChart from "../../components/CustomHorizontalBarChart";
 import VennDiagramChart from "../../components/VennDiagramChart";
+import UserActivityMetrics from "../../components/UserActivityTracking/UserActivityMetrics";
 import { getDuration } from "../../utils/getDuration";
 import { PDFDownload } from "../../utils/PDFDownload";
 import Filters from "../../components/Filters";
@@ -512,7 +513,14 @@ const L1Main = () => {
           return (
             <div className={`digit-dss-card add-margin`} key={key}>
               {row.vizArray.map((item, index) => {
-                if (item?.charts?.[0]?.chartType == "bar") {
+                if (item?.vizType === "cards-list") {
+                  // Checked first so the card's chartType (e.g. "metric") can't route it into another branch.
+                  return (
+                    <div key={index} style={{ width: "100%" }}>
+                      <UserActivityMetrics data={item} />
+                    </div>
+                  );
+                } else if (item?.charts?.[0]?.chartType == "bar") {
                   return null;
                 } else if (item?.charts?.[0]?.chartType === "heatmap") {
                   return (
