@@ -1,0 +1,375 @@
+[
+  {
+    "id": "a949bf6a-d72f-4574-b3a0-f7145c44a3a7",
+    "tenantId": "qa",
+    "schemaCode": "HCM-ADMIN-CONSOLE.campaignTemplates",
+    "uniqueIdentifier": "MalariaSMC2024",
+    "data": {
+      "id": "MalariaSMC2024",
+      "name": "Malaria SMC 2024",
+      "group": "MALARIA",
+      "usedIn": "Kano - Nigeria",
+      "disease": "MALARIA",
+      "modules": ["Registration", "Delivery", "Inventory", "Attendance"],
+      "duration": {
+        "endDate": 1715279400000,
+        "startDate": 1714329000000
+      },
+      "description": "MALARIASMC2024_DESCRIPTION",
+      "diseaseCode": "MALARIA",
+      "partnerName": "Malaria Consortium",
+      "projectType": {
+        "id": "MR-DN",
+        "code": "MR-DN",
+        "name": "Configuration for Multi Round Campaigns",
+        "cycles": [
+          {
+            "id": 1,
+            "endDate": 1715279400000,
+            "startDate": 1714329000000,
+            "deliveries": [
+              {
+                "id": 1,
+                "doseCriteria": [
+                  {
+                    "condition": "3<=ageandage<=11",
+                    "ProductVariants": [
+                      {
+                        "name": "SP - 250",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001323"
+                      },
+                      {
+                        "name": "AQ - 75",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001324"
+                      }
+                    ]
+                  },
+                  {
+                    "condition": "12<=ageandage<=59",
+                    "ProductVariants": [
+                      {
+                        "name": "SP - 500",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001325"
+                      },
+                      {
+                        "name": "AQ - 150",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001326"
+                      }
+                    ]
+                  }
+                ],
+                "deliveryStrategy": "DIRECT",
+                "mandatoryWaitSinceLastDeliveryInDays": null
+              },
+              {
+                "id": 2,
+                "doseCriteria": [
+                  {
+                    "condition": "3<=ageandage<=11",
+                    "ProductVariants": [
+                      {
+                        "name": "AQ - 75",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001324"
+                      }
+                    ]
+                  },
+                  {
+                    "condition": "12<=ageandage<=59",
+                    "ProductVariants": [
+                      {
+                        "name": "AQ - 150",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001326"
+                      }
+                    ]
+                  }
+                ],
+                "deliveryStrategy": "INDIRECT",
+                "mandatoryWaitSinceLastDeliveryInDays": null
+              },
+              {
+                "id": 3,
+                "doseCriteria": [
+                  {
+                    "condition": "3<=ageandage<=11",
+                    "ProductVariants": [
+                      {
+                        "name": "AQ - 75",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001324"
+                      }
+                    ]
+                  },
+                  {
+                    "condition": "12<=ageandage<=59",
+                    "ProductVariants": [
+                      {
+                        "name": "AQ - 150",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001326"
+                      }
+                    ]
+                  }
+                ],
+                "deliveryStrategy": "INDIRECT",
+                "mandatoryWaitSinceLastDeliveryInDays": null
+              }
+            ],
+            "description": "First round delivery for malaria chemoprevention",
+            "roundNumber": 1,
+            "durationInDays": 4
+          },
+          {
+            "id": 2,
+            "endDate": 1718908200000,
+            "startDate": 1716143400000,
+            "deliveries": [
+              {
+                "id": 1,
+                "doseCriteria": [
+                  {
+                    "condition": "3<=ageandage<=11",
+                    "ProductVariants": [
+                      {
+                        "name": "SP - 250",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001323"
+                      },
+                      {
+                        "name": "AQ - 75",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001324"
+                      }
+                    ]
+                  },
+                  {
+                    "condition": "12<=ageandage<=59",
+                    "ProductVariants": [
+                      {
+                        "name": "SP - 500",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001325"
+                      },
+                      {
+                        "name": "AQ - 150",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001326"
+                      }
+                    ]
+                  }
+                ],
+                "deliveryStrategy": "DIRECT",
+                "mandatoryWaitSinceLastDeliveryInDays": null
+              },
+              {
+                "id": 2,
+                "doseCriteria": [
+                  {
+                    "condition": "3<=ageandage<=11",
+                    "ProductVariants": [
+                      {
+                        "name": "AQ - 75",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001324"
+                      }
+                    ]
+                  },
+                  {
+                    "condition": "12<=ageandage<=59",
+                    "ProductVariants": [
+                      {
+                        "name": "AQ - 150",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001326"
+                      }
+                    ]
+                  }
+                ],
+                "deliveryStrategy": "INDIRECT",
+                "mandatoryWaitSinceLastDeliveryInDays": null
+              },
+              {
+                "id": 3,
+                "doseCriteria": [
+                  {
+                    "condition": "3<=ageandage<=11",
+                    "ProductVariants": [
+                      {
+                        "name": "AQ - 75",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001324"
+                      }
+                    ]
+                  },
+                  {
+                    "condition": "12<=ageandage<=59",
+                    "ProductVariants": [
+                      {
+                        "name": "AQ - 150",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001326"
+                      }
+                    ]
+                  }
+                ],
+                "deliveryStrategy": "INDIRECT",
+                "mandatoryWaitSinceLastDeliveryInDays": null
+              }
+            ],
+            "description": "Second round delivery",
+            "roundNumber": 2,
+            "durationInDays": 4,
+            "mandatoryWaitSinceLastCycleInDays": "30"
+          },
+          {
+            "id": 3,
+            "endDate": 1716143400000,
+            "startDate": 1718928000000,
+            "deliveries": [
+              {
+                "id": 1,
+                "doseCriteria": [
+                  {
+                    "condition": "3<=ageandage<=11",
+                    "ProductVariants": [
+                      {
+                        "name": "SP - 250",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001323"
+                      },
+                      {
+                        "name": "AQ - 75",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001324"
+                      }
+                    ]
+                  },
+                  {
+                    "condition": "12<=ageandage<=59",
+                    "ProductVariants": [
+                      {
+                        "name": "SP - 500",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001325"
+                      },
+                      {
+                        "name": "AQ - 150",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001326"
+                      }
+                    ]
+                  }
+                ],
+                "deliveryStrategy": "DIRECT",
+                "mandatoryWaitSinceLastDeliveryInDays": null
+              },
+              {
+                "id": 2,
+                "doseCriteria": [
+                  {
+                    "condition": "3<=ageandage<=11",
+                    "ProductVariants": [
+                      {
+                        "name": "AQ - 75",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001324"
+                      }
+                    ]
+                  },
+                  {
+                    "condition": "12<=ageandage<=59",
+                    "ProductVariants": [
+                      {
+                        "name": "AQ - 150",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001326"
+                      }
+                    ]
+                  }
+                ],
+                "deliveryStrategy": "INDIRECT",
+                "mandatoryWaitSinceLastDeliveryInDays": null
+              },
+              {
+                "id": 3,
+                "doseCriteria": [
+                  {
+                    "condition": "3<=ageandage<=11",
+                    "ProductVariants": [
+                      {
+                        "name": "AQ - 75",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001324"
+                      }
+                    ]
+                  },
+                  {
+                    "condition": "12<=ageandage<=59",
+                    "ProductVariants": [
+                      {
+                        "name": "AQ - 150",
+                        "quantity": 1,
+                        "productVariantId": "PVAR-2026-10-05-001326"
+                      }
+                    ]
+                  }
+                ],
+                "deliveryStrategy": "INDIRECT",
+                "mandatoryWaitSinceLastDeliveryInDays": null
+              }
+            ],
+            "description": "Third round delivery",
+            "roundNumber": 3,
+            "durationInDays": 4,
+            "mandatoryWaitSinceLastCycleInDays": "30"
+          }
+        ],
+        "resources": [
+          {
+            "name": "SP - 250",
+            "quantity": 3,
+            "productVariantId": "PVAR-2026-10-05-001323",
+            "isBaseUnitVariant": false
+          },
+          {
+            "name": "AQ - 75",
+            "quantity": 9,
+            "productVariantId": "PVAR-2026-10-05-001324",
+            "isBaseUnitVariant": false
+          },
+          {
+            "name": "SP - 500",
+            "quantity": 3,
+            "productVariantId": "PVAR-2026-10-05-001325",
+            "isBaseUnitVariant": false
+          },
+          {
+            "name": "AQ - 150",
+            "quantity": 9,
+            "productVariantId": "PVAR-2026-10-05-001326",
+            "isBaseUnitVariant": false
+          }
+        ],
+        "roundTypes": ["SINGLE_ROUND", "MULTI_ROUND"],
+        "beneficiaryType": "INDIVIDUAL",
+        "observationStrategy": "DOT1"
+      },
+      "imageDetails": {
+        "url": "https://egov-qa-assets.s3.ap-south-1.amazonaws.com/health/malaria.png",
+        "altText": "Illustration of mosquito for malaria campaign"
+      }
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "db842ca9-25c5-4419-a72f-459443d38feb",
+      "lastModifiedBy": "db842ca9-25c5-4419-a72f-459443d38feb",
+      "createdTime": 1795671001241,
+      "lastModifiedTime": 1795671001241
+    }
+  }
+]

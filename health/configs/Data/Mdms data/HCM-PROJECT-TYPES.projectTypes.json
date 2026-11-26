@@ -1,0 +1,820 @@
+[
+  {
+    "id": "5a1cca8f-d805-4ff9-95d5-70a79c547d3a",
+    "tenantId": "qa",
+    "schemaCode": "HCM-PROJECT-TYPES.projectTypes",
+    "uniqueIdentifier": "Immunisation",
+    "data": {
+      "id": "Immunisation",
+      "code": "Immunisation",
+      "name": "configuration for Campaign",
+      "type": "singleround",
+      "group": "POLIO",
+      "cycles": [
+        {
+          "id": 1,
+          "endDate": 1796581799000,
+          "startDate": 1793817000000,
+          "deliveries": [
+            {
+              "id": 1,
+              "doseCriteria": [
+                {
+                  "condition": "6<=ageandage<=120",
+                  "ProductVariants": [
+                    {
+                      "name": "MR - 0.5 ml",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-11-04-001625"
+                    }
+                  ]
+                },
+                {
+                  "condition": "6<=ageandage<=11",
+                  "ProductVariants": [
+                    {
+                      "name": "Blue capsule - 100,000 IU (Vit A)",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-11-04-001626"
+                    }
+                  ]
+                },
+                {
+                  "condition": "12<=ageandage<=59",
+                  "ProductVariants": [
+                    {
+                      "name": "Red capsule - 200,000 IU (Vit A)",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-11-04-001627"
+                    }
+                  ]
+                }
+              ],
+              "deliveryMethod": "HOUSEHOLDSTRATEGY",
+              "deliveryStrategy": "DIRECT",
+              "mandatoryWaitSinceLastDeliveryInDays": null
+            }
+          ],
+          "mandatoryWaitSinceLastCycleInDays": null
+        }
+      ],
+      "resources": [
+        {
+          "name": "MR - 0.5 ml",
+          "quantity": 1,
+          "productVariantId": "PVAR-2026-11-04-001625",
+          "isBaseUnitVariant": false
+        },
+        {
+          "name": "Blue capsule - 100,000 IU (Vit A)",
+          "quantity": 1,
+          "productVariantId": "PVAR-2026-11-04-001626",
+          "isBaseUnitVariant": false
+        },
+        {
+          "name": "Red capsule - 200,000 IU (Vit A)",
+          "quantity": 1,
+          "productVariantId": "PVAR-2026-11-04-001627",
+          "isBaseUnitVariant": false
+        }
+      ],
+      "roundTypes": ["SINGLE_ROUND"],
+      "dashboardUrls": {
+        "DISTRICT_SUPERVISOR": "2",
+        "NATIONAL_SUPERVISOR": "1",
+        "PROVINCIAL_SUPERVISOR": "1"
+      },
+      "IsCycleDisable": false,
+      "attrAddDisable": false,
+      "beneficiaryType": "INDIVIDUAL",
+      "deliveryMethods": [
+        {
+          "code": "HOUSEHOLDSTRATEGY",
+          "order": 1,
+          "i18nKey": "CAMPAIGN_DELIVERY_METHOD_HOUSEHOLD",
+          "isDefault": true,
+          "descriptionI18nKey": "CAMPAIGN_DELIVERY_METHOD_HOUSEHOLD_DESC"
+        },
+        {
+          "code": "OUTSIDEHOUSEHOLD",
+          "order": 2,
+          "i18nKey": "CAMPAIGN_DELIVERY_METHOD_OUTSIDEHOUSEHOLD",
+          "isDefault": true,
+          "descriptionI18nKey": "CAMPAIGN_DELIVERY_METHOD_OUTSIDEHOUSEHOLD_DESC"
+        }
+      ],
+      "productCountHide": false,
+      "deliveryAddDisable": false
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+      "lastModifiedBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
+      "createdTime": 1793773246948,
+      "lastModifiedTime": 1793865509685
+    }
+  },
+  {
+    "id": "63a05dd0-ad16-4614-b91f-29339ebb682f",
+    "tenantId": "qa",
+    "schemaCode": "HCM-PROJECT-TYPES.projectTypes",
+    "uniqueIdentifier": "MR-DN",
+    "data": {
+      "id": "MR-DN",
+      "code": "MR-DN",
+      "name": "Configuration for Multi Round Campaigns",
+      "group": "MALARIA",
+      "cycles": [
+        {
+          "id": 1,
+          "endDate": 1715279400000,
+          "startDate": 1714329000000,
+          "deliveries": [
+            {
+              "id": 1,
+              "doseCriteria": [
+                {
+                  "condition": "3<=ageandage<=11",
+                  "ProductVariants": [
+                    {
+                      "name": "SP - 250",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001323"
+                    },
+                    {
+                      "name": "AQ - 75",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001324"
+                    }
+                  ]
+                },
+                {
+                  "condition": "12<=ageandage<=59",
+                  "ProductVariants": [
+                    {
+                      "name": "SP - 500",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001325"
+                    },
+                    {
+                      "name": "AQ - 150",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001326"
+                    }
+                  ]
+                }
+              ],
+              "deliveryStrategy": "DIRECT",
+              "mandatoryWaitSinceLastDeliveryInDays": null
+            },
+            {
+              "id": 2,
+              "doseCriteria": [
+                {
+                  "condition": "3<=ageandage<=11",
+                  "ProductVariants": [
+                    {
+                      "name": "AQ - 75",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001324"
+                    }
+                  ]
+                },
+                {
+                  "condition": "12<=ageandage<=59",
+                  "ProductVariants": [
+                    {
+                      "name": "AQ - 150",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001326"
+                    }
+                  ]
+                }
+              ],
+              "deliveryStrategy": "INDIRECT",
+              "mandatoryWaitSinceLastDeliveryInDays": null
+            },
+            {
+              "id": 3,
+              "doseCriteria": [
+                {
+                  "condition": "3<=ageandage<=11",
+                  "ProductVariants": [
+                    {
+                      "name": "AQ - 75",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001324"
+                    }
+                  ]
+                },
+                {
+                  "condition": "12<=ageandage<=59",
+                  "ProductVariants": [
+                    {
+                      "name": "AQ - 150",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001326"
+                    }
+                  ]
+                }
+              ],
+              "deliveryStrategy": "INDIRECT",
+              "mandatoryWaitSinceLastDeliveryInDays": null
+            }
+          ],
+          "mandatoryWaitSinceLastCycleInDays": null
+        },
+        {
+          "id": 2,
+          "endDate": 1718908200000,
+          "startDate": 1716143400000,
+          "deliveries": [
+            {
+              "id": 1,
+              "doseCriteria": [
+                {
+                  "condition": "3<=ageandage<=11",
+                  "ProductVariants": [
+                    {
+                      "name": "SP - 250",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001323"
+                    },
+                    {
+                      "name": "AQ - 75",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001324"
+                    }
+                  ]
+                },
+                {
+                  "condition": "12<=ageandage<=59",
+                  "ProductVariants": [
+                    {
+                      "name": "SP - 500",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001325"
+                    },
+                    {
+                      "name": "AQ - 150",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001326"
+                    }
+                  ]
+                }
+              ],
+              "deliveryStrategy": "DIRECT",
+              "mandatoryWaitSinceLastDeliveryInDays": null
+            },
+            {
+              "id": 2,
+              "doseCriteria": [
+                {
+                  "condition": "3<=ageandage<=11",
+                  "ProductVariants": [
+                    {
+                      "name": "AQ - 75",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001324"
+                    }
+                  ]
+                },
+                {
+                  "condition": "12<=ageandage<=59",
+                  "ProductVariants": [
+                    {
+                      "name": "AQ - 150",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001326"
+                    }
+                  ]
+                }
+              ],
+              "deliveryStrategy": "INDIRECT",
+              "mandatoryWaitSinceLastDeliveryInDays": null
+            },
+            {
+              "id": 3,
+              "doseCriteria": [
+                {
+                  "condition": "3<=ageandage<=11",
+                  "ProductVariants": [
+                    {
+                      "name": "AQ - 75",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001324"
+                    }
+                  ]
+                },
+                {
+                  "condition": "12<=ageandage<=59",
+                  "ProductVariants": [
+                    {
+                      "name": "AQ - 150",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001326"
+                    }
+                  ]
+                }
+              ],
+              "deliveryStrategy": "INDIRECT",
+              "mandatoryWaitSinceLastDeliveryInDays": null
+            }
+          ],
+          "mandatoryWaitSinceLastCycleInDays": "30"
+        },
+        {
+          "id": 3,
+          "endDate": 1716143400000,
+          "startDate": 1718928000000,
+          "deliveries": [
+            {
+              "id": 1,
+              "doseCriteria": [
+                {
+                  "condition": "3<=ageandage<=11",
+                  "ProductVariants": [
+                    {
+                      "name": "SP - 250",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001323"
+                    },
+                    {
+                      "name": "AQ - 75",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001324"
+                    }
+                  ]
+                },
+                {
+                  "condition": "12<=ageandage<=59",
+                  "ProductVariants": [
+                    {
+                      "name": "SP - 500",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001325"
+                    },
+                    {
+                      "name": "AQ - 150",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001326"
+                    }
+                  ]
+                }
+              ],
+              "deliveryStrategy": "DIRECT",
+              "mandatoryWaitSinceLastDeliveryInDays": null
+            },
+            {
+              "id": 2,
+              "doseCriteria": [
+                {
+                  "condition": "3<=ageandage<=11",
+                  "ProductVariants": [
+                    {
+                      "name": "AQ - 75",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001324"
+                    }
+                  ]
+                },
+                {
+                  "condition": "12<=ageandage<=59",
+                  "ProductVariants": [
+                    {
+                      "name": "AQ - 150",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001326"
+                    }
+                  ]
+                }
+              ],
+              "deliveryStrategy": "INDIRECT",
+              "mandatoryWaitSinceLastDeliveryInDays": null
+            },
+            {
+              "id": 3,
+              "doseCriteria": [
+                {
+                  "condition": "3<=ageandage<=11",
+                  "ProductVariants": [
+                    {
+                      "name": "AQ - 75",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001324"
+                    }
+                  ]
+                },
+                {
+                  "condition": "12<=ageandage<=59",
+                  "ProductVariants": [
+                    {
+                      "name": "AQ - 150",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001326"
+                    }
+                  ]
+                }
+              ],
+              "deliveryStrategy": "INDIRECT",
+              "mandatoryWaitSinceLastDeliveryInDays": null
+            }
+          ],
+          "mandatoryWaitSinceLastCycleInDays": "30"
+        }
+      ],
+      "tenantId": "qa",
+      "resources": [
+        {
+          "name": "SP - 250",
+          "quantity": 3,
+          "productVariantId": "PVAR-2026-10-05-001323",
+          "isBaseUnitVariant": false
+        },
+        {
+          "name": "AQ - 75",
+          "quantity": 9,
+          "productVariantId": "PVAR-2026-10-05-001324",
+          "isBaseUnitVariant": false
+        },
+        {
+          "name": "SP - 500",
+          "quantity": 3,
+          "productVariantId": "PVAR-2026-10-05-001325",
+          "isBaseUnitVariant": false
+        },
+        {
+          "name": "AQ - 150",
+          "quantity": 9,
+          "productVariantId": "PVAR-2026-10-05-001326",
+          "isBaseUnitVariant": false
+        }
+      ],
+      "roundTypes": ["SINGLE_ROUND", "MULTI_ROUND"],
+      "dashboardUrls": {
+        "DISTRICT_SUPERVISOR": "/health-ui/employee/dss/dashboard/district-health-dashboard-smc",
+        "NATIONAL_SUPERVISOR": "/health-ui/employee/dss/landing/national-health-dashboard-smc",
+        "PROVINCIAL_SUPERVISOR": "/health-ui/employee/dss/dashboard/provincial-health-dashboard-smc"
+      },
+      "taskProcedure": [
+        "1 bednet is to be distributed per 2 household members.",
+        "If there are 4 household members, 2 bednets should be distributed.",
+        "If there are 5 household members, 3 bednets should be distributed."
+      ],
+      "beneficiaryType": "INDIVIDUAL",
+      "eligibilityCriteria": [
+        "All households having members under the age of 18 are eligible.",
+        "Prison inmates are eligible."
+      ],
+      "observationStrategy": "DOT1"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "8ca0fd96-d0d8-4c1d-b209-4aa5518f78e7",
+      "lastModifiedBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
+      "createdTime": 1790056041460,
+      "lastModifiedTime": 1793862738266
+    }
+  },
+  {
+    "id": "05b830dc-777b-4520-b1a7-11c66c9ad354",
+    "tenantId": "qa",
+    "schemaCode": "HCM-PROJECT-TYPES.projectTypes",
+    "uniqueIdentifier": "POLIO",
+    "data": {
+      "id": "POLIO",
+      "code": "POLIO",
+      "name": "configuration for Campaign",
+      "type": "singleround",
+      "group": "MALARIA",
+      "cycles": [
+        {
+          "id": 1,
+          "endDate": 1715279400000,
+          "startDate": 1714329000000,
+          "deliveries": [
+            {
+              "id": 1,
+              "doseCriteria": [
+                {
+                  "condition": "0<=age<59",
+                  "ProductVariants": [
+                    {
+                      "name": "nOPV2",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001327"
+                    }
+                  ]
+                }
+              ],
+              "deliveryStrategy": "DIRECT"
+            }
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "name": "nOPV2",
+          "productVariantId": "PVAR-2026-10-05-001327",
+          "isBaseUnitVariant": true
+        }
+      ],
+      "roundTypes": ["SINGLE_ROUND"],
+      "dashboardUrls": {
+        "DISTRICT_SUPERVISOR": "2",
+        "NATIONAL_SUPERVISOR": "1",
+        "PROVINCIAL_SUPERVISOR": "1"
+      },
+      "IsCycleDisable": false,
+      "attrAddDisable": false,
+      "beneficiaryType": "INDIVIDUAL",
+      "deliveryMethods": [
+        {
+          "code": "HOUSEHOLDSTRATEGY",
+          "order": 1,
+          "i18nKey": "CAMPAIGN_DELIVERY_METHOD_HOUSEHOLD",
+          "isDefault": true,
+          "descriptionI18nKey": "CAMPAIGN_DELIVERY_METHOD_HOUSEHOLD_DESC"
+        },
+        {
+          "code": "OUTSIDEHOUSEHOLD",
+          "order": 2,
+          "i18nKey": "CAMPAIGN_DELIVERY_METHOD_OUTSIDEHOUSEHOLD",
+          "isDefault": true,
+          "descriptionI18nKey": "CAMPAIGN_DELIVERY_METHOD_OUTSIDEHOUSEHOLD_DESC"
+        }
+      ],
+      "productCountHide": false,
+      "deliveryAddDisable": false
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "8ca0fd96-d0d8-4c1d-b209-4aa5518f78e7",
+      "lastModifiedBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
+      "createdTime": 1790056041271,
+      "lastModifiedTime": 1794392662384
+    }
+  },
+  {
+    "id": "f09f72a9-3d23-4345-8ab7-e8e315b7e215",
+    "tenantId": "qa",
+    "schemaCode": "HCM-PROJECT-TYPES.projectTypes",
+    "uniqueIdentifier": "Bednet",
+    "data": {
+      "id": "Bednet",
+      "code": "Bednet",
+      "name": "Bednet",
+      "group": "MALARIA",
+      "cycles": [
+        {
+          "id": 1,
+          "endDate": 1715279400000,
+          "startDate": 1714329000000,
+          "deliveries": [
+            {
+              "id": 1,
+              "doseCriteria": [
+                {
+                  "condition": "memberCount>=1andmaxCount<=3",
+                  "ProductVariants": [
+                    {
+                      "name": "Bednet - Grade 1",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001328"
+                    }
+                  ]
+                }
+              ],
+              "deliveryStrategy": "DIRECT"
+            }
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "name": "Bednet - Grade 1",
+          "productVariantId": "PVAR-2026-10-05-001328",
+          "isBaseUnitVariant": false
+        }
+      ],
+      "roundTypes": ["SINGLE_ROUND"],
+      "dashboardUrls": {
+        "DISTRICT_SUPERVISOR": "/health-ui/employee/dss/dashboard/district-health-dashboard-llin",
+        "NATIONAL_SUPERVISOR": "/health-ui/employee/dss/landing/national-health-dashboard-llin",
+        "PROVINCIAL_SUPERVISOR": "/health-ui/employee/dss/dashboard/provincial-health-dashboard-llin"
+      },
+      "taskProcedure": [
+        "1 bednet is to be distributed per 2 household members.",
+        "If there are 4 household members, 2 bednets should be distributed.",
+        "If there are 5 household members, 3 bednets should be distributed."
+      ],
+      "IsCycleDisable": true,
+      "attrAddDisable": false,
+      "beneficiaryType": "HOUSEHOLD",
+      "productCountHide": true,
+      "deliveryAddDisable": true,
+      "eligibilityCriteria": [
+        "All households are eligible.",
+        "Prison inmates are eligible."
+      ]
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "8ca0fd96-d0d8-4c1d-b209-4aa5518f78e7",
+      "lastModifiedBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
+      "createdTime": 1790056040966,
+      "lastModifiedTime": 1793864864894
+    }
+  },
+  {
+    "id": "e7a80217-25e1-45b5-9266-4298717b2c91",
+    "tenantId": "qa",
+    "schemaCode": "HCM-PROJECT-TYPES.projectTypes",
+    "uniqueIdentifier": "Oncho",
+    "data": {
+      "id": "Oncho",
+      "code": "Oncho",
+      "name": "Oncho",
+      "type": "multiround",
+      "group": "MALARIA",
+      "cycles": [
+        {
+          "id": 1,
+          "endDate": 1715279400000,
+          "startDate": 1714329000000,
+          "deliveries": [
+            {
+              "id": 1,
+              "doseCriteria": [
+                {
+                  "condition": "60<=age<=180and90<=height<=119and12<=weight<=45",
+                  "ProductVariants": [
+                    {
+                      "name": "Ivermectin - 100mg",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001329"
+                    }
+                  ]
+                },
+                {
+                  "condition": "60<=age<=180and120<=height<=139and12<=weight<=45",
+                  "ProductVariants": [
+                    {
+                      "name": "Ivermectin - 100mg",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001329"
+                    }
+                  ]
+                },
+                {
+                  "condition": "age>=180and140<=height<=159and45<=weight<=75",
+                  "ProductVariants": [
+                    {
+                      "name": "Albendazole - 250mg",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001330"
+                    }
+                  ]
+                },
+                {
+                  "condition": "age>=180andheight>=159andweight>=75",
+                  "ProductVariants": [
+                    {
+                      "name": "Albendazole - 250mg",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001330"
+                    }
+                  ]
+                }
+              ],
+              "deliveryStrategy": "DIRECT",
+              "mandatoryWaitSinceLastDeliveryInDays": null
+            }
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "name": "Ivermectin - 100mg",
+          "productVariantId": "PVAR-2026-10-05-001329",
+          "isBaseUnitVariant": true
+        },
+        {
+          "name": "Albendazole - 250mg",
+          "productVariantId": "PVAR-2026-10-05-001330",
+          "isBaseUnitVariant": true
+        }
+      ],
+      "roundTypes": ["SINGLE_ROUND", "MULTI_ROUND"],
+      "dashboardUrls": {
+        "DISTRICT_SUPERVISOR": "/health-ui/employee/dss/dashboard/district-health-dashboard",
+        "NATIONAL_SUPERVISOR": "/health-ui/employee/dss/landing/national-health-dashboard",
+        "PROVINCIAL_SUPERVISOR": "/health-ui/employee/dss/dashboard/provincial-health-dashboard"
+      },
+      "IsCycleDisable": true,
+      "attrAddDisable": false,
+      "beneficiaryType": "INDIVIDUAL",
+      "productCountHide": false,
+      "deliveryAddDisable": false,
+      "eligibilityCriteria": []
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "8ca0fd96-d0d8-4c1d-b209-4aa5518f78e7",
+      "lastModifiedBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
+      "createdTime": 1790056040797,
+      "lastModifiedTime": 1793864864157
+    }
+  },
+  {
+    "id": "37b423e8-1550-4d73-ba08-f4ac45c4c2c2",
+    "tenantId": "qa",
+    "schemaCode": "HCM-PROJECT-TYPES.projectTypes",
+    "uniqueIdentifier": "CO-DELIVERY",
+    "data": {
+      "id": "CO-DELIVERY",
+      "code": "CO-DELIVERY",
+      "name": "Configuration for Multi Round Campaigns",
+      "type": "multiround",
+      "group": "MALARIA",
+      "cycles": [
+        {
+          "id": 1,
+          "endDate": 1715279400000,
+          "startDate": 1714329000000,
+          "deliveries": [
+            {
+              "id": 1,
+              "doseCriteria": [
+                {
+                  "condition": "6<=ageandage<=59",
+                  "ProductVariants": [
+                    {
+                      "name": "Vitamin A supplement",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001331"
+                    }
+                  ]
+                },
+                {
+                  "condition": "age>=6",
+                  "ProductVariants": [
+                    {
+                      "name": "Azithromycin",
+                      "quantity": 1,
+                      "productVariantId": "PVAR-2026-10-05-001332"
+                    }
+                  ]
+                }
+              ],
+              "deliveryStrategy": "DIRECT",
+              "mandatoryWaitSinceLastDeliveryInDays": null
+            }
+          ],
+          "mandatoryWaitSinceLastCycleInDays": null
+        }
+      ],
+      "tenantId": "qa",
+      "resources": [
+        {
+          "name": "Vitamin A supplement",
+          "quantity": 1,
+          "productVariantId": "PVAR-2026-10-05-001331",
+          "isBaseUnitVariant": true
+        },
+        {
+          "name": "Azithromycin",
+          "quantity": 1,
+          "productVariantId": "PVAR-2026-10-05-001332",
+          "isBaseUnitVariant": true
+        }
+      ],
+      "roundTypes": ["SINGLE_ROUND", "MULTI_ROUND"],
+      "validMaxAge": 1800,
+      "validMinAge": 6,
+      "dashboardUrls": {
+        "DISTRICT_SUPERVISOR": "/health-ui/employee/dss/dashboard/district-health-dashboard-smc",
+        "NATIONAL_SUPERVISOR": "/health-ui/employee/dss/landing/national-health-dashboard-smc",
+        "PROVINCIAL_SUPERVISOR": "/health-ui/employee/dss/dashboard/provincial-health-dashboard-smc"
+      },
+      "taskProcedure": [
+        "1 bednet is to be distributed per 2 household members.",
+        "If there are 4 household members, 2 bednets should be distributed.",
+        "If there are 5 household members, 3 bednets should be distributed."
+      ],
+      "beneficiaryType": "INDIVIDUAL",
+      "eligibilityCriteria": [
+        "All households having members under the age of 18 are eligible.",
+        "Prison inmates are eligible."
+      ],
+      "observationStrategy": "DOT1"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "8ca0fd96-d0d8-4c1d-b209-4aa5518f78e7",
+      "lastModifiedBy": "f4dd0b5d-5ed0-4633-80ec-d8c760cbc5f6",
+      "createdTime": 1790056040686,
+      "lastModifiedTime": 1793865412435
+    }
+  }
+]

@@ -574,6 +574,7 @@
         "category": "DELIVERY",
         "navigateTo": null,
         "screenType": "TEMPLATE",
+        "description": "BENEFICIARY_DETAILS_DESC",
         "initActions": [
           {
             "actionType": "SEARCH_EVENT",
@@ -2910,6 +2911,7 @@
         "category": "REGISTRATION",
         "navigateTo": null,
         "screenType": "TEMPLATE",
+        "description": "REGISTRATION_SEARCH_BENEFICIARY_DESC",
         "initActions": [
           {
             "actionType": "LOAD_UNIQUE_ID_POOL"
