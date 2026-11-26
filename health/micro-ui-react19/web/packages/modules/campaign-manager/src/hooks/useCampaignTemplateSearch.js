@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { CAMPAIGN_TEMPLATE_SCHEMA_CODE } from "../utils/campaignTemplate";
 
 const useCampaignTemplateSearch = ({ state }) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
@@ -30,7 +31,7 @@ const useCampaignTemplateSearch = ({ state }) => {
         body: {
           MdmsCriteria: {
             tenantId,
-            schemaCode: "HCM-ADMIN-CONSOLE.campaignTypeTemplates",
+            schemaCode: CAMPAIGN_TEMPLATE_SCHEMA_CODE,
             limit: 10000,
             isActive: true,
             ...(Object.keys(filters).length > 0 && { filters }),

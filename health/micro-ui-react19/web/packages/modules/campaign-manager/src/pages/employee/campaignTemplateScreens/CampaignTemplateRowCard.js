@@ -5,6 +5,23 @@ import { useNavigate } from "react-router-dom";
 import { Tag, Button, CardText, Card, Toast } from "@egovernments/digit-ui-components";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
 import useCampaignStore from "../../../hooks/useCampaignStore";
+import { getTemplateCycles } from "../../../utils/campaignTemplate";
+
+/**
+ * The round type a template sets up, in the form the round-type step would have recorded.
+ *
+ * That step is skipped when a template is used, so the answer comes from how many cycles the
+ * template declares, kept within what the campaign type allows - the same limit the step itself
+ * applies. A template with no cycles says nothing, and the campaign is saved with no round type,
+ * exactly as it is today.
+ */
+const resolveRoundType = (templateCycles, projectTypeRecord) => {
+  if (!Array.isArray(templateCycles) || templateCycles.length === 0) return "";
+  const allowed = projectTypeRecord?.roundTypes;
+  const offers = (code) => !Array.isArray(allowed) || allowed.length === 0 || allowed.includes(code);
+  if (templateCycles.length > 1) return offers("MULTI_ROUND") ? "HCM_MULTI_ROUND" : "HCM_SINGLE_ROUND";
+  return offers("SINGLE_ROUND") ? "HCM_SINGLE_ROUND" : "HCM_MULTI_ROUND";
+};
 
 const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
   const { t } = useTranslation();
@@ -50,8 +67,9 @@ const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
     return projectTypes.find((pt) => pt.code === projectTypeCode);
   }, [projectTypesData, projectTypeCode]);
 
-  // Calculate duration from deliveryCycles
-  const deliveryCycles = rowData?.data?.deliveryCycles || [];
+  // A template's rounds are the cycles of the campaign type it carries, so the chip reads them
+  // from there. A separate list of its own could disagree with what the template actually sets up.
+  const deliveryCycles = getTemplateCycles(rowData?.data);
   const duration = deliveryCycles.length > 0
     ? `${deliveryCycles.length} ${deliveryCycles.length > 1 ? t(I18N_KEYS.COMPONENTS.ROUND_PLURAL) : t(I18N_KEYS.COMPONENTS.ROUND_SINGLE)} | ${deliveryCycles[0]?.durationInDays || 0} ${t(I18N_KEYS.COMPONENTS.DAYS)}`
     : "NA";
@@ -134,6 +152,13 @@ const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
                 const campaignName = `${projectTypeCode}_${formattedDate}`;
 
                 // Set the full campaign type from template (overwrites existing data)
+                //
+                // The campaign type comes from MDMS, not from the template's own copy of it: that
+                // is what the type dropdown and the create payload read, and it keeps the
+                // template's cycles out of session state, which is persisted.
+                //
+                // `templateId` is what carries the choice forward. It is saved onto the campaign
+                // at create time, and the delivery screens look the template up again from there.
                 const sessionData = {
                   CampaignType: matchedProjectType,
                   CampaignName: campaignName,
@@ -141,7 +166,11 @@ const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
                     startDate: "",
                     endDate: "",
                   },
-                  CycleSelection: "",
+                  // Step 1 is skipped here, so the round type comes from the cycles the template
+                  // sets up - see resolveRoundType above. Left empty, the campaign would say
+                  // nothing about its rounds while the template gave it several cycles.
+                  CycleSelection: resolveRoundType(deliveryCycles, matchedProjectType),
+                  templateId: rowData?.data?.id || rowData?.uniqueIdentifier,
                 };
 
                 // Set data via Redux store (persisted via store subscriber)

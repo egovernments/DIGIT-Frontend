@@ -1,4 +1,11 @@
-const getDeliveryConfig = ({ data, projectType }) => {
+/**
+ * The cycle and delivery defaults a screen starts from, built from a single campaign type record.
+ *
+ * `record` lets a caller pass that record in directly instead of having it looked up by code. It
+ * is how a campaign created from a template is configured from the campaign type the template
+ * carries rather than the one MDMS holds. Callers that leave it out get the lookup, as before.
+ */
+const getDeliveryConfig = ({ data, projectType, record }) => {
   function parseCondition(condition) {
     let operatorValue = "";
     let value = "";
@@ -174,6 +181,6 @@ const generateConfig = (data) => {
       deliveryConfig: deliveryConfig({ data, projectType: data?.code }),
     };
   }
-  return convertToConfig(data?.projectTypes?.filter((e) => e.code == projectType)?.[0]);
+  return convertToConfig(record || data?.projectTypes?.filter((e) => e.code == projectType)?.[0]);
 };
 export default getDeliveryConfig;

@@ -60,6 +60,14 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
   const cycleSelection = formData?.CycleSelection || totalFormData?.CycleSelection || params?.CycleSelection;
   const roundType = cycleSelection === "HCM_MULTI_ROUND" ? "MULTI_ROUND" : cycleSelection === "HCM_SINGLE_ROUND" ? "SINGLE_ROUND" : params?.additionalDetails?.roundType;
 
+  // The template this campaign was started from, if any. Taken from the session on create and from
+  // the campaign itself on every later save, so an edit cannot drop it - additionalDetails is built
+  // fresh below rather than spread, and anything not named there is lost.
+  //
+  // This is the only lasting record that a template was used: the session is cleared once the
+  // wizard finishes, and the delivery steps are opened later from the campaign details screen.
+  const templateId = params?.templateId || params?.additionalDetails?.templateId || totalFormData?.templateId;
+
   return {
     CampaignDetails: {
       hierarchyType: hierarchyType,
@@ -86,6 +94,7 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
         },
         isUnifiedCampaign: hasUnifiedResource,
         ...(roundType ? { roundType } : {}),
+        ...(templateId ? { templateId } : {}),
       },
     },
   };

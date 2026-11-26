@@ -32,6 +32,8 @@ import {
 } from './deliveryRulesSlice';
 import { CONSOLE_MDMS_MODULENAME } from '../../../Module';
 import useCampaignStore from "../../../hooks/useCampaignStore";
+import useCampaignTemplate from "../../../hooks/useCampaignTemplate";
+import { getTemplateId, mergeTemplateProjectType } from "../../../utils/campaignTemplate";
 
 export const useDeliveryRules = () => {
   const dispatch = useDispatch();
@@ -201,8 +203,26 @@ export const useDeliveryRuleData = () => {
   const sessionData = formStorageData;
   const selectedProjectType = sessionData?.HCM_CAMPAIGN_TYPE?.projectType?.code || searchParams.get("projectType");
 
+  const campaignNumber = searchParams.get("campaignNumber");
+
+  // Read for one thing only: which template this campaign was created from, if any. The campaign
+  // is the only place that still knows, since the wizard's session is cleared before this screen
+  // is reached.
+  const { data: campaignRecord, isLoading: campaignLoading } = Digit.Hooks.useCustomAPIHook({
+    url: `/project-factory/v1/project-type/search`,
+    body: { CampaignDetails: { tenantId, campaignNumber } },
+    config: {
+      enabled: !!campaignNumber,
+      cacheTime: 0,
+      staleTime: 0,
+      select: (response) => response?.CampaignDetails?.[0],
+    },
+  });
+
+  const { templateProjectType, isTemplateLoading } = useCampaignTemplate(getTemplateId(campaignRecord));
+
   // Fetch project configuration from MDMS
-  const { isLoading: configLoading, data: projectConfig, error: configError } = Digit.Hooks.useCustomMDMS(
+  const { isLoading: configLoading, data: mdmsProjectConfig, error: configError } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "HCM-PROJECT-TYPES",
     [{ name: "projectTypes" }],
@@ -256,7 +276,19 @@ export const useDeliveryRuleData = () => {
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.deliveryTypeConfig` }
   );
 
-  const loading = configLoading || attributesLoading || operatorsLoading || deliveryTypesLoading;
+  // A campaign created from a template is configured from the campaign type that template carries;
+  // anything the template leaves out still comes from the campaign type's own record.
+  //
+  // Nothing is handed over until the template has been looked up. The screen builds its rules from
+  // the first configuration it receives and then guards against doing it again, so giving it the
+  // campaign type's defaults a moment too early would mean the wrong defaults for good.
+  const waitingOnTemplate = !!campaignNumber && (campaignLoading || isTemplateLoading);
+  const projectConfig = useMemo(
+    () => (waitingOnTemplate ? undefined : mergeTemplateProjectType(mdmsProjectConfig, templateProjectType)),
+    [waitingOnTemplate, mdmsProjectConfig, templateProjectType]
+  );
+
+  const loading = configLoading || attributesLoading || operatorsLoading || deliveryTypesLoading || waitingOnTemplate;
   const error = configError;
 
   return {

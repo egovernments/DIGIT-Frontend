@@ -1,3 +1,5 @@
+import { CAMPAIGN_TEMPLATE_SCHEMA_CODE } from "../../../utils/campaignTemplate";
+
 const tenantId = Digit?.ULBService?.getCurrentTenantId() || "mz";
 const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 export const campaignTemplateConfig = {
@@ -15,7 +17,7 @@ export const campaignTemplateConfig = {
         requestBody: {
           MdmsCriteria: {
             tenantId: tenantId,
-            schemaCode: "HCM-ADMIN-CONSOLE.campaignTypeTemplates",
+            schemaCode: CAMPAIGN_TEMPLATE_SCHEMA_CODE,
             limit: "10000",
             isActive: true
           },

@@ -9,6 +9,8 @@ import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { convertEpochToNewDateFormat } from "../../utils/convertEpochToNewDateFormat";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import useCampaignStore from "../../hooks/useCampaignStore";
+import useCampaignTemplate from "../../hooks/useCampaignTemplate";
+import { getTemplateId, mergeTemplateProjectType } from "../../utils/campaignTemplate";
 
 const initialState = (saved, filteredDeliveryConfig, refetch) => {
   const data = {
@@ -148,12 +150,26 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
 
   const { data: campaignData, isFetching, isLoading: campaignDataLoading } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
+  // A campaign created from a template takes its cycles from that template rather than from the
+  // campaign type. Which template is recorded on the campaign, so it is only known once the
+  // campaign has been read.
+  const templateId = getTemplateId(campaignData);
+  const { templateProjectType, isTemplateLoading } = useCampaignTemplate(templateId);
+
   useEffect(() => {
-    if (data && selectedProjectType) {
-      const deliveryData = getDeliveryConfig({ data: data?.MdmsRes?.["HCM-PROJECT-TYPES"], projectType: selectedProjectType });
-      setFilterDeliveryConfig(deliveryData);
-    }
-  }, [data, selectedProjectType]);
+    if (!data || !selectedProjectType) return;
+    // Wait for both, then build once. Building from the campaign type first and from the template
+    // afterwards would show one set of cycle and delivery counts and then replace them on screen.
+    if (campaignNumber && (campaignDataLoading || isTemplateLoading)) return;
+
+    const projectTypeRecord = data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes?.find((e) => e?.code === selectedProjectType);
+    const deliveryData = getDeliveryConfig({
+      data: data?.MdmsRes?.["HCM-PROJECT-TYPES"],
+      projectType: selectedProjectType,
+      record: mergeTemplateProjectType(projectTypeRecord, templateProjectType),
+    });
+    setFilterDeliveryConfig(deliveryData);
+  }, [data, selectedProjectType, templateProjectType, isTemplateLoading, campaignDataLoading, campaignNumber]);
 
   function convertEpochToDate(epoch) {
     if (!epoch) return "";

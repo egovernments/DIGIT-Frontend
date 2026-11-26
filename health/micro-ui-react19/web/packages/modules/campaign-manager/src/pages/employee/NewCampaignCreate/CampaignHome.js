@@ -15,6 +15,7 @@ import { CopyAll } from "../../../components/icons/CopyAll";
 import { MobileLayout } from "../../../components/icons/MobileLayout";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import { srOnlyStyle } from "../../../utils";
+import { CAMPAIGN_TEMPLATE_SCHEMA_CODE } from "../../../utils/campaignTemplate";
 import useCampaignStore from "../../../hooks/useCampaignStore";
 import { useDispatch } from "react-redux";
 import { resetCreateCampaignData } from "../../../store/campaignStore";
@@ -145,7 +146,7 @@ const CampaignHome = () => {
     body: {
       MdmsCriteria: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
-        schemaCode: "HCM-ADMIN-CONSOLE.campaignTypeTemplates",
+        schemaCode: CAMPAIGN_TEMPLATE_SCHEMA_CODE,
         limit: "10000",
         isActive: true
       },

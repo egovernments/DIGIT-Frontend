@@ -8,6 +8,8 @@ import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import DeliveryMethodSelection from "../../../components/CreateCampaignComponents/DeliveryMethodSelection";
 import getDeliveryConfig from "../../../utils/getDeliveryConfig";
 import useCampaignStore from "../../../hooks/useCampaignStore";
+import useCampaignTemplate from "../../../hooks/useCampaignTemplate";
+import { getTemplateId, mergeTemplateProjectType } from "../../../utils/campaignTemplate";
 import {
   getCampaignDeliveryMethods,
   getDeliveryMethods,
@@ -98,10 +100,14 @@ const DeliveryStrategySetup = ({ onSelect, formData, control, ...props }) => {
     },
   });
 
-  const projectTypeRecord = useMemo(
-    () => mdmsData?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes?.find((e) => e?.code === selectedProjectType),
-    [mdmsData, selectedProjectType]
-  );
+  // A campaign created from a template is configured from the campaign type that template carries;
+  // anything the template leaves out still comes from the campaign type's own record.
+  const { templateProjectType, isTemplateLoading } = useCampaignTemplate(getTemplateId(campaignData));
+
+  const projectTypeRecord = useMemo(() => {
+    const record = mdmsData?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes?.find((e) => e?.code === selectedProjectType);
+    return mergeTemplateProjectType(record, templateProjectType);
+  }, [mdmsData, selectedProjectType, templateProjectType]);
 
   const roundType = getRoundType(campaignData, formStorageData);
   const methods = useMemo(() => getDeliveryMethods(projectTypeRecord), [projectTypeRecord]);
@@ -126,7 +132,9 @@ const DeliveryStrategySetup = ({ onSelect, formData, control, ...props }) => {
   const hydrated = useRef(false);
   useEffect(() => {
     if (!applies || hydrated.current) return;
-    if (campaignNumber && campaignLoading) return;
+    // The template is waited for as well. This runs once, so strategies coming from a template
+    // would arrive too late if it had already settled on the campaign type's defaults.
+    if (campaignNumber && (campaignLoading || isTemplateLoading)) return;
 
     // Resolve each field on its own. The session can hold the dates while the strategies only
     // exist on the campaign, so preferring one whole source over the other loses half of it.
@@ -156,7 +164,7 @@ const DeliveryStrategySetup = ({ onSelect, formData, control, ...props }) => {
     if (cycle?.toDate) setToDate(cycle.toDate);
 
     hydrated.current = true;
-  }, [applies, campaignLoading, savedCycleConfigure, campaignCycleConfigure, campaignData, methods]);
+  }, [applies, campaignLoading, isTemplateLoading, savedCycleConfigure, campaignCycleConfigure, campaignData, methods]);
 
   // Drop anything the campaign type no longer offers, and keep declared order.
   useEffect(() => {
@@ -177,8 +185,12 @@ const DeliveryStrategySetup = ({ onSelect, formData, control, ...props }) => {
 
   const deliveryConfig = useMemo(() => {
     if (!mdmsData || !selectedProjectType) return null;
-    return getDeliveryConfig({ data: mdmsData?.MdmsRes?.["HCM-PROJECT-TYPES"], projectType: selectedProjectType });
-  }, [mdmsData, selectedProjectType]);
+    return getDeliveryConfig({
+      data: mdmsData?.MdmsRes?.["HCM-PROJECT-TYPES"],
+      projectType: selectedProjectType,
+      record: projectTypeRecord,
+    });
+  }, [mdmsData, selectedProjectType, projectTypeRecord]);
 
   // Publish upward in the shape CycleConfiguration uses, plus the chosen methods.
   useEffect(() => {
@@ -196,7 +208,7 @@ const DeliveryStrategySetup = ({ onSelect, formData, control, ...props }) => {
     });
   }, [applies, selected, fromDate, toDate, deliveryConfig, hydrated.current]);
 
-  if (mdmsLoading || (campaignNumber && campaignLoading)) {
+  if (mdmsLoading || (campaignNumber && (campaignLoading || isTemplateLoading))) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
